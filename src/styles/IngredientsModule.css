@@ -1,0 +1,84 @@
+/* TREE CONTAINER */
+.gm-tree {
+  height: 400px;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--brand-1);
+}
+
+/* NODE BASE */
+.gm-node {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.gm-node:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+/* LEFT SIDE */
+.gm-node-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* CATEGORY */
+.gm-node.parent {
+  color: #fbb003;
+  font-weight: 600;
+}
+
+/* INGREDIENT */
+.gm-node.leaf {
+  color: #eaeaea;
+}
+
+/* ICONS */
+.gm-arrow {
+  font-size: 12px;
+}
+
+.gm-dot {
+  font-size: 10px;
+  opacity: 0.6;
+}
+
+/* NAME */
+.gm-name {
+  font-size: 14px;
+}
+
+/* ALLERGENS */
+.gm-allergens {
+  font-size: 11px;
+  opacity: 0.6;
+}
+
+.inv-toggle {
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: none;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.inv-toggle.on {
+  background: #22c55e;
+  color: white;
+}
+
+.inv-toggle.off {
+  background: #2a2a2a;
+  color: #aaa;
+}
+
+.inv-toggle:hover {
+  opacity: 0.8;
+}

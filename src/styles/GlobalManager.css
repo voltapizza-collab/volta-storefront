@@ -1,0 +1,95 @@
+/* CONTAINER */
+.gm-container {
+  display: flex;
+  height: 100vh;
+  background: #0f0f0f;
+  color: white;
+}
+
+/* SIDEBAR */
+.gm-sidebar {
+  width: 220px;
+ background: var(--brand-2);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* TITLE */
+.gm-title {
+  font-size: 14px;
+  font-weight: bold;
+  color: #ffffff; /* 🔥 brand2 */
+}
+
+/* NAV */
+.gm-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* BUTTONS */
+.gm-btn {
+  padding: 10px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.7);
+  cursor: pointer;
+  transition: 0.2s;
+  text-align: left;
+}
+
+/* HOVER */
+.gm-btn:hover {
+  background: var(--brand-1);
+  color: var(--brand-3);
+}
+
+/* ACTIVE */
+.gm-btn.active {
+   background: var(--brand-1);
+  color: var(--brand-2);
+  font-weight: bold;
+}
+
+/* LOGOUT */
+.gm-logoutBtn {
+  margin-top: auto;
+  padding: 10px;
+  background: var(--brand-1);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--brand-3);
+  cursor: pointer;
+}
+
+.gm-logoutBtn:hover {
+  border-color: #ff4d4d;
+  color: #ff4d4d;
+}
+
+/* MAIN */
+.gm-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #f7f7ef;
+  color: var(--brand-2);
+}
+
+/* WORKSPACE */
+.gm-workspace {
+  flex: 1;
+  padding: 30px;
+}
+
+/* FOOTER override (para integrarlo mejor) */
+.gm-main .app-footer {
+  background: linear-gradient(
+    90deg,
+    #3b008b,
+    #ffb61c
+  );
+  color: var(--brand-2);
+}

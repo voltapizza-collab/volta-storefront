@@ -1,22 +1,21 @@
+import { useNavigate } from "react-router-dom";
+
 export default function StoreGate({ store }) {
+  const navigate = useNavigate();
+
   const handleOrder = () => {
-    alert("Aquí empieza el motor de pedidos 🔥");
-    // luego aquí redirigiremos a /menu o checkout
+    navigate(`/${store.partner.slug}/${store.slug}/menu`);
   };
 
   return (
     <div style={{ textAlign: "center", marginTop: 100 }}>
 
-      {/* <h2 style={{ marginBottom: 10 }}>
-        {store.partner?.name}
-      </h2> */}
-
       <h1 style={{ marginBottom: 10 }}>
-        {store.name}
+        {store.storeName}
       </h1>
 
       <p style={{ marginBottom: 30, color: "#666" }}>
-        {store.city}, {store.country}
+        {store.city || ""} {store.city ? "," : ""} {store.partner?.country || ""}
       </p>
 
       <button

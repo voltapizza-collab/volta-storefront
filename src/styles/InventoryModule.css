@@ -1,0 +1,570 @@
+
+.inv-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.inv-title {
+  margin: 0; /* importante */
+}
+
+.inv-wrapper {
+  padding: 30px;
+}
+
+.inv-title {
+  margin: 0 0 20px;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--black);
+}
+
+.inv-addBtn {
+  border: none;
+  background: var(--brand-1);
+  color: var(--white);
+  font-weight: 700;
+  padding: 10px 18px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.inv-addBtn:hover {
+  opacity: 0.92;
+  background: var(--brand-3);
+}
+
+/* MODAL */
+.inv-modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.38);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.inv-modal {
+  width: min(760px, 92vw);
+  max-height: 85vh;
+  overflow-y: auto;
+  background: var(--brand-3);
+  border-radius: 20px;
+  border: 1px solid #e7e7e7;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.14);
+  padding: 22px;
+}
+
+.inv-modalTitle {
+  margin: 0 0 18px;
+  font-size: 24px;
+  font-weight: 700;
+  color: #111;
+}
+
+/* CATEGORIES */
+.inv-catList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.inv-catCard {
+  border: 1px solid #ececec;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #fafafa;
+}
+
+.inv-catHead {
+  width: 100%;
+  border: none;
+  background: #f3f3f3;
+  padding: 12px 14px;
+  text-align: left;
+  font-size: 15px;
+  font-weight: 700;
+  color: #111;
+  cursor: pointer;
+}
+
+.inv-catHead:hover {
+  background: #ececec;
+}
+
+.inv-catItems {
+  padding: 12px 14px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.inv-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #222;
+  font-size: 14px;
+}
+
+.inv-item input[type="checkbox"] {
+  transform: scale(1.05);
+  cursor: pointer;
+}
+
+/* ACTIONS */
+.inv-actions {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.inv-saveBtn,
+.inv-cancelBtn {
+  border: none;
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.inv-saveBtn {
+ background: var(--brand-1);
+  color: var(--white);
+}
+
+.inv-cancelBtn {
+background: var(--brand-2);
+color: var(--black);
+}
+
+.inv-saveBtn:hover,
+.inv-cancelBtn:hover {
+  opacity: 0.93;
+    background: var(--brand-3);
+}
+
+.inv-empty {
+  height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #666;
+}
+
+.inv-emptyIcon {
+  font-size: 48px;
+  margin-bottom: 10px;
+}
+
+.inv-empty h3 {
+  margin: 10px 0 5px;
+  color: #111;
+}
+
+.inv-empty p {
+  font-size: 14px;
+  margin-bottom: 15px;
+  max-width: 320px;
+}
+/* =========================
+   INVENTORY WORKSPACE PRO
+========================= */
+
+.inv-list {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* CATEGORY BLOCK */
+.inv-catBlock {
+  width: 100%;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #eaeaea;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.inv-catBlock:hover {
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+}
+
+/* CATEGORY HEADER */
+.inv-catTitle {
+  all: unset;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 14px 16px;
+  font-weight: 700;
+  font-size: 15px;
+  color: #111;
+
+  background: #f7f7f7;
+  border-bottom: 1px solid #eee;
+}
+
+.inv-catTitle:hover {
+  background: #efefef;
+}
+
+/* ITEMS CONTAINER */
+.inv-items {
+  max-height: 260px;
+  overflow-y: auto;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  padding: 12px;
+  background: #fff;
+}
+
+/* ITEM ROW */
+.inv-itemRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 10px 12px;
+  border-radius: 10px;
+
+  background: #fafafa;
+  border: 1px solid #f0f0f0;
+
+  transition: all 0.15s ease;
+}
+
+.inv-itemRow:hover {
+  background: #f2f2f2;
+}
+
+/* NAME */
+.inv-itemName {
+  font-size: 14px;
+  font-weight: 500;
+  color: #222;
+}
+
+/* RIGHT SIDE */
+.inv-itemRight {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* BUTTON */
+.inv-toggleBtn {
+  border: none;
+  padding: 6px 12px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+
+  background: linear-gradient(135deg, #6a00ff, #ff8c00);
+  color: white;
+
+  transition: all 0.2s ease;
+}
+
+.inv-toggleBtn:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+/* BADGES */
+.inv-badge {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.inv-badge.off {
+  background: #eee;
+  color: #777;
+}
+
+.inv-badge.new {
+  background: #e0f7ff;
+  color: #0077aa;
+}
+
+/* CATEGORY HEADER LAYOUT */
+.inv-catLeft {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.inv-drag {
+  font-size: 18px;
+  color: #999;
+  cursor: grab;
+}
+
+.inv-catRight {
+  display: flex;
+  align-items: center;
+}
+
+.inv-count {
+  background: #eee;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* ACTION BUTTONS */
+.inv-actionsRow {
+  display: flex;
+  gap: 8px;
+}
+
+/* BASE BUTTON */
+.inv-btn {
+  min-width: 90px; /* 🔥 mismo tamaño */
+  height: 34px;
+
+  border-radius: 12px;
+  border: 1px solid #ddd;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* STATUS */
+.inv-btn.status.on {
+  background: #dff5e8;
+  color: #1a7f4b;
+  border: 1px solid #b7e4c7;
+}
+
+.inv-btn.status.off {
+  background: #f4f4f4;
+  color: #777;
+}
+
+/* EDIT */
+.inv-btn.edit {
+  background: white;
+}
+
+.inv-btn.edit:hover {
+  background: #f2f2f2;
+}
+
+/* DELETE */
+.inv-btn.delete {
+  background: white;
+  color: #c0392b;
+}
+
+.inv-btn.delete:hover {
+  background: #fdecea;
+}
+
+.inv-toggle {
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: none;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+/* NO AGREGADO */
+.inv-toggle.not-added {
+  background: #1f2937;
+  color: #9ca3af;
+}
+
+/* ACTIVO */
+.inv-toggle.in {
+  background: #22c55e;
+  color: white;
+}
+
+/* INACTIVO */
+.inv-toggle.out {
+  background: #374151;
+  color: #f87171;
+}
+
+.inv-highlight {
+  color: #ff6933; /* color marca */
+  font-weight: 600;
+  background: rgba(255, 105, 51, 0.1);
+  padding: 1px 3px;
+  border-radius: 4px;
+}
+
+/* SEARCH BOX */
+.inv-searchBox {
+  margin: 20px 0 25px;
+}
+
+/* INPUT WRAPPER */
+.inv-searchInputWrapper {
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 12px;
+  padding: 8px 12px;
+  gap: 10px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+}
+
+/* INPUT */
+.inv-searchInputWrapper input {
+  border: none;
+  outline: none;
+  flex: 1;
+  font-size: 14px;
+  background: transparent;
+}
+
+/* ICON */
+.inv-searchIcon {
+  opacity: 0.5;
+}
+
+/* CLEAR BTN */
+.inv-clearBtn {
+  background: #eee;
+  border: none;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+}
+
+/* RESULTS CONTAINER */
+.inv-searchResults {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* 🔥 separación entre items */
+}
+
+/* ITEM ROW */
+.inv-searchResults .inv-itemRow {
+  background: #f8f8f8;
+  border-radius: 12px;
+  padding: 12px 16px;
+  transition: all 0.2s ease;
+}
+
+.inv-searchResults .inv-itemRow:hover {
+  background: #fff;
+  transform: translateY(-1px);
+}
+
+/* HIGHLIGHT */
+.inv-highlight {
+  color: #ff6933;
+  font-weight: 600;
+  background: rgba(255, 105, 51, 0.15);
+  padding: 1px 4px;
+  border-radius: 4px;
+}
+
+/* EMPTY STATE */
+.inv-emptySearch {
+  text-align: center;
+  opacity: 0.6;
+  margin-top: 20px;
+}
+
+.inv-catTitle {
+  width: 97%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* izquierda */
+.inv-catLeft {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* derecha */
+.inv-catRight {
+  display: flex;
+  align-items: center;
+}
+
+/* badge contador */
+.inv-count {
+  background: #ffb61c;
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.inv-createSuggestion {
+  margin-top: 10px;
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+.inv-createLink {
+  color: #ffb61c;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.inv-createLink:hover {
+  text-decoration: underline;
+}
+
+.inv-createForm {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.inv-createForm input,
+.inv-createForm select {
+  padding: 8px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+}
+
+.inv-confirmBtn {
+  background: #ffb61c;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.inv-createSuggestion,
+.inv-emptySearch,
+.inv-createLink {
+  pointer-events: auto;
+}

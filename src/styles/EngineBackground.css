@@ -1,0 +1,147 @@
+.engine-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+  background-color: #ffb61c;
+}
+
+/* 🔥 engranaje base */
+.gear {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.14;
+  will-change: transform;
+
+  background:
+    repeating-conic-gradient(
+      #ffb61c 0deg 4deg,
+      #ff6933 4deg 8deg,
+      transparent 8deg 12deg
+    );
+}
+
+/* centro */
+.gear::after {
+  content: "";
+  position: absolute;
+  inset: 28%;
+  background: #ffb61c;
+  border-radius: 50%;
+}
+
+/* 🔥 ANIMACIONES DINÁMICAS */
+@keyframes spinFloat {
+  0% {
+    transform: translate(0px, 0px) rotate(0deg);
+  }
+  50% {
+    transform: translate(20px, -15px) rotate(180deg);
+  }
+  100% {
+    transform: translate(0px, 0px) rotate(360deg);
+  }
+}
+
+@keyframes spinFloatReverse {
+  0% {
+    transform: translate(0px, 0px) rotate(360deg);
+  }
+  50% {
+    transform: translate(-20px, 15px) rotate(180deg);
+  }
+  100% {
+    transform: translate(0px, 0px) rotate(0deg);
+  }
+}
+
+/* 🔥 GEARS */
+
+/* GRANDE */
+.gear-1 {
+  width: 400px;
+  height: 420px;
+  top: 5%;
+  left: 5%;
+  animation: spinFloat 28s ease-in-out infinite;
+}
+
+/* MEDIO */
+.gear-2 {
+  width: 260px;
+  height: 240px;
+  bottom: 10%;
+  right: 8%;
+  animation: spinFloatReverse 22s ease-in-out infinite;
+}
+
+/* MEDIO */
+.gear-3 {
+  width: 180px;
+  height: 160px;
+  top: 55%;
+  left: 18%;
+  animation: spinFloat 18s ease-in-out infinite;
+}
+
+/* PEQUEÑO */
+.gear-4 {
+  width: 120px;
+  height: 100px;
+  top: 25%;
+  right: 22%;
+  animation: spinFloatReverse 14s ease-in-out infinite;
+}
+
+/* NUEVO */
+.gear-5 {
+  width: 220px;
+  height: 200px;
+  top: 8%;
+  right: 6%;
+  animation: spinFloatReverse 20s ease-in-out infinite;
+}
+
+/* NUEVO */
+.gear-6 {
+  width: 110px;
+  height: 120px;
+  top: 10%;
+  right: 50%;
+  animation: spinFloat 12s ease-in-out infinite;
+}
+
+/* NUEVO */
+.gear-7 {
+  width: 160px;
+  height: 150px;
+  bottom: 5%;
+  left: 40%;
+  animation: spinFloatReverse 16s ease-in-out infinite;
+}
+
+/* NUEVO */
+.gear-8 {
+  width: 900px;
+  height: 800px;
+  top: 65%;
+  left: 45%;
+  animation: spinFloat 10s ease-in-out infinite;
+}
+
+/* 🔥 GLOW CENTRAL */
+.engine-glow {
+  position: absolute;
+  width: 600px;
+  height: 700px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(
+    circle,
+    rgba(255, 105, 51, 0.18),
+    rgba(251, 176, 3, 0.1),
+    transparent
+  );
+  filter: blur(80px);
+}

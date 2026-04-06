@@ -3,8 +3,6 @@
   height: 100vh;
   background: var(--bg-soft); /* fondo general suave */
 }
-
-/* SIDEBAR */
 .bo-sidebar {
   width: 220px;
   background: var(--brand-1);
@@ -13,20 +11,16 @@
   display: flex;
   flex-direction: column;
 }
-
 .bo-title {
   font-weight: 700;
   margin-bottom: 25px;
   color: var(--white);
 }
-
-/* NAV */
 .bo-nav {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
-
 .bo-btn {
   background: transparent;
   border: none;
@@ -37,14 +31,10 @@
   border-radius: 8px;
   transition: all 0.15s ease;
 }
-
-/* hover */
 .bo-btn:hover {
   background: var(--brand-3);
   color: var(--white);
 }
-
-/* active */
 .bo-btn.active {
   background: var(--brand-2);
   color: var(--black);
@@ -71,8 +61,6 @@
   padding: 20px;
   overflow: auto;
 }
-
-/* 🔥 FULL SCREEN LOGIN */
 .bo-loginScreen {
    position: relative;
   overflow: hidden;
@@ -80,32 +68,20 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: radial-gradient(
-    circle at center,
-    var(--brand-2) 0%,
-    #ffffff 60%,
-    #cbcbcb 100%
-  );
 }
-
 .bo-bgPizza {
   position: absolute;
-  width: 2600px;
-  height: 2600px;
-
+  width: 3000px;
+  height: 3000px;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-
   animation: spinPizza 30s linear infinite;
-
   opacity: 0.08;
-
   color: var(--brand-2); 
   fill: currentColor;
-
   pointer-events: none;
-  z-index: 0;
+  z-index: 3;
 }
 /* ROTACIÓN */
 @keyframes spinPizza {
@@ -117,13 +93,11 @@
   }
 }
 
-/* LOGIN POR ENCIMA */
+
 .bo-loginCardPro {
   position: relative;
-  z-index: 2;
+  z-index: 4;
 }
-
-/* 🔥 CARD PRO */
 .bo-loginCardPro {
   width: 360px;
   padding: 40px 30px;
@@ -136,35 +110,26 @@
   flex-direction: column;
   align-items: center;
 }
-
-/* LOGO */
 .bo-loginLogo {
   width: 500px;
   height: auto;
   object-fit: contain;
   margin-bottom: 20px;
 }
-
-/* TITLES */
 .bo-loginTitlePro {
   margin: 0;
   font-size: 22px;
   font-weight: 700;
   color: black;
 }
-
 .bo-loginSubtitle {
   margin: 6px 0 20px;
   font-size: 14px;
   color: #666;
 }
-
-/* FORM */
 .bo-loginForm {
   width: 100%;
 }
-
-/* INPUTS */
 .bo-inputGroup input {
   width: 100%;
   padding: 14px 16px;
@@ -176,21 +141,16 @@
   margin-bottom: 14px;
   box-sizing: border-box; /* 🔥 CLAVE PARA QUE NO SE CORTE */
 }
-
 .bo-inputGroup input:focus {
   border: 1px solid var(--brand-2);
   background: #fff;
 }
-
-/* ERROR */
 .bo-loginErrorPro {
   margin-bottom: 12px;
   font-size: 13px;
   color: #d32f2f;
   text-align: center;
 }
-
-/* BUTTON */
 .bo-loginBtnPro {
   width: 100%;
   margin-top: 15px;
@@ -211,16 +171,14 @@
   cursor: pointer;
   transition: 0.2s;
 }
-
 .bo-loginBtnPro:hover {
   transform: translateY(-1px);
   opacity: 0.95;
 }
-
 .bo-engineBackground {
+  z-index: 1; /* 🔥 clave */
   position: absolute !important;
   inset: 0;
-  z-index: 0;
   pointer-events: none;
 }
 
@@ -244,14 +202,42 @@
 
 .bo-loginCardPro {
   position: relative;
-  z-index: 2;
+  z-index: 5;
 }
 
 .bo-bgPizza {
-  z-index: 1;
+  z-index: 2;
 }
-
 .engine-bg {
-  z-index: 0;
+  z-index: 3;
 }
 
+.engine-lines {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  background:
+    repeating-radial-gradient(
+      circle at center,
+      rgba(0, 0, 0, 0.08) 0px,
+      rgba(0, 0, 0, 0.08) 2px,
+      transparent 2px,
+      transparent 22px
+    ),
+    #ffb61c;
+}
+.engine-lines {
+  animation: tunnelMove 10s linear infinite;
+    pointer-events: none;
+  mix-blend-mode: multiply;
+  opacity: 0.3;
+}
+@keyframes tunnelMove {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.4);
+  }
+}

@@ -153,7 +153,7 @@ export default function Backoffice() {
 if (!auth) {
   return (
     <div className="bo-loginScreen">
-
+    <div className="engine-lines"></div>
       <EngineBackground />
 
       <PizzaBg className="bo-bgPizza" />

@@ -1,5 +1,4 @@
 import React from "react";
-import AppFooter from "./AppFooter";
 
 export default function AppLayout({ children }) {
   return (

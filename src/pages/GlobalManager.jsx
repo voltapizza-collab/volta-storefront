@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import "../styles/GlobalManager.css";
 
-import voltaLogo from "../assets/logo/the pizza sale enganine.png";
-import { ReactComponent as PizzaBg } from "../assets/logo/pizza.svg";
 
 // módulos
 import IngredientsModule from "../components/GlobalManager/IngredientsModule";

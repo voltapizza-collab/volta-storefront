@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import api from "../../setupAxios";
 import "../../styles/InventoryModule.css";
 import { DndContext, closestCenter } from "@dnd-kit/core";
@@ -22,12 +22,7 @@ export default function InventoryModule({ partner }) {
 
   const storeId = partner?.storeId;
 
-  useEffect(() => {
-    if (!storeId) return;
-    fetchIngredients();
-  }, [storeId]);
-
-  const fetchIngredients = async () => {
+  const fetchIngredients = useCallback(async () => {
     try {
       const res = await api.get(`/stores/${storeId}/ingredients`);
       const data = Array.isArray(res.data) ? res.data : [];
@@ -46,7 +41,12 @@ export default function InventoryModule({ partner }) {
     } catch (err) {
       console.error(err);
     }
-  };
+  }, [storeId]);
+
+  useEffect(() => {
+    if (!storeId) return;
+    fetchIngredients();
+  }, [storeId, fetchIngredients]);
 
   const grouped = useMemo(() => {
     const map = {};

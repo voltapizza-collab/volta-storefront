@@ -27,6 +27,7 @@ export default function Backoffice() {
   });
 
   const [loginError, setLoginError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     const loadPartners = async () => {
@@ -190,14 +191,23 @@ export default function Backoffice() {
               />
             </div>
 
-            <div className="bo-inputGroup">
+            <div className="bo-inputGroup bo-passwordGroup">
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 name="password"
                 value={loginForm.password}
                 onChange={handleLoginChange}
                 placeholder="Contrasena"
               />
+
+              <button
+                type="button"
+                className="bo-passwordToggle"
+                onClick={() => setShowPassword((prev) => !prev)}
+                aria-label={showPassword ? "Ocultar contrasena" : "Mostrar contrasena"}
+              >
+                {showPassword ? "Ocultar" : "Ver"}
+              </button>
             </div>
 
             {loginError && (

@@ -251,6 +251,9 @@
 .bo-loginForm {
   width: 100%;
 }
+.bo-inputGroup {
+  position: relative;
+}
 .bo-inputGroup input {
   width: 100%;
   padding: 14px 16px;
@@ -265,6 +268,25 @@
 .bo-inputGroup input:focus {
   border: 1px solid var(--brand-2);
   background: #fff;
+}
+.bo-passwordGroup input {
+  padding-right: 88px;
+}
+.bo-passwordToggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  color: #6a3df0;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 4px 6px;
+}
+.bo-passwordToggle:hover {
+  color: #4f27d8;
 }
 .bo-loginErrorPro {
   margin-bottom: 12px;

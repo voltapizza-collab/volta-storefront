@@ -129,7 +129,6 @@ export default function InventoryModule({ partner }) {
       console.error("CREATE INGREDIENT ERROR:", err.response?.data || err);
     }
   };
-
   return (
     <div className="inv-wrapper">
 

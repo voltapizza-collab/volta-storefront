@@ -115,6 +115,10 @@ export default function IngredientsModule() {
   const [suggestions, setSuggestions] = useState([]);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
 
+const getDisplayName = (name) => (name || "").toUpperCase();
+const normalizeIngredientName = (name) =>
+  (name || "").trim().toLowerCase();
+
 const loadIngredients = async () => {
     try {
       setLoading(true);
@@ -180,7 +184,6 @@ const handleApprove = async (id) => {
       { method: "PATCH" }
     );
 
-    loadIngredients();
     loadSuggestions();
   } catch (err) {
     console.error(err);
@@ -198,6 +201,37 @@ const handleReject = async (id) => {
     console.error(err);
   }
 };
+
+const handleDeleteIngredient = async (id, name) => {
+  const confirmed = window.confirm(
+    `Delete ${getDisplayName(name)} from the ingredients table?`
+  );
+
+  if (!confirmed) return;
+
+  try {
+    await fetch(`http://localhost:8080/ingredients/${id}`, {
+      method: "DELETE",
+    });
+
+    loadIngredients();
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+const existingIngredientNames = new Set(
+  ingredients.map((ing) => normalizeIngredientName(ing.name))
+);
+
+const availableBaseIngredients = category
+  ? INGREDIENTS_BASE[category].filter(
+      (item) =>
+        !existingIngredientNames.has(
+          normalizeIngredientName(item.name)
+        )
+    )
+  : [];
 
 const treeData = Object.entries(
   ingredients.reduce((acc, ing) => {
@@ -217,6 +251,7 @@ const treeData = Object.entries(
       )
       .map((i) => ({
         id: `ing-${i.id}`, // 🔥 ID SEGURO
+        ingredientId: i.id,
         name: i.name,
         allergens: i.allergens || [],
       })),
@@ -251,7 +286,7 @@ const treeData = Object.entries(
         >
           <option value="">Select ingredient</option>
           {category &&
-            INGREDIENTS_BASE[category].map((item) => (
+            availableBaseIngredients.map((item) => (
               <option key={item.name} value={item.name}>
                 {item.name}
               </option>
@@ -320,7 +355,12 @@ const treeData = Object.entries(
         >
           
         <div className="gm-tree">
-          <Tree data={treeData} openByDefault={false}>
+          <Tree
+            data={treeData}
+            openByDefault={false}
+            width="100%"
+            height={400}
+          >
             {({ node, style }) => (
               <div
                 style={style}
@@ -338,12 +378,34 @@ const treeData = Object.entries(
 
                   {node.isLeaf && <span className="gm-dot">•</span>}
 
-                  <span className="gm-name">{node.data.name}</span>
+                  <span className="gm-name">
+                    {node.isLeaf
+                      ? getDisplayName(node.data.name)
+                      : node.data.name}
+                  </span>
                 </div>
 
-                {node.isLeaf && node.data.allergens.length > 0 && (
-                  <div className="gm-allergens">
-                    {node.data.allergens.join(", ")}
+                {node.isLeaf && (
+                  <div className="gm-node-right">
+                    {node.data.allergens.length > 0 && (
+                      <div className="gm-allergens">
+                        {node.data.allergens.join(", ")}
+                      </div>
+                    )}
+
+                    <button
+                      type="button"
+                      className="gm-deleteBtn"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteIngredient(
+                          node.data.ingredientId,
+                          node.data.name
+                        );
+                      }}
+                    >
+                      ×
+                    </button>
                   </div>
                 )}
               </div>

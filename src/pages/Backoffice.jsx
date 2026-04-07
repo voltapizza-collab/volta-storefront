@@ -9,6 +9,10 @@ import api from "../setupAxios";
 
 export default function Backoffice() {
   const [activeModule, setActiveModule] = useState("inventory");
+  const [expandedModules, setExpandedModules] = useState({
+    pizzaCreator: false,
+    offers: false,
+  });
   const [partners, setPartners] = useState([]);
   const [loadingPartners, setLoadingPartners] = useState(true);
 
@@ -24,7 +28,6 @@ export default function Backoffice() {
 
   const [loginError, setLoginError] = useState("");
 
-  // 🔥 LOAD PARTNERS
   useEffect(() => {
     const loadPartners = async () => {
       try {
@@ -40,7 +43,6 @@ export default function Backoffice() {
     loadPartners();
   }, []);
 
-  // 🔥 REHIDRATAR storeId SI FALTA
   useEffect(() => {
     const hydrateStore = async () => {
       if (!auth?.partnerId || auth?.storeId) return;
@@ -80,7 +82,6 @@ export default function Backoffice() {
     setLoginError("");
   };
 
-  // 🔥 LOGIN
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -88,7 +89,7 @@ export default function Backoffice() {
     const password = loginForm.password.trim().toLowerCase();
 
     if (!username || !password) {
-      setLoginError("Debes introducir usuario y contraseña.");
+      setLoginError("Debes introducir usuario y contrasena.");
       return;
     }
 
@@ -98,7 +99,7 @@ export default function Backoffice() {
     });
 
     if (!partner) {
-      setLoginError("Credenciales inválidas.");
+      setLoginError("Credenciales invalidas.");
       return;
     }
 
@@ -135,6 +136,13 @@ export default function Backoffice() {
     setActiveModule("inventory");
   };
 
+  const toggleModuleGroup = (group) => {
+    setExpandedModules((prev) => ({
+      ...prev,
+      [group]: !prev[group],
+    }));
+  };
+
   if (loadingPartners) {
     return (
       <div className="bo-container">
@@ -150,95 +158,162 @@ export default function Backoffice() {
     );
   }
 
-if (!auth) {
-  return (
-    <div className="bo-loginScreen">
-    <div className="engine-lines"></div>
-      <EngineBackground />
+  if (!auth) {
+    return (
+      <div className="bo-loginScreen">
+        <div className="engine-lines"></div>
+        <EngineBackground />
 
-      <PizzaBg className="bo-bgPizza" />
+        <PizzaBg className="bo-bgPizza" />
 
-      <div className="bo-loginCardPro">
+        <div className="bo-loginCardPro">
+          <img
+            src={voltaLogo}
+            alt="Volta System"
+            className="bo-loginLogo"
+          />
 
-        <img
-          src={voltaLogo}
-          alt="Volta System"
-          className="bo-loginLogo"
-        />
+          <h1 className="bo-loginTitlePro">Backoffice</h1>
 
-        <h1 className="bo-loginTitlePro">Backoffice</h1>
+          <p className="bo-loginSubtitle">
+            Accede con tu partner slug
+          </p>
 
-        <p className="bo-loginSubtitle">
-          Accede con tu partner slug
-        </p>
-
-        <form onSubmit={handleLogin} className="bo-loginForm">
-
-          <div className="bo-inputGroup">
-            <input
-              type="text"
-              name="username"
-              value={loginForm.username}
-              onChange={handleLoginChange}
-              placeholder="Usuario"
-            />
-          </div>
-
-          <div className="bo-inputGroup">
-            <input
-              type="password"
-              name="password"
-              value={loginForm.password}
-              onChange={handleLoginChange}
-              placeholder="Contraseña"
-            />
-          </div>
-
-          {loginError && (
-            <div className="bo-loginErrorPro">
-              {loginError}
+          <form onSubmit={handleLogin} className="bo-loginForm">
+            <div className="bo-inputGroup">
+              <input
+                type="text"
+                name="username"
+                value={loginForm.username}
+                onChange={handleLoginChange}
+                placeholder="Usuario"
+              />
             </div>
-          )}
 
-          <button type="submit" className="bo-loginBtnPro">
-            Entrar
-          </button>
+            <div className="bo-inputGroup">
+              <input
+                type="password"
+                name="password"
+                value={loginForm.password}
+                onChange={handleLoginChange}
+                placeholder="Contrasena"
+              />
+            </div>
 
-        </form>
+            {loginError && (
+              <div className="bo-loginErrorPro">
+                {loginError}
+              </div>
+            )}
 
+            <button type="submit" className="bo-loginBtnPro">
+              Entrar
+            </button>
+          </form>
+        </div>
       </div>
-
-    </div>
-  );
-}
+    );
+  }
 
   console.log("AUTH FINAL:", auth);
 
   return (
     <div className="bo-container">
-
       <div className="bo-sidebar">
-        <div className="bo-title">Volta — Backoffice</div>
+        <div className="bo-sidebarTop">
+          <div className="bo-title">Volta - Backoffice</div>
 
-        <div className="bo-partnerBox">
-          <div className="bo-partnerLabel">Partner</div>
-          <div className="bo-partnerName">{auth.partnerName}</div>
-          <div className="bo-partnerSlug">@{auth.partnerSlug}</div>
+          <div className="bo-partnerBox">
+            <div className="bo-partnerLabel">Empresa</div>
+            <div className="bo-partnerName">{auth.partnerName}</div>
+          </div>
+
+          <div className="bo-modulesBox">
+            <div className="bo-modulesLabel">Modules</div>
+
+            <div className="bo-nav">
+              <button
+                className={`bo-btn ${activeModule === "inventory" ? "active" : ""}`}
+                onClick={() => setActiveModule("inventory")}
+                type="button"
+              >
+                Inventory
+              </button>
+
+              <button
+                className={`bo-btn bo-btnAccordion ${
+                  expandedModules.pizzaCreator ? "open" : ""
+                }`}
+                onClick={() => toggleModuleGroup("pizzaCreator")}
+                type="button"
+              >
+                <span>Pizza Creator</span>
+                <span className="bo-btnChevron">
+                  {expandedModules.pizzaCreator ? "v" : "^"}
+                </span>
+              </button>
+
+              {expandedModules.pizzaCreator && (
+                <div className="bo-subnav">
+                  <button className="bo-subbtn" disabled type="button">
+                    Extras
+                  </button>
+                </div>
+              )}
+
+              <button className="bo-btn" disabled type="button">
+                Stores
+              </button>
+
+              <button className="bo-btn" disabled type="button">
+                Customers
+              </button>
+
+              <button
+                className={`bo-btn bo-btnAccordion ${
+                  expandedModules.offers ? "open" : ""
+                }`}
+                onClick={() => toggleModuleGroup("offers")}
+                type="button"
+              >
+                <span>Ofertas</span>
+                <span className="bo-btnChevron">
+                  {expandedModules.offers ? "v" : "^"}
+                </span>
+              </button>
+
+              {expandedModules.offers && (
+                <div className="bo-subnav">
+                  <button className="bo-subbtn" disabled type="button">
+                    Enviar SMS
+                  </button>
+
+                  <button className="bo-subbtn" disabled type="button">
+                    Crear Ofertas
+                  </button>
+
+                  <button className="bo-subbtn" disabled type="button">
+                    Incentivos
+                  </button>
+                </div>
+              )}
+
+              <button className="bo-btn" disabled type="button">
+                My Orders
+              </button>
+
+              <button className="bo-btn" disabled type="button">
+                Settings
+              </button>
+            </div>
+          </div>
         </div>
 
-        <div className="bo-nav">
-          <button
-            className={`bo-btn ${activeModule === "inventory" ? "active" : ""}`}
-            onClick={() => setActiveModule("inventory")}
-          >
-            Inventory
-          </button>
-
-          <button className="bo-btn" disabled>Pizzas</button>
-          <button className="bo-btn" disabled>Offers</button>
-        </div>
-
-        <button className="bo-logoutBtn" onClick={handleLogout}>
+        <button
+          className="bo-logoutBtn"
+          onClick={handleLogout}
+          type="button"
+        >
           Logout
         </button>
       </div>
@@ -252,7 +327,6 @@ if (!auth) {
 
         <AppFooter />
       </div>
-
     </div>
   );
 }

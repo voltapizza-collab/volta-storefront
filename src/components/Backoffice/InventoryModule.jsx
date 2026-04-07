@@ -19,6 +19,7 @@ export default function InventoryModule({ partner }) {
   const [openCat, setOpenCat] = useState("");
   const [newIngredientName, setNewIngredientName] = useState("");
   const [newIngredientCategory, setNewIngredientCategory] = useState("");
+  const [createFeedback, setCreateFeedback] = useState("");
 
   const storeId = partner?.storeId;
 
@@ -98,19 +99,45 @@ export default function InventoryModule({ partner }) {
     setCategories(arrayMove(categories, oldIndex, newIndex));
   };
 
+  const getAllergenTags = (ing) => {
+    const allergens = Array.isArray(ing.allergens) ? ing.allergens : [];
+
+    if (allergens.length === 0) {
+      return ["NO ALLERGENIC"];
+    }
+
+    return allergens;
+  };
+
+  const getDisplayName = (name) => (name || "").toUpperCase();
+
   const highlightMatch = (text, query) => {
-    if (!query) return text;
+    if (!query) return <span>{text}</span>;
 
-    const parts = text.split(new RegExp(`(${query})`, "gi"));
+    const normalizedText = String(text || "");
+    const normalizedQuery = query.trim();
 
-    return parts.map((part, i) =>
-      part.toLowerCase() === query.toLowerCase() ? (
-        <span key={i} className="inv-highlight">
-          {part}
-        </span>
-      ) : (
-        part
-      )
+    if (!normalizedQuery) return <span>{normalizedText}</span>;
+
+    const lowerText = normalizedText.toLowerCase();
+    const lowerQuery = normalizedQuery.toLowerCase();
+    const matchIndex = lowerText.indexOf(lowerQuery);
+
+    if (matchIndex === -1) return <span>{normalizedText}</span>;
+
+    const before = normalizedText.slice(0, matchIndex);
+    const match = normalizedText.slice(
+      matchIndex,
+      matchIndex + normalizedQuery.length
+    );
+    const after = normalizedText.slice(matchIndex + normalizedQuery.length);
+
+    return (
+      <>
+        <span key="before">{before}</span>
+        <span key="match" className="inv-highlight">{match}</span>
+        <span key="after">{after}</span>
+      </>
     );
   };
 
@@ -124,9 +151,26 @@ export default function InventoryModule({ partner }) {
       setNewIngredientName("");
       setNewIngredientCategory("");
       setModalMode("search");
+      setCreateFeedback("Ingredient submitted for review.");
 
     } catch (err) {
       console.error("CREATE INGREDIENT ERROR:", err.response?.data || err);
+      setCreateFeedback("We couldn't submit the ingredient request.");
+    }
+  };
+
+  const handleDeleteIngredient = async (ing) => {
+    const confirmed = window.confirm(
+      `Delete ${getDisplayName(ing.name)} from this store?`
+    );
+
+    if (!confirmed) return;
+
+    try {
+      await api.delete(`/stores/${storeId}/ingredients/${ing.id}`);
+      await fetchIngredients();
+    } catch (err) {
+      console.error(err);
     }
   };
   return (
@@ -138,6 +182,7 @@ export default function InventoryModule({ partner }) {
 
         <button
           className="inv-addBtn"
+          type="button"
           onClick={() => {
             setModalOpen(true);
             setModalMode("search");
@@ -172,6 +217,7 @@ export default function InventoryModule({ partner }) {
                         <>
                           <button
                             className="inv-catTitle"
+                            type="button"
                             onClick={() =>
                               setOpenCat(isOpen ? "" : cat)
                             }
@@ -197,18 +243,40 @@ export default function InventoryModule({ partner }) {
                           {isOpen && (
                             <div className="inv-items">
                               {list.map((ing) => (
-                                <div key={ing.id} className="inv-itemRow">
-                                  <div className="inv-itemName">
-                                    {ing.name}
+                                <div
+                                  key={ing.id}
+                                  className={`inv-itemRow ${
+                                    ing.exists && ing.active
+                                      ? "is-onboarding"
+                                      : ""
+                                  }`}
+                                >
+                                  <div className="inv-itemLeft">
+                                    <button
+                                      className="inv-deleteBtn"
+                                      type="button"
+                                      onClick={() =>
+                                        handleDeleteIngredient(ing)
+                                      }
+                                    >
+                                      ×
+                                    </button>
+                                    <div className="inv-itemName">
+                                      {getDisplayName(ing.name)}
+                                    </div>
                                   </div>
 
                                   <div className="inv-itemRight">
-                                    {!ing.exists && (
-                                      <span className="inv-badge new">
-                                        not added
-                                      </span>
-                                    )}
-
+                                    <div className="inv-allergenTags">
+                                      {getAllergenTags(ing).map((tag) => (
+                                        <span
+                                          key={`${ing.id}-${tag}`}
+                                          className="inv-allergenTag"
+                                        >
+                                          {tag}
+                                        </span>
+                                      ))}
+                                    </div>
                                     <button
                                       className={`inv-toggle ${
                                         !ing.exists
@@ -217,13 +285,14 @@ export default function InventoryModule({ partner }) {
                                           ? "in"
                                           : "out"
                                       }`}
+                                      type="button"
                                       onClick={() => toggleIngredient(ing)}
                                     >
                                       {!ing.exists
-                                        ? "ADD"
+                                        ? "AGREGAR"
                                         : ing.active
-                                        ? "IN"
-                                        : "OUT"}
+                                        ? "ONBOARDING"
+                                        : "AGREGAR"}
                                     </button>
                                   </div>
                                 </div>
@@ -249,6 +318,7 @@ export default function InventoryModule({ partner }) {
           onMouseDown={(e) => {
             if (e.target === e.currentTarget) {
               setModalOpen(false);
+              setCreateFeedback("");
             }
           }}
         >
@@ -261,6 +331,12 @@ export default function InventoryModule({ partner }) {
                 ? "Manage Ingredients"
                 : "Create Ingredient"}
             </h3>
+
+            {createFeedback && (
+              <div className="inv-feedbackBanner">
+                {createFeedback}
+              </div>
+            )}
 
             {/* SEARCH MODE */}
             {modalMode === "search" && (
@@ -280,6 +356,7 @@ export default function InventoryModule({ partner }) {
                     {search && (
                       <button
                         className="inv-clearBtn"
+                        type="button"
                         onClick={() => setSearch("")}
                       >
                         ✕
@@ -296,7 +373,11 @@ export default function InventoryModule({ partner }) {
 
                       <button
                         className="inv-createBtn"
-                        onClick={() => setModalMode("create")}
+                        type="button"
+                        onClick={() => {
+                          setCreateFeedback("");
+                          setModalMode("create");
+                        }}
                       >
                         Create new ingredient
                       </button>
@@ -304,19 +385,35 @@ export default function InventoryModule({ partner }) {
                   )}
 
                   {filteredIngredients.map((ing) => (
-                    <div key={ing.id} className="inv-itemRow">
+                    <div
+                      key={`${ing.id}-${search}`}
+                      className="inv-itemRow"
+                    >
 
-                      <div className="inv-itemName">
-                        {highlightMatch(ing.name, search)}
+                      <div className="inv-itemLeft">
+                        <button
+                          className="inv-deleteBtn"
+                          type="button"
+                          onClick={() => handleDeleteIngredient(ing)}
+                        >
+                          ×
+                        </button>
+                        <div className="inv-itemName">
+                          {highlightMatch(getDisplayName(ing.name), search)}
+                        </div>
                       </div>
 
                       <div className="inv-itemRight">
-
-                        {!ing.exists && (
-                          <span className="inv-badge new">
-                            not added
-                          </span>
-                        )}
+                        <div className="inv-allergenTags">
+                          {getAllergenTags(ing).map((tag) => (
+                            <span
+                              key={`${ing.id}-${tag}`}
+                              className="inv-allergenTag"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
 
                         {ing.exists && !ing.active && (
                           <span className="inv-tag off">
@@ -332,13 +429,14 @@ export default function InventoryModule({ partner }) {
                               ? "in"
                               : "out"
                           }`}
+                          type="button"
                           onClick={() => toggleIngredient(ing)}
                         >
                           {!ing.exists
-                            ? "ADD"
+                            ? "AGREGAR"
                             : ing.active
-                            ? "IN"
-                            : "OUT"}
+                            ? "ONBOARDING"
+                            : "AGREGAR"}
                         </button>
 
                       </div>
@@ -385,13 +483,18 @@ export default function InventoryModule({ partner }) {
                 <div className="inv-actions">
                   <button
                     className="inv-cancelBtn"
-                    onClick={() => setModalMode("search")}
+                    type="button"
+                    onClick={() => {
+                      setCreateFeedback("");
+                      setModalMode("search");
+                    }}
                   >
                     Back
                   </button>
 
                   <button
                     className="inv-confirmBtn"
+                    type="button"
                     onClick={handleCreateIngredient}
                     disabled={
                       !newIngredientName || !newIngredientCategory

@@ -28,6 +28,15 @@
   gap: 8px;
 }
 
+.gm-node-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+  min-width: 180px;
+  justify-content: flex-end;
+}
+
 /* CATEGORY */
 .gm-node.parent {
   color: #fbb003;
@@ -58,6 +67,28 @@
 .gm-allergens {
   font-size: 11px;
   opacity: 0.6;
+}
+
+.gm-deleteBtn {
+  width: 20px;
+  height: 20px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  padding: 0;
+}
+
+.gm-deleteBtn:hover {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .inv-toggle {

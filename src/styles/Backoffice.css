@@ -4,41 +4,162 @@
   background: var(--bg-soft); /* fondo general suave */
 }
 .bo-sidebar {
-  width: 220px;
+  width: 260px;
   background: var(--brand-1);
   color: var(--white);
-  padding: 20px;
+  padding: 22px 18px;
   display: flex;
   flex-direction: column;
+  gap: 18px;
+}
+.bo-sidebarTop {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
 }
 .bo-title {
   font-weight: 700;
-  margin-bottom: 25px;
+  font-size: 20px;
+  line-height: 1.2;
   color: var(--white);
+}
+.bo-partnerBox {
+  padding: 14px 14px 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+.bo-partnerLabel {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 8px;
+}
+.bo-partnerName {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--white);
+}
+.bo-modulesBox {
+  padding: 14px;
+  border-radius: 20px;
+  background: linear-gradient(
+    180deg,
+    rgba(106, 61, 240, 0.34),
+    rgba(106, 61, 240, 0.16)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+.bo-modulesLabel {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+  margin-bottom: 10px;
 }
 .bo-nav {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
+
 .bo-btn {
-  background: transparent;
-  border: none;
-  color: rgba(255, 255, 255, 0.7);
-  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.82);
+  padding: 12px 14px;
   text-align: left;
   cursor: pointer;
-  border-radius: 8px;
-  transition: all 0.15s ease;
+  border-radius: 14px;
+  transition: all 0.18s ease;
+  font-weight: 600;
 }
+
 .bo-btn:hover {
-  background: var(--brand-3);
+  background: rgba(255, 255, 255, 0.12);
   color: var(--white);
+  border-color: rgba(255, 255, 255, 0.18);
 }
+
 .bo-btn.active {
   background: var(--brand-2);
   color: var(--black);
-  font-weight: 600;
+  font-weight: 700;
+  border-color: transparent;
+  box-shadow: 0 8px 18px rgba(255, 182, 28, 0.2);
+}
+
+.bo-btnAccordion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bo-btnAccordion.open {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.bo-btnChevron {
+  font-size: 14px;
+  line-height: 1;
+  opacity: 0.85;
+}
+
+.bo-btn:disabled {
+  opacity: 0.82;
+}
+
+.bo-subnav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 2px 0 4px 14px;
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
+  margin-left: 6px;
+}
+
+.bo-subbtn {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 14px;
+  text-align: left;
+  cursor: not-allowed;
+  transition: all 0.18s ease;
+}
+
+.bo-subbtn:hover {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.bo-btn:disabled,
+.bo-subbtn:disabled {
+  cursor: not-allowed;
+}
+.bo-logoutBtn {
+  margin-top: auto;
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--white);
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+.bo-logoutBtn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.22);
 }
 
 /* WORKSPACE */
@@ -221,7 +342,7 @@
     repeating-radial-gradient(
       circle at center,
       rgba(0, 0, 0, 0.08) 0px,
-      rgba(0, 0, 0, 0.08) 2px,
+      rgba(0, 0, 0, 0.08) 4px,
       transparent 2px,
       transparent 22px
     ),

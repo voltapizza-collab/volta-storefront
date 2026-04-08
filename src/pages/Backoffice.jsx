@@ -3,12 +3,14 @@ import "../styles/Backoffice.css";
 import voltaLogo from "../assets/logo/the pizza sale enganine.png";
 import { ReactComponent as PizzaBg } from "../assets/logo/pizza.svg";
 import InventoryModule from "../components/Backoffice/InventoryModule";
+import PizzaCreator from "../components/Backoffice/PizzaCreator";
 import EngineBackground from "../components/Backoffice/EngineBackground";
 import AppFooter from "../components/Layout/AppFooter";
 import api from "../setupAxios";
 
 export default function Backoffice() {
   const [activeModule, setActiveModule] = useState("inventory");
+  const [activeModuleGroup, setActiveModuleGroup] = useState("inventory");
   const [expandedModules, setExpandedModules] = useState({
     pizzaCreator: false,
     offers: false,
@@ -135,6 +137,7 @@ export default function Backoffice() {
     setAuth(null);
     localStorage.removeItem("volta_backoffice_auth");
     setActiveModule("inventory");
+    setActiveModuleGroup("inventory");
   };
 
   const toggleModuleGroup = (group) => {
@@ -142,7 +145,12 @@ export default function Backoffice() {
       ...prev,
       [group]: !prev[group],
     }));
+    setActiveModuleGroup(group);
   };
+
+  const isPizzaCreatorActive = activeModule === "pizzaCreator";
+  const isPizzaCreatorGroupActive =
+    activeModuleGroup === "pizzaCreator" || isPizzaCreatorActive;
 
   if (loadingPartners) {
     return (
@@ -243,8 +251,13 @@ export default function Backoffice() {
 
             <div className="bo-nav">
               <button
-                className={`bo-btn ${activeModule === "inventory" ? "active" : ""}`}
-                onClick={() => setActiveModule("inventory")}
+                className={`bo-btn ${
+                  activeModuleGroup === "inventory" ? "active" : ""
+                }`}
+                onClick={() => {
+                  setActiveModule("inventory");
+                  setActiveModuleGroup("inventory");
+                }}
                 type="button"
               >
                 Inventory
@@ -252,6 +265,8 @@ export default function Backoffice() {
 
               <button
                 className={`bo-btn bo-btnAccordion ${
+                  isPizzaCreatorGroupActive ? "active" : ""
+                } ${
                   expandedModules.pizzaCreator ? "open" : ""
                 }`}
                 onClick={() => toggleModuleGroup("pizzaCreator")}
@@ -264,9 +279,22 @@ export default function Backoffice() {
               </button>
 
               {expandedModules.pizzaCreator && (
-                <div className="bo-subnav">
-                  <button className="bo-subbtn" disabled type="button">
-                    Extras
+                <div
+                  className={`bo-subnav ${
+                    isPizzaCreatorGroupActive ? "is-active-group" : ""
+                  }`}
+                >
+                  <button
+                    className={`bo-subbtn ${
+                      isPizzaCreatorActive ? "active" : ""
+                    }`}
+                    onClick={() => {
+                      setActiveModule("pizzaCreator");
+                      setActiveModuleGroup("pizzaCreator");
+                    }}
+                    type="button"
+                  >
+                    Productos
                   </button>
                 </div>
               )}
@@ -332,6 +360,10 @@ export default function Backoffice() {
         <div className="bo-workspace">
           {activeModule === "inventory" && auth.storeId && (
             <InventoryModule partner={auth} />
+          )}
+
+          {activeModule === "pizzaCreator" && auth.partnerId && (
+            <PizzaCreator partner={auth} />
           )}
         </div>
 

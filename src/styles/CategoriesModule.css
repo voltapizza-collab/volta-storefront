@@ -1,0 +1,212 @@
+.gmc-container {
+  display: grid;
+  gap: 20px;
+  color: var(--brand-2);
+}
+
+.gmc-header {
+  display: grid;
+  gap: 6px;
+}
+
+.gmc-title {
+  margin: 0;
+  color: #f29b00;
+  font-size: 38px;
+  line-height: 1;
+}
+
+.gmc-subtitle {
+  margin: 0;
+  font-size: 14px;
+  opacity: 0.72;
+}
+
+.gmc-createCard,
+.gmc-listCard {
+  background: #121212;
+  border: 1px solid #2c2c2c;
+  border-radius: 14px;
+  padding: 18px;
+  color: #f3efe1;
+}
+
+.gmc-label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: 800;
+  color: #f29b00;
+}
+
+.gmc-createRow {
+  display: flex;
+  gap: 10px;
+}
+
+.gmc-input {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid #444;
+  border-radius: 10px;
+  padding: 12px 14px;
+  background: #1f1f1f;
+  color: #fff;
+  font-size: 15px;
+}
+
+.gmc-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.gmc-createBtn,
+.gmc-editBtn,
+.gmc-saveBtn,
+.gmc-cancelBtn,
+.gmc-deleteBtn,
+.gmc-dragHandle {
+  border: 1px solid #5c5c5c;
+  border-radius: 10px;
+  background: #232323;
+  color: #fff;
+  font-weight: 800;
+}
+
+.gmc-createBtn {
+  min-width: 120px;
+  padding: 0 16px;
+  cursor: pointer;
+}
+
+.gmc-createBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.gmc-listHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+  color: #f29b00;
+}
+
+.gmc-list {
+  display: grid;
+  gap: 10px;
+}
+
+.gmc-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 14px;
+  border: 1px solid #323232;
+  border-radius: 12px;
+  background: #1a1a1a;
+}
+
+.gmc-rowStatic {
+  grid-template-columns: 1fr auto;
+}
+
+.gmc-dragHandle {
+  width: 42px;
+  height: 42px;
+  font-size: 22px;
+  cursor: grab;
+}
+
+.gmc-rowInfo {
+  min-width: 0;
+}
+
+.gmc-inlineInput {
+  width: 100%;
+  border: 1px solid #4a4a4a;
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: #232323;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.gmc-rowName {
+  font-size: 18px;
+  font-weight: 900;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gmc-rowMeta {
+  margin-top: 4px;
+  font-size: 12px;
+  opacity: 0.65;
+}
+
+.gmc-deleteBtn {
+  padding: 11px 14px;
+  cursor: pointer;
+  border-color: rgba(255, 87, 87, 0.5);
+  color: #ff9c9c;
+}
+
+.gmc-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.gmc-editBtn,
+.gmc-saveBtn,
+.gmc-cancelBtn {
+  padding: 11px 14px;
+  cursor: pointer;
+}
+
+.gmc-editBtn {
+  color: #f8f2d2;
+}
+
+.gmc-saveBtn {
+  border-color: rgba(62, 207, 142, 0.45);
+  color: #9cf0c8;
+}
+
+.gmc-cancelBtn {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.gmc-empty {
+  margin: 0;
+  opacity: 0.65;
+}
+
+@media (max-width: 720px) {
+  .gmc-title {
+    font-size: 30px;
+  }
+
+  .gmc-createRow,
+  .gmc-row {
+    grid-template-columns: 1fr;
+  }
+
+  .gmc-createBtn,
+  .gmc-editBtn,
+  .gmc-saveBtn,
+  .gmc-cancelBtn,
+  .gmc-deleteBtn,
+  .gmc-dragHandle {
+    width: 100%;
+  }
+
+  .gmc-actions {
+    justify-content: stretch;
+  }
+}

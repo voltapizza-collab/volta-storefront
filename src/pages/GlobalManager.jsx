@@ -4,6 +4,7 @@ import "../styles/GlobalManager.css";
 
 // módulos
 import IngredientsModule from "../components/GlobalManager/IngredientsModule";
+import CategoriesModule from "../components/GlobalManager/CategoriesModule";
 
 // footer global
 import AppFooter from "../components/Layout/AppFooter";
@@ -135,7 +136,12 @@ export default function GlobalManager() {
             Ingredients
           </button>
 
-          <button className="gm-btn" disabled>
+          <button
+            className={`gm-btn ${
+              activeModule === "categories" ? "active" : ""
+            }`}
+            onClick={() => setActiveModule("categories")}
+          >
             Categories
           </button>
 
@@ -164,8 +170,9 @@ export default function GlobalManager() {
 
         <div className="gm-workspace">
           {activeModule === "ingredients" && <IngredientsModule />}
+          {activeModule === "categories" && <CategoriesModule />}
 
-          {activeModule !== "ingredients" && (
+          {!["ingredients", "categories"].includes(activeModule) && (
             <div style={{ opacity: 0.6 }}>
               Module not implemented yet
             </div>

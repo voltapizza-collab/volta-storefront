@@ -230,6 +230,10 @@ const availableBaseIngredients = category
         !existingIngredientNames.has(
           normalizeIngredientName(item.name)
         )
+    ).sort((a, b) =>
+      getDisplayName(a.name).localeCompare(getDisplayName(b.name), "es", {
+        sensitivity: "base",
+      })
     )
   : [];
 
@@ -288,7 +292,7 @@ const treeData = Object.entries(
           {category &&
             availableBaseIngredients.map((item) => (
               <option key={item.name} value={item.name}>
-                {item.name}
+                {getDisplayName(item.name)}
               </option>
             ))}
         </select>

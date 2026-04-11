@@ -354,6 +354,15 @@ export default function PizzaCreator({ partner }) {
     }));
 
   const onIngredientSelect = (i, id) => {
+    if (!id) {
+      setForm((p) => {
+        const ing = [...p.ingredients];
+        ing[i] = { ...ing[i], id: "", name: "" };
+        return { ...p, ingredients: ing };
+      });
+      return;
+    }
+
     const row = inventory.find((r) => r.id === Number(id));
     if (!row) return;
 
@@ -574,22 +583,22 @@ export default function PizzaCreator({ partner }) {
                       </select>
                     </div>
 
-                    <div className="pc-sizeQtyGrid">
+                    <div className="pc-sizeQtyScroller">
+                    <div className="pc-sizeQtyGrid pc-sizeQtyGrid--compact">
                       {selectedSizes.map((sz) => (
-                        <div key={`${i}-${sz}`} className="ing-col">
-                          <span className="ing-sizeLabel">{sz}</span>
-                          <div className="ing-qtyBubble">
-                            <input
-                              type="text"
-                              className="ing-qty"
-                              inputMode="numeric"
-                              maxLength={3}
-                              value={(row.qtyBySize || {})[sz] ?? 0}
-                              onChange={(e) => onQtyChange(i, sz, e.target.value)}
-                            />
-                          </div>
+                        <div key={`${i}-${sz}`} className="pc-sizeQtyItem">
+                          <span className="pc-sizeQtyLabel">{sz}</span>
+                          <input
+                            type="text"
+                            className="pc-sizeQtyInput"
+                            inputMode="numeric"
+                            maxLength={3}
+                            value={(row.qtyBySize || {})[sz] ?? 0}
+                            onChange={(e) => onQtyChange(i, sz, e.target.value)}
+                          />
                         </div>
                       ))}
+                    </div>
                     </div>
 
                     <div className="pc-rowAside">

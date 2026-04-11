@@ -1,4 +1,6 @@
 import { Routes, Route } from "react-router-dom";
+import PartnerPage from "./pages/PartnerPage";
+import PartnerOrderPage from "./pages/PartnerOrderPage";
 import StorePage from "./pages/StorePage";
 import AdminStoresPage from "./pages/AdminStoresPage";
 import MenuPage from "./pages/MenuPage";
@@ -14,6 +16,8 @@ function App() {
         <Route path="/admin/stores" element={<AdminStoresPage />} />
 
         {/* STORE (motor de ventas) */}
+        <Route path="/:partnerSlug" element={<PartnerPage />} />
+        <Route path="/:partnerSlug/order" element={<PartnerOrderPage />} />
         <Route path="/:partnerSlug/:storeSlug" element={<StorePage />} />
         <Route path="/:partnerSlug/:storeSlug/menu" element={<MenuPage />} />
 

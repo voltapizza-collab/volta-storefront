@@ -1,0 +1,511 @@
+.sf-shell {
+  min-height: 100%;
+  padding: 32px 20px 48px;
+  background:
+    radial-gradient(circle at top, rgba(106, 61, 240, 0.14), transparent 32%),
+    linear-gradient(180deg, #fcfbff 0%, #fff8ef 100%);
+  color: var(--black);
+}
+
+.sf-wrap {
+  width: min(1120px, 100%);
+  margin: 0 auto;
+}
+
+.sf-gate {
+  min-height: calc(100vh - 120px);
+  display: grid;
+  place-items: center;
+}
+
+.sf-gateCard,
+.sf-menuHero,
+.sf-menuCard {
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(59, 0, 139, 0.1);
+  box-shadow: 0 22px 48px rgba(59, 0, 139, 0.08);
+}
+
+.sf-gateCard {
+  width: min(540px, 100%);
+  padding: 42px 34px;
+  border-radius: 32px;
+  text-align: center;
+}
+
+.sf-gateTitle,
+.sf-menuTitle,
+.sf-menuCardTitle {
+  color: var(--brand-1);
+  font-weight: 900;
+}
+
+.sf-gateTitle {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3rem);
+  letter-spacing: -0.04em;
+}
+
+.sf-gateMeta,
+.sf-menuLead,
+.sf-menuCardMeta,
+.sf-chip {
+  color: rgba(0, 0, 0, 0.64);
+}
+
+.sf-gateMeta {
+  margin: 14px 0 28px;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.sf-gateButton {
+  border: none;
+  border-radius: 18px;
+  padding: 18px 28px;
+  background: linear-gradient(90deg, var(--brand-2), #ffc233);
+  color: var(--brand-1);
+  font-size: 1rem;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 16px 32px rgba(255, 182, 28, 0.24);
+}
+
+.sf-menu {
+  display: grid;
+  gap: 20px;
+}
+
+.sf-entry {
+  min-height: calc(100vh - 120px);
+  display: grid;
+  place-items: center;
+}
+
+.sf-entryCard {
+  width: min(820px, 100%);
+  padding: 28px;
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(59, 0, 139, 0.1);
+  box-shadow: 0 22px 48px rgba(59, 0, 139, 0.08);
+  display: grid;
+  gap: 20px;
+}
+
+.sf-entryTopbar,
+.sf-menuHeroTop,
+.sf-entryActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.sf-textBack,
+.sf-secondaryBtn,
+.sf-primaryBtn,
+.sf-offersBtn {
+  border-radius: 16px;
+  padding: 12px 16px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.sf-textBack,
+.sf-secondaryBtn {
+  border: 1px solid rgba(59, 0, 139, 0.12);
+  background: #fff;
+  color: var(--brand-1);
+}
+
+.sf-primaryBtn,
+.sf-offersBtn {
+  border: none;
+  background: linear-gradient(90deg, var(--brand-2), #ffc233);
+  color: var(--brand-1);
+  box-shadow: 0 14px 26px rgba(255, 182, 28, 0.2);
+}
+
+.sf-primaryBtn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.sf-kicker,
+.sf-sectionLabel,
+.sf-serviceEyebrow,
+.sf-fieldLabel,
+.sf-inlineLabel {
+  color: var(--brand-1);
+  font-size: 0.86rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.sf-entryTitle {
+  margin: 8px 0 0;
+  color: var(--brand-1);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+}
+
+.sf-entryLead,
+.sf-serviceBody,
+.sf-inlineText,
+.sf-summaryText {
+  color: rgba(0, 0, 0, 0.66);
+  font-weight: 700;
+  line-height: 1.55;
+}
+
+.sf-serviceSplit {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.sf-serviceCard {
+  display: grid;
+  gap: 10px;
+  padding: 20px;
+  text-align: left;
+  border-radius: 24px;
+  border: 1px solid rgba(59, 0, 139, 0.08);
+  background: linear-gradient(180deg, #ffffff, #fffaf4);
+  cursor: pointer;
+  transition:
+    transform 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.sf-serviceCard.is-active {
+  border-color: rgba(255, 182, 28, 0.48);
+  box-shadow: 0 16px 30px rgba(255, 182, 28, 0.14);
+  transform: translateY(-1px);
+}
+
+.sf-serviceTitle {
+  color: var(--brand-1);
+  font-size: 1.2rem;
+}
+
+.sf-modePanel {
+  display: grid;
+  gap: 12px;
+  padding: 18px 20px;
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(106, 61, 240, 0.06), rgba(255, 182, 28, 0.08));
+  border: 1px solid rgba(59, 0, 139, 0.08);
+}
+
+.sf-stepPanel {
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    opacity 0.18s ease;
+}
+
+.sf-stepPanel.is-pending {
+  opacity: 0.94;
+}
+
+.sf-stepPanel.is-complete {
+  border-color: rgba(255, 182, 28, 0.45);
+  box-shadow: 0 18px 36px rgba(255, 182, 28, 0.12);
+}
+
+.sf-stepHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.sf-stepTag,
+.sf-stepState {
+  border-radius: 999px;
+  font-weight: 900;
+}
+
+.sf-stepTag {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  background: rgba(59, 0, 139, 0.08);
+  color: var(--brand-1);
+  font-size: 0.8rem;
+  margin-bottom: 8px;
+}
+
+.sf-stepState {
+  padding: 8px 12px;
+  background: rgba(59, 0, 139, 0.06);
+  color: rgba(59, 0, 139, 0.72);
+  font-size: 0.82rem;
+  white-space: nowrap;
+}
+
+.sf-stepState.is-on {
+  background: rgba(255, 182, 28, 0.2);
+  color: var(--brand-1);
+}
+
+.sf-inlineStat {
+  display: grid;
+  gap: 6px;
+}
+
+.sf-inlineStat--success {
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.74);
+  border: 1px solid rgba(255, 182, 28, 0.34);
+}
+
+.sf-inlineValue {
+  color: var(--brand-1);
+  font-size: 1.2rem;
+  font-weight: 900;
+}
+
+.sf-input {
+  width: 100%;
+  border: 1px solid rgba(59, 0, 139, 0.12);
+  border-radius: 18px;
+  padding: 14px 16px;
+  background: linear-gradient(180deg, #ffffff, #fffaf4);
+  color: var(--black);
+  outline: none;
+  box-sizing: border-box;
+}
+
+.sf-input:focus {
+  border-color: rgba(106, 61, 240, 0.45);
+  box-shadow: 0 0 0 4px rgba(106, 61, 240, 0.08);
+}
+
+.sf-storeGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.sf-storeCard {
+  display: grid;
+  gap: 8px;
+  padding: 16px;
+  text-align: left;
+  border-radius: 20px;
+  border: 1px solid rgba(59, 0, 139, 0.08);
+  background: rgba(255, 255, 255, 0.82);
+  color: inherit;
+  cursor: pointer;
+  transition:
+    transform 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    opacity 0.18s ease;
+}
+
+.sf-storeCard:hover {
+  transform: translateY(-1px);
+}
+
+.sf-storeGrid:has(.sf-storeCard.is-selected) .sf-storeCard:not(.is-selected) {
+  opacity: 0.62;
+}
+
+.sf-storeCard.is-selected {
+  border-color: rgba(255, 182, 28, 0.52);
+  box-shadow: 0 18px 30px rgba(255, 182, 28, 0.16);
+  background: linear-gradient(180deg, #fffef9, #fff7e5);
+  opacity: 1;
+}
+
+.sf-storeCardKicker,
+.sf-storeCardState {
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.sf-storeCardKicker {
+  color: rgba(59, 0, 139, 0.72);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.sf-storeCardTitle {
+  color: var(--brand-1);
+  font-size: 1.1rem;
+}
+
+.sf-storeCardMeta {
+  color: rgba(0, 0, 0, 0.64);
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.sf-storeCardState {
+  color: var(--brand-1);
+}
+
+.sf-menuHero {
+  padding: 28px;
+  border-radius: 28px;
+}
+
+.sf-menuTitle {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 2.7rem);
+  letter-spacing: -0.04em;
+}
+
+.sf-menuLead {
+  margin: 12px 0 0;
+  font-weight: 700;
+}
+
+.sf-heroActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.sf-serviceSummary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
+.sf-menuGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 18px;
+}
+
+.sf-menuCard {
+  padding: 22px;
+  border-radius: 24px;
+  display: grid;
+  gap: 16px;
+}
+
+.sf-menuCardHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.sf-menuCardTitle {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.sf-menuCardMeta {
+  margin-top: 6px;
+  font-weight: 700;
+}
+
+.sf-badge {
+  padding: 7px 11px;
+  border-radius: 999px;
+  background: rgba(106, 61, 240, 0.08);
+  color: var(--brand-1);
+  font-size: 0.8rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.sf-priceRow,
+.sf-chipRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.sf-priceTag,
+.sf-chip {
+  border-radius: 999px;
+  padding: 8px 10px;
+  font-weight: 800;
+}
+
+.sf-priceTag {
+  background: rgba(255, 182, 28, 0.14);
+  color: var(--brand-1);
+}
+
+.sf-chip {
+  background: rgba(59, 0, 139, 0.06);
+}
+
+.sf-sectionLabel {
+  color: var(--brand-1);
+  font-size: 0.86rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.sf-empty {
+  padding: 28px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(59, 0, 139, 0.1);
+  color: rgba(0, 0, 0, 0.65);
+  font-weight: 700;
+}
+
+.sf-loading,
+.sf-error {
+  min-height: calc(100vh - 120px);
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.sf-errorCard,
+.sf-loadingCard {
+  padding: 26px 28px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(59, 0, 139, 0.1);
+  box-shadow: 0 18px 42px rgba(59, 0, 139, 0.08);
+  color: var(--brand-1);
+  font-weight: 800;
+}
+
+@media (max-width: 720px) {
+  .sf-shell {
+    padding: 20px 14px 36px;
+  }
+
+  .sf-gateCard,
+  .sf-entryCard,
+  .sf-menuHero,
+  .sf-menuCard {
+    padding: 20px;
+  }
+
+  .sf-entryTopbar,
+  .sf-menuHeroTop,
+  .sf-entryActions,
+  .sf-serviceSplit {
+    grid-template-columns: 1fr;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .sf-serviceSplit {
+    display: grid;
+  }
+}

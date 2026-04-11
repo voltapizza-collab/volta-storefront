@@ -12,6 +12,172 @@
   align-items: start;
 }
 
+.pc-overview {
+  display: grid;
+  gap: 18px;
+}
+
+.pc-overviewHero {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: center;
+}
+
+.pc-overviewTitle {
+  margin: 0;
+  color: var(--brand-1);
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+}
+
+.pc-overviewIntro {
+  margin: 10px 0 0;
+  max-width: 720px;
+  color: rgba(0, 0, 0, 0.68);
+  font-weight: 700;
+  line-height: 1.55;
+}
+
+.pc-overviewCta {
+  border: none;
+  border-radius: 18px;
+  padding: 15px 18px;
+  background: linear-gradient(90deg, var(--brand-2), #ffc233);
+  color: var(--brand-1);
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 14px 30px rgba(255, 182, 28, 0.22);
+  white-space: nowrap;
+}
+
+.pc-overviewStats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.pc-kpiCard {
+  display: grid;
+  gap: 8px;
+  padding: 18px;
+  border-radius: 22px;
+  background: linear-gradient(180deg, #ffffff, #fff8ef);
+  border: 1px solid rgba(59, 0, 139, 0.08);
+  box-shadow: 0 16px 34px rgba(59, 0, 139, 0.06);
+}
+
+.pc-kpiLabel,
+.pc-timelineLabel {
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(59, 0, 139, 0.7);
+  font-weight: 900;
+}
+
+.pc-kpiValue,
+.pc-timelineValue {
+  color: var(--brand-1);
+  font-size: 1.55rem;
+  font-weight: 900;
+  line-height: 1.1;
+}
+
+.pc-kpiMeta,
+.pc-timelineMeta,
+.pc-overviewRowMeta {
+  color: rgba(0, 0, 0, 0.62);
+  font-weight: 700;
+}
+
+.pc-overviewGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.pc-overviewList {
+  display: grid;
+  gap: 10px;
+}
+
+.pc-overviewRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #ffffff, #fffaf4);
+  border: 1px solid rgba(59, 0, 139, 0.08);
+}
+
+.pc-overviewRowTitle {
+  color: var(--brand-1);
+  font-weight: 900;
+}
+
+.pc-overviewRowBadge {
+  min-width: 44px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(255, 182, 28, 0.16), rgba(106, 61, 240, 0.12));
+  color: var(--brand-1);
+  text-align: center;
+  font-weight: 900;
+}
+
+.pc-sizeCoverage {
+  display: grid;
+  gap: 12px;
+}
+
+.pc-sizeCoverageRow {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) 30px;
+  align-items: center;
+  gap: 12px;
+}
+
+.pc-sizeCoverageLabel {
+  color: var(--brand-1);
+  font-weight: 900;
+}
+
+.pc-sizeCoverageTrack {
+  height: 12px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(59, 0, 139, 0.08);
+}
+
+.pc-sizeCoverageFill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--brand-2), #ffc233);
+}
+
+.pc-sizeCoverageValue {
+  text-align: right;
+  color: rgba(0, 0, 0, 0.68);
+  font-weight: 800;
+}
+
+.pc-timelineCard {
+  display: grid;
+  gap: 6px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #ffffff, #fffaf4);
+  border: 1px solid rgba(59, 0, 139, 0.08);
+}
+
+.pc-timelineCard + .pc-timelineCard {
+  margin-top: 12px;
+}
+
 .pc-title-creator {
   grid-column: 1 / -1;
   margin: 0 0 4px;
@@ -191,74 +357,63 @@
   scrollbar-width: thin;
 }
 
-.ing-col {
-  position: relative;
-  display: inline-flex;
-  align-items: flex-end;
-  justify-content: flex-start;
-  flex: 0 0 auto;
-  width: 78px;
-  min-width: 78px;
-  height: 54px;
-  padding: 0 12px 9px;
-  border-radius: 14px;
-  background: linear-gradient(180deg, #ffffff, #fffaf2);
-  border: 2px solid var(--brand-2);
-  box-sizing: border-box;
-  overflow: visible;
-  margin-top: 18px;
+.pc-sizeQtyScroller {
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
 }
 
-.ing-sizeLabel {
-  min-width: 12px;
+.pc-sizeQtyGrid--compact {
+  gap: 12px;
+  padding: 4px 0;
+  align-items: center;
+  flex-wrap: nowrap;
+  overflow: visible;
+  min-width: max-content;
+}
+
+.pc-sizeQtyItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.pc-sizeQtyLabel {
+  min-width: 14px;
   color: var(--brand-2);
-  font-size: 12px;
+  font-size: 0.95rem;
   font-weight: 900;
-  letter-spacing: 0.05em;
   line-height: 1;
   text-transform: uppercase;
 }
 
-.ing-qtyBubble {
-  position: absolute;
-  top: -16px;
-  right: -14px;
-  width: 32px;
-  height: 32px;
-  border-radius: 999px;
-  background: linear-gradient(135deg, var(--brand-3), var(--brand-1));
-  box-shadow: 0 7px 16px rgba(59, 0, 139, 0.16);
-  z-index: 2;
-}
-
-.ing-qty {
-  width: 100%;
-  min-width: 100%;
-  max-width: 100%;
-  height: 100%;
-  padding: 0;
+.pc-sizeQtyInput {
+  width: 56px;
+  min-width: 56px;
+  max-width: 56px;
+  padding: 8px 6px;
   text-align: center;
-  border: none;
-  border-radius: 999px;
-  background: var(--brand-1);
-  color: var(--white);
-  box-shadow: none;
-  font-size: 11px;
+  border: 1px solid rgba(59, 0, 139, 0.14);
+  border-radius: 12px;
+  background: linear-gradient(180deg, #ffffff, #fffaf4);
+  color: var(--black);
   font-weight: 800;
   appearance: textfield;
-  line-height: 32px;
-  position: relative;
-  z-index: 1;
+  font-size: 0.95rem;
 }
 
-.ing-qty::-webkit-outer-spin-button,
-.ing-qty::-webkit-inner-spin-button {
+.pc-sizeQtyInput::-webkit-outer-spin-button,
+.pc-sizeQtyInput::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
-.ing-qty:focus {
+.pc-sizeQtyInput:focus {
   outline: none;
+  border-color: rgba(106, 61, 240, 0.45);
+  box-shadow: 0 0 0 4px rgba(106, 61, 240, 0.08);
 }
 
 .ing-row button {
@@ -631,6 +786,11 @@
 }
 
 @media (max-width: 979px) {
+  .pc-overviewStats,
+  .pc-overviewGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+
   .pc-layout {
     grid-template-columns: 1fr;
   }
@@ -641,6 +801,16 @@
 }
 
 @media (max-width: 720px) {
+  .pc-overviewHero {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .pc-overviewStats,
+  .pc-overviewGrid {
+    grid-template-columns: 1fr;
+  }
+
   .pc-title-creator {
     font-size: 1.6rem;
   }

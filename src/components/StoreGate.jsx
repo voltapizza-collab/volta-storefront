@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import "../styles/Storefront.css";
 
 export default function StoreGate({ store }) {
   const navigate = useNavigate();
@@ -8,31 +9,20 @@ export default function StoreGate({ store }) {
   };
 
   return (
-    <div style={{ textAlign: "center", marginTop: 100 }}>
+    <div className="sf-shell">
+      <div className="sf-wrap sf-gate">
+        <div className="sf-gateCard">
+          <h1 className="sf-gateTitle">{store.storeName}</h1>
 
-      <h1 style={{ marginBottom: 10 }}>
-        {store.storeName}
-      </h1>
+          <p className="sf-gateMeta">
+            {store.city || ""} {store.city ? "," : ""} {store.partner?.country || ""}
+          </p>
 
-      <p style={{ marginBottom: 30, color: "#666" }}>
-        {store.city || ""} {store.city ? "," : ""} {store.partner?.country || ""}
-      </p>
-
-      <button
-        onClick={handleOrder}
-        style={{
-          padding: "18px 32px",
-          fontSize: "18px",
-          background: "#00f9a7",
-          border: "none",
-          borderRadius: "10px",
-          cursor: "pointer",
-          fontWeight: "bold"
-        }}
-      >
-        Order Here
-      </button>
-
+          <button className="sf-gateButton" onClick={handleOrder}>
+            Order Here
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

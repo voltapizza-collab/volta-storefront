@@ -4,6 +4,8 @@ import voltaLogo from "../assets/logo/the pizza sale enganine.png";
 import { ReactComponent as PizzaBg } from "../assets/logo/pizza.svg";
 import InventoryModule from "../components/Backoffice/InventoryModule";
 import PizzaCreator from "../components/Backoffice/PizzaCreator";
+import PizzaCreatorExtras from "../components/Backoffice/PizzaCreatorExtras";
+import PizzaCreatorOverview from "../components/Backoffice/PizzaCreatorOverview";
 import EngineBackground from "../components/Backoffice/EngineBackground";
 import AppFooter from "../components/Layout/AppFooter";
 import api from "../setupAxios";
@@ -148,9 +150,14 @@ export default function Backoffice() {
     setActiveModuleGroup(group);
   };
 
-  const isPizzaCreatorActive = activeModule === "pizzaCreator";
+  const isPizzaCreatorOverviewActive = activeModule === "pizzaCreator";
+  const isPizzaCreatorProductsActive = activeModule === "pizzaCreatorProducts";
+  const isPizzaCreatorExtrasActive = activeModule === "pizzaCreatorExtras";
   const isPizzaCreatorGroupActive =
-    activeModuleGroup === "pizzaCreator" || isPizzaCreatorActive;
+    activeModuleGroup === "pizzaCreator" ||
+    isPizzaCreatorOverviewActive ||
+    isPizzaCreatorProductsActive ||
+    isPizzaCreatorExtrasActive;
 
   if (loadingPartners) {
     return (
@@ -269,7 +276,14 @@ export default function Backoffice() {
                 } ${
                   expandedModules.pizzaCreator ? "open" : ""
                 }`}
-                onClick={() => toggleModuleGroup("pizzaCreator")}
+                onClick={() => {
+                  setExpandedModules((prev) => ({
+                    ...prev,
+                    pizzaCreator: true,
+                  }));
+                  setActiveModule("pizzaCreator");
+                  setActiveModuleGroup("pizzaCreator");
+                }}
                 type="button"
               >
                 <span>Pizza Creator</span>
@@ -286,15 +300,28 @@ export default function Backoffice() {
                 >
                   <button
                     className={`bo-subbtn ${
-                      isPizzaCreatorActive ? "active" : ""
+                      isPizzaCreatorProductsActive ? "active" : ""
                     }`}
                     onClick={() => {
-                      setActiveModule("pizzaCreator");
+                      setActiveModule("pizzaCreatorProducts");
                       setActiveModuleGroup("pizzaCreator");
                     }}
                     type="button"
                   >
                     Productos
+                  </button>
+
+                  <button
+                    className={`bo-subbtn ${
+                      isPizzaCreatorExtrasActive ? "active" : ""
+                    }`}
+                    onClick={() => {
+                      setActiveModule("pizzaCreatorExtras");
+                      setActiveModuleGroup("pizzaCreator");
+                    }}
+                    type="button"
+                  >
+                    Extras
                   </button>
                 </div>
               )}
@@ -363,7 +390,25 @@ export default function Backoffice() {
           )}
 
           {activeModule === "pizzaCreator" && auth.partnerId && (
+            <PizzaCreatorOverview
+              partner={auth}
+              onOpenProducts={() => {
+                setExpandedModules((prev) => ({
+                  ...prev,
+                  pizzaCreator: true,
+                }));
+                setActiveModule("pizzaCreatorProducts");
+                setActiveModuleGroup("pizzaCreator");
+              }}
+            />
+          )}
+
+          {activeModule === "pizzaCreatorProducts" && auth.partnerId && (
             <PizzaCreator partner={auth} />
+          )}
+
+          {activeModule === "pizzaCreatorExtras" && auth.partnerId && (
+            <PizzaCreatorExtras partner={auth} />
           )}
         </div>
 

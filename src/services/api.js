@@ -55,4 +55,9 @@ export const getStore = async (partnerSlug, storeSlug) => {
   return data;
 };
 
+export const getPartner = async (partnerSlug) => {
+  const data = await api.get(`/partners/${partnerSlug}`);
+  return data;
+};
+
 export default api;

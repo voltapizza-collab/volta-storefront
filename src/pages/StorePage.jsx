@@ -111,6 +111,17 @@ export default function StorePage() {
 
   const activeTabLabel =
     tabs.find((tab) => tab.id === activeTab)?.label || "Trending";
+  const reservationEnabled = Boolean(store?.acceptsReservations);
+  const activeProductsCount = visibleMenu.length;
+  const incentiveMessage =
+    activeTab === PROMOS_TAB
+      ? "Promos activas para empujar el ticket medio"
+      : activeProductsCount > 0
+      ? `Tu siguiente incentivo puede activarse con ${Math.min(
+          activeProductsCount,
+          3
+        )} elecciones mas en ${activeTabLabel.toLowerCase()}`
+      : "Activa una categoria para descubrir ofertas y combinaciones";
 
   if (error) {
     return (
@@ -134,15 +145,33 @@ export default function StorePage() {
         <section className="sf-engineControlBar">
           <div className="sf-engineTop">
             <div className="sf-engineBrand">
-              <div className="sf-engineLogo">
-                {partner?.brandLogoUrl ? (
-                  <img src={partner.brandLogoUrl} alt={partner?.name || "Partner"} />
-                ) : (
-                  <span>
+              <div className="sf-engineLogoBlock">
+                <div className="sf-engineLogo">
+                  {partner?.brandLogoUrl ? (
+                    <img src={partner.brandLogoUrl} alt={partner?.name || "Partner"} />
+                  ) : (
+                    <span>{partner?.name || store.storeName}</span>
+                  )}
+                </div>
+
+                <div className="sf-engineBrandMeta">
+                  <h1 className="sf-engineBrandName">
                     {partner?.name || store.storeName}
                     {store?.storeName ? ` (${store.storeName})` : ""}
-                  </span>
-                )}
+                  </h1>
+
+                  <div className="sf-engineUtilityRow">
+                    <span className="sf-engineUtilityPill">
+                      {store?.city || "Pizza Engine"}
+                    </span>
+                    <span className="sf-engineUtilityPill">
+                      {reservationEnabled ? "Reservas activas" : "Pedidos rapidos"}
+                    </span>
+                    <span className="sf-engineUtilityPill">
+                      {Math.max(tabs.length - 2, 0)} categorias
+                    </span>
+                  </div>
+                </div>
               </div>
 
               <div className="sf-engineSearchWrap">
@@ -154,7 +183,23 @@ export default function StorePage() {
                   onChange={(event) => setSearch(event.target.value)}
                 />
                 <button type="button" className="sf-engineSearchBtn" aria-label="Buscar">
-                  S
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <circle
+                      cx="11"
+                      cy="11"
+                      r="6.5"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.2"
+                    />
+                    <path
+                      d="M16 16l4 4"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.2"
+                      strokeLinecap="round"
+                    />
+                  </svg>
                 </button>
               </div>
             </div>
@@ -186,9 +231,27 @@ export default function StorePage() {
               Arma tu Pizza
             </button>
           </div>
+
+          <div className="sf-incentiveBanner">
+            <div className="sf-incentiveCopy">
+              <span className="sf-incentiveEyebrow">Proximo incentivo en camino</span>
+              <strong>{incentiveMessage}</strong>
+            </div>
+            <span className="sf-incentiveTimer">
+              {activeTab === PROMOS_TAB ? "Promos destacadas" : "Disponible hoy"}
+            </span>
+          </div>
         </section>
 
         <section className="sf-engineCategoryRail">
+          <div className="sf-engineRailHeader">
+            <div>
+              <span className="sf-kicker">Explorar</span>
+              <h2 className="sf-engineRailTitle">{activeTabLabel}</h2>
+            </div>
+            <span className="sf-engineRailHint">Desliza para descubrir mas</span>
+          </div>
+
           <div className="sf-engineCategoryTrack" role="tablist" aria-label="Categorias del menu">
             {tabs.map((tab) => (
               <button
@@ -216,12 +279,19 @@ export default function StorePage() {
             ) : visibleMenu.length === 0 ? (
               <div className="sf-engineEmptyState">
                 <strong>{activeTabLabel}</strong>
-                <p>No hay productos visibles para esta pestaña ahora mismo.</p>
+                <p>No hay productos visibles para esta pestana ahora mismo.</p>
               </div>
             ) : (
               <div className="sf-engineGrid">
                 {visibleMenu.map((item) => (
                   <article key={item.pizzaId} className="sf-engineMenuCard">
+                    <div className="sf-menuCardVisual">
+                      <span className="sf-menuCardVisualBadge">
+                        {item.category || "Menu"}
+                      </span>
+                      <div className="sf-menuCardVisualTitle">{item.name}</div>
+                    </div>
+
                     <div className="sf-menuCardHead">
                       <div>
                         <h3 className="sf-menuCardTitle">{item.name}</h3>
@@ -255,6 +325,13 @@ export default function StorePage() {
                         ))}
                       </div>
                     </div>
+
+                    <div className="sf-menuCardFooter">
+                      <span className="sf-menuCardSignal">Lista para vender</span>
+                      <button type="button" className="sf-menuCardCta">
+                        Elegir
+                      </button>
+                    </div>
                   </article>
                 ))}
               </div>
@@ -265,13 +342,25 @@ export default function StorePage() {
 
       <div className="sf-stickyFooterShell" style={themeStyle}>
         <div className="sf-stickyFooter">
-          <button
-            type="button"
-            className="sf-engineBottomBtn"
-            onClick={() => setScheduleOpen(true)}
-          >
-            Programar
-          </button>
+          <div className="sf-bottomActionGroup">
+            <button
+              type="button"
+              className="sf-engineBottomBtn"
+              onClick={() => setScheduleOpen(true)}
+            >
+              Programar
+            </button>
+
+            {reservationEnabled && (
+              <button
+                type="button"
+                className="sf-engineBottomBtn sf-engineBottomBtn--ghost"
+                onClick={() => setReservationOpen(true)}
+              >
+                Reservas
+              </button>
+            )}
+          </div>
 
           <label className="sf-couponDock">
             <span className="sf-couponDockIcon">%</span>
@@ -279,17 +368,14 @@ export default function StorePage() {
               type="text"
               value={couponCode}
               onChange={(event) => setCouponCode(event.target.value.toUpperCase())}
-              placeholder="¿Tienes un cupon?"
+              placeholder="Tienes un cupon?"
             />
           </label>
 
-          <button
-            type="button"
-            className="sf-engineBottomBtn"
-            onClick={() => setReservationOpen(true)}
-          >
-            Reservas
-          </button>
+          <div className="sf-footerStatus">
+            <span className="sf-footerStatusLabel">Motor activo</span>
+            <strong>{activeTabLabel}</strong>
+          </div>
         </div>
       </div>
 

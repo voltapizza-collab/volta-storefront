@@ -2,6 +2,7 @@
   display: flex;
   height: 100vh;
   background: var(--bg-soft); /* fondo general suave */
+  overflow: hidden;
 }
 .bo-sidebar {
   width: 260px;
@@ -11,11 +12,16 @@
   display: flex;
   flex-direction: column;
   gap: 18px;
+  min-height: 0;
 }
 .bo-sidebarTop {
   display: flex;
   flex-direction: column;
   gap: 18px;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 4px;
 }
 .bo-title {
   font-weight: 700;
@@ -210,6 +216,7 @@
   font-weight: 700;
   cursor: pointer;
   transition: all 0.18s ease;
+  flex-shrink: 0;
 }
 .bo-logoutBtn:hover {
   background: rgba(255, 255, 255, 0.12);
@@ -228,6 +235,8 @@
   flex: 1;
   display: flex;
   flex-direction: column;
+  min-width: 0;
+  min-height: 0;
 }
 
 /* WORKSPACE (scroll independiente) */
@@ -235,6 +244,7 @@
   flex: 1;
   padding: 20px;
   overflow: auto;
+  min-height: 0;
 }
 .bo-loginScreen {
    position: relative;
@@ -407,6 +417,470 @@
 }
 .engine-bg {
   z-index: 3;
+}
+
+.bo-settingsShell {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.bo-settingsCard {
+  max-width: 980px;
+  padding: 28px;
+  border-radius: 28px;
+  background: linear-gradient(180deg, #fff8e8 0%, #ffffff 100%);
+  border: 1px solid rgba(255, 182, 28, 0.28);
+  box-shadow: 0 18px 38px rgba(41, 11, 94, 0.08);
+}
+
+.bo-settingsHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.bo-settingsEyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--brand-1);
+  margin-bottom: 10px;
+}
+
+.bo-settingsTitle {
+  margin: 0;
+  font-size: 32px;
+  line-height: 1.05;
+  color: #1c1230;
+}
+
+.bo-settingsHint {
+  margin: 10px 0 0;
+  max-width: 720px;
+  color: rgba(28, 18, 48, 0.72);
+  line-height: 1.55;
+}
+
+.bo-settingsStoreChip {
+  padding: 12px 16px;
+  border-radius: 999px;
+  background: rgba(106, 61, 240, 0.08);
+  color: var(--brand-1);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.bo-settingsForm {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.bo-settingsOverviewGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.bo-settingsOverviewGrid--branding {
+  align-items: start;
+}
+
+.bo-settingsSummaryCard {
+  padding: 22px;
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 248, 232, 0.88));
+  border: 1px solid rgba(41, 11, 94, 0.08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.62);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.bo-settingsSummaryTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.bo-settingsSectionTitle {
+  margin: 0;
+  font-size: 24px;
+  color: #1c1230;
+}
+
+.bo-settingsMetricRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(41, 11, 94, 0.08);
+  color: #43335f;
+}
+
+.bo-settingsMetricRow strong {
+  color: #1f1634;
+}
+
+.bo-settingsCardHint {
+  margin: 0;
+  color: rgba(28, 18, 48, 0.72);
+  line-height: 1.6;
+}
+
+.bo-settingsMiniCta {
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(135deg, var(--brand-2), #ffd36e);
+  color: #23163b;
+  font-weight: 800;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.bo-settingsMiniCta--file {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bo-brandingPreview {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.bo-brandingPreviewLogo {
+  min-height: 120px;
+  padding: 18px;
+  border-radius: 24px;
+  background: rgba(53, 19, 164, 0.06);
+  border: 1px dashed rgba(53, 19, 164, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bo-brandingPreviewLogo img {
+  max-width: 100%;
+  max-height: 88px;
+  object-fit: contain;
+}
+
+.bo-brandingSwatches {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.bo-brandingSwatch {
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+  border: 1px solid rgba(28, 18, 48, 0.08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.bo-switchRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  padding: 18px 20px;
+  border-radius: 20px;
+  background: rgba(106, 61, 240, 0.04);
+  border: 1px solid rgba(106, 61, 240, 0.08);
+}
+
+.bo-switchRow strong,
+.bo-field span,
+.bo-settingsPreviewLabel {
+  display: block;
+  margin-bottom: 8px;
+  color: #241639;
+}
+
+.bo-switchRow small {
+  display: block;
+  color: rgba(36, 22, 57, 0.7);
+  line-height: 1.5;
+}
+
+.bo-switchRow input[type="checkbox"] {
+  width: 22px;
+  height: 22px;
+}
+
+.bo-settingsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.bo-settingsGrid--single {
+  grid-template-columns: minmax(0, 320px);
+}
+
+.bo-settingsGrid--triple {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.bo-settingsGrid--doubleTight {
+  grid-template-columns: repeat(2, minmax(0, 220px));
+}
+
+.bo-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.bo-field input,
+.bo-field textarea {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(41, 11, 94, 0.12);
+  background: #ffffff;
+  font-size: 14px;
+  color: #241639;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.bo-field input:focus,
+.bo-field textarea:focus {
+  border-color: rgba(255, 182, 28, 0.95);
+  box-shadow: 0 0 0 4px rgba(255, 182, 28, 0.14);
+}
+
+.bo-fieldColor small {
+  margin-top: 8px;
+  color: rgba(45, 33, 71, 0.74);
+  font-weight: 700;
+}
+
+.bo-fieldColor input[type="color"] {
+  height: 60px;
+  padding: 8px;
+  cursor: pointer;
+}
+
+.bo-pricingModeRow {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.bo-pillBtn {
+  padding: 12px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(41, 11, 94, 0.12);
+  background: #fff;
+  color: #3f3060;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.bo-pillBtn.is-active {
+  background: var(--brand-2);
+  border-color: transparent;
+  color: #23163b;
+}
+
+.bo-settingsPreview {
+  padding: 18px 20px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(255, 182, 28, 0.16), rgba(106, 61, 240, 0.06));
+  color: #2d2147;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.bo-settingsPreview span {
+  color: rgba(45, 33, 71, 0.74);
+  line-height: 1.5;
+}
+
+.bo-settingsError,
+.bo-settingsSuccess {
+  padding: 14px 16px;
+  border-radius: 16px;
+  font-weight: 600;
+}
+
+.bo-settingsError {
+  background: rgba(211, 47, 47, 0.08);
+  color: #a32929;
+}
+
+.bo-settingsSuccess {
+  background: rgba(46, 125, 50, 0.1);
+  color: #2f6b32;
+}
+
+.bo-settingsActions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.bo-settingsSave {
+  padding: 14px 22px;
+  border: none;
+  border-radius: 16px;
+  background: linear-gradient(135deg, var(--brand-2), #ffd36e);
+  color: #23163b;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.bo-logoUploadRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.bo-logoUploadHint {
+  color: rgba(45, 33, 71, 0.74);
+  line-height: 1.5;
+}
+
+.bo-brandingStage {
+  position: sticky;
+  top: 0;
+}
+
+.bo-brandingStageSurface {
+  padding: 24px;
+  border-radius: 30px;
+  background: var(--preview-surface);
+  border: 2px solid #1f1634;
+  box-shadow: 0 18px 38px rgba(41, 11, 94, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.bo-brandingStageTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.bo-brandingStageLogo {
+  width: 140px;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  color: #1c1230;
+  font-weight: 800;
+}
+
+.bo-brandingStageLogo img {
+  max-width: 100%;
+  max-height: 56px;
+  object-fit: contain;
+}
+
+.bo-brandingStageSearch {
+  width: 120px;
+  height: 32px;
+  border-radius: 10px;
+  border: 2px solid #111;
+  background: #fff;
+}
+
+.bo-brandingStageChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.bo-brandingStageChips span {
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-weight: 800;
+  color: #1b1230;
+}
+
+.bo-brandingStageChips span:nth-child(1) {
+  background: var(--preview-accent);
+}
+
+.bo-brandingStageChips span:nth-child(2),
+.bo-brandingStageChips span:nth-child(3) {
+  background: var(--preview-secondary);
+}
+
+.bo-brandingStageHero {
+  min-height: 240px;
+  border-radius: 28px;
+  background: var(--preview-primary);
+  color: #fff;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.bo-brandingStageHero p {
+  margin: 8px 0 0;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.bo-brandingStageFooter {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  padding: 8px;
+  border-radius: 999px;
+  background: var(--preview-secondary);
+}
+
+.bo-brandingStageFooter button {
+  padding: 12px;
+  border: none;
+  border-radius: 999px;
+  background: var(--preview-primary);
+  color: #fff;
+  font-weight: 700;
+}
+
+@media (max-width: 900px) {
+  .bo-settingsHeader,
+  .bo-switchRow {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .bo-settingsOverviewGrid,
+  .bo-settingsGrid,
+  .bo-settingsGrid--single,
+  .bo-settingsGrid--triple,
+  .bo-settingsGrid--doubleTight,
+  .bo-brandingStageFooter {
+    grid-template-columns: 1fr;
+  }
+
+  .bo-settingsActions {
+    justify-content: stretch;
+  }
+
+  .bo-settingsSave {
+    width: 100%;
+  }
+
+  .bo-brandingStage {
+    position: static;
+  }
 }
 
 .engine-lines {

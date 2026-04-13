@@ -12,6 +12,9 @@ export default function PartnerOrderPage() {
   const [serviceMode, setServiceMode] = useState("");
   const [deliveryAddress, setDeliveryAddress] = useState("");
   const [selectedStoreSlug, setSelectedStoreSlug] = useState("");
+  const [deliveryResolution, setDeliveryResolution] = useState(null);
+  const [deliveryError, setDeliveryError] = useState("");
+  const [isResolvingDelivery, setIsResolvingDelivery] = useState(false);
 
   useEffect(() => {
     if (!partnerSlug) return;
@@ -46,15 +49,75 @@ export default function PartnerOrderPage() {
   const canContinue =
     !!serviceMode &&
     storeStepReady &&
-    (serviceMode !== "delivery" || addressStepReady);
+    (serviceMode !== "delivery" ||
+      (addressStepReady && deliveryResolution?.withinRange));
 
   useEffect(() => {
-    if (!stores.length) return;
-
-    if (serviceMode === "delivery") {
-      setSelectedStoreSlug((current) => current || stores[0].slug);
+    if (serviceMode !== "delivery") {
+      setDeliveryResolution(null);
+      setDeliveryError("");
+      setIsResolvingDelivery(false);
+      return;
     }
-  }, [serviceMode, stores]);
+
+    const trimmedAddress = deliveryAddress.trim();
+
+    if (!trimmedAddress) {
+      setSelectedStoreSlug("");
+      setDeliveryResolution(null);
+      setDeliveryError("");
+      setIsResolvingDelivery(false);
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      try {
+        setIsResolvingDelivery(true);
+        setDeliveryError("");
+
+        const resolution = await api.post(
+          `/partners/${partnerSlug}/delivery/resolve`,
+          { address: trimmedAddress }
+        );
+
+        setDeliveryResolution(resolution);
+        setSelectedStoreSlug(resolution?.nearestStore?.slug || "");
+      } catch (err) {
+        console.error(err);
+        setDeliveryResolution(null);
+        setSelectedStoreSlug("");
+        setDeliveryError(
+          err?.message || "No pudimos validar la direccion en este momento."
+        );
+      } finally {
+        setIsResolvingDelivery(false);
+      }
+    }, 650);
+
+    return () => clearTimeout(timer);
+  }, [deliveryAddress, partnerSlug, serviceMode]);
+
+  const deliverySummary = useMemo(() => {
+    if (!partner) return "";
+
+    if (partner.deliveryPricingMode === "VARIABLE") {
+      const base = Number(partner.deliveryFeeBase || 2);
+      const baseKm = Number(partner.deliveryBaseKm || 5);
+      const extra = Number(partner.deliveryExtraPerKm || 1);
+
+      return `Base EUR ${base.toFixed(2)} hasta ${baseKm.toFixed(
+        0
+      )} km y EUR ${extra.toFixed(2)} por km extra`;
+    }
+
+    if (partner.deliveryFeeFixed != null) {
+      return `Precio fijo EUR ${Number(partner.deliveryFeeFixed).toFixed(
+        2
+      )} cada ${Number(partner.deliveryFeeBlockSize || 5)} pizzas`;
+    }
+
+    return "Precio delivery pendiente de configurar";
+  }, [partner]);
 
   if (error) {
     return (
@@ -101,7 +164,11 @@ export default function PartnerOrderPage() {
               className={`sf-serviceCard ${
                 serviceMode === "pickup" ? "is-active" : ""
               }`}
-              onClick={() => setServiceMode("pickup")}
+              onClick={() => {
+                setServiceMode("pickup");
+                setDeliveryResolution(null);
+                setDeliveryError("");
+              }}
             >
               <span className="sf-serviceEyebrow">Recoger</span>
               <strong className="sf-serviceTitle">Voy por mi pedido</strong>
@@ -115,7 +182,10 @@ export default function PartnerOrderPage() {
               className={`sf-serviceCard ${
                 serviceMode === "delivery" ? "is-active" : ""
               }`}
-              onClick={() => setServiceMode("delivery")}
+              onClick={() => {
+                setServiceMode("delivery");
+                setSelectedStoreSlug("");
+              }}
             >
               <span className="sf-serviceEyebrow">Domicilio</span>
               <strong className="sf-serviceTitle">Quiero envio</strong>
@@ -159,13 +229,28 @@ export default function PartnerOrderPage() {
                   Completa esta direccion para desbloquear claramente el
                   siguiente paso.
                 </p>
+              ) : isResolvingDelivery ? (
+                <p className="sf-inlineText">
+                  Validando direccion y calculando la tienda mas cercana...
+                </p>
+              ) : deliveryError ? (
+                <div className="sf-inlineStat">
+                  <span className="sf-inlineLabel">Direccion no validada</span>
+                  <strong className="sf-inlineValue">{deliveryAddress}</strong>
+                  <span className="sf-inlineText">{deliveryError}</span>
+                </div>
               ) : (
                 <div className="sf-inlineStat sf-inlineStat--success">
                   <span className="sf-inlineLabel">Direccion capturada</span>
-                  <strong className="sf-inlineValue">{deliveryAddress}</strong>
+                  <strong className="sf-inlineValue">
+                    {deliveryResolution?.formattedAddress || deliveryAddress}
+                  </strong>
                   <span className="sf-inlineText">
-                    Aqui luego conectaremos Google Places para autocompletado y
-                    validacion real de zona.
+                    {deliveryResolution?.coords
+                      ? `Coordenadas detectadas: ${deliveryResolution.coords.lat.toFixed(
+                          5
+                        )}, ${deliveryResolution.coords.lng.toFixed(5)}`
+                      : "Direccion pendiente de geocodificacion."}
                   </span>
                 </div>
               )}
@@ -217,22 +302,13 @@ export default function PartnerOrderPage() {
                 })}
               </div>
 
-              {selectedStore && (
-                <div className="sf-inlineStat">
-                  <span className="sf-inlineLabel">Tienda elegida</span>
-                  <strong className="sf-inlineValue">{selectedStore.storeName}</strong>
-                  <span className="sf-inlineText">
-                    {selectedStore.city || ""}
-                    {selectedStore.city ? "," : ""}
-                    {" "}
-                    {partner.country || ""}
-                  </span>
-                </div>
-              )}
             </div>
           )}
 
-          {!!stores.length && serviceMode === "delivery" && (
+          {!!stores.length &&
+            serviceMode === "delivery" &&
+            addressStepReady &&
+            !isResolvingDelivery && (
             <div
               className={`sf-modePanel sf-stepPanel ${
                 canContinue ? "is-complete" : "is-pending"
@@ -248,7 +324,7 @@ export default function PartnerOrderPage() {
                 </span>
               </div>
 
-              {selectedStore ? (
+              {selectedStore && deliveryResolution ? (
                 <div className="sf-inlineStat sf-inlineStat--success">
                   <span className="sf-inlineLabel">Tienda asignada</span>
                   <strong className="sf-inlineValue">{selectedStore.storeName}</strong>
@@ -259,14 +335,29 @@ export default function PartnerOrderPage() {
                     {partner.country || ""}
                   </span>
                   <span className="sf-inlineText">
-                    En esta fase la tienda se asigna automaticamente para evitar
-                    conflicto entre delivery y seleccion manual. El siguiente
-                    paso sera resolver la mas cercana habilitada para domicilio.
+                    {partner.deliveryRadiusKm != null
+                      ? `Km maximos ${Number(partner.deliveryRadiusKm).toFixed(1)} km.`
+                      : "Km maximos pendientes."}
+                  </span>
+                  <span className="sf-inlineText">
+                    Distancia estimada {deliveryResolution.nearestStore.distanceKm.toFixed(
+                      2
+                    )} km. {deliverySummary}.
+                  </span>
+                </div>
+              ) : deliveryResolution && !deliveryResolution.withinRange ? (
+                <div className="sf-inlineStat">
+                  <span className="sf-inlineLabel">Fuera de zona</span>
+                  <strong className="sf-inlineValue">
+                    {deliveryResolution.nearestStore?.storeName || "Sin tienda"}
+                  </strong>
+                  <span className="sf-inlineText">
+                    La direccion supera el radio maximo de entrega.
                   </span>
                 </div>
               ) : (
                 <p className="sf-inlineText">
-                  Esperando una tienda disponible para asignar el delivery.
+                  No hay una tienda disponible para asignar este pedido a domicilio.
                 </p>
               )}
             </div>

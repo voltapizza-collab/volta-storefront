@@ -6,6 +6,9 @@ import InventoryModule from "../components/Backoffice/InventoryModule";
 import PizzaCreator from "../components/Backoffice/PizzaCreator";
 import PizzaCreatorExtras from "../components/Backoffice/PizzaCreatorExtras";
 import PizzaCreatorOverview from "../components/Backoffice/PizzaCreatorOverview";
+import SettingsModule from "../components/Backoffice/SettingsModule";
+import SettingsDeliveryModule from "../components/Backoffice/SettingsDeliveryModule";
+import SettingsBrandingModule from "../components/Backoffice/SettingsBrandingModule";
 import EngineBackground from "../components/Backoffice/EngineBackground";
 import AppFooter from "../components/Layout/AppFooter";
 import api from "../setupAxios";
@@ -16,6 +19,7 @@ export default function Backoffice() {
   const [expandedModules, setExpandedModules] = useState({
     pizzaCreator: false,
     offers: false,
+    settings: false,
   });
   const [partners, setPartners] = useState([]);
   const [loadingPartners, setLoadingPartners] = useState(true);
@@ -142,12 +146,23 @@ export default function Backoffice() {
     setActiveModuleGroup("inventory");
   };
 
-  const toggleModuleGroup = (group) => {
-    setExpandedModules((prev) => ({
-      ...prev,
-      [group]: !prev[group],
-    }));
-    setActiveModuleGroup(group);
+  const toggleModuleSection = (group, fallbackModule) => {
+    setExpandedModules((prev) => {
+      const nextOpen = !prev[group];
+
+      if (!nextOpen && activeModuleGroup === group) {
+        setActiveModule(fallbackModule);
+        setActiveModuleGroup(fallbackModule);
+      } else if (nextOpen) {
+        setActiveModule(group);
+        setActiveModuleGroup(group);
+      }
+
+      return {
+        ...prev,
+        [group]: nextOpen,
+      };
+    });
   };
 
   const isPizzaCreatorOverviewActive = activeModule === "pizzaCreator";
@@ -158,6 +173,17 @@ export default function Backoffice() {
     isPizzaCreatorOverviewActive ||
     isPizzaCreatorProductsActive ||
     isPizzaCreatorExtrasActive;
+  const isSettingsOverviewActive = activeModule === "settings";
+  const isSettingsDeliveryActive = activeModule === "settingsDelivery";
+  const isSettingsBrandingActive = activeModule === "settingsBranding";
+  const isSettingsGroupActive =
+    activeModuleGroup === "settings" ||
+    isSettingsOverviewActive ||
+    isSettingsDeliveryActive ||
+    isSettingsBrandingActive;
+  const isOffersOverviewActive = activeModule === "offers";
+  const isOffersGroupActive =
+    activeModuleGroup === "offers" || isOffersOverviewActive;
 
   if (loadingPartners) {
     return (
@@ -276,14 +302,7 @@ export default function Backoffice() {
                 } ${
                   expandedModules.pizzaCreator ? "open" : ""
                 }`}
-                onClick={() => {
-                  setExpandedModules((prev) => ({
-                    ...prev,
-                    pizzaCreator: true,
-                  }));
-                  setActiveModule("pizzaCreator");
-                  setActiveModuleGroup("pizzaCreator");
-                }}
+                onClick={() => toggleModuleSection("pizzaCreator", "inventory")}
                 type="button"
               >
                 <span>Pizza Creator</span>
@@ -336,9 +355,11 @@ export default function Backoffice() {
 
               <button
                 className={`bo-btn bo-btnAccordion ${
+                  isOffersGroupActive ? "active" : ""
+                } ${
                   expandedModules.offers ? "open" : ""
                 }`}
-                onClick={() => toggleModuleGroup("offers")}
+                onClick={() => toggleModuleSection("offers", "inventory")}
                 type="button"
               >
                 <span>Ofertas</span>
@@ -348,7 +369,11 @@ export default function Backoffice() {
               </button>
 
               {expandedModules.offers && (
-                <div className="bo-subnav">
+                <div
+                  className={`bo-subnav ${
+                    isOffersGroupActive ? "is-active-group" : ""
+                  }`}
+                >
                   <button className="bo-subbtn" disabled type="button">
                     Enviar SMS
                   </button>
@@ -367,9 +392,54 @@ export default function Backoffice() {
                 My Orders
               </button>
 
-              <button className="bo-btn" disabled type="button">
-                Settings
+              <button
+                className={`bo-btn bo-btnAccordion ${
+                  isSettingsGroupActive ? "active" : ""
+                } ${
+                  expandedModules.settings ? "open" : ""
+                }`}
+                onClick={() => toggleModuleSection("settings", "inventory")}
+                type="button"
+              >
+                <span>Settings</span>
+                <span className="bo-btnChevron">
+                  {expandedModules.settings ? "v" : "^"}
+                </span>
               </button>
+
+              {expandedModules.settings && (
+                <div
+                  className={`bo-subnav ${
+                    isSettingsGroupActive ? "is-active-group" : ""
+                  }`}
+                >
+                  <button
+                    className={`bo-subbtn ${
+                      isSettingsDeliveryActive ? "active" : ""
+                    }`}
+                    onClick={() => {
+                      setActiveModule("settingsDelivery");
+                      setActiveModuleGroup("settings");
+                    }}
+                    type="button"
+                  >
+                    Entregas
+                  </button>
+
+                  <button
+                    className={`bo-subbtn ${
+                      isSettingsBrandingActive ? "active" : ""
+                    }`}
+                    onClick={() => {
+                      setActiveModule("settingsBranding");
+                      setActiveModuleGroup("settings");
+                    }}
+                    type="button"
+                  >
+                    Personalizacion
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -409,6 +479,77 @@ export default function Backoffice() {
 
           {activeModule === "pizzaCreatorExtras" && auth.partnerId && (
             <PizzaCreatorExtras partner={auth} />
+          )}
+
+          {activeModule === "settings" && auth.partnerId && (
+            <SettingsModule
+              partner={auth}
+              onOpenDelivery={() => {
+                setExpandedModules((prev) => ({
+                  ...prev,
+                  settings: true,
+                }));
+                setActiveModule("settingsDelivery");
+                setActiveModuleGroup("settings");
+              }}
+              onOpenBranding={() => {
+                setExpandedModules((prev) => ({
+                  ...prev,
+                  settings: true,
+                }));
+                setActiveModule("settingsBranding");
+                setActiveModuleGroup("settings");
+              }}
+            />
+          )}
+
+          {activeModule === "settingsDelivery" && auth.partnerId && (
+            <SettingsDeliveryModule partner={auth} />
+          )}
+
+          {activeModule === "settingsBranding" && auth.partnerId && (
+            <SettingsBrandingModule partner={auth} />
+          )}
+
+          {activeModule === "offers" && auth.partnerId && (
+            <section className="bo-settingsShell">
+              <div className="bo-settingsCard">
+                <div className="bo-settingsHeader">
+                  <div>
+                    <div className="bo-settingsEyebrow">Ofertas</div>
+                    <h2 className="bo-settingsTitle">Panel del modulo</h2>
+                    <p className="bo-settingsHint">
+                      Este padre resumira campañas, envios y promociones activas.
+                      Desde aqui luego entraremos a los hijos de SMS, creador de ofertas
+                      e incentivos.
+                    </p>
+                  </div>
+                  <div className="bo-settingsStoreChip">
+                    {auth.partnerName}
+                  </div>
+                </div>
+
+                <div className="bo-settingsOverviewGrid">
+                  <article className="bo-settingsSummaryCard">
+                    <div className="bo-settingsEyebrow">Campañas</div>
+                    <h3 className="bo-settingsSectionTitle">Mensajeria</h3>
+                    <p className="bo-settingsCardHint">
+                      Aqui veremos el resumen de envios y segmentos antes de abrir el
+                      hijo de SMS.
+                    </p>
+                  </article>
+
+                  <article className="bo-settingsSummaryCard">
+                    <div className="bo-settingsEyebrow">Promociones</div>
+                    <h3 className="bo-settingsSectionTitle">Oferta activa</h3>
+                    <p className="bo-settingsCardHint">
+                      Este espacio conectara luego con las promos del motor y con la
+                      pestaña `Promos` del storefront.
+                    </p>
+                  </article>
+                </div>
+              </div>
+            </section>
           )}
         </div>
 

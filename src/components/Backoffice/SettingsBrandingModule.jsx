@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import api from "../../setupAxios";
-
-const DEFAULT_FORM = {
-  brandPrimary: "#3513A4",
-  brandSecondary: "#FFBF2D",
-  brandAccent: "#F7A600",
-  brandSurface: "#FFF7E8",
-};
+import {
+  BRANDING_DEFAULTS,
+  BRAND_FONT_OPTIONS,
+  OFFER_BUTTON_VARIANTS,
+  buildBrandThemeVars,
+  getOfferButtonVariant,
+} from "../../constants/branding";
 
 export default function SettingsBrandingModule({ partner }) {
   const [loading, setLoading] = useState(true);
@@ -15,7 +15,8 @@ export default function SettingsBrandingModule({ partner }) {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [partnerData, setPartnerData] = useState(null);
-  const [form, setForm] = useState(DEFAULT_FORM);
+  const [form, setForm] = useState(BRANDING_DEFAULTS);
+  const [offerModalOpen, setOfferModalOpen] = useState(false);
 
   useEffect(() => {
     const loadBranding = async () => {
@@ -32,10 +33,18 @@ export default function SettingsBrandingModule({ partner }) {
 
         setPartnerData(currentPartner);
         setForm({
-          brandPrimary: currentPartner.brandPrimary || DEFAULT_FORM.brandPrimary,
-          brandSecondary: currentPartner.brandSecondary || DEFAULT_FORM.brandSecondary,
-          brandAccent: currentPartner.brandAccent || DEFAULT_FORM.brandAccent,
-          brandSurface: currentPartner.brandSurface || DEFAULT_FORM.brandSurface,
+          brandPrimary: currentPartner.brandPrimary || BRANDING_DEFAULTS.brandPrimary,
+          brandSecondary:
+            currentPartner.brandSecondary || BRANDING_DEFAULTS.brandSecondary,
+          brandAccent: currentPartner.brandAccent || BRANDING_DEFAULTS.brandAccent,
+          brandSurface: currentPartner.brandSurface || BRANDING_DEFAULTS.brandSurface,
+          brandTextColor:
+            currentPartner.brandTextColor || BRANDING_DEFAULTS.brandTextColor,
+          brandFontFamily:
+            currentPartner.brandFontFamily || BRANDING_DEFAULTS.brandFontFamily,
+          brandOfferButtonStyle:
+            currentPartner.brandOfferButtonStyle ||
+            BRANDING_DEFAULTS.brandOfferButtonStyle,
         });
         setError("");
       } catch (loadError) {
@@ -49,20 +58,48 @@ export default function SettingsBrandingModule({ partner }) {
     loadBranding();
   }, [partner?.partnerId]);
 
-  const previewStyle = useMemo(
-    () => ({
-      "--preview-primary": form.brandPrimary,
-      "--preview-secondary": form.brandSecondary,
-      "--preview-accent": form.brandAccent,
-      "--preview-surface": form.brandSurface,
-    }),
-    [form.brandAccent, form.brandPrimary, form.brandSecondary, form.brandSurface]
+  const selectedOfferVariant = useMemo(
+    () => getOfferButtonVariant(form.brandOfferButtonStyle),
+    [form.brandOfferButtonStyle]
   );
+
+  const previewStyle = useMemo(() => {
+    const theme = buildBrandThemeVars({
+      brandPrimary: form.brandPrimary,
+      brandSecondary: form.brandSecondary,
+      brandAccent: selectedOfferVariant.accent,
+      brandSurface: form.brandSurface,
+      brandTextColor: form.brandTextColor,
+      brandFontFamily: form.brandFontFamily,
+    });
+
+    return {
+      "--preview-primary": theme.primary,
+      "--preview-secondary": theme.secondary,
+      "--preview-accent": theme.accent,
+      "--preview-surface": theme.surface,
+      "--preview-text": theme.text,
+      "--preview-text-soft": theme.textSoft,
+      "--preview-text-muted": theme.textMuted,
+      "--preview-on-primary": theme.onPrimary,
+      "--preview-on-secondary": theme.onSecondary,
+      "--preview-on-accent": theme.onAccent,
+      "--preview-on-surface": theme.onSurface,
+      "--preview-font-family": theme.fontFamily,
+    };
+  }, [
+    form.brandPrimary,
+    form.brandSecondary,
+      form.brandSurface,
+      form.brandTextColor,
+      form.brandFontFamily,
+      selectedOfferVariant.accent,
+    ]);
 
   const handleChange = (field, value) => {
     setForm((current) => ({
       ...current,
-      [field]: value.toUpperCase(),
+      [field]: value.startsWith("#") ? value.toUpperCase() : value,
     }));
     setSuccess("");
   };
@@ -79,7 +116,10 @@ export default function SettingsBrandingModule({ partner }) {
 
       const response = await api.patch(
         `/partners/by-id/${partner.partnerId}/branding`,
-        form
+        {
+          ...form,
+          brandAccent: selectedOfferVariant.accent,
+        }
       );
       setPartnerData(response.data);
       setSuccess("Personalizacion guardada.");
@@ -90,6 +130,20 @@ export default function SettingsBrandingModule({ partner }) {
       setSaving(false);
     }
   };
+
+  const handleOfferVariantSelect = (variantId) => {
+    const nextVariant = getOfferButtonVariant(variantId);
+    setForm((current) => ({
+      ...current,
+      brandOfferButtonStyle: nextVariant.id,
+      brandAccent: nextVariant.accent,
+    }));
+    setSuccess("");
+    setOfferModalOpen(false);
+  };
+
+  const partnerName = partnerData?.name || "Partner";
+  const storeLine = "Nombre de la tienda";
 
   const handleLogoUpload = async (event) => {
     const file = event.target.files?.[0];
@@ -175,14 +229,21 @@ export default function SettingsBrandingModule({ partner }) {
                 <small>{form.brandSecondary}</small>
               </label>
 
-              <label className="bo-field bo-fieldColor">
-                <span>Color acento</span>
-                <input
-                  type="color"
-                  value={form.brandAccent}
-                  onChange={(e) => handleChange("brandAccent", e.target.value)}
-                />
-                <small>{form.brandAccent}</small>
+              <label className="bo-field">
+                <span>Boton de ofertas</span>
+                <button
+                  type="button"
+                  className="bo-offerPicker"
+                  onClick={() => setOfferModalOpen(true)}
+                >
+                  <span
+                    className={`sf-offersBtn bo-offerPickerPreview ${selectedOfferVariant.className}`}
+                  >
+                    <span className="sf-offersBtnLabel">{selectedOfferVariant.label}</span>
+                  </span>
+                  <strong>{selectedOfferVariant.name}</strong>
+                  <small>Seleccionar variante</small>
+                </button>
               </label>
 
               <label className="bo-field bo-fieldColor">
@@ -193,6 +254,30 @@ export default function SettingsBrandingModule({ partner }) {
                   onChange={(e) => handleChange("brandSurface", e.target.value)}
                 />
                 <small>{form.brandSurface}</small>
+              </label>
+
+              <label className="bo-field bo-fieldColor">
+                <span>Color de letra</span>
+                <input
+                  type="color"
+                  value={form.brandTextColor}
+                  onChange={(e) => handleChange("brandTextColor", e.target.value)}
+                />
+                <small>{form.brandTextColor}</small>
+              </label>
+
+              <label className="bo-field">
+                <span>Tipografia</span>
+                <select
+                  value={form.brandFontFamily}
+                  onChange={(e) => handleChange("brandFontFamily", e.target.value)}
+                >
+                  {BRAND_FONT_OPTIONS.map((option) => (
+                    <option key={option.id} value={option.id}>
+                      {option.label} - {option.preview}
+                    </option>
+                  ))}
+                </select>
               </label>
             </div>
 
@@ -227,19 +312,28 @@ export default function SettingsBrandingModule({ partner }) {
           <aside className="bo-brandingStage" style={previewStyle}>
             <div className="bo-brandingStageSurface">
               <div className="bo-brandingStageTop">
-                <div className="bo-brandingStageLogo">
-                  {partnerData?.brandLogoUrl ? (
-                    <img src={partnerData.brandLogoUrl} alt={partnerData?.name || "Partner"} />
-                  ) : (
-                    <span>{partnerData?.name || "Tu logo"}</span>
-                  )}
+                <div className="bo-brandingStageBrandLockup">
+                  <div className="bo-brandingStageLogo">
+                    {partnerData?.brandLogoUrl ? (
+                      <img src={partnerData.brandLogoUrl} alt={partnerData?.name || "Partner"} />
+                    ) : (
+                      <span>{partnerData?.name || "Tu logo"}</span>
+                    )}
+                  </div>
+
+                  <div className="bo-brandingStageBrandMeta">
+                    <strong>{partnerName}</strong>
+                    <span>{storeLine}</span>
+                  </div>
                 </div>
 
                 <div className="bo-brandingStageSearch" />
               </div>
 
               <div className="bo-brandingStageChips">
-                <span>Oferta</span>
+                <span className={`sf-offersBtn ${selectedOfferVariant.className}`}>
+                  <span className="sf-offersBtnLabel">{selectedOfferVariant.label}</span>
+                </span>
                 <span>Mitad / Mitad</span>
                 <span>Arma tu pizza</span>
               </div>
@@ -258,6 +352,45 @@ export default function SettingsBrandingModule({ partner }) {
           </aside>
         </div>
       </div>
+
+      {offerModalOpen && (
+        <div className="bo-brandingModalBackdrop" onClick={() => setOfferModalOpen(false)}>
+          <div className="bo-brandingModalCard" onClick={(e) => e.stopPropagation()}>
+            <div className="bo-brandingModalHead">
+              <div>
+                <div className="bo-settingsEyebrow">Boton de ofertas</div>
+                <h3 className="bo-settingsSectionTitle">Elige una variante</h3>
+              </div>
+              <button
+                type="button"
+                className="bo-brandingModalClose"
+                onClick={() => setOfferModalOpen(false)}
+              >
+                Cerrar
+              </button>
+            </div>
+
+            <div className="bo-offerVariantGrid">
+              {OFFER_BUTTON_VARIANTS.map((variant) => (
+                <button
+                  key={variant.id}
+                  type="button"
+                  className={`bo-offerVariantCard ${
+                    form.brandOfferButtonStyle === variant.id ? "is-active" : ""
+                  }`}
+                  onClick={() => handleOfferVariantSelect(variant.id)}
+                >
+                  <span className={`sf-offersBtn bo-offerVariantPreview ${variant.className}`}>
+                    <span className="sf-offersBtnLabel">{variant.label}</span>
+                  </span>
+                  <strong>{variant.name}</strong>
+                  <small>{variant.accent}</small>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

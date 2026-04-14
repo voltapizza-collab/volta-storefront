@@ -1,5 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import api from "../../setupAxios";
+import {
+  BRANDING_DEFAULTS,
+  getBrandFontOption,
+  getOfferButtonVariant,
+} from "../../constants/branding";
 
 const formatCurrency = (value) => {
   const numeric = Number(value || 0);
@@ -49,10 +54,24 @@ export default function SettingsModule({ partner, onOpenDelivery, onOpenBranding
     () => [
       partnerData?.brandPrimary || "#3513A4",
       partnerData?.brandSecondary || "#FFBF2D",
-      partnerData?.brandAccent || "#F7A600",
+      partnerData?.brandAccent || BRANDING_DEFAULTS.brandAccent,
       partnerData?.brandSurface || "#FFF7E8",
+      partnerData?.brandTextColor || BRANDING_DEFAULTS.brandTextColor,
     ],
     [partnerData]
+  );
+
+  const brandFont = useMemo(
+    () => getBrandFontOption(partnerData?.brandFontFamily || BRANDING_DEFAULTS.brandFontFamily),
+    [partnerData?.brandFontFamily]
+  );
+
+  const offerVariant = useMemo(
+    () =>
+      getOfferButtonVariant(
+        partnerData?.brandOfferButtonStyle || BRANDING_DEFAULTS.brandOfferButtonStyle
+      ),
+    [partnerData?.brandOfferButtonStyle]
   );
 
   return (
@@ -131,6 +150,13 @@ export default function SettingsModule({ partner, onOpenDelivery, onOpenBranding
                 ) : (
                   <span>Sin logo</span>
                 )}
+              </div>
+
+              <div className="bo-brandingPreviewMeta">
+                <strong style={{ fontFamily: brandFont.family }}>{brandFont.label}</strong>
+                <span className={`sf-offersBtn bo-brandingPreviewOffer ${offerVariant.className}`}>
+                  <span className="sf-offersBtnLabel">{offerVariant.label}</span>
+                </span>
               </div>
 
               <div className="bo-brandingSwatches">

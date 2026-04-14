@@ -484,6 +484,153 @@
   object-position: center;
 }
 
+.sf-engineQuickRow {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.sf-engineQuickCard {
+  min-height: 68px;
+  border-radius: 22px;
+  border: 1px solid rgba(17, 17, 17, 0.08);
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 12px 24px rgba(53, 34, 19, 0.06);
+  display: grid;
+  place-items: center;
+  padding: 10px;
+  color: var(--sf-theme-on-surface, #171717);
+  text-decoration: none;
+}
+
+.sf-engineQuickCard--logo {
+  padding: 8px;
+}
+
+.sf-engineQuickLogo {
+  width: 100%;
+  height: 100%;
+  border-radius: 18px;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at top left, color-mix(in srgb, var(--sf-theme-secondary, #FFBF2D) 36%, white), transparent 72%),
+    rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(17, 17, 17, 0.08);
+  font-weight: 900;
+}
+
+.sf-engineQuickLogo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.sf-engineQuickCard--call {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, #ffd93a, #ffc61a);
+  border: 4px solid #111;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 6px 0 #111,
+    0 12px 20px rgba(27, 20, 10, 0.2);
+  color: #f33a4e;
+  transition: transform 0.16s ease, box-shadow 0.16s ease;
+}
+
+.sf-engineQuickCard--call:hover {
+  transform: translateY(-1px);
+}
+
+.sf-engineQuickCard--call:active {
+  transform: translateY(3px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.26),
+    0 2px 0 #111,
+    0 6px 10px rgba(27, 20, 10, 0.18);
+}
+
+.sf-engineQuickCard--call::before {
+  content: "";
+  position: absolute;
+  inset: 8px 8px 8px 34%;
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0));
+  pointer-events: none;
+}
+
+.sf-engineQuickCard--disabled {
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.sf-engineQuickCallSpine {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 30%;
+  background: linear-gradient(180deg, #f53a4b, #ea233c);
+  border-right: 4px solid #111;
+}
+
+.sf-engineQuickCallPhone {
+  position: relative;
+  z-index: 1;
+  width: 58px;
+  height: 58px;
+  display: inline-grid;
+  place-items: center;
+  color: #ef3248;
+}
+
+.sf-engineQuickCallPhone svg {
+  width: 52px;
+  height: 52px;
+}
+
+.sf-engineQuickCallPlate {
+  position: relative;
+  z-index: 1;
+  min-width: 52px;
+  min-height: 20px;
+  padding: 3px 12px;
+  border-radius: 10px;
+  background: #ef3248;
+  border: 4px solid #111;
+  display: inline-grid;
+  place-items: center;
+  box-shadow: 0 3px 0 rgba(17, 17, 17, 0.75);
+}
+
+.sf-engineQuickCallLabel {
+  font-size: 0.62rem;
+  font-weight: 950;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #111;
+}
+
+.sf-engineQuickCard--cart {
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at top left, color-mix(in srgb, var(--sf-theme-secondary, #FFBF2D) 36%, white), transparent 64%),
+    rgba(255, 255, 255, 0.9);
+  color: var(--sf-theme-primary, #4B11B2);
+}
+
+.sf-engineQuickCard--cart svg {
+  width: 28px;
+  height: 28px;
+}
+
+.sf-engineSearchRow {
+  display: block;
+}
+
 .sf-engineSearchWrap {
   display: grid;
   grid-template-columns: 1fr 54px;
@@ -518,97 +665,6 @@
 .sf-engineSearchBtn svg {
   width: 22px;
   height: 22px;
-}
-
-.sf-engineInfoDeck {
-  display: grid;
-  grid-template-columns: repeat(3, 56px);
-  gap: 20px;
-  justify-content: start;
-}
-
-.sf-engineInfoCard {
-  width: 56px;
-  height: 56px;
-  padding: 5px;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.78);
-  border: 1px solid rgba(17, 17, 17, 0.08);
-  box-shadow: 0 8px 18px rgba(53, 34, 19, 0.05);
-  backdrop-filter: blur(6px);
-  display: grid;
-  place-items: center;
-  gap: 0;
-}
-
-.sf-engineInfoCard--logo {
-  padding: 4px;
-}
-
-.sf-engineInfoLogo {
-  width: 100%;
-  height: 100%;
-  min-height: 100%;
-  border-radius: 10px;
-  overflow: hidden;
-  display: grid;
-  place-items: center;
-  background:
-    radial-gradient(circle at top left, color-mix(in srgb, var(--sf-theme-secondary, #FFBF2D) 36%, white), transparent 72%),
-    rgba(255, 255, 255, 0.88);
-  border: 1px solid rgba(17, 17, 17, 0.08);
-  color: var(--sf-theme-on-surface, #171717);
-  font-size: 0.76rem;
-  font-weight: 900;
-}
-
-.sf-engineInfoLogo img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-}
-
-.sf-engineInfoCard--action {
-  color: inherit;
-  text-decoration: none;
-}
-
-.sf-engineInfoCard--muted {
-  background: rgba(255, 255, 255, 0.68);
-}
-
-.sf-engineInfoIcon {
-  width: 24px;
-  height: 24px;
-  display: inline-grid;
-  place-items: center;
-  color: color-mix(in srgb, var(--sf-theme-secondary, #FFBF2D) 34%, var(--sf-theme-text, #171717));
-}
-
-.sf-engineInfoIcon svg {
-  width: 100%;
-  height: 100%;
-}
-
-.sf-cartGhostBtn {
-  border: none;
-  background: transparent;
-  color: var(--sf-theme-primary, #4B11B2);
-  cursor: pointer;
-  line-height: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  flex-shrink: 0;
-  align-self: start;
-}
-
-.sf-cartGhostBtn svg {
-  width: 28px;
-  height: 28px;
 }
 
 .sf-offersBtn {
@@ -1227,20 +1283,47 @@
     width: 100%;
   }
 
-  .sf-engineLogoBlock {
-    align-items: flex-start;
+  .sf-engineQuickRow {
+    gap: 8px;
   }
 
-  .sf-cartGhostBtn {
-    align-self: flex-start;
+  .sf-engineQuickCard {
+    min-height: 60px;
+    border-radius: 18px;
+    padding: 8px;
+  }
+
+  .sf-engineQuickLogo {
+    border-radius: 14px;
+  }
+
+  .sf-engineQuickCallPhone {
+    width: 46px;
+    height: 46px;
+  }
+
+  .sf-engineQuickCallPhone svg {
     width: 40px;
     height: 40px;
-    margin-top: 8px;
   }
 
-  .sf-cartGhostBtn svg {
-    width: 24px;
-    height: 24px;
+  .sf-engineQuickCard--cart svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .sf-engineQuickCallPlate {
+    min-width: 42px;
+    min-height: 18px;
+    border-width: 3px;
+  }
+
+  .sf-engineQuickCallLabel {
+    font-size: 0.56rem;
+  }
+
+  .sf-engineLogoBlock {
+    align-items: flex-start;
   }
 
   .sf-engineActionRow {
@@ -1275,23 +1358,6 @@
     width: 100%;
     max-width: none;
     grid-template-columns: 1fr 52px;
-  }
-
-  .sf-engineInfoDeck {
-    grid-template-columns: repeat(3, 48px);
-    gap: 8px;
-  }
-
-  .sf-engineInfoCard {
-    width: 48px;
-    height: 48px;
-    padding: 4px;
-    border-radius: 12px;
-  }
-
-  .sf-engineInfoLogo {
-    min-height: 100%;
-    border-radius: 9px;
   }
 
   .sf-engineCategoryRail {

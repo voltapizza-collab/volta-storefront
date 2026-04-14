@@ -241,6 +241,112 @@ export default function StorePage() {
               </div>
 
               <div className="sf-engineAside">
+                <div className="sf-engineQuickRow" aria-label="Acciones rapidas">
+                  <div
+                    className="sf-engineQuickCard sf-engineQuickCard--logo"
+                    aria-label="Logo del partner"
+                  >
+                    <div className="sf-engineQuickLogo">
+                      {partner?.brandLogoUrl ? (
+                        <img src={partner.brandLogoUrl} alt={partner?.name || "Partner"} />
+                      ) : (
+                        <span>{(partner?.name || store.storeName || "SF").slice(0, 2)}</span>
+                      )}
+                    </div>
+                  </div>
+
+                  {phoneHref ? (
+                    <a
+                      className="sf-engineQuickCard sf-engineQuickCard--call"
+                      href={phoneHref}
+                      aria-label={`Llamar a ${storePhone}`}
+                      title={storePhone}
+                    >
+                      <span className="sf-engineQuickCallSpine" aria-hidden="true" />
+                      <span className="sf-engineQuickCallPhone" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                          <path
+                            d="M6.7 3.8h3l1.3 3.5-1.8 1.6c.9 1.8 2.4 3.3 4.2 4.2l1.6-1.8 3.5 1.3v3c0 .6-.4 1-1 1C10 16.6 7.4 14 6.7 6.8c0-.6.4-1 1-1Z"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.9"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                          <path
+                            d="M15.4 6.8c1.2.2 2.4 1 3.2 2.1"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.6"
+                            strokeLinecap="round"
+                          />
+                          <path
+                            d="M15.1 4.1c2.2.3 4.2 1.8 5.4 3.8"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.6"
+                            strokeLinecap="round"
+                          />
+                        </svg>
+                      </span>
+                      <span className="sf-engineQuickCallPlate">
+                        <span className="sf-engineQuickCallLabel">Llamar</span>
+                      </span>
+                    </a>
+                  ) : (
+                    <div
+                      className="sf-engineQuickCard sf-engineQuickCard--call sf-engineQuickCard--disabled"
+                      aria-label="Llamada directa no disponible"
+                    >
+                      <span className="sf-engineQuickCallSpine" aria-hidden="true" />
+                      <span className="sf-engineQuickCallPhone" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                          <path
+                            d="M6.7 3.8h3l1.3 3.5-1.8 1.6c.9 1.8 2.4 3.3 4.2 4.2l1.6-1.8 3.5 1.3v3c0 .6-.4 1-1 1C10 16.6 7.4 14 6.7 6.8c0-.6.4-1 1-1Z"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.9"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                          <path
+                            d="M15.4 6.8c1.2.2 2.4 1 3.2 2.1"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.6"
+                            strokeLinecap="round"
+                          />
+                          <path
+                            d="M15.1 4.1c2.2.3 4.2 1.8 5.4 3.8"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.6"
+                            strokeLinecap="round"
+                          />
+                        </svg>
+                      </span>
+                      <span className="sf-engineQuickCallPlate">
+                        <span className="sf-engineQuickCallLabel">Llamar</span>
+                      </span>
+                    </div>
+                  )}
+
+                  <button type="button" className="sf-engineQuickCard sf-engineQuickCard--cart" aria-label="Carrito">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path
+                        d="M3 4h2l2.2 9.2A2 2 0 0 0 9.15 15H18a2 2 0 0 0 1.94-1.53L21 8H7.1"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <circle cx="10" cy="19" r="1.6" fill="currentColor" />
+                      <circle cx="17" cy="19" r="1.6" fill="currentColor" />
+                    </svg>
+                  </button>
+                </div>
+
                 <div className="sf-engineSearchRow">
                   <div className="sf-engineSearchWrap">
                     <input
@@ -269,94 +375,6 @@ export default function StorePage() {
                         />
                       </svg>
                     </button>
-                  </div>
-
-                  <button type="button" className="sf-cartGhostBtn" aria-label="Carrito">
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path
-                        d="M3 4h2l2.2 9.2A2 2 0 0 0 9.15 15H18a2 2 0 0 0 1.94-1.53L21 8H7.1"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <circle cx="10" cy="19" r="1.6" fill="currentColor" />
-                      <circle cx="17" cy="19" r="1.6" fill="currentColor" />
-                    </svg>
-                  </button>
-                </div>
-
-                <div className="sf-engineInfoDeck" aria-label="Informacion de la tienda">
-                  <div
-                    className="sf-engineInfoCard sf-engineInfoCard--logo"
-                    aria-label="Logo del partner"
-                  >
-                    <div className="sf-engineInfoLogo">
-                      {partner?.brandLogoUrl ? (
-                        <img src={partner.brandLogoUrl} alt={partner?.name || "Partner"} />
-                      ) : (
-                        <span>{(partner?.name || store.storeName || "SF").slice(0, 2)}</span>
-                      )}
-                    </div>
-                  </div>
-
-                  {phoneHref ? (
-                    <a
-                      className="sf-engineInfoCard sf-engineInfoCard--action"
-                      href={phoneHref}
-                      aria-label={`Llamar a ${storePhone}`}
-                      title={storePhone}
-                    >
-                      <span className="sf-engineInfoIcon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24">
-                          <path
-                            d="M6.7 3.8h3l1.3 3.5-1.8 1.6c.9 1.8 2.4 3.3 4.2 4.2l1.6-1.8 3.5 1.3v3c0 .6-.4 1-1 1C10 16.6 7.4 14 6.7 6.8c0-.6.4-1 1-1Z"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="1.9"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                      </span>
-                    </a>
-                  ) : (
-                    <div
-                      className="sf-engineInfoCard sf-engineInfoCard--action sf-engineInfoCard--muted"
-                      aria-label="Llamada directa no disponible"
-                    >
-                      <span className="sf-engineInfoIcon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24">
-                          <path
-                            d="M6.7 3.8h3l1.3 3.5-1.8 1.6c.9 1.8 2.4 3.3 4.2 4.2l1.6-1.8 3.5 1.3v3c0 .6-.4 1-1 1C10 16.6 7.4 14 6.7 6.8c0-.6.4-1 1-1Z"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="1.9"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                      </span>
-                    </div>
-                  )}
-
-                  <div
-                    className="sf-engineInfoCard sf-engineInfoCard--action sf-engineInfoCard--muted"
-                    aria-label="Visitar redes"
-                  >
-                    <span className="sf-engineInfoIcon" aria-hidden="true">
-                      <svg viewBox="0 0 24 24">
-                        <path
-                          d="M7 8.5A4.5 4.5 0 0 1 11.5 4h1A4.5 4.5 0 0 1 17 8.5v7A4.5 4.5 0 0 1 12.5 20h-1A4.5 4.5 0 0 1 7 15.5Z"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="1.9"
-                        />
-                        <circle cx="12" cy="12" r="2.7" fill="none" stroke="currentColor" strokeWidth="1.9" />
-                        <circle cx="16.8" cy="7.2" r="0.9" fill="currentColor" />
-                      </svg>
-                    </span>
                   </div>
                 </div>
               </div>

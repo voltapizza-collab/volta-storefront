@@ -65,9 +65,21 @@ function CountryFlag({ countryCode }) {
   const normalized = String(countryCode || "").trim().toUpperCase();
   const src = COUNTRY_FLAG_MAP[normalized];
 
-  if (!src) return null;
+  // ✅ si existe imagen → usar imagen
+  if (src) {
+    return <img className="sf-countryFlag" src={src} alt="" aria-hidden="true" />;
+  }
 
-  return <img className="sf-countryFlag" src={src} alt="" aria-hidden="true" />;
+  // ✅ fallback emoji
+  const emoji = countryCodeToFlag(normalized);
+
+  if (!emoji) return null;
+
+  return (
+    <span className="sf-countryFlag sf-countryFlag--emoji" aria-hidden="true">
+      {emoji}
+    </span>
+  );
 }
 
 function QuickCallIcon() {

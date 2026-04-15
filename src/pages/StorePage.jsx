@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../services/api";
 import "../styles/Storefront.css";
+import flagEs from "../assets/flags/es.svg";
 import {
   BRANDING_DEFAULTS,
   buildBrandThemeVars,
@@ -10,6 +11,97 @@ import {
 
 const TRENDING_TAB = "__TRENDING__";
 const PROMOS_TAB = "__PROMOS__";
+
+function formatCountdown(totalMinutes) {
+  if (totalMinutes <= 0) return "Cerrando ahora";
+
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+
+  if (hours > 0 && minutes > 0) {
+    return `Cierra en ${hours}h ${minutes}m`;
+  }
+
+  if (hours > 0) {
+    return `Cierra en ${hours}h`;
+  }
+
+  return `Cierra en ${minutes}m`;
+}
+
+function buildClosingSnapshot(now, closeHour = 23, closeMinute = 30) {
+  const closingTime = new Date(now);
+  closingTime.setHours(closeHour, closeMinute, 0, 0);
+
+  const diffMs = closingTime.getTime() - now.getTime();
+  const diffMinutes = Math.max(Math.ceil(diffMs / 60000), 0);
+  const hours = Math.floor(diffMinutes / 60);
+  const minutes = diffMinutes % 60;
+  const countdownValue =
+    hours > 0 ? `${hours}h ${String(minutes).padStart(2, "0")}m` : `${minutes}m`;
+
+  return {
+    countdownLabel: formatCountdown(diffMinutes),
+    countdownValue,
+    closingLabel: `Hoy ${String(closeHour).padStart(2, "0")}:${String(closeMinute).padStart(2, "0")}`,
+  };
+}
+
+function countryCodeToFlag(code) {
+  const normalized = String(code || "").trim().toUpperCase();
+
+  if (!/^[A-Z]{2}$/.test(normalized)) return "";
+
+  return String.fromCodePoint(
+    ...[...normalized].map((char) => 127397 + char.charCodeAt(0))
+  );
+}
+
+const COUNTRY_FLAG_MAP = {
+  ES: flagEs,
+};
+
+function CountryFlag({ countryCode }) {
+  const normalized = String(countryCode || "").trim().toUpperCase();
+  const src = COUNTRY_FLAG_MAP[normalized];
+
+  if (!src) return null;
+
+  return <img className="sf-countryFlag" src={src} alt="" aria-hidden="true" />;
+}
+
+function QuickCallIcon() {
+  return (
+    <span className="sf-voltaDialIcon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" role="presentation">
+        <path
+          d="M22 16.92v3a2 2 0 0 1-2.18 2A19.8 19.8 0 0 1 11.2 18.8a19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.08 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.72c.12.9.31 1.77.58 2.6a2 2 0 0 1-.45 2.1L8 9.9a16 16 0 0 0 6.1 6.1l1.49-1.24a2 2 0 0 1 2.1-.45c.83.27 1.7.46 2.6.58A2 2 0 0 1 22 16.92Z"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.4"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M15 3a8 8 0 0 1 8 8"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.4"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M15 7a4 4 0 0 1 4 4"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.4"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </span>
+  );
+}
 
 export default function StorePage() {
   const { partnerSlug, storeSlug } = useParams();
@@ -23,6 +115,7 @@ export default function StorePage() {
   const [activeTab, setActiveTab] = useState(TRENDING_TAB);
   const [scheduleOpen, setScheduleOpen] = useState(false);
   const [reservationOpen, setReservationOpen] = useState(false);
+  const [now, setNow] = useState(() => new Date());
 
   useEffect(() => {
     if (!partnerSlug || !storeSlug) return;
@@ -51,6 +144,16 @@ export default function StorePage() {
 
     loadStorefront();
   }, [partnerSlug, storeSlug]);
+
+  useEffect(() => {
+    const intervalId = window.setInterval(() => {
+      setNow(new Date());
+    }, 60000);
+
+    return () => {
+      window.clearInterval(intervalId);
+    };
+  }, []);
 
   const themeStyle = useMemo(
     () => {
@@ -174,6 +277,78 @@ export default function StorePage() {
 
     return "Delivery activo";
   }, [partner]);
+  const deliveryMetaLabel = useMemo(() => {
+    if (!partner) return "Modo activo";
+
+    const radiusKm = Number(partner.deliveryRadiusKm || 0);
+    const pricingLabel =
+      partner.deliveryPricingMode === "VARIABLE"
+        ? "Tarifa variable"
+        : "Tarifa fija";
+
+    if (radiusKm > 0) {
+      return `${pricingLabel} - ${radiusKm} km`;
+    }
+
+    return pricingLabel;
+  }, [partner]);
+  const countryBadgeLabel = useMemo(() => {
+    const countryCode = String(partner?.country || "").trim().toUpperCase();
+
+    if (!countryCode) return "Zona activa";
+
+    return countryCode;
+  }, [partner?.country]);
+  const closingSnapshot = useMemo(() => buildClosingSnapshot(now), [now]);
+  const utilityPills = useMemo(
+    () => [
+      {
+        key: "city",
+        tone: "neutral",
+        primary: store?.city || "Pizza Engine",
+        secondary: countryBadgeLabel,
+      },
+      {
+        key: "delivery",
+        tone: "neutral",
+        primary: deliveryLabel,
+        secondary: deliveryMetaLabel,
+      },
+      ...(reservationEnabled
+        ? [
+            {
+              key: "reservations",
+              tone: "accent live",
+              primary: "Reserva",
+              secondary: "Hoy",
+            },
+          ]
+        : []),
+      {
+        key: "closing",
+        tone: "dark live",
+        primary: "Cierra en",
+        secondary: closingSnapshot.countdownValue,
+      },
+    ],
+    [closingSnapshot, countryBadgeLabel, deliveryLabel, deliveryMetaLabel, reservationEnabled, store?.city]
+  );
+
+  useEffect(() => {
+    if (!partner && !store) return;
+
+    console.log("[StorePage] utility pills debug", {
+      storeCity: store?.city,
+      partnerCountry: partner?.country,
+      deliveryPricingMode: partner?.deliveryPricingMode,
+      deliveryRadiusKm: partner?.deliveryRadiusKm,
+      deliveryFeeFixed: partner?.deliveryFeeFixed,
+      deliveryFeeBase: partner?.deliveryFeeBase,
+      deliveryLabel,
+      deliveryMetaLabel,
+      utilityPills,
+    });
+  }, [deliveryLabel, deliveryMetaLabel, partner, store, utilityPills]);
   const activeProductsCount = visibleMenu.length;
   const incentiveMessage =
     activeTab === PROMOS_TAB
@@ -207,8 +382,8 @@ export default function StorePage() {
         <section className="sf-engineControlBar">
           <div className="sf-engineTop">
             <div className="sf-engineBrand">
-              <div className="sf-engineLogoBlock">
-                <div className="sf-engineBrandMeta">
+              <div className="sf-engineBrandHead">
+                <div className="sf-engineLogoBlock">
                   <h1 className="sf-engineBrandName">
                     <span className="sf-engineBrandPartner">
                       {partner?.name || store.storeName}
@@ -217,142 +392,99 @@ export default function StorePage() {
                       <span className="sf-engineBrandStore">{store.storeName}</span>
                     )}
                   </h1>
-
-                  <div className="sf-engineUtilityRow">
-                    <span className="sf-engineUtilityPill">
-                      {store?.city || "Pizza Engine"}
-                    </span>
-                    <span className="sf-engineUtilityPill">
-                      {deliveryLabel}
-                    </span>
-                    {reservationEnabled && (
-                      <span className="sf-engineUtilityPill sf-engineUtilityPill--reservations">
-                        Reservas activas
-                      </span>
-                    )}
-                    <span className="sf-engineUtilityPill">
-                      {reservationEnabled ? "Servicio en sala" : "Pedidos rapidos"}
-                    </span>
-                    <span className="sf-engineUtilityPill">
-                      {Math.max(tabs.length - 2, 0)} categorias
-                    </span>
-                  </div>
                 </div>
-              </div>
 
-              <div className="sf-engineAside">
                 <div className="sf-engineQuickRow" aria-label="Acciones rapidas">
-                  <div
-                    className="sf-engineQuickCard sf-engineQuickCard--logo"
-                    aria-label="Logo del partner"
-                  >
-                    <div className="sf-engineQuickLogo">
-                      {partner?.brandLogoUrl ? (
-                        <img src={partner.brandLogoUrl} alt={partner?.name || "Partner"} />
-                      ) : (
-                        <span>{(partner?.name || store.storeName || "SF").slice(0, 2)}</span>
-                      )}
-                    </div>
-                  </div>
-
                   {phoneHref ? (
-                    <a
-                      className="sf-engineQuickCard sf-engineQuickCard--call"
-                      href={phoneHref}
+                    <button
+                      type="button"
+                      className="sf-engineQuickAction sf-engineQuickAction--call"
+                      onClick={() => {
+                        window.location.href = phoneHref;
+                      }}
                       aria-label={`Llamar a ${storePhone}`}
                       title={storePhone}
                     >
-                      <span className="sf-engineQuickCallSpine" aria-hidden="true" />
-                      <span className="sf-engineQuickCallPhone" aria-hidden="true">
-                        <svg viewBox="0 0 24 24">
-                          <path
-                            d="M6.7 3.8h3l1.3 3.5-1.8 1.6c.9 1.8 2.4 3.3 4.2 4.2l1.6-1.8 3.5 1.3v3c0 .6-.4 1-1 1C10 16.6 7.4 14 6.7 6.8c0-.6.4-1 1-1Z"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="1.9"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                          <path
-                            d="M15.4 6.8c1.2.2 2.4 1 3.2 2.1"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="1.6"
-                            strokeLinecap="round"
-                          />
-                          <path
-                            d="M15.1 4.1c2.2.3 4.2 1.8 5.4 3.8"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="1.6"
-                            strokeLinecap="round"
-                          />
-                        </svg>
+                      <span className="sf-engineQuickActionFace">
+                        <QuickCallIcon />
                       </span>
-                      <span className="sf-engineQuickCallPlate">
-                        <span className="sf-engineQuickCallLabel">Llamar</span>
-                      </span>
-                    </a>
+                    </button>
                   ) : (
-                    <div
-                      className="sf-engineQuickCard sf-engineQuickCard--call sf-engineQuickCard--disabled"
+                    <button
+                      type="button"
+                      className="sf-engineQuickAction sf-engineQuickAction--call sf-engineQuickAction--disabled"
                       aria-label="Llamada directa no disponible"
+                      disabled
                     >
-                      <span className="sf-engineQuickCallSpine" aria-hidden="true" />
-                      <span className="sf-engineQuickCallPhone" aria-hidden="true">
-                        <svg viewBox="0 0 24 24">
-                          <path
-                            d="M6.7 3.8h3l1.3 3.5-1.8 1.6c.9 1.8 2.4 3.3 4.2 4.2l1.6-1.8 3.5 1.3v3c0 .6-.4 1-1 1C10 16.6 7.4 14 6.7 6.8c0-.6.4-1 1-1Z"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="1.9"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                          <path
-                            d="M15.4 6.8c1.2.2 2.4 1 3.2 2.1"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="1.6"
-                            strokeLinecap="round"
-                          />
-                          <path
-                            d="M15.1 4.1c2.2.3 4.2 1.8 5.4 3.8"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="1.6"
-                            strokeLinecap="round"
-                          />
-                        </svg>
+                      <span className="sf-engineQuickActionFace">
+                        <QuickCallIcon />
                       </span>
-                      <span className="sf-engineQuickCallPlate">
-                        <span className="sf-engineQuickCallLabel">Llamar</span>
-                      </span>
-                    </div>
+                    </button>
                   )}
 
-                  <button type="button" className="sf-engineQuickCard sf-engineQuickCard--cart" aria-label="Carrito">
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path
-                        d="M3 4h2l2.2 9.2A2 2 0 0 0 9.15 15H18a2 2 0 0 0 1.94-1.53L21 8H7.1"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <circle cx="10" cy="19" r="1.6" fill="currentColor" />
-                      <circle cx="17" cy="19" r="1.6" fill="currentColor" />
-                    </svg>
+                  <button type="button" className="sf-engineQuickAction sf-engineQuickAction--cart" aria-label="Carrito">
+                    <span className="sf-engineQuickActionFace">
+                      <span className="sf-engineQuickCartIcon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                          <path
+                            d="M3 4h2l2.2 9.2A2 2 0 0 0 9.15 15H18a2 2 0 0 0 1.94-1.53L21 8H7.1"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                          <circle cx="10" cy="19" r="1.6" fill="currentColor" />
+                          <circle cx="17" cy="19" r="1.6" fill="currentColor" />
+                        </svg>
+                      </span>
+                    </span>
                   </button>
+                </div>
+              </div>
+
+              <div className="sf-engineBrandInfo">
+                <div className="sf-engineUtilityRow">
+                  <button type="button" className={`sf-offersBtn sf-engineUtilityOffer ${offerVariant.className}`}>
+                    <span className="sf-offersBtnLabel">{offerVariant.label}</span>
+                  </button>
+                  {utilityPills.map((pill) => (
+                    <span
+                      key={pill.key}
+                      className={`sf-engineUtilityPill sf-engineUtilityPill--${pill.tone.split(" ").join(" sf-engineUtilityPill--")}`}
+                    >
+                      <span className="sf-engineUtilityPillTicker">
+                        <span className="sf-engineUtilityPillTrack">
+                          <span className="sf-engineUtilityPillLine">{pill.primary}</span>
+                          <span className="sf-engineUtilityPillLine">
+                            {pill.key === "city" ? (
+                              <span className="sf-engineUtilityPillInline">
+                                <CountryFlag countryCode={partner?.country} />
+                                <span>{pill.secondary}</span>
+                              </span>
+                            ) : (
+                              pill.secondary
+                            )}
+                          </span>
+                        </span>
+                      </span>
+                    </span>
+                  ))}
                 </div>
 
                 <div className="sf-engineSearchRow">
                   <div className="sf-engineSearchWrap">
+                    {!search && (
+                      <span className="sf-engineSearchTicker" aria-hidden="true">
+                        <span className="sf-engineSearchTickerTrack">
+                          <span>Buscar pizza o ingrediente, extras o sabores</span>
+                        </span>
+                      </span>
+                    )}
                     <input
                       className="sf-engineSearch"
                       type="search"
-                      placeholder="Buscar pizza o ingrediente"
+                      placeholder=""
                       value={search}
                       onChange={(event) => setSearch(event.target.value)}
                     />
@@ -382,9 +514,6 @@ export default function StorePage() {
           </div>
 
           <div className="sf-engineActionRow">
-            <button type="button" className={`sf-offersBtn ${offerVariant.className}`}>
-              <span className="sf-offersBtnLabel">{offerVariant.label}</span>
-            </button>
             <button type="button" className="sf-enginePillBtn">
               Mitad / Mitad
             </button>

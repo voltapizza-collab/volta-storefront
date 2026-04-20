@@ -111,6 +111,7 @@ const getAllergenSummary = (allergens) => {
 
 export default function PizzaCreator({ partner }) {
   const partnerId = partner?.partnerId;
+  const storeId = partner?.storeId;
   const [categories, setCategories] = useState([]);
   const [pizzaOrderByCat, setPizzaOrderByCat] = useState({});
   const [form, setForm] = useState(createInitialForm);
@@ -160,17 +161,22 @@ export default function PizzaCreator({ partner }) {
     let alive = true;
 
     api
-      .get("/ingredients")
+      .get(storeId ? `/stores/${storeId}/ingredients` : "/ingredients")
       .then((r) => {
         if (!alive) return;
-        setInventory(Array.isArray(r.data) ? r.data : []);
+        const source = Array.isArray(r.data) ? r.data : [];
+        setInventory(
+          storeId
+            ? source.filter((item) => item.exists && item.active)
+            : source
+        );
       })
       .catch(console.error);
 
     return () => {
       alive = false;
     };
-  }, []);
+  }, [storeId]);
 
   const fetchPizzas = useCallback(async () => {
     if (!partnerId) return;
@@ -403,6 +409,9 @@ export default function PizzaCreator({ partner }) {
     payload.append("name", form.name.trim());
     payload.append("partnerId", String(partnerId));
     payload.append("categoryId", String(Number(form.categoryId)));
+    if (storeId) {
+      payload.append("storeId", String(storeId));
+    }
     payload.append("sizes", JSON.stringify(form.sizes));
     payload.append("priceBySize", JSON.stringify(form.priceBySize));
     payload.append("ingredients", JSON.stringify(form.ingredients));
@@ -556,6 +565,10 @@ export default function PizzaCreator({ partner }) {
                   Selecciona al menos un tamano para poder poner cantidades.
                 </div>
               )}
+
+              <div className="pc-hint">
+                Solo aparecen ingredientes activos del inventario/onboarding de esta tienda.
+              </div>
 
               <fieldset className="ingredients-fieldset">
                 {form.ingredients.map((row, i) => {

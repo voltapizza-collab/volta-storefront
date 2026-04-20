@@ -1,0 +1,361 @@
+.cu-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cu-panel {
+  max-width: 1180px;
+  padding: 28px;
+  border-radius: 28px;
+  background: linear-gradient(180deg, #f7f1ff 0%, #ffffff 100%);
+  border: 1px solid rgba(59, 0, 139, 0.12);
+  box-shadow: 0 18px 42px rgba(59, 0, 139, 0.08);
+}
+
+.cu-head,
+.cu-headActions,
+.cu-toolbar,
+.cu-modalHead,
+.cu-modalActions,
+.cu-actionsRight,
+.cu-rowActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.cu-kicker {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--brand-3);
+  margin-bottom: 10px;
+}
+
+.cu-head h2,
+.cu-modalHead h3 {
+  margin: 0;
+  color: var(--brand-1);
+}
+
+.cu-head p {
+  margin: 8px 0 0;
+  color: rgba(59, 0, 139, 0.72);
+}
+
+.cu-btn,
+.cu-inlineBtn,
+.cu-search,
+.cu-field input,
+.cu-field textarea,
+.cu-iconBtn {
+  font: inherit;
+  border-radius: 16px;
+}
+
+.cu-btn,
+.cu-inlineBtn,
+.cu-iconBtn {
+  cursor: pointer;
+}
+
+.cu-btn {
+  border: 1px solid rgba(59, 0, 139, 0.12);
+  padding: 12px 16px;
+}
+
+.cu-btn-primary {
+  background: linear-gradient(135deg, var(--brand-2), #ffd36e);
+  color: var(--black);
+  border-color: transparent;
+  font-weight: 800;
+}
+
+.cu-btn-ghost {
+  background: rgba(59, 0, 139, 0.06);
+  color: var(--brand-1);
+}
+
+.cu-statsGrid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 14px;
+  margin: 24px 0 18px;
+}
+
+.cu-statCard {
+  padding: 16px 18px;
+  border-radius: 20px;
+  background: #fff;
+  border: 1px solid rgba(59, 0, 139, 0.08);
+  display: grid;
+  gap: 8px;
+}
+
+.cu-statCard span,
+.cu-statCard small {
+  color: rgba(59, 0, 139, 0.72);
+}
+
+.cu-statCard strong {
+  font-size: 26px;
+  color: var(--brand-1);
+}
+
+.cu-statCard-total {
+  background: linear-gradient(135deg, rgba(255, 182, 28, 0.18), rgba(106, 61, 240, 0.08));
+}
+
+.cu-toolbar {
+  margin-bottom: 18px;
+}
+
+.cu-search {
+  width: min(320px, 100%);
+  padding: 12px 16px;
+  border: 1px solid rgba(59, 0, 139, 0.14);
+  background: #fff;
+}
+
+.cu-error,
+.cu-empty {
+  padding: 16px;
+  border-radius: 18px;
+  background: #fff4f2;
+  color: #982c1f;
+  border: 1px solid rgba(152, 44, 31, 0.12);
+}
+
+.cu-empty {
+  background: #faf7ff;
+  color: rgba(59, 0, 139, 0.68);
+  border-color: rgba(59, 0, 139, 0.08);
+  text-align: center;
+}
+
+.cu-tableWrap {
+   max-height: 520px;
+  overflow: auto;
+  border-radius: 22px;
+  border: 1px solid rgba(59, 0, 139, 0.08);
+  background: #ededed;
+  color: rgba(59, 0, 139, 0.68);
+}
+
+.cu-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.cu-table th,
+.cu-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(59, 0, 139, 0.06);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.cu-table th {
+  color: rgba(59, 0, 139, 0.76);
+  background: rgba(59, 0, 139, 0.03);
+}
+
+.cu-table .actions {
+  text-align: right;
+}
+
+.cu-nameCell {
+  display: grid;
+  gap: 4px;
+}
+
+.cu-nameCell strong {
+  color: var(--brand-1);
+}
+
+.cu-nameCell span {
+  color: rgba(59, 0, 139, 0.66);
+  font-size: 13px;
+}
+
+.cu-inlineBtn {
+  border: 1px solid rgba(59, 0, 139, 0.12);
+  background: rgba(59, 0, 139, 0.04);
+  color: var(--brand-1);
+  padding: 8px 12px;
+}
+
+.cu-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.cu-badge-s1,
+.cu-badge-s2,
+.cu-badge-s3,
+.cu-badge-s4 {
+  background: rgba(106, 61, 240, 0.08);
+  color: var(--brand-1);
+}
+
+.cu-badge-active {
+  background: rgba(255, 182, 28, 0.18);
+  color: #6a4800;
+}
+
+.cu-badge-restricted {
+  background: rgba(59, 0, 139, 0.14);
+  color: var(--brand-1);
+}
+
+.cu-modalBack {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 9, 44, 0.44);
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  z-index: 70;
+}
+
+.cu-modalCard {
+  width: min(760px, 100%);
+  padding: 22px;
+  border-radius: 28px;
+  background: #fff;
+  box-shadow: 0 28px 60px rgba(29, 9, 74, 0.28);
+}
+
+.cu-iconBtn {
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(59, 0, 139, 0.12);
+  background: #fff;
+  color: var(--brand-1);
+}
+
+.cu-formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 16px;
+  margin-top: 18px;
+}
+
+.cu-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cu-field span {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--brand-1);
+}
+
+.cu-field input,
+.cu-field textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  border: 1px solid rgba(59, 0, 139, 0.12);
+  background: #fff;
+}
+
+.cu-field-wide {
+  grid-column: 1 / -1;
+}
+
+.cu-btn-danger {
+  background: rgba(59, 0, 139, 0.9);
+  color: #fff;
+}
+
+.cu-statCard {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cu-statCard:hover {
+  transform: translateY(-2px);
+}
+
+.cu-statCard.active {
+  border: 2px solid #ff6933;
+  background: rgba(255, 105, 51, 0.1);
+}
+
+.cu-daysOff {
+  font-weight: 600;
+}
+
+.cu-daysOff.cold {
+  color: #ff6933; /* peligro */
+}
+
+.cu-daysOff.hot {
+  color: #00c853; /* activo */
+}
+
+@media (max-width: 900px) {
+  .cu-head,
+  .cu-headActions,
+  .cu-toolbar,
+  .cu-modalHead,
+  .cu-modalActions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .cu-statsGrid,
+  .cu-formGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .cu-table {
+    min-width: 760px;
+  }
+}
+.cu-table td:nth-child(5),
+.cu-table th:nth-child(5) {
+  text-align: center;
+  width: 110px;
+}
+.cu-badge-s1 { background: rgba(200,200,200,0.2); }
+.cu-badge-s2 { background: rgba(255, 193, 7, 0.2); }
+.cu-badge-s3 { background: rgba(33, 150, 243, 0.2); }
+.cu-badge-s4 { background: rgba(76, 175, 80, 0.2); }
+
+.cu-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #fff;
+  cursor: default;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.cu-pill.hot {
+  background: linear-gradient(135deg, #ff2d6f, #ff6b6b);
+}
+
+.cu-pill.cold {
+  background: linear-gradient(135deg, #36a2eb, #4bc0c0);
+}
+
+.cu-pill:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+}

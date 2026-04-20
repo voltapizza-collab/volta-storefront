@@ -9,8 +9,10 @@ import PizzaCreatorOverview from "../components/Backoffice/PizzaCreatorOverview"
 import SettingsModule from "../components/Backoffice/SettingsModule";
 import SettingsDeliveryModule from "../components/Backoffice/SettingsDeliveryModule";
 import SettingsBrandingModule from "../components/Backoffice/SettingsBrandingModule";
+import CustomersModule from "../components/Backoffice/CustomersModule";
 import EngineBackground from "../components/Backoffice/EngineBackground";
 import AppFooter from "../components/Layout/AppFooter";
+import AdminStoresPage from "./AdminStoresPage";
 import api from "../setupAxios";
 
 export default function Backoffice() {
@@ -345,11 +347,29 @@ export default function Backoffice() {
                 </div>
               )}
 
-              <button className="bo-btn" disabled type="button">
+              <button
+                className={`bo-btn ${
+                  activeModuleGroup === "stores" ? "active" : ""
+                }`}
+                onClick={() => {
+                  setActiveModule("stores");
+                  setActiveModuleGroup("stores");
+                }}
+                type="button"
+              >
                 Stores
               </button>
 
-              <button className="bo-btn" disabled type="button">
+              <button
+                className={`bo-btn ${
+                  activeModuleGroup === "customers" ? "active" : ""
+                }`}
+                onClick={() => {
+                  setActiveModule("customers");
+                  setActiveModuleGroup("customers");
+                }}
+                type="button"
+              >
                 Customers
               </button>
 
@@ -457,6 +477,17 @@ export default function Backoffice() {
         <div className="bo-workspace">
           {activeModule === "inventory" && auth.storeId && (
             <InventoryModule partner={auth} />
+          )}
+
+          {activeModule === "stores" && auth.partnerId && (
+            <AdminStoresPage
+              initialPartnerId={String(auth.partnerId)}
+              lockPartner
+            />
+          )}
+
+          {activeModule === "customers" && auth.partnerId && (
+            <CustomersModule partner={auth} />
           )}
 
           {activeModule === "pizzaCreator" && auth.partnerId && (

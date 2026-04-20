@@ -1,0 +1,785 @@
+.sc-page {
+  min-height: 100%;
+  padding: 8px 4px 24px;
+  color: #201233;
+}
+
+.sc-header,
+.sc-cardHead,
+.sc-hoursDayHead,
+.sc-modalHead,
+.sc-modalFooter,
+.sc-headerActions,
+.sc-modalToolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.sc-header {
+  margin-bottom: 20px;
+}
+
+.sc-header h2,
+.sc-card h3,
+.sc-cardTitle,
+.sc-modalTitle,
+.sc-modalHead h3 {
+  margin: 0;
+  color: var(--brand-1);
+}
+
+.sc-header h2 {
+  font-size: 34px;
+  line-height: 1;
+}
+
+.sc-subtitle,
+.sc-mapMeta {
+  margin: 8px 0 0;
+  color: rgba(32, 18, 51, 0.68);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.sc-card {
+  background: linear-gradient(180deg, #fff9ec 0%, #ffffff 100%);
+  border: 1px solid rgba(59, 0, 139, 0.1);
+  border-radius: 28px;
+  padding: 24px;
+  box-shadow: 0 18px 38px rgba(59, 0, 139, 0.08);
+  margin-bottom: 20px;
+}
+
+.sc-cardTitle {
+  font-size: 28px;
+}
+
+.sc-banner {
+  margin-bottom: 18px;
+  padding: 14px 18px;
+  border-radius: 18px;
+  background: rgba(106, 61, 240, 0.08);
+  color: var(--brand-1);
+  border: 1px solid rgba(106, 61, 240, 0.12);
+  font-weight: 600;
+}
+
+.sc-banner.is-error {
+  background: rgba(192, 42, 42, 0.08);
+  color: #9f2424;
+  border-color: rgba(192, 42, 42, 0.14);
+}
+
+.sc-btn,
+.table-btn,
+.sc-iconBtn,
+.sc-toggle,
+.sc-select,
+.sc-input,
+.sc-inlineInput,
+.sc-hoursRow select {
+  font: inherit;
+}
+
+.sc-btn,
+.table-btn,
+.sc-iconBtn,
+.sc-stockSectionHead {
+  cursor: pointer;
+}
+
+.sc-btn {
+  min-height: 44px;
+  padding: 11px 18px;
+  border-radius: 16px;
+  border: 1px solid rgba(59, 0, 139, 0.12);
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--brand-1);
+  font-weight: 700;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.sc-btn:hover,
+.table-btn:hover,
+.sc-iconBtn:hover,
+.sc-stockSectionHead:hover {
+  transform: translateY(-1px);
+}
+
+.sc-btn.primary {
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--brand-2), #ff9d00);
+  color: #241639;
+  box-shadow: 0 10px 22px rgba(255, 182, 28, 0.24);
+}
+
+.sc-btn.ghost {
+  background: rgba(255, 255, 255, 0.96);
+  color: var(--brand-1);
+}
+
+.sc-btn-active {
+  border-color: rgba(255, 182, 28, 0.5);
+  box-shadow: inset 0 0 0 1px rgba(255, 182, 28, 0.42);
+}
+
+.sc-select,
+.sc-input,
+.sc-inlineInput,
+.sc-hoursRow select {
+  width: 100%;
+  min-height: 46px;
+  padding: 11px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(59, 0, 139, 0.12);
+  background: #ffffff;
+  color: #241639;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.sc-select {
+  min-width: 220px;
+}
+
+.sc-select--compact {
+  min-width: 220px;
+  width: auto;
+}
+
+.sc-select:focus,
+.sc-input:focus,
+.sc-inlineInput:focus,
+.sc-hoursRow select:focus {
+  border-color: rgba(255, 182, 28, 0.95);
+  box-shadow: 0 0 0 4px rgba(255, 182, 28, 0.14);
+}
+
+.store-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.store-table th,
+.store-table td {
+  padding: 13px 10px;
+  border-bottom: 1px solid rgba(59, 0, 139, 0.08);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.store-table th {
+  color: var(--brand-1);
+}
+
+.store-table .actions,
+.store-table .right {
+  text-align: right;
+}
+
+.table-btn {
+  min-height: 38px;
+  padding: 8px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(59, 0, 139, 0.12);
+  background: rgba(106, 61, 240, 0.06);
+  color: var(--brand-1);
+  font-weight: 700;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+.table-btn.table-btn-icon {
+  width: 38px;
+  min-width: 38px;
+  padding: 0;
+  display: inline-grid;
+  place-items: center;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.table-btn.edit,
+.table-btn.stock,
+.table-btn.report,
+.table-btn.hours,
+.table-btn.reservations,
+.table-btn.complete {
+  background: rgba(106, 61, 240, 0.08);
+}
+
+.table-btn.status.active {
+  background: linear-gradient(135deg, var(--brand-2), #ffd36e);
+  color: #23163b;
+  border-color: transparent;
+}
+
+.table-btn.status.inactive {
+  background: linear-gradient(180deg, rgba(125, 133, 147, 0.18), rgba(125, 133, 147, 0.08));
+  border-color: rgba(125, 133, 147, 0.28);
+  color: rgba(36, 22, 59, 0.72);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.45);
+}
+
+.table-btn.danger {
+  background: rgba(192, 42, 42, 0.08);
+  color: #a92d2d;
+  border-color: rgba(192, 42, 42, 0.16);
+}
+
+.table-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.sc-pizzaNameCell {
+  color: #241639;
+  font-weight: 700;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.72);
+}
+
+.sc-pizzaNameBlock {
+  display: grid;
+  gap: 4px;
+}
+
+.sc-pizzaNameBlock strong {
+  color: #241639;
+}
+
+.sc-pizzaNameBlock span {
+  color: rgba(36, 22, 59, 0.66);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.sc-inlineStatusBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(59, 0, 139, 0.12);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+}
+
+.sc-inlineStatusBadge--button {
+  cursor: pointer;
+  min-width: 112px;
+  background-clip: padding-box;
+}
+
+.sc-inlineStatusBadge.is-active {
+  background: rgba(34, 197, 94, 0.12);
+  border-color: rgba(34, 197, 94, 0.24);
+  color: #1c7a3d;
+}
+
+.sc-inlineStatusBadge.is-inactive {
+  background: rgba(125, 133, 147, 0.14);
+  border-color: rgba(125, 133, 147, 0.26);
+  color: rgba(43, 25, 66, 0.72);
+}
+
+.sc-mapCard {
+  overflow: hidden;
+}
+
+.sc-mapPanel {
+  display: grid;
+  gap: 16px;
+}
+
+.sc-mapActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sc-mapLegend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.sc-legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(59, 0, 139, 0.1);
+  color: #241639;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.sc-legendDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.sc-legendDot.is-hot {
+  background: #e53935;
+}
+
+.sc-legendDot.is-cold {
+  background: #1e88e5;
+}
+
+.sc-mapEmbedShell {
+  position: relative;
+  overflow: hidden;
+  min-height: 320px;
+  border-radius: 24px;
+  border: 1px solid rgba(59, 0, 139, 0.1);
+  background: linear-gradient(135deg, rgba(59, 0, 139, 0.05), rgba(255, 182, 28, 0.12));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.sc-mapEmbed {
+  width: 100%;
+  height: 320px;
+  border: 0;
+  display: block;
+}
+
+.sc-mapCanvas {
+  width: 100%;
+  height: 320px;
+}
+
+.sc-reportWrap {
+  display: grid;
+  gap: 16px;
+}
+
+.sc-reportGrid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.sc-reportCard,
+.sc-reportFootCard {
+  display: grid;
+  gap: 8px;
+  padding: 18px;
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(255, 249, 236, 0.92), rgba(255, 255, 255, 0.98));
+  border: 1px solid rgba(59, 0, 139, 0.1);
+  box-shadow: 0 14px 24px rgba(59, 0, 139, 0.06);
+}
+
+.sc-reportFooter {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.sc-reportLabel {
+  color: rgba(36, 22, 59, 0.62);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.sc-reportValue {
+  color: #241639;
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  line-height: 1;
+}
+
+.sc-reportValue--small {
+  font-size: 22px;
+}
+
+.sc-reportMeta {
+  color: rgba(36, 22, 59, 0.72);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.sc-mapMarkerOverlay {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -100%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.sc-mapMarker {
+  position: relative;
+  display: block;
+  width: 34px;
+  height: 34px;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  border: 3px solid rgba(255, 255, 255, 0.95);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.28);
+}
+
+.sc-mapMarker::after {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.sc-mapMarker.is-active {
+  background: #d92d20;
+}
+
+.sc-mapMarker.is-inactive {
+  background: #7d8593;
+}
+
+.sc-mapFallbackGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.sc-mapPinCard {
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(59, 0, 139, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: #2b1942;
+}
+
+.sc-mapPinCard--customer {
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.sc-mapPinCard--customer:hover {
+  transform: translateY(-1px);
+}
+
+.sc-mapPinCard--customer.is-selected {
+  border-color: rgba(59, 0, 139, 0.28);
+  box-shadow: 0 14px 24px rgba(59, 0, 139, 0.12);
+}
+
+.sc-mapPinCard strong {
+  color: var(--brand-1);
+}
+
+.sc-mapPinCard small {
+  color: rgba(43, 25, 66, 0.72);
+}
+
+.sc-mapPinCard.is-active {
+  box-shadow: inset 0 0 0 1px rgba(217, 45, 32, 0.32);
+}
+
+.sc-mapPinCard.is-inactive {
+  border-color: rgba(125, 133, 147, 0.22);
+  background: rgba(248, 248, 250, 0.94);
+}
+
+.sc-mapPinCard.is-customer {
+  background: rgba(106, 61, 240, 0.07);
+}
+
+.sc-customerMeta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sc-tempDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.sc-tempDot.is-hot {
+  background: #e53935;
+}
+
+.sc-tempDot.is-cold {
+  background: #1e88e5;
+}
+
+.sc-modalBack {
+  position: fixed;
+  inset: 0;
+  background: rgba(18, 9, 35, 0.48);
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  z-index: 50;
+}
+
+.sc-modalBox {
+  width: min(760px, 100%);
+  max-height: calc(100vh - 40px);
+  overflow: auto;
+  border-radius: 28px;
+  background: linear-gradient(180deg, #fffaf0 0%, #ffffff 100%);
+  border: 1px solid rgba(59, 0, 139, 0.1);
+  box-shadow: 0 24px 60px rgba(28, 18, 48, 0.24);
+}
+
+.sc-modalBox--wide {
+  width: min(980px, 100%);
+}
+
+.sc-modalHead,
+.sc-modalFooter,
+.sc-modalToolbar {
+  padding: 18px 22px;
+}
+
+.sc-modalHead {
+  border-bottom: 1px solid rgba(59, 0, 139, 0.08);
+}
+
+.sc-modalFooter {
+  border-top: 1px solid rgba(59, 0, 139, 0.08);
+}
+
+.sc-modalBody {
+  padding: 22px;
+}
+
+.sc-iconBtn {
+  width: 40px;
+  height: 40px;
+  border-radius: 14px;
+  border: 1px solid rgba(59, 0, 139, 0.12);
+  background: #ffffff;
+  color: var(--brand-1);
+  font-weight: 800;
+}
+
+.sc-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 16px;
+}
+
+.sc-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.sc-field--toggle {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-radius: 20px;
+  background: rgba(106, 61, 240, 0.05);
+  border: 1px solid rgba(106, 61, 240, 0.08);
+}
+
+.sc-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: #352150;
+}
+
+.sc-toggle {
+  position: relative;
+  width: 62px;
+  height: 34px;
+  border-radius: 999px;
+  border: 1px solid rgba(59, 0, 139, 0.14);
+  background: rgba(59, 0, 139, 0.12);
+  padding: 0;
+}
+
+.sc-toggle.on {
+  background: linear-gradient(135deg, var(--brand-2), #ff9900);
+  border-color: transparent;
+}
+
+.sc-toggle-knob {
+  position: absolute;
+  top: 3px;
+  left: 4px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 180ms ease;
+}
+
+.sc-toggle.on .sc-toggle-knob {
+  transform: translateX(28px);
+}
+
+.sc-stockSection + .sc-stockSection,
+.sc-hoursDay + .sc-hoursDay {
+  margin-top: 14px;
+}
+
+.sc-stockSectionHead {
+  width: 100%;
+  text-align: left;
+  padding: 12px 14px;
+  border-radius: 18px;
+  border: 1px solid rgba(59, 0, 139, 0.1);
+  background: rgba(106, 61, 240, 0.05);
+  color: var(--brand-1);
+  font-weight: 700;
+}
+
+.sc-hoursGrid {
+  display: grid;
+  gap: 14px;
+}
+
+.sc-hoursDay {
+  padding: 18px;
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(255, 249, 236, 0.9), rgba(255, 255, 255, 0.98));
+  border: 1px solid rgba(59, 0, 139, 0.1);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.82);
+}
+
+.sc-hoursDayHead {
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.sc-hoursDayHead strong {
+  color: #241639;
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+}
+
+.sc-hoursRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: #ffffff;
+  border: 1px solid rgba(59, 0, 139, 0.1);
+}
+
+.sc-hoursTimeGroup {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sc-hoursTimeLabel {
+  min-width: 48px;
+  color: rgba(36, 22, 59, 0.72);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.sc-hoursTimeControls {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  border-radius: 14px;
+  background: rgba(106, 61, 240, 0.05);
+  border: 1px solid rgba(59, 0, 139, 0.08);
+}
+
+.sc-hoursTimeControls span,
+.sc-hoursArrow {
+  color: var(--brand-1);
+  font-weight: 800;
+}
+
+.sc-hoursArrow {
+  font-size: 18px;
+}
+
+.sc-hoursRow select {
+  width: auto;
+  min-width: 72px;
+  min-height: 40px;
+  padding: 8px 10px;
+  border-radius: 12px;
+}
+
+.sc-hoursEmpty,
+.sc-emptyState {
+  padding: 18px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px dashed rgba(59, 0, 139, 0.18);
+  color: rgba(32, 18, 51, 0.72);
+}
+
+@media (max-width: 800px) {
+  .sc-page {
+    padding: 0 0 24px;
+  }
+
+  .sc-header,
+  .sc-headerActions,
+  .sc-cardHead,
+  .sc-modalHead,
+  .sc-modalFooter {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .sc-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .store-table {
+    display: block;
+    overflow-x: auto;
+  }
+
+  .sc-mapActions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .sc-reportGrid,
+  .sc-reportFooter {
+    grid-template-columns: 1fr;
+  }
+
+  .sc-hoursRow {
+    align-items: stretch;
+  }
+
+  .sc-hoursTimeGroup {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .sc-hoursArrow {
+    display: none;
+  }
+}

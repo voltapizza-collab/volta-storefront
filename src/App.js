@@ -16,7 +16,7 @@ function App() {
         {/* ADMIN */}
         <Route path="/admin/stores" element={<AdminStoresPage />} />
 
-        {/* STORE (motor de ventas) */}
+        {/* STORE (motor de vents) */}
         <Route path="/:partnerSlug" element={<PartnerPage />} />
         <Route path="/:partnerSlug/coupons" element={<CouponGalleryPage />} />
         <Route path="/:partnerSlug/order" element={<PartnerOrderPage />} />

@@ -13,7 +13,7 @@ function App() {
   return (
     <AppLayout>
       <Routes>
-        {/* ADMIN */}
+        {/* ADMI */}
         <Route path="/admin/stores" element={<AdminStoresPage />} />
 
         {/* STORE (motor de vents) */}

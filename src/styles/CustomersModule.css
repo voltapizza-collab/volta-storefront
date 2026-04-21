@@ -51,14 +51,20 @@
 .cu-search,
 .cu-field input,
 .cu-field textarea,
-.cu-iconBtn {
+.cu-select,
+.cu-iconBtn,
+.cu-filterChip,
+.cu-filterReset {
   font: inherit;
   border-radius: 16px;
 }
 
 .cu-btn,
 .cu-inlineBtn,
-.cu-iconBtn {
+.cu-iconBtn,
+.cu-filterChip,
+.cu-filterReset,
+.cu-statCard {
   cursor: pointer;
 }
 
@@ -79,11 +85,36 @@
   color: var(--brand-1);
 }
 
+.cu-overview {
+  display: grid;
+  gap: 18px;
+  margin: 24px 0 18px;
+}
+
+.cu-statsBlock {
+  display: grid;
+  gap: 10px;
+}
+
+.cu-blockLabel {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(59, 0, 139, 0.62);
+}
+
 .cu-statsGrid {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 14px;
-  margin: 24px 0 18px;
+}
+
+.cu-statsGrid-segments {
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+}
+
+.cu-statsGrid-temperature {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
 }
 
 .cu-statCard {
@@ -93,6 +124,12 @@
   border: 1px solid rgba(59, 0, 139, 0.08);
   display: grid;
   gap: 8px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.cu-statCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 24px rgba(59, 0, 139, 0.08);
 }
 
 .cu-statCard span,
@@ -105,19 +142,111 @@
   color: var(--brand-1);
 }
 
+.cu-statCard.active {
+  border: 2px solid #ff6933;
+  background: rgba(255, 105, 51, 0.08);
+}
+
+.cu-statCard-segment {
+  background: linear-gradient(180deg, #ffffff 0%, rgba(247, 241, 255, 0.88) 100%);
+}
+
 .cu-statCard-total {
   background: linear-gradient(135deg, rgba(255, 182, 28, 0.18), rgba(106, 61, 240, 0.08));
 }
 
+.cu-statCard-temperature {
+  color: #fff;
+}
+
+.cu-statCard-temperature span,
+.cu-statCard-temperature strong,
+.cu-statCard-temperature small {
+  color: inherit;
+}
+
+.cu-statCard-temperature-hot {
+  background: linear-gradient(135deg, #ff2d6f, #ff7b54);
+}
+
+.cu-statCard-temperature-cold {
+  background: linear-gradient(135deg, #1d9bf0, #4bc0c0);
+}
+
 .cu-toolbar {
-  margin-bottom: 18px;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
 }
 
 .cu-search {
-  width: min(320px, 100%);
+  width: min(280px, 100%);
   padding: 12px 16px;
   border: 1px solid rgba(59, 0, 139, 0.14);
   background: #fff;
+}
+
+.cu-filterBar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+  padding: 14px 16px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(59, 0, 139, 0.08);
+}
+
+.cu-filterGroup {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.cu-filterTitle {
+  font-size: 13px;
+  font-weight: 800;
+  color: rgba(59, 0, 139, 0.72);
+}
+
+.cu-filterChip,
+.cu-filterReset {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  border: 1px solid rgba(59, 0, 139, 0.12);
+  background: #fff;
+  color: var(--brand-1);
+  transition: all 0.2s ease;
+}
+
+.cu-filterChip strong {
+  font-size: 12px;
+}
+
+.cu-filterChip.active {
+  border-color: #ff6933;
+  background: rgba(255, 105, 51, 0.1);
+}
+
+.cu-filterChip-hot {
+  background: rgba(255, 45, 111, 0.08);
+  border-color: rgba(255, 45, 111, 0.16);
+  color: #b0134d;
+}
+
+.cu-filterChip-cold {
+  background: rgba(29, 155, 240, 0.1);
+  border-color: rgba(29, 155, 240, 0.18);
+  color: #0b5f9f;
+}
+
+.cu-filterReset {
+  background: rgba(59, 0, 139, 0.06);
 }
 
 .cu-error,
@@ -137,7 +266,7 @@
 }
 
 .cu-tableWrap {
-   max-height: 520px;
+  max-height: 520px;
   overflow: auto;
   border-radius: 22px;
   border: 1px solid rgba(59, 0, 139, 0.08);
@@ -198,12 +327,29 @@
   font-weight: 800;
 }
 
-.cu-badge-s1,
-.cu-badge-s2,
-.cu-badge-s3,
-.cu-badge-s4 {
-  background: rgba(106, 61, 240, 0.08);
+.cu-badge-s1 {
+  background: rgba(200, 200, 200, 0.2);
   color: var(--brand-1);
+}
+
+.cu-badge-s2 {
+  background: rgba(255, 193, 7, 0.2);
+  color: #7c5d00;
+}
+
+.cu-badge-s3 {
+  background: rgba(33, 150, 243, 0.2);
+  color: #0b5f9f;
+}
+
+.cu-badge-s4 {
+  background: rgba(76, 175, 80, 0.2);
+  color: #1b6f1f;
+}
+
+.cu-badge-s5 {
+  background: rgba(255, 45, 111, 0.16);
+  color: #a30f45;
 }
 
 .cu-badge-active {
@@ -262,12 +408,36 @@
 }
 
 .cu-field input,
-.cu-field textarea {
+.cu-field textarea,
+.cu-select {
   width: 100%;
   box-sizing: border-box;
   padding: 12px 14px;
   border: 1px solid rgba(59, 0, 139, 0.12);
   background: #fff;
+}
+
+.cu-boostMeta {
+  display: grid;
+  gap: 4px;
+  margin-top: 16px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(247, 241, 255, 0.82);
+  border: 1px solid rgba(59, 0, 139, 0.08);
+}
+
+.cu-boostMeta strong {
+  color: var(--brand-1);
+}
+
+.cu-boostMeta span,
+.cu-boostHint {
+  color: rgba(59, 0, 139, 0.7);
+}
+
+.cu-boostFeedback {
+  margin-top: 16px;
 }
 
 .cu-field-wide {
@@ -279,60 +449,11 @@
   color: #fff;
 }
 
-.cu-statCard {
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.cu-statCard:hover {
-  transform: translateY(-2px);
-}
-
-.cu-statCard.active {
-  border: 2px solid #ff6933;
-  background: rgba(255, 105, 51, 0.1);
-}
-
-.cu-daysOff {
-  font-weight: 600;
-}
-
-.cu-daysOff.cold {
-  color: #ff6933; /* peligro */
-}
-
-.cu-daysOff.hot {
-  color: #00c853; /* activo */
-}
-
-@media (max-width: 900px) {
-  .cu-head,
-  .cu-headActions,
-  .cu-toolbar,
-  .cu-modalHead,
-  .cu-modalActions {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .cu-statsGrid,
-  .cu-formGrid {
-    grid-template-columns: 1fr;
-  }
-
-  .cu-table {
-    min-width: 760px;
-  }
-}
 .cu-table td:nth-child(5),
 .cu-table th:nth-child(5) {
   text-align: center;
   width: 110px;
 }
-.cu-badge-s1 { background: rgba(200,200,200,0.2); }
-.cu-badge-s2 { background: rgba(255, 193, 7, 0.2); }
-.cu-badge-s3 { background: rgba(33, 150, 243, 0.2); }
-.cu-badge-s4 { background: rgba(76, 175, 80, 0.2); }
 
 .cu-pill {
   display: inline-flex;
@@ -357,5 +478,31 @@
 
 .cu-pill:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 900px) {
+  .cu-head,
+  .cu-headActions,
+  .cu-toolbar,
+  .cu-modalHead,
+  .cu-modalActions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .cu-filterBar,
+  .cu-filterGroup {
+    align-items: stretch;
+  }
+
+  .cu-statsGrid-segments,
+  .cu-statsGrid-temperature,
+  .cu-formGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .cu-table {
+    min-width: 760px;
+  }
 }

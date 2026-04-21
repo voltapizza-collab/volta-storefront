@@ -1,0 +1,234 @@
+.cg-shell {
+  min-height: 100vh;
+  padding: 24px 14px 110px;
+  background:
+    radial-gradient(circle at top left, rgba(42, 92, 255, 0.26), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(255, 86, 143, 0.2), transparent 32%),
+    linear-gradient(180deg, #eff4ff 0%, #f6f0ff 100%);
+}
+
+.cg-wrap,
+.cg-stateCard {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+}
+
+.cg-hero,
+.cg-card,
+.cg-stateCard,
+.cg-modalCard {
+  border-radius: 28px;
+  border: 1px solid rgba(33, 22, 70, 0.1);
+  box-shadow: 0 22px 48px rgba(33, 22, 70, 0.14);
+}
+
+.cg-hero {
+  padding: 30px;
+  background: linear-gradient(135deg, #214fd1, #6a3df0 58%, #ff2d6f 100%);
+  color: #fff;
+}
+
+.cg-kicker {
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.78;
+  margin-bottom: 10px;
+}
+
+.cg-hero h1 {
+  margin: 0;
+  font-size: clamp(2.2rem, 6vw, 4rem);
+  letter-spacing: -0.05em;
+}
+
+.cg-hero p {
+  margin: 10px 0 0;
+  max-width: 640px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.cg-grid {
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.cg-card {
+  padding: 18px;
+  min-height: 320px;
+  display: grid;
+  gap: 14px;
+  align-content: space-between;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(255, 248, 232, 0.92));
+}
+
+.cg-card-random_percent {
+  background: linear-gradient(135deg, #fff7cc, #ffe0f0);
+}
+
+.cg-card-fixed_percent {
+  background: linear-gradient(135deg, #e6f4ff, #efe8ff);
+}
+
+.cg-card-fixed_amount,
+.cg-card-surprise_amount {
+  background: linear-gradient(135deg, #ff5b93, #ff8a00);
+  color: #fff;
+}
+
+.cg-cardTop,
+.cg-modalHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.cg-cardTag,
+.cg-cardStock {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  background: rgba(17, 17, 17, 0.1);
+}
+
+.cg-card-fixed_amount .cg-cardTag,
+.cg-card-fixed_amount .cg-cardStock,
+.cg-card-surprise_amount .cg-cardTag,
+.cg-card-surprise_amount .cg-cardStock {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.cg-cardBody {
+  display: grid;
+  gap: 10px;
+}
+
+.cg-cardTitle {
+  font-size: clamp(2rem, 5vw, 3.6rem);
+  font-weight: 900;
+  letter-spacing: -0.06em;
+}
+
+.cg-cardSubtitle {
+  font-size: 1rem;
+  font-weight: 700;
+  opacity: 0.86;
+}
+
+.cg-claimBtn,
+.cg-primaryBtn,
+.cg-ghostBtn {
+  font: inherit;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.cg-claimBtn,
+.cg-primaryBtn {
+  padding: 14px 18px;
+  border: none;
+  font-weight: 900;
+}
+
+.cg-claimBtn {
+  background: #fff;
+  color: #193f9e;
+}
+
+.cg-primaryBtn {
+  background: linear-gradient(135deg, #ffbf2d, #ffd978);
+  color: #21163a;
+}
+
+.cg-ghostBtn {
+  padding: 10px 14px;
+  border: 1px solid rgba(33, 22, 70, 0.12);
+  background: #fff;
+  color: #21163a;
+}
+
+.cg-empty,
+.cg-stateCard,
+.cg-error,
+.cg-claimSuccess {
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.cg-stateShell {
+  min-height: calc(100vh - 100px);
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+
+.cg-modalBack {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(16, 9, 34, 0.42);
+}
+
+.cg-modalCard {
+  width: min(520px, 100%);
+  padding: 24px;
+  background: #fffdf8;
+}
+
+.cg-claimForm {
+  display: grid;
+  gap: 14px;
+}
+
+.cg-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cg-field span {
+  font-weight: 700;
+  color: #221534;
+}
+
+.cg-field input {
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(33, 22, 70, 0.12);
+  background: #fff;
+  font: inherit;
+}
+
+.cg-error {
+  border-radius: 16px;
+  color: #982c1f;
+}
+
+.cg-claimSuccess {
+  border-radius: 20px;
+  display: grid;
+  gap: 10px;
+}
+
+@media (max-width: 700px) {
+  .cg-card {
+    min-height: 280px;
+  }
+
+  .cg-modalHead {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

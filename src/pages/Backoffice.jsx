@@ -10,6 +10,7 @@ import SettingsModule from "../components/Backoffice/SettingsModule";
 import SettingsDeliveryModule from "../components/Backoffice/SettingsDeliveryModule";
 import SettingsBrandingModule from "../components/Backoffice/SettingsBrandingModule";
 import CustomersModule from "../components/Backoffice/CustomersModule";
+import CouponsModule from "../components/Backoffice/Coupons/CouponsModule";
 import EngineBackground from "../components/Backoffice/EngineBackground";
 import AppFooter from "../components/Layout/AppFooter";
 import AdminStoresPage from "./AdminStoresPage";
@@ -184,8 +185,13 @@ export default function Backoffice() {
     isSettingsDeliveryActive ||
     isSettingsBrandingActive;
   const isOffersOverviewActive = activeModule === "offers";
+  const isOffersCreateActive = activeModule === "offersCreate";
+  const isOffersRedemptionsActive = activeModule === "offersRedemptions";
   const isOffersGroupActive =
-    activeModuleGroup === "offers" || isOffersOverviewActive;
+    activeModuleGroup === "offers" ||
+    isOffersOverviewActive ||
+    isOffersCreateActive ||
+    isOffersRedemptionsActive;
 
   if (loadingPartners) {
     return (
@@ -394,16 +400,37 @@ export default function Backoffice() {
                     isOffersGroupActive ? "is-active-group" : ""
                   }`}
                 >
-                  <button className="bo-subbtn" disabled type="button">
-                    Enviar SMS
+                  <button
+                    className={`bo-subbtn ${isOffersOverviewActive ? "active" : ""}`}
+                    onClick={() => {
+                      setActiveModule("offers");
+                      setActiveModuleGroup("offers");
+                    }}
+                    type="button"
+                  >
+                    Overview
                   </button>
 
-                  <button className="bo-subbtn" disabled type="button">
+                  <button
+                    className={`bo-subbtn ${isOffersCreateActive ? "active" : ""}`}
+                    onClick={() => {
+                      setActiveModule("offersCreate");
+                      setActiveModuleGroup("offers");
+                    }}
+                    type="button"
+                  >
                     Crear Ofertas
                   </button>
 
-                  <button className="bo-subbtn" disabled type="button">
-                    Incentivos
+                  <button
+                    className={`bo-subbtn ${isOffersRedemptionsActive ? "active" : ""}`}
+                    onClick={() => {
+                      setActiveModule("offersRedemptions");
+                      setActiveModuleGroup("offers");
+                    }}
+                    type="button"
+                  >
+                    Redenciones
                   </button>
                 </div>
               )}
@@ -543,44 +570,15 @@ export default function Backoffice() {
           )}
 
           {activeModule === "offers" && auth.partnerId && (
-            <section className="bo-settingsShell">
-              <div className="bo-settingsCard">
-                <div className="bo-settingsHeader">
-                  <div>
-                    <div className="bo-settingsEyebrow">Ofertas</div>
-                    <h2 className="bo-settingsTitle">Panel del modulo</h2>
-                    <p className="bo-settingsHint">
-                      Este padre resumira campañas, envios y promociones activas.
-                      Desde aqui luego entraremos a los hijos de SMS, creador de ofertas
-                      e incentivos.
-                    </p>
-                  </div>
-                  <div className="bo-settingsStoreChip">
-                    {auth.partnerName}
-                  </div>
-                </div>
+            <CouponsModule partner={auth} initialView="overview" />
+          )}
 
-                <div className="bo-settingsOverviewGrid">
-                  <article className="bo-settingsSummaryCard">
-                    <div className="bo-settingsEyebrow">Campañas</div>
-                    <h3 className="bo-settingsSectionTitle">Mensajeria</h3>
-                    <p className="bo-settingsCardHint">
-                      Aqui veremos el resumen de envios y segmentos antes de abrir el
-                      hijo de SMS.
-                    </p>
-                  </article>
+          {activeModule === "offersCreate" && auth.partnerId && (
+            <CouponsModule partner={auth} initialView="create" />
+          )}
 
-                  <article className="bo-settingsSummaryCard">
-                    <div className="bo-settingsEyebrow">Promociones</div>
-                    <h3 className="bo-settingsSectionTitle">Oferta activa</h3>
-                    <p className="bo-settingsCardHint">
-                      Este espacio conectara luego con las promos del motor y con la
-                      pestaña `Promos` del storefront.
-                    </p>
-                  </article>
-                </div>
-              </div>
-            </section>
+          {activeModule === "offersRedemptions" && auth.partnerId && (
+            <CouponsModule partner={auth} initialView="redemptions" />
           )}
         </div>
 

@@ -52,12 +52,20 @@ export default function PartnerPage() {
             {partner.country || ""} · {partner.stores?.length || 0} tiendas activas
           </p>
 
-          <button
-            className="sf-gateButton"
-            onClick={() => navigate(`/${partner.slug}/order`)}
-          >
-            Order Here
-          </button>
+          <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+            <button
+              className="sf-gateButton"
+              onClick={() => navigate(`/${partner.slug}/order`)}
+            >
+              Order Here
+            </button>
+            <button
+              className="sf-secondaryBtn"
+              onClick={() => navigate(`/${partner.slug}/coupons`)}
+            >
+              Coupon Gallery
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import api from "../../setupAxios";
 import "../../styles/CustomersModule.css";
-// import CustomerIncentiveModal from "../CustomerIncentiveModal";
+import OfferCreatePanelCustomer from "./Coupons/OfferCreatePanelCustomer";
 
 const emptyCustomer = {
   name: "",
@@ -14,6 +14,19 @@ const emptyCustomer = {
 
 const normalizePhone = (value = "") => value.replace(/[^\d]/g, "");
 
+const temperatureCards = [
+  { key: "HOT", label: "Hot", description: "Ultimos 15 dias", countKey: "hot", tone: "hot" },
+  { key: "COLD", label: "Cold", description: "Mas de 15 dias", countKey: "cold", tone: "cold" },
+];
+
+const segmentCards = [
+  { key: "S1", shortLabel: "Potencial", description: "0 compras" },
+  { key: "S2", shortLabel: "Nuevo", description: "1 compra" },
+  { key: "S3", shortLabel: "Dormido", description: "Bajo su media" },
+  { key: "S4", shortLabel: "Activo", description: "En linea con su media" },
+  { key: "S5", shortLabel: "VIP", description: "Supera objetivo +15%" },
+];
+
 const displayESPhone = (phone = "") => {
   const raw = String(phone || "").trim();
   const match = raw.match(/^\+34(\d{9})$/);
@@ -23,7 +36,12 @@ const displayESPhone = (phone = "") => {
 };
 
 function SegmentBadge({ value }) {
-  return <span className={`cu-badge cu-badge-${String(value || "s1").toLowerCase()}`}>{value || "S1"}</span>;
+  const segment = segmentCards.find((item) => item.key === value) || segmentCards[0];
+  return (
+    <span className={`cu-badge cu-badge-${String(segment.key || "s1").toLowerCase()}`}>
+      {segment.shortLabel}
+    </span>
+  );
 }
 
 function StatusBadge({ restricted }) {
@@ -99,9 +117,7 @@ function CustomerModal({ initial, loading, onClose, onSubmit, onDelete }) {
             <span>Address</span>
             <input
               value={form.address_1}
-              onChange={(event) =>
-                setForm((prev) => ({ ...prev, address_1: event.target.value }))
-              }
+              onChange={(event) => setForm((prev) => ({ ...prev, address_1: event.target.value }))}
             />
           </label>
 
@@ -156,50 +172,56 @@ function CustomerModal({ initial, loading, onClose, onSubmit, onDelete }) {
 export default function CustomersModule({ partner }) {
   const partnerId = partner?.partnerId;
   const [query, setQuery] = useState("");
+  const [zipQuery, setZipQuery] = useState("");
   const [rows, setRows] = useState([]);
   const [stats, setStats] = useState({
     total: 0,
-    counts: { S1: 0, S2: 0, S3: 0, S4: 0 },
+    counts: { S1: 0, S2: 0, S3: 0, S4: 0, S5: 0 },
     active: { restricted: 0, unrestricted: 0 },
+    temperature: { cold: 0, hot: 0 },
+    zipCodes: [],
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [editing, setEditing] = useState(null);
+  const [boosting, setBoosting] = useState(null);
   const [segmentFilter, setSegmentFilter] = useState(null);
-const [incentiveCustomer, setIncentiveCustomer] = useState(null);
+  const [temperatureFilter, setTemperatureFilter] = useState(null);
+
   const loadStats = useCallback(async () => {
     if (!partnerId) return;
     const response = await api.get(`/api/customers/segment-stats?partnerId=${partnerId}`);
-    setStats(response.data || {
-      total: 0,
-      counts: { S1: 0, S2: 0, S3: 0, S4: 0 },
-      active: { restricted: 0, unrestricted: 0 },
-    });
+    setStats(
+      response.data || {
+        total: 0,
+        counts: { S1: 0, S2: 0, S3: 0, S4: 0, S5: 0 },
+        active: { restricted: 0, unrestricted: 0 },
+        temperature: { cold: 0, hot: 0 },
+        zipCodes: [],
+      }
+    );
   }, [partnerId]);
 
   const loadRows = useCallback(
-    async (phoneDigits = "") => {
+    async (phoneDigits = "", zipDigits = "") => {
       if (!partnerId) return;
 
       const params = new URLSearchParams({
         partnerId: String(partnerId),
-        take: phoneDigits ? "50" : "50",
+        take: "50",
       });
 
-      if (segmentFilter) {
-        params.set("segment", segmentFilter);
-      }
-
-      if (phoneDigits) {
-        params.set("q", phoneDigits);
-      }
+      if (segmentFilter) params.set("segment", segmentFilter);
+      if (temperatureFilter) params.set("temperature", temperatureFilter);
+      if (phoneDigits) params.set("q", phoneDigits);
+      if (zipDigits) params.set("zip", zipDigits);
 
       const response = await api.get(`/api/customers/admin?${params.toString()}`);
       setRows(Array.isArray(response.data?.items) ? response.data.items : []);
     },
-    [partnerId, segmentFilter]
+    [partnerId, segmentFilter, temperatureFilter]
   );
 
   useEffect(() => {
@@ -209,7 +231,7 @@ const [incentiveCustomer, setIncentiveCustomer] = useState(null);
       try {
         setLoading(true);
         setError("");
-        await Promise.all([loadRows(""), loadStats()]);
+        await Promise.all([loadRows("", ""), loadStats()]);
       } catch (requestError) {
         console.error("CUSTOMERS MODULE BOOTSTRAP ERROR:", requestError);
         setError("No pudimos cargar customers.");
@@ -227,7 +249,7 @@ const [incentiveCustomer, setIncentiveCustomer] = useState(null);
     const timeoutId = window.setTimeout(async () => {
       try {
         setLoading(true);
-        await loadRows(normalizePhone(query));
+        await loadRows(normalizePhone(query), zipQuery);
       } catch (requestError) {
         console.error("CUSTOMERS SEARCH ERROR:", requestError);
         setError("No pudimos filtrar customers.");
@@ -237,9 +259,10 @@ const [incentiveCustomer, setIncentiveCustomer] = useState(null);
     }, 250);
 
     return () => window.clearTimeout(timeoutId);
-  }, [loadRows, partnerId, query, segmentFilter]);
+  }, [loadRows, partnerId, query, zipQuery]);
 
-  const orderedSegments = useMemo(() => ["S1", "S2", "S3", "S4"], []);
+  const orderedSegments = useMemo(() => segmentCards, []);
+  const hasActiveFilters = Boolean(segmentFilter || temperatureFilter || query || zipQuery);
 
   const saveCustomer = async (payload) => {
     try {
@@ -257,7 +280,7 @@ const [incentiveCustomer, setIncentiveCustomer] = useState(null);
         await api.post("/api/customers", finalPayload);
       }
 
-      await Promise.all([loadRows(normalizePhone(query)), loadStats()]);
+      await Promise.all([loadRows(normalizePhone(query), zipQuery), loadStats()]);
       setShowModal(false);
       setEditing(null);
     } catch (requestError) {
@@ -275,7 +298,7 @@ const [incentiveCustomer, setIncentiveCustomer] = useState(null);
     try {
       setSaving(true);
       await api.delete(`/api/customers/${editing.id}`);
-      await Promise.all([loadRows(normalizePhone(query)), loadStats()]);
+      await Promise.all([loadRows(normalizePhone(query), zipQuery), loadStats()]);
       setShowModal(false);
       setEditing(null);
     } catch (requestError) {
@@ -296,7 +319,7 @@ const [incentiveCustomer, setIncentiveCustomer] = useState(null);
         reason,
       });
 
-      await Promise.all([loadRows(normalizePhone(query)), loadStats()]);
+      await Promise.all([loadRows(normalizePhone(query), zipQuery), loadStats()]);
     } catch (requestError) {
       console.error("TOGGLE RESTRICT ERROR:", requestError);
       setError("No pudimos cambiar el estado del customer.");
@@ -307,7 +330,7 @@ const [incentiveCustomer, setIncentiveCustomer] = useState(null);
     try {
       setSaving(true);
       await api.post("/api/customers/resegment", { partnerId });
-      await Promise.all([loadRows(normalizePhone(query)), loadStats()]);
+      await Promise.all([loadRows(normalizePhone(query), zipQuery), loadStats()]);
     } catch (requestError) {
       console.error("RESEGMENT ERROR:", requestError);
       setError("No pudimos recalcular segmentos.");
@@ -323,9 +346,7 @@ const [incentiveCustomer, setIncentiveCustomer] = useState(null);
           <div>
             <div className="cu-kicker">Customers</div>
             <h2>Gestion de clientes</h2>
-            <p>
-              Bloque del transplante CRM dentro del backoffice del partner.
-            </p>
+            <p>Bloque del transplante CRM dentro del backoffice del partner.</p>
           </div>
 
           <div className="cu-headActions">
@@ -345,32 +366,58 @@ const [incentiveCustomer, setIncentiveCustomer] = useState(null);
           </div>
         </div>
 
-        <div className="cu-statsGrid">
-          {orderedSegments.map((segment) => (
-            <article
-                key={segment}
-                className={`cu-statCard ${segmentFilter === segment ? "active" : ""}`}
+        <div className="cu-overview">
+          <div className="cu-statsBlock">
+            <div className="cu-blockLabel">Segmentos</div>
+            <div className="cu-statsGrid cu-statsGrid-segments">
+              {orderedSegments.map((segment) => (
+                <article
+                  key={segment.key}
+                  className={`cu-statCard cu-statCard-segment ${
+                    segmentFilter === segment.key ? "active" : ""
+                  }`}
+                  onClick={() => setSegmentFilter((prev) => (prev === segment.key ? null : segment.key))}
+                >
+                  <span>{segment.shortLabel}</span>
+                  <strong>{stats.counts?.[segment.key] || 0}</strong>
+                  <small>{segment.description}</small>
+                </article>
+              ))}
+            </div>
+          </div>
+
+          <div className="cu-statsBlock">
+            <div className="cu-blockLabel">Temperatura</div>
+            <div className="cu-statsGrid cu-statsGrid-temperature">
+              {temperatureCards.map((item) => (
+                <article
+                  key={item.key}
+                  className={`cu-statCard cu-statCard-temperature cu-statCard-temperature-${item.tone} ${
+                    temperatureFilter === item.key ? "active" : ""
+                  }`}
+                  onClick={() => setTemperatureFilter((prev) => (prev === item.key ? null : item.key))}
+                >
+                  <span>{item.label}</span>
+                  <strong>{stats.temperature?.[item.countKey] || 0}</strong>
+                  <small>{item.description}</small>
+                </article>
+              ))}
+
+              <article
+                className={`cu-statCard cu-statCard-total ${!segmentFilter && !temperatureFilter ? "active" : ""}`}
                 onClick={() => {
-                  setSegmentFilter((prev) => (prev === segment ? null : segment));
+                  setSegmentFilter(null);
+                  setTemperatureFilter(null);
                 }}
               >
-              <span>{segment}</span>
-              <strong>{stats.counts?.[segment] || 0}</strong>
-            </article>
-          ))}
-
-          <article
-              className={`cu-statCard cu-statCard-total ${!segmentFilter ? "active" : ""}`}
-              onClick={() => {
-                setSegmentFilter(null);
-              }}
-            >
-            <span>Total</span>
-            <strong>{stats.total || 0}</strong>
-            <small>
-              Active: {stats.active?.unrestricted || 0} · Restricted: {stats.active?.restricted || 0}
-            </small>
-          </article>
+                <span>Total</span>
+                <strong>{stats.total || 0}</strong>
+                <small>
+                  Active: {stats.active?.unrestricted || 0} · Restricted: {stats.active?.restricted || 0}
+                </small>
+              </article>
+            </div>
+          </div>
         </div>
 
         <div className="cu-toolbar">
@@ -380,6 +427,67 @@ const [incentiveCustomer, setIncentiveCustomer] = useState(null);
             onChange={(event) => setQuery(normalizePhone(event.target.value))}
             placeholder="Search by phone"
           />
+          <select
+            className="cu-search"
+            value={zipQuery}
+            onChange={(event) => setZipQuery(event.target.value)}
+          >
+            <option value="">All zip codes</option>
+            {stats.zipCodes?.map((zipCode) => (
+              <option key={zipCode} value={zipCode}>
+                {zipCode}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="cu-filterBar">
+          <div className="cu-filterGroup">
+            <span className="cu-filterTitle">Segmento</span>
+            {orderedSegments.map((segment) => (
+              <button
+                key={segment.key}
+                className={`cu-filterChip ${segmentFilter === segment.key ? "active" : ""}`}
+                onClick={() => setSegmentFilter((prev) => (prev === segment.key ? null : segment.key))}
+                type="button"
+              >
+                <span>{segment.shortLabel}</span>
+                <strong>{stats.counts?.[segment.key] || 0}</strong>
+              </button>
+            ))}
+          </div>
+
+          <div className="cu-filterGroup">
+            <span className="cu-filterTitle">Temperatura</span>
+            {temperatureCards.map((item) => (
+              <button
+                key={item.key}
+                className={`cu-filterChip cu-filterChip-${item.tone} ${
+                  temperatureFilter === item.key ? "active" : ""
+                }`}
+                onClick={() => setTemperatureFilter((prev) => (prev === item.key ? null : item.key))}
+                type="button"
+              >
+                <span>{item.label}</span>
+                <strong>{stats.temperature?.[item.countKey] || 0}</strong>
+              </button>
+            ))}
+          </div>
+
+          {hasActiveFilters && (
+            <button
+              className="cu-filterReset"
+              onClick={() => {
+                setSegmentFilter(null);
+                setTemperatureFilter(null);
+                setQuery("");
+                setZipQuery("");
+              }}
+              type="button"
+            >
+              Limpiar filtros
+            </button>
+          )}
         </div>
 
         {error && <div className="cu-error">{error}</div>}
@@ -401,22 +509,20 @@ const [incentiveCustomer, setIncentiveCustomer] = useState(null);
             <tbody>
               {rows.map((customer) => (
                 <tr key={customer.id}>
-                  <td>{customer.code || "—"}</td>
+                  <td>{customer.code || "-"}</td>
                   <td>
                     <div className="cu-nameCell">
-                      <strong>{customer.name || "—"}</strong>
+                      <strong>{customer.name || "-"}</strong>
                       <span>{customer.address_1 || "Sin direccion"}</span>
                     </div>
                   </td>
-                  <td>{customer.phone ? displayESPhone(customer.phone) : "—"}</td>
+                  <td>{customer.phone ? displayESPhone(customer.phone) : "-"}</td>
                   <td>
                     <SegmentBadge value={customer.segment} />
                   </td>
                   <td>
                     <span
-                      className={`cu-pill ${
-                        (customer.daysOff ?? 0) > 15 ? "cold" : "hot"
-                      }`}
+                      className={`cu-pill ${(customer.daysOff ?? 0) > 15 ? "cold" : "hot"}`}
                       title={`${customer.daysOff ?? 0} days without orders`}
                     >
                       {(customer.daysOff ?? 0) > 15 ? "COLD" : "HOT"}
@@ -438,12 +544,12 @@ const [incentiveCustomer, setIncentiveCustomer] = useState(null);
                         Edit
                       </button>
                       <button
-                          className="cu-inlineBtn"
-                          onClick={() => setIncentiveCustomer(customer)}
-                          type="button"
-                        >
-                          Boost
-                        </button>
+                        className="cu-inlineBtn"
+                        onClick={() => setBoosting(customer)}
+                        type="button"
+                      >
+                        Boost
+                      </button>
                       <button
                         className="cu-inlineBtn"
                         onClick={() => toggleRestricted(customer)}
@@ -458,7 +564,7 @@ const [incentiveCustomer, setIncentiveCustomer] = useState(null);
 
               {!loading && rows.length === 0 && (
                 <tr>
-                  <td colSpan="6">
+                  <td colSpan="7">
                     <div className="cu-empty">No customers yet.</div>
                   </td>
                 </tr>
@@ -480,12 +586,18 @@ const [incentiveCustomer, setIncentiveCustomer] = useState(null);
           onDelete={deleteCustomer}
         />
       )}
-      {/* {incentiveCustomer && (
-  <CustomerIncentiveModal
-    customer={incentiveCustomer}
-    onClose={() => setIncentiveCustomer(null)}
-  />
-)} */}
+
+      {boosting && (
+        <OfferCreatePanelCustomer
+          partnerId={partnerId}
+          customer={boosting}
+          onClose={() => setBoosting(null)}
+          onDone={async () => {
+            setBoosting(null);
+            await Promise.all([loadRows(normalizePhone(query), zipQuery), loadStats()]);
+          }}
+        />
+      )}
     </section>
   );
 }

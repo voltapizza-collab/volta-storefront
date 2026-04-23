@@ -8,6 +8,7 @@ const emptyCustomer = {
   phone: "",
   email: "",
   address_1: "",
+  zipCode: "",
   portal: "",
   observations: "",
 };
@@ -33,6 +34,25 @@ const displayESPhone = (phone = "") => {
   if (match) return match[1];
   const digits = raw.replace(/\D/g, "");
   return digits.length >= 9 ? digits.slice(-9) : raw;
+};
+
+const buildTrend = (customer) => {
+  const daysOff = Number(customer?.daysOff ?? 0);
+  const segment = String(customer?.segment || "");
+
+  if (daysOff <= 7 && (segment === "S4" || segment === "S5")) {
+    return { label: "En alza", tone: "up", hint: "Compra reciente y valor fuerte" };
+  }
+
+  if (daysOff <= 15) {
+    return { label: "Estable", tone: "steady", hint: "Cliente activo sin senales de caida" };
+  }
+
+  if (segment === "S4" || segment === "S5" || daysOff > 30) {
+    return { label: "Bajando", tone: "down", hint: "Conviene win-back o boost" };
+  }
+
+  return { label: "Frio", tone: "down", hint: "Actividad baja, revisar reenganche" };
 };
 
 function SegmentBadge({ value }) {
@@ -61,6 +81,7 @@ function CustomerModal({ initial, loading, onClose, onSubmit, onDelete }) {
       phone: displayESPhone(initial?.phone || ""),
       email: initial?.email || "",
       address_1: initial?.address_1 || "",
+      zipCode: initial?.zipCode || "",
       portal: initial?.portal || "",
       observations: initial?.observations || "",
     });
@@ -122,6 +143,14 @@ function CustomerModal({ initial, loading, onClose, onSubmit, onDelete }) {
           </label>
 
           <label className="cu-field">
+            <span>Zip code</span>
+            <input
+              value={form.zipCode}
+              onChange={(event) => setForm((prev) => ({ ...prev, zipCode: event.target.value }))}
+            />
+          </label>
+
+          <label className="cu-field">
             <span>Portal</span>
             <input
               value={form.portal}
@@ -171,9 +200,16 @@ function CustomerModal({ initial, loading, onClose, onSubmit, onDelete }) {
 
 export default function CustomersModule({ partner }) {
   const partnerId = partner?.partnerId;
-  const [query, setQuery] = useState("");
+  const partnerSlug = partner?.partnerSlug;
+  const [countryQuery, setCountryQuery] = useState("");
+  const [storeQuery, setStoreQuery] = useState("");
   const [zipQuery, setZipQuery] = useState("");
+  const [query, setQuery] = useState("");
   const [rows, setRows] = useState([]);
+  const [territory, setTerritory] = useState({
+    countries: [],
+    stores: [],
+  });
   const [stats, setStats] = useState({
     total: 0,
     counts: { S1: 0, S2: 0, S3: 0, S4: 0, S5: 0 },
@@ -204,8 +240,31 @@ export default function CustomersModule({ partner }) {
     );
   }, [partnerId]);
 
+  const loadTerritory = useCallback(async () => {
+    if (!partnerId) return;
+
+    const [storesResponse, partnerResponse] = await Promise.all([
+      api.get(`/stores?partnerId=${partnerId}`),
+      partnerSlug ? api.get(`/partners/${partnerSlug}`) : Promise.resolve({ data: null }),
+    ]);
+
+    const partnerCountry = String(partnerResponse.data?.country || "").trim();
+
+    setTerritory({
+      countries: partnerCountry ? [partnerCountry] : [],
+      stores: Array.isArray(storesResponse.data) ? storesResponse.data : [],
+    });
+
+  }, [partnerId, partnerSlug]);
+
+  const activeCountry = useMemo(() => {
+    if (countryQuery) return countryQuery;
+    if (!storeQuery) return "";
+    return territory.countries[0] || "";
+  }, [countryQuery, storeQuery, territory.countries]);
+
   const loadRows = useCallback(
-    async (phoneDigits = "", zipDigits = "") => {
+    async (countryValue = "", storeValue = "", zipDigits = "", phoneDigits = "") => {
       if (!partnerId) return;
 
       const params = new URLSearchParams({
@@ -213,6 +272,8 @@ export default function CustomersModule({ partner }) {
         take: "50",
       });
 
+      if (countryValue) params.set("country", countryValue);
+      if (storeValue) params.set("storeId", storeValue);
       if (segmentFilter) params.set("segment", segmentFilter);
       if (temperatureFilter) params.set("temperature", temperatureFilter);
       if (phoneDigits) params.set("q", phoneDigits);
@@ -231,7 +292,7 @@ export default function CustomersModule({ partner }) {
       try {
         setLoading(true);
         setError("");
-        await Promise.all([loadRows("", ""), loadStats()]);
+        await Promise.all([loadTerritory(), loadStats()]);
       } catch (requestError) {
         console.error("CUSTOMERS MODULE BOOTSTRAP ERROR:", requestError);
         setError("No pudimos cargar customers.");
@@ -241,7 +302,7 @@ export default function CustomersModule({ partner }) {
     };
 
     bootstrap();
-  }, [loadRows, loadStats, partnerId]);
+  }, [loadStats, loadTerritory, partnerId]);
 
   useEffect(() => {
     if (!partnerId) return;
@@ -249,7 +310,8 @@ export default function CustomersModule({ partner }) {
     const timeoutId = window.setTimeout(async () => {
       try {
         setLoading(true);
-        await loadRows(normalizePhone(query), zipQuery);
+        setError("");
+        await loadRows(activeCountry, storeQuery, zipQuery, normalizePhone(query));
       } catch (requestError) {
         console.error("CUSTOMERS SEARCH ERROR:", requestError);
         setError("No pudimos filtrar customers.");
@@ -259,10 +321,58 @@ export default function CustomersModule({ partner }) {
     }, 250);
 
     return () => window.clearTimeout(timeoutId);
-  }, [loadRows, partnerId, query, zipQuery]);
+  }, [activeCountry, loadRows, partnerId, query, storeQuery, zipQuery]);
 
   const orderedSegments = useMemo(() => segmentCards, []);
-  const hasActiveFilters = Boolean(segmentFilter || temperatureFilter || query || zipQuery);
+  const hasActiveFilters = Boolean(segmentFilter || temperatureFilter || countryQuery || storeQuery || query || zipQuery);
+  const visibleStats = useMemo(() => {
+    if (!hasActiveFilters) return stats;
+
+    const counts = { S1: 0, S2: 0, S3: 0, S4: 0, S5: 0 };
+    let restricted = 0;
+    let cold = 0;
+
+    rows.forEach((customer) => {
+      if (customer?.segment && Object.prototype.hasOwnProperty.call(counts, customer.segment)) {
+        counts[customer.segment] += 1;
+      }
+      if (customer?.isRestricted) restricted += 1;
+      if (Number(customer?.daysOff ?? 0) > 15) cold += 1;
+    });
+
+    const zipCodes = [...new Set(
+      rows
+        .map((customer) => customer?.zipCode || customer?.address_1?.match(/\b(\d{5})\b/)?.[1] || null)
+        .filter(Boolean)
+    )].sort((left, right) => String(left).localeCompare(String(right)));
+
+    return {
+      total: rows.length,
+      counts,
+      active: {
+        restricted,
+        unrestricted: Math.max(rows.length - restricted, 0),
+      },
+      temperature: {
+        cold,
+        hot: Math.max(rows.length - cold, 0),
+      },
+      zipCodes,
+    };
+  }, [hasActiveFilters, rows, stats]);
+
+  useEffect(() => {
+    if (!zipQuery) return;
+    if (visibleStats.zipCodes?.includes(zipQuery)) return;
+    setZipQuery("");
+  }, [visibleStats.zipCodes, zipQuery]);
+
+  useEffect(() => {
+    if (!storeQuery) return;
+    if (countryQuery) return;
+    if (!territory.countries.length) return;
+    setCountryQuery(territory.countries[0]);
+  }, [countryQuery, storeQuery, territory.countries]);
 
   const saveCustomer = async (payload) => {
     try {
@@ -280,7 +390,7 @@ export default function CustomersModule({ partner }) {
         await api.post("/api/customers", finalPayload);
       }
 
-      await Promise.all([loadRows(normalizePhone(query), zipQuery), loadStats()]);
+      await Promise.all([loadRows(activeCountry, storeQuery, zipQuery, normalizePhone(query)), loadStats()]);
       setShowModal(false);
       setEditing(null);
     } catch (requestError) {
@@ -298,7 +408,7 @@ export default function CustomersModule({ partner }) {
     try {
       setSaving(true);
       await api.delete(`/api/customers/${editing.id}`);
-      await Promise.all([loadRows(normalizePhone(query), zipQuery), loadStats()]);
+      await Promise.all([loadRows(activeCountry, storeQuery, zipQuery, normalizePhone(query)), loadStats()]);
       setShowModal(false);
       setEditing(null);
     } catch (requestError) {
@@ -319,7 +429,7 @@ export default function CustomersModule({ partner }) {
         reason,
       });
 
-      await Promise.all([loadRows(normalizePhone(query), zipQuery), loadStats()]);
+      await Promise.all([loadRows(activeCountry, storeQuery, zipQuery, normalizePhone(query)), loadStats()]);
     } catch (requestError) {
       console.error("TOGGLE RESTRICT ERROR:", requestError);
       setError("No pudimos cambiar el estado del customer.");
@@ -330,7 +440,7 @@ export default function CustomersModule({ partner }) {
     try {
       setSaving(true);
       await api.post("/api/customers/resegment", { partnerId });
-      await Promise.all([loadRows(normalizePhone(query), zipQuery), loadStats()]);
+      await Promise.all([loadRows(activeCountry, storeQuery, zipQuery, normalizePhone(query)), loadStats()]);
     } catch (requestError) {
       console.error("RESEGMENT ERROR:", requestError);
       setError("No pudimos recalcular segmentos.");
@@ -379,7 +489,7 @@ export default function CustomersModule({ partner }) {
                   onClick={() => setSegmentFilter((prev) => (prev === segment.key ? null : segment.key))}
                 >
                   <span>{segment.shortLabel}</span>
-                  <strong>{stats.counts?.[segment.key] || 0}</strong>
+                  <strong>{visibleStats.counts?.[segment.key] || 0}</strong>
                   <small>{segment.description}</small>
                 </article>
               ))}
@@ -398,7 +508,7 @@ export default function CustomersModule({ partner }) {
                   onClick={() => setTemperatureFilter((prev) => (prev === item.key ? null : item.key))}
                 >
                   <span>{item.label}</span>
-                  <strong>{stats.temperature?.[item.countKey] || 0}</strong>
+                  <strong>{visibleStats.temperature?.[item.countKey] || 0}</strong>
                   <small>{item.description}</small>
                 </article>
               ))}
@@ -411,9 +521,9 @@ export default function CustomersModule({ partner }) {
                 }}
               >
                 <span>Total</span>
-                <strong>{stats.total || 0}</strong>
+                <strong>{visibleStats.total || 0}</strong>
                 <small>
-                  Active: {stats.active?.unrestricted || 0} · Restricted: {stats.active?.restricted || 0}
+                  Active: {visibleStats.active?.unrestricted || 0} · Restricted: {visibleStats.active?.restricted || 0}
                 </small>
               </article>
             </div>
@@ -421,24 +531,37 @@ export default function CustomersModule({ partner }) {
         </div>
 
         <div className="cu-toolbar">
-          <input
-            className="cu-search"
-            value={query}
-            onChange={(event) => setQuery(normalizePhone(event.target.value))}
-            placeholder="Search by phone"
-          />
-          <select
-            className="cu-search"
-            value={zipQuery}
-            onChange={(event) => setZipQuery(event.target.value)}
-          >
-            <option value="">All zip codes</option>
-            {stats.zipCodes?.map((zipCode) => (
+          <select className="cu-search" value={activeCountry} onChange={(event) => setCountryQuery(event.target.value)}>
+            <option value="">Pais</option>
+            {territory.countries.map((country) => (
+              <option key={country} value={country}>
+                {country}
+              </option>
+            ))}
+          </select>
+          <select className="cu-search" value={storeQuery} onChange={(event) => setStoreQuery(event.target.value)}>
+            <option value="">Tienda</option>
+            {territory.stores.map((store) => (
+              <option key={store.id} value={store.id}>
+                {store.storeName}
+                {store.city ? ` - ${store.city}` : ""}
+              </option>
+            ))}
+          </select>
+          <select className="cu-search" value={zipQuery} onChange={(event) => setZipQuery(event.target.value)}>
+            <option value="">Zip code</option>
+            {visibleStats.zipCodes?.map((zipCode) => (
               <option key={zipCode} value={zipCode}>
                 {zipCode}
               </option>
             ))}
           </select>
+          <input
+            className="cu-search"
+            value={query}
+            onChange={(event) => setQuery(normalizePhone(event.target.value))}
+            placeholder="Phone"
+          />
         </div>
 
         <div className="cu-filterBar">
@@ -452,7 +575,7 @@ export default function CustomersModule({ partner }) {
                 type="button"
               >
                 <span>{segment.shortLabel}</span>
-                <strong>{stats.counts?.[segment.key] || 0}</strong>
+                <strong>{visibleStats.counts?.[segment.key] || 0}</strong>
               </button>
             ))}
           </div>
@@ -469,7 +592,7 @@ export default function CustomersModule({ partner }) {
                 type="button"
               >
                 <span>{item.label}</span>
-                <strong>{stats.temperature?.[item.countKey] || 0}</strong>
+                <strong>{visibleStats.temperature?.[item.countKey] || 0}</strong>
               </button>
             ))}
           </div>
@@ -480,6 +603,8 @@ export default function CustomersModule({ partner }) {
               onClick={() => {
                 setSegmentFilter(null);
                 setTemperatureFilter(null);
+                setCountryQuery("");
+                setStoreQuery("");
                 setQuery("");
                 setZipQuery("");
               }}
@@ -500,6 +625,7 @@ export default function CustomersModule({ partner }) {
                 <th>Name</th>
                 <th>Phone</th>
                 <th>Segment</th>
+                <th>Tendencia</th>
                 <th>Days Off</th>
                 <th>Status</th>
                 <th className="actions">Actions</th>
@@ -509,6 +635,10 @@ export default function CustomersModule({ partner }) {
             <tbody>
               {rows.map((customer) => (
                 <tr key={customer.id}>
+                  {(() => {
+                    const trend = buildTrend(customer);
+                    return (
+                      <>
                   <td>{customer.code || "-"}</td>
                   <td>
                     <div className="cu-nameCell">
@@ -519,6 +649,11 @@ export default function CustomersModule({ partner }) {
                   <td>{customer.phone ? displayESPhone(customer.phone) : "-"}</td>
                   <td>
                     <SegmentBadge value={customer.segment} />
+                  </td>
+                  <td>
+                    <span className={`cu-trend cu-trend-${trend.tone}`} title={trend.hint}>
+                      <span>{trend.label}</span>
+                    </span>
                   </td>
                   <td>
                     <span
@@ -559,12 +694,15 @@ export default function CustomersModule({ partner }) {
                       </button>
                     </div>
                   </td>
+                      </>
+                    );
+                  })()}
                 </tr>
               ))}
 
               {!loading && rows.length === 0 && (
                 <tr>
-                  <td colSpan="7">
+                  <td colSpan="8">
                     <div className="cu-empty">No customers yet.</div>
                   </td>
                 </tr>
@@ -594,7 +732,7 @@ export default function CustomersModule({ partner }) {
           onClose={() => setBoosting(null)}
           onDone={async () => {
             setBoosting(null);
-            await Promise.all([loadRows(normalizePhone(query), zipQuery), loadStats()]);
+            await Promise.all([loadRows(activeCountry, storeQuery, zipQuery, normalizePhone(query)), loadStats()]);
           }}
         />
       )}

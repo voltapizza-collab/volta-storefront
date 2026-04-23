@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import api from "../setupAxios";
+import OfferCreatePanelCustomer from "../components/Backoffice/Coupons/OfferCreatePanelCustomer";
 import "../styles/StoreCreator.css";
 
 const emptyStore = {
@@ -49,9 +50,21 @@ const loadGoogleMaps = (apiKey) =>
 
 const COLD_CUSTOMER_DAYS = 15;
 
-const normalizePostalCode = (address) => {
-  const match = String(address || "").match(/\b(32\d{3})\b/);
-  return match ? match[1] : "Sin CP";
+const extractPostalCode = (value) => {
+  const match = String(value || "").match(/\b(\d{5})\b/);
+  return match ? match[1] : null;
+};
+
+const normalizeComparableText = (value = "") =>
+  String(value || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+
+const postalAreaKey = (postalCode) => {
+  const digits = String(postalCode || "").replace(/\D/g, "");
+  return digits.length >= 3 ? digits.slice(0, 3) : "";
 };
 
 const getCustomerTemperature = (daysOff) =>
@@ -793,9 +806,11 @@ function MapPanel({
   customers,
   showCustomers,
   customerPostalCode,
+  temperatureFilter,
   selectedStoreId,
   selectedCustomerId,
   onSelectCustomer,
+  onBoostCustomer,
 }) {
   const mapNodeRef = useRef(null);
   const mapRef = useRef(null);
@@ -813,6 +828,25 @@ function MapPanel({
   );
 
   const center = useMemo(() => {
+    if (!storeMarkers.length) {
+      return { lat: 40.4168, lng: -3.7038 };
+    }
+
+    if (String(selectedStoreId) === "all") {
+      const sum = storeMarkers.reduce(
+        (acc, store) => ({
+          lat: acc.lat + store.latitude,
+          lng: acc.lng + store.longitude,
+        }),
+        { lat: 0, lng: 0 }
+      );
+
+      return {
+        lat: sum.lat / storeMarkers.length,
+        lng: sum.lng / storeMarkers.length,
+      };
+    }
+
     const selectedStore = storeMarkers.find((store) => String(store.id) === String(selectedStoreId));
     const focusStore = selectedStore || storeMarkers[0];
     return focusStore
@@ -842,6 +876,7 @@ function MapPanel({
     if (!selectedCustomer) return;
 
     mapRef.current.panTo({ lat: selectedCustomer.lat, lng: selectedCustomer.lng });
+    mapRef.current.setZoom(Math.max(mapRef.current.getZoom?.() || 13, 15));
   }, [customerMarkers, selectedCustomerId]);
 
   useEffect(() => {
@@ -874,7 +909,10 @@ function MapPanel({
               position: { lat: store.latitude, lng: store.longitude },
               icon: createStorePinIcon(google, store.active),
               title: store.storeName,
-              zIndex: String(store.id) === String(selectedStoreId) ? 40 : 30,
+              zIndex:
+                String(selectedStoreId) !== "all" && String(store.id) === String(selectedStoreId)
+                  ? 40
+                  : 30,
           });
 
           markersRef.current.push(marker);
@@ -907,6 +945,38 @@ function MapPanel({
 
             markersRef.current.push(marker);
           });
+        }
+
+        const bounds = new google.maps.LatLngBounds();
+        let hasBounds = false;
+
+        if (String(selectedStoreId) === "all") {
+          storeMarkers.forEach((store) => {
+            bounds.extend({ lat: store.latitude, lng: store.longitude });
+            hasBounds = true;
+          });
+        } else {
+          const selectedStore = storeMarkers.find((store) => String(store.id) === String(selectedStoreId));
+          if (selectedStore) {
+            bounds.extend({ lat: selectedStore.latitude, lng: selectedStore.longitude });
+            hasBounds = true;
+          }
+        }
+
+        if (showCustomers) {
+          customerMarkers.forEach((customer) => {
+            bounds.extend({ lat: customer.lat, lng: customer.lng });
+            hasBounds = true;
+          });
+        }
+
+        if (hasBounds) {
+          if (String(selectedStoreId) === "all" || (showCustomers && customerMarkers.length > 0)) {
+            mapRef.current.fitBounds(bounds, 48);
+          } else {
+            mapRef.current.setCenter(center);
+            mapRef.current.setZoom(13);
+          }
         }
 
         console.debug("[StoresMap]", {
@@ -955,46 +1025,50 @@ function MapPanel({
       </div>
 
       <div className="sc-mapFallbackGrid">
-        {storeMarkers.map((store) => (
-          <div key={store.id} className={`sc-mapPinCard ${store.active ? "is-active" : "is-inactive"}`}>
-            <strong>{store.storeName}</strong>
-            <span>{store.city || "Sin ciudad"}</span>
-            <small>
-              {store.latitude}, {store.longitude}
-            </small>
-          </div>
-        ))}
-
         {showCustomers &&
           customerMarkers.map((customer) => (
-          <button
+          <article
             key={`cust-${customer.id}`}
-            type="button"
             className={`sc-mapPinCard sc-mapPinCard--customer ${
               String(customer.id) === String(selectedCustomerId) ? "is-selected" : ""
             }`}
-            onClick={() => onSelectCustomer?.(customer.id)}
           >
-            <strong>{customer.name || "Cliente"}</strong>
-            <span className="sc-customerMeta">
-              <span
-                className={`sc-tempDot ${
-                  customer.temperature === "Frio" ? "is-cold" : "is-hot"
-                }`}
-                aria-hidden="true"
-              />
-              <span>{customer.segment || "S1"}</span>
-              <span>{customer.postalCode}</span>
-            </span>
-            <small>
-              {customer.daysOff || 0} dias sin pedir
-            </small>
-          </button>
+            <button
+              type="button"
+              className="sc-mapPinCardButton"
+              onClick={() => onSelectCustomer?.(customer.id)}
+            >
+              <strong>{customer.name || "Cliente"}</strong>
+              <span className="sc-customerMeta">
+                <span
+                  className={`sc-tempDot ${
+                    customer.temperature === "Frio" ? "is-cold" : "is-hot"
+                  }`}
+                  aria-hidden="true"
+                />
+                <span>{customer.segment || "S1"}</span>
+                <span>{customer.postalCode}</span>
+              </span>
+              <small>{customer.daysOff || 0} dias sin pedir</small>
+            </button>
+
+            <div className="sc-mapPinActions">
+              <button
+                type="button"
+                className="sc-mapMiniBtn"
+                onClick={() => onBoostCustomer?.(customer)}
+              >
+                Boost
+              </button>
+            </div>
+          </article>
         ))}
 
         {showCustomers && customers.length === 0 && (
           <div className="sc-emptyState">
-            No hay clientes para este filtro{customerPostalCode !== "all" ? ` en ${customerPostalCode}` : ""}.
+            No hay clientes para este filtro
+            {temperatureFilter !== "all" ? ` de ${temperatureFilter === "hot" ? "calientes" : "frios"}` : ""}
+            {customerPostalCode !== "all" ? ` en ${customerPostalCode}` : ""}.
           </div>
         )}
       </div>
@@ -1009,8 +1083,10 @@ export default function AdminStoresPage({ initialPartnerId = "", lockPartner = f
   const [customers, setCustomers] = useState([]);
   const [showCust, setShowCust] = useState(false);
   const [customerPostalCode, setCustomerPostalCode] = useState("all");
-  const [selectedMapStoreId, setSelectedMapStoreId] = useState("");
+  const [customerTemperatureFilter, setCustomerTemperatureFilter] = useState("all");
+  const [selectedMapStoreId, setSelectedMapStoreId] = useState("all");
   const [selectedCustomerId, setSelectedCustomerId] = useState("");
+  const [boostCustomer, setBoostCustomer] = useState(null);
   const [stockModal, setStockModal] = useState(null);
   const [hoursModal, setHoursModal] = useState(null);
   const [reservationsModal, setReservationsModal] = useState(null);
@@ -1091,44 +1167,83 @@ export default function AdminStoresPage({ initialPartnerId = "", lockPartner = f
 
   useEffect(() => {
     if (!stores.length) {
-      setSelectedMapStoreId("");
+      setSelectedMapStoreId("all");
       return;
     }
 
+    if (String(selectedMapStoreId) === "all") return;
     if (stores.some((store) => String(store.id) === String(selectedMapStoreId))) return;
 
-    const firstStoreWithCoords = stores.find(
-      (store) => toCoordinate(store.latitude) != null && toCoordinate(store.longitude) != null
-    );
-
-    setSelectedMapStoreId(String(firstStoreWithCoords?.id || stores[0]?.id || ""));
+    setSelectedMapStoreId("all");
   }, [selectedMapStoreId, stores]);
 
   const customersWithTags = useMemo(
     () =>
       customers.map((customer) => ({
         ...customer,
-        postalCode: normalizePostalCode(customer.address_1),
+        postalCode: customer.zipCode || extractPostalCode(customer.address_1) || "Sin CP",
         temperature: getCustomerTemperature(customer.daysOff),
       })),
     [customers]
   );
 
+  const scopedCustomers = useMemo(() => {
+    if (String(selectedMapStoreId) === "all") return customersWithTags;
+
+    const selectedStore = stores.find((store) => String(store.id) === String(selectedMapStoreId));
+    const storeCity = normalizeComparableText(selectedStore?.city || "");
+    const storeZip = String(selectedStore?.zipCode || "").trim();
+    const storeAreaKey = postalAreaKey(storeZip);
+    if (!storeZip && !storeCity) return [];
+
+    return customersWithTags.filter((customer) => {
+      const customerZip = String(customer.postalCode || "").trim();
+      const customerAreaKey = postalAreaKey(customerZip);
+      const customerAddress = normalizeComparableText(customer.address_1 || "");
+
+      if (storeZip && customerZip === storeZip) return true;
+      if (storeAreaKey && customerAreaKey && storeAreaKey === customerAreaKey) return true;
+      if (storeCity && customerAddress.includes(storeCity)) return true;
+      return false;
+    });
+  }, [customersWithTags, selectedMapStoreId, stores]);
+
   const customerPostalCodes = useMemo(
     () =>
-      [...new Set(customersWithTags.map((customer) => customer.postalCode))]
+      [...new Set(scopedCustomers.map((customer) => customer.postalCode))]
         .filter(Boolean)
         .sort((left, right) => String(left).localeCompare(String(right))),
-    [customersWithTags]
+    [scopedCustomers]
   );
 
   const visibleCustomers = useMemo(
     () =>
-      customersWithTags.filter((customer) =>
-        customerPostalCode === "all" ? true : customer.postalCode === customerPostalCode
-      ),
-    [customerPostalCode, customersWithTags]
+      scopedCustomers.filter((customer) => {
+        const matchesPostal =
+          customerPostalCode === "all" ? true : customer.postalCode === customerPostalCode;
+        const matchesTemperature =
+          customerTemperatureFilter === "all"
+            ? true
+            : customerTemperatureFilter === "hot"
+              ? customer.temperature === "Caliente"
+              : customer.temperature === "Frio";
+
+        return matchesPostal && matchesTemperature;
+      }),
+    [customerPostalCode, customerTemperatureFilter, scopedCustomers]
   );
+
+  useEffect(() => {
+    if (customerPostalCode === "all") return;
+    if (customerPostalCodes.includes(customerPostalCode)) return;
+    setCustomerPostalCode("all");
+  }, [customerPostalCode, customerPostalCodes]);
+
+  useEffect(() => {
+    setCustomerPostalCode("all");
+    setCustomerTemperatureFilter("all");
+    setSelectedCustomerId("");
+  }, [selectedMapStoreId]);
 
   useEffect(() => {
     if (!visibleCustomers.length) {
@@ -1214,17 +1329,31 @@ export default function AdminStoresPage({ initialPartnerId = "", lockPartner = f
   };
 
   const center = useMemo(() => {
-    const selectedStore = stores.find(
-      (store) => String(store.id) === String(selectedMapStoreId)
+    const storesWithCoords = stores.filter(
+      (store) => toCoordinate(store.latitude) != null && toCoordinate(store.longitude) != null
     );
 
-    const storeWithCoords = [selectedStore, ...stores].find(
-      (store) => store && toCoordinate(store.latitude) != null && toCoordinate(store.longitude) != null
-    );
+    if (!storesWithCoords.length) return { lat: 40.4168, lng: -3.7038 };
 
-    return storeWithCoords
-      ? { lat: toCoordinate(storeWithCoords.latitude), lng: toCoordinate(storeWithCoords.longitude) }
-      : { lat: 40.4168, lng: -3.7038 };
+    if (String(selectedMapStoreId) === "all") {
+      const sum = storesWithCoords.reduce(
+        (acc, store) => ({
+          lat: acc.lat + toCoordinate(store.latitude),
+          lng: acc.lng + toCoordinate(store.longitude),
+        }),
+        { lat: 0, lng: 0 }
+      );
+
+      return {
+        lat: sum.lat / storesWithCoords.length,
+        lng: sum.lng / storesWithCoords.length,
+      };
+    }
+
+    const selectedStore = storesWithCoords.find((store) => String(store.id) === String(selectedMapStoreId));
+    return selectedStore
+      ? { lat: toCoordinate(selectedStore.latitude), lng: toCoordinate(selectedStore.longitude) }
+      : { lat: toCoordinate(storesWithCoords[0].latitude), lng: toCoordinate(storesWithCoords[0].longitude) };
   }, [selectedMapStoreId, stores]);
 
   if (loading) {
@@ -1381,6 +1510,7 @@ export default function AdminStoresPage({ initialPartnerId = "", lockPartner = f
                 value={selectedMapStoreId}
                 onChange={(event) => setSelectedMapStoreId(event.target.value)}
               >
+                <option value="all">All stores</option>
                 {stores.map((store) => (
                   <option key={store.id} value={store.id}>
                     {store.storeName}
@@ -1415,14 +1545,29 @@ export default function AdminStoresPage({ initialPartnerId = "", lockPartner = f
 
           {showCust && (
             <div className="sc-mapLegend">
-              <span className="sc-legendItem">
+              <button
+                type="button"
+                className={`sc-legendItem ${customerTemperatureFilter === "all" ? "is-active" : ""}`}
+                onClick={() => setCustomerTemperatureFilter("all")}
+              >
+                Todos
+              </button>
+              <button
+                type="button"
+                className={`sc-legendItem ${customerTemperatureFilter === "hot" ? "is-active" : ""}`}
+                onClick={() => setCustomerTemperatureFilter("hot")}
+              >
                 <span className="sc-legendDot is-hot" />
                 Calientes: hasta {COLD_CUSTOMER_DAYS} dias
-              </span>
-              <span className="sc-legendItem">
+              </button>
+              <button
+                type="button"
+                className={`sc-legendItem ${customerTemperatureFilter === "cold" ? "is-active" : ""}`}
+                onClick={() => setCustomerTemperatureFilter("cold")}
+              >
                 <span className="sc-legendDot is-cold" />
                 Frios: mas de {COLD_CUSTOMER_DAYS} dias
-              </span>
+              </button>
             </div>
           )}
 
@@ -1431,12 +1576,23 @@ export default function AdminStoresPage({ initialPartnerId = "", lockPartner = f
             customers={visibleCustomers}
             showCustomers={showCust}
             customerPostalCode={customerPostalCode}
+            temperatureFilter={customerTemperatureFilter}
             selectedStoreId={selectedMapStoreId}
             selectedCustomerId={selectedCustomerId}
             onSelectCustomer={setSelectedCustomerId}
+            onBoostCustomer={setBoostCustomer}
           />
         </section>
       </div>
+
+      {boostCustomer && (
+        <OfferCreatePanelCustomer
+          partnerId={selectedPartnerId}
+          customer={boostCustomer}
+          onClose={() => setBoostCustomer(null)}
+          onDone={() => setBoostCustomer(null)}
+        />
+      )}
 
       {showAdd && (
         <div

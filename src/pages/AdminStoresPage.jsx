@@ -809,6 +809,7 @@ function MapPanel({
   temperatureFilter,
   selectedStoreId,
   selectedCustomerId,
+  onSelectStore,
   onSelectCustomer,
   onBoostCustomer,
 }) {
@@ -867,6 +868,16 @@ function MapPanel({
   );
 
   useEffect(() => {
+    if (!mapRef.current || String(selectedStoreId) === "all") return;
+
+    const selectedStore = storeMarkers.find((store) => String(store.id) === String(selectedStoreId));
+    if (!selectedStore) return;
+
+    mapRef.current.panTo({ lat: selectedStore.latitude, lng: selectedStore.longitude });
+    mapRef.current.setZoom(Math.max(mapRef.current.getZoom?.() || 13, 14));
+  }, [selectedStoreId, storeMarkers]);
+
+  useEffect(() => {
     if (!mapRef.current || !selectedCustomerId) return;
 
     const selectedCustomer = customerMarkers.find(
@@ -905,14 +916,18 @@ function MapPanel({
 
         storeMarkers.forEach((store) => {
           const marker = new google.maps.Marker({
-              map: mapRef.current,
-              position: { lat: store.latitude, lng: store.longitude },
-              icon: createStorePinIcon(google, store.active),
-              title: store.storeName,
-              zIndex:
-                String(selectedStoreId) !== "all" && String(store.id) === String(selectedStoreId)
-                  ? 40
-                  : 30,
+            map: mapRef.current,
+            position: { lat: store.latitude, lng: store.longitude },
+            icon: createStorePinIcon(google, store.active),
+            title: store.storeName,
+            zIndex:
+              String(selectedStoreId) !== "all" && String(store.id) === String(selectedStoreId)
+                ? 40
+                : 30,
+          });
+
+          marker.addListener("click", () => {
+            onSelectStore?.(store.id);
           });
 
           markersRef.current.push(marker);
@@ -971,7 +986,18 @@ function MapPanel({
         }
 
         if (hasBounds) {
-          if (String(selectedStoreId) === "all" || (showCustomers && customerMarkers.length > 0)) {
+          const selectedStore = storeMarkers.find((store) => String(store.id) === String(selectedStoreId));
+          const selectedCustomer = customerMarkers.find(
+            (customer) => String(customer.id) === String(selectedCustomerId)
+          );
+
+          if (selectedCustomer) {
+            mapRef.current.panTo({ lat: selectedCustomer.lat, lng: selectedCustomer.lng });
+            mapRef.current.setZoom(15);
+          } else if (selectedStore) {
+            mapRef.current.panTo({ lat: selectedStore.latitude, lng: selectedStore.longitude });
+            mapRef.current.setZoom(showCustomers && customerMarkers.length > 0 ? 14 : 15);
+          } else if (String(selectedStoreId) === "all" || (showCustomers && customerMarkers.length > 0)) {
             mapRef.current.fitBounds(bounds, 48);
           } else {
             mapRef.current.setCenter(center);
@@ -999,6 +1025,7 @@ function MapPanel({
     center,
     customerMarkers,
     customerPostalCode,
+    onSelectStore,
     onSelectCustomer,
     selectedCustomerId,
     selectedStoreId,
@@ -1579,6 +1606,7 @@ export default function AdminStoresPage({ initialPartnerId = "", lockPartner = f
             temperatureFilter={customerTemperatureFilter}
             selectedStoreId={selectedMapStoreId}
             selectedCustomerId={selectedCustomerId}
+            onSelectStore={(storeId) => setSelectedMapStoreId(String(storeId))}
             onSelectCustomer={setSelectedCustomerId}
             onBoostCustomer={setBoostCustomer}
           />

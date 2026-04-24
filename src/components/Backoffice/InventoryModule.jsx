@@ -176,7 +176,7 @@ export default function InventoryModule({ partner }) {
   return (
     <div className="inv-wrapper">
 
-      {/* HEADER */}
+      {/* HEADR */}
       <div className="inv-header">
         <h2 className="inv-title">Inventory</h2>
 

@@ -104,6 +104,10 @@ export default function OfferCreatePanel({ partnerId }) {
     },
     [form.storeIds, territory.customers, territory.stores]
   );
+  const availableZipCodes = useMemo(() => {
+    if (!form.storeIds.length) return territory.zipCodes;
+    return territory.zipCodes.filter((zipCode) => linkedZipCodes.has(zipCode));
+  }, [form.storeIds.length, linkedZipCodes, territory.zipCodes]);
 
   useEffect(() => {
     if (!partnerId) return;
@@ -150,6 +154,14 @@ export default function OfferCreatePanel({ partnerId }) {
     }));
   };
 
+  const toggleAllSegments = () => {
+    const allSegments = COUPON_SEGMENTS.map((segment) => segment.key);
+    setForm((prev) => ({
+      ...prev,
+      segments: prev.segments.length === allSegments.length ? [] : allSegments,
+    }));
+  };
+
   const toggleDay = (day) => {
     setForm((prev) => ({
       ...prev,
@@ -168,6 +180,16 @@ export default function OfferCreatePanel({ partnerId }) {
     }));
   };
 
+  const toggleAllStores = () => {
+    setForm((prev) => ({
+      ...prev,
+      storeIds:
+        prev.storeIds.length === territory.stores.length
+          ? []
+          : territory.stores.map((store) => store.id),
+    }));
+  };
+
   const toggleZipCode = (zipCode) => {
     setForm((prev) => ({
       ...prev,
@@ -176,6 +198,24 @@ export default function OfferCreatePanel({ partnerId }) {
         : [...prev.zipCodes, zipCode],
     }));
   };
+
+  const toggleAllZipCodes = () => {
+    setForm((prev) => ({
+      ...prev,
+      zipCodes:
+        prev.zipCodes.length === availableZipCodes.length
+          ? []
+          : [...availableZipCodes],
+    }));
+  };
+
+  useEffect(() => {
+    setForm((prev) => {
+      const nextZipCodes = prev.zipCodes.filter((zipCode) => availableZipCodes.includes(zipCode));
+      if (nextZipCodes.length === prev.zipCodes.length) return prev;
+      return { ...prev, zipCodes: nextZipCodes };
+    });
+  }, [availableZipCodes]);
 
   const submit = async (event) => {
     event.preventDefault();
@@ -195,7 +235,7 @@ export default function OfferCreatePanel({ partnerId }) {
         storeIds: form.storeIds,
         zipCodes: form.zipCodes,
         notes: form.notes,
-        ...(form.minAmount ? { minAmount: Number(form.minAmount) } : {}),
+        ...(Number(form.minAmount) > 0 ? { minAmount: Number(form.minAmount) } : {}),
         ...(type === "RANDOM_PERCENT" && {
           percentMin: Number(form.percentMin),
           percentMax: Number(form.percentMax),
@@ -276,6 +316,9 @@ export default function OfferCreatePanel({ partnerId }) {
             <span>Destino privado</span>
             <div className="cp-helper">
               Se crea 1 cupón por cliente del grupo definido por segmentos y temperatura.
+            </div>
+            <div className="cp-helper">
+              Si no marcas tiendas ni codigos postales, se enviara al grupo completo que cumpla ese filtro.
             </div>
           </div>
         )}
@@ -371,6 +414,13 @@ export default function OfferCreatePanel({ partnerId }) {
       <div className="cp-field">
         <span>Segmentos</span>
         <div className="cp-pillRow">
+          <button
+            className={`cp-pill ${form.segments.length === COUPON_SEGMENTS.length ? "is-active" : ""}`}
+            onClick={toggleAllSegments}
+            type="button"
+          >
+            Seleccionar todo
+          </button>
           {COUPON_SEGMENTS.map((segment) => (
             <button
               key={segment.key}
@@ -398,6 +448,15 @@ export default function OfferCreatePanel({ partnerId }) {
         <div className="cp-field">
           <span>Tiendas</span>
           <div className="cp-pillRow">
+            {!!territory.stores.length && (
+              <button
+                className={`cp-pill ${form.storeIds.length === territory.stores.length ? "is-active" : ""}`}
+                onClick={toggleAllStores}
+                type="button"
+              >
+                Seleccionar todo
+              </button>
+            )}
             {territory.stores.map((store) => (
               <button
                 key={store.id}
@@ -411,13 +470,25 @@ export default function OfferCreatePanel({ partnerId }) {
               </button>
             ))}
           </div>
+          {!form.storeIds.length && !!territory.stores.length && (
+            <div className="cp-helper">Sin tiendas marcadas = todas las tiendas.</div>
+          )}
           {!territory.stores.length && <div className="cp-helper">No hay tiendas cargadas para este partner.</div>}
         </div>
 
         <div className="cp-field">
           <span>Codigos postales</span>
           <div className="cp-pillRow">
-            {territory.zipCodes.map((zipCode) => (
+            {!!availableZipCodes.length && (
+              <button
+                className={`cp-pill ${form.zipCodes.length === availableZipCodes.length ? "is-active" : ""}`}
+                onClick={toggleAllZipCodes}
+                type="button"
+              >
+                Seleccionar todo
+              </button>
+            )}
+            {availableZipCodes.map((zipCode) => (
               <button
                 key={zipCode}
                 className={`cp-pill ${form.zipCodes.includes(zipCode) ? "is-active" : ""} ${
@@ -430,6 +501,9 @@ export default function OfferCreatePanel({ partnerId }) {
               </button>
             ))}
           </div>
+          {!form.zipCodes.length && !!availableZipCodes.length && (
+            <div className="cp-helper">Sin codigos postales marcados = todos los codigos postales.</div>
+          )}
           {!!form.storeIds.length && !!linkedZipCodes.size && (
             <div className="cp-helper">Los codigos resaltados vienen asociados a las tiendas marcadas.</div>
           )}

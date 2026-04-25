@@ -31,6 +31,21 @@ const postalAreaKey = (postalCode) => {
   return digits.length >= 3 ? digits.slice(0, 3) : "";
 };
 
+const defaultSurpriseMidAmount = (minValue, maxValue) => {
+  const minCents = Math.round(Number(minValue || 0) * 100);
+  const maxCents = Math.round(Number(maxValue || 0) * 100);
+  if (!Number.isFinite(minCents) || !Number.isFinite(maxCents) || minCents <= 0 || maxCents <= 0) {
+    return "";
+  }
+
+  const halfMax = Math.floor(maxCents / 2);
+  const midCents = halfMax > minCents && halfMax < maxCents
+    ? halfMax
+    : Math.floor((minCents + maxCents) / 2);
+
+  return (midCents / 100).toFixed(2);
+};
+
 export default function OfferCreatePanel({ partnerId }) {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
@@ -42,13 +57,15 @@ export default function OfferCreatePanel({ partnerId }) {
   });
   const [form, setForm] = useState({
     type: "RANDOM_PERCENT",
-    isVisible: true,
+    visibility: "PUBLIC",
     quantity: 25,
     percentMin: 5,
     percentMax: 15,
     percent: 10,
     amount: 5,
-    minAmount: "",
+    surpriseMinAmount: 0.99,
+    surpriseMidAmount: 4.99,
+    surpriseMaxAmount: 9.99,
     maxAmount: "",
     segments: [],
     storeIds: [],
@@ -63,6 +80,8 @@ export default function OfferCreatePanel({ partnerId }) {
   });
 
   const type = useMemo(() => form.type, [form.type]);
+  const isPublic = useMemo(() => form.visibility === "PUBLIC", [form.visibility]);
+  const isSurpriseAmount = useMemo(() => type === "SURPRISE_AMOUNT", [type]);
   const linkedZipCodes = useMemo(
     () => {
       const selectedStores = territory.stores.filter((store) => form.storeIds.includes(store.id));
@@ -142,7 +161,22 @@ export default function OfferCreatePanel({ partnerId }) {
   }, [partnerId]);
 
   const updateForm = (key, value) => {
-    setForm((prev) => ({ ...prev, [key]: value }));
+    setForm((prev) => {
+      const next = { ...prev, [key]: value };
+
+      if (key === "visibility" && value === "PUBLIC") {
+        next.segments = [];
+      }
+
+      if (key === "surpriseMinAmount" || key === "surpriseMaxAmount") {
+        const previousDefaultMid = defaultSurpriseMidAmount(prev.surpriseMinAmount, prev.surpriseMaxAmount);
+        if (String(prev.surpriseMidAmount) === String(previousDefaultMid)) {
+          next.surpriseMidAmount = defaultSurpriseMidAmount(next.surpriseMinAmount, next.surpriseMaxAmount);
+        }
+      }
+
+      return next;
+    });
   };
 
   const toggleSegment = (segment) => {
@@ -227,22 +261,28 @@ export default function OfferCreatePanel({ partnerId }) {
       const payload = {
         partnerId,
         type: form.type,
-        quantity: form.isVisible ? Number(form.quantity) : 1,
+        quantity: isPublic ? Number(form.quantity) : 1,
         usageLimit: 1,
-        isVisible: form.isVisible,
-        visibility: form.isVisible ? "PUBLIC" : "RESERVED",
-        segments: form.segments,
+        isVisible: isPublic,
+        visibility: form.visibility,
+        segments: isPublic ? [] : form.segments,
         storeIds: form.storeIds,
         zipCodes: form.zipCodes,
         notes: form.notes,
-        ...(Number(form.minAmount) > 0 ? { minAmount: Number(form.minAmount) } : {}),
         ...(type === "RANDOM_PERCENT" && {
           percentMin: Number(form.percentMin),
           percentMax: Number(form.percentMax),
         }),
         ...(type === "FIXED_PERCENT" && { percent: Number(form.percent) }),
         ...(type === "FIXED_AMOUNT" && { amount: Number(form.amount) }),
-        ...(form.maxAmount ? { maxAmount: Number(form.maxAmount) } : {}),
+        ...(type === "SURPRISE_AMOUNT" && {
+          surpriseMinAmount: Number(form.surpriseMinAmount),
+          surpriseMidAmount: Number(form.surpriseMidAmount),
+          surpriseMaxAmount: Number(form.surpriseMaxAmount),
+        }),
+        ...((type === "RANDOM_PERCENT" || type === "FIXED_PERCENT") && form.maxAmount
+          ? { maxAmount: Number(form.maxAmount) }
+          : {}),
         ...(form.activeFrom ? { activeFrom: form.activeFrom } : {}),
         ...(form.expiresAt ? { expiresAt: form.expiresAt } : {}),
         ...(form.isTemporal
@@ -255,10 +295,15 @@ export default function OfferCreatePanel({ partnerId }) {
       };
 
       const { data } = await api.post("/api/coupons/bulk-generate", payload);
+      const distribution = data?.surpriseDistribution;
+      const distributionText =
+        type === "SURPRISE_AMOUNT" && distribution
+          ? ` Distribucion: ${distribution.min || 0} minimo, ${distribution.mid || 0} medio, ${distribution.max || 0} maximo.`
+          : "";
       setMessage(
-        form.isVisible
-          ? `Se crearon ${data?.created || 0} cupones visibles en gallery.`
-          : `Se asignaron ${data?.created || 0} cupones privados al grupo filtrado (${data?.recipients || 0} clientes).`
+        isPublic
+          ? `Se crearon ${data?.created || 0} cupones visibles en gallery.${distributionText}`
+          : `Se asignaron ${data?.created || 0} cupones privados al grupo filtrado (${data?.recipients || 0} clientes).${distributionText}`
       );
       setSample(Array.isArray(data?.sample) ? data.sample : []);
     } catch (requestError) {
@@ -272,21 +317,32 @@ export default function OfferCreatePanel({ partnerId }) {
   return (
     <form className="cp-card cp-form" onSubmit={submit}>
       <div className="cp-kicker">Create</div>
-      <h3>{form.isVisible ? "Generar cupones publicos" : "Generar cupones privados"}</h3>
+      <h3>{isPublic ? "Generar cupones publicos" : "Generar cupones privados"}</h3>
 
-      <label className="cp-checkRow">
-        <input
-          checked={form.isVisible}
-          onChange={(event) => updateForm("isVisible", event.target.checked)}
-          type="checkbox"
-        />
-        isVisible
-      </label>
+      <div className="cp-field">
+        <span>Audiencia</span>
+        <div className="cp-segmented">
+          <button
+            className={`cp-segmentedBtn ${isPublic ? "is-active" : ""}`}
+            onClick={() => updateForm("visibility", "PUBLIC")}
+            type="button"
+          >
+            Publico
+          </button>
+          <button
+            className={`cp-segmentedBtn ${!isPublic ? "is-active" : ""}`}
+            onClick={() => updateForm("visibility", "RESERVED")}
+            type="button"
+          >
+            Privado
+          </button>
+        </div>
+      </div>
 
       <div className="cp-helper">
-        {form.isVisible
-          ? "Visible: el cupón se publica en CouponGallery."
-          : "No visible: el cupón se reserva y se asigna a clientes del grupo filtrado."}
+        {isPublic
+          ? "Publico: se publica en CouponGallery para todos los clientes dentro de la capa territorial."
+          : "Privado: se asigna a clientes del grupo filtrado y queda reservado para envio directo."}
       </div>
 
       <div className="cp-formGrid">
@@ -301,7 +357,7 @@ export default function OfferCreatePanel({ partnerId }) {
           </select>
         </label>
 
-        {form.isVisible ? (
+        {isPublic ? (
           <label className="cp-field">
             <span>Cantidad</span>
             <input
@@ -374,21 +430,54 @@ export default function OfferCreatePanel({ partnerId }) {
           </label>
         )}
 
-        <label className="cp-field">
-          <span>Tope minimo</span>
-          <input
-            type="number"
-            min="0"
-            step="0.01"
-            value={form.minAmount}
-            onChange={(event) => updateForm("minAmount", event.target.value)}
-          />
-        </label>
+        {isSurpriseAmount && (
+          <>
+            <label className="cp-field">
+              <span>Valor minimo</span>
+              <input
+                type="number"
+                min="0.01"
+                step="0.01"
+                value={form.surpriseMinAmount}
+                onChange={(event) => updateForm("surpriseMinAmount", event.target.value)}
+              />
+            </label>
+            <label className="cp-field">
+              <span>Valor medio</span>
+              <input
+                type="number"
+                min="0.01"
+                step="0.01"
+                value={form.surpriseMidAmount}
+                onChange={(event) => updateForm("surpriseMidAmount", event.target.value)}
+              />
+            </label>
+            <label className="cp-field">
+              <span>Valor maximo</span>
+              <input
+                type="number"
+                min="0.01"
+                step="0.01"
+                value={form.surpriseMaxAmount}
+                onChange={(event) => updateForm("surpriseMaxAmount", event.target.value)}
+              />
+            </label>
+            <div className="cp-helper">
+              Distribucion: 75% valor minimo, 15% valor medio, 10% valor maximo. Desde 10 cupones se garantiza 1 maximo.
+            </div>
+          </>
+        )}
 
         {(type === "RANDOM_PERCENT" || type === "FIXED_PERCENT") && (
           <label className="cp-field">
             <span>Tope maximo</span>
-            <input value={form.maxAmount} onChange={(event) => updateForm("maxAmount", event.target.value)} />
+            <input
+              type="number"
+              min="0"
+              step="0.01"
+              value={form.maxAmount}
+              onChange={(event) => updateForm("maxAmount", event.target.value)}
+            />
           </label>
         )}
 
@@ -411,36 +500,38 @@ export default function OfferCreatePanel({ partnerId }) {
         </label>
       </div>
 
-      <div className="cp-field">
-        <span>Segmentos</span>
-        <div className="cp-pillRow">
-          <button
-            className={`cp-pill ${form.segments.length === COUPON_SEGMENTS.length ? "is-active" : ""}`}
-            onClick={toggleAllSegments}
-            type="button"
-          >
-            Seleccionar todo
-          </button>
-          {COUPON_SEGMENTS.map((segment) => (
+      {!isPublic && (
+        <div className="cp-field">
+          <span>Segmentos</span>
+          <div className="cp-pillRow">
             <button
-              key={segment.key}
-              className={`cp-pill ${form.segments.includes(segment.key) ? "is-active" : ""}`}
-              onClick={() => toggleSegment(segment.key)}
+              className={`cp-pill ${form.segments.length === COUPON_SEGMENTS.length ? "is-active" : ""}`}
+              onClick={toggleAllSegments}
               type="button"
             >
-              {segment.label}
+              Seleccionar todo
             </button>
-          ))}
+            {COUPON_SEGMENTS.map((segment) => (
+              <button
+                key={segment.key}
+                className={`cp-pill ${form.segments.includes(segment.key) ? "is-active" : ""}`}
+                onClick={() => toggleSegment(segment.key)}
+                type="button"
+              >
+                {segment.label}
+              </button>
+            ))}
+          </div>
+          <div className="cp-helper">Puedes mezclar segmentos S1-S5 con estado Hot/Cold.</div>
         </div>
-        <div className="cp-helper">Ahora puedes mezclar segmentos S1-S5 con estado Hot/Cold.</div>
-      </div>
+      )}
 
       <div className="cp-targetPanel">
         <div className="cp-field">
           <span>Capa territorial</span>
           <div className="cp-helper">
-            {form.isVisible
-              ? "Puedes dejar preparada la campana con tiendas y codigos postales; el targeting queda guardado en metadata."
+            {isPublic
+              ? "El cupon publico se muestra en CouponGallery para todos los clientes dentro de las tiendas o codigos postales marcados."
               : "Combina segmentos con una o varias tiendas y con uno o varios codigos postales para cruzar el territorio con precision."}
           </div>
         </div>

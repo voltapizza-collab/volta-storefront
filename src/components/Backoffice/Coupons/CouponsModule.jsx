@@ -4,8 +4,7 @@ import OfferCreatePanel from "./OfferCreatePanel";
 import OfferRedemptions from "./OfferRedemptions";
 import "../../../styles/CouponsModule.css";
 
-const tabs = [
-  { key: "overview", label: "Overview" },
+const creatorTabs = [
   { key: "create", label: "Crear ofertas" },
   { key: "redemptions", label: "Redenciones" },
 ];
@@ -26,18 +25,20 @@ export default function CouponsModule({ partner, initialView = "overview" }) {
             <p>Desde aqui se crean ofertas publicas para CouponGallery y envios privados para clientes o grupos.</p>
           </div>
 
-          <div className="cp-tabRow">
-            {tabs.map((tab) => (
-              <button
-                key={tab.key}
-                className={`cp-tabBtn ${activeView === tab.key ? "is-active" : ""}`}
-                onClick={() => setActiveTab(tab.key)}
-                type="button"
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
+          {activeView !== "overview" && (
+            <div className="cp-tabRow">
+              {creatorTabs.map((tab) => (
+                <button
+                  key={tab.key}
+                  className={`cp-tabBtn ${activeView === tab.key ? "is-active" : ""}`}
+                  onClick={() => setActiveTab(tab.key)}
+                  type="button"
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         {activeView === "overview" && <OffersOverview partnerId={partnerId} />}

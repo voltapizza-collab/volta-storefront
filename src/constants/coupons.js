@@ -12,6 +12,7 @@ export const COUPON_TYPES = [
   { key: "RANDOM_PERCENT", label: "Random (%)" },
   { key: "FIXED_PERCENT", label: "Porcentaje fijo" },
   { key: "FIXED_AMOUNT", label: "Importe fijo" },
+  { key: "SURPRISE_AMOUNT", label: "Cupon sorpresa" },
 ];
 
 export const couponSegmentLabel = (segment) =>

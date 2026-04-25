@@ -203,6 +203,34 @@
   gap: 10px;
 }
 
+.cp-segmented {
+  display: inline-grid;
+  grid-template-columns: repeat(2, minmax(120px, 1fr));
+  gap: 4px;
+  width: min(100%, 320px);
+  padding: 4px;
+  border-radius: 16px;
+  border: 1px solid rgba(59, 0, 139, 0.12);
+  background: rgba(59, 0, 139, 0.05);
+}
+
+.cp-segmentedBtn {
+  min-height: 40px;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--brand-1);
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.cp-segmentedBtn.is-active {
+  background: #fff;
+  color: #23163b;
+  box-shadow: 0 8px 18px rgba(59, 0, 139, 0.12);
+}
+
 .cp-checkRow {
   display: inline-flex;
   align-items: center;

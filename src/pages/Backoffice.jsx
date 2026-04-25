@@ -186,12 +186,10 @@ export default function Backoffice() {
     isSettingsBrandingActive;
   const isOffersOverviewActive = activeModule === "offers";
   const isOffersCreateActive = activeModule === "offersCreate";
-  const isOffersRedemptionsActive = activeModule === "offersRedemptions";
   const isOffersGroupActive =
     activeModuleGroup === "offers" ||
     isOffersOverviewActive ||
-    isOffersCreateActive ||
-    isOffersRedemptionsActive;
+    isOffersCreateActive;
 
   if (loadingPartners) {
     return (
@@ -401,17 +399,6 @@ export default function Backoffice() {
                   }`}
                 >
                   <button
-                    className={`bo-subbtn ${isOffersOverviewActive ? "active" : ""}`}
-                    onClick={() => {
-                      setActiveModule("offers");
-                      setActiveModuleGroup("offers");
-                    }}
-                    type="button"
-                  >
-                    Overview
-                  </button>
-
-                  <button
                     className={`bo-subbtn ${isOffersCreateActive ? "active" : ""}`}
                     onClick={() => {
                       setActiveModule("offersCreate");
@@ -420,17 +407,6 @@ export default function Backoffice() {
                     type="button"
                   >
                     Crear Ofertas
-                  </button>
-
-                  <button
-                    className={`bo-subbtn ${isOffersRedemptionsActive ? "active" : ""}`}
-                    onClick={() => {
-                      setActiveModule("offersRedemptions");
-                      setActiveModuleGroup("offers");
-                    }}
-                    type="button"
-                  >
-                    Redenciones
                   </button>
                 </div>
               )}
@@ -577,9 +553,6 @@ export default function Backoffice() {
             <CouponsModule partner={auth} initialView="create" />
           )}
 
-          {activeModule === "offersRedemptions" && auth.partnerId && (
-            <CouponsModule partner={auth} initialView="redemptions" />
-          )}
         </div>
 
         <AppFooter />

@@ -2,12 +2,39 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import api from "../../setupAxios";
 import "../../styles/PizzaCreatorExtras.css";
 
+const defaultSizeList = ["S", "M", "L"];
+const sizeOrder = ["S", "M", "L", "XL", "XXL", "ST"];
+
+const normalizePriceBySize = (value, sizes = defaultSizeList, fallbackPrice = 0) => {
+  const source = value && typeof value === "object" && !Array.isArray(value)
+    ? value
+    : {};
+  const fallback = Number(fallbackPrice || 0);
+
+  return sizes.reduce((acc, size) => {
+    const rawPrice = source[size];
+    acc[size] =
+      rawPrice === "" || rawPrice == null
+        ? fallback || ""
+        : rawPrice;
+    return acc;
+  }, {});
+};
+
+const getPrimaryPrice = (priceBySize, fallbackPrice = 0) => {
+  const firstPrice = Object.values(priceBySize || {}).find(
+    (price) => price !== "" && price != null
+  );
+  return Number(firstPrice ?? fallbackPrice ?? 0);
+};
+
 export default function PizzaCreatorExtras({ partner }) {
   const partnerId = partner?.partnerId;
   const storeId = partner?.storeId;
   const [categories, setCategories] = useState([]);
   const [ingredients, setIngredients] = useState([]);
   const [extras, setExtras] = useState([]);
+  const [pizzas, setPizzas] = useState([]);
   const [modal, setModal] = useState(null);
   const [editingExtra, setEditingExtra] = useState(null);
   const [selectedIngredient, setSelectedIngredient] = useState("");
@@ -22,16 +49,66 @@ export default function PizzaCreatorExtras({ partner }) {
     );
   }, [ingredients]);
 
+  const ingredientOptions = useMemo(() => {
+    if (!editingExtra?.ingredientId) return sortedIngredients;
+
+    const exists = sortedIngredients.some(
+      (ingredient) => ingredient.id === editingExtra.ingredientId
+    );
+
+    if (exists) return sortedIngredients;
+
+    return [
+      {
+        id: editingExtra.ingredientId,
+        name: editingExtra.ingredientName || `Ingrediente ${editingExtra.ingredientId}`,
+      },
+      ...sortedIngredients,
+    ];
+  }, [editingExtra, sortedIngredients]);
+
+  const categorySizesById = useMemo(() => {
+    const map = new Map();
+
+    pizzas.forEach((pizza) => {
+      const categoryId = pizza.categoryId;
+      if (!categoryId) return;
+
+      const sizes = Array.isArray(pizza.selectSize) ? pizza.selectSize : [];
+      if (!map.has(categoryId)) map.set(categoryId, new Set());
+      sizes.forEach((size) => {
+        if (size) map.get(categoryId).add(size);
+      });
+    });
+
+    return new Map(
+      [...map.entries()].map(([categoryId, sizes]) => [
+        categoryId,
+        [...sizes].sort(
+          (a, b) =>
+            (sizeOrder.indexOf(a) === -1 ? 999 : sizeOrder.indexOf(a)) -
+            (sizeOrder.indexOf(b) === -1 ? 999 : sizeOrder.indexOf(b))
+        ),
+      ])
+    );
+  }, [pizzas]);
+
+  const getCategorySizes = useCallback(
+    (categoryId) => categorySizesById.get(categoryId) || defaultSizeList,
+    [categorySizesById]
+  );
+
   const loadAll = useCallback(async () => {
     if (!storeId) return;
 
     try {
       setLoading(true);
 
-      const [catRes, ingRes, extraRes] = await Promise.all([
+      const [catRes, ingRes, extraRes, pizzaRes] = await Promise.all([
         api.get(`/api/partners/${partnerId}/categories`),
         api.get(`/stores/${storeId}/ingredients`),
         api.get(`/api/ingredient-extras/all?storeId=${storeId}`),
+        api.get(`/api/pizzas?partnerId=${partnerId}`),
       ]);
 
       setCategories(Array.isArray(catRes.data) ? catRes.data : []);
@@ -41,11 +118,13 @@ export default function PizzaCreatorExtras({ partner }) {
         )
       );
       setExtras(Array.isArray(extraRes.data) ? extraRes.data : []);
+      setPizzas(Array.isArray(pizzaRes.data) ? pizzaRes.data : []);
     } catch (err) {
       console.error(err);
       setCategories([]);
       setIngredients([]);
       setExtras([]);
+      setPizzas([]);
     } finally {
       setLoading(false);
     }
@@ -64,11 +143,15 @@ export default function PizzaCreatorExtras({ partner }) {
   };
 
   const openEdit = (extra) => {
-    setSelectedIngredient(extra.ingredientId);
+    setSelectedIngredient(String(extra.ingredientId));
     setSelectedCategories(
       extra.categories.map((category) => ({
         id: category.id,
-        price: category.price || 0,
+        priceBySize: normalizePriceBySize(
+          category.priceBySize,
+          getCategorySizes(category.id),
+          category.price
+        ),
       }))
     );
     setEditingExtra(extra);
@@ -86,14 +169,28 @@ export default function PizzaCreatorExtras({ partner }) {
     setSelectedCategories((prev) => {
       const exists = prev.find((category) => category.id === id);
       if (exists) return prev.filter((category) => category.id !== id);
-      return [...prev, { id, price: 0 }];
+      return [
+        ...prev,
+        {
+          id,
+          priceBySize: normalizePriceBySize({}, getCategorySizes(id)),
+        },
+      ];
     });
   };
 
-  const setCategoryPrice = (id, price) => {
+  const setCategorySizePrice = (id, size, price) => {
     setSelectedCategories((prev) =>
       prev.map((category) =>
-        category.id === id ? { ...category, price } : category
+        category.id === id
+          ? {
+              ...category,
+              priceBySize: {
+                ...(category.priceBySize || {}),
+                [size]: price,
+              },
+            }
+          : category
       )
     );
   };
@@ -127,7 +224,8 @@ export default function PizzaCreatorExtras({ partner }) {
         ingredientId: Number(selectedIngredient),
         links: selectedCategories.map((category) => ({
           categoryId: category.id,
-          price: Number(category.price || 0),
+          price: getPrimaryPrice(category.priceBySize),
+          priceBySize: category.priceBySize,
         })),
       });
 
@@ -159,8 +257,6 @@ export default function PizzaCreatorExtras({ partner }) {
     }
   };
 
-  const formatPrice = (value) => `EUR ${Number(value || 0).toFixed(2)}`;
-
   return (
     <div className="pcex-page">
       <div className="pcex-header">
@@ -187,14 +283,6 @@ export default function PizzaCreatorExtras({ partner }) {
             <div key={extra.ingredientId} className="pcex-row">
               <div>
                 <strong className="pcex-rowTitle">{extra.ingredientName}</strong>
-                <div className="pcex-rowMeta">
-                  {extra.categories
-                    .map(
-                      (category) =>
-                        `${category.name} (${formatPrice(category.price)})`
-                    )
-                    .join(", ")}
-                </div>
               </div>
 
               <div className="pcex-actions">
@@ -218,10 +306,10 @@ export default function PizzaCreatorExtras({ partner }) {
               <label>Ingrediente</label>
               <select
                 value={selectedIngredient}
-                onChange={(e) => setSelectedIngredient(Number(e.target.value))}
+                onChange={(e) => setSelectedIngredient(e.target.value)}
               >
                 <option value="">- Selecciona -</option>
-                {sortedIngredients.map((ingredient) => (
+                {ingredientOptions.map((ingredient) => (
                   <option key={ingredient.id} value={ingredient.id}>
                     {ingredient.name}
                   </option>
@@ -236,6 +324,14 @@ export default function PizzaCreatorExtras({ partner }) {
                   const selected = selectedCategories.find(
                     (item) => item.id === category.id
                   );
+                  const categorySizes = getCategorySizes(category.id);
+                  const selectedPriceBySize = selected
+                    ? normalizePriceBySize(
+                        selected.priceBySize,
+                        categorySizes,
+                        selected.price
+                      )
+                    : {};
 
                   return (
                     <div
@@ -252,24 +348,32 @@ export default function PizzaCreatorExtras({ partner }) {
                           <span className="pcex-catName">{category.name}</span>
                         </label>
 
-                        <div className="pcex-catPreview">
-                          {formatPrice(selected?.price || 0)}
-                        </div>
                       </div>
 
                       <div className="pcex-catEditor">
                         {selected ? (
-                          <div className="pcex-catInput">
-                            <span>EUR</span>
-                            <input
-                              type="number"
-                              step="0.01"
-                              value={selected?.price || ""}
-                              placeholder="0.00"
-                              onChange={(e) =>
-                                setCategoryPrice(category.id, e.target.value)
-                              }
-                            />
+                          <div className="pcex-catControls">
+                            <div className="pcex-catInputList">
+                              {categorySizes.map((size) => (
+                                <label key={size} className="pcex-catInput">
+                                  <span>{size}</span>
+                                  <div className="pcex-catCurrency">EUR</div>
+                                  <input
+                                    type="number"
+                                    step="0.01"
+                                    value={selectedPriceBySize[size] || ""}
+                                    placeholder="0.00"
+                                    onChange={(e) =>
+                                      setCategorySizePrice(
+                                        category.id,
+                                        size,
+                                        e.target.value
+                                      )
+                                    }
+                                  />
+                                </label>
+                              ))}
+                            </div>
                           </div>
                         ) : (
                           <div className="pcex-catInputPlaceholder" />

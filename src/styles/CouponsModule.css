@@ -327,6 +327,138 @@
   color: rgba(34, 21, 52, 0.76);
 }
 
+.cp-promosLayout {
+  display: grid;
+  gap: 16px;
+}
+
+.cp-promoBuilder {
+  align-items: stretch;
+}
+
+.cp-promoImageNote {
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(59, 0, 139, 0.06);
+  color: rgba(34, 21, 52, 0.72);
+  font-weight: 800;
+}
+
+.cp-promoPicker,
+.cp-promoBag {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(59, 0, 139, 0.08);
+}
+
+.cp-promoCategory {
+  display: grid;
+  gap: 10px;
+}
+
+.cp-promoCategoryHead,
+.cp-promoBagHead {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: #23163b;
+}
+
+.cp-promoCategoryHead span,
+.cp-promoBagHead span {
+  color: rgba(34, 21, 52, 0.62);
+  font-weight: 800;
+}
+
+.cp-promoProductGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 10px;
+}
+
+.cp-promoProductBtn {
+  display: grid;
+  gap: 6px;
+  text-align: left;
+  border: 1px solid rgba(59, 0, 139, 0.1);
+  border-radius: 16px;
+  padding: 12px 14px;
+  background: #fff;
+  color: #23163b;
+  cursor: pointer;
+}
+
+.cp-promoProductBtn span {
+  color: rgba(34, 21, 52, 0.62);
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.cp-promoBagRow {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) 86px 86px auto;
+  align-items: end;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 16px;
+  background: #fff;
+  border: 1px solid rgba(59, 0, 139, 0.08);
+}
+
+.cp-promoBagRow > div {
+  display: grid;
+  gap: 4px;
+}
+
+.cp-promoBagRow span {
+  color: rgba(34, 21, 52, 0.62);
+  font-weight: 800;
+}
+
+.cp-promoBagRow label {
+  display: grid;
+  gap: 6px;
+  color: rgba(34, 21, 52, 0.72);
+  font-size: 0.8rem;
+  font-weight: 900;
+}
+
+.cp-promoBagRow input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid rgba(59, 0, 139, 0.12);
+  border-radius: 12px;
+  padding: 9px 10px;
+}
+
+.cp-miniDanger {
+  border: 1px solid rgba(211, 47, 47, 0.18);
+  border-radius: 12px;
+  padding: 10px 12px;
+  background: rgba(211, 47, 47, 0.06);
+  color: #9b1c1c;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.cp-rowActions {
+  display: flex;
+  gap: 8px;
+}
+
+.cp-rowActions button {
+  border: 1px solid rgba(59, 0, 139, 0.12);
+  border-radius: 12px;
+  padding: 8px 10px;
+  background: #fff;
+  color: var(--brand-1);
+  font-weight: 900;
+  cursor: pointer;
+}
+
 @media (max-width: 900px) {
   .cp-head,
   .cp-actions {
@@ -337,6 +469,10 @@
   .cp-grid,
   .cp-kpiGrid,
   .cp-formGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .cp-promoBagRow {
     grid-template-columns: 1fr;
   }
 }

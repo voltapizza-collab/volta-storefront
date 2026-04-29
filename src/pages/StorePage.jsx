@@ -11,6 +11,7 @@ import {
 
 const TRENDING_TAB = "__TRENDING__";
 const PROMOS_TAB = "__PROMOS__";
+const UPCOMING_TAB = "__UPCOMING__";
 
 function formatCountdown(totalMinutes) {
   if (totalMinutes <= 0) return "Cerrando ahora";
@@ -45,6 +46,78 @@ function buildClosingSnapshot(now, closeHour = 23, closeMinute = 30) {
     countdownValue,
     closingLabel: `Hoy ${String(closeHour).padStart(2, "0")}:${String(closeMinute).padStart(2, "0")}`,
   };
+}
+
+function formatLaunchCountdown(launchAt, now) {
+  const launchDate = new Date(launchAt);
+  if (!launchAt || Number.isNaN(launchDate.getTime())) return "Muy pronto";
+
+  const diffMs = launchDate.getTime() - now.getTime();
+  if (diffMs <= 0) return "Disponible ahora";
+
+  const totalMinutes = Math.ceil(diffMs / 60000);
+  const days = Math.floor(totalMinutes / 1440);
+  const hours = Math.floor((totalMinutes % 1440) / 60);
+  const minutes = totalMinutes % 60;
+
+  if (days > 0) return `${days}d ${hours}h`;
+  if (hours > 0) return `${hours}h ${String(minutes).padStart(2, "0")}m`;
+  return `${minutes}m`;
+}
+
+function formatLaunchDate(launchAt) {
+  const launchDate = new Date(launchAt);
+  if (!launchAt || Number.isNaN(launchDate.getTime())) return "Fecha por anunciar";
+
+  return new Intl.DateTimeFormat("es", {
+    day: "2-digit",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(launchDate);
+}
+
+function filterMenuItems(items, query) {
+  if (!query) return items;
+
+  return items.filter((item) => {
+    const pizzaName = String(item.name || "").toLowerCase();
+    const pizzaCategory = String(item.category || "").toLowerCase();
+    const ingredientMatch = (item.ingredients || []).some((ingredient) =>
+      String(ingredient.name || "").toLowerCase().includes(query)
+    );
+
+    return (
+      pizzaName.includes(query) ||
+      pizzaCategory.includes(query) ||
+      ingredientMatch
+    );
+  });
+}
+
+function filterPromos(items, query) {
+  if (!query) return items;
+
+  return items.filter((promo) => {
+    const title = String(promo.title || "").toLowerCase();
+    const description = String(promo.description || "").toLowerCase();
+    const itemMatch = (promo.items || []).some((item) =>
+      String(item.name || "").toLowerCase().includes(query)
+    );
+
+    return title.includes(query) || description.includes(query) || itemMatch;
+  });
+}
+
+function formatPromoDate(value) {
+  if (!value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+
+  return new Intl.DateTimeFormat("es", {
+    day: "2-digit",
+    month: "short",
+  }).format(date);
 }
 
 function countryCodeToFlag(code) {
@@ -119,6 +192,8 @@ export default function StorePage() {
   const { partnerSlug, storeSlug } = useParams();
 
   const [menu, setMenu] = useState([]);
+  const [upcoming, setUpcoming] = useState([]);
+  const [promos, setPromos] = useState([]);
   const [store, setStore] = useState(null);
   const [partner, setPartner] = useState(null);
   const [error, setError] = useState("");
@@ -140,13 +215,20 @@ export default function StorePage() {
         ]);
 
         const nextMenu = Array.isArray(menuData?.menu) ? menuData.menu : [];
+        const nextUpcoming = Array.isArray(menuData?.upcoming)
+          ? menuData.upcoming
+          : [];
+        const nextPromos = Array.isArray(menuData?.promos) ? menuData.promos : [];
 
         setMenu(nextMenu);
+        setUpcoming(nextUpcoming);
+        setPromos(nextPromos);
         setStore(menuData?.store || null);
         setPartner(partnerData || null);
 
         const firstCategory =
-          nextMenu.find((item) => item.category)?.category || TRENDING_TAB;
+          nextMenu.find((item) => item.category)?.category ||
+          (nextUpcoming.length ? UPCOMING_TAB : TRENDING_TAB);
         setActiveTab(firstCategory || TRENDING_TAB);
       } catch (err) {
         console.error(err);
@@ -222,32 +304,29 @@ export default function StorePage() {
     () => [
       { id: TRENDING_TAB, label: "Trending" },
       { id: PROMOS_TAB, label: "Promos" },
+      ...(upcoming.length ? [{ id: UPCOMING_TAB, label: "Proximos" }] : []),
       ...categories.map((category) => ({ id: category, label: category })),
     ],
-    [categories]
+    [categories, upcoming.length]
   );
 
   const baseFilteredMenu = useMemo(() => {
     const query = search.trim().toLowerCase();
-    if (!query) return menu;
-
-    return menu.filter((item) => {
-      const pizzaName = String(item.name || "").toLowerCase();
-      const pizzaCategory = String(item.category || "").toLowerCase();
-      const ingredientMatch = (item.ingredients || []).some((ingredient) =>
-        String(ingredient.name || "").toLowerCase().includes(query)
-      );
-
-      return (
-        pizzaName.includes(query) ||
-        pizzaCategory.includes(query) ||
-        ingredientMatch
-      );
-    });
+    return filterMenuItems(menu, query);
   }, [menu, search]);
 
+  const filteredUpcoming = useMemo(() => {
+    const query = search.trim().toLowerCase();
+    return filterMenuItems(upcoming, query);
+  }, [upcoming, search]);
+
+  const filteredPromos = useMemo(() => {
+    const query = search.trim().toLowerCase();
+    return filterPromos(promos, query);
+  }, [promos, search]);
+
   const visibleMenu = useMemo(() => {
-    if (activeTab === PROMOS_TAB) return [];
+    if (activeTab === PROMOS_TAB || activeTab === UPCOMING_TAB) return [];
 
     if (activeTab === TRENDING_TAB) {
       return [...baseFilteredMenu].slice(0, 12);
@@ -364,7 +443,9 @@ export default function StorePage() {
   const activeProductsCount = visibleMenu.length;
   const incentiveMessage =
     activeTab === PROMOS_TAB
-      ? "Promos activas para empujar el ticket medio"
+      ? `${filteredPromos.length} promo${filteredPromos.length === 1 ? "" : "s"} activa${filteredPromos.length === 1 ? "" : "s"}`
+      : activeTab === UPCOMING_TAB
+      ? `${filteredUpcoming.length} lanzamiento${filteredUpcoming.length === 1 ? "" : "s"} en camino`
       : activeProductsCount > 0
       ? `Tu siguiente incentivo puede activarse con ${Math.min(
           activeProductsCount,
@@ -540,7 +621,11 @@ export default function StorePage() {
               <strong>{incentiveMessage}</strong>
             </div>
             <span className="sf-incentiveTimer">
-              {activeTab === PROMOS_TAB ? "Promos destacadas" : "Disponible hoy"}
+              {activeTab === PROMOS_TAB
+                ? "Promos destacadas"
+                : activeTab === UPCOMING_TAB
+                ? "Coming soon"
+                : "Disponible hoy"}
             </span>
           </div>
         </section>
@@ -571,13 +656,141 @@ export default function StorePage() {
         <section className="sf-engineCard">
           <div className="sf-engineGridStage">
             {activeTab === PROMOS_TAB ? (
-              <div className="sf-engineEmptyState">
-                <strong>Promos</strong>
-                <p>
-                  Aqui iran las ofertas creadas desde el hijo de promociones dentro
-                  del modulo de ofertas.
-                </p>
-              </div>
+              filteredPromos.length === 0 ? (
+                <div className="sf-engineEmptyState">
+                  <strong>Promos</strong>
+                  <p>No hay promos visibles para esta busqueda.</p>
+                </div>
+              ) : (
+                <div className="sf-engineGrid sf-engineGrid--promos">
+                  {filteredPromos.map((promo) => (
+                    <article key={promo.id} className="sf-engineMenuCard sf-engineMenuCard--promo">
+                      <div
+                        className={`sf-menuCardVisual sf-menuCardVisual--promo ${
+                          promo.image ? "has-image" : ""
+                        }`}
+                        style={
+                          promo.image
+                            ? { "--sf-promo-image": `url(${promo.image})` }
+                            : undefined
+                        }
+                      >
+                        <span className="sf-menuCardVisualBadge">Promo</span>
+                        <div className="sf-menuCardVisualTitle">{promo.title}</div>
+                      </div>
+
+                      <div className="sf-menuCardHead">
+                        <div>
+                          <h3 className="sf-menuCardTitle">{promo.title}</h3>
+                          <div className="sf-menuCardMeta">
+                            {[formatPromoDate(promo.activeFrom), formatPromoDate(promo.expiresAt)]
+                              .filter(Boolean)
+                              .join(" - ") || "Promo activa"}
+                          </div>
+                        </div>
+                        <span className="sf-promoPrice">
+                          EUR{Number(promo.totalPrice || 0).toFixed(2)}
+                        </span>
+                      </div>
+
+                      {promo.description && (
+                        <p className="sf-promoDescription">{promo.description}</p>
+                      )}
+
+                      <div>
+                        <div className="sf-sectionLabel">Contenido</div>
+                        <div className="sf-promoContentList">
+                          {(promo.items || []).map((item) => (
+                            <span key={`${promo.id}-${item.pizzaId}`}>
+                              {item.quantity || 1}x {item.name}
+                              {item.size ? ` ${item.size}` : ""}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="sf-menuCardFooter">
+                        <span className="sf-menuCardSignal">Oferta limitada</span>
+                        <button type="button" className="sf-menuCardCta">
+                          Elegir promo
+                        </button>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              )
+            ) : activeTab === UPCOMING_TAB ? (
+              filteredUpcoming.length === 0 ? (
+                <div className="sf-engineEmptyState">
+                  <strong>Proximos</strong>
+                  <p>No hay lanzamientos visibles para esta busqueda.</p>
+                </div>
+              ) : (
+                <div className="sf-engineGrid sf-engineGrid--upcoming">
+                  {filteredUpcoming.map((item) => (
+                    <article key={item.pizzaId} className="sf-engineMenuCard sf-engineMenuCard--upcoming">
+                      <div
+                        className={`sf-menuCardVisual sf-menuCardVisual--upcoming ${
+                          item.image ? "has-image" : ""
+                        }`}
+                        style={
+                          item.image
+                            ? { "--sf-launch-image": `url(${item.image})` }
+                            : undefined
+                        }
+                      >
+                        <span className="sf-menuCardVisualBadge">Coming soon</span>
+                        <div className="sf-comingSoonWordmark">COMING SOON</div>
+                        <div className="sf-launchCountdown">
+                          <span>Sale en</span>
+                          <strong>{formatLaunchCountdown(item.launchAt, now)}</strong>
+                        </div>
+                      </div>
+
+                      <div className="sf-menuCardHead">
+                        <div>
+                          <h3 className="sf-menuCardTitle">{item.name}</h3>
+                          <div className="sf-menuCardMeta">
+                            {item.category || "Sin categoria"} - {formatLaunchDate(item.launchAt)}
+                          </div>
+                        </div>
+                        <span className="sf-badge sf-badge--upcoming">Soon</span>
+                      </div>
+
+                      <div>
+                        <div className="sf-sectionLabel">Tamanos y precios</div>
+                        <div className="sf-priceRow">
+                          {Object.entries(item.priceBySize || {})
+                            .filter(([_, value]) => value !== "" && value != null)
+                            .map(([size, value]) => (
+                              <span key={size} className="sf-priceTag">
+                                {size}: EUR{value}
+                              </span>
+                            ))}
+                        </div>
+                      </div>
+
+                      <div>
+                        <div className="sf-sectionLabel">Ingredientes activos</div>
+                        <div className="sf-chipRow">
+                          {(item.ingredients || []).map((ingredient) => (
+                            <span key={ingredient.id} className="sf-chip">
+                              {ingredient.name}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="sf-menuCardFooter">
+                        <span className="sf-menuCardSignal">Lanzamiento programado</span>
+                        <button type="button" className="sf-menuCardCta sf-menuCardCta--disabled" disabled>
+                          Pronto
+                        </button>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              )
             ) : visibleMenu.length === 0 ? (
               <div className="sf-engineEmptyState">
                 <strong>{activeTabLabel}</strong>

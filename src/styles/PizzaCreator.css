@@ -245,6 +245,7 @@
 
 .pizza-form input[type="text"],
 .pizza-form input[type="number"],
+.pizza-form input[type="datetime-local"],
 .pizza-form select {
   width: 100%;
   border: 1px solid rgba(59, 0, 139, 0.12);
@@ -261,6 +262,7 @@
 
 .pizza-form input[type="text"]:focus,
 .pizza-form input[type="number"]:focus,
+.pizza-form input[type="datetime-local"]:focus,
 .pizza-form select:focus {
   border-color: rgba(106, 61, 240, 0.45);
   box-shadow: 0 0 0 4px rgba(106, 61, 240, 0.08);

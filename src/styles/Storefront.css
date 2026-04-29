@@ -1081,6 +1081,18 @@
   box-shadow: 0 18px 34px rgba(16, 12, 37, 0.18);
 }
 
+.sf-engineMenuCard--upcoming {
+  border-color: color-mix(in srgb, var(--sf-theme-accent, #F72585) 26%, rgba(17, 17, 17, 0.08));
+}
+
+.sf-engineMenuCard--promo {
+  border-color: color-mix(in srgb, var(--sf-theme-secondary, #FFBF2D) 34%, rgba(17, 17, 17, 0.08));
+}
+
+.sf-engineMenuCard--upcoming:hover {
+  transform: none;
+}
+
 .sf-menuCardVisual {
   min-height: 124px;
   border-radius: 22px;
@@ -1092,6 +1104,111 @@
     radial-gradient(circle at top left, rgba(255, 193, 45, 0.3), transparent 38%),
     linear-gradient(145deg, color-mix(in srgb, var(--sf-theme-primary, #4B11B2) 82%, white), color-mix(in srgb, var(--sf-theme-primary, #4B11B2) 62%, black));
   color: var(--sf-theme-on-primary, #fff);
+}
+
+.sf-menuCardVisual--upcoming {
+  position: relative;
+  min-height: 178px;
+  overflow: hidden;
+  background:
+    linear-gradient(90deg, rgba(15, 15, 25, 0.62), rgba(15, 15, 25, 0.2)),
+    repeating-linear-gradient(
+      -10deg,
+      color-mix(in srgb, var(--sf-theme-accent, #F72585) 68%, #111) 0 14px,
+      color-mix(in srgb, var(--sf-theme-primary, #4B11B2) 76%, #111) 14px 28px
+    );
+  background-size: cover;
+  background-position: center;
+}
+
+.sf-menuCardVisual--promo {
+  position: relative;
+  min-height: 178px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.28), transparent 32%),
+    linear-gradient(
+      135deg,
+      var(--sf-theme-accent, #F72585),
+      color-mix(in srgb, var(--sf-theme-primary, #4B11B2) 82%, #111)
+    );
+  background-size: cover;
+  background-position: center;
+}
+
+.sf-menuCardVisual--promo.has-image::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(12, 10, 18, 0.12), rgba(12, 10, 18, 0.64)),
+    var(--sf-promo-image);
+  background-size: cover;
+  background-position: center;
+}
+
+.sf-menuCardVisual--promo > * {
+  position: relative;
+  z-index: 1;
+}
+
+.sf-menuCardVisual--upcoming.has-image::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(15, 15, 20, 0.18), rgba(15, 15, 20, 0.72)),
+    var(--sf-launch-image);
+  background-size: cover;
+  background-position: center;
+  filter: saturate(0.85) contrast(1.06);
+}
+
+.sf-menuCardVisual--upcoming > * {
+  position: relative;
+  z-index: 1;
+}
+
+.sf-comingSoonWordmark {
+  align-self: center;
+  justify-self: center;
+  margin: auto 0;
+  color: #fff;
+  font-size: clamp(2rem, 10vw, 4.5rem);
+  font-weight: 950;
+  line-height: 0.82;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0;
+  text-shadow:
+    0 4px 0 color-mix(in srgb, var(--sf-theme-primary, #2317ff) 92%, #000),
+    0 12px 24px rgba(0, 0, 0, 0.28);
+}
+
+.sf-launchCountdown {
+  align-self: flex-end;
+  display: inline-grid;
+  justify-items: end;
+  gap: 2px;
+  padding: 8px 11px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(10px);
+  color: #fff;
+}
+
+.sf-launchCountdown span {
+  font-size: 0.7rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.82;
+}
+
+.sf-launchCountdown strong {
+  font-size: 1rem;
+  line-height: 1;
 }
 
 .sf-menuCardVisualBadge {
@@ -1146,6 +1263,41 @@
   white-space: nowrap;
 }
 
+.sf-badge--upcoming {
+  background: color-mix(in srgb, var(--sf-theme-accent, #F72585) 12%, white);
+  color: color-mix(in srgb, var(--sf-theme-accent, #F72585) 78%, #111);
+}
+
+.sf-promoPrice {
+  flex-shrink: 0;
+  padding: 10px 13px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--sf-theme-secondary, #FFBF2D), #fff0a8);
+  color: var(--sf-theme-on-secondary, #2d2104);
+  font-weight: 950;
+  box-shadow: 0 10px 18px rgba(255, 191, 45, 0.18);
+}
+
+.sf-promoDescription {
+  margin: 0;
+  color: var(--sf-theme-text-muted, rgba(17, 17, 17, 0.62));
+  font-weight: 750;
+  line-height: 1.45;
+}
+
+.sf-promoContentList {
+  display: grid;
+  gap: 8px;
+}
+
+.sf-promoContentList span {
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--sf-theme-secondary, #FFBF2D) 13%, white);
+  color: var(--sf-theme-on-surface, #171717);
+  font-weight: 850;
+}
+
 .sf-priceRow,
 .sf-chipRow {
   display: flex;
@@ -1195,6 +1347,14 @@
   font-weight: 900;
   cursor: pointer;
   box-shadow: 0 10px 18px rgba(255, 47, 116, 0.22);
+}
+
+.sf-menuCardCta--disabled,
+.sf-menuCardCta:disabled {
+  background: rgba(17, 17, 17, 0.12);
+  color: rgba(17, 17, 17, 0.58);
+  cursor: not-allowed;
+  box-shadow: none;
 }
 
 .sf-stickyFooterShell {

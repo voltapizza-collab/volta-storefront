@@ -93,6 +93,7 @@ const createInitialForm = () => ({
   category: "",
   sizes: [],
   priceBySize: { S: "", M: "", L: "", XL: "", XXL: "", ST: "" },
+  launchAt: "",
   imageFile: null,
   ingredients: [],
 });
@@ -107,6 +108,16 @@ const getAllergenSummary = (allergens) => {
   }
 
   return `${String(allergens[0]).slice(0, 3).toUpperCase()}+${allergens.length - 1}`;
+};
+
+const toDateTimeLocalValue = (value) => {
+  if (!value) return "";
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+
+  const offsetMs = date.getTimezoneOffset() * 60000;
+  return new Date(date.getTime() - offsetMs).toISOString().slice(0, 16);
 };
 
 export default function PizzaCreator({ partner }) {
@@ -236,6 +247,7 @@ export default function PizzaCreator({ partner }) {
         XXL: "",
         ST: "",
       },
+      launchAt: toDateTimeLocalValue(pizza.launchAt),
       imageFile: null,
       ingredients: (pizza.ingredients || []).map((i) => ({
         id: i.id,
@@ -415,6 +427,7 @@ export default function PizzaCreator({ partner }) {
     payload.append("sizes", JSON.stringify(form.sizes));
     payload.append("priceBySize", JSON.stringify(form.priceBySize));
     payload.append("ingredients", JSON.stringify(form.ingredients));
+    payload.append("launchAt", form.launchAt || "");
     payload.append("cookingMethod", "");
     if (form.imageFile) {
       payload.append("image", form.imageFile);
@@ -524,6 +537,20 @@ export default function PizzaCreator({ partner }) {
                   ))}
                 </select>
               </label>
+
+              <label>
+                Fecha de lanzamiento
+                <input
+                  type="datetime-local"
+                  name="launchAt"
+                  value={form.launchAt}
+                  onChange={onChange}
+                />
+              </label>
+
+              <div className="pc-note">
+                Si eliges una fecha futura, el producto aparecera en Proximos y no se vendera hasta ese momento.
+              </div>
 
               <div className="pc-block">
                 <div className="pc-sectionTitle">Tamanos y precios</div>

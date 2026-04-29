@@ -97,7 +97,15 @@ export default function OfferCreatePanelCustomer({ partnerId, customer, onDone, 
       };
 
       const { data } = await api.post("/api/coupons/push-customer", payload);
-      setMessage(`Cupón ${data?.coupon?.code || ""} creado. El envío de mensaje queda para mañana.`);
+      const delivery = data?.delivery;
+      const deliveryError =
+        delivery?.error && typeof delivery.error === "object"
+          ? delivery.error.detail || delivery.error.title
+          : delivery?.error;
+      const deliveryText = delivery?.sent
+        ? ` SMS ${delivery.status || "enviado"}.`
+        : ` SMS no enviado${deliveryError ? `: ${deliveryError}` : "."}`;
+      setMessage(`Cupon ${data?.coupon?.code || ""} creado.${deliveryText}`);
       window.setTimeout(() => {
         onDone?.();
       }, 800);

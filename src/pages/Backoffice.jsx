@@ -186,10 +186,12 @@ export default function Backoffice() {
     isSettingsBrandingActive;
   const isOffersOverviewActive = activeModule === "offers";
   const isOffersCreateActive = activeModule === "offersCreate";
+  const isOffersPromosActive = activeModule === "offersPromos";
   const isOffersGroupActive =
     activeModuleGroup === "offers" ||
     isOffersOverviewActive ||
-    isOffersCreateActive;
+    isOffersCreateActive ||
+    isOffersPromosActive;
 
   if (loadingPartners) {
     return (
@@ -398,18 +400,28 @@ export default function Backoffice() {
                     isOffersGroupActive ? "is-active-group" : ""
                   }`}
                 >
-                  <button
-                    className={`bo-subbtn ${isOffersCreateActive ? "active" : ""}`}
-                    onClick={() => {
-                      setActiveModule("offersCreate");
-                      setActiveModuleGroup("offers");
+                    <button
+                      className={`bo-subbtn ${isOffersCreateActive ? "active" : ""}`}
+                      onClick={() => {
+                        setActiveModule("offersCreate");
+                        setActiveModuleGroup("offers");
                     }}
                     type="button"
-                  >
-                    Crear Ofertas
-                  </button>
-                </div>
-              )}
+                    >
+                      Crear Ofertas
+                    </button>
+                    <button
+                      className={`bo-subbtn ${isOffersPromosActive ? "active" : ""}`}
+                      onClick={() => {
+                        setActiveModule("offersPromos");
+                        setActiveModuleGroup("offers");
+                      }}
+                      type="button"
+                    >
+                      Promos
+                    </button>
+                  </div>
+                )}
 
               <button className="bo-btn" disabled type="button">
                 My Orders
@@ -551,6 +563,10 @@ export default function Backoffice() {
 
           {activeModule === "offersCreate" && auth.partnerId && (
             <CouponsModule partner={auth} initialView="create" />
+          )}
+
+          {activeModule === "offersPromos" && auth.partnerId && (
+            <CouponsModule partner={auth} initialView="promos" />
           )}
 
         </div>

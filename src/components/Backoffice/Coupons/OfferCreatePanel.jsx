@@ -258,6 +258,11 @@ export default function OfferCreatePanel({ partnerId }) {
     setSample([]);
 
     try {
+      if (!isPublic && !form.segments.length && !form.storeIds.length && !form.zipCodes.length) {
+        setMessage("Selecciona al menos un segmento, una tienda o un codigo postal para el envio privado.");
+        return;
+      }
+
       const payload = {
         partnerId,
         type: form.type,
@@ -300,15 +305,33 @@ export default function OfferCreatePanel({ partnerId }) {
         type === "SURPRISE_AMOUNT" && distribution
           ? ` Distribucion: ${distribution.min || 0} minimo, ${distribution.mid || 0} medio, ${distribution.max || 0} maximo.`
           : "";
+      const delivery = data?.delivery;
+      const firstDeliveryError = Array.isArray(delivery?.errors) ? delivery.errors[0] : null;
+      const deliveryErrorText =
+        firstDeliveryError && (firstDeliveryError.detail || firstDeliveryError.title)
+          ? ` Error: ${firstDeliveryError.detail || firstDeliveryError.title}.`
+          : "";
+      const deliveryText =
+        !isPublic && delivery
+          ? ` SMS: ${delivery.sent || 0} enviados, ${delivery.failed || 0} fallidos${
+              delivery.skipped ? `, ${delivery.skipped} omitidos` : ""
+            }.${deliveryErrorText}`
+          : "";
       setMessage(
         isPublic
           ? `Se crearon ${data?.created || 0} cupones visibles en gallery.${distributionText}`
-          : `Se asignaron ${data?.created || 0} cupones privados al grupo filtrado (${data?.recipients || 0} clientes).${distributionText}`
+          : `Se asignaron ${data?.created || 0} cupones privados al grupo filtrado (${data?.recipients || 0} clientes).${distributionText}${deliveryText}`
       );
       setSample(Array.isArray(data?.sample) ? data.sample : []);
     } catch (requestError) {
       console.error(requestError);
-      setMessage(requestError.response?.data?.error || "No se pudo crear la oferta.");
+      const errorCode = requestError.response?.data?.error;
+      const errorMessages = {
+        no_recipients: "No hay clientes que coincidan con ese destino privado. Prueba seleccionando otro segmento, tienda o codigo postal.",
+        bad_store_ids: "Alguna tienda seleccionada no pertenece a este partner.",
+        public_coupons_cannot_have_segments: "Los cupones publicos no pueden tener segmentos privados.",
+      };
+      setMessage(errorMessages[errorCode] || errorCode || "No se pudo crear la oferta.");
     } finally {
       setSaving(false);
     }

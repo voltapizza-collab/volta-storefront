@@ -197,6 +197,47 @@
   font: inherit;
 }
 
+.cp-fileControl {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 16px;
+  border: 1px solid rgba(59, 0, 139, 0.12);
+  background: #fff;
+}
+
+.cp-fileControl input {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.cp-fileControl label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 12px;
+  background: rgba(59, 0, 139, 0.08);
+  color: var(--brand-1);
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.cp-fileControl span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: rgba(34, 21, 52, 0.66);
+  font-weight: 800;
+}
+
 .cp-pillRow {
   display: flex;
   flex-wrap: wrap;
@@ -322,6 +363,11 @@
   text-align: left;
 }
 
+.cp-table td {
+  color: #23163b;
+  font-weight: 700;
+}
+
 .cp-table th {
   background: rgba(59, 0, 139, 0.04);
   color: rgba(34, 21, 52, 0.76);
@@ -359,6 +405,10 @@
   gap: 10px;
 }
 
+.cp-promoCategory[open] {
+  padding-bottom: 6px;
+}
+
 .cp-promoCategoryHead,
 .cp-promoBagHead {
   display: flex;
@@ -367,39 +417,105 @@
   color: #23163b;
 }
 
+.cp-promoCategoryHead {
+  align-items: center;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(59, 0, 139, 0.05);
+  cursor: pointer;
+  list-style: none;
+}
+
+.cp-promoCategoryHead::-webkit-details-marker {
+  display: none;
+}
+
+.cp-promoCategoryHead::after {
+  content: "+";
+  flex: 0 0 auto;
+  color: var(--brand-1);
+  font-weight: 900;
+}
+
+.cp-promoCategory[open] .cp-promoCategoryHead::after {
+  content: "-";
+}
+
 .cp-promoCategoryHead span,
 .cp-promoBagHead span {
   color: rgba(34, 21, 52, 0.62);
   font-weight: 800;
 }
 
+.cp-mutedText {
+  display: block;
+  margin-top: 4px;
+  color: rgba(34, 21, 52, 0.62);
+  font-weight: 800;
+}
+
 .cp-promoProductGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 8px;
 }
 
 .cp-promoProductBtn {
-  display: grid;
-  gap: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   text-align: left;
   border: 1px solid rgba(59, 0, 139, 0.1);
-  border-radius: 16px;
-  padding: 12px 14px;
+  border-radius: 12px;
+  min-height: 38px;
+  padding: 8px 10px;
   background: #fff;
   color: #23163b;
   cursor: pointer;
 }
 
-.cp-promoProductBtn span {
-  color: rgba(34, 21, 52, 0.62);
-  font-size: 0.85rem;
+.cp-promoProductBtn.is-selected {
+  border-color: rgba(255, 182, 28, 0.7);
+  background: linear-gradient(180deg, rgba(255, 211, 110, 0.26), #fff);
+}
+
+.cp-promoProductBtn strong {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.88rem;
   font-weight: 800;
+}
+
+.cp-promoProductCheck {
+  display: inline-grid;
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  place-items: center;
+  border-radius: 4px;
+  border: 1px solid rgba(59, 0, 139, 0.22);
+  background: #fff;
+}
+
+.cp-promoProductBtn.is-selected .cp-promoProductCheck {
+  background: var(--brand-2);
+  border-color: transparent;
+}
+
+.cp-promoProductBtn.is-selected .cp-promoProductCheck::after {
+  content: "";
+  width: 7px;
+  height: 4px;
+  border-left: 2px solid #23163b;
+  border-bottom: 2px solid #23163b;
+  transform: rotate(-45deg);
 }
 
 .cp-promoBagRow {
   display: grid;
-  grid-template-columns: minmax(180px, 1fr) 86px 86px auto;
+  grid-template-columns: minmax(180px, 1fr) 72px 92px 104px auto;
   align-items: end;
   gap: 10px;
   padding: 12px;
@@ -426,12 +542,25 @@
   font-weight: 900;
 }
 
-.cp-promoBagRow input {
+.cp-promoBagRow input,
+.cp-promoBagRow select,
+.cp-promoBagPrice {
   width: 100%;
   box-sizing: border-box;
   border: 1px solid rgba(59, 0, 139, 0.12);
   border-radius: 12px;
   padding: 9px 10px;
+  background: #fff;
+  color: #23163b;
+  font: inherit;
+}
+
+.cp-promoBagRow .cp-promoBagPrice {
+  display: inline-flex;
+  align-items: center;
+  min-height: 38px;
+  color: rgba(34, 21, 52, 0.72);
+  font-weight: 900;
 }
 
 .cp-miniDanger {

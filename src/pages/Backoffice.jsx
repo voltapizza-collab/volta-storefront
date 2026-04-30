@@ -408,7 +408,7 @@ export default function Backoffice() {
                     }}
                     type="button"
                     >
-                      Crear Ofertas
+                      Cupones
                     </button>
                     <button
                       className={`bo-subbtn ${isOffersPromosActive ? "active" : ""}`}

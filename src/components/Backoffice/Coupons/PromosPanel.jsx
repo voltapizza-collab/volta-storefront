@@ -1,6 +1,18 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useState } from "react";
 import api from "../../../setupAxios";
 import "../../../styles/CouponsModule.css";
+
+const WEEK_DAYS = [
+  { value: "lunes", label: "Lun", number: 1 },
+  { value: "martes", label: "Mar", number: 2 },
+  { value: "miercoles", label: "Mie", number: 3 },
+  { value: "jueves", label: "Jue", number: 4 },
+  { value: "viernes", label: "Vie", number: 5 },
+  { value: "sabado", label: "Sab", number: 6 },
+  { value: "domingo", label: "Dom", number: 0 },
+];
+
+const QUANTITY_OPTIONS = Array.from({ length: 10 }, (_, index) => index + 1);
 
 const initialForm = {
   title: "",
@@ -8,6 +20,10 @@ const initialForm = {
   totalPrice: "",
   activeFrom: "",
   expiresAt: "",
+  isTemporal: false,
+  daysActive: [],
+  windowStart: "",
+  windowEnd: "",
   imageFile: null,
   items: [],
 };
@@ -23,7 +39,66 @@ const toDateTimeLocalValue = (value) => {
 
 const formatPrice = (value) => `EUR ${Number(value || 0).toFixed(2)}`;
 
+const timeToMinutes = (value) => {
+  if (!value || !/^\d{2}:\d{2}$/.test(value)) return "";
+  const [hours, minutes] = value.split(":").map(Number);
+  return String(hours * 60 + minutes);
+};
+
+const minutesToTime = (value) => {
+  if (value == null || value === "") return "";
+  const minutes = Number(value);
+  if (!Number.isInteger(minutes)) return "";
+  const hoursPart = String(Math.floor(minutes / 60)).padStart(2, "0");
+  const minutesPart = String(minutes % 60).padStart(2, "0");
+  return `${hoursPart}:${minutesPart}`;
+};
+
+const hasActivePrice = (value) =>
+  value !== "" && value != null && Number.isFinite(Number(value));
+
+const getPizzaSizes = (pizza) => {
+  const selectSize = Array.isArray(pizza?.selectSize)
+    ? pizza.selectSize.map((size) => String(size || "").trim()).filter(Boolean)
+    : [];
+  const priceBySize = pizza?.priceBySize || {};
+  const pricedSelectedSizes = selectSize.filter((size) => hasActivePrice(priceBySize[size]));
+  const pricedSizes = Object.entries(priceBySize)
+    .filter(([, value]) => hasActivePrice(value))
+    .map(([size]) => size);
+
+  return [...new Set(pricedSelectedSizes.length ? pricedSelectedSizes : pricedSizes)];
+};
+
+const getItemSizes = (item) => {
+  const sizes = Array.isArray(item?.sizeOptions) ? item.sizeOptions : [];
+  const priceBySize = item?.priceBySize || {};
+  const activeSizes = sizes.filter((size) => !Object.keys(priceBySize).length || hasActivePrice(priceBySize[size]));
+  const pricedSizes = Object.entries(priceBySize)
+    .filter(([, value]) => hasActivePrice(value))
+    .map(([size]) => size);
+  const candidates = activeSizes.length ? activeSizes : pricedSizes;
+
+  return [...new Set((candidates.length ? candidates : [item?.size]).filter(Boolean))];
+};
+
+const getSizePrice = (item, size = item?.size) => {
+  const rawPrice = item?.priceBySize?.[size];
+  const price = Number(rawPrice);
+  return Number.isFinite(price) ? price : null;
+};
+
+const isPubliclyLaunched = (pizza) => {
+  if (pizza?.status && pizza.status !== "ACTIVE") return false;
+  if (pizza?.type && pizza.type !== "SELLABLE") return false;
+  if (!pizza?.launchAt) return true;
+
+  const launchDate = new Date(pizza.launchAt);
+  return Number.isNaN(launchDate.getTime()) || launchDate <= new Date();
+};
+
 export default function PromosPanel({ partnerId }) {
+  const fileInputId = useId();
   const [pizzas, setPizzas] = useState([]);
   const [promos, setPromos] = useState([]);
   const [form, setForm] = useState(initialForm);
@@ -38,16 +113,27 @@ export default function PromosPanel({ partnerId }) {
 
     try {
       setLoading(true);
-      const [pizzaResponse, promoResponse] = await Promise.all([
+      const [pizzaResult, promoResult] = await Promise.allSettled([
         api.get(`/api/pizzas?partnerId=${partnerId}`),
         api.get(`/api/promos?partnerId=${partnerId}`),
       ]);
 
-      setPizzas(Array.isArray(pizzaResponse.data) ? pizzaResponse.data : []);
-      setPromos(Array.isArray(promoResponse.data?.promos) ? promoResponse.data.promos : []);
-    } catch (error) {
-      console.error(error);
-      setMessage("No se pudieron cargar las promos.");
+      if (pizzaResult.status === "fulfilled") {
+        const rows = pizzaResult.value.data;
+        setPizzas(Array.isArray(rows) ? rows : rows?.pizzas || []);
+      } else {
+        console.error(pizzaResult.reason);
+        setPizzas([]);
+        setMessage("No se pudieron cargar los productos.");
+      }
+
+      if (promoResult.status === "fulfilled") {
+        setPromos(Array.isArray(promoResult.value.data?.promos) ? promoResult.value.data.promos : []);
+      } else {
+        console.error(promoResult.reason);
+        setPromos([]);
+        setMessage("No se pudieron cargar las promos.");
+      }
     } finally {
       setLoading(false);
     }
@@ -57,10 +143,16 @@ export default function PromosPanel({ partnerId }) {
     loadAll();
   }, [loadAll]);
 
+  const pizzaById = useMemo(() => {
+    const map = new Map();
+    pizzas.forEach((pizza) => map.set(pizza.id, pizza));
+    return map;
+  }, [pizzas]);
+
   const pizzasByCategory = useMemo(() => {
     const map = new Map();
 
-    pizzas.forEach((pizza) => {
+    pizzas.filter(isPubliclyLaunched).forEach((pizza) => {
       const category = pizza.categoryName || pizza.category || "Sin categoria";
       if (!map.has(category)) map.set(category, []);
       map.get(category).push(pizza);
@@ -88,6 +180,15 @@ export default function PromosPanel({ partnerId }) {
     setForm((prev) => ({ ...prev, [key]: value }));
   };
 
+  const toggleDay = (day) => {
+    setForm((prev) => ({
+      ...prev,
+      daysActive: prev.daysActive.includes(day)
+        ? prev.daysActive.filter((item) => item !== day)
+        : [...prev.daysActive, day],
+    }));
+  };
+
   const addItem = (pizza) => {
     setForm((prev) => {
       const existing = prev.items.find((item) => item.pizzaId === pizza.id);
@@ -95,13 +196,12 @@ export default function PromosPanel({ partnerId }) {
       if (existing) {
         return {
           ...prev,
-          items: prev.items.map((item) =>
-            item.pizzaId === pizza.id
-              ? { ...item, quantity: Number(item.quantity || 1) + 1 }
-              : item
-          ),
+          items: prev.items.filter((item) => item.pizzaId !== pizza.id),
         };
       }
+
+      const sizeOptions = getPizzaSizes(pizza);
+      const defaultSize = sizeOptions[0] || "";
 
       return {
         ...prev,
@@ -112,7 +212,10 @@ export default function PromosPanel({ partnerId }) {
             name: pizza.name,
             category: pizza.categoryName || pizza.category || "Sin categoria",
             quantity: 1,
-            size: Array.isArray(pizza.selectSize) ? pizza.selectSize[0] || "" : "",
+            size: defaultSize,
+            sizeOptions,
+            priceBySize: pizza.priceBySize || {},
+            unitPrice: getSizePrice({ priceBySize: pizza.priceBySize }, defaultSize),
           },
         ],
       };
@@ -123,7 +226,13 @@ export default function PromosPanel({ partnerId }) {
     setForm((prev) => ({
       ...prev,
       items: prev.items.map((item) =>
-        item.pizzaId === pizzaId ? { ...item, [key]: value } : item
+        item.pizzaId === pizzaId
+          ? {
+              ...item,
+              [key]: value,
+              ...(key === "size" ? { unitPrice: getSizePrice(item, value) } : {}),
+            }
+          : item
       ),
     }));
   };
@@ -136,6 +245,14 @@ export default function PromosPanel({ partnerId }) {
   };
 
   const editPromo = (promo) => {
+    const daysActive = Array.isArray(promo.daysActive)
+      ? promo.daysActive
+          .map((day) => WEEK_DAYS.find((item) => item.number === Number(day))?.value)
+          .filter(Boolean)
+      : [];
+    const windowStart = minutesToTime(promo.windowStart);
+    const windowEnd = minutesToTime(promo.windowEnd);
+
     setEditingId(promo.id);
     setExistingImage(promo.image || "");
     setForm({
@@ -144,8 +261,14 @@ export default function PromosPanel({ partnerId }) {
       totalPrice: promo.totalPrice || "",
       activeFrom: toDateTimeLocalValue(promo.activeFrom),
       expiresAt: toDateTimeLocalValue(promo.expiresAt),
+      isTemporal: !!daysActive.length || !!windowStart || !!windowEnd,
+      daysActive,
+      windowStart,
+      windowEnd,
       imageFile: null,
-      items: Array.isArray(promo.items) ? promo.items : [],
+      items: Array.isArray(promo.items)
+        ? promo.items.map((item) => normalizePromoItem(item))
+        : [],
     });
   };
 
@@ -173,6 +296,7 @@ export default function PromosPanel({ partnerId }) {
       return;
     }
 
+    const normalizedItems = form.items.map((item) => normalizePromoItem(item));
     const payload = new FormData();
     payload.append("partnerId", String(partnerId));
     payload.append("title", form.title.trim());
@@ -180,7 +304,10 @@ export default function PromosPanel({ partnerId }) {
     payload.append("totalPrice", String(Number(form.totalPrice || 0)));
     payload.append("activeFrom", form.activeFrom || "");
     payload.append("expiresAt", form.expiresAt || "");
-    payload.append("items", JSON.stringify(form.items));
+    payload.append("daysActive", JSON.stringify(form.isTemporal ? form.daysActive : []));
+    payload.append("windowStart", form.isTemporal ? timeToMinutes(form.windowStart) : "");
+    payload.append("windowEnd", form.isTemporal ? timeToMinutes(form.windowEnd) : "");
+    payload.append("items", JSON.stringify(normalizedItems));
     if (form.imageFile) payload.append("image", form.imageFile);
 
     try {
@@ -204,6 +331,25 @@ export default function PromosPanel({ partnerId }) {
     } finally {
       setSaving(false);
     }
+  };
+
+  const selectedFileName = form.imageFile?.name || (existingImage ? "Imagen actual" : "Sin archivo");
+
+  const normalizePromoItem = (item) => {
+    const pizza = pizzaById.get(item.pizzaId);
+    const priceBySize = pizza?.priceBySize || item.priceBySize || {};
+    const sizeOptions = pizza ? getPizzaSizes(pizza) : getItemSizes(item);
+    const size = sizeOptions.includes(item.size) ? item.size : sizeOptions[0] || "";
+
+    return {
+      ...item,
+      name: pizza?.name || item.name,
+      category: pizza?.categoryName || pizza?.category || item.category || "Sin categoria",
+      size,
+      sizeOptions,
+      priceBySize,
+      unitPrice: getSizePrice({ priceBySize }, size),
+    };
   };
 
   return (
@@ -264,16 +410,67 @@ export default function PromosPanel({ partnerId }) {
           />
         </label>
 
-        <label className="cp-field">
-          <span>Foto</span>
+        <label className="cp-checkRow">
           <input
-            type="file"
-            accept="image/*"
-            onChange={(event) =>
-              updateForm("imageFile", event.target.files?.[0] || null)
-            }
+            checked={form.isTemporal}
+            onChange={(event) => updateForm("isTemporal", event.target.checked)}
+            type="checkbox"
           />
+          Limitar por dias y horas
         </label>
+
+        {form.isTemporal && (
+          <div className="cp-targetPanel">
+            <div className="cp-pillRow">
+              {WEEK_DAYS.map((day) => (
+                <button
+                  key={day.value}
+                  className={`cp-pill ${form.daysActive.includes(day.value) ? "is-active" : ""}`}
+                  onClick={() => toggleDay(day.value)}
+                  type="button"
+                >
+                  {day.label}
+                </button>
+              ))}
+            </div>
+
+            <div className="cp-formGrid">
+              <label className="cp-field">
+                <span>Inicio</span>
+                <input
+                  type="time"
+                  value={form.windowStart}
+                  onChange={(event) => updateForm("windowStart", event.target.value)}
+                />
+              </label>
+
+              <label className="cp-field">
+                <span>Fin</span>
+                <input
+                  type="time"
+                  value={form.windowEnd}
+                  onChange={(event) => updateForm("windowEnd", event.target.value)}
+                />
+              </label>
+            </div>
+          </div>
+        )}
+
+        <div className="cp-field">
+          <span>Foto</span>
+          <div className="cp-fileControl">
+            <input
+              id={fileInputId}
+              type="file"
+              accept="image/*"
+              onChange={(event) =>
+                updateForm("imageFile", event.target.files?.[0] || null)
+              }
+            />
+            <label htmlFor={fileInputId}>Seleccionar foto</label>
+            <span>{selectedFileName}</span>
+          </div>
+        </div>
 
         {existingImage && !form.imageFile && (
           <div className="cp-promoImageNote">Imagen actual cargada.</div>
@@ -285,34 +482,34 @@ export default function PromosPanel({ partnerId }) {
             <div className="cp-helper">Selecciona productos por categoria para meterlos en la bolsa.</div>
           </div>
 
-          {pizzasByCategory.map((group) => (
-            <section key={group.category} className="cp-promoCategory">
-              <div className="cp-promoCategoryHead">
+          {pizzasByCategory.map((group, index) => (
+            <details key={group.category} className="cp-promoCategory" open={index === 0}>
+              <summary className="cp-promoCategoryHead">
                 <strong>{group.category}</strong>
                 <span>{group.rows.length} productos</span>
-              </div>
+              </summary>
 
               <div className="cp-promoProductGrid">
                 {group.rows.map((pizza) => (
                   <button
                     key={pizza.id}
                     type="button"
-                    className="cp-promoProductBtn"
+                    className={`cp-promoProductBtn ${
+                      form.items.some((item) => item.pizzaId === pizza.id) ? "is-selected" : ""
+                    }`}
                     onClick={() => addItem(pizza)}
                   >
+                    <span className="cp-promoProductCheck" aria-hidden="true" />
                     <strong>{pizza.name}</strong>
-                    <span>
-                      {Object.entries(pizza.priceBySize || {})
-                        .filter(([, value]) => value !== "" && value != null)
-                        .slice(0, 3)
-                        .map(([size, value]) => `${size} ${formatPrice(value)}`)
-                        .join(" · ") || "Sin precio"}
-                    </span>
                   </button>
                 ))}
               </div>
-            </section>
+            </details>
           ))}
+
+          {!pizzasByCategory.length && (
+            <div className="cp-empty">No hay productos cargados para este partner.</div>
+          )}
         </div>
 
         <div className="cp-promoBag">
@@ -321,45 +518,66 @@ export default function PromosPanel({ partnerId }) {
             <span>{form.items.length} items</span>
           </div>
 
-          {form.items.map((item) => (
-            <div key={item.pizzaId} className="cp-promoBagRow">
+          {form.items.map((item) => {
+            const normalizedItem = normalizePromoItem(item);
+
+            return (
+            <div key={normalizedItem.pizzaId} className="cp-promoBagRow">
               <div>
-                <strong>{item.name}</strong>
-                <span>{item.category}</span>
+                <strong>{normalizedItem.name}</strong>
+                <span>{normalizedItem.category}</span>
               </div>
 
               <label>
                 Cant.
-                <input
-                  type="number"
-                  min="1"
-                  value={item.quantity}
+                <select
+                  value={normalizedItem.quantity}
                   onChange={(event) =>
-                    updateItem(item.pizzaId, "quantity", event.target.value)
+                    updateItem(normalizedItem.pizzaId, "quantity", Number(event.target.value))
                   }
-                />
+                >
+                  {QUANTITY_OPTIONS.map((quantity) => (
+                    <option key={quantity} value={quantity}>
+                      {quantity}
+                    </option>
+                  ))}
+                </select>
               </label>
 
               <label>
                 Tam.
-                <input
-                  value={item.size || ""}
+                <select
+                  value={normalizedItem.size || ""}
                   onChange={(event) =>
-                    updateItem(item.pizzaId, "size", event.target.value)
+                    updateItem(normalizedItem.pizzaId, "size", event.target.value)
                   }
-                  placeholder="M"
-                />
+                >
+                  {getItemSizes(normalizedItem).map((size) => (
+                    <option key={size} value={size}>
+                      {size}
+                    </option>
+                  ))}
+                  {!getItemSizes(normalizedItem).length && <option value="">-</option>}
+                </select>
+              </label>
+
+              <label>
+                Precio
+                <span className="cp-promoBagPrice">
+                  {getSizePrice(normalizedItem) == null ? "-" : formatPrice(getSizePrice(normalizedItem))}
+                </span>
               </label>
 
               <button
                 type="button"
                 className="cp-miniDanger"
-                onClick={() => removeItem(item.pizzaId)}
+                onClick={() => removeItem(normalizedItem.pizzaId)}
               >
                 Quitar
               </button>
             </div>
-          ))}
+            );
+          })}
 
           {!form.items.length && (
             <div className="cp-empty">La bolsa esta vacia.</div>
@@ -391,10 +609,10 @@ export default function PromosPanel({ partnerId }) {
             <table className="cp-table">
               <thead>
                 <tr>
-                  <th>Promo</th>
-                  <th>Contenido</th>
-                  <th>Precio</th>
-                  <th>Vigencia</th>
+                  <th>Promo name</th>
+                  <th>Precio global</th>
+                  <th>Fecha de lanzamiento</th>
+                  <th>Vendidas</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
@@ -402,17 +620,11 @@ export default function PromosPanel({ partnerId }) {
                 {promos.map((promo) => (
                   <tr key={promo.id}>
                     <td>{promo.title}</td>
-                    <td>
-                      {(promo.items || [])
-                        .map((item) => `${item.quantity || 1}x ${item.name}`)
-                        .join(", ")}
-                    </td>
                     <td>{formatPrice(promo.totalPrice)}</td>
                     <td>
                       {promo.activeFrom ? toDateTimeLocalValue(promo.activeFrom) : "Ahora"}
-                      {" / "}
-                      {promo.expiresAt ? toDateTimeLocalValue(promo.expiresAt) : "Sin fin"}
                     </td>
+                    <td>{promo.soldCount || 0}</td>
                     <td>
                       <div className="cp-rowActions">
                         <button type="button" onClick={() => editPromo(promo)}>

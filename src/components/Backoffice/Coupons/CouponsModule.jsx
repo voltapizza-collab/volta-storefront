@@ -1,21 +1,12 @@
-import { useMemo, useState } from "react";
 import OffersOverview from "./OffersOverview";
 import OfferCreatePanel from "./OfferCreatePanel";
 import OfferRedemptions from "./OfferRedemptions";
 import PromosPanel from "./PromosPanel";
 import "../../../styles/CouponsModule.css";
 
-const creatorTabs = [
-  { key: "create", label: "Crear ofertas" },
-  { key: "promos", label: "Promos" },
-  { key: "redemptions", label: "Redenciones" },
-];
-
 export default function CouponsModule({ partner, initialView = "overview" }) {
-  const [activeTab, setActiveTab] = useState(initialView);
   const partnerId = partner?.partnerId;
-
-  const activeView = useMemo(() => activeTab, [activeTab]);
+  const activeView = initialView;
 
   return (
     <section className="cp-shell">
@@ -26,21 +17,6 @@ export default function CouponsModule({ partner, initialView = "overview" }) {
             <h2>Gestion de ofertas y cupones</h2>
             <p>Desde aqui se crean ofertas publicas para CouponGallery y envios privados para clientes o grupos.</p>
           </div>
-
-          {activeView !== "overview" && (
-            <div className="cp-tabRow">
-              {creatorTabs.map((tab) => (
-                <button
-                  key={tab.key}
-                  className={`cp-tabBtn ${activeView === tab.key ? "is-active" : ""}`}
-                  onClick={() => setActiveTab(tab.key)}
-                  type="button"
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
-          )}
         </div>
 
         {activeView === "overview" && <OffersOverview partnerId={partnerId} />}

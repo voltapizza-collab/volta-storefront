@@ -90,6 +90,69 @@
   gap: 16px;
 }
 
+.cp-smsWallet {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) auto;
+  gap: 14px;
+  align-items: center;
+  margin: 18px 0;
+  padding: 18px;
+  border-radius: 22px;
+  border: 1px solid rgba(59, 0, 139, 0.1);
+  background: #fff;
+}
+
+.cp-smsWallet h3 {
+  margin: 0;
+  color: #23163b;
+  font-size: 28px;
+}
+
+.cp-smsWallet p {
+  margin: 6px 0 0;
+}
+
+.cp-smsRecharge {
+  display: flex;
+  align-items: end;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.cp-smsRecharge label {
+  display: grid;
+  gap: 6px;
+  color: #23163b;
+  font-weight: 800;
+}
+
+.cp-smsRecharge input {
+  width: 120px;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(59, 0, 139, 0.12);
+  font: inherit;
+}
+
+.cp-smsRecharge strong {
+  min-width: 120px;
+  padding: 11px 12px;
+  border-radius: 14px;
+  background: rgba(59, 0, 139, 0.05);
+  color: #23163b;
+  text-align: center;
+}
+
+.cp-smsWalletMsg {
+  grid-column: 1 / -1;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(46, 125, 50, 0.12);
+  color: #1f6a2c;
+  font-weight: 800;
+}
+
 .cp-kpiGrid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -597,8 +660,18 @@
 
   .cp-grid,
   .cp-kpiGrid,
-  .cp-formGrid {
+  .cp-formGrid,
+  .cp-smsWallet {
     grid-template-columns: 1fr;
+  }
+
+  .cp-smsRecharge {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .cp-smsRecharge input {
+    width: 100%;
   }
 
   .cp-promoBagRow {

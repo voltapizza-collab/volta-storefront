@@ -2,6 +2,7 @@ import OffersOverview from "./OffersOverview";
 import OfferCreatePanel from "./OfferCreatePanel";
 import OfferRedemptions from "./OfferRedemptions";
 import PromosPanel from "./PromosPanel";
+import SmsCreditsPanel from "./SmsCreditsPanel";
 import "../../../styles/CouponsModule.css";
 
 export default function CouponsModule({ partner, initialView = "overview" }) {
@@ -18,6 +19,8 @@ export default function CouponsModule({ partner, initialView = "overview" }) {
             <p>Desde aqui se crean ofertas publicas para CouponGallery y envios privados para clientes o grupos.</p>
           </div>
         </div>
+
+        <SmsCreditsPanel partnerId={partnerId} />
 
         {activeView === "overview" && <OffersOverview partnerId={partnerId} />}
         {activeView === "create" && <OfferCreatePanel partnerId={partnerId} />}

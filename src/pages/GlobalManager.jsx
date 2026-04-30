@@ -5,6 +5,7 @@ import "../styles/GlobalManager.css";
 // módulos
 import IngredientsModule from "../components/GlobalManager/IngredientsModule";
 import CategoriesModule from "../components/GlobalManager/CategoriesModule";
+import SmsCreditsModule from "../components/GlobalManager/SmsCreditsModule";
 
 // footer global
 import AppFooter from "../components/Layout/AppFooter";
@@ -145,6 +146,15 @@ export default function GlobalManager() {
             Categories
           </button>
 
+          <button
+            className={`gm-btn ${
+              activeModule === "smsCredits" ? "active" : ""
+            }`}
+            onClick={() => setActiveModule("smsCredits")}
+          >
+            SMS Credits
+          </button>
+
           <button className="gm-btn" disabled>
             Partners
           </button>
@@ -171,8 +181,9 @@ export default function GlobalManager() {
         <div className="gm-workspace">
           {activeModule === "ingredients" && <IngredientsModule />}
           {activeModule === "categories" && <CategoriesModule />}
+          {activeModule === "smsCredits" && <SmsCreditsModule />}
 
-          {!["ingredients", "categories"].includes(activeModule) && (
+          {!["ingredients", "categories", "smsCredits"].includes(activeModule) && (
             <div style={{ opacity: 0.6 }}>
               Module not implemented yet
             </div>

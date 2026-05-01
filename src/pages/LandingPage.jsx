@@ -1,32 +1,44 @@
 import { useState } from "react";
-import logo from "../assets/logo/the pizza sale enganine.png";
-import heroLogo from "../assets/logo/voltaLogo.jpg";
+import { ReactComponent as PizzaBg } from "../assets/logo/pizza.svg";
+import EngineBackground from "../components/Backoffice/EngineBackground";
 import "../styles/LandingPage.css";
 
 const modules = [
   {
-    name: "Menu vivo",
-    text: "Publica productos, tamanos, ingredientes, extras, promos y lanzamientos desde un solo panel.",
+    name: "Inventory",
+    text: "Productos, bases, ingredientes, extras y stock vivos en un panel denso, rapido y preparado para tienda real.",
   },
   {
-    name: "Motor comercial",
-    text: "Activa cupones, juegos, recompensas y campanas para mover clientes sin depender solo de descuentos manuales.",
+    name: "Pizza Creator",
+    text: "Construye la carta con tamanos, categorias, toppings y lanzamientos sin romper la operacion del dia.",
   },
   {
-    name: "Operacion local",
-    text: "Gestiona tiendas, horarios, reservas, delivery, stock y configuracion visual por cada pizzeria.",
+    name: "Stores",
+    text: "Controla locales, horarios, delivery, reserva y presencia publica desde la misma consola.",
   },
   {
-    name: "CRM y mensajes",
-    text: "Segmenta clientes y prepara comunicaciones por SMS con control de creditos y trazabilidad.",
+    name: "Customers",
+    text: "Segmenta clientes, actividad, cupones y mensajes para convertir visitas en pedidos repetidos.",
   },
 ];
 
 const metrics = [
-  ["1", "panel para operar"],
-  ["24/7", "catalogo online"],
-  ["SMS", "campanas medibles"],
+  ["01", "backoffice central"],
+  ["24/7", "storefront activo"],
+  ["SMS", "motor comercial"],
 ];
+
+const getBackofficeHref = () => {
+  const envUrl = process.env.REACT_APP_BACKOFFICE_URL?.trim();
+  if (envUrl) return envUrl;
+
+  if (typeof window !== "undefined") {
+    const isLocal = ["localhost", "127.0.0.1"].includes(window.location.hostname);
+    if (isLocal) return `${window.location.origin}/Backoffice`;
+  }
+
+  return "https://api.voltapizza.com/Backoffice";
+};
 
 export default function LandingPage() {
   const [lead, setLead] = useState({
@@ -59,31 +71,33 @@ export default function LandingPage() {
     window.location.href = `mailto:contacto@voltapizza.com?subject=${subject}&body=${body}`;
   };
 
+  const backofficeHref = getBackofficeHref();
+
   return (
     <main className="vp-site">
-      <section className="vp-hero" style={{ "--vp-hero-image": `url(${heroLogo})` }}>
-        <div className="vp-nav">
-          <a className="vp-brand" href="/" aria-label="Volta Pizza">
-            <img src={logo} alt="" />
-          </a>
-          <nav aria-label="Principal">
-            <a href="#sistema">Sistema</a>
-            <a href="#contacto">Contacto</a>
-            <a href="/backoffice">Acceso</a>
-          </nav>
+      <section className="vp-hero">
+        <div className="vp-engineField" aria-hidden="true">
+          <EngineBackground />
+          <div className="vp-tunnelLines"></div>
+          <PizzaBg className="vp-bgPizza" />
+          <div className="vp-orbit vp-orbitOne"></div>
+          <div className="vp-orbit vp-orbitTwo"></div>
         </div>
 
-        <div className="vp-heroCopy">
-          <p className="vp-kicker">The pizza sale engine</p>
-          <h1>Volta Pizza</h1>
-          <p>
-            Plataforma comercial para pizzerias que necesitan vender online,
-            activar promociones, gestionar clientes y operar sus tiendas desde
-            un sistema preparado para crecer.
-          </p>
-          <div className="vp-heroActions">
-            <a className="vp-primaryLink" href="#contacto">Solicitar demo</a>
-            <a className="vp-secondaryLink" href="#sistema">Ver sistema</a>
+        <div className="vp-heroGrid">
+          <div className="vp-heroCopy">
+            <p className="vp-kicker">The pizza sale engine</p>
+            <h1>Volta Pizza</h1>
+            <p>
+              Un sistema galactico de alta densidad para operar pizzerias:
+              storefront, backoffice, CRM, promociones, delivery y stock
+              trabajando desde el mismo motor.
+            </p>
+            <div className="vp-heroActions">
+              <a className="vp-primaryLink" href={backofficeHref}>MyBackoffice</a>
+              <a className="vp-secondaryLink" href="#sistema">Ver sistema</a>
+              <a className="vp-secondaryLink" href="#contacto">Contacto</a>
+            </div>
           </div>
         </div>
 
@@ -99,11 +113,12 @@ export default function LandingPage() {
 
       <section id="sistema" className="vp-band vp-systemBand">
         <div className="vp-sectionHead">
-          <span>Que resuelve</span>
-          <h2>Una pizzeria necesita mas que una carta online.</h2>
+          <span>App-layout primero</span>
+          <h2>El backoffice como identidad visual del producto.</h2>
           <p>
-            Volta une storefront, backoffice, promociones, CRM y creditos de
-            mensajes en una estructura pensada para negocios de pizza.
+            El home ahora parte del mismo universo que el login: engranajes,
+            movimiento, profundidad, cristal y controles compactos. La pagina
+            publica se siente como la puerta de entrada al sistema.
           </p>
         </div>
 
@@ -121,7 +136,7 @@ export default function LandingPage() {
         <div className="vp-productLayout">
           <div>
             <span className="vp-kicker">Operacion real</span>
-            <h2>De la primera visita al cliente recurrente.</h2>
+            <h2>Una consola para vender, operar y volver a vender.</h2>
             <p>
               Cada tienda puede tener su menu, promociones, reservas, motor de
               cupones y base de clientes. El objetivo es convertir visitas en
@@ -144,6 +159,7 @@ export default function LandingPage() {
               <span>CRM listo</span>
               <span>Delivery activo</span>
             </div>
+            <a className="vp-consoleCta" href={backofficeHref}>Abrir MyBackoffice</a>
           </div>
         </div>
       </section>

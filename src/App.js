@@ -30,6 +30,7 @@ function App() {
         <Route path="/global-manager/*" element={<GlobalManager />} />
 
         {/* BACKOFFICE */}
+        <Route path="/Backoffice/*" element={<Backoffice />} />
         <Route path="/backoffice/*" element={<Backoffice />} />
       </Routes>
     </AppLayout>

@@ -3,12 +3,16 @@ import api from "../../setupAxios";
 import "../../styles/GlobalManager.css";
 
 const formatNumber = (value) => new Intl.NumberFormat("es-ES").format(Number(value || 0));
+const formatMoney = (value, currency = "EUR") => {
+  const parsed = Number(String(value || "0").replace(",", "."));
+  return `${currency || "EUR"} ${Number.isFinite(parsed) ? parsed.toFixed(2) : "0.00"}`;
+};
 
 export default function SmsCreditsModule() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [selectedPartnerId, setSelectedPartnerId] = useState("");
-  const [amount, setAmount] = useState("10");
+  const [selectedPackageAmount, setSelectedPackageAmount] = useState("10");
   const [message, setMessage] = useState("");
   const [saving, setSaving] = useState(false);
 
@@ -17,12 +21,14 @@ export default function SmsCreditsModule() {
     [data, selectedPartnerId]
   );
 
-  const estimatedMessages = useMemo(() => {
-    const parsedAmount = Number(String(amount).replace(",", "."));
-    const sellPrice = Number(data?.pricing?.sellPrice || 0.0008);
-    if (!Number.isFinite(parsedAmount) || parsedAmount <= 0 || !sellPrice) return 0;
-    return Math.floor(parsedAmount / sellPrice);
-  }, [amount, data]);
+  const packages = useMemo(() => data?.packages || [], [data]);
+  const selectedPackage = useMemo(
+    () => packages.find((item) => String(item.amount) === String(selectedPackageAmount)) || packages[0],
+    [packages, selectedPackageAmount]
+  );
+  const inventory = data?.providerInventory || {};
+  const canSellSelectedPackage =
+    inventory.availableToSell == null || !selectedPackage || selectedPackage.credits <= inventory.availableToSell;
 
   const load = async () => {
     try {
@@ -30,7 +36,9 @@ export default function SmsCreditsModule() {
       const response = await api.get("/api/sms-credits/global/summary");
       setData(response.data || null);
       const partners = response.data?.partners || [];
+      const nextPackages = response.data?.packages || [];
       setSelectedPartnerId((current) => current || (partners[0] ? String(partners[0].id) : ""));
+      setSelectedPackageAmount((current) => current || (nextPackages[0] ? String(nextPackages[0].amount) : "10"));
     } catch (error) {
       console.error(error);
       setMessage("No se pudo cargar creditos SMS.");
@@ -55,7 +63,7 @@ export default function SmsCreditsModule() {
     try {
       setSaving(true);
       const response = await api.post(`/api/sms-credits/${selectedPartnerId}/recharge`, {
-        amount: Number(String(amount).replace(",", ".")),
+        packageAmount: selectedPackage?.amount || Number(selectedPackageAmount),
         source: "global_manager",
       });
       setMessage(`Recarga registrada: ${formatNumber(response.data?.credits)} mensajes.`);
@@ -82,8 +90,24 @@ export default function SmsCreditsModule() {
 
       <div className="gm-smsStats">
         <article>
-          <span>Disponibles clientes</span>
+          <span>Bolsa Volta Telnyx</span>
+          <strong>{inventory.ok ? formatNumber(inventory.availableMessages) : "--"}</strong>
+          <small>{inventory.ok ? formatMoney(inventory.availableCredit, inventory.currency) : "Telnyx no disponible"}</small>
+        </article>
+        <article>
+          <span>Libres para vender</span>
+          <strong>{inventory.availableToSell == null ? "--" : formatNumber(inventory.availableToSell)}</strong>
+          <small>Coste {Number(data?.pricing?.providerCost || 0.0004).toFixed(4)} EUR</small>
+        </article>
+        <article>
+          <span>Comprometidos clientes</span>
           <strong>{formatNumber(data?.totals?.credits)}</strong>
+          <small>Saldo pendiente de uso</small>
+        </article>
+        <article>
+          <span>Margen por mensaje</span>
+          <strong>EUR {(Number(data?.pricing?.sellPrice || 0) - Number(data?.pricing?.providerCost || 0)).toFixed(4)}</strong>
+          <small>Venta {Number(data?.pricing?.sellPrice || 0.0008).toFixed(4)} EUR</small>
         </article>
         <article>
           <span>Vendidos</span>
@@ -96,6 +120,11 @@ export default function SmsCreditsModule() {
         <article>
           <span>Margen estimado</span>
           <strong>EUR {(Number(data?.estimatedMarginEur || 0)).toFixed(4)}</strong>
+        </article>
+        <article>
+          <span>Paquete base</span>
+          <strong>{formatNumber(data?.pricing?.messagesPer10Eur)}</strong>
+          <small>10 EUR</small>
         </article>
       </div>
 
@@ -111,21 +140,21 @@ export default function SmsCreditsModule() {
           </select>
         </label>
         <label>
-          <span>Importe EUR</span>
-          <input
-            type="number"
-            min="1"
-            step="0.01"
-            value={amount}
-            onChange={(event) => setAmount(event.target.value)}
-          />
+          <span>Paquete</span>
+          <select value={selectedPackageAmount} onChange={(event) => setSelectedPackageAmount(event.target.value)}>
+            {packages.map((item) => (
+              <option key={item.amount} value={item.amount} disabled={inventory.availableToSell != null && item.credits > inventory.availableToSell}>
+                {item.amount} EUR - {formatNumber(item.credits)} mensajes
+              </option>
+            ))}
+          </select>
         </label>
         <div>
           <span>Mensajes</span>
-          <strong>{formatNumber(estimatedMessages)}</strong>
+          <strong>{formatNumber(selectedPackage?.credits)}</strong>
         </div>
-        <button type="submit" disabled={saving || !selectedPartner}>
-          {saving ? "Registrando..." : "Registrar recarga"}
+        <button type="submit" disabled={saving || !selectedPartner || !selectedPackage || !canSellSelectedPackage}>
+          {saving ? "Asignando..." : "Asignar paquete"}
         </button>
       </form>
 

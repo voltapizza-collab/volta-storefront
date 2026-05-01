@@ -164,9 +164,14 @@
   font-size: 26px;
 }
 
+.gm-smsStats small {
+  color: rgba(31, 23, 42, 0.56);
+  font-weight: 800;
+}
+
 .gm-smsRecharge {
   display: grid;
-  grid-template-columns: 1fr 140px 140px auto;
+  grid-template-columns: minmax(220px, 1fr) 260px 160px auto;
   align-items: end;
   gap: 12px;
   padding: 16px;

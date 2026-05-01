@@ -7,12 +7,15 @@ import MenuPage from "./pages/MenuPage";
 import GlobalManager from "./pages/GlobalManager";
 import Backoffice from "./pages/Backoffice";
 import CouponGalleryPage from "./pages/CouponGalleryPage";
+import LandingPage from "./pages/LandingPage";
 import AppLayout from "./components/Layout/AppLayout";
 
 function App() {
   return (
     <AppLayout>
       <Routes>
+        <Route path="/" element={<LandingPage />} />
+
         {/* ADMI */}
         <Route path="/admin/stores" element={<AdminStoresPage />} />
 

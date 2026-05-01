@@ -7,17 +7,14 @@ const formatNumber = (value) => new Intl.NumberFormat("es-ES").format(Number(val
 export default function SmsCreditsPanel({ partnerId }) {
   const [loading, setLoading] = useState(false);
   const [balance, setBalance] = useState(null);
-  const [pricing, setPricing] = useState(null);
-  const [amount, setAmount] = useState("10");
+  const [packages, setPackages] = useState([]);
+  const [selectedPackageAmount, setSelectedPackageAmount] = useState("10");
   const [message, setMessage] = useState("");
-  const [saving, setSaving] = useState(false);
 
-  const estimatedMessages = useMemo(() => {
-    const parsedAmount = Number(String(amount).replace(",", "."));
-    const sellPrice = Number(pricing?.sellPrice || 0.0008);
-    if (!Number.isFinite(parsedAmount) || parsedAmount <= 0 || !sellPrice) return 0;
-    return Math.floor(parsedAmount / sellPrice);
-  }, [amount, pricing]);
+  const selectedPackage = useMemo(
+    () => packages.find((item) => String(item.amount) === String(selectedPackageAmount)) || packages[0],
+    [packages, selectedPackageAmount]
+  );
 
   const loadBalance = useCallback(async () => {
     if (!partnerId) return;
@@ -25,7 +22,8 @@ export default function SmsCreditsPanel({ partnerId }) {
       setLoading(true);
       const { data } = await api.get(`/api/sms-credits/${partnerId}`);
       setBalance(data?.balance || null);
-      setPricing(data?.pricing || null);
+      setPackages(data?.packages || []);
+      setSelectedPackageAmount((current) => current || (data?.packages?.[0] ? String(data.packages[0].amount) : "10"));
     } catch (error) {
       console.error(error);
       setMessage("No se pudo cargar el saldo de mensajes.");
@@ -38,30 +36,9 @@ export default function SmsCreditsPanel({ partnerId }) {
     loadBalance();
   }, [loadBalance]);
 
-  const submitRecharge = async (event) => {
+  const submitRecharge = (event) => {
     event.preventDefault();
-    setMessage("");
-
-    const parsedAmount = Number(String(amount).replace(",", "."));
-    if (!Number.isFinite(parsedAmount) || parsedAmount <= 0) {
-      setMessage("Importe invalido.");
-      return;
-    }
-
-    try {
-      setSaving(true);
-      const { data } = await api.post(`/api/sms-credits/${partnerId}/recharge`, {
-        amount: parsedAmount,
-        source: "offers_panel",
-      });
-      setBalance(data?.balance || null);
-      setMessage(`Recarga registrada: ${formatNumber(data?.credits)} mensajes.`);
-    } catch (error) {
-      console.error(error);
-      setMessage(error.response?.data?.error || "No se pudo registrar la recarga.");
-    } finally {
-      setSaving(false);
-    }
+    setMessage("Pago online pendiente de activar.");
   };
 
   return (
@@ -76,18 +53,18 @@ export default function SmsCreditsPanel({ partnerId }) {
 
       <form className="cp-smsRecharge" onSubmit={submitRecharge}>
         <label>
-          <span>Recarga EUR</span>
-          <input
-            type="number"
-            min="1"
-            step="0.01"
-            value={amount}
-            onChange={(event) => setAmount(event.target.value)}
-          />
+          <span>Paquete</span>
+          <select value={selectedPackageAmount} onChange={(event) => setSelectedPackageAmount(event.target.value)}>
+            {packages.map((item) => (
+              <option key={item.amount} value={item.amount}>
+                {item.amount} EUR
+              </option>
+            ))}
+          </select>
         </label>
-        <strong>{formatNumber(estimatedMessages)} mensajes</strong>
-        <button className="cp-primaryBtn" disabled={saving || !partnerId} type="submit">
-          {saving ? "Recargando..." : "Recargar mensajes"}
+        <strong>{formatNumber(selectedPackage?.credits)} mensajes</strong>
+        <button className="cp-primaryBtn" disabled={!partnerId || !selectedPackage} type="submit">
+          Solicitar paquete
         </button>
       </form>
 

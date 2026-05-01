@@ -126,7 +126,8 @@
   font-weight: 800;
 }
 
-.cp-smsRecharge input {
+.cp-smsRecharge input,
+.cp-smsRecharge select {
   width: 120px;
   box-sizing: border-box;
   padding: 10px 12px;
@@ -670,7 +671,8 @@
     flex-direction: column;
   }
 
-  .cp-smsRecharge input {
+  .cp-smsRecharge input,
+  .cp-smsRecharge select {
     width: 100%;
   }
 

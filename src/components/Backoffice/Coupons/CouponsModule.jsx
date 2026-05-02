@@ -20,7 +20,7 @@ export default function CouponsModule({ partner, initialView = "overview" }) {
           </div>
         </div>
 
-        <SmsCreditsPanel partnerId={partnerId} />
+        {activeView === "overview" && <SmsCreditsPanel partnerId={partnerId} />}
 
         {activeView === "overview" && <OffersOverview partnerId={partnerId} />}
         {activeView === "create" && <OfferCreatePanel partnerId={partnerId} />}

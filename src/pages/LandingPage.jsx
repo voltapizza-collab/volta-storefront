@@ -89,9 +89,9 @@ export default function LandingPage() {
             <p className="vp-kicker">The pizza sale engine</p>
             <h1>Volta Pizza</h1>
             <p>
-              Un sistema galactico de alta densidad para operar pizzerias:
-              storefront, backoffice, CRM, promociones, delivery y stock
-              trabajando desde el mismo motor.
+              Tu pizzería online, tus clientes y tus datos.
+              Recibe más del 90% de cada pedido.
+              Vende y opera todo desde un solo motor.
             </p>
             <div className="vp-heroActions">
               <a className="vp-primaryLink" href={backofficeHref}>MyBackoffice</a>

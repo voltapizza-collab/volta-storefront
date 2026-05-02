@@ -17,11 +17,12 @@ import AdminStoresPage from "./AdminStoresPage";
 import api from "../setupAxios";
 
 export default function Backoffice() {
-  const [activeModule, setActiveModule] = useState("inventory");
-  const [activeModuleGroup, setActiveModuleGroup] = useState("inventory");
+  const initialSmsPaymentStatus = new URLSearchParams(window.location.search).get("sms_payment");
+  const [activeModule, setActiveModule] = useState(initialSmsPaymentStatus ? "offers" : "inventory");
+  const [activeModuleGroup, setActiveModuleGroup] = useState(initialSmsPaymentStatus ? "offers" : "inventory");
   const [expandedModules, setExpandedModules] = useState({
     pizzaCreator: false,
-    offers: false,
+    offers: Boolean(initialSmsPaymentStatus),
     settings: false,
   });
   const [partners, setPartners] = useState([]);

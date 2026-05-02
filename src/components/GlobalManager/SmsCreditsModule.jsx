@@ -7,6 +7,24 @@ const formatMoney = (value, currency = "EUR") => {
   const parsed = Number(String(value || "0").replace(",", "."));
   return `${currency || "EUR"} ${Number.isFinite(parsed) ? parsed.toFixed(2) : "0.00"}`;
 };
+const formatDateTime = (value) => {
+  if (!value) return "-";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "-";
+  return new Intl.DateTimeFormat("es-ES", {
+    day: "2-digit",
+    month: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(date);
+};
+const getLedgerSource = (entry) => {
+  const source = entry?.meta?.source;
+  if (source === "stripe_checkout") return "Stripe";
+  if (source === "global_manager") return "Global Manager";
+  if (source === "portal") return "Portal";
+  return source || entry?.provider || "-";
+};
 
 export default function SmsCreditsModule() {
   const [data, setData] = useState(null);
@@ -180,6 +198,41 @@ export default function SmsCreditsModule() {
                 <td>{formatNumber(partner.smsConsumed)}</td>
               </tr>
             ))}
+          </tbody>
+        </table>
+      </section>
+
+      <section className="gm-smsTable">
+        <h3>Movimientos</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Partner</th>
+              <th>Tipo</th>
+              <th>Mensajes</th>
+              <th>Importe</th>
+              <th>Origen</th>
+              <th>Referencia</th>
+            </tr>
+          </thead>
+          <tbody>
+            {(data?.ledger || []).map((entry) => (
+              <tr key={entry.id}>
+                <td>{formatDateTime(entry.createdAt)}</td>
+                <td>{entry.partner?.name || "-"}</td>
+                <td>{entry.type}</td>
+                <td>{formatNumber(entry.quantity)}</td>
+                <td>{entry.amount == null ? "-" : formatMoney(entry.amount)}</td>
+                <td>{getLedgerSource(entry)}</td>
+                <td>{entry.reference || "-"}</td>
+              </tr>
+            ))}
+            {!data?.ledger?.length && (
+              <tr>
+                <td colSpan="7">No hay movimientos todavia.</td>
+              </tr>
+            )}
           </tbody>
         </table>
       </section>

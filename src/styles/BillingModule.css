@@ -1,0 +1,468 @@
+.bi-shell {
+  display: grid;
+  gap: 16px;
+  color: #1f172a;
+}
+
+.bi-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.bi-header span,
+.bi-panelHead span,
+.bi-card span,
+.bi-cashoutBox label span,
+.bi-quote span,
+.bi-invoice span {
+  color: #3b008b;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.bi-header h2 {
+  margin: 4px 0;
+  color: #1f172a;
+}
+
+.bi-header p {
+  max-width: 760px;
+  margin: 0;
+  color: rgba(31, 23, 42, 0.62);
+  font-weight: 700;
+}
+
+.bi-header button,
+.bi-cashoutBox button,
+.bi-secondaryBtn {
+  border: 0;
+  border-radius: 8px;
+  padding: 11px 14px;
+  background: #ffb61c;
+  color: #1f172a;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.bi-header button:disabled,
+.bi-cashoutBox button:disabled,
+.bi-secondaryBtn:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
+.bi-message {
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: rgba(255, 182, 28, 0.18);
+  color: #3b008b;
+  font-weight: 900;
+}
+
+.bi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.bi-card,
+.bi-panel {
+  border: 1px solid rgba(59, 0, 139, 0.1);
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 12px 28px rgba(59, 0, 139, 0.08);
+}
+
+.bi-card {
+  display: grid;
+  gap: 8px;
+  min-height: 120px;
+  padding: 16px;
+}
+
+.bi-card strong {
+  color: #3b008b;
+  font-size: 26px;
+  line-height: 1.1;
+}
+
+.bi-card small {
+  color: rgba(31, 23, 42, 0.58);
+  font-weight: 800;
+}
+
+.bi-card--gross strong,
+.bi-card--available strong {
+  color: #155e39;
+}
+
+.bi-card--instant {
+  border-color: rgba(247, 37, 133, 0.22);
+  background: linear-gradient(180deg, rgba(247, 37, 133, 0.06), #fff);
+}
+
+.bi-card--instant strong {
+  color: #b1125f;
+}
+
+.bi-mainGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.55fr);
+  gap: 14px;
+  align-items: start;
+}
+
+.bi-cashoutLanes {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(360px, 1.1fr);
+  gap: 16px;
+  align-items: stretch;
+}
+
+.bi-standardLane,
+.bi-instantLane {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 12px 28px rgba(59, 0, 139, 0.08);
+}
+
+.bi-standardLane {
+  border: 1px solid rgba(59, 0, 139, 0.1);
+  padding: 16px;
+}
+
+.bi-instantLane {
+  border: 2px solid #171717;
+  background:
+    linear-gradient(135deg, rgba(255, 182, 28, 0.95), rgba(247, 37, 133, 0.92)),
+    #ffb61c;
+  color: #171717;
+  box-shadow:
+    0 18px 42px rgba(247, 37, 133, 0.22),
+    0 12px 28px rgba(59, 0, 139, 0.12);
+}
+
+.bi-instantLane .bi-panelHead,
+.bi-instantLane .bi-cashoutBox,
+.bi-instantLane .bi-policy,
+.bi-laneHead--instant {
+  position: relative;
+  z-index: 1;
+}
+
+.bi-instantLane .bi-panelHead {
+  border-bottom-color: rgba(23, 23, 23, 0.18);
+}
+
+.bi-instantLane .bi-panelHead span,
+.bi-instantLane .bi-cashoutBox label span,
+.bi-instantLane .bi-quote span,
+.bi-instantLane .bi-policy span {
+  color: rgba(23, 23, 23, 0.7);
+}
+
+.bi-instantLane .bi-panelHead h3,
+.bi-instantLane .bi-quote strong,
+.bi-instantLane .bi-policy strong {
+  color: #171717;
+}
+
+.bi-instantGlow {
+  position: absolute;
+  inset: -40% -20% auto auto;
+  width: 260px;
+  height: 260px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.32);
+  filter: blur(2px);
+  pointer-events: none;
+}
+
+.bi-laneHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(59, 0, 139, 0.08);
+}
+
+.bi-laneHead span {
+  color: #3b008b;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.bi-laneHead h3 {
+  margin: 3px 0 0;
+}
+
+.bi-laneHead b {
+  padding: 7px 9px;
+  border-radius: 8px;
+  background: rgba(21, 94, 57, 0.1);
+  color: #155e39;
+  font-size: 12px;
+}
+
+.bi-laneHead--instant {
+  padding: 16px;
+  border-bottom-color: rgba(23, 23, 23, 0.18);
+}
+
+.bi-laneHead--instant span,
+.bi-laneHead--instant h3,
+.bi-laneHead--instant b {
+  color: #171717;
+}
+
+.bi-laneHead--instant b {
+  background: #171717;
+  color: #fff;
+}
+
+.bi-laneAmount {
+  display: grid;
+  gap: 6px;
+  padding: 16px 0 12px;
+}
+
+.bi-laneAmount span {
+  color: rgba(31, 23, 42, 0.62);
+  font-weight: 900;
+}
+
+.bi-laneAmount strong {
+  color: #155e39;
+  font-size: 30px;
+  line-height: 1.05;
+}
+
+.bi-steps {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 16px;
+  padding-left: 20px;
+  color: rgba(31, 23, 42, 0.68);
+  font-weight: 750;
+}
+
+.bi-standardBtn {
+  width: 100%;
+  border: 1px solid rgba(59, 0, 139, 0.14);
+  border-radius: 8px;
+  padding: 12px 14px;
+  background: #fff;
+  color: #3b008b;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.bi-standardBtn:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.bi-panel {
+  overflow: hidden;
+}
+
+.bi-panelHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 16px;
+  border-bottom: 1px solid rgba(59, 0, 139, 0.08);
+}
+
+.bi-panelHead h3 {
+  margin: 3px 0 0;
+}
+
+.bi-panelHead b {
+  padding: 7px 9px;
+  border-radius: 8px;
+  background: rgba(59, 0, 139, 0.08);
+  color: #3b008b;
+  font-size: 12px;
+}
+
+.bi-cashoutBox,
+.bi-policy,
+.bi-invoice,
+.bi-salesList {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+}
+
+.bi-cashoutBox label {
+  display: grid;
+  gap: 7px;
+}
+
+.bi-cashoutBox input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid rgba(59, 0, 139, 0.16);
+  border-radius: 8px;
+  padding: 12px;
+  color: #1f172a;
+  font: inherit;
+}
+
+.bi-cashoutBox .bi-turboBtn {
+  min-height: 58px;
+  border: 2px solid #171717;
+  background: #171717;
+  color: #fff;
+  font-size: 18px;
+  letter-spacing: 0;
+  box-shadow: 0 10px 0 rgba(23, 23, 23, 0.24);
+  transform: translateY(0);
+  transition: transform 0.16s ease, box-shadow 0.16s ease;
+}
+
+.bi-cashoutBox .bi-turboBtn:not(:disabled):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 0 rgba(23, 23, 23, 0.28);
+}
+
+.bi-cashoutBox .bi-turboBtn:disabled {
+  background: rgba(23, 23, 23, 0.46);
+  border-color: rgba(23, 23, 23, 0.46);
+  box-shadow: none;
+}
+
+.bi-quote {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.bi-quote div,
+.bi-invoice div,
+.bi-policy div {
+  display: grid;
+  gap: 5px;
+  padding: 12px;
+  border-radius: 8px;
+  background: rgba(59, 0, 139, 0.05);
+}
+
+.bi-quote strong,
+.bi-invoice strong {
+  color: #1f172a;
+  font-size: 20px;
+}
+
+.bi-policy {
+  padding-top: 0;
+}
+
+.bi-policy strong {
+  color: #1f172a;
+}
+
+.bi-policy span {
+  color: rgba(31, 23, 42, 0.64);
+  font-weight: 750;
+}
+
+.bi-secondaryBtn {
+  margin: 0 16px 16px;
+  background: #3b008b;
+  color: #fff;
+}
+
+.bi-tableWrap {
+  overflow: auto;
+}
+
+.bi-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.bi-table th,
+.bi-table td {
+  padding: 12px;
+  border-bottom: 1px solid rgba(59, 0, 139, 0.08);
+  text-align: left;
+}
+
+.bi-table th {
+  background: #f7f3ff;
+  color: rgba(31, 23, 42, 0.68);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.bi-saleRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 4px 12px;
+  padding-bottom: 11px;
+  border-bottom: 1px solid rgba(59, 0, 139, 0.08);
+}
+
+.bi-saleRow:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.bi-saleRow span {
+  display: grid;
+  gap: 3px;
+}
+
+.bi-saleRow small,
+.bi-saleRow em {
+  color: rgba(31, 23, 42, 0.56);
+  font-style: normal;
+  font-weight: 800;
+}
+
+.bi-saleRow b {
+  color: #155e39;
+}
+
+.bi-saleRow em {
+  grid-column: 1 / -1;
+}
+
+.bi-empty {
+  color: rgba(31, 23, 42, 0.58);
+  font-weight: 900;
+}
+
+@media (max-width: 1100px) {
+  .bi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .bi-mainGrid,
+  .bi-cashoutLanes {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .bi-header {
+    display: grid;
+  }
+
+  .bi-grid,
+  .bi-quote {
+    grid-template-columns: 1fr;
+  }
+}

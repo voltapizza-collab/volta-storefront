@@ -652,9 +652,154 @@
   cursor: pointer;
 }
 
+.cp-rowActions button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.cp-incentivesLayout,
+.cp-incentivesList {
+  display: grid;
+  gap: 16px;
+}
+
+.cp-incentivesHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.cp-incentiveRow {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) minmax(150px, auto) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(59, 0, 139, 0.08);
+  background: rgba(255, 255, 255, 0.86);
+}
+
+.cp-incentiveRow > div:first-child,
+.cp-incentiveMeta {
+  display: grid;
+  gap: 5px;
+}
+
+.cp-incentiveRow strong {
+  color: #23163b;
+}
+
+.cp-incentiveRow span,
+.cp-incentiveMeta span {
+  color: rgba(34, 21, 52, 0.64);
+  font-weight: 800;
+}
+
+.cp-incentiveMeta span:first-child {
+  justify-self: start;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(59, 0, 139, 0.07);
+}
+
+.cp-incentiveMeta span.is-active {
+  background: rgba(46, 125, 50, 0.12);
+  color: #1f6a2c;
+}
+
+.cp-incentiveScheduleWrap {
+  margin-top: 16px;
+  overflow: auto;
+  border-radius: 18px;
+  border: 1px solid rgba(59, 0, 139, 0.08);
+}
+
+.cp-incentiveSchedule {
+  width: 100%;
+  min-width: 560px;
+  border-collapse: collapse;
+}
+
+.cp-incentiveSchedule th,
+.cp-incentiveSchedule td {
+  padding: 10px;
+  border-bottom: 1px solid rgba(59, 0, 139, 0.06);
+  text-align: center;
+}
+
+.cp-incentiveSchedule th {
+  background: rgba(59, 0, 139, 0.04);
+  color: rgba(34, 21, 52, 0.76);
+}
+
+.cp-incentiveSchedule td:first-child {
+  width: 74px;
+  color: rgba(34, 21, 52, 0.66);
+  font-weight: 900;
+}
+
+.cp-scheduleCell {
+  height: 30px;
+  min-width: 54px;
+  background: rgba(59, 0, 139, 0.03);
+}
+
+.cp-scheduleCell.incentive-1 {
+  background: #ffe082;
+}
+
+.cp-scheduleCell.incentive-2 {
+  background: #f8bbd0;
+}
+
+.cp-scheduleCell.incentive-3 {
+  background: #bbdefb;
+}
+
+.cp-scheduleCell.incentive-4 {
+  background: #c8e6c9;
+}
+
+.cp-scheduleCell.incentive-5 {
+  background: #e1bee7;
+}
+
+.cp-scheduleCell.incentive-6 {
+  background: #ffccbc;
+}
+
+.cp-scheduleCell.incentive-7 {
+  background: #d7ccc8;
+}
+
+.cp-modalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(20, 13, 34, 0.48);
+  backdrop-filter: blur(3px);
+}
+
+.cp-modal {
+  width: min(720px, 100%);
+  max-height: 92vh;
+  overflow: auto;
+  padding: 24px;
+  border-radius: 24px;
+  border: 1px solid rgba(59, 0, 139, 0.12);
+  background: linear-gradient(180deg, #fff9ef 0%, #ffffff 100%);
+  box-shadow: 0 24px 54px rgba(20, 13, 34, 0.2);
+}
+
 @media (max-width: 900px) {
   .cp-head,
-  .cp-actions {
+  .cp-actions,
+  .cp-incentivesHeader {
     flex-direction: column;
     align-items: stretch;
   }
@@ -677,6 +822,10 @@
   }
 
   .cp-promoBagRow {
+    grid-template-columns: 1fr;
+  }
+
+  .cp-incentiveRow {
     grid-template-columns: 1fr;
   }
 }

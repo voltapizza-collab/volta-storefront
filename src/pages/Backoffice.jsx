@@ -11,6 +11,8 @@ import SettingsDeliveryModule from "../components/Backoffice/SettingsDeliveryMod
 import SettingsBrandingModule from "../components/Backoffice/SettingsBrandingModule";
 import CustomersModule from "../components/Backoffice/CustomersModule";
 import CouponsModule from "../components/Backoffice/Coupons/CouponsModule";
+import BillingModule from "../components/Backoffice/BillingModule";
+import MyOrdersModule from "../components/GlobalManager/MyOrdersModule";
 import EngineBackground from "../components/Backoffice/EngineBackground";
 import AppFooter from "../components/Layout/AppFooter";
 import AdminStoresPage from "./AdminStoresPage";
@@ -188,11 +190,13 @@ export default function Backoffice() {
   const isOffersOverviewActive = activeModule === "offers";
   const isOffersCreateActive = activeModule === "offersCreate";
   const isOffersPromosActive = activeModule === "offersPromos";
+  const isOffersIncentivesActive = activeModule === "offersIncentives";
   const isOffersGroupActive =
     activeModuleGroup === "offers" ||
     isOffersOverviewActive ||
     isOffersCreateActive ||
-    isOffersPromosActive;
+    isOffersPromosActive ||
+    isOffersIncentivesActive;
 
   if (loadingPartners) {
     return (
@@ -421,11 +425,43 @@ export default function Backoffice() {
                     >
                       Promos
                     </button>
+                    <button
+                      className={`bo-subbtn ${isOffersIncentivesActive ? "active" : ""}`}
+                      onClick={() => {
+                        setActiveModule("offersIncentives");
+                        setActiveModuleGroup("offers");
+                      }}
+                      type="button"
+                    >
+                      Incentivos
+                    </button>
                   </div>
                 )}
 
-              <button className="bo-btn" disabled type="button">
+              <button
+                className={`bo-btn ${
+                  activeModuleGroup === "myorders" ? "active" : ""
+                }`}
+                onClick={() => {
+                  setActiveModule("myorders");
+                  setActiveModuleGroup("myorders");
+                }}
+                type="button"
+              >
                 My Orders
+              </button>
+
+              <button
+                className={`bo-btn ${
+                  activeModuleGroup === "billing" ? "active" : ""
+                }`}
+                onClick={() => {
+                  setActiveModule("billing");
+                  setActiveModuleGroup("billing");
+                }}
+                type="button"
+              >
+                Billing
               </button>
 
               <button
@@ -568,6 +604,18 @@ export default function Backoffice() {
 
           {activeModule === "offersPromos" && auth.partnerId && (
             <CouponsModule partner={auth} initialView="promos" />
+          )}
+
+          {activeModule === "offersIncentives" && auth.partnerId && (
+            <CouponsModule partner={auth} initialView="incentives" />
+          )}
+
+          {activeModule === "myorders" && auth.partnerId && (
+            <MyOrdersModule partner={auth} />
+          )}
+
+          {activeModule === "billing" && auth.partnerId && (
+            <BillingModule partner={auth} />
           )}
 
         </div>

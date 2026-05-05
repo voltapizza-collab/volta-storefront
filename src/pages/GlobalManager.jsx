@@ -6,12 +6,13 @@ import "../styles/GlobalManager.css";
 import IngredientsModule from "../components/GlobalManager/IngredientsModule";
 import CategoriesModule from "../components/GlobalManager/CategoriesModule";
 import SmsCreditsModule from "../components/GlobalManager/SmsCreditsModule";
+import MyOrdersModule from "../components/GlobalManager/MyOrdersModule";
 
 // footer global
 import AppFooter from "../components/Layout/AppFooter";
 
 export default function GlobalManager() {
-  const [activeModule, setActiveModule] = useState("ingredients");
+  const [activeModule, setActiveModule] = useState("myorders");
 
   const [auth, setAuth] = useState(() => {
     const saved = localStorage.getItem("volta_gm_auth");
@@ -61,7 +62,7 @@ export default function GlobalManager() {
   const handleLogout = () => {
     setAuth(null);
     localStorage.removeItem("volta_gm_auth");
-    setActiveModule("ingredients");
+    setActiveModule("myorders");
   };
 
   // 🔥 LOGIN SCREEN
@@ -130,6 +131,15 @@ export default function GlobalManager() {
 
           <button
             className={`gm-btn ${
+              activeModule === "myorders" ? "active" : ""
+            }`}
+            onClick={() => setActiveModule("myorders")}
+          >
+            My Orders
+          </button>
+
+          <button
+            className={`gm-btn ${
               activeModule === "ingredients" ? "active" : ""
             }`}
             onClick={() => setActiveModule("ingredients")}
@@ -179,11 +189,12 @@ export default function GlobalManager() {
       <div className="gm-main">
 
         <div className="gm-workspace">
+          {activeModule === "myorders" && <MyOrdersModule />}
           {activeModule === "ingredients" && <IngredientsModule />}
           {activeModule === "categories" && <CategoriesModule />}
           {activeModule === "smsCredits" && <SmsCreditsModule />}
 
-          {!["ingredients", "categories", "smsCredits"].includes(activeModule) && (
+          {!["myorders", "ingredients", "categories", "smsCredits"].includes(activeModule) && (
             <div style={{ opacity: 0.6 }}>
               Module not implemented yet
             </div>

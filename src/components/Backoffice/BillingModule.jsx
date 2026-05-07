@@ -37,17 +37,47 @@ function BillingCard({ label, value, meta, tone = "" }) {
   );
 }
 
+const buildCsv = (rows) => {
+  const headers = ["Referencia", "Tipo", "Fecha", "Importe", "Estado"];
+  const escapeCell = (value) => `"${String(value ?? "").replace(/"/g, '""')}"`;
+
+  return [
+    headers.map(escapeCell).join(","),
+    ...rows.map((row) =>
+      [
+        row.reference,
+        row.type,
+        row.dateLabel,
+        row.amountLabel,
+        row.status,
+      ].map(escapeCell).join(",")
+    ),
+  ].join("\n");
+};
+
+const exportCsv = (rows, filename) => {
+  const blob = new Blob([buildCsv(rows)], {
+    type: "text/csv;charset=utf-8;",
+  });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  link.click();
+  URL.revokeObjectURL(url);
+};
+
 export default function BillingModule({ partner }) {
   const partnerId = partner?.partnerId || partner?.id;
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [cashoutAmount, setCashoutAmount] = useState("");
+  const [isCashoutModalOpen, setIsCashoutModalOpen] = useState(false);
 
   const currency = data?.currency || "EUR";
   const policy = data?.policy || {};
   const balances = data?.balances || {};
-  const invoice = data?.invoiceDraft || {};
   const instantQuote = data?.instantQuote || {};
 
   const customQuote = useMemo(() => {
@@ -88,18 +118,18 @@ export default function BillingModule({ partner }) {
     load();
   }, [load]);
 
-  const requestInvoice = async () => {
-    try {
-      await api.post(`/api/billing/${partnerId}/invoices/send`, {
-        invoiceId: invoice.id,
-      });
-    } catch (error) {
-      setMessage(
-        error.response?.data?.message ||
-          "Facturacion todavia no esta conectada."
-      );
-    }
-  };
+  useEffect(() => {
+    if (!isCashoutModalOpen) return undefined;
+
+    const handleEscape = (event) => {
+      if (event.key === "Escape") {
+        setIsCashoutModalOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
+  }, [isCashoutModalOpen]);
 
   const requestInstantCashout = async () => {
     try {
@@ -129,16 +159,25 @@ export default function BillingModule({ partner }) {
     <div className="bi-shell">
       <header className="bi-header">
         <div>
-          <span>Billing</span>
-          <h2>Saldo, facturas y cashout</h2>
+          <span>Finance</span>
+          <h2>Saldo, transferencias y cashout</h2>
           <p>
-            Primer corte estructural. Los importes salen de ventas registradas;
-            cashout real queda pendiente de Stripe Connect y ledger contable.
+            Saldo operativo, transferencias y cashout. Las facturas viven ahora
+            en el submodulo Billing.
           </p>
         </div>
-        <button type="button" onClick={load} disabled={loading}>
-          {loading ? "Actualizando..." : "Actualizar"}
-        </button>
+        <div className="bi-headerActions">
+          <button
+            className="bi-cashoutTrigger"
+            type="button"
+            onClick={() => setIsCashoutModalOpen(true)}
+          >
+            Turbo Cashout
+          </button>
+          <button type="button" onClick={load} disabled={loading}>
+            {loading ? "Actualizando..." : "Actualizar"}
+          </button>
+        </div>
       </header>
 
       {message && <div className="bi-message">{message}</div>}
@@ -200,119 +239,101 @@ export default function BillingModule({ partner }) {
             Iniciar transferencia normal
           </button>
         </article>
-
-        <article className="bi-instantLane">
-          <div className="bi-instantGlow" />
-          <div className="bi-laneHead bi-laneHead--instant">
-            <div>
-              <span>Cashout instantaneo</span>
-              <h3>Turbo Cashout</h3>
-            </div>
-            <b>30 min aprox.</b>
-          </div>
-
-          <div className="bi-panelHead">
-            <div>
-              <span>Saldo puente</span>
-              <h3>{formatMoney(balances.instantBridgeable, currency)}</h3>
-            </div>
-            <b>{policy.cashoutExecutionEnabled ? "Activo" : "Preparado"}</b>
-          </div>
-
-          <div className="bi-cashoutBox">
-            <label>
-              <span>Importe a retirar</span>
-              <input
-                type="number"
-                min="0"
-                step="0.01"
-                value={cashoutAmount}
-                onChange={(event) => setCashoutAmount(event.target.value)}
-                placeholder="0.00"
-              />
-            </label>
-
-            <div className="bi-quote">
-              <div>
-                <span>Fee estimado</span>
-                <strong>{formatMoney(customQuote?.fee || instantQuote.fee, currency)}</strong>
-              </div>
-              <div>
-                <span>Neto recibido</span>
-                <strong>
-                  {formatMoney(customQuote?.netAmount || instantQuote.netAmount, currency)}
-                </strong>
-              </div>
-            </div>
-
-            <button
-              className="bi-turboBtn"
-              type="button"
-              onClick={requestInstantCashout}
-              disabled={!policy.cashoutExecutionEnabled}
-            >
-              Activar Turbo Cashout
-            </button>
-          </div>
-
-          <div className="bi-policy">
-            <div>
-              <strong>Transferencia normal</strong>
-              <span>Libre de coste extra, liquidacion estimada T+{policy.standardDelayBusinessDays || 3} dias habiles.</span>
-            </div>
-            <div>
-              <strong>Cashout instantaneo</strong>
-              <span>
-                Coste Stripe {formatPercent(policy.stripeInstantCostRate)}, coste oportunidad {formatPercent(policy.opportunityCostRate)}, margen {formatPercent(policy.platformMarkupRate)}.
-              </span>
-            </div>
-          </div>
-        </article>
       </section>
 
-      <div className="bi-mainGrid">
-        <section className="bi-panel">
-          <div className="bi-panelHead">
-            <div>
-              <span>Factura</span>
-              <h3>Borrador mensual</h3>
-            </div>
-            <b>{invoice.status || "DRAFT"}</b>
-          </div>
-
-          <div className="bi-invoice">
-            <div>
-              <span>Periodo</span>
-              <strong>
-                {formatDate(invoice.periodStart)} - {formatDate(invoice.periodEnd)}
-              </strong>
-            </div>
-            <div>
-              <span>Ventas del mes</span>
-              <strong>{formatMoney(invoice.grossSales, currency)}</strong>
-            </div>
-            <div>
-              <span>Comision Volta</span>
-              <strong>{formatMoney(invoice.platformFeeAmount, currency)}</strong>
-            </div>
-            <div>
-              <span>Rate aplicado</span>
-              <strong>{formatPercent(invoice.platformFeeRate)}</strong>
-            </div>
-          </div>
-
-          <button
-            className="bi-secondaryBtn"
-            type="button"
-            onClick={requestInvoice}
-            disabled={!policy.invoicesEnabled}
+      {isCashoutModalOpen && (
+        <div
+          className="bi-modalOverlay"
+          role="presentation"
+          onMouseDown={() => setIsCashoutModalOpen(false)}
+        >
+          <article
+            className="bi-instantLane bi-instantModal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="bi-cashout-title"
+            onMouseDown={(event) => event.stopPropagation()}
           >
-            Enviar factura
-          </button>
-        </section>
-      </div>
+            <div className="bi-instantGlow" />
+            <div className="bi-laneHead bi-laneHead--instant">
+              <div>
+                <span>Cashout instantaneo</span>
+                <h3 id="bi-cashout-title">Turbo Cashout</h3>
+              </div>
+              <div className="bi-modalTopActions">
+                <b>30 min aprox.</b>
+                <button
+                  type="button"
+                  className="bi-modalClose"
+                  aria-label="Cerrar cashout"
+                  onClick={() => setIsCashoutModalOpen(false)}
+                >
+                  x
+                </button>
+              </div>
+            </div>
 
-      <div className="bi-mainGrid">
+            <div className="bi-panelHead">
+              <div>
+                <span>Saldo puente</span>
+                <h3>{formatMoney(balances.instantBridgeable, currency)}</h3>
+              </div>
+              <b>{policy.cashoutExecutionEnabled ? "Activo" : "Preparado"}</b>
+            </div>
+
+            <div className="bi-cashoutBox">
+              <label>
+                <span>Importe a retirar</span>
+                <input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={cashoutAmount}
+                  onChange={(event) => setCashoutAmount(event.target.value)}
+                  placeholder="0.00"
+                />
+              </label>
+
+              <div className="bi-quote">
+                <div>
+                  <span>Fee estimado</span>
+                  <strong>{formatMoney(customQuote?.fee || instantQuote.fee, currency)}</strong>
+                </div>
+                <div>
+                  <span>Neto recibido</span>
+                  <strong>
+                    {formatMoney(customQuote?.netAmount || instantQuote.netAmount, currency)}
+                  </strong>
+                </div>
+              </div>
+
+              <button
+                className="bi-turboBtn"
+                type="button"
+                onClick={requestInstantCashout}
+                disabled={!policy.cashoutExecutionEnabled}
+              >
+                Activar Turbo Cashout
+              </button>
+            </div>
+
+            <div className="bi-policy">
+              <div>
+                <strong>Transferencia normal</strong>
+                <span>Libre de coste extra, liquidacion estimada T+{policy.standardDelayBusinessDays || 3} dias habiles.</span>
+              </div>
+              <div>
+                <strong>Cashout instantaneo</strong>
+                <span>
+                  Coste Stripe {formatPercent(policy.stripeInstantCostRate)}, coste oportunidad {formatPercent(policy.opportunityCostRate)}, margen {formatPercent(policy.platformMarkupRate)}.
+                </span>
+              </div>
+            </div>
+          </article>
+        </div>
+      )}
+
+      <div className="bi-mainGrid bi-mainGrid--single">
         <section className="bi-panel">
           <div className="bi-panelHead">
             <div>
@@ -349,30 +370,238 @@ export default function BillingModule({ partner }) {
           </div>
         </section>
 
-        <section className="bi-panel">
-          <div className="bi-panelHead">
-            <div>
-              <span>Movimientos</span>
-              <h3>Ventas recientes</h3>
-            </div>
-          </div>
-          <div className="bi-salesList">
-            {(data?.recentSales || []).map((sale) => (
-              <div key={sale.id} className="bi-saleRow">
-                <span>
-                  <strong>{sale.code}</strong>
-                  <small>{sale.storeName} · {formatDate(sale.date)}</small>
-                </span>
-                <b>{formatMoney(sale.total, sale.currency || currency)}</b>
-                <em>{sale.status}</em>
-              </div>
-            ))}
-            {!data?.recentSales?.length && (
-              <div className="bi-empty">Sin movimientos todavia.</div>
-            )}
-          </div>
-        </section>
       </div>
+    </div>
+  );
+}
+
+export function FinanceBillingModule({ partner }) {
+  const partnerId = partner?.partnerId || partner?.id;
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const [view, setView] = useState("all");
+
+  const currency = data?.currency || "EUR";
+  const balances = data?.balances || {};
+  const invoice = useMemo(() => data?.invoiceDraft || {}, [data?.invoiceDraft]);
+
+  const load = useCallback(async () => {
+    if (!partnerId) return;
+
+    try {
+      setLoading(true);
+      setMessage("");
+      const response = await api.get(`/api/billing/${partnerId}/summary`);
+      setData(response.data || null);
+    } catch (error) {
+      console.error(error);
+      setMessage(error.response?.data?.error || "No se pudo cargar Billing.");
+    } finally {
+      setLoading(false);
+    }
+  }, [partnerId]);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  const rows = useMemo(() => {
+    const invoiceDate = invoice.periodEnd || invoice.periodStart || new Date().toISOString();
+    const invoiceReference = invoice.id || `VOLTA-${partnerId || "PARTNER"}-${formatDate(invoiceDate)}`;
+    const invoiceRows = [
+      {
+        id: `invoice-${invoiceReference}`,
+        category: "invoices",
+        reference: invoiceReference,
+        type: "Factura mensual Volta",
+        date: invoiceDate,
+        dateLabel: formatDate(invoiceDate),
+        amount: Number(invoice.platformFeeAmount || 0),
+        amountLabel: formatMoney(invoice.platformFeeAmount, currency),
+        status: invoice.status || "DRAFT",
+      },
+    ];
+
+    const receivedRows = (data?.recentSales || []).map((sale) => ({
+      id: `sale-${sale.id}`,
+      category: "received",
+      reference: sale.code || sale.id,
+      type: `Pago recibido${sale.storeName ? ` - ${sale.storeName}` : ""}`,
+      date: sale.date,
+      dateLabel: formatDate(sale.date),
+      amount: Number(sale.total || 0),
+      amountLabel: formatMoney(sale.total, sale.currency || currency),
+      status: sale.status || "REGISTRADO",
+    }));
+
+    const payoutRows = [
+      {
+        id: "payout-standard",
+        category: "paid",
+        reference: `PAYOUT-NORMAL-${partnerId || "PARTNER"}`,
+        type: "Payout normal disponible",
+        date: new Date().toISOString(),
+        dateLabel: formatDate(new Date().toISOString()),
+        amount: Number(balances.standardAvailable || 0),
+        amountLabel: formatMoney(balances.standardAvailable, currency),
+        status: "PREPARADO",
+      },
+      {
+        id: "payout-instant",
+        category: "paid",
+        reference: `PAYOUT-TURBO-${partnerId || "PARTNER"}`,
+        type: "Turbo Cashout disponible",
+        date: new Date().toISOString(),
+        dateLabel: formatDate(new Date().toISOString()),
+        amount: Number(balances.instantBridgeable || 0),
+        amountLabel: formatMoney(balances.instantBridgeable, currency),
+        status: "PREPARADO",
+      },
+    ].filter((row) => row.amount > 0);
+
+    return [...invoiceRows, ...receivedRows, ...payoutRows].sort(
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    );
+  }, [balances.instantBridgeable, balances.standardAvailable, currency, data?.recentSales, invoice, partnerId]);
+
+  const filteredRows = rows.filter((row) => view === "all" || row.category === view);
+  const periodLabel = `${formatDate(invoice.periodStart)} - ${formatDate(invoice.periodEnd)}`;
+
+  const requestInvoice = async () => {
+    try {
+      await api.post(`/api/billing/${partnerId}/invoices/send`, {
+        invoiceId: invoice.id,
+      });
+      setMessage("Factura enviada o preparada para envio.");
+    } catch (error) {
+      setMessage(
+        error.response?.data?.message ||
+          "Facturacion todavia no esta conectada."
+      );
+    }
+  };
+
+  return (
+    <div className="bi-shell bi-ledgerShell">
+      <header className="bi-ledgerHeader">
+        <div>
+          <h2>Facturas</h2>
+          <p>
+            Consulta facturas, pagos recibidos y pagos realizados. Filtra la
+            tabla o exporta resumenes en CSV.
+          </p>
+        </div>
+        <button
+          className="bi-ledgerExport"
+          type="button"
+          onClick={() => exportCsv(filteredRows, "volta-finance-resumen.csv")}
+          disabled={!filteredRows.length}
+        >
+          CSV en lote
+        </button>
+      </header>
+
+      {message && <div className="bi-message">{message}</div>}
+
+      <div className="bi-ledgerFilters">
+        <button type="button">{partner?.partnerName || "Establecimiento"}</button>
+        <button type="button">{periodLabel}</button>
+        <button
+          className={view === "all" ? "is-active" : ""}
+          type="button"
+          onClick={() => setView("all")}
+        >
+          Todo
+        </button>
+        <button
+          className={view === "invoices" ? "is-active" : ""}
+          type="button"
+          onClick={() => setView("invoices")}
+        >
+          Facturas
+        </button>
+        <button
+          className={view === "received" ? "is-active" : ""}
+          type="button"
+          onClick={() => setView("received")}
+        >
+          Recibidos
+        </button>
+        <button
+          className={view === "paid" ? "is-active" : ""}
+          type="button"
+          onClick={() => setView("paid")}
+        >
+          Realizados
+        </button>
+        <button type="button" onClick={load} disabled={loading}>
+          {loading ? "Actualizando..." : "Actualizar"}
+        </button>
+      </div>
+
+      <section className="bi-ledgerStats">
+        <div>
+          <span>Ventas del mes</span>
+          <strong>{formatMoney(invoice.grossSales, currency)}</strong>
+        </div>
+        <div>
+          <span>Comision Volta</span>
+          <strong>{formatMoney(invoice.platformFeeAmount, currency)}</strong>
+        </div>
+        <div>
+          <span>Rate aplicado</span>
+          <strong>{formatPercent(invoice.platformFeeRate)}</strong>
+        </div>
+      </section>
+
+      <section className="bi-ledgerTableWrap">
+        <table className="bi-ledgerTable">
+          <thead>
+            <tr>
+              <th>Referencia</th>
+              <th>Tipo</th>
+              <th>Fecha</th>
+              <th>Importe</th>
+              <th>Estado</th>
+              <th />
+            </tr>
+          </thead>
+          <tbody>
+            {filteredRows.map((row) => (
+              <tr key={row.id}>
+                <td>{row.reference}</td>
+                <td>{row.type}</td>
+                <td>{row.dateLabel}</td>
+                <td>{row.amountLabel}</td>
+                <td>{row.status}</td>
+                <td>
+                  <button
+                    type="button"
+                    onClick={() => exportCsv([row], `${row.reference}.csv`)}
+                  >
+                    Exportar
+                  </button>
+                </td>
+              </tr>
+            ))}
+            {!filteredRows.length && (
+              <tr>
+                <td colSpan="6">Sin registros para este filtro.</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </section>
+
+      <button
+        className="bi-secondaryBtn bi-ledgerInvoiceBtn"
+        type="button"
+        onClick={requestInvoice}
+        disabled={!data?.policy?.invoicesEnabled}
+      >
+        Enviar factura mensual
+      </button>
     </div>
   );
 }

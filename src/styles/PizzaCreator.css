@@ -309,6 +309,14 @@
   font-weight: 700;
 }
 
+.pc-hint--error {
+  color: #8f1d1d;
+  background: #fff1f1;
+  border: 1px solid rgba(143, 29, 29, 0.22);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+
 .ingredients-fieldset {
   border: 1px solid rgba(59, 0, 139, 0.1);
   border-radius: 20px;

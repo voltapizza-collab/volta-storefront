@@ -11,8 +11,8 @@ import SettingsDeliveryModule from "../components/Backoffice/SettingsDeliveryMod
 import SettingsBrandingModule from "../components/Backoffice/SettingsBrandingModule";
 import CustomersModule from "../components/Backoffice/CustomersModule";
 import CouponsModule from "../components/Backoffice/Coupons/CouponsModule";
-import BillingModule from "../components/Backoffice/BillingModule";
-import MyOrdersModule from "../components/GlobalManager/MyOrdersModule";
+import BillingModule, { FinanceBillingModule } from "../components/Backoffice/BillingModule";
+import MyOrdersModule, { OrdersMovementsModule } from "../components/GlobalManager/MyOrdersModule";
 import EngineBackground from "../components/Backoffice/EngineBackground";
 import AppFooter from "../components/Layout/AppFooter";
 import AdminStoresPage from "./AdminStoresPage";
@@ -25,6 +25,8 @@ export default function Backoffice() {
   const [expandedModules, setExpandedModules] = useState({
     pizzaCreator: false,
     offers: Boolean(initialSmsPaymentStatus),
+    myorders: false,
+    finance: false,
     settings: false,
   });
   const [partners, setPartners] = useState([]);
@@ -197,6 +199,18 @@ export default function Backoffice() {
     isOffersCreateActive ||
     isOffersPromosActive ||
     isOffersIncentivesActive;
+  const isMyOrdersOverviewActive = activeModule === "myorders";
+  const isMyOrdersMovementsActive = activeModule === "myordersMovements";
+  const isMyOrdersGroupActive =
+    activeModuleGroup === "myorders" ||
+    isMyOrdersOverviewActive ||
+    isMyOrdersMovementsActive;
+  const isFinanceOverviewActive = activeModule === "finance";
+  const isFinanceBillingActive = activeModule === "financeBilling";
+  const isFinanceGroupActive =
+    activeModuleGroup === "finance" ||
+    isFinanceOverviewActive ||
+    isFinanceBillingActive;
 
   if (loadingPartners) {
     return (
@@ -439,30 +453,76 @@ export default function Backoffice() {
                 )}
 
               <button
-                className={`bo-btn ${
-                  activeModuleGroup === "myorders" ? "active" : ""
+                className={`bo-btn bo-btnAccordion ${
+                  isMyOrdersGroupActive ? "active" : ""
+                } ${
+                  expandedModules.myorders ? "open" : ""
                 }`}
-                onClick={() => {
-                  setActiveModule("myorders");
-                  setActiveModuleGroup("myorders");
-                }}
+                onClick={() => toggleModuleSection("myorders", "inventory")}
                 type="button"
               >
-                My Orders
+                <span>My Orders</span>
+                <span className="bo-btnChevron">
+                  {expandedModules.myorders ? "v" : "^"}
+                </span>
               </button>
 
+              {expandedModules.myorders && (
+                <div
+                  className={`bo-subnav ${
+                    isMyOrdersGroupActive ? "is-active-group" : ""
+                  }`}
+                >
+                  <button
+                    className={`bo-subbtn ${
+                      isMyOrdersMovementsActive ? "active" : ""
+                    }`}
+                    onClick={() => {
+                      setActiveModule("myordersMovements");
+                      setActiveModuleGroup("myorders");
+                    }}
+                    type="button"
+                  >
+                    Movimientos
+                  </button>
+                </div>
+              )}
+
               <button
-                className={`bo-btn ${
-                  activeModuleGroup === "billing" ? "active" : ""
+                className={`bo-btn bo-btnAccordion ${
+                  isFinanceGroupActive ? "active" : ""
+                } ${
+                  expandedModules.finance ? "open" : ""
                 }`}
-                onClick={() => {
-                  setActiveModule("billing");
-                  setActiveModuleGroup("billing");
-                }}
+                onClick={() => toggleModuleSection("finance", "inventory")}
                 type="button"
               >
-                Billing
+                <span>Finance</span>
+                <span className="bo-btnChevron">
+                  {expandedModules.finance ? "v" : "^"}
+                </span>
               </button>
+
+              {expandedModules.finance && (
+                <div
+                  className={`bo-subnav ${
+                    isFinanceGroupActive ? "is-active-group" : ""
+                  }`}
+                >
+                  <button
+                    className={`bo-subbtn ${
+                      isFinanceBillingActive ? "active" : ""
+                    }`}
+                    onClick={() => {
+                      setActiveModule("financeBilling");
+                      setActiveModuleGroup("finance");
+                    }}
+                    type="button"
+                  >
+                    Facturas
+                  </button>
+                </div>
+              )}
 
               <button
                 className={`bo-btn bo-btnAccordion ${
@@ -614,8 +674,16 @@ export default function Backoffice() {
             <MyOrdersModule partner={auth} />
           )}
 
-          {activeModule === "billing" && auth.partnerId && (
+          {activeModule === "myordersMovements" && auth.partnerId && (
+            <OrdersMovementsModule partner={auth} />
+          )}
+
+          {activeModule === "finance" && auth.partnerId && (
             <BillingModule partner={auth} />
+          )}
+
+          {activeModule === "financeBilling" && auth.partnerId && (
+            <FinanceBillingModule partner={auth} />
           )}
 
         </div>

@@ -26,6 +26,25 @@ const formatDateTime = (value) => {
   }).format(date);
 };
 
+const formatDate = (value) => {
+  if (!value) return "-";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "-";
+
+  return new Intl.DateTimeFormat("es-ES", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  }).format(date);
+};
+
+const toDateInputValue = (value) => {
+  if (!value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  return date.toISOString().slice(0, 10);
+};
+
 const parseMaybeJson = (value, fallback) => {
   if (value == null) return fallback;
   if (typeof value !== "string") return value;
@@ -483,6 +502,201 @@ export default function MyOrdersModule({ partner = null }) {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+export function OrdersMovementsModule({ partner = null }) {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const [status, setStatus] = useState("all");
+  const [storeName, setStoreName] = useState("all");
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
+
+  const partnerId = partner?.partnerId || partner?.id;
+  const currency = data?.currency || "EUR";
+
+  const load = useCallback(async () => {
+    if (!partnerId) return;
+
+    try {
+      setLoading(true);
+      setMessage("");
+      const response = await api.get(`/api/billing/${partnerId}/summary`);
+      setData(response.data || null);
+    } catch (error) {
+      console.error(error);
+      setMessage(error.response?.data?.error || "No se pudo cargar movimientos.");
+    } finally {
+      setLoading(false);
+    }
+  }, [partnerId]);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  const movements = useMemo(() => {
+    return (data?.recentSales || []).map((sale) => ({
+      ...sale,
+      dateValue: toDateInputValue(sale.date),
+      statusLabel: sale.status || "REGISTRADO",
+      storeLabel: sale.storeName || "Sin tienda",
+    }));
+  }, [data?.recentSales]);
+
+  const stores = useMemo(
+    () => [...new Set(movements.map((sale) => sale.storeLabel).filter(Boolean))],
+    [movements]
+  );
+
+  const filteredMovements = useMemo(() => {
+    return movements.filter((sale) => {
+      if (status !== "all" && sale.statusLabel !== status) return false;
+      if (storeName !== "all" && sale.storeLabel !== storeName) return false;
+      if (fromDate && sale.dateValue < fromDate) return false;
+      if (toDate && sale.dateValue > toDate) return false;
+      return true;
+    });
+  }, [fromDate, movements, status, storeName, toDate]);
+
+  const total = filteredMovements.reduce((sum, sale) => sum + Number(sale.total || 0), 0);
+
+  return (
+    <div className="gmo-shell">
+      <header className="gm-moduleHeader">
+        <div>
+          <span>My Orders</span>
+          <h2>Movimientos de clientes</h2>
+        </div>
+        <button type="button" onClick={load} disabled={loading}>
+          {loading ? "Actualizando..." : "Actualizar"}
+        </button>
+      </header>
+
+      <section className="gmo-movementToolbar">
+        <label className="gmo-filter">
+          <span>Desde</span>
+          <input
+            type="date"
+            value={fromDate}
+            onChange={(event) => setFromDate(event.target.value)}
+          />
+        </label>
+
+        <label className="gmo-filter">
+          <span>Hasta</span>
+          <input
+            type="date"
+            value={toDate}
+            onChange={(event) => setToDate(event.target.value)}
+          />
+        </label>
+
+        <label className="gmo-filter">
+          <span>Tienda</span>
+          <select value={storeName} onChange={(event) => setStoreName(event.target.value)}>
+            <option value="all">Todas las tiendas</option>
+            {stores.map((name) => (
+              <option key={name} value={name}>
+                {name}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label className="gmo-filter">
+          <span>Estado</span>
+          <select value={status} onChange={(event) => setStatus(event.target.value)}>
+            <option value="all">Todos</option>
+            {[...new Set(movements.map((sale) => sale.statusLabel))].map((item) => (
+              <option key={item} value={item}>
+                {item}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <button
+          className="gmo-clearFilters"
+          type="button"
+          onClick={() => {
+            setStatus("all");
+            setStoreName("all");
+            setFromDate("");
+            setToDate("");
+          }}
+        >
+          Restablecer
+        </button>
+      </section>
+
+      {message && <div className="gmo-message">{message}</div>}
+
+      <section className="gmo-kpiGrid gmo-kpiGrid--movements">
+        <KpiCard
+          label="Movimientos"
+          value={formatNumber(filteredMovements.length)}
+          hint="Segun filtros activos"
+        />
+        <KpiCard
+          label="Importe"
+          value={formatMoney(total, currency)}
+          hint="Ventas de clientes"
+          tone="revenue"
+        />
+        <KpiCard
+          label="Tiendas"
+          value={formatNumber(stores.length)}
+          hint="Con actividad reciente"
+        />
+      </section>
+
+      <section className="gmo-panel">
+        <div className="gmo-panelHead">
+          <div>
+            <span>Historial</span>
+            <h3>Ventas y pagos de clientes</h3>
+          </div>
+          <small>{data?.updatedAt ? `Ultima lectura ${formatDateTime(data.updatedAt)}` : ""}</small>
+        </div>
+
+        <div className="gmo-tableWrap">
+          <table className="gmo-table gmo-table--movements">
+            <thead>
+              <tr>
+                <th>Codigo</th>
+                <th>Fecha</th>
+                <th>Tienda</th>
+                <th>Estado</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredMovements.map((sale) => (
+                <tr key={sale.id}>
+                  <td>
+                    <strong>{sale.code}</strong>
+                  </td>
+                  <td>{formatDate(sale.date)}</td>
+                  <td>{sale.storeLabel}</td>
+                  <td>
+                    <span className="gmo-statusPill">{sale.statusLabel}</span>
+                  </td>
+                  <td>{formatMoney(sale.total, sale.currency || currency)}</td>
+                </tr>
+              ))}
+              {!filteredMovements.length && (
+                <tr>
+                  <td colSpan="5">Sin movimientos para los filtros seleccionados.</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </section>
     </div>
   );
 }

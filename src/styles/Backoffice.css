@@ -23,6 +23,42 @@
   overflow-y: auto;
   padding-right: 4px;
 }
+
+.bo-sidebarTop,
+.bo-workspace {
+  scrollbar-color: var(--brand-2) rgba(255, 255, 255, 0.16);
+  scrollbar-width: thin;
+}
+
+.bo-sidebarTop::-webkit-scrollbar,
+.bo-workspace::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+.bo-sidebarTop::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+}
+
+.bo-workspace::-webkit-scrollbar-track {
+  background: rgba(59, 0, 139, 0.08);
+  border-radius: 999px;
+}
+
+.bo-sidebarTop::-webkit-scrollbar-thumb,
+.bo-workspace::-webkit-scrollbar-thumb {
+  border: 3px solid transparent;
+  border-radius: 999px;
+  background: var(--brand-2);
+  background-clip: content-box;
+}
+
+.bo-sidebarTop::-webkit-scrollbar-thumb:hover,
+.bo-workspace::-webkit-scrollbar-thumb:hover {
+  background: #ffc94e;
+  background-clip: content-box;
+}
 .bo-title {
   font-weight: 700;
   font-size: 20px;

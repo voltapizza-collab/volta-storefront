@@ -109,6 +109,85 @@ function filterPromos(items, query) {
   });
 }
 
+const num = (value) => {
+  if (value == null || value === "") return 0;
+  const normalized = typeof value === "string" ? value.replace(",", ".") : value;
+  const parsed = Number(normalized);
+  return Number.isFinite(parsed) ? parsed : 0;
+};
+
+const priceForSize = (priceBySize = {}, size = "M") => {
+  const preferred = num(priceBySize?.[size]);
+  if (preferred > 0) return preferred;
+
+  for (const key of ["M", "S", "L", "XL", "XS"]) {
+    const value = num(priceBySize?.[key]);
+    if (value > 0) return value;
+  }
+
+  for (const value of Object.values(priceBySize || {})) {
+    const parsed = num(value);
+    if (parsed > 0) return parsed;
+  }
+
+  return 0;
+};
+
+const capWords = (value = "") => {
+  const lowerWords = ["de", "del", "y", "con", "al"];
+
+  return String(value)
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .split(" ")
+    .map((word, index) => {
+      if (index !== 0 && lowerWords.includes(word)) return word;
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    })
+    .join(" ");
+};
+
+const joinWithY = (items = []) => {
+  const clean = items.filter(Boolean);
+  if (!clean.length) return "";
+  if (clean.length === 1) return clean[0];
+  if (clean.length === 2) return `${clean[0]} y ${clean[1]}`;
+  return `${clean.slice(0, -1).join(", ")} y ${clean[clean.length - 1]}`;
+};
+
+const seededPick = (seed, items) => {
+  if (!items.length) return "";
+  const value = Math.abs(Number(seed) || 1);
+  return items[value % items.length];
+};
+
+const CRUSH_CLOSERS = [
+  "First taste, first love.",
+  "Sabor que no se olvida.",
+  "Te mira y caes.",
+  "Una mordida y listo.",
+  "Crush confirmado en 10 segundos.",
+  "Te enamora sin avisar.",
+];
+
+const buildPizzaLine = (item) => {
+  const ingredients = Array.isArray(item?.ingredients)
+    ? item.ingredients.map((ingredient) => capWords(ingredient?.name)).filter(Boolean)
+    : [];
+
+  const line = item?.description
+    ? item.description
+    : ingredients.length
+    ? `${joinWithY(ingredients)}.`
+    : "Ingredientes seleccionados a mano.";
+
+  return {
+    line,
+    closer: seededPick((Number(item?.pizzaId) || 1) + 13, CRUSH_CLOSERS),
+  };
+};
+
 function formatPromoDate(value) {
   if (!value) return "";
   const date = new Date(value);
@@ -155,39 +234,6 @@ function CountryFlag({ countryCode }) {
   );
 }
 
-function QuickCallIcon() {
-  return (
-    <span className="sf-voltaDialIcon" aria-hidden="true">
-      <svg viewBox="0 0 24 24" role="presentation">
-        <path
-          d="M22 16.92v3a2 2 0 0 1-2.18 2A19.8 19.8 0 0 1 11.2 18.8a19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.08 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.72c.12.9.31 1.77.58 2.6a2 2 0 0 1-.45 2.1L8 9.9a16 16 0 0 0 6.1 6.1l1.49-1.24a2 2 0 0 1 2.1-.45c.83.27 1.7.46 2.6.58A2 2 0 0 1 22 16.92Z"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.4"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M15 3a8 8 0 0 1 8 8"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.4"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M15 7a4 4 0 0 1 4 4"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.4"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-    </span>
-  );
-}
-
 export default function StorePage() {
   const { partnerSlug, storeSlug } = useParams();
 
@@ -203,6 +249,8 @@ export default function StorePage() {
   const [scheduleOpen, setScheduleOpen] = useState(false);
   const [reservationOpen, setReservationOpen] = useState(false);
   const [now, setNow] = useState(() => new Date());
+  const [flippedId, setFlippedId] = useState(null);
+  const [tick, setTick] = useState(false);
 
   useEffect(() => {
     if (!partnerSlug || !storeSlug) return;
@@ -243,6 +291,17 @@ export default function StorePage() {
     const intervalId = window.setInterval(() => {
       setNow(new Date());
     }, 60000);
+
+    return () => {
+      window.clearInterval(intervalId);
+    };
+  }, []);
+
+  useEffect(() => {
+    const intervalId = window.setInterval(() => {
+      setTick(true);
+      window.setTimeout(() => setTick(false), 600);
+    }, 5000);
 
     return () => {
       window.clearInterval(intervalId);
@@ -441,6 +500,8 @@ export default function StorePage() {
     });
   }, [deliveryLabel, deliveryMetaLabel, partner, store, utilityPills]);
   const activeProductsCount = visibleMenu.length;
+  const cartCount = 0;
+  const cartTotal = 0;
   const incentiveMessage =
     activeTab === PROMOS_TAB
       ? `${filteredPromos.length} promo${filteredPromos.length === 1 ? "" : "s"} activa${filteredPromos.length === 1 ? "" : "s"}`
@@ -472,150 +533,97 @@ export default function StorePage() {
   return (
     <div className="sf-shell" style={themeStyle}>
       <div className="sf-wrap sf-menu">
-        <section className="sf-engineControlBar">
-          <div className="sf-engineTop">
-            <div className="sf-engineBrand">
-              <div className="sf-engineBrandHead">
-                <div className="sf-engineLogoBlock">
-                  <h1 className="sf-engineBrandName">
-                    <span className="sf-engineBrandPartner">
-                      {partner?.name || store.storeName}
+        <section className="sf-storeHeader">
+          <div className="sf-storeHeaderTitle">Selecciona productos</div>
+
+          <div className="lsf-top__actions">
+            <span className="sf-engineUtilityPill sf-lsfStoreTicker" aria-label={`${partner?.name || store.storeName}, ${store?.city || "Ciudad"}, ${store.storeName}`}>
+              <span className="sf-engineUtilityPillTicker">
+                <span className="sf-engineUtilityPillTrack">
+                  <span className="sf-engineUtilityPillLine">
+                    {partner?.name || store.storeName}
+                  </span>
+                  <span className="sf-engineUtilityPillLine">
+                    {store?.city || "Ciudad"}
+                  </span>
+                  <span className="sf-engineUtilityPillLine">
+                    <span className="sf-engineUtilityPillInline">
+                      <CountryFlag countryCode={partner?.country} />
+                      <span>{store.storeName}</span>
                     </span>
-                    {store?.storeName && (
-                      <span className="sf-engineBrandStore">{store.storeName}</span>
-                    )}
-                  </h1>
-                </div>
+                  </span>
+                </span>
+              </span>
+            </span>
+            <button
+              type="button"
+              className="lsf-cartbtn__count lsf-schedulebtn"
+              onClick={() => setScheduleOpen(true)}
+            >
+              Programar
+            </button>
 
-                <div className="sf-engineQuickRow" aria-label="Acciones rapidas">
-                  {phoneHref ? (
-                    <button
-                      type="button"
-                      className="sf-engineQuickAction sf-engineQuickAction--call"
-                      onClick={() => {
-                        window.location.href = phoneHref;
-                      }}
-                      aria-label={`Llamar a ${storePhone}`}
-                      title={storePhone}
-                    >
-                      <span className="sf-engineQuickActionFace">
-                        <QuickCallIcon />
-                      </span>
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      className="sf-engineQuickAction sf-engineQuickAction--call sf-engineQuickAction--disabled"
-                      aria-label="Llamada directa no disponible"
-                      disabled
-                    >
-                      <span className="sf-engineQuickActionFace">
-                        <QuickCallIcon />
-                      </span>
-                    </button>
-                  )}
+            <button type="button" className={`lsf-cartbtn ${cartCount > 0 ? "is-active" : ""}`}>
+              <span aria-hidden="true">🛒</span>
+              <span className="lsf-cartbtn__count">{cartCount}</span>
+              <span className="lsf-cartbtn__total">€{cartTotal.toFixed(2)}</span>
+            </button>
+          </div>
+        </section>
 
-                  <button type="button" className="sf-engineQuickAction sf-engineQuickAction--cart" aria-label="Carrito">
-                    <span className="sf-engineQuickActionFace">
-                      <span className="sf-engineQuickCartIcon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24">
-                          <path
-                            d="M3 4h2l2.2 9.2A2 2 0 0 0 9.15 15H18a2 2 0 0 0 1.94-1.53L21 8H7.1"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                          <circle cx="10" cy="19" r="1.6" fill="currentColor" />
-                          <circle cx="17" cy="19" r="1.6" fill="currentColor" />
-                        </svg>
-                      </span>
+        <section className="sf-lsfSurface lsf-wrapper lsf-mobile">
+          <div className="sf-lsfActionSearchLine">
+            <button type="button" className={`sf-offersBtn sf-lsfOfferBtn ${offerVariant.className}`}>
+              <span className="sf-offersBtnLabel">{offerVariant.label}</span>
+            </button>
+
+            <button type="button" className="lsf-buildmode">
+              Mitad / Mitad
+            </button>
+            <button type="button" className="lsf-buildmode">
+              Arma tu pizza
+            </button>
+
+            <div className="sf-engineSearchRow sf-engineSearchRow--lsf">
+              <div className="sf-engineSearchWrap">
+                {!search && (
+                  <span className="sf-engineSearchTicker" aria-hidden="true">
+                    <span className="sf-engineSearchTickerTrack">
+                      <span>Buscar pizza o ingrediente, extras o sabores</span>
                     </span>
-                  </button>
-                </div>
-              </div>
-
-              <div className="sf-engineBrandInfo">
-                <div className="sf-engineUtilityRow">
-                  <button type="button" className={`sf-offersBtn sf-engineUtilityOffer ${offerVariant.className}`}>
-                    <span className="sf-offersBtnLabel">{offerVariant.label}</span>
-                  </button>
-                  {utilityPills.map((pill) => (
-                    <span
-                      key={pill.key}
-                      className={`sf-engineUtilityPill sf-engineUtilityPill--${pill.tone.split(" ").join(" sf-engineUtilityPill--")}`}
-                    >
-                      <span className="sf-engineUtilityPillTicker">
-                        <span className="sf-engineUtilityPillTrack">
-                          <span className="sf-engineUtilityPillLine">{pill.primary}</span>
-                          <span className="sf-engineUtilityPillLine">
-                            {pill.key === "city" ? (
-                              <span className="sf-engineUtilityPillInline">
-                                <CountryFlag countryCode={partner?.country} />
-                                <span>{pill.secondary}</span>
-                              </span>
-                            ) : (
-                              pill.secondary
-                            )}
-                          </span>
-                        </span>
-                      </span>
-                    </span>
-                  ))}
-                </div>
-
-                <div className="sf-engineSearchRow">
-                  <div className="sf-engineSearchWrap">
-                    {!search && (
-                      <span className="sf-engineSearchTicker" aria-hidden="true">
-                        <span className="sf-engineSearchTickerTrack">
-                          <span>Buscar pizza o ingrediente, extras o sabores</span>
-                        </span>
-                      </span>
-                    )}
-                    <input
-                      className="sf-engineSearch"
-                      type="search"
-                      placeholder=""
-                      value={search}
-                      onChange={(event) => setSearch(event.target.value)}
+                  </span>
+                )}
+                <input
+                  className="sf-engineSearch"
+                  type="search"
+                  placeholder=""
+                  value={search}
+                  onChange={(event) => setSearch(event.target.value)}
+                />
+                <button type="button" className="sf-engineSearchBtn" aria-label="Buscar">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <circle
+                      cx="11"
+                      cy="11"
+                      r="6.5"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.2"
                     />
-                    <button type="button" className="sf-engineSearchBtn" aria-label="Buscar">
-                      <svg viewBox="0 0 24 24" aria-hidden="true">
-                        <circle
-                          cx="11"
-                          cy="11"
-                          r="6.5"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2.2"
-                        />
-                        <path
-                          d="M16 16l4 4"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2.2"
-                          strokeLinecap="round"
-                        />
-                      </svg>
-                    </button>
-                  </div>
-                </div>
+                    <path
+                      d="M16 16l4 4"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.2"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                </button>
               </div>
             </div>
           </div>
 
-          <div className="sf-engineActionRow">
-            <button type="button" className="sf-enginePillBtn">
-              Mitad / Mitad
-            </button>
-            <button type="button" className="sf-enginePillBtn">
-              Arma tu Pizza
-            </button>
-          </div>
-
-          <div className="sf-incentiveBanner">
+          <div className="sf-incentiveBanner sf-incentiveBanner--lsf">
             <div className="sf-incentiveCopy">
               <span className="sf-incentiveEyebrow">Proximo incentivo en camino</span>
               <strong>{incentiveMessage}</strong>
@@ -628,23 +636,13 @@ export default function StorePage() {
                 : "Disponible hoy"}
             </span>
           </div>
-        </section>
 
-        <section className="sf-engineCategoryRail">
-          <div className="sf-engineRailHeader">
-            <div>
-              <span className="sf-kicker">Explorar</span>
-              <h2 className="sf-engineRailTitle">{activeTabLabel}</h2>
-            </div>
-            <span className="sf-engineRailHint">Desliza para descubrir mas</span>
-          </div>
-
-          <div className="sf-engineCategoryTrack" role="tablist" aria-label="Categorias del menu">
+          <div className="lsf-tabs" role="tablist" aria-label="Categorias del menu">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 type="button"
-                className={`sf-engineTab ${activeTab === tab.id ? "is-active" : ""}`}
+                className={`lsf-tab ${activeTab === tab.id ? "is-active" : ""}`}
                 onClick={() => setActiveTab(tab.id)}
               >
                 {tab.label}
@@ -653,8 +651,10 @@ export default function StorePage() {
           </div>
         </section>
 
-        <section className="sf-engineCard">
-          <div className="sf-engineGridStage">
+       
+
+        <section className="sf-engineCard sf-engineCard--lsf">
+          <div className="sf-engineGridStage sf-engineGridStage--lsf">
             {activeTab === PROMOS_TAB ? (
               filteredPromos.length === 0 ? (
                 <div className="sf-engineEmptyState">
@@ -797,58 +797,73 @@ export default function StorePage() {
                 <p>No hay productos visibles para esta pestana ahora mismo.</p>
               </div>
             ) : (
-              <div className="sf-engineGrid">
-                {visibleMenu.map((item) => (
-                  <article key={item.pizzaId} className="sf-engineMenuCard">
-                    <div className="sf-menuCardVisual">
-                      <span className="sf-menuCardVisualBadge">
-                        {item.category || "Menu"}
-                      </span>
-                      <div className="sf-menuCardVisualTitle">{item.name}</div>
-                    </div>
+              <div className="lsf-grid-wrap">
+                <div className="lsf-grid" role="list">
+                  {visibleMenu.map((item) => {
+                    const flipped = flippedId === item.pizzaId;
+                    const image = item.image || "";
+                    const sizes = Object.keys(item.priceBySize || {}).filter(
+                      (size) => item.priceBySize?.[size] !== "" && item.priceBySize?.[size] != null
+                    );
+                    const basePrice = priceForSize(item.priceBySize, sizes[0] || "M");
+                    const { line, closer } = buildPizzaLine(item);
 
-                    <div className="sf-menuCardHead">
-                      <div>
-                        <h3 className="sf-menuCardTitle">{item.name}</h3>
-                        <div className="sf-menuCardMeta">
-                          {item.category || "Sin categoria"}
+                    return (
+                      <div
+                        key={item.pizzaId}
+                        className={`lsf-card lsf-flip ${flipped ? "is-flipped" : ""}`}
+                        onClick={() =>
+                          setFlippedId((current) =>
+                            current === item.pizzaId ? null : item.pizzaId
+                          )
+                        }
+                        role="listitem"
+                      >
+                        <div className="lsf-flip__inner">
+                          <div className="lsf-flip__front">
+                            <div className="lsf-card__image">
+                              {image ? (
+                                <img src={image} alt={item.name} />
+                              ) : (
+                                <div className="lsf-card__img is-placeholder">
+                                  <span>🍕</span>
+                                </div>
+                              )}
+                            </div>
+
+                            <button
+                              type="button"
+                              className="lsf-card__addbtn"
+                              onClick={(event) => {
+                                event.stopPropagation();
+                              }}
+                              aria-label={`Comprar ${item.name}`}
+                            >
+                              Comprar
+                            </button>
+
+                            <div className="lsf-card__overlay">
+                              <div className="lsf-card__ticker">
+                                <div className="lsf-card__name">{item.name}</div>
+                              </div>
+                              <div className={`lsf-card__price ${tick ? "is-ticking" : ""}`}>
+                                €{basePrice.toFixed(2)}
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="lsf-flip__back">
+                            <div className="lsf-flip-desc">
+                              <div className="lsf-flip-title">Tu crush sin filtro</div>
+                              <div className="lsf-flip-line">{line}</div>
+                              <div className="lsf-flip-closer">{closer}</div>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                      <span className="sf-badge">ACTIVE</span>
-                    </div>
-
-                    <div>
-                      <div className="sf-sectionLabel">Tamanos y precios</div>
-                      <div className="sf-priceRow">
-                        {Object.entries(item.priceBySize || {})
-                          .filter(([_, value]) => value !== "" && value != null)
-                          .map(([size, value]) => (
-                            <span key={size} className="sf-priceTag">
-                              {size}: EUR{value}
-                            </span>
-                          ))}
-                      </div>
-                    </div>
-
-                    <div>
-                      <div className="sf-sectionLabel">Ingredientes activos</div>
-                      <div className="sf-chipRow">
-                        {(item.ingredients || []).map((ingredient) => (
-                          <span key={ingredient.id} className="sf-chip">
-                            {ingredient.name}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="sf-menuCardFooter">
-                      <span className="sf-menuCardSignal">Lista para vender</span>
-                      <button type="button" className="sf-menuCardCta">
-                        Elegir
-                      </button>
-                    </div>
-                  </article>
-                ))}
+                    );
+                  })}
+                </div>
               </div>
             )}
           </div>
@@ -861,9 +876,12 @@ export default function StorePage() {
             <button
               type="button"
               className="sf-engineBottomBtn"
-              onClick={() => setScheduleOpen(true)}
+              onClick={() => {
+                if (phoneHref) window.location.href = phoneHref;
+              }}
+              disabled={!phoneHref}
             >
-              Programar
+              Llamar
             </button>
 
             {reservationEnabled && (

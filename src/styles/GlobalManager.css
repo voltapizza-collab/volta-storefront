@@ -265,6 +265,18 @@
   box-shadow: 0 12px 28px rgba(59, 0, 139, 0.08);
 }
 
+.gmo-movementToolbar {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(160px, 1fr)) auto;
+  gap: 12px;
+  align-items: end;
+  padding: 14px;
+  border: 1px solid rgba(59, 0, 139, 0.12);
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 12px 28px rgba(59, 0, 139, 0.08);
+}
+
 .gmo-segmented {
   display: inline-grid;
   grid-template-columns: repeat(2, minmax(86px, 1fr));
@@ -313,13 +325,26 @@
   color: rgba(31, 23, 42, 0.6);
 }
 
-.gmo-filter select {
+.gmo-filter select,
+.gmo-filter input {
   min-height: 40px;
   border: 1px solid rgba(59, 0, 139, 0.16);
   border-radius: 8px;
   padding: 0 12px;
   color: #1f172a;
   background: #fff;
+  font: inherit;
+}
+
+.gmo-clearFilters {
+  min-height: 40px;
+  border: 0;
+  border-radius: 8px;
+  padding: 0 14px;
+  background: #1f172a;
+  color: #fff;
+  font-weight: 900;
+  cursor: pointer;
 }
 
 .gmo-liveBadge {
@@ -358,6 +383,10 @@
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 12px;
+}
+
+.gmo-kpiGrid--movements {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .gmo-kpiCard {
@@ -451,6 +480,10 @@
   border-collapse: collapse;
 }
 
+.gmo-table--movements {
+  min-width: 760px;
+}
+
 .gmo-table th,
 .gmo-table td {
   padding: 12px;
@@ -512,6 +545,18 @@
   color: #1f172a;
   font-weight: 900;
   cursor: pointer;
+}
+
+.gmo-statusPill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: rgba(59, 0, 139, 0.08);
+  color: #3b008b;
+  font-size: 12px;
+  font-weight: 900;
 }
 
 .gmo-side {
@@ -760,6 +805,10 @@
 
   .gmo-toolbar {
     align-items: stretch;
+  }
+
+  .gmo-movementToolbar {
+    grid-template-columns: 1fr;
   }
 
   .gmo-filter,

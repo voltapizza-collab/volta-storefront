@@ -134,7 +134,10 @@ export default function PizzaCreator({ partner }) {
   const [categoryOrder, setCategoryOrder] = useState([]);
   const [loadingCategories, setLoadingCategories] = useState(false);
   const [loadingPizzas, setLoadingPizzas] = useState(false);
+  const [loadingInventory, setLoadingInventory] = useState(false);
+  const [inventoryLoadError, setInventoryLoadError] = useState("");
   const [savingProduct, setSavingProduct] = useState(false);
+  const [originalIngredientIds, setOriginalIngredientIds] = useState([]);
 
   const loadCategories = useCallback(async () => {
     if (!partnerId) return;
@@ -171,6 +174,9 @@ export default function PizzaCreator({ partner }) {
   useEffect(() => {
     let alive = true;
 
+    setLoadingInventory(true);
+    setInventoryLoadError("");
+
     api
       .get(storeId ? `/stores/${storeId}/ingredients` : "/ingredients")
       .then((r) => {
@@ -182,7 +188,17 @@ export default function PizzaCreator({ partner }) {
             : source
         );
       })
-      .catch(console.error);
+      .catch((err) => {
+        console.error(err);
+        if (!alive) return;
+        setInventory([]);
+        setInventoryLoadError(
+          "No se pudieron cargar los ingredientes de esta tienda."
+        );
+      })
+      .finally(() => {
+        if (alive) setLoadingInventory(false);
+      });
 
     return () => {
       alive = false;
@@ -233,6 +249,11 @@ export default function PizzaCreator({ partner }) {
   const loadPizzaForEdit = (pizza) => {
     setEditingPizzaId(pizza.id);
     setExistingImage(pizza.image || null);
+    setOriginalIngredientIds(
+      (pizza.ingredients || [])
+        .map((ingredient) => Number(ingredient.id))
+        .filter((id) => Number.isInteger(id) && id > 0)
+    );
 
     setForm({
       name: pizza.name || "",
@@ -354,6 +375,11 @@ export default function PizzaCreator({ partner }) {
   };
 
   const addIngredient = () => {
+    if (inventoryLoadError) {
+      alert("Espera a que carguen los ingredientes antes de modificar la receta.");
+      return;
+    }
+
     const qty = {};
     sizeList.forEach((s) => {
       qty[s] = 0;
@@ -417,6 +443,31 @@ export default function PizzaCreator({ partner }) {
       return;
     }
 
+    if (inventoryLoadError) {
+      alert(
+        "No se puede guardar el producto porque los ingredientes no cargaron correctamente. Recarga el modulo e intenta de nuevo."
+      );
+      return;
+    }
+
+    const ingredientsPayload = form.ingredients
+      .filter((row) => Number(row.id))
+      .map((row) => ({
+        ...row,
+        id: Number(row.id),
+      }));
+
+    if (
+      editingPizzaId &&
+      originalIngredientIds.length > 0 &&
+      ingredientsPayload.length === 0
+    ) {
+      alert(
+        "Este producto ya tenia ingredientes y ahora la receta esta vacia. No se guardo para evitar borrar informacion importante."
+      );
+      return;
+    }
+
     const payload = new FormData();
     payload.append("name", form.name.trim());
     payload.append("partnerId", String(partnerId));
@@ -426,7 +477,7 @@ export default function PizzaCreator({ partner }) {
     }
     payload.append("sizes", JSON.stringify(form.sizes));
     payload.append("priceBySize", JSON.stringify(form.priceBySize));
-    payload.append("ingredients", JSON.stringify(form.ingredients));
+    payload.append("ingredients", JSON.stringify(ingredientsPayload));
     payload.append("launchAt", form.launchAt || "");
     payload.append("cookingMethod", "");
     if (form.imageFile) {
@@ -437,20 +488,34 @@ export default function PizzaCreator({ partner }) {
       setSavingProduct(true);
 
       if (editingPizzaId) {
-        await api.put(`/api/pizzas/${editingPizzaId}`, payload);
+        await api.put(`/api/pizzas/${editingPizzaId}`, payload, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
         alert("Producto actualizado");
       } else {
-        await api.post("/api/pizzas", payload);
+        await api.post("/api/pizzas", payload, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
         alert("Producto creado");
       }
 
       setEditingPizzaId(null);
       setExistingImage(null);
+      setOriginalIngredientIds([]);
       setForm(createInitialForm());
       fetchPizzas();
     } catch (err) {
       console.error(err);
-      alert("Error al guardar");
+      const backendError = err.response?.data?.error || "";
+      const databaseUnavailable =
+        err.response?.status === 503 ||
+        backendError.includes("Can't reach database server");
+
+      alert(
+        databaseUnavailable
+          ? "No se pudo conectar con la base de datos. Revisa que el servidor de Railway/Postgres este activo e intenta de nuevo."
+          : backendError || "Error al guardar"
+      );
     } finally {
       setSavingProduct(false);
     }
@@ -503,6 +568,24 @@ export default function PizzaCreator({ partner }) {
       ),
     [inventory]
   );
+
+  const ingredientOptions = useMemo(() => {
+    const missingSelected = form.ingredients
+      .map((row) => ({
+        id: Number(row.id),
+        name: row.name || `Ingrediente #${row.id}`,
+      }))
+      .filter(
+        (row) =>
+          Number.isInteger(row.id) &&
+          row.id > 0 &&
+          !inventoryById.has(row.id)
+      );
+
+    return [...sortedInventory, ...missingSelected].sort((a, b) =>
+      a.name.localeCompare(b.name, "es", { sensitivity: "base" })
+    );
+  }, [form.ingredients, inventoryById, sortedInventory]);
 
   return (
     <>
@@ -596,6 +679,14 @@ export default function PizzaCreator({ partner }) {
               <div className="pc-hint">
                 Solo aparecen ingredientes activos del inventario/onboarding de esta tienda.
               </div>
+              {loadingInventory && (
+                <div className="pc-hint">Cargando ingredientes...</div>
+              )}
+              {inventoryLoadError && (
+                <div className="pc-hint pc-hint--error">
+                  {inventoryLoadError} No guardes el producto hasta recargar el modulo.
+                </div>
+              )}
 
               <fieldset className="ingredients-fieldset">
                 {form.ingredients.map((row, i) => {
@@ -615,7 +706,7 @@ export default function PizzaCreator({ partner }) {
                         onChange={(e) => onIngredientSelect(i, e.target.value)}
                       >
                         <option value="">- ingrediente -</option>
-                        {sortedInventory.map((item) => (
+                        {ingredientOptions.map((item) => (
                           <option key={item.id} value={item.id}>
                             {item.name}
                           </option>
@@ -715,6 +806,7 @@ export default function PizzaCreator({ partner }) {
                 onClick={() => {
                   setEditingPizzaId(null);
                   setExistingImage(null);
+                  setOriginalIngredientIds([]);
                   setForm(createInitialForm());
                 }}
               >

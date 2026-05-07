@@ -244,16 +244,22 @@ export default function LandingPage() {
               <strong>MyCrushPizza</strong>
             </div>
             <div className="vp-consoleRows">
-              <div><span>Promos activas</span><strong>8</strong></div>
-              <div><span>Cupones generados</span><strong>248</strong></div>
-              <div><span>Mensajes disponibles</span><strong>12.500</strong></div>
+              <div className="vp-consoleRow"><span>Promos activas</span><strong>8</strong></div>
+              <div className="vp-consoleRow"><span>Cupones generados</span><strong>248</strong></div>
+              <div className="vp-consoleRow"><span>Mensajes disponibles</span><strong>12.500</strong></div>
             </div>
             <div className="vp-consoleFooter">
-              <span>Menu publicado</span>
-              <span>CRM listo</span>
-              <span>Delivery activo</span>
+              <span className="vp-consoleBadge">Menu publicado</span>
+              <span className="vp-consoleBadge">CRM listo</span>
+              <span className="vp-consoleBadge">Delivery activo</span>
             </div>
             <a className="vp-consoleCta" href={backofficeHref}>Abrir MyBackoffice</a>
+            <div className="vp-consoleDemo" aria-hidden="true">
+              <span className="vp-demoCursor" />
+              <span className="vp-demoClick vp-demoClickOne" />
+              <span className="vp-demoClick vp-demoClickTwo" />
+              <span className="vp-demoClick vp-demoClickThree" />
+            </div>
           </div>
         </div>
       </section>

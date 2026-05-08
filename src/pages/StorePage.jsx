@@ -109,11 +109,37 @@ function filterPromos(items, query) {
   });
 }
 
+function filterTrendingItems(items, query) {
+  return filterMenuItems(items, query).slice(0, 3);
+}
+
 const num = (value) => {
   if (value == null || value === "") return 0;
   const normalized = typeof value === "string" ? value.replace(",", ".") : value;
   const parsed = Number(normalized);
   return Number.isFinite(parsed) ? parsed : 0;
+};
+
+const getApiErrorMessage = (error, fallback) => {
+  try {
+    const parsed = JSON.parse(error?.message || "");
+    return parsed?.error || fallback;
+  } catch {
+    return error?.message || fallback;
+  }
+};
+
+const formatMoney = (value, currency = "EUR") =>
+  new Intl.NumberFormat("es-ES", {
+    style: "currency",
+    currency: currency || "EUR",
+  }).format(Number(value || 0));
+
+const formatTrendPercent = (value) => {
+  const parsed = Number(value || 0);
+  if (parsed > 0) return `+${parsed}%`;
+  if (parsed < 0) return `${parsed}%`;
+  return "0%";
 };
 
 const priceForSize = (priceBySize = {}, size = "M") => {
@@ -171,6 +197,46 @@ const CRUSH_CLOSERS = [
   "Te enamora sin avisar.",
 ];
 
+const ALLERGEN_LABELS = {
+  CELERY: "apio",
+  CRUSTACEANS: "crustaceos",
+  EGG: "huevo",
+  FISH: "pescado",
+  GLUTEN: "gluten",
+  LACTOSE: "lactosa",
+  LUPIN: "altramuces",
+  MILK: "leche",
+  MOLLUSCS: "moluscos",
+  MUSTARD: "mostaza",
+  NUTS: "frutos secos",
+  PEANUTS: "cacahuetes",
+  SESAME: "sesamo",
+  SHELLFISH: "marisco",
+  SOY: "soja",
+  SULFITES: "sulfitos",
+};
+
+const normalizeAllergenLabel = (value) => {
+  const key = String(value || "").trim().toUpperCase();
+  if (!key) return "";
+  return ALLERGEN_LABELS[key] || key.toLowerCase().replace(/_/g, " ");
+};
+
+const getProductAllergens = (item) => {
+  const allergenSet = new Set();
+
+  (item?.ingredients || []).forEach((ingredient) => {
+    (Array.isArray(ingredient?.allergens) ? ingredient.allergens : []).forEach((allergen) => {
+      const label = normalizeAllergenLabel(allergen);
+      if (label) allergenSet.add(label);
+    });
+  });
+
+  return [...allergenSet].sort((left, right) =>
+    left.localeCompare(right, "es", { sensitivity: "base" })
+  );
+};
+
 const buildPizzaLine = (item) => {
   const ingredients = Array.isArray(item?.ingredients)
     ? item.ingredients.map((ingredient) => capWords(ingredient?.name)).filter(Boolean)
@@ -185,6 +251,57 @@ const buildPizzaLine = (item) => {
   return {
     line,
     closer: seededPick((Number(item?.pizzaId) || 1) + 13, CRUSH_CLOSERS),
+  };
+};
+
+const getAvailableSizes = (item) => {
+  const explicitSizes = Array.isArray(item?.selectSize)
+    ? item.selectSize.filter(Boolean)
+    : [];
+
+  if (explicitSizes.length) return explicitSizes;
+
+  return Object.entries(item?.priceBySize || {})
+    .filter(([, value]) => value !== "" && value != null && num(value) > 0)
+    .map(([size]) => size);
+};
+
+const priceForExtraSize = (extra, size) => {
+  const sized = num(extra?.priceBySize?.[size]);
+  if (sized > 0) return sized;
+  return num(extra?.price);
+};
+
+const getCartLineQty = (line) => {
+  const qty = Number(line?.qty ?? line?.quantity ?? 1);
+  return Number.isFinite(qty) && qty > 0 ? qty : 1;
+};
+
+const normalizeCartLine = (line, index = 0) => {
+  const qty = getCartLineQty(line);
+  const price = num(line?.price ?? line?.unitPrice ?? line?.amount);
+  const extras = Array.isArray(line?.extras)
+    ? line.extras.map((extra) => ({
+        id: extra?.id ?? extra?.ingredientId ?? extra?.code ?? `extra-${index}`,
+        name: extra?.name ?? extra?.label ?? extra?.ingredientName ?? "Extra",
+        price: num(extra?.price ?? extra?.amount),
+      }))
+    : [];
+  const extrasTotal = extras.reduce((sum, extra) => sum + num(extra.price), 0);
+  const subtotal = num(line?.subtotal) || (price + extrasTotal) * qty;
+
+  return {
+    cartLineId: line?.cartLineId || line?.repeatLineId || `${Date.now()}-${index}`,
+    pizzaId: line?.pizzaId ?? line?.id ?? null,
+    name: line?.name || line?.label || "Producto",
+    category: line?.category || "",
+    size: line?.size || line?.selectedSize || "M",
+    qty,
+    price,
+    extras,
+    subtotal,
+    image: line?.image || "",
+    source: line?.source || "",
   };
 };
 
@@ -238,6 +355,7 @@ export default function StorePage() {
   const { partnerSlug, storeSlug } = useParams();
 
   const [menu, setMenu] = useState([]);
+  const [trending, setTrending] = useState([]);
   const [upcoming, setUpcoming] = useState([]);
   const [promos, setPromos] = useState([]);
   const [store, setStore] = useState(null);
@@ -248,6 +366,30 @@ export default function StorePage() {
   const [activeTab, setActiveTab] = useState(TRENDING_TAB);
   const [scheduleOpen, setScheduleOpen] = useState(false);
   const [reservationOpen, setReservationOpen] = useState(false);
+  const [repeatOpen, setRepeatOpen] = useState(false);
+  const [repeatPhone, setRepeatPhone] = useState("");
+  const [repeatDraft, setRepeatDraft] = useState(null);
+  const [repeatMessage, setRepeatMessage] = useState("");
+  const [repeatLoading, setRepeatLoading] = useState(false);
+  const [cartDraft, setCartDraft] = useState(null);
+  const [cart, setCart] = useState([]);
+  const [cartOpen, setCartOpen] = useState(false);
+  const [productModalOpen, setProductModalOpen] = useState(false);
+  const [selectedProductId, setSelectedProductId] = useState(null);
+  const [productSelection, setProductSelection] = useState({
+    size: "",
+    qty: 1,
+    extras: {},
+  });
+  const [extrasAvail, setExtrasAvail] = useState([]);
+  const [extrasLoading, setExtrasLoading] = useState(false);
+  const [showAllExtras, setShowAllExtras] = useState(false);
+  const [bootsOpen, setBootsOpen] = useState(false);
+  const [bootsCode, setBootsCode] = useState("");
+  const [bootsTargetPosition, setBootsTargetPosition] = useState("1");
+  const [bootsQuote, setBootsQuote] = useState(null);
+  const [bootsMessage, setBootsMessage] = useState("");
+  const [bootsLoading, setBootsLoading] = useState(false);
   const [now, setNow] = useState(() => new Date());
   const [flippedId, setFlippedId] = useState(null);
   const [tick, setTick] = useState(false);
@@ -263,21 +405,22 @@ export default function StorePage() {
         ]);
 
         const nextMenu = Array.isArray(menuData?.menu) ? menuData.menu : [];
+        const nextTrending = Array.isArray(menuData?.trending)
+          ? menuData.trending
+          : [];
         const nextUpcoming = Array.isArray(menuData?.upcoming)
           ? menuData.upcoming
           : [];
         const nextPromos = Array.isArray(menuData?.promos) ? menuData.promos : [];
 
         setMenu(nextMenu);
+        setTrending(nextTrending);
         setUpcoming(nextUpcoming);
         setPromos(nextPromos);
         setStore(menuData?.store || null);
         setPartner(partnerData || null);
 
-        const firstCategory =
-          nextMenu.find((item) => item.category)?.category ||
-          (nextUpcoming.length ? UPCOMING_TAB : TRENDING_TAB);
-        setActiveTab(firstCategory || TRENDING_TAB);
+        setActiveTab(TRENDING_TAB);
       } catch (err) {
         console.error(err);
         setError("Error loading menu");
@@ -307,6 +450,26 @@ export default function StorePage() {
       window.clearInterval(intervalId);
     };
   }, []);
+
+  const cartDraftStorageKey = useMemo(
+    () => `volta-repeat-cart-draft:${partnerSlug || "partner"}:${storeSlug || "store"}`,
+    [partnerSlug, storeSlug]
+  );
+
+  useEffect(() => {
+    try {
+      const stored = window.localStorage.getItem(cartDraftStorageKey);
+      const parsed = stored ? JSON.parse(stored) : null;
+      setCartDraft(parsed);
+      if (Array.isArray(parsed?.items) && parsed.items.length) {
+        setCart((current) =>
+          current.length ? current : parsed.items.map((item, index) => normalizeCartLine(item, index))
+        );
+      }
+    } catch {
+      setCartDraft(null);
+    }
+  }, [cartDraftStorageKey]);
 
   const themeStyle = useMemo(
     () => {
@@ -384,11 +547,35 @@ export default function StorePage() {
     return filterPromos(promos, query);
   }, [promos, search]);
 
+  const fallbackTrending = useMemo(
+    () =>
+      menu.slice(0, 3).map((item, index) => ({
+        ...item,
+        trend: {
+          rank: index + 1,
+          soldLast7Days: 0,
+          soldPrevious7Days: 0,
+          soldAllTime: 0,
+          trendDelta: 0,
+          trendPercent: 0,
+          lastOrderedAt: null,
+          lastOrderedLabel: "Aun sin ventas",
+          rankingBasis: "menuFallback",
+        },
+      })),
+    [menu]
+  );
+
+  const filteredTrending = useMemo(() => {
+    const query = search.trim().toLowerCase();
+    return filterTrendingItems(trending.length ? trending : fallbackTrending, query);
+  }, [fallbackTrending, search, trending]);
+
   const visibleMenu = useMemo(() => {
     if (activeTab === PROMOS_TAB || activeTab === UPCOMING_TAB) return [];
 
     if (activeTab === TRENDING_TAB) {
-      return [...baseFilteredMenu].slice(0, 12);
+      return [];
     }
 
     return baseFilteredMenu.filter((item) => item.category === activeTab);
@@ -499,20 +686,292 @@ export default function StorePage() {
       utilityPills,
     });
   }, [deliveryLabel, deliveryMetaLabel, partner, store, utilityPills]);
-  const activeProductsCount = visibleMenu.length;
-  const cartCount = 0;
-  const cartTotal = 0;
+
+  const selectedProduct = useMemo(() => {
+    if (!selectedProductId) return null;
+
+    const allProducts = [
+      ...menu,
+      ...trending,
+      ...upcoming,
+    ];
+
+    return allProducts.find(
+      (item) => Number(item.pizzaId) === Number(selectedProductId)
+    ) || null;
+  }, [menu, selectedProductId, trending, upcoming]);
+
+  const selectedProductSizes = useMemo(
+    () => getAvailableSizes(selectedProduct),
+    [selectedProduct]
+  );
+
+  const selectedBasePrice = selectedProduct
+    ? priceForSize(
+        selectedProduct.priceBySize,
+        productSelection.size || selectedProductSizes[0] || "M"
+      )
+    : 0;
+
+  const selectedExtras = useMemo(
+    () =>
+      extrasAvail
+        .filter((extra) => productSelection.extras[extra.ingredientId])
+        .map((extra) => ({
+          id: extra.ingredientId,
+          name: extra.name || extra.ingredientName || "Extra",
+          price: priceForExtraSize(extra, productSelection.size),
+        })),
+    [extrasAvail, productSelection.extras, productSelection.size]
+  );
+
+  const selectedExtrasTotal = selectedExtras.reduce(
+    (sum, extra) => sum + num(extra.price),
+    0
+  );
+  const selectedUnitTotal = selectedBasePrice + selectedExtrasTotal;
+  const selectedLineTotal = selectedUnitTotal * Number(productSelection.qty || 1);
+  const productModalReady = Boolean(selectedProduct && productSelection.size);
+  const selectedProductAllergens = useMemo(
+    () => getProductAllergens(selectedProduct),
+    [selectedProduct]
+  );
+  const sortedExtras = useMemo(
+    () => [...extrasAvail].sort((left, right) => num(right.price) - num(left.price)),
+    [extrasAvail]
+  );
+  const visibleExtras = showAllExtras ? sortedExtras : sortedExtras.slice(0, 3);
+
+  useEffect(() => {
+    if (!selectedProduct || !productModalOpen) return;
+
+    const sizes = getAvailableSizes(selectedProduct);
+    setProductSelection((current) => {
+      if (current.size && sizes.includes(current.size)) return current;
+      return {
+        ...current,
+        size: sizes.length === 1 ? sizes[0] : "",
+      };
+    });
+  }, [productModalOpen, selectedProduct]);
+
+  useEffect(() => {
+    if (!selectedProduct?.categoryId || !productModalOpen) {
+      setExtrasAvail([]);
+      return;
+    }
+
+    const loadExtras = async () => {
+      try {
+        setExtrasLoading(true);
+        const params = new URLSearchParams({
+          categoryId: String(selectedProduct.categoryId),
+          storeId: String(store?.id || ""),
+        });
+        const data = await api.get(`/api/ingredient-extras?${params.toString()}`);
+        setExtrasAvail(Array.isArray(data) ? data : []);
+      } catch (err) {
+        console.error(err);
+        setExtrasAvail([]);
+      } finally {
+        setExtrasLoading(false);
+      }
+    };
+
+    loadExtras();
+  }, [productModalOpen, selectedProduct?.categoryId, store?.id]);
+
+  const openProductModal = (item) => {
+    const sizes = getAvailableSizes(item);
+    setSelectedProductId(item.pizzaId);
+    setProductSelection({
+      size: sizes.length === 1 ? sizes[0] : "",
+      qty: 1,
+      extras: {},
+    });
+    setShowAllExtras(false);
+    setProductModalOpen(true);
+  };
+
+  const addProductLine = () => {
+    if (!selectedProduct || !productSelection.size) return;
+
+    const line = {
+      cartLineId: `${selectedProduct.pizzaId}-${Date.now()}`,
+      pizzaId: selectedProduct.pizzaId,
+      name: selectedProduct.name,
+      category: selectedProduct.category,
+      size: productSelection.size,
+      qty: Number(productSelection.qty || 1),
+      price: selectedBasePrice,
+      extras: selectedExtras,
+      subtotal: selectedLineTotal,
+      image: selectedProduct.image || "",
+    };
+
+    setCart((current) => [...current, line]);
+    setCartDraft(null);
+    try {
+      window.localStorage.removeItem(cartDraftStorageKey);
+    } catch {
+      // Ignore storage cleanup failures.
+    }
+    setProductModalOpen(false);
+    setCartOpen(true);
+  };
+
+  const decProductQty = () => {
+    setProductSelection((current) => ({
+      ...current,
+      qty: Math.max(1, Number(current.qty || 1) - 1),
+    }));
+  };
+
+  const incProductQty = () => {
+    const stockMax =
+      selectedProduct?.stock == null ? 12 : Math.max(1, Number(selectedProduct.stock));
+    const max = Math.min(12, stockMax || 12);
+    setProductSelection((current) => ({
+      ...current,
+      qty: Math.min(max, Number(current.qty || 1) + 1),
+    }));
+  };
+
+  const toggleProductExtra = (ingredientId) => {
+    setProductSelection((current) => ({
+      ...current,
+      extras: {
+        ...current.extras,
+        [ingredientId]: !current.extras[ingredientId],
+      },
+    }));
+  };
+
+  const activeProductsCount =
+    activeTab === TRENDING_TAB ? filteredTrending.length : visibleMenu.length;
+  const cartCount = useMemo(
+    () => cart.reduce((sum, item) => sum + getCartLineQty(item), 0),
+    [cart]
+  );
+  const cartTotal = cart.reduce((sum, item) => sum + num(item.subtotal), 0);
+  const bootsPreviewPosition = 11;
+  const quoteCurrency = bootsQuote?.currency || partner?.currency || "EUR";
   const incentiveMessage =
     activeTab === PROMOS_TAB
       ? `${filteredPromos.length} promo${filteredPromos.length === 1 ? "" : "s"} activa${filteredPromos.length === 1 ? "" : "s"}`
       : activeTab === UPCOMING_TAB
       ? `${filteredUpcoming.length} lanzamiento${filteredUpcoming.length === 1 ? "" : "s"} en camino`
+      : activeTab === TRENDING_TAB
+      ? filteredTrending.length
+        ? `Top ${filteredTrending.length} pizzas con mas senales de venta en esta tienda`
+        : "Trending se activa cuando la tienda acumule ventas"
       : activeProductsCount > 0
       ? `Tu siguiente incentivo puede activarse con ${Math.min(
           activeProductsCount,
           3
         )} elecciones mas en ${activeTabLabel.toLowerCase()}`
       : "Activa una categoria para descubrir ofertas y combinaciones";
+
+  const loadRepeatOrder = async (event) => {
+    event?.preventDefault();
+
+    const phone = repeatPhone.trim();
+    if (!phone) {
+      setRepeatMessage("Escribe el telefono usado en el pedido anterior.");
+      return;
+    }
+
+    try {
+      setRepeatLoading(true);
+      setRepeatMessage("");
+      const params = new URLSearchParams({
+        partnerId: String(partner?.id || ""),
+        storeId: String(store?.id || ""),
+        phone,
+      });
+      const data = await api.get(`/api/myorders/repeat/latest?${params.toString()}`);
+      const draft = data?.cartDraft || null;
+
+      setRepeatDraft(draft);
+      setCartDraft(draft);
+      setCart(
+        Array.isArray(draft?.items)
+          ? draft.items.map((item, index) => normalizeCartLine(item, index))
+          : []
+      );
+
+      try {
+        if (draft) {
+          window.localStorage.setItem(cartDraftStorageKey, JSON.stringify(draft));
+        }
+      } catch {
+        // The in-memory draft is enough if storage is unavailable.
+      }
+
+      setRepeatMessage(
+        draft?.sourceOrderCode
+          ? `Pedido ${draft.sourceOrderCode} listo para el carrito.`
+          : "Pedido anterior listo para el carrito."
+      );
+    } catch (err) {
+      console.error(err);
+      setRepeatDraft(null);
+      setRepeatMessage(
+        getApiErrorMessage(err, "No encontramos un pedido anterior para repetir.")
+      );
+    } finally {
+      setRepeatLoading(false);
+    }
+  };
+
+  const loadBootsQuote = async (event) => {
+    event?.preventDefault();
+
+    const orderCode = bootsCode.trim().toUpperCase();
+    if (!orderCode) {
+      setBootsMessage("Escribe el codigo del pedido para calcular el Boots.");
+      return;
+    }
+
+    try {
+      setBootsLoading(true);
+      setBootsMessage("");
+      const params = new URLSearchParams({
+        orderCode,
+        targetPosition: bootsTargetPosition,
+      });
+      const data = await api.get(`/api/myorders/boosts/quote?${params.toString()}`);
+      setBootsQuote(data?.quote || null);
+    } catch (err) {
+      console.error(err);
+      setBootsQuote(null);
+      setBootsMessage(getApiErrorMessage(err, "No se pudo calcular el Boots."));
+    } finally {
+      setBootsLoading(false);
+    }
+  };
+
+  const activateBoots = async () => {
+    const orderCode = bootsCode.trim().toUpperCase();
+    if (!orderCode) return;
+
+    try {
+      setBootsLoading(true);
+      setBootsMessage("");
+      const data = await api.post("/api/myorders/boosts/activate", {
+        orderCode,
+        targetPosition: Number(bootsTargetPosition),
+        paymentMode: "manual_mvp",
+      });
+      setBootsQuote(data?.quote || null);
+      setBootsMessage("Boots activado. El pedido sube en la cola pendiente.");
+    } catch (err) {
+      console.error(err);
+      setBootsMessage(getApiErrorMessage(err, "No se pudo activar el Boots."));
+    } finally {
+      setBootsLoading(false);
+    }
+  };
 
   if (error) {
     return (
@@ -563,7 +1022,12 @@ export default function StorePage() {
               Programar
             </button>
 
-            <button type="button" className={`lsf-cartbtn ${cartCount > 0 ? "is-active" : ""}`}>
+            <button
+              type="button"
+              className={`lsf-cartbtn ${cartCount > 0 ? "is-active" : ""}`}
+              onClick={() => setCartOpen(true)}
+              aria-label="Abrir carrito"
+            >
               <span aria-hidden="true">🛒</span>
               <span className="lsf-cartbtn__count">{cartCount}</span>
               <span className="lsf-cartbtn__total">€{cartTotal.toFixed(2)}</span>
@@ -584,42 +1048,96 @@ export default function StorePage() {
               Arma tu pizza
             </button>
 
-            <div className="sf-engineSearchRow sf-engineSearchRow--lsf">
-              <div className="sf-engineSearchWrap">
-                {!search && (
-                  <span className="sf-engineSearchTicker" aria-hidden="true">
-                    <span className="sf-engineSearchTickerTrack">
-                      <span>Buscar pizza o ingrediente, extras o sabores</span>
+            <div className="sf-lsfSearchCluster">
+              <div className="sf-engineSearchRow sf-engineSearchRow--lsf">
+                <div className="sf-engineSearchWrap">
+                  {!search && (
+                    <span className="sf-engineSearchTicker" aria-hidden="true">
+                      <span className="sf-engineSearchTickerTrack">
+                        <span>Buscar pizza o ingrediente, extras o sabores</span>
+                      </span>
                     </span>
-                  </span>
-                )}
-                <input
-                  className="sf-engineSearch"
-                  type="search"
-                  placeholder=""
-                  value={search}
-                  onChange={(event) => setSearch(event.target.value)}
-                />
-                <button type="button" className="sf-engineSearchBtn" aria-label="Buscar">
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <circle
-                      cx="11"
-                      cy="11"
-                      r="6.5"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.2"
-                    />
-                    <path
-                      d="M16 16l4 4"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.2"
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                </button>
+                  )}
+                  <input
+                    className="sf-engineSearch"
+                    type="search"
+                    placeholder=""
+                    value={search}
+                    onChange={(event) => setSearch(event.target.value)}
+                  />
+                  <button
+                    type="button"
+                    className="sf-imageSearchBtn"
+                    aria-label="Buscar por imagen en construccion"
+                    data-tooltip="En construccion"
+                    onClick={(event) => event.preventDefault()}
+                  >
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path
+                        d="M8 4H5.8A1.8 1.8 0 0 0 4 5.8V8M16 4h2.2A1.8 1.8 0 0 1 20 5.8V8M4 16v2.2A1.8 1.8 0 0 0 5.8 20H8M20 16v2.2A1.8 1.8 0 0 1 18.2 20H16"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      />
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="3.2"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      />
+                    </svg>
+                  </button>
+                  <button type="button" className="sf-engineSearchBtn" aria-label="Buscar">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <circle
+                        cx="11"
+                        cy="11"
+                        r="6.5"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.2"
+                      />
+                      <path
+                        d="M16 16l4 4"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.2"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                  </button>
+                </div>
               </div>
+
+              <button
+                type="button"
+                className={`sf-repeatOrderBtn ${cartCount > 0 ? "has-draft" : ""}`}
+                onClick={() => setRepeatOpen(true)}
+                aria-label="Repetir pedido anterior"
+                title="Repetir pedido anterior"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path
+                    d="M8 7H5v-3M5.6 7A7.2 7.2 0 1 1 4.9 14"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M9 12h6M12 9v6"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                  />
+                </svg>
+                <span>Repetir pedido</span>
+              </button>
             </div>
           </div>
 
@@ -633,6 +1151,8 @@ export default function StorePage() {
                 ? "Promos destacadas"
                 : activeTab === UPCOMING_TAB
                 ? "Coming soon"
+                : activeTab === TRENDING_TAB
+                ? "Top 3"
                 : "Disponible hoy"}
             </span>
           </div>
@@ -662,61 +1182,203 @@ export default function StorePage() {
                   <p>No hay promos visibles para esta busqueda.</p>
                 </div>
               ) : (
-                <div className="sf-engineGrid sf-engineGrid--promos">
-                  {filteredPromos.map((promo) => (
-                    <article key={promo.id} className="sf-engineMenuCard sf-engineMenuCard--promo">
-                      <div
-                        className={`sf-menuCardVisual sf-menuCardVisual--promo ${
-                          promo.image ? "has-image" : ""
-                        }`}
-                        style={
-                          promo.image
-                            ? { "--sf-promo-image": `url(${promo.image})` }
-                            : undefined
-                        }
-                      >
-                        <span className="sf-menuCardVisualBadge">Promo</span>
-                        <div className="sf-menuCardVisualTitle">{promo.title}</div>
-                      </div>
+                <div className="lsf-grid-wrap">
+                  <div className="lsf-grid lsf-grid--promos" role="list">
+                    {filteredPromos.map((promo) => {
+                      const promoFlipId = `promo-${promo.id}`;
+                      const flipped = flippedId === promoFlipId;
+                      const promoItems = Array.isArray(promo.items) ? promo.items : [];
 
-                      <div className="sf-menuCardHead">
-                        <div>
-                          <h3 className="sf-menuCardTitle">{promo.title}</h3>
-                          <div className="sf-menuCardMeta">
-                            {[formatPromoDate(promo.activeFrom), formatPromoDate(promo.expiresAt)]
-                              .filter(Boolean)
-                              .join(" - ") || "Promo activa"}
+                      return (
+                        <div
+                          key={promo.id}
+                          className={`lsf-card lsf-card--promo lsf-flip ${flipped ? "is-flipped" : ""}`}
+                          onClick={() =>
+                            setFlippedId((current) =>
+                              current === promoFlipId ? null : promoFlipId
+                            )
+                          }
+                          role="listitem"
+                        >
+                          <div className="lsf-flip__inner">
+                            <div className="lsf-flip__front">
+                              <div className={`lsf-card__image lsf-promoImage ${promo.image ? "has-image" : ""}`}>
+                                {promo.image ? (
+                                  <img src={promo.image} alt={promo.title} />
+                                ) : (
+                                  <div className="lsf-card__img is-placeholder">
+                                    <span>Promo</span>
+                                  </div>
+                                )}
+                              </div>
+
+                              <span className="lsf-promoBadge">Promo</span>
+
+                              <button
+                                type="button"
+                                className="lsf-card__addbtn"
+                                onClick={(event) => {
+                                  event.stopPropagation();
+                                }}
+                                aria-label={`Elegir promo ${promo.title}`}
+                              >
+                                Elegir
+                              </button>
+
+                              <div className="lsf-card__overlay">
+                                <div className="lsf-card__ticker">
+                                  <div className={`lsf-card__name ${tick ? "is-ticking" : ""}`}>
+                                    {promo.title}
+                                  </div>
+                                </div>
+                                <div className={`lsf-card__price ${tick ? "is-ticking" : ""}`}>
+                                  EUR {Number(promo.totalPrice || 0).toFixed(2)}
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="lsf-flip__back">
+                              <div className="lsf-flip-desc lsf-promoFlipDesc">
+                                <div className="lsf-flip-title">Contenido</div>
+                                <div className="lsf-promoFlipList">
+                                  {promoItems.length ? (
+                                    promoItems.map((item, index) => (
+                                      <span key={`${promo.id}-${item.pizzaId || item.name || index}`}>
+                                        {item.quantity || 1}x {item.name}
+                                        {item.size ? ` ${item.size}` : ""}
+                                      </span>
+                                    ))
+                                  ) : (
+                                    <span>Promo activa</span>
+                                  )}
+                                </div>
+                                <div className="lsf-flip-closer">
+                                  {[formatPromoDate(promo.activeFrom), formatPromoDate(promo.expiresAt)]
+                                    .filter(Boolean)
+                                    .join(" - ") || "Oferta limitada"}
+                                </div>
+                              </div>
+                            </div>
                           </div>
                         </div>
-                        <span className="sf-promoPrice">
-                          EUR{Number(promo.totalPrice || 0).toFixed(2)}
-                        </span>
-                      </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )
+            ) : activeTab === TRENDING_TAB ? (
+              filteredTrending.length === 0 ? (
+                <div className="sf-engineEmptyState">
+                  <strong>Trending</strong>
+                  <p>No hay pizzas trending visibles para esta busqueda.</p>
+                </div>
+              ) : (
+                <div className="lsf-grid-wrap">
+                  <div className="lsf-grid lsf-grid--trending" role="list">
+                    {filteredTrending.map((item) => {
+                      const flipped = flippedId === item.pizzaId;
+                      const image = item.image || "";
+                      const sizes = Object.keys(item.priceBySize || {}).filter(
+                        (size) => item.priceBySize?.[size] !== "" && item.priceBySize?.[size] != null
+                      );
+                      const basePrice = priceForSize(item.priceBySize, sizes[0] || "M");
+                      const { line, closer } = buildPizzaLine(item);
+                      const trend = item.trend || {};
+                      const soldWeek = Number(trend.soldLast7Days || 0);
+                      const soldAllTime = Number(trend.soldAllTime || 0);
+                      const rank = Number(trend.rank || 0) || 1;
+                      const trendPercent = Number(trend.trendPercent || 0);
+                      const trendBasisLabel =
+                        trend.rankingBasis === "last7Days"
+                          ? "Ultimos 7 dias"
+                          : trend.rankingBasis === "historicalFallback"
+                          ? "Historico tienda"
+                          : "Esperando ventas";
 
-                      {promo.description && (
-                        <p className="sf-promoDescription">{promo.description}</p>
-                      )}
+                      return (
+                        <div
+                          key={item.pizzaId}
+                          className="lsf-trendingItem"
+                          role="listitem"
+                        >
+                          <div
+                            className={`lsf-card lsf-card--trending lsf-flip ${flipped ? "is-flipped" : ""}`}
+                            onClick={() =>
+                              setFlippedId((current) =>
+                                current === item.pizzaId ? null : item.pizzaId
+                              )
+                            }
+                          >
+                            <div className="lsf-flip__inner">
+                              <div className="lsf-flip__front">
+                                <div className="lsf-card__image">
+                                  {image ? (
+                                    <img src={image} alt={item.name} />
+                                  ) : (
+                                    <div className="lsf-card__img is-placeholder">
+                                      <span>Pizza</span>
+                                    </div>
+                                  )}
+                                </div>
 
-                      <div>
-                        <div className="sf-sectionLabel">Contenido</div>
-                        <div className="sf-promoContentList">
-                          {(promo.items || []).map((item) => (
-                            <span key={`${promo.id}-${item.pizzaId}`}>
-                              {item.quantity || 1}x {item.name}
-                              {item.size ? ` ${item.size}` : ""}
-                            </span>
-                          ))}
+                                <div className="lsf-trendingRank">
+                                  <span>#{rank}</span>
+                                  <strong>Trending</strong>
+                                </div>
+
+                                <button
+                                  type="button"
+                                  className="lsf-card__addbtn"
+                                  onClick={(event) => {
+                                    event.stopPropagation();
+                                    openProductModal(item);
+                                  }}
+                                  aria-label={`Comprar ${item.name}`}
+                                >
+                                  Comprar
+                                </button>
+
+                                <div className="lsf-card__overlay">
+                                  <div className="lsf-card__ticker">
+                                    <div className={`lsf-card__name ${tick ? "is-ticking" : ""}`}>
+                                      {item.name}
+                                    </div>
+                                  </div>
+                                  <div className={`lsf-card__price ${tick ? "is-ticking" : ""}`}>
+                                    EUR {basePrice.toFixed(2)}
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="lsf-flip__back">
+                                <div className="lsf-flip-desc">
+                                  <div className="lsf-flip-title">Tu crush sin filtro</div>
+                                  <div className="lsf-flip-line">{line}</div>
+                                  <div className="lsf-flip-closer">{closer}</div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="lsf-trendingPanel">
+                            <div className="lsf-trendingMainKpi">
+                              <span>{trendBasisLabel}</span>
+                              <strong>{soldWeek}</strong>
+                              <small>vendidas esta semana</small>
+                            </div>
+
+                            <div className="lsf-trendingKpiRow">
+                              <span className={trendPercent >= 0 ? "is-up" : "is-down"}>
+                                {formatTrendPercent(trendPercent)} vs semana ant.
+                              </span>
+                              <span>{soldAllTime} historicas</span>
+                              <span>{trend.lastOrderedLabel || "Sin pedidos recientes"}</span>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-
-                      <div className="sf-menuCardFooter">
-                        <span className="sf-menuCardSignal">Oferta limitada</span>
-                        <button type="button" className="sf-menuCardCta">
-                          Elegir promo
-                        </button>
-                      </div>
-                    </article>
-                  ))}
+                      );
+                    })}
+                  </div>
                 </div>
               )
             ) : activeTab === UPCOMING_TAB ? (
@@ -836,6 +1498,7 @@ export default function StorePage() {
                               className="lsf-card__addbtn"
                               onClick={(event) => {
                                 event.stopPropagation();
+                                openProductModal(item);
                               }}
                               aria-label={`Comprar ${item.name}`}
                             >
@@ -844,10 +1507,12 @@ export default function StorePage() {
 
                             <div className="lsf-card__overlay">
                               <div className="lsf-card__ticker">
-                                <div className="lsf-card__name">{item.name}</div>
+                                <div className={`lsf-card__name ${tick ? "is-ticking" : ""}`}>
+                                  {item.name}
+                                </div>
                               </div>
                               <div className={`lsf-card__price ${tick ? "is-ticking" : ""}`}>
-                                €{basePrice.toFixed(2)}
+                                EUR {basePrice.toFixed(2)}
                               </div>
                             </div>
                           </div>
@@ -905,12 +1570,328 @@ export default function StorePage() {
             />
           </label>
 
-          <div className="sf-footerStatus">
-            <span className="sf-footerStatusLabel">Motor activo</span>
-            <strong>{activeTabLabel}</strong>
-          </div>
+          <button
+            type="button"
+            className="sf-footerStatus sf-footerStatus--boots"
+            onClick={() => setBootsOpen(true)}
+          >
+            <span className="sf-bootsCounter" aria-label={`Posicion ${bootsPreviewPosition} en espera`}>
+              <span>POS</span>
+              <strong>{bootsPreviewPosition}</strong>
+            </span>
+            <span className="sf-bootsTicker" aria-label="Boots para subir posicion en la cola">
+              <span className="sf-bootsTickerTrack">
+                <span>Boost</span>
+                <span>Speedy</span>
+                <span>Turbo</span>
+              </span>
+            </span>
+          </button>
         </div>
       </div>
+
+      {productModalOpen && (
+        <div className="sf-modalOverlay" onClick={() => setProductModalOpen(false)}>
+          <div
+            className="sf-modalCard sf-productModal"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="sf-cartModalHead">
+              <div>
+                <span>Producto</span>
+                <h3>{selectedProduct?.name || "Pizza"}</h3>
+              </div>
+              <button
+                type="button"
+                className="sf-modalCloseBtn"
+                onClick={() => setProductModalOpen(false)}
+                aria-label="Cerrar"
+              >
+                x
+              </button>
+            </div>
+
+            {selectedProduct && (
+              <div className="sf-productPicker">
+                <div className="sf-productPickerHero">
+                  {selectedProduct.image ? (
+                    <img src={selectedProduct.image} alt={selectedProduct.name} />
+                  ) : (
+                    <div className="sf-productPickerPlaceholder">Pizza</div>
+                  )}
+                </div>
+
+                <div className="sf-productPickerDesc">
+                  {(() => {
+                    const { line, closer } = buildPizzaLine(selectedProduct);
+                    return (
+                      <>
+                        <strong>Tu crush sin filtro</strong>
+                        <span>{line} {closer}</span>
+                      </>
+                    );
+                  })()}
+                </div>
+
+                <div className="sf-productPickerNotice">
+                  {selectedProductAllergens.length
+                    ? `Alergenos: ${selectedProductAllergens.join(", ")}.`
+                    : "Sin alergenos declarados en los ingredientes de esta pizza."}
+                </div>
+
+                <div className="sf-productPickerRow">
+                  <span>Qty</span>
+                  <div className="sf-qtyControl">
+                    <button
+                      type="button"
+                      onClick={decProductQty}
+                      disabled={Number(productSelection.qty || 1) <= 1}
+                    >
+                      -
+                    </button>
+                    <strong>{productSelection.qty}</strong>
+                    <button type="button" onClick={incProductQty}>+</button>
+                  </div>
+                </div>
+
+                <div className="sf-productPickerRow sf-productPickerRow--stack">
+                  <span>Size</span>
+                  <div className="sf-sizeOptions">
+                    {selectedProductSizes.map((size) => {
+                      const active = productSelection.size === size;
+                      const price = priceForSize(selectedProduct.priceBySize, size);
+
+                      return (
+                        <button
+                          key={size}
+                          type="button"
+                          className={`sf-sizeChip ${active ? "is-active" : ""}`}
+                          onClick={() =>
+                            setProductSelection((current) => ({
+                              ...current,
+                              size,
+                            }))
+                          }
+                        >
+                          <span>{size}</span>
+                          <strong>EUR {price.toFixed(2)}</strong>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="sf-productPickerRow sf-productPickerRow--stack">
+                  <span>Extras</span>
+                  {extrasLoading ? (
+                    <div className="sf-mutedLine">Cargando extras...</div>
+                  ) : sortedExtras.length === 0 ? (
+                    <div className="sf-mutedLine">No hay extras para esta pizza.</div>
+                  ) : (
+                    <div className="sf-extrasList">
+                      {visibleExtras.map((extra) => {
+                        const checked = Boolean(productSelection.extras[extra.ingredientId]);
+                        const price = priceForExtraSize(extra, productSelection.size);
+
+                        return (
+                          <label key={extra.ingredientId} className="sf-extraItem">
+                            <input
+                              type="checkbox"
+                              checked={checked}
+                              onChange={() => toggleProductExtra(extra.ingredientId)}
+                            />
+                            <span>{extra.name || extra.ingredientName}</span>
+                            <strong>+EUR {price.toFixed(2)}</strong>
+                          </label>
+                        );
+                      })}
+
+                      {sortedExtras.length > 3 && (
+                        <button
+                          type="button"
+                          className="sf-showMoreBtn"
+                          onClick={() => setShowAllExtras((current) => !current)}
+                        >
+                          {showAllExtras
+                            ? "Mostrar menos"
+                            : `Mostrar ${sortedExtras.length - 3} mas`}
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                <div className="sf-productPickerActions">
+                  <button
+                    type="button"
+                    className="sf-secondaryBtn"
+                    onClick={() => setProductModalOpen(false)}
+                  >
+                    Continue
+                  </button>
+                  <button
+                    type="button"
+                    className="sf-primaryBtn"
+                    disabled={!productModalReady}
+                    onClick={addProductLine}
+                  >
+                    {productModalReady
+                      ? `Add to cart - EUR ${selectedLineTotal.toFixed(2)}`
+                      : "Selecciona size"}
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {cartOpen && (
+        <div className="sf-modalOverlay" onClick={() => setCartOpen(false)}>
+          <div
+            className="sf-modalCard sf-cartModal"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="sf-cartModalHead">
+              <div>
+                <span>Carrito</span>
+                <h3>EUR {cartTotal.toFixed(2)}</h3>
+              </div>
+              <button
+                type="button"
+                className="sf-modalCloseBtn"
+                onClick={() => setCartOpen(false)}
+                aria-label="Cerrar"
+              >
+                x
+              </button>
+            </div>
+
+            {cart.length === 0 ? (
+              <div className="sf-cartEmpty">Carrito vacio.</div>
+            ) : (
+              <>
+                <div className="sf-cartList">
+                  {cart.map((line, index) => (
+                    <div key={line.cartLineId || index} className="sf-cartRow">
+                      <div className="sf-cartRowMain">
+                        <strong>{line.name}</strong>
+                        <span>
+                          {line.size} x {line.qty}
+                        </span>
+                        {line.extras?.length > 0 && (
+                          <small>
+                            + {line.extras.map((extra) => extra.name).join(", ")}
+                          </small>
+                        )}
+                      </div>
+                      <div className="sf-cartRowSide">
+                        <strong>EUR {num(line.subtotal).toFixed(2)}</strong>
+                        <button
+                          type="button"
+                          className="sf-modalCloseBtn sf-cartRemoveBtn"
+                          onClick={() =>
+                            setCart((current) =>
+                              current.filter((_, lineIndex) => lineIndex !== index)
+                            )
+                          }
+                          aria-label={`Eliminar ${line.name}`}
+                        >
+                          x
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="sf-cartFoot">
+                  <div className="sf-cartFootLine">
+                    <span>Subtotal</span>
+                    <strong>EUR {cartTotal.toFixed(2)}</strong>
+                  </div>
+                  <div className="sf-cartFootLine sf-cartFootLine--total">
+                    <span>Total</span>
+                    <strong>EUR {cartTotal.toFixed(2)}</strong>
+                  </div>
+                  <button
+                    type="button"
+                    className="sf-primaryBtn"
+                    onClick={() => setCartOpen(false)}
+                  >
+                    Confirmar carrito
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
+      {repeatOpen && (
+        <div className="sf-modalOverlay" onClick={() => setRepeatOpen(false)}>
+          <div className="sf-modalCard sf-repeatModal" onClick={(event) => event.stopPropagation()}>
+            <h3>Repetir pedido</h3>
+            <p>
+              Buscamos el ultimo pedido con tu telefono y lo dejamos preparado
+              como borrador para el carrito.
+            </p>
+
+            <form className="sf-repeatForm" onSubmit={loadRepeatOrder}>
+              <label>
+                <span>Telefono</span>
+                <input
+                  type="tel"
+                  value={repeatPhone}
+                  onChange={(event) => {
+                    setRepeatPhone(event.target.value);
+                    setRepeatMessage("");
+                  }}
+                  placeholder="+34 600 000 000"
+                />
+              </label>
+              <button type="submit" className="sf-primaryBtn" disabled={repeatLoading}>
+                {repeatLoading ? "Buscando..." : "Repetir"}
+              </button>
+            </form>
+
+            {repeatDraft && (
+              <div className="sf-repeatSummary">
+                <span>{repeatDraft.sourceOrderCode}</span>
+                <strong>
+                  {cartCount} producto{cartCount === 1 ? "" : "s"} - {formatMoney(cartTotal, repeatDraft.currency)}
+                </strong>
+              </div>
+            )}
+
+            {repeatMessage && <div className="sf-bootsMessage">{repeatMessage}</div>}
+
+            <div className="sf-bootsActions">
+              <button type="button" className="sf-secondaryBtn" onClick={() => setRepeatOpen(false)}>
+                Cerrar
+              </button>
+              {cartDraft && (
+                <button
+                  type="button"
+                  className="sf-secondaryBtn"
+                  onClick={() => {
+                    setCartDraft(null);
+                    setCart([]);
+                    setRepeatDraft(null);
+                    try {
+                      window.localStorage.removeItem(cartDraftStorageKey);
+                    } catch {
+                      // Nothing to clean when storage is unavailable.
+                    }
+                    setRepeatMessage("Borrador de carrito eliminado.");
+                  }}
+                >
+                  Borrar borrador
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {scheduleOpen && (
         <div className="sf-modalOverlay" onClick={() => setScheduleOpen(false)}>
@@ -946,6 +1927,92 @@ export default function StorePage() {
             >
               Cerrar
             </button>
+          </div>
+        </div>
+      )}
+
+      {bootsOpen && (
+        <div className="sf-modalOverlay" onClick={() => setBootsOpen(false)}>
+          <div className="sf-modalCard sf-bootsModal" onClick={(event) => event.stopPropagation()}>
+            <div className="sf-bootsPulse" aria-hidden="true">!!</div>
+            <h3>Boots de emergencia</h3>
+            <p>
+              Activa prioridad sobre un pedido pendiente y empujalo hacia los
+              primeros puestos de la cola de esta tienda.
+            </p>
+
+            <form className="sf-bootsForm" onSubmit={loadBootsQuote}>
+              <label>
+                <span>Codigo de pedido</span>
+                <input
+                  type="text"
+                  value={bootsCode}
+                  onChange={(event) => {
+                    setBootsCode(event.target.value.toUpperCase());
+                    setBootsQuote(null);
+                  }}
+                  placeholder="VOLTA-1234"
+                />
+              </label>
+
+              <label>
+                <span>Posicion destino</span>
+                <select
+                  value={bootsTargetPosition}
+                  onChange={(event) => {
+                    setBootsTargetPosition(event.target.value);
+                    setBootsQuote(null);
+                  }}
+                >
+                  <option value="1">Numero 1</option>
+                  <option value="2">Numero 2</option>
+                  <option value="3">Numero 3</option>
+                </select>
+              </label>
+
+              <button type="submit" className="sf-primaryBtn" disabled={bootsLoading}>
+                {bootsLoading ? "Calculando..." : "Calcular Boots"}
+              </button>
+            </form>
+
+            {bootsQuote && (
+              <div className="sf-bootsQuote">
+                <div>
+                  <span>Ahora</span>
+                  <strong>#{bootsQuote.currentPosition}</strong>
+                </div>
+                <div>
+                  <span>Destino</span>
+                  <strong>#{bootsQuote.targetPosition}</strong>
+                </div>
+                <div>
+                  <span>Salto</span>
+                  <strong>{bootsQuote.positionsToJump}</strong>
+                </div>
+                <div>
+                  <span>Precio</span>
+                  <strong>{formatMoney(bootsQuote.amount, quoteCurrency)}</strong>
+                </div>
+              </div>
+            )}
+
+            {bootsMessage && <div className="sf-bootsMessage">{bootsMessage}</div>}
+
+            <div className="sf-bootsActions">
+              <button type="button" className="sf-secondaryBtn" onClick={() => setBootsOpen(false)}>
+                Cerrar
+              </button>
+              <button
+                type="button"
+                className="sf-primaryBtn sf-bootsActivate"
+                onClick={activateBoots}
+                disabled={!bootsQuote || bootsQuote.positionsToJump <= 0 || bootsLoading}
+              >
+                {bootsQuote
+                  ? `Activar ${formatMoney(bootsQuote.amount, quoteCurrency)}`
+                  : "Activar Boots"}
+              </button>
+            </div>
           </div>
         </div>
       )}

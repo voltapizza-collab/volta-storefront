@@ -334,7 +334,7 @@ export default function MyOrdersModule({ partner = null }) {
                 </thead>
                 <tbody>
                   {orders.map((order) => (
-                    <tr key={order.id}>
+                    <tr key={order.id} className={order.boost?.active ? "gmo-orderBoosted" : ""}>
                       <td>
                         <button
                           type="button"
@@ -343,6 +343,11 @@ export default function MyOrdersModule({ partner = null }) {
                         >
                           {order.code}
                         </button>
+                        {order.boost?.active && (
+                          <span className="gmo-boostBadge">
+                            Boots #{order.queuePosition || order.boost.targetPosition || 1}
+                          </span>
+                        )}
                       </td>
                       <td>{formatDateTime(order.date || order.createdAt)}</td>
                       <td>
@@ -445,6 +450,16 @@ export default function MyOrdersModule({ partner = null }) {
                 <span>Tienda</span>
                 <strong>{selectedOrder.storeName}</strong>
               </div>
+              {selectedOrder.boost?.active && (
+                <div className="gmo-ticketLine gmo-ticketLine--boost">
+                  <span>Boots</span>
+                  <strong>
+                    Prioridad #{selectedOrder.queuePosition || selectedOrder.boost.targetPosition || 1}
+                    {" · "}
+                    {formatMoney(selectedOrder.boost.amount, selectedOrder.currency || currency)}
+                  </strong>
+                </div>
+              )}
               <div className="gmo-ticketLine">
                 <span>Cliente</span>
                 <strong>{selectedOrder.customerData?.name || "-"}</strong>

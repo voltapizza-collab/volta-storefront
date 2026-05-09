@@ -5,8 +5,10 @@ import "../../styles/CategoriesModule.css";
 export default function CategoriesModule() {
   const [categories, setCategories] = useState([]);
   const [newCategoryName, setNewCategoryName] = useState("");
+  const [newCategoryCustomizable, setNewCategoryCustomizable] = useState(false);
   const [editingCategoryId, setEditingCategoryId] = useState(null);
   const [editingName, setEditingName] = useState("");
+  const [editingCustomizable, setEditingCustomizable] = useState(false);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
 
@@ -54,8 +56,12 @@ export default function CategoriesModule() {
 
     try {
       setSaving(true);
-      await api.post("/api/categories", { name: trimmedName });
+      await api.post("/api/categories", {
+        name: trimmedName,
+        customizable: newCategoryCustomizable,
+      });
       setNewCategoryName("");
+      setNewCategoryCustomizable(false);
       await loadCategories();
     } catch (err) {
       console.error(err);
@@ -68,11 +74,13 @@ export default function CategoriesModule() {
   const startEditing = (category) => {
     setEditingCategoryId(category.id);
     setEditingName(category.name || "");
+    setEditingCustomizable(Boolean(category.customizable));
   };
 
   const cancelEditing = () => {
     setEditingCategoryId(null);
     setEditingName("");
+    setEditingCustomizable(false);
   };
 
   const saveCategory = async (category) => {
@@ -99,6 +107,7 @@ export default function CategoriesModule() {
       setSaving(true);
       const { data } = await api.patch(`/api/categories/${category.id}`, {
         name: trimmedName,
+        customizable: editingCustomizable,
       });
 
       setCategories((prev) =>
@@ -163,6 +172,16 @@ export default function CategoriesModule() {
             disabled={saving}
           />
 
+          <label className="gmc-customizeCheck">
+            <input
+              type="checkbox"
+              checked={newCategoryCustomizable}
+              onChange={(e) => setNewCategoryCustomizable(e.target.checked)}
+              disabled={saving}
+            />
+            Personalizable
+          </label>
+
           <button
             type="button"
             className="gmc-createBtn"
@@ -201,8 +220,23 @@ export default function CategoriesModule() {
                     <div className="gmc-rowName">{category.name}</div>
                   )}
                   <div className="gmc-rowMeta">
-                    Global catalog only
+                    {category.customizable
+                      ? "Personalizable en armado"
+                      : "Catalogo global"}
                   </div>
+                  {editingCategoryId === category.id && (
+                    <label className="gmc-customizeCheck gmc-customizeCheck--inline">
+                      <input
+                        type="checkbox"
+                        checked={editingCustomizable}
+                        onChange={(e) =>
+                          setEditingCustomizable(e.target.checked)
+                        }
+                        disabled={saving}
+                      />
+                      Personalizable
+                    </label>
+                  )}
                 </div>
 
                 <div className="gmc-actions">

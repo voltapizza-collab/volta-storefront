@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../services/api";
 import "../styles/Storefront.css";
@@ -12,6 +12,21 @@ import {
 const TRENDING_TAB = "__TRENDING__";
 const PROMOS_TAB = "__PROMOS__";
 const UPCOMING_TAB = "__UPCOMING__";
+const BOOST_PRICE_PER_POSITION = 0.2;
+const BOOST_MAX_OPTIONS = 3;
+const HALF_CATEGORY_ID = 3;
+const CUSTOM_BASE_PRICE_FACTOR = 0.72;
+const CUSTOM_CATEGORY_ORDER = [
+  "SALSAS",
+  "QUESOS",
+  "FIAMBRES",
+  "CARNES",
+  "PESCADOS",
+  "DEL MAR",
+  "VEGETALES",
+  "SETAS",
+  "COMPLEMENTOS",
+];
 
 function formatCountdown(totalMinutes) {
   if (totalMinutes <= 0) return "Cerrando ahora";
@@ -159,6 +174,8 @@ const priceForSize = (priceBySize = {}, size = "M") => {
   return 0;
 };
 
+const roundMoney = (value) => Math.round(Number(value || 0) * 100) / 100;
+
 const capWords = (value = "") => {
   const lowerWords = ["de", "del", "y", "con", "al"];
 
@@ -180,6 +197,13 @@ const joinWithY = (items = []) => {
   if (clean.length === 1) return clean[0];
   if (clean.length === 2) return `${clean[0]} y ${clean[1]}`;
   return `${clean.slice(0, -1).join(", ")} y ${clean[clean.length - 1]}`;
+};
+
+const formatCustomBuilderSubject = (categoryName) => {
+  const clean = String(categoryName || "").trim();
+  if (!clean) return "producto";
+
+  return clean;
 };
 
 const seededPick = (seed, items) => {
@@ -272,9 +296,100 @@ const priceForExtraSize = (extra, size) => {
   return num(extra?.price);
 };
 
+const getCustomIngredientPrice = (ingredient) => {
+  const base = num(ingredient?.basePrice ?? ingredient?.costPrice);
+  const quantityMultiplier = ingredient?.quantity === "DOUBLE" ? 2 : 1;
+  const placementMultiplier = ingredient?.placement === "FULL" ? 1 : 0.5;
+
+  if (!ingredient?.placement) return 0;
+  return base * quantityMultiplier * placementMultiplier;
+};
+
 const getCartLineQty = (line) => {
   const qty = Number(line?.qty ?? line?.quantity ?? 1);
   return Number.isFinite(qty) && qty > 0 ? qty : 1;
+};
+
+const normalizeRepeatPhoneInput = (value) => {
+  let digits = String(value || "").replace(/\D/g, "");
+
+  if (digits.startsWith("0034") && digits.length > 9) {
+    digits = digits.slice(4);
+  }
+
+  if (digits.startsWith("34") && digits.length === 11) {
+    digits = digits.slice(2);
+  }
+
+  return digits.slice(0, 9);
+};
+
+const normalizeSearchText = (value = "") =>
+  String(value || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim();
+
+const isPizzaLikeCategory = (value = "") => {
+  const normalized = normalizeSearchText(value);
+  return normalized.includes("pizza");
+};
+
+const getCustomCategoryKey = (item) => {
+  const categoryId = Number(item?.categoryId);
+  if (Number.isInteger(categoryId) && categoryId > 0) {
+    return `category:${categoryId}`;
+  }
+
+  return `category-name:${normalizeSearchText(item?.category || "productos")}`;
+};
+
+const getLowestPriceBySize = (items = []) => {
+  const result = {};
+
+  items.forEach((item) => {
+    getAvailableSizes(item).forEach((size) => {
+      const price = priceForSize(item.priceBySize, size);
+      if (price <= 0) return;
+
+      if (!result[size] || price < result[size]) {
+        result[size] = price;
+      }
+    });
+  });
+
+  return result;
+};
+
+const isHalfPizzaCandidate = (item) => {
+  const category = normalizeSearchText(item?.category);
+  const name = normalizeSearchText(item?.name);
+  const type = normalizeSearchText(item?.type);
+  const blockedWords = [
+    "bebida",
+    "drink",
+    "refresco",
+    "postre",
+    "dessert",
+    "entrante",
+    "extra",
+    "complemento",
+    "salsa",
+  ];
+
+  if (blockedWords.some((word) => category.includes(word) || type.includes(word))) {
+    return false;
+  }
+
+  const sizes = getAvailableSizes(item);
+  if (!sizes.length) return false;
+
+  return (
+    category.includes("pizza") ||
+    name.includes("pizza") ||
+    Boolean(item?.categoryId)
+  );
 };
 
 const normalizeCartLine = (line, index = 0) => {
@@ -363,7 +478,7 @@ export default function StorePage() {
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
   const [couponCode, setCouponCode] = useState("");
-  const [activeTab, setActiveTab] = useState(TRENDING_TAB);
+  const [activeTab, setActiveTab] = useState("");
   const [scheduleOpen, setScheduleOpen] = useState(false);
   const [reservationOpen, setReservationOpen] = useState(false);
   const [repeatOpen, setRepeatOpen] = useState(false);
@@ -371,7 +486,6 @@ export default function StorePage() {
   const [repeatDraft, setRepeatDraft] = useState(null);
   const [repeatMessage, setRepeatMessage] = useState("");
   const [repeatLoading, setRepeatLoading] = useState(false);
-  const [cartDraft, setCartDraft] = useState(null);
   const [cart, setCart] = useState([]);
   const [cartOpen, setCartOpen] = useState(false);
   const [productModalOpen, setProductModalOpen] = useState(false);
@@ -384,12 +498,32 @@ export default function StorePage() {
   const [extrasAvail, setExtrasAvail] = useState([]);
   const [extrasLoading, setExtrasLoading] = useState(false);
   const [showAllExtras, setShowAllExtras] = useState(false);
+  const [halfModalOpen, setHalfModalOpen] = useState(false);
+  const [halfAIndex, setHalfAIndex] = useState(0);
+  const [halfBIndex, setHalfBIndex] = useState(1);
+  const [halfQty, setHalfQty] = useState(1);
+  const [halfSize, setHalfSize] = useState("");
+  const [halfExtras, setHalfExtras] = useState({ A: {}, B: {} });
+  const [halfExtrasAvail, setHalfExtrasAvail] = useState([]);
+  const [halfExtrasLoading, setHalfExtrasLoading] = useState(false);
+  const [openHalfExtrasA, setOpenHalfExtrasA] = useState(false);
+  const [openHalfExtrasB, setOpenHalfExtrasB] = useState(false);
+  const [customModalOpen, setCustomModalOpen] = useState(false);
+  const [customCategoryKey, setCustomCategoryKey] = useState("");
+  const [customCategoryExtras, setCustomCategoryExtras] = useState([]);
+  const [customExtrasLoading, setCustomExtrasLoading] = useState(false);
+  const [customIngredientsCatalog, setCustomIngredientsCatalog] = useState([]);
+  const [customSize, setCustomSize] = useState("");
+  const [customQty, setCustomQty] = useState(1);
+  const [customIngredients, setCustomIngredients] = useState({});
+  const [customOpenSection, setCustomOpenSection] = useState(null);
+  const [customLoading, setCustomLoading] = useState(false);
+  const customCategoryCarouselRef = useRef(null);
   const [bootsOpen, setBootsOpen] = useState(false);
-  const [bootsCode, setBootsCode] = useState("");
+  const [bootsQueuePosition, setBootsQueuePosition] = useState(null);
+  const [bootsQueueLoading, setBootsQueueLoading] = useState(false);
   const [bootsTargetPosition, setBootsTargetPosition] = useState("1");
-  const [bootsQuote, setBootsQuote] = useState(null);
   const [bootsMessage, setBootsMessage] = useState("");
-  const [bootsLoading, setBootsLoading] = useState(false);
   const [now, setNow] = useState(() => new Date());
   const [flippedId, setFlippedId] = useState(null);
   const [tick, setTick] = useState(false);
@@ -420,7 +554,7 @@ export default function StorePage() {
         setStore(menuData?.store || null);
         setPartner(partnerData || null);
 
-        setActiveTab(TRENDING_TAB);
+        setActiveTab("");
       } catch (err) {
         console.error(err);
         setError("Error loading menu");
@@ -451,6 +585,47 @@ export default function StorePage() {
     };
   }, []);
 
+  const loadBootsQueuePosition = useCallback(async () => {
+    if (!partner?.id || !store?.id) {
+      setBootsQueuePosition(null);
+      return;
+    }
+
+    try {
+      setBootsQueueLoading(true);
+      const params = new URLSearchParams({
+        partnerId: String(partner.id),
+        storeId: String(store.id),
+        take: "200",
+      });
+      const data = await api.get(`/api/myorders/pending?${params.toString()}`);
+      const pendingCount = Number(
+        data?.queueSize ?? (Array.isArray(data?.items) ? data.items.length : 0)
+      );
+
+      setBootsQueuePosition(
+        Number.isFinite(pendingCount) && pendingCount > 0
+          ? Math.trunc(pendingCount)
+          : 0
+      );
+    } catch (err) {
+      console.error(err);
+      setBootsQueuePosition(null);
+    } finally {
+      setBootsQueueLoading(false);
+    }
+  }, [partner?.id, store?.id]);
+
+  useEffect(() => {
+    loadBootsQueuePosition();
+  }, [loadBootsQueuePosition]);
+
+  useEffect(() => {
+    if (bootsOpen) {
+      loadBootsQueuePosition();
+    }
+  }, [bootsOpen, loadBootsQueuePosition]);
+
   const cartDraftStorageKey = useMemo(
     () => `volta-repeat-cart-draft:${partnerSlug || "partner"}:${storeSlug || "store"}`,
     [partnerSlug, storeSlug]
@@ -460,14 +635,13 @@ export default function StorePage() {
     try {
       const stored = window.localStorage.getItem(cartDraftStorageKey);
       const parsed = stored ? JSON.parse(stored) : null;
-      setCartDraft(parsed);
       if (Array.isArray(parsed?.items) && parsed.items.length) {
         setCart((current) =>
           current.length ? current : parsed.items.map((item, index) => normalizeCartLine(item, index))
         );
       }
     } catch {
-      setCartDraft(null);
+      // Ignore invalid stored drafts.
     }
   }, [cartDraftStorageKey]);
 
@@ -515,11 +689,24 @@ export default function StorePage() {
       const key = item.categoryId || item.category;
       if (!key || !item.category) return;
       if (!uniques.has(key)) {
-        uniques.set(key, item.category);
+        uniques.set(key, {
+          id: getCustomCategoryKey(item),
+          name: item.category,
+          position: Number.isFinite(Number(item.categoryPosition))
+            ? Number(item.categoryPosition)
+            : 999,
+        });
       }
     });
 
-    return [...uniques.values()];
+    return [...uniques.values()].sort((left, right) => {
+      const byPosition = left.position - right.position;
+      if (byPosition !== 0) return byPosition;
+
+      return left.name.localeCompare(right.name, "es", {
+        sensitivity: "base",
+      });
+    });
   }, [menu]);
 
   const tabs = useMemo(
@@ -527,10 +714,25 @@ export default function StorePage() {
       { id: TRENDING_TAB, label: "Trending" },
       { id: PROMOS_TAB, label: "Promos" },
       ...(upcoming.length ? [{ id: UPCOMING_TAB, label: "Proximos" }] : []),
-      ...categories.map((category) => ({ id: category, label: category })),
+      ...categories.map((category) => ({
+        id: category.id,
+        label: category.name,
+      })),
     ],
     [categories, upcoming.length]
   );
+
+  useEffect(() => {
+    if (!categories.length) {
+      setActiveTab((current) => current || TRENDING_TAB);
+      return;
+    }
+
+    const validCategoryIds = new Set(categories.map((category) => category.id));
+    setActiveTab((current) =>
+      validCategoryIds.has(current) ? current : categories[0].id
+    );
+  }, [categories]);
 
   const baseFilteredMenu = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -578,7 +780,9 @@ export default function StorePage() {
       return [];
     }
 
-    return baseFilteredMenu.filter((item) => item.category === activeTab);
+    return baseFilteredMenu.filter(
+      (item) => getCustomCategoryKey(item) === activeTab
+    );
   }, [activeTab, baseFilteredMenu]);
 
   const activeTabLabel =
@@ -741,6 +945,310 @@ export default function StorePage() {
     [extrasAvail]
   );
   const visibleExtras = showAllExtras ? sortedExtras : sortedExtras.slice(0, 3);
+  const halfItems = useMemo(() => {
+    const pizzaItems = menu.filter(isHalfPizzaCandidate);
+
+    return [...pizzaItems].sort((left, right) => {
+      const leftSize = getAvailableSizes(left)[0] || "M";
+      const rightSize = getAvailableSizes(right)[0] || "M";
+      return priceForSize(right.priceBySize, rightSize) - priceForSize(left.priceBySize, leftSize);
+    });
+  }, [menu]);
+  const getHalfNavigableItems = useCallback(
+    (otherIndex) => {
+      const other = halfItems[otherIndex] || null;
+      const candidates = halfSize
+        ? halfItems.filter((item) => getAvailableSizes(item).includes(halfSize))
+        : halfItems;
+
+      if (!other || !halfSize) return candidates;
+
+      return candidates.filter((item) =>
+        getAvailableSizes(item).some((size) => getAvailableSizes(other).includes(size))
+      );
+    },
+    [halfItems, halfSize]
+  );
+  const halfA = halfItems[halfAIndex] || null;
+  const halfB = halfItems[halfBIndex] || null;
+  const halfSizeOptions = useMemo(() => {
+    if (!halfA || !halfB) return [];
+    const sizesA = getAvailableSizes(halfA);
+    const sizesB = getAvailableSizes(halfB);
+    return sizesA.filter((size) => sizesB.includes(size));
+  }, [halfA, halfB]);
+  const halfBasePrice = useMemo(() => {
+    if (!halfSize || !halfA || !halfB) return 0;
+    return Math.max(
+      priceForSize(halfA.priceBySize, halfSize),
+      priceForSize(halfB.priceBySize, halfSize)
+    );
+  }, [halfA, halfB, halfSize]);
+  const sortedHalfExtras = useMemo(
+    () => [...halfExtrasAvail].sort((left, right) => num(right.price) - num(left.price)),
+    [halfExtrasAvail]
+  );
+  const getHalfSideExtras = useCallback(
+    (side) =>
+      sortedHalfExtras
+        .filter((extra) => halfExtras[side]?.[extra.ingredientId])
+        .map((extra) => ({
+          id: extra.ingredientId,
+          name: extra.name || extra.ingredientName || "Extra",
+          side,
+          price: priceForExtraSize(extra, halfSize),
+        })),
+    [halfExtras, halfSize, sortedHalfExtras]
+  );
+  const halfSelectedExtrasA = useMemo(
+    () => getHalfSideExtras("A"),
+    [getHalfSideExtras]
+  );
+  const halfSelectedExtrasB = useMemo(
+    () => getHalfSideExtras("B"),
+    [getHalfSideExtras]
+  );
+  const halfSelectedExtras = useMemo(
+    () => [...halfSelectedExtrasA, ...halfSelectedExtrasB],
+    [halfSelectedExtrasA, halfSelectedExtrasB]
+  );
+  const halfExtrasTotal = halfSelectedExtras.reduce(
+    (sum, extra) => sum + num(extra.price),
+    0
+  );
+  const halfGrandTotal = (halfBasePrice + halfExtrasTotal) * Number(halfQty || 1);
+  const halfModalReady = Boolean(halfA && halfB && halfSize);
+  const halfPricingSource = useMemo(() => {
+    if (!halfA || !halfB || !halfSize) return null;
+    const priceA = priceForSize(halfA.priceBySize, halfSize);
+    const priceB = priceForSize(halfB.priceBySize, halfSize);
+    return priceA >= priceB ? halfA : halfB;
+  }, [halfA, halfB, halfSize]);
+  const hasExplicitCustomCategories = useMemo(
+    () => menu.some((item) => item?.categoryCustomizable === true),
+    [menu]
+  );
+  const customCategoryOptions = useMemo(() => {
+    const grouped = new Map();
+
+    menu.forEach((item) => {
+      const categoryName = item?.category || "Productos";
+      const isCustomizable =
+        item?.categoryCustomizable === true ||
+        (!hasExplicitCustomCategories && isPizzaLikeCategory(categoryName));
+
+      if (!isCustomizable) return;
+
+      const key = getCustomCategoryKey(item);
+      const current =
+        grouped.get(key) || {
+          key,
+          categoryId: item.categoryId ?? null,
+          name: categoryName,
+          baseName: item.cookingMethod || categoryName,
+          position: Number.isFinite(Number(item.categoryPosition))
+            ? Number(item.categoryPosition)
+            : 999,
+          samplePizzaId: item.pizzaId,
+          sampleImage: item.image || "",
+          products: [],
+        };
+
+      current.products.push(item);
+      if (!current.sampleImage && item.image) current.sampleImage = item.image;
+      if (!current.baseName && item.cookingMethod) {
+        current.baseName = item.cookingMethod;
+      }
+
+      grouped.set(key, current);
+    });
+
+    return [...grouped.values()]
+      .map((category) => {
+        const lowestPriceBySize = getLowestPriceBySize(category.products);
+        const selectSize = Object.keys(lowestPriceBySize);
+
+        return {
+          ...category,
+          selectSize,
+          priceBySize: Object.fromEntries(
+            Object.entries(lowestPriceBySize).map(([size, price]) => [
+              size,
+              roundMoney(price * CUSTOM_BASE_PRICE_FACTOR),
+            ])
+          ),
+          minMenuPrice: Math.min(
+            ...Object.values(lowestPriceBySize).filter((price) => price > 0)
+          ),
+        };
+      })
+      .filter((category) => category.selectSize.length > 0)
+      .sort((left, right) => {
+        const byPosition = left.position - right.position;
+        if (byPosition !== 0) return byPosition;
+
+        return left.name.localeCompare(right.name, "es", {
+          sensitivity: "base",
+        });
+      });
+  }, [hasExplicitCustomCategories, menu]);
+  const selectedCustomCategory = useMemo(
+    () =>
+      customCategoryOptions.find(
+        (category) => category.key === customCategoryKey
+      ) || null,
+    [customCategoryKey, customCategoryOptions]
+  );
+  const selectedCustomBase = selectedCustomCategory;
+  const customBuilderSubject = formatCustomBuilderSubject(
+    selectedCustomCategory?.name
+  );
+  const customBuilderKicker = selectedCustomCategory
+    ? `Arma tu ${customBuilderSubject}`
+    : "Personalizar";
+  const customBuilderTitle = selectedCustomCategory
+    ? `Construye tu ${customBuilderSubject}`
+    : "Que quieres personalizar";
+  const customBasePrice = useMemo(() => {
+    if (!selectedCustomBase || !customSize) return 0;
+    return priceForSize(selectedCustomBase.priceBySize, customSize);
+  }, [customSize, selectedCustomBase]);
+  const customExtraByIngredientId = useMemo(
+    () =>
+      new Map(
+        customCategoryExtras.map((extra) => [
+          Number(extra.ingredientId),
+          extra,
+        ])
+      ),
+    [customCategoryExtras]
+  );
+  const scopedCustomIngredientsCatalog = useMemo(() => {
+    if (!selectedCustomCategory) return [];
+
+    if (customExtrasLoading) return [];
+
+    if (isPizzaLikeCategory(selectedCustomCategory.name)) {
+      return customIngredientsCatalog;
+    }
+
+    if (!customCategoryExtras.length) return customIngredientsCatalog;
+
+    return customIngredientsCatalog.filter((ingredient) =>
+      customExtraByIngredientId.has(Number(ingredient.id))
+    );
+  }, [
+    customCategoryExtras.length,
+    customExtraByIngredientId,
+    customExtrasLoading,
+    customIngredientsCatalog,
+    selectedCustomCategory,
+  ]);
+  const customIngredientsByCategory = useMemo(() => {
+    const grouped = {};
+
+    scopedCustomIngredientsCatalog.forEach((ingredient) => {
+      const category = String(ingredient?.category || "OTROS").trim().toUpperCase();
+      if (!grouped[category]) grouped[category] = [];
+      grouped[category].push(ingredient);
+    });
+
+    Object.keys(grouped).forEach((category) => {
+      grouped[category] = [...grouped[category]].sort((left, right) => {
+        const leftName = normalizeSearchText(left.name);
+        const rightName = normalizeSearchText(right.name);
+
+        if (category === "SALSAS") {
+          if (leftName.includes("tomate")) return -1;
+          if (rightName.includes("tomate")) return 1;
+        }
+
+        if (category === "QUESOS") {
+          if (leftName.includes("mozz")) return -1;
+          if (rightName.includes("mozz")) return 1;
+        }
+
+        return String(left.name || "").localeCompare(String(right.name || ""));
+      });
+    });
+
+    return grouped;
+  }, [scopedCustomIngredientsCatalog]);
+  const selectedCustomIngredientIds = useMemo(
+    () => Object.keys(customIngredients).map((id) => Number(id)),
+    [customIngredients]
+  );
+  const customHasBase = Boolean(selectedCustomCategory);
+  const customHasSize = Boolean(customSize);
+  const customHasSauce = (customIngredientsByCategory.SALSAS || []).some((ingredient) =>
+    selectedCustomIngredientIds.includes(Number(ingredient.id))
+  );
+  const customHasCheese = (customIngredientsByCategory.QUESOS || []).some((ingredient) =>
+    selectedCustomIngredientIds.includes(Number(ingredient.id))
+  );
+  const customSelectedIsPizzaLike = isPizzaLikeCategory(selectedCustomCategory?.name);
+  const customRequiresSauce =
+    customSelectedIsPizzaLike && (customIngredientsByCategory.SALSAS || []).length > 0;
+  const customRequiresCheese =
+    customSelectedIsPizzaLike && (customIngredientsByCategory.QUESOS || []).length > 0;
+  const customReady =
+    customHasBase &&
+    customHasSize &&
+    (!customRequiresSauce || customHasSauce) &&
+    (!customRequiresCheese || customHasCheese);
+  const customIngredientsTotal = useMemo(
+    () =>
+      Object.values(customIngredients).reduce(
+        (sum, ingredient) => sum + getCustomIngredientPrice(ingredient),
+        0
+      ),
+    [customIngredients]
+  );
+  const customGrandTotal =
+    (customBasePrice + customIngredientsTotal) * Number(customQty || 1);
+  const scrollCustomCategoryCarousel = useCallback((direction) => {
+    const node = customCategoryCarouselRef.current;
+    if (!node) return;
+
+    node.scrollBy({
+      left: direction * Math.max(180, node.clientWidth * 0.7),
+      behavior: "smooth",
+    });
+  }, []);
+  const customOrderedCategories = useMemo(() => {
+    const existing = Object.keys(customIngredientsByCategory);
+    return [
+      ...CUSTOM_CATEGORY_ORDER.filter((category) => existing.includes(category)),
+      ...existing.filter((category) => !CUSTOM_CATEGORY_ORDER.includes(category)).sort(),
+    ];
+  }, [customIngredientsByCategory]);
+  const getNextCustomSection = useCallback(
+    (categoryName) => {
+      const currentIndex = customOrderedCategories.indexOf(categoryName);
+      if (currentIndex === -1) return null;
+
+      return customOrderedCategories[currentIndex + 1] || null;
+    },
+    [customOrderedCategories]
+  );
+  const getCustomIngredientUnitPrice = useCallback(
+    (ingredient) => {
+      const extra = customExtraByIngredientId.get(Number(ingredient?.id));
+      if (extra) return priceForExtraSize(extra, customSize);
+
+      return num(ingredient?.costPrice);
+    },
+    [customExtraByIngredientId, customSize]
+  );
+
+  useEffect(() => {
+    if (halfItems.length < 2) return;
+    setHalfAIndex((current) => Math.min(current, halfItems.length - 1));
+    setHalfBIndex((current) => {
+      if (current >= halfItems.length) return 1;
+      return current === halfAIndex ? (current + 1) % halfItems.length : current;
+    });
+  }, [halfAIndex, halfItems.length]);
 
   useEffect(() => {
     if (!selectedProduct || !productModalOpen) return;
@@ -781,6 +1289,186 @@ export default function StorePage() {
     loadExtras();
   }, [productModalOpen, selectedProduct?.categoryId, store?.id]);
 
+  useEffect(() => {
+    if (!halfModalOpen) return;
+
+    const loadHalfExtras = async () => {
+      try {
+        setHalfExtrasLoading(true);
+        const categoryIds = [
+          halfA?.categoryId,
+          halfB?.categoryId,
+          HALF_CATEGORY_ID,
+        ]
+          .map((id) => Number(id))
+          .filter((id, index, ids) => Number.isInteger(id) && id > 0 && ids.indexOf(id) === index);
+
+        const results = await Promise.all(
+          categoryIds.map(async (categoryId) => {
+            const params = new URLSearchParams({
+              categoryId: String(categoryId),
+              storeId: String(store?.id || ""),
+            });
+            try {
+              const data = await api.get(`/api/ingredient-extras?${params.toString()}`);
+              return Array.isArray(data) ? data : [];
+            } catch {
+              return [];
+            }
+          })
+        );
+        const byIngredient = new Map();
+        results.flat().forEach((extra) => {
+          const key = extra?.ingredientId ?? extra?.id ?? extra?.name;
+          if (!key || byIngredient.has(key)) return;
+          byIngredient.set(key, extra);
+        });
+        setHalfExtrasAvail([...byIngredient.values()]);
+      } catch (err) {
+        console.error(err);
+        setHalfExtrasAvail([]);
+      } finally {
+        setHalfExtrasLoading(false);
+      }
+    };
+
+    loadHalfExtras();
+  }, [halfA?.categoryId, halfB?.categoryId, halfModalOpen, store?.id]);
+
+  useEffect(() => {
+    if (!halfModalOpen) return;
+    if (halfSizeOptions.length === 1) {
+      setHalfSize(halfSizeOptions[0]);
+    } else if (!halfSizeOptions.includes(halfSize)) {
+      setHalfSize("");
+    }
+  }, [halfModalOpen, halfSize, halfSizeOptions]);
+
+  useEffect(() => {
+    if (!customModalOpen) return;
+
+    const loadCustomBuildData = async () => {
+      try {
+        setCustomLoading(true);
+        let ingredientsData = [];
+
+        try {
+          ingredientsData = store?.id
+            ? await api.get(`/stores/${store.id}/ingredients`)
+            : await api.get("/ingredients");
+        } catch (ingredientsErr) {
+          console.error(ingredientsErr);
+          ingredientsData = await api.get("/ingredients");
+        }
+
+        const ingredients = Array.isArray(ingredientsData) ? ingredientsData : [];
+
+        setCustomIngredientsCatalog(
+          ingredients.filter((ingredient) => {
+            const status = String(ingredient?.status || "ACTIVE").toUpperCase();
+            const category = normalizeSearchText(ingredient?.category);
+            const storeEnabled =
+              ingredient.exists == null ||
+              (ingredient.exists === true && ingredient.active !== false);
+
+            return storeEnabled && status === "ACTIVE" && !category.includes("bebida");
+          })
+        );
+      } catch (err) {
+        console.error(err);
+        setCustomIngredientsCatalog([]);
+      } finally {
+        setCustomLoading(false);
+      }
+    };
+
+    loadCustomBuildData();
+  }, [customModalOpen, partner?.id, store?.id]);
+
+  useEffect(() => {
+    if (!customModalOpen || !selectedCustomCategory?.categoryId) {
+      setCustomCategoryExtras([]);
+      return;
+    }
+
+    const loadCustomCategoryExtras = async () => {
+      try {
+        setCustomExtrasLoading(true);
+        const params = new URLSearchParams({
+          categoryId: String(selectedCustomCategory.categoryId),
+          storeId: String(store?.id || ""),
+        });
+        const data = await api.get(`/api/ingredient-extras?${params.toString()}`);
+        setCustomCategoryExtras(Array.isArray(data) ? data : []);
+      } catch (err) {
+        console.error(err);
+        setCustomCategoryExtras([]);
+      } finally {
+        setCustomExtrasLoading(false);
+      }
+    };
+
+    loadCustomCategoryExtras();
+  }, [customModalOpen, selectedCustomCategory?.categoryId, store?.id]);
+
+  useEffect(() => {
+    if (!customModalOpen || !customSize) return;
+
+    setCustomIngredients((current) => {
+      const next = {};
+
+      Object.entries(current).forEach(([id, data]) => {
+        const ingredient = customIngredientsCatalog.find(
+          (item) => Number(item.id) === Number(id)
+        );
+
+        next[id] = {
+          ...data,
+          basePrice: getCustomIngredientUnitPrice(ingredient || data),
+        };
+      });
+
+      return next;
+    });
+  }, [
+    customIngredientsCatalog,
+    customModalOpen,
+    customSize,
+    getCustomIngredientUnitPrice,
+  ]);
+
+  useEffect(() => {
+    if (
+      !customModalOpen ||
+      !selectedCustomCategory ||
+      !customHasSize ||
+      customExtrasLoading ||
+      customOrderedCategories.length === 0
+    ) {
+      return;
+    }
+
+    if (customOpenSection === "BASE") {
+      setCustomOpenSection(customOrderedCategories[0]);
+    }
+  }, [
+    customExtrasLoading,
+    customHasSize,
+    customModalOpen,
+    customOpenSection,
+    customOrderedCategories,
+    selectedCustomCategory,
+  ]);
+
+  useEffect(() => {
+    if (!customModalOpen) return;
+    setCustomCategoryKey("");
+    setCustomSize("");
+    setCustomQty(1);
+    setCustomIngredients({});
+    setCustomOpenSection("BASE");
+  }, [customModalOpen]);
+
   const openProductModal = (item) => {
     const sizes = getAvailableSizes(item);
     setSelectedProductId(item.pizzaId);
@@ -810,7 +1498,6 @@ export default function StorePage() {
     };
 
     setCart((current) => [...current, line]);
-    setCartDraft(null);
     try {
       window.localStorage.removeItem(cartDraftStorageKey);
     } catch {
@@ -847,6 +1534,192 @@ export default function StorePage() {
     }));
   };
 
+  const moveHalf = (side, direction) => {
+    if (halfItems.length < 2) return;
+
+    const setter = side === "A" ? setHalfAIndex : setHalfBIndex;
+    const otherIndex = side === "A" ? halfBIndex : halfAIndex;
+    const navigable = getHalfNavigableItems(otherIndex);
+    if (navigable.length < 2) return;
+
+    setter((current) => {
+      const currentItem = halfItems[current];
+      const currentNavIndex = Math.max(
+        navigable.findIndex((item) => Number(item.pizzaId) === Number(currentItem?.pizzaId)),
+        0
+      );
+      let nextNavIndex = (currentNavIndex + direction + navigable.length) % navigable.length;
+      let nextItem = navigable[nextNavIndex];
+
+      if (Number(nextItem?.pizzaId) === Number(halfItems[otherIndex]?.pizzaId)) {
+        nextNavIndex = (nextNavIndex + direction + navigable.length) % navigable.length;
+        nextItem = navigable[nextNavIndex];
+      }
+
+      const nextIndex = halfItems.findIndex(
+        (item) => Number(item.pizzaId) === Number(nextItem?.pizzaId)
+      );
+
+      return nextIndex >= 0 ? nextIndex : current;
+    });
+  };
+
+  const toggleHalfExtra = (side, ingredientId) => {
+    setHalfExtras((current) => ({
+      ...current,
+      [side]: {
+        ...current[side],
+        [ingredientId]: !current[side]?.[ingredientId],
+      },
+    }));
+  };
+
+  const openHalfModal = () => {
+    setHalfQty(1);
+    setHalfSize("");
+    setHalfExtras({ A: {}, B: {} });
+    setOpenHalfExtrasA(false);
+    setOpenHalfExtrasB(false);
+    setHalfAIndex(0);
+    setHalfBIndex(halfItems.length > 1 ? 1 : 0);
+    setHalfModalOpen(true);
+  };
+
+  const addHalfLine = () => {
+    if (!halfModalReady) return;
+
+    const priceA = priceForSize(halfA.priceBySize, halfSize);
+    const priceB = priceForSize(halfB.priceBySize, halfSize);
+    const main = priceA >= priceB ? halfA : halfB;
+    const subtotal = halfGrandTotal;
+
+    const line = {
+      cartLineId: `half-${halfA.pizzaId}-${halfB.pizzaId}-${Date.now()}`,
+      type: "HALF_HALF",
+      pizzaId: main.pizzaId,
+      mainPizzaId: main.pizzaId,
+      mainName: main.name,
+      leftPizzaId: halfA.pizzaId,
+      rightPizzaId: halfB.pizzaId,
+      leftName: halfA.name,
+      rightName: halfB.name,
+      name: `${halfA.name} / ${halfB.name}`,
+      category: main.category,
+      size: halfSize,
+      qty: Number(halfQty || 1),
+      price: halfBasePrice,
+      extras: halfSelectedExtras,
+      subtotal,
+      halfMeta: {
+        priceRule: "MOST_EXPENSIVE_HALF",
+        pricingSourcePizzaId: main.pizzaId,
+        pricingSourceName: main.name,
+        leftPrice: priceA,
+        rightPrice: priceB,
+      },
+      image: main.image || halfA.image || halfB.image || "",
+    };
+
+    setCart((current) => [...current, line]);
+    try {
+      window.localStorage.removeItem(cartDraftStorageKey);
+    } catch {
+      // Ignore storage cleanup failures.
+    }
+    setHalfModalOpen(false);
+    setCartOpen(true);
+  };
+
+  const updateCustomIngredient = (ingredient, updates) => {
+    setCustomIngredients((current) => {
+      const existing = current[ingredient.id] || {
+        ingredientId: ingredient.id,
+        name: ingredient.name,
+        basePrice: getCustomIngredientUnitPrice(ingredient),
+        placement: null,
+        quantity: "SIMPLE",
+      };
+      const updated = {
+        ...existing,
+        basePrice: getCustomIngredientUnitPrice(ingredient),
+        ...updates,
+      };
+
+      if (!updated.placement) {
+        const copy = { ...current };
+        delete copy[ingredient.id];
+        return copy;
+      }
+
+      return {
+        ...current,
+        [ingredient.id]: updated,
+      };
+    });
+  };
+
+  const removeCustomIngredient = (ingredientId) => {
+    setCustomIngredients((current) => {
+      const copy = { ...current };
+      delete copy[ingredientId];
+      return copy;
+    });
+  };
+
+  const openCustomModal = () => {
+    setCustomModalOpen(true);
+  };
+
+  const addCustomLine = () => {
+    if (!selectedCustomCategory || !customReady) return;
+
+    const ingredients = Object.entries(customIngredients).map(([id, data]) => {
+      const catalogIngredient = customIngredientsCatalog.find(
+        (ingredient) => Number(ingredient.id) === Number(id)
+      );
+
+      return {
+        id: Number(id),
+        ingredientId: Number(id),
+        name: catalogIngredient?.name || data.name || "Ingrediente",
+        placement: data.placement,
+        quantity: data.quantity,
+        price: getCustomIngredientPrice(data),
+      };
+    });
+
+    const line = {
+      cartLineId: `custom-${selectedCustomCategory.key}-${Date.now()}`,
+      type: "CUSTOM_BUILD",
+      pizzaId: selectedCustomCategory.samplePizzaId,
+      name: `Personalizada ${selectedCustomCategory.name}`,
+      category: selectedCustomCategory.name,
+      size: customSize,
+      qty: Number(customQty || 1),
+      price: customBasePrice,
+      ingredients,
+      extras: [],
+      subtotal: customGrandTotal,
+      customMeta: {
+        categoryId: selectedCustomCategory.categoryId,
+        categoryName: selectedCustomCategory.name,
+        baseName: selectedCustomCategory.baseName,
+        pricingRule: "CATEGORY_BASELINE",
+        basePriceFactor: CUSTOM_BASE_PRICE_FACTOR,
+      },
+      image: selectedCustomCategory.sampleImage || "",
+    };
+
+    setCart((current) => [...current, line]);
+    try {
+      window.localStorage.removeItem(cartDraftStorageKey);
+    } catch {
+      // Ignore storage cleanup failures.
+    }
+    setCustomModalOpen(false);
+    setCartOpen(true);
+  };
+
   const activeProductsCount =
     activeTab === TRENDING_TAB ? filteredTrending.length : visibleMenu.length;
   const cartCount = useMemo(
@@ -854,8 +1727,59 @@ export default function StorePage() {
     [cart]
   );
   const cartTotal = cart.reduce((sum, item) => sum + num(item.subtotal), 0);
-  const bootsPreviewPosition = 11;
-  const quoteCurrency = bootsQuote?.currency || partner?.currency || "EUR";
+  const cartHasBoost = useMemo(
+    () => cart.some((line) => line?.source === "queue_boost"),
+    [cart]
+  );
+  const boostCurrency = partner?.currency || "EUR";
+  const bootsCurrentPosition = Number.isFinite(Number(bootsQueuePosition))
+    ? Number(bootsQueuePosition)
+    : null;
+  const bootsPositionLabel =
+    bootsCurrentPosition == null ? "--" : String(bootsCurrentPosition);
+  const bootsOptions = useMemo(
+    () =>
+      Array.from(
+        { length: Math.min(BOOST_MAX_OPTIONS, Math.max(bootsCurrentPosition || 0, 0)) },
+        (_, index) => {
+          const targetPosition = index + 1;
+          const jumps = Math.max((bootsCurrentPosition || 0) - targetPosition + 1, 0);
+
+          return {
+            targetPosition,
+            jumps,
+            amount: Math.round(jumps * BOOST_PRICE_PER_POSITION * 100) / 100,
+          };
+        }
+      ),
+    [bootsCurrentPosition]
+  );
+  const selectedBootsOption =
+    bootsOptions.find(
+      (option) => String(option.targetPosition) === String(bootsTargetPosition)
+    ) || bootsOptions[0];
+  const repeatPreviewLines = useMemo(
+    () =>
+      Array.isArray(repeatDraft?.items)
+        ? repeatDraft.items.map((item, index) => normalizeCartLine(item, index))
+        : [],
+    [repeatDraft]
+  );
+  const repeatPreviewTotal = repeatPreviewLines.reduce(
+    (sum, line) => sum + num(line.subtotal),
+    0
+  );
+  const repeatPreviewExtras = useMemo(
+    () =>
+      Array.isArray(repeatDraft?.extras)
+        ? repeatDraft.extras.map((extra, index) => ({
+            id: extra?.id ?? extra?.ingredientId ?? extra?.code ?? `repeat-extra-${index}`,
+            name: extra?.name ?? extra?.label ?? extra?.ingredientName ?? "Extra",
+            price: num(extra?.price ?? extra?.amount ?? extra?.subtotal),
+          }))
+        : [],
+    [repeatDraft]
+  );
   const incentiveMessage =
     activeTab === PROMOS_TAB
       ? `${filteredPromos.length} promo${filteredPromos.length === 1 ? "" : "s"} activa${filteredPromos.length === 1 ? "" : "s"}`
@@ -875,15 +1799,21 @@ export default function StorePage() {
   const loadRepeatOrder = async (event) => {
     event?.preventDefault();
 
-    const phone = repeatPhone.trim();
+    const phone = normalizeRepeatPhoneInput(repeatPhone);
     if (!phone) {
       setRepeatMessage("Escribe el telefono usado en el pedido anterior.");
+      return;
+    }
+
+    if (phone.length !== 9) {
+      setRepeatMessage("Introduce un telefono de 9 digitos.");
       return;
     }
 
     try {
       setRepeatLoading(true);
       setRepeatMessage("");
+      setRepeatPhone(phone);
       const params = new URLSearchParams({
         partnerId: String(partner?.id || ""),
         storeId: String(store?.id || ""),
@@ -893,25 +1823,10 @@ export default function StorePage() {
       const draft = data?.cartDraft || null;
 
       setRepeatDraft(draft);
-      setCartDraft(draft);
-      setCart(
-        Array.isArray(draft?.items)
-          ? draft.items.map((item, index) => normalizeCartLine(item, index))
-          : []
-      );
-
-      try {
-        if (draft) {
-          window.localStorage.setItem(cartDraftStorageKey, JSON.stringify(draft));
-        }
-      } catch {
-        // The in-memory draft is enough if storage is unavailable.
-      }
-
       setRepeatMessage(
         draft?.sourceOrderCode
-          ? `Pedido ${draft.sourceOrderCode} listo para el carrito.`
-          : "Pedido anterior listo para el carrito."
+          ? `Pedido ${draft.sourceOrderCode} encontrado.`
+          : "Pedido anterior encontrado."
       );
     } catch (err) {
       console.error(err);
@@ -924,53 +1839,57 @@ export default function StorePage() {
     }
   };
 
-  const loadBootsQuote = async (event) => {
-    event?.preventDefault();
+  const repeatFoundOrder = () => {
+    if (!repeatDraft || repeatPreviewLines.length === 0) return;
 
-    const orderCode = bootsCode.trim().toUpperCase();
-    if (!orderCode) {
-      setBootsMessage("Escribe el codigo del pedido para calcular el Boots.");
+    setCart(repeatPreviewLines);
+    try {
+      window.localStorage.setItem(cartDraftStorageKey, JSON.stringify(repeatDraft));
+    } catch {
+      // The in-memory draft is enough if storage is unavailable.
+    }
+    setRepeatMessage("Pedido repetido y anadido al carrito.");
+    setRepeatOpen(false);
+    setCartOpen(true);
+  };
+
+  const activateBoots = () => {
+    if (!selectedBootsOption) return;
+    if (cartHasBoost) {
+      setBootsMessage("Ya tienes un Boost en el carrito. Borralo para elegir otro.");
       return;
     }
 
-    try {
-      setBootsLoading(true);
-      setBootsMessage("");
-      const params = new URLSearchParams({
-        orderCode,
-        targetPosition: bootsTargetPosition,
-      });
-      const data = await api.get(`/api/myorders/boosts/quote?${params.toString()}`);
-      setBootsQuote(data?.quote || null);
-    } catch (err) {
-      console.error(err);
-      setBootsQuote(null);
-      setBootsMessage(getApiErrorMessage(err, "No se pudo calcular el Boots."));
-    } finally {
-      setBootsLoading(false);
-    }
-  };
+    const boostLine = {
+      cartLineId: `queue-boost-${store?.id || "store"}`,
+      type: "queue_boost",
+      source: "queue_boost",
+      name: "Emergency Boost",
+      category: "Boost",
+      size: `#${bootsPositionLabel} -> #${selectedBootsOption.targetPosition}`,
+      qty: 1,
+      price: selectedBootsOption.amount,
+      subtotal: selectedBootsOption.amount,
+      image: "",
+      boost: {
+        currentPosition: bootsCurrentPosition,
+        targetPosition: selectedBootsOption.targetPosition,
+        positionsToJump: selectedBootsOption.jumps,
+        unitPrice: BOOST_PRICE_PER_POSITION,
+        amount: selectedBootsOption.amount,
+        currency: boostCurrency,
+      },
+    };
 
-  const activateBoots = async () => {
-    const orderCode = bootsCode.trim().toUpperCase();
-    if (!orderCode) return;
-
+    setCart((current) => [...current, boostLine]);
     try {
-      setBootsLoading(true);
-      setBootsMessage("");
-      const data = await api.post("/api/myorders/boosts/activate", {
-        orderCode,
-        targetPosition: Number(bootsTargetPosition),
-        paymentMode: "manual_mvp",
-      });
-      setBootsQuote(data?.quote || null);
-      setBootsMessage("Boots activado. El pedido sube en la cola pendiente.");
-    } catch (err) {
-      console.error(err);
-      setBootsMessage(getApiErrorMessage(err, "No se pudo activar el Boots."));
-    } finally {
-      setBootsLoading(false);
+      window.localStorage.removeItem(cartDraftStorageKey);
+    } catch {
+      // Ignore storage cleanup failures.
     }
+    setBootsMessage("Boost anadido al carrito. Se cobrara al finalizar la compra.");
+    setBootsOpen(false);
+    setCartOpen(true);
   };
 
   if (error) {
@@ -1041,10 +1960,18 @@ export default function StorePage() {
               <span className="sf-offersBtnLabel">{offerVariant.label}</span>
             </button>
 
-            <button type="button" className="lsf-buildmode">
+            <button
+              type="button"
+              className={`lsf-buildmode ${halfModalOpen ? "is-active" : ""}`}
+              onClick={openHalfModal}
+            >
               Mitad / Mitad
             </button>
-            <button type="button" className="lsf-buildmode">
+            <button
+              type="button"
+              className={`lsf-buildmode ${customModalOpen ? "is-active" : ""}`}
+              onClick={openCustomModal}
+            >
               Arma tu pizza
             </button>
 
@@ -1388,69 +2315,84 @@ export default function StorePage() {
                   <p>No hay lanzamientos visibles para esta busqueda.</p>
                 </div>
               ) : (
-                <div className="sf-engineGrid sf-engineGrid--upcoming">
-                  {filteredUpcoming.map((item) => (
-                    <article key={item.pizzaId} className="sf-engineMenuCard sf-engineMenuCard--upcoming">
-                      <div
-                        className={`sf-menuCardVisual sf-menuCardVisual--upcoming ${
-                          item.image ? "has-image" : ""
-                        }`}
-                        style={
-                          item.image
-                            ? { "--sf-launch-image": `url(${item.image})` }
-                            : undefined
-                        }
-                      >
-                        <span className="sf-menuCardVisualBadge">Coming soon</span>
-                        <div className="sf-comingSoonWordmark">COMING SOON</div>
-                        <div className="sf-launchCountdown">
-                          <span>Sale en</span>
-                          <strong>{formatLaunchCountdown(item.launchAt, now)}</strong>
-                        </div>
-                      </div>
+                <div className="lsf-grid-wrap">
+                  <div className="lsf-grid lsf-grid--upcoming" role="list">
+                    {filteredUpcoming.map((item) => {
+                      const upcomingFlipId = `upcoming-${item.pizzaId}`;
+                      const flipped = flippedId === upcomingFlipId;
+                      const image = item.image || "";
+                      const sizes = Object.keys(item.priceBySize || {}).filter(
+                        (size) =>
+                          item.priceBySize?.[size] !== "" &&
+                          item.priceBySize?.[size] != null
+                      );
+                      const basePrice = priceForSize(item.priceBySize, sizes[0] || "M");
+                      const { line } = buildPizzaLine(item);
 
-                      <div className="sf-menuCardHead">
-                        <div>
-                          <h3 className="sf-menuCardTitle">{item.name}</h3>
-                          <div className="sf-menuCardMeta">
-                            {item.category || "Sin categoria"} - {formatLaunchDate(item.launchAt)}
+                      return (
+                        <div
+                          key={item.pizzaId}
+                          className={`lsf-card lsf-card--upcoming lsf-flip ${flipped ? "is-flipped" : ""}`}
+                          onClick={() =>
+                            setFlippedId((current) =>
+                              current === upcomingFlipId ? null : upcomingFlipId
+                            )
+                          }
+                          role="listitem"
+                        >
+                          <div className="lsf-flip__inner">
+                            <div className="lsf-flip__front">
+                              <div className="lsf-card__image lsf-upcomingImage">
+                                {image ? (
+                                  <img src={image} alt={item.name} />
+                                ) : (
+                                  <div className="lsf-card__img is-placeholder">
+                                    <span>Proximo</span>
+                                  </div>
+                                )}
+                              </div>
+
+                              <span className="lsf-upcomingBadge">Proximo</span>
+                              <span className="lsf-upcomingCountdown">
+                                {formatLaunchCountdown(item.launchAt, now)}
+                              </span>
+
+                              <button
+                                type="button"
+                                className="lsf-card__addbtn lsf-card__addbtn--disabled"
+                                onClick={(event) => event.stopPropagation()}
+                                disabled
+                                aria-label={`${item.name} aun no disponible`}
+                              >
+                                Soon
+                              </button>
+
+                              <div className="lsf-card__overlay">
+                                <div className="lsf-card__ticker">
+                                  <div className={`lsf-card__name ${tick ? "is-ticking" : ""}`}>
+                                    {item.name}
+                                  </div>
+                                </div>
+                                <div className={`lsf-card__price ${tick ? "is-ticking" : ""}`}>
+                                  EUR {basePrice.toFixed(2)}
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="lsf-flip__back">
+                              <div className="lsf-flip-desc lsf-upcomingFlipDesc">
+                                <div className="lsf-flip-title">Lanzamiento</div>
+                                <div className="lsf-flip-line">
+                                  {formatLaunchDate(item.launchAt)}
+                                </div>
+                                <div className="lsf-flip-closer">{line}</div>
+                              </div>
+                            </div>
                           </div>
                         </div>
-                        <span className="sf-badge sf-badge--upcoming">Soon</span>
-                      </div>
-
-                      <div>
-                        <div className="sf-sectionLabel">Tamanos y precios</div>
-                        <div className="sf-priceRow">
-                          {Object.entries(item.priceBySize || {})
-                            .filter(([_, value]) => value !== "" && value != null)
-                            .map(([size, value]) => (
-                              <span key={size} className="sf-priceTag">
-                                {size}: EUR{value}
-                              </span>
-                            ))}
-                        </div>
-                      </div>
-
-                      <div>
-                        <div className="sf-sectionLabel">Ingredientes activos</div>
-                        <div className="sf-chipRow">
-                          {(item.ingredients || []).map((ingredient) => (
-                            <span key={ingredient.id} className="sf-chip">
-                              {ingredient.name}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div className="sf-menuCardFooter">
-                        <span className="sf-menuCardSignal">Lanzamiento programado</span>
-                        <button type="button" className="sf-menuCardCta sf-menuCardCta--disabled" disabled>
-                          Pronto
-                        </button>
-                      </div>
-                    </article>
-                  ))}
+                      );
+                    })}
+                  </div>
                 </div>
               )
             ) : visibleMenu.length === 0 ? (
@@ -1575,15 +2517,15 @@ export default function StorePage() {
             className="sf-footerStatus sf-footerStatus--boots"
             onClick={() => setBootsOpen(true)}
           >
-            <span className="sf-bootsCounter" aria-label={`Posicion ${bootsPreviewPosition} en espera`}>
+            <span className="sf-bootsCounter" aria-label={`Posicion ${bootsPositionLabel} en espera`}>
               <span>POS</span>
-              <strong>{bootsPreviewPosition}</strong>
+              <strong>{bootsPositionLabel}</strong>
             </span>
             <span className="sf-bootsTicker" aria-label="Boots para subir posicion en la cola">
               <span className="sf-bootsTickerTrack">
-                <span>Boost</span>
-                <span>Speedy</span>
-                <span>Turbo</span>
+                <span>Boost UP</span>
+                <span>Go Faster</span>
+                <span>Get It Now!</span>
               </span>
             </span>
           </button>
@@ -1776,12 +2718,39 @@ export default function StorePage() {
                     <div key={line.cartLineId || index} className="sf-cartRow">
                       <div className="sf-cartRowMain">
                         <strong>{line.name}</strong>
-                        <span>
-                          {line.size} x {line.qty}
-                        </span>
+                        {line.source === "queue_boost" ? (
+                          <span>
+                            Cola {line.boost?.currentPosition ? `#${line.boost.currentPosition}` : ""}
+                            {" -> "}
+                            #{line.boost?.targetPosition || line.size}
+                          </span>
+                        ) : line.type === "HALF_HALF" ? (
+                          <span>
+                            Mitad A: {line.leftName || "Pizza"} / Mitad B: {line.rightName || "Pizza"} - {line.size} x {line.qty}
+                          </span>
+                        ) : (
+                          <span>
+                            {line.size} x {line.qty}
+                          </span>
+                        )}
+                        {line.source === "queue_boost" && (
+                          <small>
+                            {line.boost?.positionsToJump || 0} salto
+                            {Number(line.boost?.positionsToJump || 0) === 1 ? "" : "s"} de cola
+                          </small>
+                        )}
                         {line.extras?.length > 0 && (
                           <small>
-                            + {line.extras.map((extra) => extra.name).join(", ")}
+                            + {line.extras.map((extra) =>
+                              extra.side ? `${extra.name} (${extra.side})` : extra.name
+                            ).join(", ")}
+                          </small>
+                        )}
+                        {line.ingredients?.length > 0 && (
+                          <small>
+                            {line.ingredients.map((ingredient) =>
+                              `${ingredient.name} (${ingredient.placement}/${ingredient.quantity})`
+                            ).join(", ")}
                           </small>
                         )}
                       </div>
@@ -1827,13 +2796,559 @@ export default function StorePage() {
         </div>
       )}
 
+      {halfModalOpen && (
+        <div className="sf-modalOverlay" onClick={() => setHalfModalOpen(false)}>
+          <div
+            className="sf-modalCard sf-productModal sf-halfModal"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="sf-cartModalHead">
+              <div>
+                <span>Mitad / Mitad</span>
+                <h3>Pizza mitad / mitad</h3>
+              </div>
+              <button
+                type="button"
+                className="sf-modalCloseBtn"
+                onClick={() => setHalfModalOpen(false)}
+                aria-label="Cerrar"
+              >
+                x
+              </button>
+            </div>
+
+            {halfItems.length < 2 ? (
+              <div className="sf-cartEmpty">No hay suficientes pizzas disponibles.</div>
+            ) : (
+              <div className="sf-halfPicker">
+                <div className="sf-halfSlots">
+                  {[
+                    { side: "A", item: halfA, otherIndex: halfBIndex },
+                    { side: "B", item: halfB, otherIndex: halfAIndex },
+                  ].map(({ side, item, otherIndex }) => {
+                    const canNavigate = getHalfNavigableItems(otherIndex).length > 1;
+
+                    return (
+                    <div key={side} className="sf-halfSlot">
+                      <div className="sf-halfSlotLabel">Mitad {side}</div>
+                      <button
+                        type="button"
+                        className="sf-halfNavBtn"
+                        onClick={() => moveHalf(side, -1)}
+                        disabled={!canNavigate}
+                        aria-label={`Pizza anterior mitad ${side}`}
+                      >
+                        ^
+                      </button>
+                      <div className="sf-halfImage">
+                        {item?.image ? (
+                          <img src={item.image} alt={item.name} />
+                        ) : (
+                          <div className="sf-productPickerPlaceholder">Pizza</div>
+                        )}
+                      </div>
+                      <strong>{item?.name || "Pizza"}</strong>
+                      <button
+                        type="button"
+                        className="sf-halfNavBtn"
+                        onClick={() => moveHalf(side, 1)}
+                        disabled={!canNavigate}
+                        aria-label={`Pizza siguiente mitad ${side}`}
+                      >
+                        v
+                      </button>
+                    </div>
+                    );
+                  })}
+                </div>
+
+                <div className="sf-productPickerRow">
+                  <span>Qty</span>
+                  <div className="sf-qtyControl">
+                    <button
+                      type="button"
+                      onClick={() => setHalfQty((qty) => Math.max(1, Number(qty || 1) - 1))}
+                      disabled={Number(halfQty || 1) <= 1}
+                    >
+                      -
+                    </button>
+                    <strong>{halfQty}</strong>
+                    <button
+                      type="button"
+                      onClick={() => setHalfQty((qty) => Math.min(12, Number(qty || 1) + 1))}
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+
+                <div className="sf-productPickerRow sf-productPickerRow--stack">
+                  <span>Size</span>
+                  {halfSizeOptions.length === 0 ? (
+                    <div className="sf-mutedLine">No hay tamanos compatibles.</div>
+                  ) : (
+                    <div className="sf-sizeOptions">
+                      {halfSizeOptions.map((size) => {
+                        const active = halfSize === size;
+                        const price = Math.max(
+                          priceForSize(halfA.priceBySize, size),
+                          priceForSize(halfB.priceBySize, size)
+                        );
+
+                        return (
+                          <button
+                            key={size}
+                            type="button"
+                            className={`sf-sizeChip ${active ? "is-active" : ""}`}
+                            onClick={() => setHalfSize(size)}
+                          >
+                            <span>{size}</span>
+                            <strong>EUR {price.toFixed(2)}</strong>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+
+                <div className="sf-productPickerNotice">
+                  Puede contener alergenos. Consulta con nuestro personal si tienes alguna alergia.
+                </div>
+
+                {halfPricingSource && (
+                  <div className="sf-halfRule">
+                    <span>Regla de precio</span>
+                    <strong>{halfPricingSource.name}</strong>
+                    <small>
+                      La mitad mas cara define el precio base y las caracteristicas principales.
+                    </small>
+                  </div>
+                )}
+
+                {[
+                  {
+                    side: "A",
+                    label: "Extras Mitad A",
+                    open: openHalfExtrasA,
+                    toggle: () => setOpenHalfExtrasA((value) => !value),
+                  },
+                  {
+                    side: "B",
+                    label: "Extras Mitad B",
+                    open: openHalfExtrasB,
+                    toggle: () => setOpenHalfExtrasB((value) => !value),
+                  },
+                ].map(({ side, label, open, toggle }) => (
+                  <div key={side} className="sf-productPickerRow sf-productPickerRow--stack">
+                    <button type="button" className="sf-halfExtrasToggle" onClick={toggle}>
+                      <span>{label}</span>
+                      <strong>{open ? "^" : "v"}</strong>
+                    </button>
+
+                    {open && (
+                      halfExtrasLoading ? (
+                        <div className="sf-mutedLine">Cargando extras...</div>
+                      ) : sortedHalfExtras.length === 0 ? (
+                        <div className="sf-mutedLine">No hay extras.</div>
+                      ) : (
+                        <div className="sf-extrasList sf-halfExtrasList">
+                          {sortedHalfExtras.map((extra) => {
+                            const checked = Boolean(halfExtras[side]?.[extra.ingredientId]);
+                            const price = priceForExtraSize(extra, halfSize);
+
+                            return (
+                              <label key={`${side}-${extra.ingredientId}`} className="sf-extraItem">
+                                <input
+                                  type="checkbox"
+                                  checked={checked}
+                                  onChange={() => toggleHalfExtra(side, extra.ingredientId)}
+                                />
+                                <span>{extra.name || extra.ingredientName}</span>
+                                <strong>+EUR {price.toFixed(2)}</strong>
+                              </label>
+                            );
+                          })}
+                        </div>
+                      )
+                    )}
+                  </div>
+                ))}
+
+                <div className="sf-productPickerActions">
+                  <button
+                    type="button"
+                    className="sf-secondaryBtn"
+                    onClick={() => setHalfModalOpen(false)}
+                  >
+                    Continue
+                  </button>
+                  <button
+                    type="button"
+                    className="sf-primaryBtn"
+                    disabled={!halfModalReady}
+                    onClick={addHalfLine}
+                  >
+                    {halfModalReady
+                      ? `Add to cart - EUR ${halfGrandTotal.toFixed(2)}`
+                      : "Selecciona size"}
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {customModalOpen && (
+        <div className="sf-modalOverlay" onClick={() => setCustomModalOpen(false)}>
+          <div
+            className="sf-modalCard sf-productModal sf-customModal"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="sf-cartModalHead">
+              <div>
+                <span>{customBuilderKicker}</span>
+                <h3>{customBuilderTitle}</h3>
+              </div>
+              <button
+                type="button"
+                className="sf-modalCloseBtn"
+                onClick={() => setCustomModalOpen(false)}
+                aria-label="Cerrar"
+              >
+                x
+              </button>
+            </div>
+
+            {customLoading ? (
+              <div className="sf-cartEmpty">Cargando ingredientes...</div>
+            ) : (
+              <div className="sf-customBuilder">
+                <div className="sf-customHero">
+                  {customCategoryOptions.length === 0 ? (
+                    <div className="sf-mutedLine">
+                      No hay categorias personalizables en esta tienda.
+                    </div>
+                  ) : (
+                    <div className="sf-customCategoryRail">
+                      <button
+                        type="button"
+                        className="sf-customCategoryNav"
+                        onClick={() => scrollCustomCategoryCarousel(-1)}
+                        aria-label="Ver categorias anteriores"
+                      >
+                        {"<"}
+                      </button>
+                      <div
+                        ref={customCategoryCarouselRef}
+                        className="sf-customCategoryCarousel"
+                        aria-label="Categorias personalizables"
+                      >
+                      {customCategoryOptions.map((category) => {
+                        const active = customCategoryKey === category.key;
+                        const fromPrice = priceForSize(
+                          category.priceBySize,
+                          category.selectSize[0]
+                        );
+
+                        return (
+                          <button
+                            key={category.key}
+                            type="button"
+                            className={`sf-customCategorySlide ${active ? "is-active" : ""}`}
+                            onClick={() => {
+                              const sizes = getAvailableSizes(category);
+                              setCustomCategoryKey(category.key);
+                              setCustomSize(sizes.length === 1 ? sizes[0] : "");
+                              setCustomIngredients({});
+                              setCustomOpenSection("BASE");
+                            }}
+                          >
+                            {category.sampleImage ? (
+                              <img src={category.sampleImage} alt="" aria-hidden="true" />
+                            ) : (
+                              <span className="sf-customCategorySlideArt" aria-hidden="true" />
+                            )}
+                            <span>{category.name}</span>
+                            <small>
+                              {category.selectSize.join(" / ")}
+                              {fromPrice ? ` - desde EUR ${fromPrice.toFixed(2)}` : ""}
+                            </small>
+                          </button>
+                        );
+                      })}
+                      </div>
+                      <button
+                        type="button"
+                        className="sf-customCategoryNav"
+                        onClick={() => scrollCustomCategoryCarousel(1)}
+                        aria-label="Ver mas categorias"
+                      >
+                        {">"}
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                <section className="sf-customAccordion">
+                  <button
+                    type="button"
+                    className={`sf-customAccordionHead ${
+                      !selectedCustomCategory ? "is-disabled" : ""
+                    }`}
+                    onClick={() => {
+                      if (!selectedCustomCategory) return;
+                      setCustomOpenSection((current) =>
+                        current === "BASE" ? null : "BASE"
+                      );
+                    }}
+                  >
+                    <span>BASE</span>
+                    <strong>
+                      {selectedCustomBase && (
+                        `${selectedCustomBase.baseName}${customSize ? ` ${customSize}` : ""}`
+                      )}
+                      {!selectedCustomBase && "Primero elige categoria"}
+                    </strong>
+                  </button>
+
+                  {customOpenSection === "BASE" && selectedCustomBase && (
+                    <div className="sf-customAccordionBody">
+                      <div className="sf-customBaseSummary">
+                        <span>{selectedCustomBase.baseName}</span>
+                        <small>{selectedCustomBase.products.length} productos de referencia</small>
+                      </div>
+
+                      <div className="sf-productPickerRow sf-productPickerRow--stack">
+                        <span>Tamano</span>
+                        <div className="sf-sizeOptions">
+                          {getAvailableSizes(selectedCustomBase).map((size) => {
+                            const active = customSize === size;
+                            const price = priceForSize(
+                              selectedCustomBase.priceBySize,
+                              size
+                            );
+
+                            return (
+                              <button
+                                key={size}
+                                type="button"
+                                className={`sf-sizeChip ${active ? "is-active" : ""}`}
+                                onClick={() => {
+                                  setCustomSize(size);
+                                  setCustomOpenSection(
+                                    customOrderedCategories[0] || "BASE"
+                                  );
+                                }}
+                              >
+                                <span>{size}</span>
+                                <strong>EUR {price.toFixed(2)}</strong>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      <div className="sf-productPickerRow">
+                        <span>Qty</span>
+                        <div className="sf-qtyControl">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setCustomQty((qty) =>
+                                Math.max(1, Number(qty || 1) - 1)
+                              )
+                            }
+                            disabled={Number(customQty || 1) <= 1}
+                          >
+                            -
+                          </button>
+                          <strong>{customQty}</strong>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setCustomQty((qty) =>
+                                Math.min(12, Number(qty || 1) + 1)
+                              )
+                            }
+                          >
+                            +
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </section>
+
+                {selectedCustomCategory && customHasSize && customExtrasLoading && (
+                  <div className="sf-customEmptyLine">Cargando opciones para {selectedCustomCategory.name}...</div>
+                )}
+
+                {selectedCustomCategory &&
+                  customHasSize &&
+                  !customExtrasLoading &&
+                  customOrderedCategories.length === 0 && (
+                    <div className="sf-customEmptyLine">
+                      No hay ingredientes personalizables configurados para {selectedCustomCategory.name}.
+                    </div>
+                  )}
+
+                {customOrderedCategories.map((categoryName) => {
+                  const ingredients = customIngredientsByCategory[categoryName] || [];
+                  const selectedCount = ingredients.filter((ingredient) =>
+                    selectedCustomIngredientIds.includes(Number(ingredient.id))
+                  ).length;
+                  const isOpen = customOpenSection === categoryName;
+                  const isSauce = categoryName === "SALSAS";
+                  const isCheese = categoryName === "QUESOS";
+                  const isLocked =
+                    !customHasBase ||
+                    !customHasSize ||
+                    (!isSauce && customRequiresSauce && isCheese && !customHasSauce) ||
+                    (!isSauce &&
+                      !isCheese &&
+                      ((customRequiresSauce && !customHasSauce) ||
+                        (customRequiresCheese && !customHasCheese)));
+
+                  return (
+                    <section key={categoryName} className="sf-customAccordion">
+                      <button
+                        type="button"
+                        className={`sf-customAccordionHead ${isLocked ? "is-disabled" : ""}`}
+                        onClick={() => {
+                          if (isLocked) return;
+                          setCustomOpenSection((current) =>
+                            current === categoryName ? null : categoryName
+                          );
+                        }}
+                      >
+                        <span>{categoryName}</span>
+                        <strong>
+                          {selectedCount > 0
+                            ? `${selectedCount} seleccionado${selectedCount === 1 ? "" : "s"}`
+                            : isLocked
+                            ? "Completa el paso anterior"
+                            : "Elegir"}
+                        </strong>
+                      </button>
+
+                      {isOpen && !isLocked && (
+                        <div className="sf-customAccordionBody">
+                          {ingredients.map((ingredient) => {
+                            const selected = customIngredients[ingredient.id] || null;
+
+                            return (
+                              <div key={ingredient.id} className="sf-customIngredient">
+                                <div className="sf-customIngredientHead">
+                                  <strong>{ingredient.name}</strong>
+                                  <span>
+                                    {customExtrasLoading
+                                      ? "..."
+                                      : `EUR ${getCustomIngredientUnitPrice(ingredient).toFixed(2)}`}
+                                  </span>
+                                </div>
+
+                                <div className="sf-customPlacement">
+                                  {["FULL", "LEFT", "RIGHT"].map((placement) => (
+                                    <button
+                                      key={placement}
+                                      type="button"
+                                      className={`sf-sizeChip ${
+                                        selected?.placement === placement ? "is-active" : ""
+                                      }`}
+                                      onClick={() =>
+                                        updateCustomIngredient(ingredient, {
+                                          placement,
+                                          quantity: selected?.quantity || "SIMPLE",
+                                        })
+                                      }
+                                    >
+                                      <span>{placement}</span>
+                                    </button>
+                                  ))}
+                                </div>
+
+                                {selected?.placement && (
+                                  <div className="sf-customIngredientExpanded">
+                                    <div className="sf-customToggle">
+                                      {["SIMPLE", "DOUBLE"].map((quantity) => (
+                                        <button
+                                          key={quantity}
+                                          type="button"
+                                          className={`sf-sizeChip ${
+                                            selected.quantity === quantity ? "is-active" : ""
+                                          }`}
+                                          onClick={() => {
+                                            updateCustomIngredient(ingredient, { quantity });
+                                            setCustomOpenSection(
+                                              getNextCustomSection(categoryName)
+                                            );
+                                          }}
+                                        >
+                                          <span>{quantity}</span>
+                                        </button>
+                                      ))}
+                                    </div>
+                                    <strong>
+                                      EUR {getCustomIngredientPrice(selected).toFixed(2)}
+                                    </strong>
+                                    <button
+                                      type="button"
+                                      className="sf-modalCloseBtn sf-customRemove"
+                                      onClick={() => removeCustomIngredient(ingredient.id)}
+                                      aria-label={`Quitar ${ingredient.name}`}
+                                    >
+                                      x
+                                    </button>
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </section>
+                  );
+                })}
+
+                <div className="sf-productPickerNotice">
+                  Para avanzar necesitas categoria, tamano
+                  {customRequiresSauce ? ", una salsa" : ""}
+                  {customRequiresCheese ? " y un queso" : ""}.
+                </div>
+
+                <div className="sf-productPickerActions">
+                  <button
+                    type="button"
+                    className="sf-secondaryBtn"
+                    onClick={() => setCustomModalOpen(false)}
+                  >
+                    Continue
+                  </button>
+                  <button
+                    type="button"
+                    className="sf-primaryBtn"
+                    disabled={!customReady}
+                    onClick={addCustomLine}
+                  >
+                    {customReady
+                      ? `Add to cart - EUR ${customGrandTotal.toFixed(2)}`
+                      : "Completa la personalizacion"}
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {repeatOpen && (
         <div className="sf-modalOverlay" onClick={() => setRepeatOpen(false)}>
           <div className="sf-modalCard sf-repeatModal" onClick={(event) => event.stopPropagation()}>
             <h3>Repetir pedido</h3>
             <p>
-              Buscamos el ultimo pedido con tu telefono y lo dejamos preparado
-              como borrador para el carrito.
+              Busca el ultimo pedido con tu telefono, revisa el contenido y
+              repitelo cuando este correcto.
             </p>
 
             <form className="sf-repeatForm" onSubmit={loadRepeatOrder}>
@@ -1843,22 +3358,50 @@ export default function StorePage() {
                   type="tel"
                   value={repeatPhone}
                   onChange={(event) => {
-                    setRepeatPhone(event.target.value);
+                    setRepeatPhone(normalizeRepeatPhoneInput(event.target.value));
+                    setRepeatDraft(null);
                     setRepeatMessage("");
                   }}
-                  placeholder="+34 600 000 000"
+                  placeholder="600000000"
+                  inputMode="numeric"
+                  maxLength={9}
                 />
               </label>
               <button type="submit" className="sf-primaryBtn" disabled={repeatLoading}>
-                {repeatLoading ? "Buscando..." : "Repetir"}
+                {repeatLoading ? "Buscando..." : "Buscar ultimo pedido"}
               </button>
             </form>
 
             {repeatDraft && (
               <div className="sf-repeatSummary">
-                <span>{repeatDraft.sourceOrderCode}</span>
+                <span>Pedido {repeatDraft.sourceOrderCode}</span>
+                <div className="sf-repeatLines">
+                  {repeatPreviewLines.map((line, index) => (
+                    <div key={line.cartLineId || index} className="sf-repeatLine">
+                      <div>
+                        <strong>{line.name}</strong>
+                        <small>
+                          {line.size} x {line.qty}
+                          {line.extras?.length > 0
+                            ? ` · Extra ${line.extras.map((extra) => extra.name).join(", ")}`
+                            : ""}
+                        </small>
+                      </div>
+                      <em>{formatMoney(line.subtotal, repeatDraft.currency)}</em>
+                    </div>
+                  ))}
+                  {repeatPreviewExtras.map((extra) => (
+                    <div key={extra.id} className="sf-repeatLine sf-repeatLine--extra">
+                      <div>
+                        <strong>{extra.name}</strong>
+                        <small>Extra</small>
+                      </div>
+                      <em>{formatMoney(extra.price, repeatDraft.currency)}</em>
+                    </div>
+                  ))}
+                </div>
                 <strong>
-                  {cartCount} producto{cartCount === 1 ? "" : "s"} - {formatMoney(cartTotal, repeatDraft.currency)}
+                  Total pedido: {formatMoney(repeatPreviewTotal, repeatDraft.currency)}
                 </strong>
               </div>
             )}
@@ -1869,13 +3412,11 @@ export default function StorePage() {
               <button type="button" className="sf-secondaryBtn" onClick={() => setRepeatOpen(false)}>
                 Cerrar
               </button>
-              {cartDraft && (
+              {repeatDraft && (
                 <button
                   type="button"
                   className="sf-secondaryBtn"
                   onClick={() => {
-                    setCartDraft(null);
-                    setCart([]);
                     setRepeatDraft(null);
                     try {
                       window.localStorage.removeItem(cartDraftStorageKey);
@@ -1886,6 +3427,16 @@ export default function StorePage() {
                   }}
                 >
                   Borrar borrador
+                </button>
+              )}
+              {repeatDraft && (
+                <button
+                  type="button"
+                  className="sf-primaryBtn"
+                  onClick={repeatFoundOrder}
+                  disabled={repeatPreviewLines.length === 0}
+                >
+                  Repetir
                 </button>
               )}
             </div>
@@ -1935,66 +3486,82 @@ export default function StorePage() {
         <div className="sf-modalOverlay" onClick={() => setBootsOpen(false)}>
           <div className="sf-modalCard sf-bootsModal" onClick={(event) => event.stopPropagation()}>
             <div className="sf-bootsPulse" aria-hidden="true">!!</div>
-            <h3>Boots de emergencia</h3>
+            <h3>Boost de emergencia</h3>
             <p>
-              Activa prioridad sobre un pedido pendiente y empujalo hacia los
-              primeros puestos de la cola de esta tienda.
+              Ahora estas en la posicion #{bootsPositionLabel}. Elige hasta
+              donde quieres avanzar en la cola.
             </p>
 
-            <form className="sf-bootsForm" onSubmit={loadBootsQuote}>
-              <label>
-                <span>Codigo de pedido</span>
-                <input
-                  type="text"
-                  value={bootsCode}
-                  onChange={(event) => {
-                    setBootsCode(event.target.value.toUpperCase());
-                    setBootsQuote(null);
-                  }}
-                  placeholder="VOLTA-1234"
-                />
-              </label>
+            <div className="sf-bootsCurrent">
+              <span>Tu posicion actual</span>
+              <strong>#{bootsPositionLabel}</strong>
+              <small>
+                {bootsQueueLoading
+                  ? "Actualizando cola..."
+                  : bootsCurrentPosition == null
+                  ? "No pudimos leer la cola de esta tienda."
+                  : `Hay ${bootsCurrentPosition} personas delante de ti.`}
+              </small>
+            </div>
 
-              <label>
-                <span>Posicion destino</span>
-                <select
-                  value={bootsTargetPosition}
-                  onChange={(event) => {
-                    setBootsTargetPosition(event.target.value);
-                    setBootsQuote(null);
-                  }}
-                >
-                  <option value="1">Numero 1</option>
-                  <option value="2">Numero 2</option>
-                  <option value="3">Numero 3</option>
-                </select>
-              </label>
+            <div className="sf-bootsOptionGroup" role="radiogroup" aria-label="Elige tu nueva posicion">
+              <span>Elige tu nueva posicion</span>
+              {bootsOptions.length === 0 ? (
+                <div className="sf-bootsEmpty">
+                  No hay cola suficiente para activar Boost ahora mismo.
+                </div>
+              ) : bootsOptions.map((option) => {
+                const active =
+                  String(option.targetPosition) === String(bootsTargetPosition);
 
-              <button type="submit" className="sf-primaryBtn" disabled={bootsLoading}>
-                {bootsLoading ? "Calculando..." : "Calcular Boots"}
-              </button>
-            </form>
+                return (
+                  <button
+                    key={option.targetPosition}
+                    type="button"
+                    className={`sf-bootsOption ${active ? "is-active" : ""}`}
+                    onClick={() => {
+                      setBootsTargetPosition(String(option.targetPosition));
+                      setBootsMessage("");
+                    }}
+                    role="radio"
+                    aria-checked={active}
+                  >
+                    <strong>#{option.targetPosition}</strong>
+                    <span>
+                      {option.jumps} salto{option.jumps === 1 ? "" : "s"} de cola
+                    </span>
+                    <em>{formatMoney(option.amount, boostCurrency)}</em>
+                  </button>
+                );
+              })}
+            </div>
 
-            {bootsQuote && (
+            {selectedBootsOption && (
               <div className="sf-bootsQuote">
                 <div>
                   <span>Ahora</span>
-                  <strong>#{bootsQuote.currentPosition}</strong>
+                  <strong>#{bootsPositionLabel}</strong>
                 </div>
                 <div>
                   <span>Destino</span>
-                  <strong>#{bootsQuote.targetPosition}</strong>
+                  <strong>#{selectedBootsOption.targetPosition}</strong>
                 </div>
                 <div>
                   <span>Salto</span>
-                  <strong>{bootsQuote.positionsToJump}</strong>
+                  <strong>{selectedBootsOption.jumps}</strong>
                 </div>
                 <div>
                   <span>Precio</span>
-                  <strong>{formatMoney(bootsQuote.amount, quoteCurrency)}</strong>
+                  <strong>{formatMoney(selectedBootsOption.amount, boostCurrency)}</strong>
                 </div>
               </div>
             )}
+
+            <small className="sf-bootsCheckoutNote">
+              {cartHasBoost
+                ? "Ya tienes un Boost en el carrito. Solo se permite uno por sesion."
+                : "El Boost se anadira a tu carrito y se cobrara al finalizar la compra."}
+            </small>
 
             {bootsMessage && <div className="sf-bootsMessage">{bootsMessage}</div>}
 
@@ -2006,11 +3573,13 @@ export default function StorePage() {
                 type="button"
                 className="sf-primaryBtn sf-bootsActivate"
                 onClick={activateBoots}
-                disabled={!bootsQuote || bootsQuote.positionsToJump <= 0 || bootsLoading}
+                disabled={!selectedBootsOption || bootsQueueLoading || cartHasBoost}
               >
-                {bootsQuote
-                  ? `Activar ${formatMoney(bootsQuote.amount, quoteCurrency)}`
-                  : "Activar Boots"}
+                {cartHasBoost
+                  ? "Boost ya en carrito"
+                  : selectedBootsOption
+                  ? `Activar Boost - ${formatMoney(selectedBootsOption.amount, boostCurrency)}`
+                  : "Activar Boost"}
               </button>
             </div>
           </div>

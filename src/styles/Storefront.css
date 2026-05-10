@@ -1502,8 +1502,11 @@
     inset 0 0 0 2px #111,
     inset 0 0 0 4px color-mix(in srgb, #ff2f74 72%, white),
     inset 0 0 0 5px rgba(255, 255, 255, 0.34),
+    inset 0 0 18px rgba(255, 255, 255, 0.42),
     0 10px 20px rgba(255, 191, 45, 0.24),
-    0 0 18px rgba(223, 255, 0, 0.34);
+    0 0 0 2px rgba(255, 255, 255, 0.72),
+    0 0 18px rgba(223, 255, 0, 0.34),
+    0 0 28px color-mix(in srgb, var(--sf-theme-primary, #4B11B2) 34%, transparent);
 }
 
 .sf-footerStatus--boots::before {
@@ -1677,26 +1680,25 @@
 
 .sf-bootsTicker::before {
   content: "";
-  inset: -9px -12px -7px -2px;
+  inset: -12px -14px -10px -4px;
   display: block;
   place-items: initial;
-  opacity: 0.5;
+  opacity: 0.74;
   color: transparent;
   text-shadow: none;
   background:
-    radial-gradient(68% 140% at 7% 22%, transparent 0 38%, rgba(30, 18, 0, 0.7) 39% 48%, transparent 49%),
-    radial-gradient(52% 126% at 20% 86%, transparent 0 39%, rgba(90, 48, 0, 0.58) 40% 51%, transparent 52%),
-    radial-gradient(76% 146% at 42% 16%, transparent 0 37%, rgba(30, 18, 0, 0.72) 38% 47%, transparent 48%),
-    radial-gradient(58% 118% at 58% 82%, transparent 0 40%, rgba(92, 48, 0, 0.62) 41% 52%, transparent 53%),
-    radial-gradient(72% 136% at 78% 20%, transparent 0 36%, rgba(30, 18, 0, 0.72) 37% 47%, transparent 48%),
-    radial-gradient(55% 126% at 96% 74%, transparent 0 40%, rgba(92, 48, 0, 0.62) 41% 52%, transparent 53%),
-    linear-gradient(112deg, transparent 0 22%, rgba(20, 12, 0, 0.36) 23% 26%, transparent 27% 100%);
-  background-size: 64px 42px, 54px 34px, 68px 42px, 58px 36px, 66px 42px, 56px 36px, 46px 100%;
-  background-position: -8px -5px, 9px 10px, 27px -8px, 45px 8px, 67px -5px, 88px 8px, 0 0;
-  filter: blur(0.08px) contrast(1.08);
+    radial-gradient(ellipse at center, rgba(17, 10, 0, 0.82) 0 18%, rgba(108, 57, 0, 0.5) 19% 31%, transparent 32%),
+    radial-gradient(ellipse at center, rgba(22, 12, 0, 0.78) 0 16%, rgba(118, 61, 0, 0.46) 17% 29%, transparent 30%),
+    radial-gradient(ellipse at center, rgba(17, 10, 0, 0.8) 0 17%, rgba(92, 43, 0, 0.48) 18% 30%, transparent 31%),
+    radial-gradient(ellipse at center, rgba(33, 16, 0, 0.74) 0 15%, rgba(120, 70, 0, 0.44) 16% 27%, transparent 28%),
+    radial-gradient(circle at 88% 18%, rgba(255, 255, 255, 0.72), transparent 17%),
+    radial-gradient(circle at 12% 80%, rgba(80, 20, 124, 0.34), transparent 20%);
+  background-size: 30px 22px, 38px 28px, 34px 24px, 42px 30px, 74px 42px, 64px 42px;
+  background-position: -2px 2px, 16px 13px, 36px 0, 58px 15px, 0 0, 28px 2px;
+  filter: contrast(1.16) saturate(1.15);
   mask-image: linear-gradient(90deg, transparent 0%, #000 12%, #000 86%, transparent 100%);
   -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 12%, #000 86%, transparent 100%);
-  animation: sfBootsTigerStripes 1.65s ease-in-out infinite;
+  animation: sfBootsLeopardSpots 1.85s ease-in-out infinite;
 }
 
 .sf-footerStatus strong {
@@ -2957,13 +2959,13 @@
   }
 }
 
-@keyframes sfBootsTigerStripes {
+@keyframes sfBootsLeopardSpots {
   0%,
   100% {
-    transform: translateY(0) skewX(-8deg) scaleX(1);
+    transform: translate(0, 0) scale(1);
   }
   50% {
-    transform: translateY(-4px) skewX(-11deg) scaleX(1.05);
+    transform: translate(-7px, -3px) scale(1.04);
   }
 }
 

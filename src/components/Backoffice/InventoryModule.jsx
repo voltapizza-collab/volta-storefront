@@ -36,7 +36,9 @@ export default function InventoryModule({ partner }) {
             .map((i) => (i.category || "").toUpperCase().trim())
             .filter(Boolean)
         ),
-      ];
+      ].sort((left, right) =>
+        left.localeCompare(right, "es", { sensitivity: "base" })
+      );
 
       setCategories(uniqueCategories);
     } catch (err) {
@@ -159,20 +161,6 @@ export default function InventoryModule({ partner }) {
     }
   };
 
-  const handleDeleteIngredient = async (ing) => {
-    const confirmed = window.confirm(
-      `Delete ${getDisplayName(ing.name)} from this store?`
-    );
-
-    if (!confirmed) return;
-
-    try {
-      await api.delete(`/stores/${storeId}/ingredients/${ing.id}`);
-      await fetchIngredients();
-    } catch (err) {
-      console.error(err);
-    }
-  };
   return (
     <div className="inv-wrapper">
 
@@ -252,15 +240,6 @@ export default function InventoryModule({ partner }) {
                                   }`}
                                 >
                                   <div className="inv-itemLeft">
-                                    <button
-                                      className="inv-deleteBtn"
-                                      type="button"
-                                      onClick={() =>
-                                        handleDeleteIngredient(ing)
-                                      }
-                                    >
-                                      ×
-                                    </button>
                                     <div className="inv-itemName">
                                       {getDisplayName(ing.name)}
                                     </div>
@@ -391,13 +370,6 @@ export default function InventoryModule({ partner }) {
                     >
 
                       <div className="inv-itemLeft">
-                        <button
-                          className="inv-deleteBtn"
-                          type="button"
-                          onClick={() => handleDeleteIngredient(ing)}
-                        >
-                          ×
-                        </button>
                         <div className="inv-itemName">
                           {highlightMatch(getDisplayName(ing.name), search)}
                         </div>

@@ -12,10 +12,15 @@ import {
 const TRENDING_TAB = "__TRENDING__";
 const PROMOS_TAB = "__PROMOS__";
 const UPCOMING_TAB = "__UPCOMING__";
-const BOOST_PRICE_PER_POSITION = 0.2;
-const BOOST_MAX_OPTIONS = 3;
 const HALF_CATEGORY_ID = 3;
-const CUSTOM_BASE_PRICE_FACTOR = 0.72;
+const CUSTOM_BASE_PRICE_FACTOR = 0.8;
+const DEFAULT_BOOST_SETTINGS = {
+  active: true,
+  unitPrice: 0.2,
+  maxOptions: 3,
+  voltaSharePercent: 25,
+  partnerSharePercent: 75,
+};
 const CUSTOM_CATEGORY_ORDER = [
   "SALSAS",
   "QUESOS",
@@ -227,7 +232,6 @@ const ALLERGEN_LABELS = {
   EGG: "huevo",
   FISH: "pescado",
   GLUTEN: "gluten",
-  LACTOSE: "lactosa",
   LUPIN: "altramuces",
   MILK: "leche",
   MOLLUSCS: "moluscos",
@@ -260,6 +264,30 @@ const getProductAllergens = (item) => {
     left.localeCompare(right, "es", { sensitivity: "base" })
   );
 };
+
+const getIngredientAllergens = (ingredient) =>
+  (Array.isArray(ingredient?.allergens) ? ingredient.allergens : [])
+    .map((allergen) => normalizeAllergenLabel(allergen))
+    .filter(Boolean);
+
+const getAllergensFromIngredients = (ingredients = []) => {
+  const allergenSet = new Set();
+
+  ingredients.forEach((ingredient) => {
+    getIngredientAllergens(ingredient).forEach((allergen) => {
+      allergenSet.add(allergen);
+    });
+  });
+
+  return [...allergenSet].sort((left, right) =>
+    left.localeCompare(right, "es", { sensitivity: "base" })
+  );
+};
+
+const getAllergenNotice = (allergens = []) =>
+  allergens.length
+    ? `Alergenos: ${allergens.join(", ")}.`
+    : "Sin alergenos declarados en los ingredientes seleccionados.";
 
 const buildPizzaLine = (item) => {
   const ingredients = Array.isArray(item?.ingredients)
@@ -363,33 +391,14 @@ const getLowestPriceBySize = (items = []) => {
 };
 
 const isHalfPizzaCandidate = (item) => {
-  const category = normalizeSearchText(item?.category);
-  const name = normalizeSearchText(item?.name);
-  const type = normalizeSearchText(item?.type);
-  const blockedWords = [
-    "bebida",
-    "drink",
-    "refresco",
-    "postre",
-    "dessert",
-    "entrante",
-    "extra",
-    "complemento",
-    "salsa",
-  ];
-
-  if (blockedWords.some((word) => category.includes(word) || type.includes(word))) {
+  if (item?.categoryHalfAndHalf !== true) {
     return false;
   }
 
   const sizes = getAvailableSizes(item);
   if (!sizes.length) return false;
 
-  return (
-    category.includes("pizza") ||
-    name.includes("pizza") ||
-    Boolean(item?.categoryId)
-  );
+  return sizes.some((size) => priceForSize(item.priceBySize, size) > 0);
 };
 
 const normalizeCartLine = (line, index = 0) => {
@@ -510,8 +519,8 @@ export default function StorePage() {
   const [openHalfExtrasB, setOpenHalfExtrasB] = useState(false);
   const [customModalOpen, setCustomModalOpen] = useState(false);
   const [customCategoryKey, setCustomCategoryKey] = useState("");
-  const [customCategoryExtras, setCustomCategoryExtras] = useState([]);
-  const [customExtrasLoading, setCustomExtrasLoading] = useState(false);
+  const [customCategoryUses, setCustomCategoryUses] = useState([]);
+  const [customUsesLoading, setCustomUsesLoading] = useState(false);
   const [customIngredientsCatalog, setCustomIngredientsCatalog] = useState([]);
   const [customSize, setCustomSize] = useState("");
   const [customQty, setCustomQty] = useState(1);
@@ -524,6 +533,7 @@ export default function StorePage() {
   const [bootsQueueLoading, setBootsQueueLoading] = useState(false);
   const [bootsTargetPosition, setBootsTargetPosition] = useState("1");
   const [bootsMessage, setBootsMessage] = useState("");
+  const [boostSettings, setBoostSettings] = useState(DEFAULT_BOOST_SETTINGS);
   const [now, setNow] = useState(() => new Date());
   const [flippedId, setFlippedId] = useState(null);
   const [tick, setTick] = useState(false);
@@ -553,6 +563,7 @@ export default function StorePage() {
         setPromos(nextPromos);
         setStore(menuData?.store || null);
         setPartner(partnerData || null);
+        setBoostSettings(menuData?.boostSettings || DEFAULT_BOOST_SETTINGS);
 
         setActiveTab("");
       } catch (err) {
@@ -924,6 +935,7 @@ export default function StorePage() {
         .map((extra) => ({
           id: extra.ingredientId,
           name: extra.name || extra.ingredientName || "Extra",
+          allergens: Array.isArray(extra.allergens) ? extra.allergens : [],
           price: priceForExtraSize(extra, productSelection.size),
         })),
     [extrasAvail, productSelection.extras, productSelection.size]
@@ -939,6 +951,18 @@ export default function StorePage() {
   const selectedProductAllergens = useMemo(
     () => getProductAllergens(selectedProduct),
     [selectedProduct]
+  );
+  const selectedPurchaseAllergens = useMemo(
+    () =>
+      [
+        ...new Set([
+          ...selectedProductAllergens,
+          ...getAllergensFromIngredients(selectedExtras),
+        ]),
+      ].sort((left, right) =>
+        left.localeCompare(right, "es", { sensitivity: "base" })
+      ),
+    [selectedExtras, selectedProductAllergens]
   );
   const sortedExtras = useMemo(
     () => [...extrasAvail].sort((left, right) => num(right.price) - num(left.price)),
@@ -995,6 +1019,7 @@ export default function StorePage() {
         .map((extra) => ({
           id: extra.ingredientId,
           name: extra.name || extra.ingredientName || "Extra",
+          allergens: Array.isArray(extra.allergens) ? extra.allergens : [],
           side,
           price: priceForExtraSize(extra, halfSize),
         })),
@@ -1024,6 +1049,19 @@ export default function StorePage() {
     const priceB = priceForSize(halfB.priceBySize, halfSize);
     return priceA >= priceB ? halfA : halfB;
   }, [halfA, halfB, halfSize]);
+  const halfPurchaseAllergens = useMemo(
+    () =>
+      [
+        ...new Set([
+          ...getProductAllergens(halfA),
+          ...getProductAllergens(halfB),
+          ...getAllergensFromIngredients(halfSelectedExtras),
+        ]),
+      ].sort((left, right) =>
+        left.localeCompare(right, "es", { sensitivity: "base" })
+      ),
+    [halfA, halfB, halfSelectedExtras]
+  );
   const hasExplicitCustomCategories = useMemo(
     () => menu.some((item) => item?.categoryCustomizable === true),
     [menu]
@@ -1113,34 +1151,40 @@ export default function StorePage() {
     if (!selectedCustomBase || !customSize) return 0;
     return priceForSize(selectedCustomBase.priceBySize, customSize);
   }, [customSize, selectedCustomBase]);
-  const customExtraByIngredientId = useMemo(
+  const customUseByIngredientId = useMemo(
     () =>
       new Map(
-        customCategoryExtras.map((extra) => [
-          Number(extra.ingredientId),
-          extra,
+        customCategoryUses.map((use) => [
+          Number(use.ingredientId),
+          use,
         ])
       ),
-    [customCategoryExtras]
+    [customCategoryUses]
   );
   const scopedCustomIngredientsCatalog = useMemo(() => {
     if (!selectedCustomCategory) return [];
 
-    if (customExtrasLoading) return [];
+    if (customUsesLoading) return [];
 
-    if (isPizzaLikeCategory(selectedCustomCategory.name)) {
-      return customIngredientsCatalog;
-    }
+    if (!customCategoryUses.length) return [];
 
-    if (!customCategoryExtras.length) return customIngredientsCatalog;
+    return customCategoryUses.map((use) => {
+      const catalogIngredient = customIngredientsCatalog.find(
+        (ingredient) => Number(ingredient.id) === Number(use.ingredientId)
+      );
 
-    return customIngredientsCatalog.filter((ingredient) =>
-      customExtraByIngredientId.has(Number(ingredient.id))
-    );
+      return {
+        ...(catalogIngredient || {}),
+        ...use,
+        id: use.ingredientId ?? use.id,
+        name: use.name || catalogIngredient?.name || "Ingrediente",
+        category: use.category || catalogIngredient?.category || "OTROS",
+        costPrice: use.costPrice ?? catalogIngredient?.costPrice,
+      };
+    });
   }, [
-    customCategoryExtras.length,
-    customExtraByIngredientId,
-    customExtrasLoading,
+    customCategoryUses,
+    customUsesLoading,
     customIngredientsCatalog,
     selectedCustomCategory,
   ]);
@@ -1178,6 +1222,20 @@ export default function StorePage() {
     () => Object.keys(customIngredients).map((id) => Number(id)),
     [customIngredients]
   );
+  const customSelectedAllergens = useMemo(
+    () =>
+      getAllergensFromIngredients(
+        selectedCustomIngredientIds
+          .map((id) =>
+            scopedCustomIngredientsCatalog.find(
+              (ingredient) => Number(ingredient.id) === Number(id)
+            )
+          )
+          .filter(Boolean)
+      ),
+    [scopedCustomIngredientsCatalog, selectedCustomIngredientIds]
+  );
+  const customHasIngredient = selectedCustomIngredientIds.length > 0;
   const customHasBase = Boolean(selectedCustomCategory);
   const customHasSize = Boolean(customSize);
   const customHasSauce = (customIngredientsByCategory.SALSAS || []).some((ingredient) =>
@@ -1194,6 +1252,7 @@ export default function StorePage() {
   const customReady =
     customHasBase &&
     customHasSize &&
+    customHasIngredient &&
     (!customRequiresSauce || customHasSauce) &&
     (!customRequiresCheese || customHasCheese);
   const customIngredientsTotal = useMemo(
@@ -1233,12 +1292,12 @@ export default function StorePage() {
   );
   const getCustomIngredientUnitPrice = useCallback(
     (ingredient) => {
-      const extra = customExtraByIngredientId.get(Number(ingredient?.id));
-      if (extra) return priceForExtraSize(extra, customSize);
+      const use = customUseByIngredientId.get(Number(ingredient?.id));
+      if (use) return priceForExtraSize(use, customSize);
 
       return num(ingredient?.costPrice);
     },
-    [customExtraByIngredientId, customSize]
+    [customUseByIngredientId, customSize]
   );
 
   useEffect(() => {
@@ -1387,28 +1446,28 @@ export default function StorePage() {
 
   useEffect(() => {
     if (!customModalOpen || !selectedCustomCategory?.categoryId) {
-      setCustomCategoryExtras([]);
+      setCustomCategoryUses([]);
       return;
     }
 
-    const loadCustomCategoryExtras = async () => {
+    const loadCustomCategoryUses = async () => {
       try {
-        setCustomExtrasLoading(true);
+        setCustomUsesLoading(true);
         const params = new URLSearchParams({
           categoryId: String(selectedCustomCategory.categoryId),
           storeId: String(store?.id || ""),
         });
-        const data = await api.get(`/api/ingredient-extras?${params.toString()}`);
-        setCustomCategoryExtras(Array.isArray(data) ? data : []);
+        const data = await api.get(`/api/ingredient-category-uses?${params.toString()}`);
+        setCustomCategoryUses(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error(err);
-        setCustomCategoryExtras([]);
+        setCustomCategoryUses([]);
       } finally {
-        setCustomExtrasLoading(false);
+        setCustomUsesLoading(false);
       }
     };
 
-    loadCustomCategoryExtras();
+    loadCustomCategoryUses();
   }, [customModalOpen, selectedCustomCategory?.categoryId, store?.id]);
 
   useEffect(() => {
@@ -1442,7 +1501,7 @@ export default function StorePage() {
       !customModalOpen ||
       !selectedCustomCategory ||
       !customHasSize ||
-      customExtrasLoading ||
+      customUsesLoading ||
       customOrderedCategories.length === 0
     ) {
       return;
@@ -1452,7 +1511,7 @@ export default function StorePage() {
       setCustomOpenSection(customOrderedCategories[0]);
     }
   }, [
-    customExtrasLoading,
+    customUsesLoading,
     customHasSize,
     customModalOpen,
     customOpenSection,
@@ -1493,6 +1552,7 @@ export default function StorePage() {
       qty: Number(productSelection.qty || 1),
       price: selectedBasePrice,
       extras: selectedExtras,
+      allergens: selectedPurchaseAllergens,
       subtotal: selectedLineTotal,
       image: selectedProduct.image || "",
     };
@@ -1609,6 +1669,7 @@ export default function StorePage() {
       qty: Number(halfQty || 1),
       price: halfBasePrice,
       extras: halfSelectedExtras,
+      allergens: halfPurchaseAllergens,
       subtotal,
       halfMeta: {
         priceRule: "MOST_EXPENSIVE_HALF",
@@ -1684,6 +1745,9 @@ export default function StorePage() {
         name: catalogIngredient?.name || data.name || "Ingrediente",
         placement: data.placement,
         quantity: data.quantity,
+        allergens: Array.isArray(catalogIngredient?.allergens)
+          ? catalogIngredient.allergens
+          : [],
         price: getCustomIngredientPrice(data),
       };
     });
@@ -1698,6 +1762,7 @@ export default function StorePage() {
       qty: Number(customQty || 1),
       price: customBasePrice,
       ingredients,
+      allergens: customSelectedAllergens,
       extras: [],
       subtotal: customGrandTotal,
       customMeta: {
@@ -1740,7 +1805,12 @@ export default function StorePage() {
   const bootsOptions = useMemo(
     () =>
       Array.from(
-        { length: Math.min(BOOST_MAX_OPTIONS, Math.max(bootsCurrentPosition || 0, 0)) },
+        {
+          length: Math.min(
+            Number(boostSettings.maxOptions || DEFAULT_BOOST_SETTINGS.maxOptions),
+            Math.max(bootsCurrentPosition || 0, 0)
+          ),
+        },
         (_, index) => {
           const targetPosition = index + 1;
           const jumps = Math.max((bootsCurrentPosition || 0) - targetPosition + 1, 0);
@@ -1748,11 +1818,11 @@ export default function StorePage() {
           return {
             targetPosition,
             jumps,
-            amount: Math.round(jumps * BOOST_PRICE_PER_POSITION * 100) / 100,
+            amount: Math.round(jumps * Number(boostSettings.unitPrice || 0) * 100) / 100,
           };
         }
       ),
-    [bootsCurrentPosition]
+    [boostSettings.maxOptions, boostSettings.unitPrice, bootsCurrentPosition]
   );
   const selectedBootsOption =
     bootsOptions.find(
@@ -1875,7 +1945,9 @@ export default function StorePage() {
         currentPosition: bootsCurrentPosition,
         targetPosition: selectedBootsOption.targetPosition,
         positionsToJump: selectedBootsOption.jumps,
-        unitPrice: BOOST_PRICE_PER_POSITION,
+        unitPrice: Number(boostSettings.unitPrice || 0),
+        voltaSharePercent: Number(boostSettings.voltaSharePercent || 25),
+        partnerSharePercent: Number(boostSettings.partnerSharePercent || 75),
         amount: selectedBootsOption.amount,
         currency: boostCurrency,
       },
@@ -2516,6 +2588,7 @@ export default function StorePage() {
             type="button"
             className="sf-footerStatus sf-footerStatus--boots"
             onClick={() => setBootsOpen(true)}
+            disabled={boostSettings.active === false}
           >
             <span className="sf-bootsCounter" aria-label={`Posicion ${bootsPositionLabel} en espera`}>
               <span>POS</span>
@@ -2576,9 +2649,7 @@ export default function StorePage() {
                 </div>
 
                 <div className="sf-productPickerNotice">
-                  {selectedProductAllergens.length
-                    ? `Alergenos: ${selectedProductAllergens.join(", ")}.`
-                    : "Sin alergenos declarados en los ingredientes de esta pizza."}
+                  {getAllergenNotice(selectedPurchaseAllergens)}
                 </div>
 
                 <div className="sf-productPickerRow">
@@ -2753,6 +2824,9 @@ export default function StorePage() {
                             ).join(", ")}
                           </small>
                         )}
+                        {line.allergens?.length > 0 && (
+                          <small>Alergenos: {line.allergens.join(", ")}</small>
+                        )}
                       </div>
                       <div className="sf-cartRowSide">
                         <strong>EUR {num(line.subtotal).toFixed(2)}</strong>
@@ -2912,7 +2986,7 @@ export default function StorePage() {
                 </div>
 
                 <div className="sf-productPickerNotice">
-                  Puede contener alergenos. Consulta con nuestro personal si tienes alguna alergia.
+                  {getAllergenNotice(halfPurchaseAllergens)}
                 </div>
 
                 {halfPricingSource && (
@@ -3072,7 +3146,7 @@ export default function StorePage() {
                             <span>{category.name}</span>
                             <small>
                               {category.selectSize.join(" / ")}
-                              {fromPrice ? ` - desde EUR ${fromPrice.toFixed(2)}` : ""}
+                              {fromPrice ? ` - base desde EUR ${fromPrice.toFixed(2)}` : ""}
                             </small>
                           </button>
                         );
@@ -3180,13 +3254,13 @@ export default function StorePage() {
                   )}
                 </section>
 
-                {selectedCustomCategory && customHasSize && customExtrasLoading && (
+                {selectedCustomCategory && customHasSize && customUsesLoading && (
                   <div className="sf-customEmptyLine">Cargando opciones para {selectedCustomCategory.name}...</div>
                 )}
 
                 {selectedCustomCategory &&
                   customHasSize &&
-                  !customExtrasLoading &&
+                  !customUsesLoading &&
                   customOrderedCategories.length === 0 && (
                     <div className="sf-customEmptyLine">
                       No hay ingredientes personalizables configurados para {selectedCustomCategory.name}.
@@ -3242,7 +3316,7 @@ export default function StorePage() {
                                 <div className="sf-customIngredientHead">
                                   <strong>{ingredient.name}</strong>
                                   <span>
-                                    {customExtrasLoading
+                                    {customUsesLoading
                                       ? "..."
                                       : `EUR ${getCustomIngredientUnitPrice(ingredient).toFixed(2)}`}
                                   </span>
@@ -3313,8 +3387,13 @@ export default function StorePage() {
 
                 <div className="sf-productPickerNotice">
                   Para avanzar necesitas categoria, tamano
+                  {!customHasIngredient ? ", al menos un ingrediente" : ""}
                   {customRequiresSauce ? ", una salsa" : ""}
                   {customRequiresCheese ? " y un queso" : ""}.
+                </div>
+
+                <div className="sf-productPickerNotice">
+                  {getAllergenNotice(customSelectedAllergens)}
                 </div>
 
                 <div className="sf-productPickerActions">

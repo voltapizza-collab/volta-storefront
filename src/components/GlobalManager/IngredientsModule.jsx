@@ -6,25 +6,27 @@ import { Tree } from "react-arborist";
 const INGREDIENTS_BASE = {
 
   QUESOS: [
-    { name: "Mozzarella", allergens: ["LACTOSE"] },
-    { name: "Cheddar", allergens: ["LACTOSE"] },
-    { name: "Parmesano", allergens: ["LACTOSE"] },
-    { name: "Gorgonzola", allergens: ["LACTOSE"] },
-    { name: "Queso azul", allergens: ["LACTOSE"] },
-    { name: "Burrata", allergens: ["LACTOSE"] },
-    { name: "Ricotta", allergens: ["LACTOSE"] },
-    { name: "Queso de cabra", allergens: ["LACTOSE"] },
-    { name: "Emmental", allergens: ["LACTOSE"] },
-    { name: "Provolone", allergens: ["LACTOSE"] }
+    { name: "Mozzarella", allergens: ["MILK"] },
+    { name: "Cheddar", allergens: ["MILK"] },
+    { name: "Parmesano", allergens: ["MILK"] },
+    { name: "Gorgonzola", allergens: ["MILK"] },
+    { name: "Queso azul", allergens: ["MILK"] },
+    { name: "Burrata", allergens: ["MILK"] },
+    { name: "Ricotta", allergens: ["MILK"] },
+    { name: "Queso de cabra", allergens: ["MILK"] },
+    { name: "Emmental", allergens: ["MILK"] },
+    { name: "Provolone", allergens: ["MILK"] },
+    { name: "Relleno de Mozzarela", allergens: ["MILK"] }
   ],
 
   SALSAS: [
-    { name: "Tomate", allergens: [] },
-    { name: "BBQ", allergens: [] },
-    { name: "Pesto", allergens: ["NUTS"] },
-    { name: "Crema", allergens: ["LACTOSE"] },
+    { name: "Salsa Tomate", allergens: [] },
+    { name: "Salsa BBQ", allergens: [] },
+    { name: "Salsa Pesto", allergens: ["NUTS"] },
+    { name: "Salsa esparragos", allergens: ["MILK"] },
     { name: "Salsa picante", allergens: [] },
     { name: "Salsa de ajo", allergens: ["EGG"] },
+    { name: "Salsa de arándanos", allergens: ["MILK"] },
     { name: "Salsa miel-mostaza", allergens: ["MUSTARD"] }
   ],
 
@@ -59,6 +61,33 @@ const INGREDIENTS_BASE = {
     { name: "Pulpo", allergens: ["SHELLFISH"] },
     { name: "Mejillones", allergens: ["SHELLFISH"] }
   ],
+
+  CREMAS_DULCES: [
+  { name: "Avellana blanca", allergens: ["MILK", "TREE_NUTS", "SOY"] },
+  { name: "Avellana tradicional", allergens: ["MILK", "TREE_NUTS", "SOY"] },
+  { name: "Pistacho", allergens: ["MILK", "TREE_NUTS", "SOY"] },
+  { name: "Lotus Biscoff", allergens: ["WHEAT", "SOY"] },
+  { name: "Dulce de leche", allergens: ["MILK"] },
+  { name: "Leche condensada", allergens: ["MILK"] },
+  { name: "Chocolate blanco", allergens: ["MILK", "SOY"] },
+  { name: "Chocolate con leche", allergens: ["MILK", "SOY"] },
+  { name: "Chocolate oscuro", allergens: ["SOY"] },
+  { name: "Nutella", allergens: ["MILK", "TREE_NUTS", "SOY"] },
+  { name: "Crema de almendras", allergens: ["TREE_NUTS"] },
+  { name: "Crema de maní", allergens: ["PEANUTS"] },
+  { name: "Crema de coco", allergens: ["TREE_NUTS"] },
+  { name: "Crema de vainilla", allergens: ["MILK", "EGGS"] },
+  { name: "Crema pastelera", allergens: ["MILK", "EGGS", "WHEAT"] },
+  { name: "Crema de queso dulce", allergens: ["MILK"] }
+],
+ENDULZANTES: [
+  { name: "Miel", allergens: [] },
+  { name: "Azúcar", allergens: [] },
+  { name: "Azúcar glass", allergens: [] },
+  { name: "Sirope de maple", allergens: [] },
+  { name: "Sirope de agave", allergens: [] },
+  { name: "Caramelo", allergens: ["MILK"] }
+],
 
   VERDURAS: [
     { name: "Cebolla", allergens: [] },

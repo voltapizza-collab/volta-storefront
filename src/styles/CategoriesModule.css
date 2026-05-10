@@ -107,6 +107,12 @@
   margin-top: 8px;
 }
 
+.gmc-inlineChecks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .gmc-listHeader {
   display: flex;
   justify-content: space-between;
@@ -210,6 +216,85 @@
 .gmc-empty {
   margin: 0;
   opacity: 0.65;
+}
+
+.gmc-kicker {
+  color: #f29b00;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.gmc-header h2 {
+  margin: 0;
+  color: #f3efe1;
+  font-size: 32px;
+  line-height: 1.05;
+}
+
+.gmc-header p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.68);
+  max-width: 720px;
+}
+
+.gmc-form {
+  display: grid;
+  gap: 16px;
+  max-width: 720px;
+}
+
+.gmc-field,
+.gmc-switchRow {
+  display: grid;
+  gap: 8px;
+  padding: 16px;
+  border: 1px solid #2c2c2c;
+  border-radius: 14px;
+  background: #121212;
+  color: #f3efe1;
+}
+
+.gmc-switchRow {
+  grid-template-columns: auto 1fr;
+  align-items: center;
+}
+
+.gmc-field span,
+.gmc-switchRow span {
+  color: #f29b00;
+  font-weight: 900;
+}
+
+.gmc-field input {
+  border: 1px solid #444;
+  border-radius: 10px;
+  padding: 12px 14px;
+  background: #1f1f1f;
+  color: #fff;
+  font-size: 15px;
+}
+
+.gmc-primaryBtn {
+  justify-self: start;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  padding: 12px 18px;
+  background: #f29b00;
+  color: #101010;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.gmc-primaryBtn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.gmc-feedback {
+  color: rgba(255, 255, 255, 0.72);
+  font-weight: 800;
 }
 
 @media (max-width: 720px) {

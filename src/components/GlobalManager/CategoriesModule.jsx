@@ -6,9 +6,11 @@ export default function CategoriesModule() {
   const [categories, setCategories] = useState([]);
   const [newCategoryName, setNewCategoryName] = useState("");
   const [newCategoryCustomizable, setNewCategoryCustomizable] = useState(false);
+  const [newCategoryHalfAndHalf, setNewCategoryHalfAndHalf] = useState(false);
   const [editingCategoryId, setEditingCategoryId] = useState(null);
   const [editingName, setEditingName] = useState("");
   const [editingCustomizable, setEditingCustomizable] = useState(false);
+  const [editingHalfAndHalf, setEditingHalfAndHalf] = useState(false);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
 
@@ -59,9 +61,11 @@ export default function CategoriesModule() {
       await api.post("/api/categories", {
         name: trimmedName,
         customizable: newCategoryCustomizable,
+        halfAndHalf: newCategoryHalfAndHalf,
       });
       setNewCategoryName("");
       setNewCategoryCustomizable(false);
+      setNewCategoryHalfAndHalf(false);
       await loadCategories();
     } catch (err) {
       console.error(err);
@@ -75,12 +79,14 @@ export default function CategoriesModule() {
     setEditingCategoryId(category.id);
     setEditingName(category.name || "");
     setEditingCustomizable(Boolean(category.customizable));
+    setEditingHalfAndHalf(Boolean(category.halfAndHalf));
   };
 
   const cancelEditing = () => {
     setEditingCategoryId(null);
     setEditingName("");
     setEditingCustomizable(false);
+    setEditingHalfAndHalf(false);
   };
 
   const saveCategory = async (category) => {
@@ -108,6 +114,7 @@ export default function CategoriesModule() {
       const { data } = await api.patch(`/api/categories/${category.id}`, {
         name: trimmedName,
         customizable: editingCustomizable,
+        halfAndHalf: editingHalfAndHalf,
       });
 
       setCategories((prev) =>
@@ -182,6 +189,16 @@ export default function CategoriesModule() {
             Personalizable
           </label>
 
+          <label className="gmc-customizeCheck">
+            <input
+              type="checkbox"
+              checked={newCategoryHalfAndHalf}
+              onChange={(e) => setNewCategoryHalfAndHalf(e.target.checked)}
+              disabled={saving}
+            />
+            Mitad / mitad
+          </label>
+
           <button
             type="button"
             className="gmc-createBtn"
@@ -220,22 +237,38 @@ export default function CategoriesModule() {
                     <div className="gmc-rowName">{category.name}</div>
                   )}
                   <div className="gmc-rowMeta">
-                    {category.customizable
-                      ? "Personalizable en armado"
-                      : "Catalogo global"}
+                    {[
+                      category.customizable ? "Personalizable en armado" : "Catalogo global",
+                      category.halfAndHalf ? "Disponible para mitad / mitad" : null,
+                    ]
+                      .filter(Boolean)
+                      .join(" · ")}
                   </div>
                   {editingCategoryId === category.id && (
-                    <label className="gmc-customizeCheck gmc-customizeCheck--inline">
-                      <input
-                        type="checkbox"
-                        checked={editingCustomizable}
-                        onChange={(e) =>
-                          setEditingCustomizable(e.target.checked)
-                        }
-                        disabled={saving}
-                      />
-                      Personalizable
-                    </label>
+                    <div className="gmc-inlineChecks">
+                      <label className="gmc-customizeCheck gmc-customizeCheck--inline">
+                        <input
+                          type="checkbox"
+                          checked={editingCustomizable}
+                          onChange={(e) =>
+                            setEditingCustomizable(e.target.checked)
+                          }
+                          disabled={saving}
+                        />
+                        Personalizable
+                      </label>
+                      <label className="gmc-customizeCheck gmc-customizeCheck--inline">
+                        <input
+                          type="checkbox"
+                          checked={editingHalfAndHalf}
+                          onChange={(e) =>
+                            setEditingHalfAndHalf(e.target.checked)
+                          }
+                          disabled={saving}
+                        />
+                        Mitad / mitad
+                      </label>
+                    </div>
                   )}
                 </div>
 

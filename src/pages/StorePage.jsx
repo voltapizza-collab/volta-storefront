@@ -731,7 +731,6 @@ export default function StorePage() {
 
         await fetchIncentiveSnapshot(partnerId);
 
-        setActiveTab("");
       } catch (err) {
         console.error(err);
         setError("Error loading menu");
@@ -923,7 +922,7 @@ export default function StorePage() {
 
   useEffect(() => {
     if (!categories.length) {
-      setActiveTab((current) => current || TRENDING_TAB);
+      setActiveTab("");
       return;
     }
 
@@ -2531,7 +2530,7 @@ export default function StorePage() {
                 <strong>{incentiveRewardLabel} listo para este pedido</strong>
                 <span>Volta reward</span>
               </div>
-            ) : (
+            ) : activeIncentive ? (
               <div className="sf-incentiveProgress" aria-label="Progreso del incentivo">
                 <div className="sf-incentiveProgressTrack">
                   <span
@@ -2551,7 +2550,7 @@ export default function StorePage() {
                   </span>
                 </div>
               </div>
-            )}
+            ) : null}
           </div>
 
           <div className="lsf-tabs" role="tablist" aria-label="Categorias del menu">

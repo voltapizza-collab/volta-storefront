@@ -20,6 +20,10 @@ export default function InventoryModule({ partner }) {
   const [newIngredientName, setNewIngredientName] = useState("");
   const [newIngredientCategory, setNewIngredientCategory] = useState("");
   const [createFeedback, setCreateFeedback] = useState("");
+  const [onboardingPriceIngredient, setOnboardingPriceIngredient] =
+    useState(null);
+  const [onboardingPriceDraft, setOnboardingPriceDraft] = useState("");
+  const [savingOnboardingId, setSavingOnboardingId] = useState(null);
 
   const storeId = partner?.storeId;
 
@@ -75,20 +79,122 @@ export default function InventoryModule({ partner }) {
 
   const toggleIngredient = async (ing) => {
     try {
+      if (ing.exists && ing.active) {
+        await api.patch(`/stores/${storeId}/ingredients/${ing.id}`, {
+          active: false,
+        });
+        await fetchIngredients();
+        return;
+      }
+
+      setOnboardingPriceIngredient(ing);
+      setOnboardingPriceDraft(
+        ing.costPrice == null ? "" : String(ing.costPrice)
+      );
+      setCreateFeedback("");
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const normalizePriceInput = (value) =>
+    String(value ?? "")
+      .replace(",", ".")
+      .replace(/[^\d.]/g, "")
+      .replace(/(\..*)\./g, "$1")
+      .slice(0, 8);
+
+  const confirmIngredientOnboarding = async () => {
+    if (!onboardingPriceIngredient) return;
+
+    const normalizedValue = String(onboardingPriceDraft)
+      .replace(",", ".")
+      .trim();
+    const costPrice = Number(normalizedValue);
+
+    if (!Number.isFinite(costPrice) || costPrice <= 0) {
+      setCreateFeedback("Ingresa un precio valido para activar el ingrediente.");
+      return;
+    }
+
+    try {
+      const ing = onboardingPriceIngredient;
+      setSavingOnboardingId(ing.id);
+      await api.patch(`/ingredients/${ing.id}`, {
+        costPrice,
+      });
+
       if (!ing.exists) {
         await api.post(`/stores/${storeId}/ingredients`, {
           ingredientIds: [ing.id],
         });
       } else {
         await api.patch(`/stores/${storeId}/ingredients/${ing.id}`, {
-          active: !ing.active,
+          active: true,
         });
       }
 
+      setOnboardingPriceIngredient(null);
+      setOnboardingPriceDraft("");
+      setCreateFeedback("");
       await fetchIngredients();
     } catch (err) {
       console.error(err);
+      setCreateFeedback("No se pudo activar el ingrediente con precio.");
+    } finally {
+      setSavingOnboardingId(null);
     }
+  };
+
+  const formatIngredientPrice = (value) => {
+    const price = Number(value);
+    if (!Number.isFinite(price) || price <= 0) return "";
+    return `EUR ${price.toFixed(2)}`;
+  };
+
+  const renderOnboardingAction = (ing) => {
+    const isSaving = savingOnboardingId === ing.id;
+    const activePrice = ing.exists && ing.active
+      ? formatIngredientPrice(ing.costPrice)
+      : "";
+
+    return (
+      <div className="inv-onboardingAction">
+        <button
+          className={`inv-toggle ${
+            !ing.exists
+              ? "not-added"
+              : ing.active
+              ? "in"
+              : "out"
+          }`}
+          type="button"
+          onClick={() => toggleIngredient(ing)}
+          disabled={isSaving}
+        >
+          {!ing.exists
+            ? "AGREGAR"
+            : ing.active
+            ? "ONBOARDING"
+            : "AGREGAR"}
+        </button>
+
+        {activePrice && (
+          <button
+            type="button"
+            className="inv-priceBubble"
+            onClick={() => {
+              setOnboardingPriceIngredient(ing);
+              setOnboardingPriceDraft(String(ing.costPrice ?? ""));
+              setCreateFeedback("");
+            }}
+            disabled={isSaving}
+          >
+            {activePrice}
+          </button>
+        )}
+      </div>
+    );
   };
 
   const handleDragEnd = (event) => {
@@ -180,6 +286,78 @@ export default function InventoryModule({ partner }) {
         </button>
       </div>
 
+      {onboardingPriceIngredient && (
+        <div
+          className="inv-priceModalOverlay"
+          onMouseDown={(e) => {
+            if (e.target === e.currentTarget && !savingOnboardingId) {
+              setOnboardingPriceIngredient(null);
+              setOnboardingPriceDraft("");
+              setCreateFeedback("");
+            }
+          }}
+        >
+          <div
+            className="inv-priceModal"
+            onMouseDown={(e) => e.stopPropagation()}
+          >
+            <h3>Precio del ingrediente</h3>
+            <p>{getDisplayName(onboardingPriceIngredient.name)}</p>
+
+            {createFeedback && (
+              <div className="inv-priceModalError">{createFeedback}</div>
+            )}
+
+            <label className="inv-priceModalField">
+              <span>Ingresa precio</span>
+              <div>
+                <strong>EUR</strong>
+                <input
+                  type="text"
+                  inputMode="decimal"
+                  value={onboardingPriceDraft}
+                  placeholder="0.99"
+                  onChange={(e) =>
+                    setOnboardingPriceDraft(
+                      normalizePriceInput(e.target.value)
+                    )
+                  }
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      confirmIngredientOnboarding();
+                    }
+                  }}
+                  disabled={Boolean(savingOnboardingId)}
+                  autoFocus
+                />
+              </div>
+            </label>
+
+            <div className="inv-priceModalActions">
+              <button
+                type="button"
+                onClick={() => {
+                  setOnboardingPriceIngredient(null);
+                  setOnboardingPriceDraft("");
+                  setCreateFeedback("");
+                }}
+                disabled={Boolean(savingOnboardingId)}
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                onClick={confirmIngredientOnboarding}
+                disabled={Boolean(savingOnboardingId)}
+              >
+                {savingOnboardingId ? "Guardando..." : "Guardar"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* LIST */}
       {ingredients.length > 0 && (
         <DndContext
@@ -195,6 +373,9 @@ export default function InventoryModule({ partner }) {
               {categories.map((cat) => {
                 const list = grouped[cat] || [];
                 if (list.length === 0) return null;
+                const activeCount = list.filter(
+                  (ing) => ing.exists && ing.active
+                ).length;
 
                 return (
                   <SortableCategory key={cat} cat={cat}>
@@ -223,7 +404,9 @@ export default function InventoryModule({ partner }) {
 
                             <div className="inv-catRight">
                               <span className="inv-count">
-                                {list.length}
+                                <strong>{activeCount}</strong>
+                                <span>/</span>
+                                <small>{list.length}</small>
                               </span>
                             </div>
                           </button>
@@ -256,23 +439,7 @@ export default function InventoryModule({ partner }) {
                                         </span>
                                       ))}
                                     </div>
-                                    <button
-                                      className={`inv-toggle ${
-                                        !ing.exists
-                                          ? "not-added"
-                                          : ing.active
-                                          ? "in"
-                                          : "out"
-                                      }`}
-                                      type="button"
-                                      onClick={() => toggleIngredient(ing)}
-                                    >
-                                      {!ing.exists
-                                        ? "AGREGAR"
-                                        : ing.active
-                                        ? "ONBOARDING"
-                                        : "AGREGAR"}
-                                    </button>
+                                    {renderOnboardingAction(ing)}
                                   </div>
                                 </div>
                               ))}
@@ -393,23 +560,7 @@ export default function InventoryModule({ partner }) {
                           </span>
                         )}
 
-                        <button
-                          className={`inv-toggle ${
-                            !ing.exists
-                              ? "not-added"
-                              : ing.active
-                              ? "in"
-                              : "out"
-                          }`}
-                          type="button"
-                          onClick={() => toggleIngredient(ing)}
-                        >
-                          {!ing.exists
-                            ? "AGREGAR"
-                            : ing.active
-                            ? "ONBOARDING"
-                            : "AGREGAR"}
-                        </button>
+                        {renderOnboardingAction(ing)}
 
                       </div>
                     </div>

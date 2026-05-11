@@ -21,6 +21,22 @@ const DEFAULT_BOOST_SETTINGS = {
   voltaSharePercent: 25,
   partnerSharePercent: 75,
 };
+const NON_INCENTIVE_LINE_SOURCES = new Set([
+  "queue_boost",
+  "incentive_reward",
+  "promo",
+  "offer",
+  "coupon",
+  "discount",
+]);
+const NON_INCENTIVE_LINE_TYPES = new Set([
+  "queue_boost",
+  "INCENTIVE_REWARD",
+  "PROMO",
+  "OFFER",
+  "COUPON",
+  "DISCOUNT",
+]);
 const CUSTOM_CATEGORY_ORDER = [
   "SALSAS",
   "QUESOS",
@@ -32,6 +48,17 @@ const CUSTOM_CATEGORY_ORDER = [
   "SETAS",
   "COMPLEMENTOS",
 ];
+const INGREDIENT_BASE_SIZE = "M";
+const INGREDIENT_SIZE_DIAMETERS_CM = {
+  XS: 20,
+  S: 25,
+  M: 30,
+  L: 35,
+  XL: 40,
+  XXL: 45,
+  ST: 30,
+};
+const INCENTIVE_TIME_ZONE = "Europe/Madrid";
 
 function formatCountdown(totalMinutes) {
   if (totalMinutes <= 0) return "Cerrando ahora";
@@ -180,6 +207,95 @@ const priceForSize = (priceBySize = {}, size = "M") => {
 };
 
 const roundMoney = (value) => Math.round(Number(value || 0) * 100) / 100;
+
+const formatDurationMs = (value) => {
+  const totalSeconds = Math.max(0, Math.floor(Number(value || 0) / 1000));
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  if (hours > 0) {
+    return `${hours}h ${String(minutes).padStart(2, "0")}m ${String(seconds).padStart(2, "0")}s`;
+  }
+
+  return `${minutes}m ${String(seconds).padStart(2, "0")}s`;
+};
+
+const getZonedDate = (nowMs) => {
+  const zoned = new Date(nowMs).toLocaleString("sv-SE", {
+    timeZone: INCENTIVE_TIME_ZONE,
+  });
+
+  return new Date(zoned.replace(" ", "T"));
+};
+
+const getIncentiveWindowTimeLeftMs = (incentive, nowMs) => {
+  if (!incentive || incentive.windowEnd == null) return null;
+
+  const windowEnd = Number(incentive.windowEnd);
+  if (!Number.isFinite(windowEnd)) return null;
+
+  const zonedNow = getZonedDate(nowMs);
+  const minutesNow = zonedNow.getHours() * 60 + zonedNow.getMinutes();
+  const windowStart =
+    incentive.windowStart == null ? null : Number(incentive.windowStart);
+
+  const crossesMidnight =
+    Number.isFinite(windowStart) && windowStart > windowEnd;
+  const minutesLeft = crossesMidnight
+    ? minutesNow < windowEnd
+      ? windowEnd - minutesNow
+      : 24 * 60 - minutesNow + windowEnd
+    : windowEnd - minutesNow;
+
+  return Math.max(
+    0,
+    minutesLeft * 60 * 1000 -
+      zonedNow.getSeconds() * 1000 -
+      zonedNow.getMilliseconds()
+  );
+};
+
+const getActiveIncentiveTimeLeftMs = (incentive, nowMs) => {
+  if (!incentive) return null;
+
+  const candidates = [];
+  if (incentive.endsAt) {
+    const endsAtMs = new Date(incentive.endsAt).getTime();
+    if (Number.isFinite(endsAtMs)) {
+      candidates.push(endsAtMs - nowMs);
+    }
+  }
+
+  const windowLeft = getIncentiveWindowTimeLeftMs(incentive, nowMs);
+  if (windowLeft != null) candidates.push(windowLeft);
+
+  if (!candidates.length) return null;
+  return Math.max(0, Math.min(...candidates));
+};
+
+const getNextIncentiveStartsInMs = (nextIncentive, nowMs) => {
+  if (!nextIncentive || nextIncentive.startsInMs == null) return null;
+
+  const startsInMs = Number(nextIncentive.startsInMs);
+  if (!Number.isFinite(startsInMs)) return null;
+
+  const fetchedAtMs = Number(nextIncentive.fetchedAtMs || nowMs);
+  return Math.max(0, startsInMs - Math.max(0, nowMs - fetchedAtMs));
+};
+
+const scaleIngredientPriceForSize = (basePrice, size = INGREDIENT_BASE_SIZE) => {
+  const price = num(basePrice);
+  if (price <= 0) return 0;
+
+  const baseDiameter =
+    INGREDIENT_SIZE_DIAMETERS_CM[INGREDIENT_BASE_SIZE] || 30;
+  const targetDiameter =
+    INGREDIENT_SIZE_DIAMETERS_CM[size] || baseDiameter;
+  const areaFactor = (targetDiameter * targetDiameter) / (baseDiameter * baseDiameter);
+
+  return roundMoney(price * areaFactor);
+};
 
 const capWords = (value = "") => {
   const lowerWords = ["de", "del", "y", "con", "al"];
@@ -429,6 +545,16 @@ const normalizeCartLine = (line, index = 0) => {
   };
 };
 
+const isIncentiveEligibleCartLine = (line) => {
+  const source = String(line?.source || "").trim();
+  const type = String(line?.type || "").trim();
+
+  if (NON_INCENTIVE_LINE_SOURCES.has(source)) return false;
+  if (NON_INCENTIVE_LINE_TYPES.has(type)) return false;
+
+  return true;
+};
+
 function formatPromoDate(value) {
   if (!value) return "";
   const date = new Date(value);
@@ -534,9 +660,42 @@ export default function StorePage() {
   const [bootsTargetPosition, setBootsTargetPosition] = useState("1");
   const [bootsMessage, setBootsMessage] = useState("");
   const [boostSettings, setBoostSettings] = useState(DEFAULT_BOOST_SETTINGS);
+  const [activeIncentive, setActiveIncentive] = useState(null);
+  const [nextIncentive, setNextIncentive] = useState(null);
+  const [storeAverageTicket, setStoreAverageTicket] = useState(0);
   const [now, setNow] = useState(() => new Date());
+  const [incentiveNowMs, setIncentiveNowMs] = useState(() => Date.now());
   const [flippedId, setFlippedId] = useState(null);
   const [tick, setTick] = useState(false);
+  const incentiveZeroRefreshRef = useRef(false);
+  const dismissedRewardIncentiveIdsRef = useRef(new Set());
+
+  const fetchIncentiveSnapshot = useCallback(async (partnerIdValue) => {
+    const partnerId = Number(partnerIdValue);
+
+    if (!partnerId) {
+      setActiveIncentive(null);
+      setNextIncentive(null);
+      return;
+    }
+
+    try {
+      const data = await api.get(`/api/incentives/active/one?partnerId=${partnerId}`);
+      setActiveIncentive(data?.active || null);
+      setNextIncentive(
+        data?.next
+          ? {
+              ...data.next,
+              fetchedAtMs: Date.now(),
+            }
+          : null
+      );
+    } catch (incentiveErr) {
+      console.error(incentiveErr);
+      setActiveIncentive(null);
+      setNextIncentive(null);
+    }
+  }, []);
 
   useEffect(() => {
     if (!partnerSlug || !storeSlug) return;
@@ -564,6 +723,13 @@ export default function StorePage() {
         setStore(menuData?.store || null);
         setPartner(partnerData || null);
         setBoostSettings(menuData?.boostSettings || DEFAULT_BOOST_SETTINGS);
+        setActiveIncentive(null);
+        setNextIncentive(null);
+        setStoreAverageTicket(num(menuData?.incentiveStats?.averageTicket));
+
+        const partnerId = partnerData?.id;
+
+        await fetchIncentiveSnapshot(partnerId);
 
         setActiveTab("");
       } catch (err) {
@@ -573,7 +739,7 @@ export default function StorePage() {
     };
 
     loadStorefront();
-  }, [partnerSlug, storeSlug]);
+  }, [fetchIncentiveSnapshot, partnerSlug, storeSlug]);
 
   useEffect(() => {
     const intervalId = window.setInterval(() => {
@@ -584,6 +750,28 @@ export default function StorePage() {
       window.clearInterval(intervalId);
     };
   }, []);
+
+  useEffect(() => {
+    const intervalId = window.setInterval(() => {
+      setIncentiveNowMs(Date.now());
+    }, 1000);
+
+    return () => {
+      window.clearInterval(intervalId);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!partner?.id) return undefined;
+
+    const intervalId = window.setInterval(() => {
+      fetchIncentiveSnapshot(partner.id);
+    }, 20000);
+
+    return () => {
+      window.clearInterval(intervalId);
+    };
+  }, [fetchIncentiveSnapshot, partner?.id]);
 
   useEffect(() => {
     const intervalId = window.setInterval(() => {
@@ -1293,9 +1481,14 @@ export default function StorePage() {
   const getCustomIngredientUnitPrice = useCallback(
     (ingredient) => {
       const use = customUseByIngredientId.get(Number(ingredient?.id));
-      if (use) return priceForExtraSize(use, customSize);
+      if (use) {
+        return scaleIngredientPriceForSize(
+          use.costPrice ?? ingredient?.costPrice ?? use.price,
+          customSize
+        );
+      }
 
-      return num(ingredient?.costPrice);
+      return scaleIngredientPriceForSize(ingredient?.costPrice, customSize);
     },
     [customUseByIngredientId, customSize]
   );
@@ -1785,13 +1978,18 @@ export default function StorePage() {
     setCartOpen(true);
   };
 
-  const activeProductsCount =
-    activeTab === TRENDING_TAB ? filteredTrending.length : visibleMenu.length;
   const cartCount = useMemo(
     () => cart.reduce((sum, item) => sum + getCartLineQty(item), 0),
     [cart]
   );
   const cartTotal = cart.reduce((sum, item) => sum + num(item.subtotal), 0);
+  const cartProductSubtotal = useMemo(
+    () =>
+      cart
+        .filter(isIncentiveEligibleCartLine)
+        .reduce((sum, item) => sum + num(item.subtotal), 0),
+    [cart]
+  );
   const cartHasBoost = useMemo(
     () => cart.some((line) => line?.source === "queue_boost"),
     [cart]
@@ -1850,21 +2048,189 @@ export default function StorePage() {
         : [],
     [repeatDraft]
   );
-  const incentiveMessage =
-    activeTab === PROMOS_TAB
-      ? `${filteredPromos.length} promo${filteredPromos.length === 1 ? "" : "s"} activa${filteredPromos.length === 1 ? "" : "s"}`
-      : activeTab === UPCOMING_TAB
-      ? `${filteredUpcoming.length} lanzamiento${filteredUpcoming.length === 1 ? "" : "s"} en camino`
-      : activeTab === TRENDING_TAB
-      ? filteredTrending.length
-        ? `Top ${filteredTrending.length} pizzas con mas senales de venta en esta tienda`
-        : "Trending se activa cuando la tienda acumule ventas"
-      : activeProductsCount > 0
-      ? `Tu siguiente incentivo puede activarse con ${Math.min(
-          activeProductsCount,
-          3
-        )} elecciones mas en ${activeTabLabel.toLowerCase()}`
-      : "Activa una categoria para descubrir ofertas y combinaciones";
+  const incentiveTarget = useMemo(() => {
+    if (!activeIncentive) return 0;
+
+    if (activeIncentive.triggerMode === "FIXED") {
+      return num(activeIncentive.fixedAmount);
+    }
+
+    const percent = num(activeIncentive.percentOverAvg);
+    return roundMoney(storeAverageTicket * (1 + percent / 100));
+  }, [activeIncentive, storeAverageTicket]);
+  const incentiveProgress = incentiveTarget > 0
+    ? Math.min(cartProductSubtotal / incentiveTarget, 1)
+    : 0;
+  const incentiveRemaining = Math.max(incentiveTarget - cartProductSubtotal, 0);
+  const incentiveUnlocked = activeIncentive && incentiveTarget > 0 && incentiveRemaining <= 0;
+  const incentiveRewardName =
+    activeIncentive?.rewardPizza?.name || "tu recompensa";
+  const incentiveRewardLabel = `${incentiveRewardName} GRATIS`;
+  const incentiveRewardPizza = useMemo(() => {
+    const rewardId = Number(activeIncentive?.rewardPizzaId || activeIncentive?.rewardPizza?.id);
+    if (!rewardId) return null;
+
+    return (
+      menu.find((item) => Number(item.pizzaId) === rewardId) ||
+      (activeIncentive?.rewardPizza
+        ? {
+            pizzaId: rewardId,
+            name: activeIncentive.rewardPizza.name,
+            category: activeIncentive.rewardPizza.category || "Incentivo",
+            image: activeIncentive.rewardPizza.image || "",
+            selectSize: activeIncentive.rewardPizza.selectSize || ["M"],
+            priceBySize: activeIncentive.rewardPizza.priceBySize || {},
+          }
+        : null)
+    );
+  }, [activeIncentive, menu]);
+  const incentiveRewardSize = useMemo(() => {
+    const sizes = getAvailableSizes(incentiveRewardPizza);
+    if (sizes.includes("M")) return "M";
+    return sizes[0] || "M";
+  }, [incentiveRewardPizza]);
+  const incentiveRewardPrice = useMemo(() => {
+    if (!incentiveRewardPizza) return 0;
+    return priceForSize(incentiveRewardPizza.priceBySize, incentiveRewardSize);
+  }, [incentiveRewardPizza, incentiveRewardSize]);
+  const activeIncentiveTimeLeftMs = useMemo(
+    () => getActiveIncentiveTimeLeftMs(activeIncentive, incentiveNowMs),
+    [activeIncentive, incentiveNowMs]
+  );
+  const nextIncentiveStartsInMs = useMemo(
+    () => getNextIncentiveStartsInMs(nextIncentive, incentiveNowMs),
+    [nextIncentive, incentiveNowMs]
+  );
+  const incentivePercent = activeIncentive
+    ? Math.round(incentiveProgress * 100)
+    : 0;
+  const incentiveMessage = activeIncentive
+    ? incentiveUnlocked
+      ? `${incentiveRewardLabel} desbloqueado`
+      : `Faltan ${formatMoney(
+          incentiveRemaining,
+          partner?.currency || "EUR"
+        )} para desbloquear ${incentiveRewardLabel}`
+    : nextIncentive
+    ? `Proximo incentivo: ${nextIncentive.name}`
+    : "No hay incentivo activo ahora";
+  const incentiveEyebrow = activeIncentive
+    ? incentiveUnlocked
+      ? "Premio conseguido"
+      : "Incentivo activo"
+    : nextIncentive
+    ? "Proximo incentivo"
+    : "Proximo incentivo";
+  const incentiveCounterLabel = activeIncentive
+    ? activeIncentiveTimeLeftMs == null
+      ? "Activo ahora"
+      : `Termina en ${formatDurationMs(activeIncentiveTimeLeftMs)}`
+    : nextIncentiveStartsInMs == null
+    ? "Sin horario"
+    : `Disponible en ${formatDurationMs(nextIncentiveStartsInMs)}`;
+  useEffect(() => {
+    if (!partner?.id) return undefined;
+
+    const currentCountdown = activeIncentive
+      ? activeIncentiveTimeLeftMs
+      : nextIncentiveStartsInMs;
+
+    if (currentCountdown == null) return undefined;
+
+    if (currentCountdown > 0) {
+      incentiveZeroRefreshRef.current = false;
+      return undefined;
+    }
+
+    if (incentiveZeroRefreshRef.current) return undefined;
+    incentiveZeroRefreshRef.current = true;
+
+    fetchIncentiveSnapshot(partner.id);
+    const retryId = window.setTimeout(() => {
+      fetchIncentiveSnapshot(partner.id);
+    }, 2000);
+
+    return () => {
+      window.clearTimeout(retryId);
+    };
+  }, [
+    activeIncentive,
+    activeIncentiveTimeLeftMs,
+    fetchIncentiveSnapshot,
+    nextIncentiveStartsInMs,
+    partner?.id,
+  ]);
+
+  useEffect(() => {
+    const activeId = Number(activeIncentive?.id);
+
+    if (!activeId) {
+      setCart((current) => current.filter((line) => line.type !== "INCENTIVE_REWARD"));
+      return;
+    }
+
+    setCart((current) => {
+      const withoutOtherIncentives = current.filter(
+        (line) =>
+          line.type !== "INCENTIVE_REWARD" ||
+          Number(line.incentiveId) === activeId
+      );
+
+      if (!incentiveUnlocked) {
+        return withoutOtherIncentives.filter(
+          (line) => line.type !== "INCENTIVE_REWARD"
+        );
+      }
+
+      const alreadyInCart = withoutOtherIncentives.some(
+        (line) =>
+          line.type === "INCENTIVE_REWARD" &&
+          Number(line.incentiveId) === activeId
+      );
+
+      if (
+        alreadyInCart ||
+        dismissedRewardIncentiveIdsRef.current.has(activeId) ||
+        !incentiveRewardPizza ||
+        incentiveRewardPrice <= 0
+      ) {
+        return withoutOtherIncentives;
+      }
+
+      return [
+        ...withoutOtherIncentives,
+        {
+          cartLineId: `incentive-${activeId}`,
+          type: "INCENTIVE_REWARD",
+          source: "incentive_reward",
+          incentiveId: activeId,
+          rewardPizzaId: Number(
+            activeIncentive.rewardPizzaId || incentiveRewardPizza.pizzaId
+          ),
+          pizzaId: Number(
+            activeIncentive.rewardPizzaId || incentiveRewardPizza.pizzaId
+          ),
+          name: incentiveRewardName,
+          category: incentiveRewardPizza.category || "Incentivo",
+          size: incentiveRewardSize,
+          qty: 1,
+          price: -incentiveRewardPrice,
+          subtotal: -incentiveRewardPrice,
+          extras: [],
+          ingredients: [],
+          allergens: [],
+          image: incentiveRewardPizza.image || "",
+        },
+      ];
+    });
+  }, [
+    activeIncentive,
+    incentiveRewardName,
+    incentiveRewardPizza,
+    incentiveRewardPrice,
+    incentiveRewardSize,
+    incentiveUnlocked,
+  ]);
 
   const loadRepeatOrder = async (event) => {
     event?.preventDefault();
@@ -2140,20 +2506,52 @@ export default function StorePage() {
             </div>
           </div>
 
-          <div className="sf-incentiveBanner sf-incentiveBanner--lsf">
-            <div className="sf-incentiveCopy">
-              <span className="sf-incentiveEyebrow">Proximo incentivo en camino</span>
-              <strong>{incentiveMessage}</strong>
+          <div
+            className={`sf-incentiveBanner sf-incentiveBanner--lsf ${
+              incentiveUnlocked ? "is-complete" : ""
+            } ${activeIncentive ? "is-active" : nextIncentive ? "is-waiting" : "is-idle"}`}
+          >
+            <div className="sf-incentiveHead">
+              <div className="sf-incentiveCopy">
+                <span className="sf-incentiveEyebrow">
+                  {incentiveEyebrow}
+                </span>
+                <strong>{incentiveMessage}</strong>
+              </div>
+              {!incentiveUnlocked && (
+                <div className="sf-incentiveSignal" aria-label="Estado del incentivo">
+                  <span className="sf-incentiveTimer">{incentiveCounterLabel}</span>
+                </div>
+              )}
             </div>
-            <span className="sf-incentiveTimer">
-              {activeTab === PROMOS_TAB
-                ? "Promos destacadas"
-                : activeTab === UPCOMING_TAB
-                ? "Coming soon"
-                : activeTab === TRENDING_TAB
-                ? "Top 3"
-                : "Disponible hoy"}
-            </span>
+
+            {incentiveUnlocked ? (
+              <div className="sf-incentiveRewardStage" aria-label="Incentivo desbloqueado">
+                <span>Felicidades</span>
+                <strong>{incentiveRewardLabel} listo para este pedido</strong>
+                <span>Volta reward</span>
+              </div>
+            ) : (
+              <div className="sf-incentiveProgress" aria-label="Progreso del incentivo">
+                <div className="sf-incentiveProgressTrack">
+                  <span
+                    className="sf-incentiveProgressFill"
+                    style={{ width: `${Math.round(incentiveProgress * 100)}%` }}
+                  />
+                  <span
+                    className="sf-incentiveProgressStripes"
+                    style={{ width: `${Math.round(incentiveProgress * 100)}%` }}
+                  />
+                  <span className="sf-incentiveProgressGlow" />
+                  <span
+                    className="sf-incentiveProgressMarker"
+                    style={{ left: `${Math.min(96, Math.max(4, incentivePercent))}%` }}
+                  >
+                    {activeIncentive ? `${incentivePercent}%` : "--"}
+                  </span>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="lsf-tabs" role="tablist" aria-label="Categorias del menu">
@@ -2788,14 +3186,21 @@ export default function StorePage() {
                   {cart.map((line, index) => (
                     <div key={line.cartLineId || index} className="sf-cartRow">
                       <div className="sf-cartRowMain">
-                        <strong>{line.name}</strong>
+                        <strong>
+                          {line.type === "INCENTIVE_REWARD"
+                            ? `${line.name} GRATIS`
+                            : line.name}
+                        </strong>
+                        {line.type === "INCENTIVE_REWARD" && (
+                          <span>Incentivo #{line.incentiveId} - {line.size} x {line.qty}</span>
+                        )}
                         {line.source === "queue_boost" ? (
                           <span>
                             Cola {line.boost?.currentPosition ? `#${line.boost.currentPosition}` : ""}
                             {" -> "}
                             #{line.boost?.targetPosition || line.size}
                           </span>
-                        ) : line.type === "HALF_HALF" ? (
+                        ) : line.type === "INCENTIVE_REWARD" ? null : line.type === "HALF_HALF" ? (
                           <span>
                             Mitad A: {line.leftName || "Pizza"} / Mitad B: {line.rightName || "Pizza"} - {line.size} x {line.qty}
                           </span>
@@ -2829,15 +3234,25 @@ export default function StorePage() {
                         )}
                       </div>
                       <div className="sf-cartRowSide">
-                        <strong>EUR {num(line.subtotal).toFixed(2)}</strong>
+                        <strong>
+                          {line.type === "INCENTIVE_REWARD"
+                            ? `-EUR ${Math.abs(num(line.subtotal)).toFixed(2)}`
+                            : `EUR ${num(line.subtotal).toFixed(2)}`}
+                        </strong>
                         <button
                           type="button"
                           className="sf-modalCloseBtn sf-cartRemoveBtn"
-                          onClick={() =>
+                          onClick={() => {
+                            if (line.type === "INCENTIVE_REWARD" && line.incentiveId) {
+                              dismissedRewardIncentiveIdsRef.current.add(
+                                Number(line.incentiveId)
+                              );
+                            }
+
                             setCart((current) =>
                               current.filter((_, lineIndex) => lineIndex !== index)
-                            )
-                          }
+                            );
+                          }}
                           aria-label={`Eliminar ${line.name}`}
                         >
                           x

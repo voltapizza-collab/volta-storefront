@@ -138,6 +138,7 @@ export default function PizzaCreator({ partner }) {
   const [inventoryLoadError, setInventoryLoadError] = useState("");
   const [savingProduct, setSavingProduct] = useState(false);
   const [originalIngredientIds, setOriginalIngredientIds] = useState([]);
+  const [ingredientSearchByRow, setIngredientSearchByRow] = useState({});
 
   const loadCategories = useCallback(async () => {
     if (!partnerId) return;
@@ -278,6 +279,7 @@ export default function PizzaCreator({ partner }) {
     });
 
     setOpenCat(null);
+    setIngredientSearchByRow({});
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -391,11 +393,28 @@ export default function PizzaCreator({ partner }) {
     }));
   };
 
-  const removeIngredient = (i) =>
+  const removeIngredient = (i) => {
     setForm((p) => ({
       ...p,
       ingredients: p.ingredients.filter((_, idx) => idx !== i),
     }));
+    setIngredientSearchByRow((current) => {
+      const next = {};
+      Object.entries(current).forEach(([key, value]) => {
+        const index = Number(key);
+        if (!Number.isInteger(index) || index === i) return;
+        next[index > i ? index - 1 : index] = value;
+      });
+      return next;
+    });
+  };
+
+  const onIngredientSearchChange = (i, value) => {
+    setIngredientSearchByRow((current) => ({
+      ...current,
+      [i]: value,
+    }));
+  };
 
   const onIngredientSelect = (i, id) => {
     if (!id) {
@@ -415,6 +434,7 @@ export default function PizzaCreator({ partner }) {
       ing[i] = { ...ing[i], id: row.id, name: row.name };
       return { ...p, ingredients: ing };
     });
+    setIngredientSearchByRow((current) => ({ ...current, [i]: "" }));
   };
 
   const onQtyChange = (i, sz, val) =>
@@ -503,6 +523,7 @@ export default function PizzaCreator({ partner }) {
       setExistingImage(null);
       setOriginalIngredientIds([]);
       setForm(createInitialForm());
+      setIngredientSearchByRow({});
       fetchPizzas();
     } catch (err) {
       console.error(err);
@@ -586,6 +607,13 @@ export default function PizzaCreator({ partner }) {
       a.name.localeCompare(b.name, "es", { sensitivity: "base" })
     );
   }, [form.ingredients, inventoryById, sortedInventory]);
+
+  const normalizeOptionText = (value = "") =>
+    String(value)
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .trim();
 
   return (
     <>
@@ -697,21 +725,50 @@ export default function PizzaCreator({ partner }) {
                   const hasAllergens =
                     Array.isArray(ingredientMeta?.allergens) &&
                     ingredientMeta.allergens.length > 0;
+                  const ingredientSearch = ingredientSearchByRow[i] || "";
+                  const normalizedIngredientSearch =
+                    normalizeOptionText(ingredientSearch);
+                  const rowIngredientOptions = normalizedIngredientSearch
+                    ? ingredientOptions.filter((item) =>
+                        normalizeOptionText(item.name).includes(
+                          normalizedIngredientSearch
+                        )
+                      )
+                    : ingredientOptions;
 
                   return (
                   <div key={i} className="ing-row">
                     <div className="pc-ingredientCell">
-                      <select
-                        value={row.id}
-                        onChange={(e) => onIngredientSelect(i, e.target.value)}
-                      >
-                        <option value="">- ingrediente -</option>
-                        {ingredientOptions.map((item) => (
-                          <option key={item.id} value={item.id}>
-                            {item.name}
-                          </option>
-                          ))}
-                      </select>
+                      <div className="pc-ingredientPicker">
+                        <select
+                          value={row.id}
+                          onChange={(e) => onIngredientSelect(i, e.target.value)}
+                        >
+                          <option value="">- ingrediente -</option>
+                          {rowIngredientOptions.map((item) => (
+                            <option key={item.id} value={item.id}>
+                              {item.name}
+                            </option>
+                            ))}
+                          {ingredientSearch && rowIngredientOptions.length === 0 && (
+                            <option value="" disabled>
+                              Sin resultados
+                            </option>
+                          )}
+                        </select>
+
+                        <label className="pc-ingredientSearch">
+                          <span aria-hidden="true">⌕</span>
+                          <input
+                            type="text"
+                            value={ingredientSearch}
+                            placeholder="Buscar"
+                            onChange={(e) =>
+                              onIngredientSearchChange(i, e.target.value)
+                            }
+                          />
+                        </label>
+                      </div>
                     </div>
 
                     <div className="pc-sizeQtyScroller">
@@ -808,6 +865,7 @@ export default function PizzaCreator({ partner }) {
                   setExistingImage(null);
                   setOriginalIngredientIds([]);
                   setForm(createInitialForm());
+                  setIngredientSearchByRow({});
                 }}
               >
                 Cancelar edicion

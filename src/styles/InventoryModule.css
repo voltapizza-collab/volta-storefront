@@ -7,7 +7,7 @@
 }
 
 .inv-title {
-  margin: 0; /* importante */
+  margin: 0;
 }
 
 .inv-wrapper {
@@ -15,10 +15,17 @@
 }
 
 .inv-title {
-  margin: 0 0 20px;
+  margin: 0;
   font-size: 28px;
-  font-weight: 700;
+  font-weight: 800;
   color: var(--black);
+}
+
+.inv-subtitle {
+  margin: 6px 0 0;
+  color: #667085;
+  font-size: 14px;
+  font-weight: 700;
 }
 
 .inv-addBtn {

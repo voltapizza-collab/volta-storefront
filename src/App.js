@@ -7,6 +7,7 @@ import MenuPage from "./pages/MenuPage";
 import GlobalManager from "./pages/GlobalManager";
 import Backoffice from "./pages/Backoffice";
 import CouponGalleryPage from "./pages/CouponGalleryPage";
+import GamePage from "./pages/GamePage";
 import LandingPage from "./pages/LandingPage";
 import AppLayout from "./components/Layout/AppLayout";
 
@@ -22,6 +23,7 @@ function App() {
         {/* STORE (motor de vents) */}
         <Route path="/:partnerSlug" element={<PartnerPage />} />
         <Route path="/:partnerSlug/coupons" element={<CouponGalleryPage />} />
+        <Route path="/:partnerSlug/games/:gameSlug" element={<GamePage />} />
         <Route path="/:partnerSlug/order" element={<PartnerOrderPage />} />
         <Route path="/:partnerSlug/:storeSlug" element={<StorePage />} />
         <Route path="/:partnerSlug/:storeSlug/menu" element={<MenuPage />} />
@@ -32,6 +34,8 @@ function App() {
         {/* BACKOFFICE */}
         <Route path="/Backoffice/*" element={<Backoffice />} />
         <Route path="/backoffice/*" element={<Backoffice />} />
+        <Route path="/jugar" element={<GamePage fixedGameSlug="winning-number" />} />
+        <Route path="/perfect-timing" element={<GamePage fixedGameSlug="perfect-timing" />} />
       </Routes>
     </AppLayout>
   );

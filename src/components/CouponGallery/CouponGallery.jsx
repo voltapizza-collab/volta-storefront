@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../../setupAxios";
 import "../../styles/CouponGallery.css";
 
@@ -43,13 +44,18 @@ const getCardTheme = (type = "") => {
   }
 };
 
+const isGameCoupon = (card) =>
+  String(card?.acquisition || "").toUpperCase() === "GAME" ||
+  String(card?.channel || "").toUpperCase() === "GAME" ||
+  Boolean(card?.gameId || card?.game);
+
 const getDisplaySubtitle = (card) => {
   const subtitle = String(card?.subtitle || "").trim();
   if (subtitle) return subtitle;
 
   const title = String(card?.title || "").trim();
   if (title.includes("%")) return `${title} de descuento en tu pedido`;
-  return `${title || "Oferta"} para canjear en tu siguiente pedido`;
+  return `${title || "Cupon"} para canjear en tu siguiente pedido`;
 };
 
 function ZoneModal({
@@ -85,7 +91,7 @@ function ZoneModal({
     <div className="cg-modalBack cg-modalBack-zone">
       <div className="cg-modalCard cg-zoneCard" onMouseDown={(event) => event.stopPropagation()}>
         <div className="cg-kicker">Coupon Gallery</div>
-        <h2 className="cg-zoneTitle">Ofertas disponibles donde estas</h2>
+        <h2 className="cg-zoneTitle">Cupones disponibles donde estas</h2>
         <p className="cg-zoneText">
           Necesitamos saber tu codigo postal para mostrarte solo los cupones disponibles en tu zona
           para {partnerName || "esta tienda"}.
@@ -137,6 +143,7 @@ function ZoneModal({
           </label>
 
           <div className="cg-zoneMetaRow">
+            <div className="cg-zoneDivider">o ubica tu codigo postal automaticamente</div>
             <button
               className="cg-ghostBtn cg-locationBtn"
               type="button"
@@ -191,7 +198,7 @@ function ZoneModal({
           {locationError && <div className="cg-error">{locationError}</div>}
 
           <button className="cg-primaryBtn" type="submit" disabled={saving}>
-            {saving ? "Consultando..." : "Ver ofertas"}
+            {saving ? "Consultando..." : "Ver cupones"}
           </button>
         </form>
       </div>
@@ -199,22 +206,38 @@ function ZoneModal({
   );
 }
 
-function CouponCard({ card, onClaim }) {
+function CouponCard({ card, partner, onClaim }) {
   const isUnlimited = card.remaining == null;
   const remaining = isUnlimited ? null : Number(card.remaining || 0);
+  const isSoldOut = !isUnlimited && remaining <= 0;
   const isLowStock = !isUnlimited && remaining > 0 && remaining <= 3;
   const isSegmented = Boolean(card.isSegmented);
+  const gameCoupon = isGameCoupon(card);
+  const partnerLogo = partner?.brandLogoUrl || "";
+  const cardStyle = partnerLogo
+    ? { "--cg-card-logo": `url("${partnerLogo}")` }
+    : undefined;
 
   return (
-    <article className={`cg-card ${getCardTheme(card.type)}`}>
+    <article
+      className={`cg-card ${getCardTheme(card.type)} ${gameCoupon ? "cg-card-game" : ""} ${
+        isSoldOut ? "is-soldout" : ""
+      }`}
+      style={cardStyle}
+    >
       <header className="cg-cardTop">
-        <span className="cg-cardBadge">{isSegmented ? "Personalizado" : "Reward"}</span>
+        <span className="cg-cardBadge">
+          {gameCoupon ? "Play & Win" : isSegmented ? "Personalizado" : "Reward"}
+        </span>
         <span className="cg-cardType">{getDisplayType(card.type)}</span>
       </header>
 
       <div className="cg-cardBody">
-        <p className="cg-cardEyebrow">{card.type.replaceAll("_", " ")}</p>
+        <p className="cg-cardEyebrow">{String(card.type || "").replaceAll("_", " ")}</p>
         <h2 className="cg-cardTitle">{card.title}</h2>
+        {gameCoupon && (
+          <p className="cg-cardGameLine">{card.game?.name || "Premio dorado"}</p>
+        )}
         <p className="cg-cardSubtitle">{getDisplaySubtitle(card)}</p>
         {isSegmented && (
           <p className="cg-cardHint">Disponible segun tu perfil de cliente.</p>
@@ -223,19 +246,32 @@ function CouponCard({ card, onClaim }) {
 
       <footer className="cg-cardFooter">
         <div className="cg-cardStockBlock">
-          <span className="cg-cardStockLabel">IN STOCK</span>
+          <span className="cg-cardStockLabel">{isSoldOut ? "STATUS" : "IN STOCK"}</span>
           <span className={`cg-cardStockValue ${isLowStock ? "is-low" : ""}`}>
-            {isUnlimited ? "∞" : remaining}
+            {isSoldOut ? "Sold out" : isUnlimited ? "∞" : remaining}
           </span>
         </div>
 
-        <button className="cg-claimBtn" onClick={onClaim} type="button">
+        <button
+          className="cg-claimBtn"
+          onClick={onClaim}
+          type="button"
+          disabled={isSoldOut}
+        >
           <span className="cg-ctaViewport" aria-hidden="true">
             <span className="cg-ctaSlider">
-              <span className="cg-ctaWord">{isSegmented ? "VER SI APLICA" : "CLAIM"}</span>
-              <span className="cg-ctaWord">{isSegmented ? "COMPROBAR" : "RECLAMAR"}</span>
-              <span className="cg-ctaWord">{isSegmented ? "DESBLOQUEAR" : "CANXEAR"}</span>
-              <span className="cg-ctaWord">{isSegmented ? "VER SI APLICA" : "CLAIM"}</span>
+              <span className="cg-ctaWord">
+                {isSoldOut ? "AGOTADO" : gameCoupon ? "JUGAR" : isSegmented ? "VER SI APLICA" : "CLAIM"}
+              </span>
+              <span className="cg-ctaWord">
+                {isSoldOut ? "SOLD OUT" : gameCoupon ? "PLAY" : isSegmented ? "COMPROBAR" : "RECLAMAR"}
+              </span>
+              <span className="cg-ctaWord">
+                {isSoldOut ? "AGOTADO" : gameCoupon ? "WIN" : isSegmented ? "DESBLOQUEAR" : "CANXEAR"}
+              </span>
+              <span className="cg-ctaWord">
+                {isSoldOut ? "SOLD OUT" : gameCoupon ? "JUGAR" : isSegmented ? "VER SI APLICA" : "CLAIM"}
+              </span>
             </span>
           </span>
         </button>
@@ -346,6 +382,7 @@ function ClaimModal({ card, partnerId, zipCode, onClose, onClaimed }) {
 }
 
 export default function CouponGallery({ partner }) {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [cards, setCards] = useState([]);
@@ -410,7 +447,7 @@ export default function CouponGallery({ partner }) {
     loadCards();
   }, [loadCards, zipCode, zipReady]);
 
-  const visibleCards = useMemo(
+  const activeCards = useMemo(
     () => cards.filter((card) => card.remaining == null || card.remaining > 0),
     [cards]
   );
@@ -457,13 +494,18 @@ export default function CouponGallery({ partner }) {
         <header className="cg-hero">
           <div className="cg-kicker">Coupon Gallery</div>
           <h1>{partner?.name || "Coupon Gallery"}</h1>
-          <p>Explora las ofertas publicas y reclama solo los cupones disponibles en tu zona.</p>
+          <p>Explora cupones publicos y reclama solo los disponibles en tu zona.</p>
 
           {zipReady && zipCode && (
             <div className="cg-zoneBar">
               <div className="cg-zoneBadge">
                 Codigo postal activo: <strong>{zipCode}</strong>
               </div>
+              {!loading && !error && (
+                <div className="cg-zoneBadge cg-zoneBadge-soft">
+                  Cupones activos: <strong>{activeCards.length}</strong>
+                </div>
+              )}
               <button className="cg-ghostBtn" onClick={resetZone} type="button">
                 Cambiar ubicacion
               </button>
@@ -478,16 +520,25 @@ export default function CouponGallery({ partner }) {
         {zipReady && error && !loading && <div className="cg-stateCard">{error}</div>}
 
         {zipReady && !loading && !error && (
-          <section className="cg-grid">
-            {visibleCards.map((card) => (
-              <CouponCard
-                key={`${card.type}-${card.key}`}
-                card={card}
-                onClaim={() => setClaimingCard(card)}
-              />
-            ))}
+          <section className="cg-galleryRail" aria-label="Cupones disponibles">
+            <div className="cg-grid">
+              {cards.map((card) => (
+                <CouponCard
+                  key={`${card.type}-${card.key}`}
+                  card={card}
+                  partner={partner}
+                  onClaim={() => {
+                    if (isGameCoupon(card)) {
+                      navigate(`/${partner?.slug}/games/${card.game?.slug || "winning-number"}`);
+                      return;
+                    }
+                    setClaimingCard(card);
+                  }}
+                />
+              ))}
+            </div>
 
-            {!visibleCards.length && (
+            {!cards.length && (
               <div className="cg-empty">
                 No hay cupones publicos disponibles para el codigo postal <strong>{zipCode}</strong>.
               </div>

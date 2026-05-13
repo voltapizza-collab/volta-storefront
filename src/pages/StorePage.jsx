@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import api from "../services/api";
 import "../styles/Storefront.css";
 import flagEs from "../assets/flags/es.svg";
@@ -400,10 +400,20 @@ const getAllergensFromIngredients = (ingredients = []) => {
   );
 };
 
-const getAllergenNotice = (allergens = []) =>
-  allergens.length
-    ? `Alergenos: ${allergens.join(", ")}.`
-    : "Sin alergenos declarados en los ingredientes seleccionados.";
+const renderAllergenNotice = (allergens = []) => {
+  if (!Array.isArray(allergens) || allergens.length === 0) return null;
+
+  return (
+    <div className="sf-allergenAlert" role="note" aria-label="Aviso de alergenos">
+      <span>Atencion alergenos</span>
+      <div>
+        {allergens.map((allergen) => (
+          <strong key={allergen}>{allergen}</strong>
+        ))}
+      </div>
+    </div>
+  );
+};
 
 const buildPizzaLine = (item) => {
   const ingredients = Array.isArray(item?.ingredients)
@@ -520,6 +530,8 @@ const isHalfPizzaCandidate = (item) => {
 const normalizeCartLine = (line, index = 0) => {
   const qty = getCartLineQty(line);
   const price = num(line?.price ?? line?.unitPrice ?? line?.amount);
+  const source = line?.source || "";
+  const type = line?.type || "";
   const extras = Array.isArray(line?.extras)
     ? line.extras.map((extra) => ({
         id: extra?.id ?? extra?.ingredientId ?? extra?.code ?? `extra-${index}`,
@@ -540,9 +552,21 @@ const normalizeCartLine = (line, index = 0) => {
     price,
     extras,
     subtotal,
+    type,
     image: line?.image || "",
-    source: line?.source || "",
+    source,
+    incentiveId: line?.incentiveId ?? null,
+    rewardPizzaId: line?.rewardPizzaId ?? null,
+    promoId: line?.promoId ?? null,
+    promoItems: Array.isArray(line?.promoItems) ? line.promoItems : [],
   };
+};
+
+const isIncentiveRewardCartLine = (line) => {
+  const source = String(line?.source || "").trim();
+  const type = String(line?.type || "").trim();
+
+  return source === "incentive_reward" || type === "INCENTIVE_REWARD";
 };
 
 const isIncentiveEligibleCartLine = (line) => {
@@ -553,6 +577,11 @@ const isIncentiveEligibleCartLine = (line) => {
   if (NON_INCENTIVE_LINE_TYPES.has(type)) return false;
 
   return true;
+};
+
+const getCartLinePayableTotal = (line) => {
+  if (isIncentiveRewardCartLine(line)) return 0;
+  return num(line?.subtotal);
 };
 
 function formatPromoDate(value) {
@@ -603,6 +632,7 @@ function CountryFlag({ countryCode }) {
 
 export default function StorePage() {
   const { partnerSlug, storeSlug } = useParams();
+  const navigate = useNavigate();
 
   const [menu, setMenu] = useState([]);
   const [trending, setTrending] = useState([]);
@@ -936,6 +966,7 @@ export default function StorePage() {
     const query = search.trim().toLowerCase();
     return filterMenuItems(menu, query);
   }, [menu, search]);
+  const isProductSearchActive = search.trim().length > 0;
 
   const filteredUpcoming = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -1230,12 +1261,6 @@ export default function StorePage() {
   );
   const halfGrandTotal = (halfBasePrice + halfExtrasTotal) * Number(halfQty || 1);
   const halfModalReady = Boolean(halfA && halfB && halfSize);
-  const halfPricingSource = useMemo(() => {
-    if (!halfA || !halfB || !halfSize) return null;
-    const priceA = priceForSize(halfA.priceBySize, halfSize);
-    const priceB = priceForSize(halfB.priceBySize, halfSize);
-    return priceA >= priceB ? halfA : halfB;
-  }, [halfA, halfB, halfSize]);
   const halfPurchaseAllergens = useMemo(
     () =>
       [
@@ -1425,23 +1450,12 @@ export default function StorePage() {
   const customHasIngredient = selectedCustomIngredientIds.length > 0;
   const customHasBase = Boolean(selectedCustomCategory);
   const customHasSize = Boolean(customSize);
-  const customHasSauce = (customIngredientsByCategory.SALSAS || []).some((ingredient) =>
-    selectedCustomIngredientIds.includes(Number(ingredient.id))
-  );
-  const customHasCheese = (customIngredientsByCategory.QUESOS || []).some((ingredient) =>
-    selectedCustomIngredientIds.includes(Number(ingredient.id))
-  );
-  const customSelectedIsPizzaLike = isPizzaLikeCategory(selectedCustomCategory?.name);
-  const customRequiresSauce =
-    customSelectedIsPizzaLike && (customIngredientsByCategory.SALSAS || []).length > 0;
-  const customRequiresCheese =
-    customSelectedIsPizzaLike && (customIngredientsByCategory.QUESOS || []).length > 0;
-  const customReady =
-    customHasBase &&
-    customHasSize &&
-    customHasIngredient &&
-    (!customRequiresSauce || customHasSauce) &&
-    (!customRequiresCheese || customHasCheese);
+  const customReady = customHasBase && customHasSize && customHasIngredient;
+  const customMissingSteps = [
+    !customHasBase ? "base" : null,
+    !customHasSize ? "tamano" : null,
+    !customHasIngredient ? "al menos un ingrediente" : null,
+  ].filter(Boolean);
   const customIngredientsTotal = useMemo(
     () =>
       Object.values(customIngredients).reduce(
@@ -1981,7 +1995,10 @@ export default function StorePage() {
     () => cart.reduce((sum, item) => sum + getCartLineQty(item), 0),
     [cart]
   );
-  const cartTotal = cart.reduce((sum, item) => sum + num(item.subtotal), 0);
+  const cartTotal = useMemo(
+    () => cart.reduce((sum, item) => sum + getCartLinePayableTotal(item), 0),
+    [cart]
+  );
   const cartProductSubtotal = useMemo(
     () =>
       cart
@@ -2033,7 +2050,7 @@ export default function StorePage() {
     [repeatDraft]
   );
   const repeatPreviewTotal = repeatPreviewLines.reduce(
-    (sum, line) => sum + num(line.subtotal),
+    (sum, line) => sum + getCartLinePayableTotal(line),
     0
   );
   const repeatPreviewExtras = useMemo(
@@ -2164,26 +2181,26 @@ export default function StorePage() {
     const activeId = Number(activeIncentive?.id);
 
     if (!activeId) {
-      setCart((current) => current.filter((line) => line.type !== "INCENTIVE_REWARD"));
+      setCart((current) => current.filter((line) => !isIncentiveRewardCartLine(line)));
       return;
     }
 
     setCart((current) => {
       const withoutOtherIncentives = current.filter(
         (line) =>
-          line.type !== "INCENTIVE_REWARD" ||
+          !isIncentiveRewardCartLine(line) ||
           Number(line.incentiveId) === activeId
       );
 
       if (!incentiveUnlocked) {
         return withoutOtherIncentives.filter(
-          (line) => line.type !== "INCENTIVE_REWARD"
+          (line) => !isIncentiveRewardCartLine(line)
         );
       }
 
       const alreadyInCart = withoutOtherIncentives.some(
         (line) =>
-          line.type === "INCENTIVE_REWARD" &&
+          isIncentiveRewardCartLine(line) &&
           Number(line.incentiveId) === activeId
       );
 
@@ -2288,6 +2305,47 @@ export default function StorePage() {
     setCartOpen(true);
   };
 
+  const addPromoLine = (promo) => {
+    const promoId = Number(promo?.id);
+    const totalPrice = roundMoney(num(promo?.totalPrice));
+    if (!promoId || totalPrice <= 0) return;
+
+    const promoItems = Array.isArray(promo.items)
+      ? promo.items.map((item, index) => ({
+          pizzaId: item?.pizzaId ?? null,
+          name: item?.name || `Producto ${index + 1}`,
+          size: item?.size || "",
+          quantity: getCartLineQty(item),
+        }))
+      : [];
+
+    const line = {
+      cartLineId: `promo-${promoId}-${Date.now()}`,
+      type: "PROMO",
+      source: "promo",
+      promoId,
+      name: promo.title || "Promo",
+      category: "Promo",
+      size: "",
+      qty: 1,
+      price: totalPrice,
+      subtotal: totalPrice,
+      promoItems,
+      extras: [],
+      ingredients: [],
+      allergens: [],
+      image: promo.image || "",
+    };
+
+    setCart((current) => [...current, line]);
+    try {
+      window.localStorage.removeItem(cartDraftStorageKey);
+    } catch {
+      // Ignore storage cleanup failures.
+    }
+    setCartOpen(true);
+  };
+
   const activateBoots = () => {
     if (!selectedBootsOption) return;
     if (cartHasBoost) {
@@ -2327,6 +2385,74 @@ export default function StorePage() {
     setBootsMessage("Boost anadido al carrito. Se cobrara al finalizar la compra.");
     setBootsOpen(false);
     setCartOpen(true);
+  };
+
+  const renderProductCard = (item) => {
+    const flipped = flippedId === item.pizzaId;
+    const image = item.image || "";
+    const sizes = Object.keys(item.priceBySize || {}).filter(
+      (size) => item.priceBySize?.[size] !== "" && item.priceBySize?.[size] != null
+    );
+    const basePrice = priceForSize(item.priceBySize, sizes[0] || "M");
+    const { line, closer } = buildPizzaLine(item);
+
+    return (
+      <div
+        key={item.pizzaId}
+        className={`lsf-card lsf-flip ${flipped ? "is-flipped" : ""}`}
+        onClick={() =>
+          setFlippedId((current) =>
+            current === item.pizzaId ? null : item.pizzaId
+          )
+        }
+        role="listitem"
+      >
+        <div className="lsf-flip__inner">
+          <div className="lsf-flip__front">
+            <div className="lsf-card__image">
+              {image ? (
+                <img src={image} alt={item.name} />
+              ) : (
+                <div className="lsf-card__img is-placeholder">
+                  <span>Pizza</span>
+                </div>
+              )}
+            </div>
+
+            <button
+              type="button"
+              className="lsf-card__addbtn"
+              onClick={(event) => {
+                event.stopPropagation();
+                openProductModal(item);
+              }}
+              aria-label={`Comprar ${item.name}`}
+            >
+              Comprar
+            </button>
+
+            <div className="lsf-card__overlay">
+              <div className="lsf-card__ticker">
+                <div className={`lsf-card__name ${tick ? "is-ticking" : ""}`}>
+                  {item.name}
+                </div>
+              </div>
+              <div className={`lsf-card__price ${tick ? "is-ticking" : ""}`}>
+                EUR {basePrice.toFixed(2)}
+              </div>
+            </div>
+          </div>
+
+          <div className="lsf-flip__back">
+            <div className="lsf-flip-desc">
+              <div className="lsf-flip-title">Tu crush sin filtro</div>
+              <div className="lsf-flip-line">{line}</div>
+              <div className="lsf-flip-closer">{closer}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   if (error) {
@@ -2393,7 +2519,11 @@ export default function StorePage() {
 
         <section className="sf-lsfSurface lsf-wrapper lsf-mobile">
           <div className="sf-lsfActionSearchLine">
-            <button type="button" className={`sf-offersBtn sf-lsfOfferBtn ${offerVariant.className}`}>
+            <button
+              type="button"
+              className={`sf-offersBtn sf-lsfOfferBtn ${offerVariant.className}`}
+              onClick={() => navigate(`/${partnerSlug}/coupons`)}
+            >
               <span className="sf-offersBtnLabel">{offerVariant.label}</span>
             </button>
 
@@ -2571,7 +2701,26 @@ export default function StorePage() {
 
         <section className="sf-engineCard sf-engineCard--lsf">
           <div className="sf-engineGridStage sf-engineGridStage--lsf">
-            {activeTab === PROMOS_TAB ? (
+            {isProductSearchActive ? (
+              baseFilteredMenu.length === 0 ? (
+                <div className="sf-engineEmptyState">
+                  <strong>Busqueda</strong>
+                  <p>No hay productos que coincidan con "{search.trim()}".</p>
+                </div>
+              ) : (
+                <div className="lsf-searchResultsStage">
+                  <div className="lsf-searchResultsHead">
+                    <span>Busqueda global</span>
+                    <strong>{baseFilteredMenu.length} productos</strong>
+                  </div>
+                  <div className="lsf-grid-wrap">
+                    <div className="lsf-grid lsf-grid--searchResults" role="list">
+                      {baseFilteredMenu.map((item) => renderProductCard(item))}
+                    </div>
+                  </div>
+                </div>
+              )
+            ) : activeTab === PROMOS_TAB ? (
               filteredPromos.length === 0 ? (
                 <div className="sf-engineEmptyState">
                   <strong>Promos</strong>
@@ -2615,6 +2764,7 @@ export default function StorePage() {
                                 className="lsf-card__addbtn"
                                 onClick={(event) => {
                                   event.stopPropagation();
+                                  addPromoLine(promo);
                                 }}
                                 aria-label={`Elegir promo ${promo.title}`}
                               >
@@ -3045,9 +3195,7 @@ export default function StorePage() {
                   })()}
                 </div>
 
-                <div className="sf-productPickerNotice">
-                  {getAllergenNotice(selectedPurchaseAllergens)}
-                </div>
+                {renderAllergenNotice(selectedPurchaseAllergens)}
 
                 <div className="sf-productPickerRow">
                   <span>Qty</span>
@@ -3186,11 +3334,11 @@ export default function StorePage() {
                     <div key={line.cartLineId || index} className="sf-cartRow">
                       <div className="sf-cartRowMain">
                         <strong>
-                          {line.type === "INCENTIVE_REWARD"
+                          {isIncentiveRewardCartLine(line)
                             ? `${line.name} GRATIS`
                             : line.name}
                         </strong>
-                        {line.type === "INCENTIVE_REWARD" && (
+                        {isIncentiveRewardCartLine(line) && (
                           <span>Incentivo #{line.incentiveId} - {line.size} x {line.qty}</span>
                         )}
                         {line.source === "queue_boost" ? (
@@ -3199,7 +3347,15 @@ export default function StorePage() {
                             {" -> "}
                             #{line.boost?.targetPosition || line.size}
                           </span>
-                        ) : line.type === "INCENTIVE_REWARD" ? null : line.type === "HALF_HALF" ? (
+                        ) : isIncentiveRewardCartLine(line) ? null : line.type === "PROMO" ? (
+                          <span>
+                            {Array.isArray(line.promoItems) && line.promoItems.length
+                              ? line.promoItems
+                                  .map((item) => `${item.quantity || 1}x ${item.name}${item.size ? ` ${item.size}` : ""}`)
+                                  .join(", ")
+                              : "Precio cerrado de promo"}
+                          </span>
+                        ) : line.type === "HALF_HALF" ? (
                           <span>
                             Mitad A: {line.leftName || "Pizza"} / Mitad B: {line.rightName || "Pizza"} - {line.size} x {line.qty}
                           </span>
@@ -3234,15 +3390,15 @@ export default function StorePage() {
                       </div>
                       <div className="sf-cartRowSide">
                         <strong>
-                          {line.type === "INCENTIVE_REWARD"
-                            ? `-EUR ${Math.abs(num(line.subtotal)).toFixed(2)}`
+                          {isIncentiveRewardCartLine(line)
+                            ? `Ahorras EUR ${Math.abs(num(line.subtotal)).toFixed(2)}`
                             : `EUR ${num(line.subtotal).toFixed(2)}`}
                         </strong>
                         <button
                           type="button"
                           className="sf-modalCloseBtn sf-cartRemoveBtn"
                           onClick={() => {
-                            if (line.type === "INCENTIVE_REWARD" && line.incentiveId) {
+                            if (isIncentiveRewardCartLine(line) && line.incentiveId) {
                               dismissedRewardIncentiveIdsRef.current.add(
                                 Number(line.incentiveId)
                               );
@@ -3399,19 +3555,7 @@ export default function StorePage() {
                   )}
                 </div>
 
-                <div className="sf-productPickerNotice">
-                  {getAllergenNotice(halfPurchaseAllergens)}
-                </div>
-
-                {halfPricingSource && (
-                  <div className="sf-halfRule">
-                    <span>Regla de precio</span>
-                    <strong>{halfPricingSource.name}</strong>
-                    <small>
-                      La mitad mas cara define el precio base y las caracteristicas principales.
-                    </small>
-                  </div>
-                )}
+                {renderAllergenNotice(halfPurchaseAllergens)}
 
                 {[
                   {
@@ -3462,7 +3606,11 @@ export default function StorePage() {
                   </div>
                 ))}
 
-                <div className="sf-productPickerActions">
+                <div className="sf-productPickerActions sf-builderStickyActions">
+                  <div className="sf-builderTotal">
+                    <span>Total mitad/mitad</span>
+                    <strong>EUR {halfGrandTotal.toFixed(2)}</strong>
+                  </div>
                   <button
                     type="button"
                     className="sf-secondaryBtn"
@@ -3687,16 +3835,7 @@ export default function StorePage() {
                     selectedCustomIngredientIds.includes(Number(ingredient.id))
                   ).length;
                   const isOpen = customOpenSection === categoryName;
-                  const isSauce = categoryName === "SALSAS";
-                  const isCheese = categoryName === "QUESOS";
-                  const isLocked =
-                    !customHasBase ||
-                    !customHasSize ||
-                    (!isSauce && customRequiresSauce && isCheese && !customHasSauce) ||
-                    (!isSauce &&
-                      !isCheese &&
-                      ((customRequiresSauce && !customHasSauce) ||
-                        (customRequiresCheese && !customHasCheese)));
+                  const isLocked = !customHasBase || !customHasSize;
 
                   return (
                     <section key={categoryName} className="sf-customAccordion">
@@ -3800,17 +3939,18 @@ export default function StorePage() {
                 })}
 
                 <div className="sf-productPickerNotice">
-                  Para avanzar necesitas categoria, tamano
-                  {!customHasIngredient ? ", al menos un ingrediente" : ""}
-                  {customRequiresSauce ? ", una salsa" : ""}
-                  {customRequiresCheese ? " y un queso" : ""}.
+                  {customMissingSteps.length > 0
+                    ? `Para avanzar necesitas ${customMissingSteps.join(", ")}.`
+                    : "Puedes anadirlo al carrito o seguir personalizando."}
                 </div>
 
-                <div className="sf-productPickerNotice">
-                  {getAllergenNotice(customSelectedAllergens)}
-                </div>
+                {renderAllergenNotice(customSelectedAllergens)}
 
-                <div className="sf-productPickerActions">
+                <div className="sf-productPickerActions sf-builderStickyActions">
+                  <div className="sf-builderTotal">
+                    <span>Total armado</span>
+                    <strong>EUR {customGrandTotal.toFixed(2)}</strong>
+                  </div>
                   <button
                     type="button"
                     className="sf-secondaryBtn"

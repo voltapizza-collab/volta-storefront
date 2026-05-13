@@ -10,6 +10,7 @@ import SettingsModule from "../components/Backoffice/SettingsModule";
 import SettingsDeliveryModule from "../components/Backoffice/SettingsDeliveryModule";
 import SettingsBrandingModule from "../components/Backoffice/SettingsBrandingModule";
 import CustomersModule from "../components/Backoffice/CustomersModule";
+import CommunicationsPanel from "../components/Backoffice/CommunicationsPanel";
 import CouponsModule from "../components/Backoffice/Coupons/CouponsModule";
 import BillingModule, { FinanceBillingModule } from "../components/Backoffice/BillingModule";
 import MyOrdersModule, { OrdersMovementsModule } from "../components/GlobalManager/MyOrdersModule";
@@ -24,6 +25,7 @@ export default function Backoffice() {
   const [activeModuleGroup, setActiveModuleGroup] = useState(initialSmsPaymentStatus ? "offers" : "inventory");
   const [expandedModules, setExpandedModules] = useState({
     pizzaCreator: false,
+    customers: false,
     offers: Boolean(initialSmsPaymentStatus),
     myorders: false,
     finance: false,
@@ -189,6 +191,12 @@ export default function Backoffice() {
     isSettingsOverviewActive ||
     isSettingsDeliveryActive ||
     isSettingsBrandingActive;
+  const isCustomersOverviewActive = activeModule === "customers";
+  const isCustomersCommunicationsActive = activeModule === "customersCommunications";
+  const isCustomersGroupActive =
+    activeModuleGroup === "customers" ||
+    isCustomersOverviewActive ||
+    isCustomersCommunicationsActive;
   const isOffersOverviewActive = activeModule === "offers";
   const isOffersCreateActive = activeModule === "offersCreate";
   const isOffersPromosActive = activeModule === "offersPromos";
@@ -320,7 +328,7 @@ export default function Backoffice() {
                 }}
                 type="button"
               >
-                Inventory
+                Toppings Inventory
               </button>
 
               <button
@@ -386,17 +394,38 @@ export default function Backoffice() {
               </button>
 
               <button
-                className={`bo-btn ${
-                  activeModuleGroup === "customers" ? "active" : ""
+                className={`bo-btn bo-btnAccordion ${
+                  isCustomersGroupActive ? "active" : ""
+                } ${
+                  expandedModules.customers ? "open" : ""
                 }`}
-                onClick={() => {
-                  setActiveModule("customers");
-                  setActiveModuleGroup("customers");
-                }}
+                onClick={() => toggleModuleSection("customers", "inventory")}
                 type="button"
               >
-                Customers
+                <span>Customers</span>
+                <span className="bo-btnChevron">
+                  {expandedModules.customers ? "v" : "^"}
+                </span>
               </button>
+
+              {expandedModules.customers && (
+                <div
+                  className={`bo-subnav ${
+                    isCustomersGroupActive ? "is-active-group" : ""
+                  }`}
+                >
+                  <button
+                    className={`bo-subbtn ${isCustomersCommunicationsActive ? "active" : ""}`}
+                    onClick={() => {
+                      setActiveModule("customersCommunications");
+                      setActiveModuleGroup("customers");
+                    }}
+                    type="button"
+                  >
+                    SMS
+                  </button>
+                </div>
+              )}
 
               <button
                 className={`bo-btn bo-btnAccordion ${
@@ -600,6 +629,10 @@ export default function Backoffice() {
 
           {activeModule === "customers" && auth.partnerId && (
             <CustomersModule partner={auth} />
+          )}
+
+          {activeModule === "customersCommunications" && auth.partnerId && (
+            <CommunicationsPanel partnerId={auth.partnerId} />
           )}
 
           {activeModule === "pizzaCreator" && auth.partnerId && (

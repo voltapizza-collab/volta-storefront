@@ -1,0 +1,233 @@
+.vg-root {
+  min-height: 100vh;
+  padding: 24px 14px 90px;
+  display: grid;
+  align-content: start;
+  gap: 18px;
+  background:
+    radial-gradient(circle at top left, rgba(255, 191, 45, 0.22), transparent 26%),
+    radial-gradient(circle at bottom right, rgba(249, 38, 114, 0.24), transparent 32%),
+    linear-gradient(180deg, #19123a 0%, #060713 100%);
+  color: #fff;
+}
+
+.vg-card {
+  width: min(680px, 100%);
+  margin: 0 auto;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.32);
+  backdrop-filter: blur(16px);
+}
+
+.vg-hero {
+  padding: 24px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 16px;
+  align-items: center;
+}
+
+.vg-hero img {
+  width: 86px;
+  height: 86px;
+  object-fit: contain;
+  border-radius: 22px;
+  background: #fff;
+  padding: 8px;
+}
+
+.vg-kicker,
+.vg-card > span,
+.vg-card small {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.76rem;
+  font-weight: 1000;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.vg-hero h1 {
+  margin: 5px 0;
+  font-size: clamp(2.4rem, 8vw, 4.2rem);
+  line-height: 0.92;
+  letter-spacing: -0.06em;
+}
+
+.vg-hero p,
+.vg-lock p,
+.vg-claim p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.78);
+  line-height: 1.55;
+}
+
+.vg-number,
+.vg-timing,
+.vg-crust,
+.vg-lock,
+.vg-claim {
+  padding: 24px;
+  display: grid;
+  justify-items: center;
+  gap: 16px;
+  text-align: center;
+}
+
+.vg-digits {
+  display: flex;
+  gap: 10px;
+}
+
+.vg-digits b {
+  width: 72px;
+  height: 86px;
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #fff, #ffe49c);
+  color: #21163a;
+  font-size: 3.4rem;
+  font-weight: 1000;
+  box-shadow: 0 12px 26px rgba(255, 191, 45, 0.2);
+}
+
+.vg-clock {
+  width: min(320px, 100%);
+  padding: 24px;
+  border-radius: 28px;
+  background: #090914;
+  color: #ffbf2d;
+  font-size: clamp(4rem, 18vw, 7rem);
+  font-weight: 1000;
+  line-height: 1;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+    0 0 34px rgba(255, 191, 45, 0.22);
+}
+
+.vg-clock.is-win {
+  color: #00df8f;
+  box-shadow: 0 0 42px rgba(0, 223, 143, 0.5);
+}
+
+.vg-pizzaStage {
+  position: relative;
+  width: min(330px, 78vw);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+}
+
+.vg-pizzaBase {
+  width: 76%;
+  height: 76%;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 45% 40%, #f94275 0 5%, transparent 6%),
+    radial-gradient(circle at 62% 55%, #f94275 0 4%, transparent 5%),
+    radial-gradient(circle at 35% 66%, #fff0a8 0 6%, transparent 7%),
+    radial-gradient(circle, #ffc94f 0 58%, #f29b22 59% 100%);
+  box-shadow: inset 0 0 0 7px #f6d36a;
+  animation: vgPizzaSpin 5s linear infinite;
+}
+
+.vg-crustRing {
+  position: absolute;
+  border-radius: 50%;
+  border: 16px solid #d88722;
+  box-shadow:
+    inset 0 0 0 4px rgba(255, 240, 180, 0.9),
+    0 0 28px rgba(255, 191, 45, 0.34);
+  pointer-events: none;
+}
+
+.vg-crustRing.is-win {
+  border-color: #00df8f;
+  box-shadow: 0 0 34px rgba(0, 223, 143, 0.6);
+}
+
+.vg-crust label,
+.vg-claim form {
+  width: min(420px, 100%);
+  display: grid;
+  gap: 10px;
+  color: rgba(255, 255, 255, 0.82);
+  font-weight: 900;
+}
+
+.vg-crust input[type="range"] {
+  width: 100%;
+  accent-color: #ffbf2d;
+}
+
+.vg-root button {
+  min-height: 48px;
+  padding: 0 22px;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #ffbf2d, #ff4f87);
+  color: #21163a;
+  font: inherit;
+  font-weight: 1000;
+  cursor: pointer;
+  box-shadow: 0 12px 28px rgba(255, 79, 135, 0.24);
+}
+
+.vg-root button:disabled {
+  opacity: 0.48;
+  cursor: not-allowed;
+}
+
+.vg-claim {
+  background:
+    radial-gradient(circle at top, rgba(255, 233, 138, 0.32), transparent 38%),
+    rgba(255, 255, 255, 0.12);
+}
+
+.vg-claim form input {
+  min-height: 48px;
+  padding: 0 14px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #21163a;
+  font: inherit;
+}
+
+.vg-claim strong,
+.vg-lock strong {
+  color: #ffdd7a;
+  font-size: clamp(1.8rem, 8vw, 3.2rem);
+  font-weight: 1000;
+}
+
+.vg-error {
+  margin: 0;
+  color: #ffb8c9;
+  font-weight: 900;
+}
+
+@keyframes vgPizzaSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 620px) {
+  .vg-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .vg-hero img {
+    width: 72px;
+    height: 72px;
+  }
+
+  .vg-digits b {
+    width: 58px;
+    height: 72px;
+    font-size: 2.8rem;
+  }
+}

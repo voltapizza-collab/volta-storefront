@@ -54,6 +54,7 @@ export default function OfferCreatePanel({ partnerId }) {
     stores: [],
     zipCodes: [],
     customers: [],
+    games: [],
   });
   const [form, setForm] = useState({
     type: "RANDOM_PERCENT",
@@ -76,6 +77,7 @@ export default function OfferCreatePanel({ partnerId }) {
     daysActive: [],
     windowStart: "",
     windowEnd: "",
+    gameId: "",
     notes: "",
   });
 
@@ -135,10 +137,11 @@ export default function OfferCreatePanel({ partnerId }) {
 
     const loadTerritory = async () => {
       try {
-        const [storesResponse, statsResponse, customersResponse] = await Promise.all([
+        const [storesResponse, statsResponse, customersResponse, gamesResponse] = await Promise.all([
           api.get(`/stores?partnerId=${partnerId}`),
           api.get(`/api/customers/segment-stats?partnerId=${partnerId}`),
           api.get(`/api/customers?partnerId=${partnerId}`),
+          api.get(`/api/coupons/games?partnerId=${partnerId}`).catch(() => ({ data: { games: [] } })),
         ]);
 
         if (!isMounted) return;
@@ -147,6 +150,7 @@ export default function OfferCreatePanel({ partnerId }) {
           stores: Array.isArray(storesResponse.data) ? storesResponse.data : [],
           zipCodes: Array.isArray(statsResponse.data?.zipCodes) ? statsResponse.data.zipCodes : [],
           customers: Array.isArray(customersResponse.data) ? customersResponse.data : [],
+          games: Array.isArray(gamesResponse.data?.games) ? gamesResponse.data.games : [],
         });
       } catch (requestError) {
         console.error("Error loading coupon territory filters", requestError);
@@ -295,6 +299,14 @@ export default function OfferCreatePanel({ partnerId }) {
               daysActive: form.daysActive,
               windowStart: timeToMinutes(form.windowStart),
               windowEnd: timeToMinutes(form.windowEnd),
+            }
+          : {}),
+        ...(form.gameId
+          ? {
+              gameId: Number(form.gameId),
+              acquisition: "GAME",
+              channel: "GAME",
+              campaign: "GAME_REWARD",
             }
           : {}),
       };
@@ -674,6 +686,41 @@ export default function OfferCreatePanel({ partnerId }) {
           </div>
         </>
       )}
+
+      <div className="cp-gameNest">
+        <label className="cp-checkRow">
+          <input
+            checked={Boolean(form.gameId)}
+            onChange={(event) => updateForm("gameId", event.target.checked ? territory.games[0]?.id || "" : "")}
+            type="checkbox"
+            disabled={!territory.games.length}
+          />
+          Anidar videojuego
+        </label>
+
+        <div className="cp-helper">
+          Si seleccionas un juego, este cupon queda como premio dorado: se vera en Coupon Gallery como PLAY & WIN y se entregara al ganar el minijuego.
+        </div>
+
+        {territory.games.length ? (
+          <label className="cp-field">
+            <span>Juego asociado</span>
+            <select
+              value={form.gameId}
+              onChange={(event) => updateForm("gameId", event.target.value)}
+            >
+              <option value="">Sin videojuego</option>
+              {territory.games.map((game) => (
+                <option key={game.id} value={game.id}>
+                  {game.name}
+                </option>
+              ))}
+            </select>
+          </label>
+        ) : (
+          <div className="cp-helper">Todavia no hay minijuegos activos configurados para este partner.</div>
+        )}
+      </div>
 
       <label className="cp-field">
         <span>Notas</span>

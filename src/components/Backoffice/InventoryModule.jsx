@@ -272,7 +272,10 @@ export default function InventoryModule({ partner }) {
 
       {/* HEADR */}
       <div className="inv-header">
-        <h2 className="inv-title">Inventory</h2>
+        <div>
+          <h2 className="inv-title">Toppings Inventory</h2>
+          <p className="inv-subtitle">Everything that goes on top of the dough.</p>
+        </div>
 
         <button
           className="inv-addBtn"
@@ -282,7 +285,7 @@ export default function InventoryModule({ partner }) {
             setModalMode("search");
           }}
         >
-          Manage ingredients
+          Ingredient finder
         </button>
       </div>
 
@@ -474,8 +477,8 @@ export default function InventoryModule({ partner }) {
           >
             <h3 className="inv-modalTitle">
               {modalMode === "search"
-                ? "Manage Ingredients"
-                : "Create Ingredient"}
+                ? "Ingredient Finder"
+                : "Request Ingredient"}
             </h3>
 
             {createFeedback && (
@@ -493,7 +496,7 @@ export default function InventoryModule({ partner }) {
 
                     <input
                       type="text"
-                      placeholder="Search ingredients..."
+                      placeholder="Search toppings or ingredients..."
                       value={search}
                       onChange={(e) => setSearch(e.target.value)}
                       autoFocus
@@ -515,7 +518,7 @@ export default function InventoryModule({ partner }) {
 
                   {search.trim() && filteredIngredients.length === 0 && (
                     <div className="inv-emptySearch">
-                      <div>No ingredients found</div>
+                      <div>No matching ingredient found</div>
 
                       <button
                         className="inv-createBtn"
@@ -525,7 +528,7 @@ export default function InventoryModule({ partner }) {
                           setModalMode("create");
                         }}
                       >
-                        Create new ingredient
+                        Request new ingredient
                       </button>
                     </div>
                   )}

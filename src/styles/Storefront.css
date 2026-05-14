@@ -1774,11 +1774,13 @@
   padding: 8px;
   border-radius: 999px;
   background:
-    radial-gradient(circle at 8% 24%, rgba(255, 255, 255, 0.55), transparent 24%),
-    linear-gradient(90deg, var(--sf-theme-primary, #4B11B2), color-mix(in srgb, var(--sf-theme-primary, #4B11B2) 74%, var(--sf-theme-accent, #f92672)));
+    radial-gradient(circle at 9% 18%, rgba(255, 182, 28, 0.22), transparent 20%),
+    radial-gradient(circle at 78% 50%, rgba(106, 61, 240, 0.32), transparent 34%),
+    linear-gradient(90deg, #130026 0%, #240051 42%, #0f0627 100%);
   box-shadow:
-    0 16px 38px rgba(31, 22, 52, 0.18),
-    inset 0 0 0 2px color-mix(in srgb, var(--sf-theme-primary, #4B11B2) 64%, #ffffff);
+    0 16px 38px rgba(19, 0, 38, 0.22),
+    inset 0 0 0 2px rgba(255, 182, 28, 0.58),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
 }
 
 .sf-engineBottomBtn {
@@ -1792,21 +1794,20 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid #111;
+  border: 0;
   border-radius: 999px;
-  padding: 0 14px;
-  color: #171717;
+  padding: 0 12px;
+  color: #ffffff;
   font-size: 0.78rem;
   font-weight: 950;
-  letter-spacing: 0;
+  letter-spacing: 0.02em;
   text-align: center;
   white-space: nowrap;
-  background:
-    radial-gradient(circle at 24% 18%, rgba(255, 255, 255, 0.92), transparent 32%),
-    linear-gradient(135deg, #ffe5f0, color-mix(in srgb, var(--sf-theme-accent, #f92672) 22%, #ffffff));
+  background: #111;
   box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.5),
-    0 8px 16px rgba(17, 17, 17, 0.16);
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    inset 0 -5px 0 rgba(0, 0, 0, 0.22),
+    0 8px 16px rgba(17, 17, 17, 0.18);
   transition:
     transform 0.18s ease,
     box-shadow 0.18s ease,
@@ -1818,7 +1819,7 @@
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: linear-gradient(110deg, transparent 0%, rgba(255, 255, 255, 0.58) 42%, transparent 74%);
+  background: linear-gradient(110deg, transparent 0%, rgba(255, 255, 255, 0.5) 42%, transparent 74%);
   transform: translateX(-130%);
   transition: transform 0.32s ease;
 }
@@ -1851,34 +1852,133 @@
 
 .sf-engineBottomBtn--reservation {
   background:
-    radial-gradient(circle at 24% 18%, rgba(255, 255, 255, 0.82), transparent 32%),
-    linear-gradient(135deg, color-mix(in srgb, var(--sf-theme-primary, #4B11B2) 82%, #ffffff), color-mix(in srgb, var(--sf-theme-accent, #f92672) 44%, var(--sf-theme-primary, #4B11B2)));
+    radial-gradient(circle at 18% 22%, rgba(255, 182, 28, 0.68), transparent 20%),
+    radial-gradient(circle at 82% 16%, rgba(83, 241, 255, 0.36), transparent 26%),
+    linear-gradient(135deg, #1b083e 0%, #6a3df0 58%, #ff2fa7 100%);
+  border: 1px solid rgba(255, 182, 28, 0.78);
+  color: #240051;
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.72),
+    0 0 10px rgba(255, 182, 28, 0.24);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.34),
+    inset 0 -5px 0 rgba(27, 8, 62, 0.36),
+    0 6px 0 #240051,
+    0 12px 22px rgba(106, 61, 240, 0.28);
+}
+
+.sf-engineBottomBtn--call {
+  background:
+    radial-gradient(circle at 20% 16%, rgba(255, 255, 255, 0.55), transparent 22%),
+    radial-gradient(circle at 84% 82%, rgba(255, 182, 28, 0.34), transparent 28%),
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0 4px, transparent 4px 10px),
+    linear-gradient(135deg, #7a0000 0%, #e20b17 48%, #ff3b30 100%);
+  border: 1px solid rgba(255, 225, 120, 0.52);
   color: #ffffff;
-  text-shadow: 0 1px 0 rgba(17, 17, 17, 0.16);
+  text-shadow:
+    0 1px 0 rgba(80, 0, 0, 0.92),
+    0 0 10px rgba(255, 182, 28, 0.4);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    inset 0 -5px 0 rgba(80, 0, 0, 0.38),
+    0 6px 0 #5c0000,
+    0 12px 22px rgba(226, 11, 23, 0.28),
+    0 0 0 0 rgba(255, 59, 48, 0.45);
+  animation: sfEmergencyCallPulse 1.65s ease-in-out infinite;
 }
 
 .sf-engineBottomBtn--call::before,
 .sf-engineBottomBtn--reservation::before {
-  display: inline-block;
-  margin-right: 7px;
-  font-size: 0.9rem;
-  line-height: 1;
+  content: "";
+  position: absolute;
+  left: 50%;
+  width: 68px;
+  right: auto;
+  top: 50%;
+  height: 20px;
+  z-index: -1;
+  transform: translate(-50%, -50%) rotate(-2deg);
+  border-radius: 9px;
+  opacity: 0.86;
+  filter: blur(0.4px);
+  box-shadow:
+    0 5px 10px rgba(0, 0, 0, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28);
 }
 
 .sf-engineBottomBtn--call::before {
-  content: "TEL";
-  color: color-mix(in srgb, var(--sf-theme-primary, #4B11B2) 84%, #111);
-  font-size: 0.58rem;
-  font-weight: 1000;
-  letter-spacing: 0.04em;
+  width: 70px;
+  background: linear-gradient(135deg, #fff3a4, #ffb61c 42%, #ffffff);
+  opacity: 0.74;
+  animation: sfEmergencyCallGlow 1.65s ease-in-out infinite;
 }
 
 .sf-engineBottomBtn--reservation::before {
-  content: "RSV";
-  color: #dfff00;
-  font-size: 0.58rem;
-  font-weight: 1000;
-  letter-spacing: 0.04em;
+  width: 78px;
+  background: linear-gradient(135deg, #fff000, #ffb61c 46%, #ff4fd8);
+}
+
+.sf-engineBottomBtn--call:hover:not(:disabled) {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.44),
+    inset 0 -5px 0 rgba(80, 0, 0, 0.32),
+    0 8px 0 #5c0000,
+    0 16px 26px rgba(226, 11, 23, 0.34),
+    0 0 18px rgba(255, 59, 48, 0.32);
+}
+
+.sf-engineBottomBtn--reservation:hover:not(:disabled) {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.38),
+    inset 0 -5px 0 rgba(27, 8, 62, 0.3),
+    0 8px 0 #240051,
+    0 16px 26px rgba(255, 47, 167, 0.24);
+}
+
+@keyframes sfFooterCallPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  42% {
+    transform: scale(1.08);
+    filter: brightness(1.16);
+  }
+}
+
+@keyframes sfEmergencyCallPulse {
+  0%,
+  100% {
+    filter: saturate(1);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.4),
+      inset 0 -5px 0 rgba(80, 0, 0, 0.38),
+      0 6px 0 #5c0000,
+      0 12px 22px rgba(226, 11, 23, 0.28),
+      0 0 0 0 rgba(255, 59, 48, 0.38);
+  }
+  50% {
+    filter: saturate(1.2) brightness(1.06);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.44),
+      inset 0 -5px 0 rgba(80, 0, 0, 0.34),
+      0 6px 0 #5c0000,
+      0 14px 24px rgba(226, 11, 23, 0.34),
+      0 0 0 6px rgba(255, 59, 48, 0);
+  }
+}
+
+@keyframes sfEmergencyCallGlow {
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: translate(-50%, -50%) rotate(-2deg) scaleX(1);
+  }
+  50% {
+    opacity: 0.92;
+    transform: translate(-50%, -50%) rotate(-2deg) scaleX(1.06);
+  }
 }
 
 .sf-couponDock {
@@ -4792,16 +4892,24 @@
 }
 
 .sf-storeHeader {
+  position: sticky;
+  top: 0;
+  z-index: 28;
   display: grid;
   grid-template-columns: minmax(220px, 1fr) minmax(220px, 1fr);
   gap: 12px;
   align-items: center;
-  padding: 4px 8px 0;
+  margin-bottom: 12px;
+  padding: 12px 8px 14px;
+  background:
+    linear-gradient(180deg, rgba(255, 250, 241, 0.98) 0%, rgba(255, 250, 241, 0.92) 72%, rgba(255, 250, 241, 0));
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 18px rgba(58, 34, 19, 0.06);
 }
 
 .sf-lsfSurface {
   position: sticky;
-  top: 10px;
+  top: 86px;
   z-index: 22;
   border: 1px solid rgba(17, 17, 17, 0.08);
   box-shadow: 0 10px 24px rgba(58, 34, 19, 0.08);
@@ -6261,7 +6369,12 @@
   .sf-storeHeader {
     grid-template-columns: 1fr;
     justify-items: center;
-    padding-inline: 0;
+    padding: 10px 0 12px;
+    margin-bottom: 14px;
+  }
+
+  .sf-lsfSurface {
+    top: 132px;
   }
 
   .sf-storeHeaderTitle {
@@ -6351,7 +6464,8 @@
   .sf-storeHeader {
     grid-template-columns: 1fr;
     gap: 8px;
-    padding: 0 2px;
+    padding: 8px 2px 10px;
+    margin-bottom: 12px;
   }
 
   .sf-storeHeaderTitle {

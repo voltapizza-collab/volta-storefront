@@ -33,10 +33,9 @@ export default function SettingsBrandingModule({ partner }) {
 
         setPartnerData(currentPartner);
         setForm({
-          brandPrimary: currentPartner.brandPrimary || BRANDING_DEFAULTS.brandPrimary,
-          brandSecondary:
-            currentPartner.brandSecondary || BRANDING_DEFAULTS.brandSecondary,
-          brandAccent: currentPartner.brandAccent || BRANDING_DEFAULTS.brandAccent,
+          brandPrimary: BRANDING_DEFAULTS.brandPrimary,
+          brandSecondary: BRANDING_DEFAULTS.brandSecondary,
+          brandAccent: BRANDING_DEFAULTS.brandAccent,
           brandSurface: currentPartner.brandSurface || BRANDING_DEFAULTS.brandSurface,
           brandTextColor:
             currentPartner.brandTextColor || BRANDING_DEFAULTS.brandTextColor,
@@ -65,9 +64,9 @@ export default function SettingsBrandingModule({ partner }) {
 
   const previewStyle = useMemo(() => {
     const theme = buildBrandThemeVars({
-      brandPrimary: form.brandPrimary,
-      brandSecondary: form.brandSecondary,
-      brandAccent: selectedOfferVariant.accent,
+      brandPrimary: BRANDING_DEFAULTS.brandPrimary,
+      brandSecondary: BRANDING_DEFAULTS.brandSecondary,
+      brandAccent: BRANDING_DEFAULTS.brandAccent,
       brandSurface: form.brandSurface,
       brandTextColor: form.brandTextColor,
       brandFontFamily: form.brandFontFamily,
@@ -88,12 +87,9 @@ export default function SettingsBrandingModule({ partner }) {
       "--preview-font-family": theme.fontFamily,
     };
   }, [
-    form.brandPrimary,
-    form.brandSecondary,
       form.brandSurface,
       form.brandTextColor,
       form.brandFontFamily,
-      selectedOfferVariant.accent,
     ]);
 
   const handleChange = (field, value) => {
@@ -118,7 +114,9 @@ export default function SettingsBrandingModule({ partner }) {
         `/partners/by-id/${partner.partnerId}/branding`,
         {
           ...form,
-          brandAccent: selectedOfferVariant.accent,
+          brandPrimary: BRANDING_DEFAULTS.brandPrimary,
+          brandSecondary: BRANDING_DEFAULTS.brandSecondary,
+          brandAccent: BRANDING_DEFAULTS.brandAccent,
         }
       );
       setPartnerData(response.data);
@@ -136,7 +134,7 @@ export default function SettingsBrandingModule({ partner }) {
     setForm((current) => ({
       ...current,
       brandOfferButtonStyle: nextVariant.id,
-      brandAccent: nextVariant.accent,
+      brandAccent: BRANDING_DEFAULTS.brandAccent,
     }));
     setSuccess("");
     setOfferModalOpen(false);
@@ -209,25 +207,17 @@ export default function SettingsBrandingModule({ partner }) {
         <div className="bo-settingsOverviewGrid bo-settingsOverviewGrid--branding">
           <form className="bo-settingsForm" onSubmit={handleSubmit}>
             <div className="bo-settingsGrid bo-settingsGrid--doubleTight">
-              <label className="bo-field bo-fieldColor">
-                <span>Color primario</span>
-                <input
-                  type="color"
-                  value={form.brandPrimary}
-                  onChange={(e) => handleChange("brandPrimary", e.target.value)}
-                />
-                <small>{form.brandPrimary}</small>
-              </label>
-
-              <label className="bo-field bo-fieldColor">
-                <span>Color secundario</span>
-                <input
-                  type="color"
-                  value={form.brandSecondary}
-                  onChange={(e) => handleChange("brandSecondary", e.target.value)}
-                />
-                <small>{form.brandSecondary}</small>
-              </label>
+              <div className="bo-field bo-brandLock">
+                <span>Paleta Volta fija</span>
+                <div className="bo-brandLockSwatches" aria-label="Paleta Volta fija">
+                  <i style={{ background: BRANDING_DEFAULTS.brandPrimary }} />
+                  <i style={{ background: BRANDING_DEFAULTS.brandSecondary }} />
+                  <i style={{ background: BRANDING_DEFAULTS.brandAccent }} />
+                </div>
+                <small>
+                  {BRANDING_DEFAULTS.brandPrimary} - {BRANDING_DEFAULTS.brandSecondary} - {BRANDING_DEFAULTS.brandAccent}
+                </small>
+              </div>
 
               <label className="bo-field">
                 <span>Boton de ofertas</span>
@@ -344,7 +334,7 @@ export default function SettingsBrandingModule({ partner }) {
               </div>
 
               <div className="bo-brandingStageFooter">
-                <button type="button">Programar</button>
+                <button type="button">PROGRAMAR</button>
                 <button type="button">Cupon</button>
                 <button type="button">Reservas</button>
               </div>

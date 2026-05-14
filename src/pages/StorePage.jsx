@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import OrderPortalTransition from "../components/Storefront/OrderPortalTransition";
 import api from "../services/api";
 import "../styles/Storefront.css";
 import flagEs from "../assets/flags/es.svg";
@@ -95,6 +96,166 @@ function buildClosingSnapshot(now, closeHour = 23, closeMinute = 30) {
   };
 }
 
+const SCHEDULE_SLOT_STEP_MINUTES = 15;
+const SCHEDULE_OPEN_OFFSET_MINUTES = 30;
+const SCHEDULE_DAYS_AHEAD = 5;
+const FALLBACK_SCHEDULE_WINDOW = {
+  openTime: 14 * 60,
+  closeTime: 23 * 60 + 30,
+};
+
+function parseStoreTimeToMinutes(value) {
+  if (typeof value === "number" && Number.isFinite(value)) {
+    return Math.trunc(value);
+  }
+
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+    const timeMatch = trimmed.match(/^(\d{1,2}):(\d{2})/);
+
+    if (timeMatch) {
+      const hours = Number(timeMatch[1]);
+      const minutes = Number(timeMatch[2]);
+
+      if (Number.isFinite(hours) && Number.isFinite(minutes)) {
+        return hours * 60 + minutes;
+      }
+    }
+
+    const numericValue = Number(trimmed);
+    if (Number.isFinite(numericValue)) {
+      return Math.trunc(numericValue);
+    }
+  }
+
+  return null;
+}
+
+function clampScheduleMinute(value) {
+  return Math.min(Math.max(value, 0), 24 * 60);
+}
+
+function roundUpToStep(minutes, step = SCHEDULE_SLOT_STEP_MINUTES) {
+  return Math.ceil(minutes / step) * step;
+}
+
+function minutesToHHMM(minutes) {
+  const hours = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+
+  return `${String(hours).padStart(2, "0")}:${String(mins).padStart(2, "0")}`;
+}
+
+function isSameLocalDay(left, right) {
+  if (!left || !right) return false;
+
+  return (
+    left.getFullYear() === right.getFullYear() &&
+    left.getMonth() === right.getMonth() &&
+    left.getDate() === right.getDate()
+  );
+}
+
+function getMinutesOfDay(date) {
+  return date.getHours() * 60 + date.getMinutes();
+}
+
+function buildScheduleDays(nowDate) {
+  return Array.from({ length: SCHEDULE_DAYS_AHEAD }, (_, index) => {
+    const date = new Date(nowDate);
+    date.setDate(nowDate.getDate() + index);
+    date.setHours(0, 0, 0, 0);
+
+    const weekDays = ["dom", "lun", "mar", "mie", "jue", "vie", "sab"];
+    const months = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
+    const label =
+      index === 0
+        ? "Hoy"
+        : index === 1
+        ? "Manana"
+        : `${weekDays[date.getDay()]} ${date.getDate()} ${months[date.getMonth()]}`;
+
+    return {
+      date,
+      label,
+    };
+  });
+}
+
+function formatScheduledOrderLabel(date, nowDate) {
+  if (!date) return "";
+
+  const startOfDate = new Date(date);
+  startOfDate.setHours(0, 0, 0, 0);
+
+  const startOfNow = new Date(nowDate);
+  startOfNow.setHours(0, 0, 0, 0);
+
+  const diffDays = Math.round((startOfDate.getTime() - startOfNow.getTime()) / 86400000);
+  const weekDays = ["dom", "lun", "mar", "mie", "jue", "vie", "sab"];
+  const months = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
+  const dateLabel =
+    diffDays === 0
+      ? "Hoy"
+      : diffDays === 1
+      ? "Manana"
+      : `${weekDays[date.getDay()]} ${date.getDate()} ${months[date.getMonth()]}`;
+
+  return `${dateLabel} ${minutesToHHMM(getMinutesOfDay(date))}`;
+}
+
+function toLocalDateValue(date) {
+  if (!date) return "";
+
+  return [
+    date.getFullYear(),
+    String(date.getMonth() + 1).padStart(2, "0"),
+    String(date.getDate()).padStart(2, "0"),
+  ].join("-");
+}
+
+function getScheduleWindowsForDate(store, date) {
+  const storeHours = Array.isArray(store?.hours) ? store.hours : [];
+  const dayOfWeek = date.getDay();
+  const matchingHours = storeHours.filter((item) => Number(item.dayOfWeek) === dayOfWeek);
+  const sourceHours = matchingHours.length ? matchingHours : [FALLBACK_SCHEDULE_WINDOW];
+
+  return sourceHours
+    .map((item) => {
+      const openTime = parseStoreTimeToMinutes(item.openTime);
+      const closeTime = parseStoreTimeToMinutes(item.closeTime);
+
+      if (openTime == null || closeTime == null) return null;
+
+      const start = clampScheduleMinute(openTime + SCHEDULE_OPEN_OFFSET_MINUTES);
+      const end = clampScheduleMinute(closeTime);
+
+      if (start >= end) return null;
+
+      return { start, end };
+    })
+    .filter(Boolean);
+}
+
+function buildScheduleSlots({ store, selectedDate, nowDate }) {
+  if (!selectedDate) return [];
+
+  const nowMinutes = getMinutesOfDay(nowDate);
+  const isToday = isSameLocalDay(selectedDate, nowDate);
+  const slots = new Set();
+
+  getScheduleWindowsForDate(store, selectedDate).forEach((window) => {
+    const earliestMinute = isToday ? Math.max(window.start, nowMinutes) : window.start;
+    const start = roundUpToStep(earliestMinute);
+
+    for (let minute = start; minute <= window.end; minute += SCHEDULE_SLOT_STEP_MINUTES) {
+      slots.add(minute);
+    }
+  });
+
+  return [...slots].sort((left, right) => left - right);
+}
+
 function formatLaunchCountdown(launchAt, now) {
   const launchDate = new Date(launchAt);
   if (!launchAt || Number.isNaN(launchDate.getTime())) return "Muy pronto";
@@ -181,6 +342,19 @@ const formatMoney = (value, currency = "EUR") =>
     style: "currency",
     currency: currency || "EUR",
   }).format(Number(value || 0));
+
+const formatRepeatDate = (value) => {
+  if (!value) return "Fecha no disponible";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "Fecha no disponible";
+
+  return new Intl.DateTimeFormat("es-ES", {
+    day: "2-digit",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(date);
+};
 
 const formatTrendPercent = (value) => {
   const parsed = Number(value || 0);
@@ -633,6 +807,7 @@ function CountryFlag({ countryCode }) {
 export default function StorePage() {
   const { partnerSlug, storeSlug } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [menu, setMenu] = useState([]);
   const [trending, setTrending] = useState([]);
@@ -641,18 +816,36 @@ export default function StorePage() {
   const [store, setStore] = useState(null);
   const [partner, setPartner] = useState(null);
   const [error, setError] = useState("");
+  const [portalReady, setPortalReady] = useState(false);
   const [search, setSearch] = useState("");
   const [couponCode, setCouponCode] = useState("");
   const [activeTab, setActiveTab] = useState("");
   const [scheduleOpen, setScheduleOpen] = useState(false);
+  const [scheduledAt, setScheduledAt] = useState(null);
   const [reservationOpen, setReservationOpen] = useState(false);
+  const [reservationDate, setReservationDate] = useState(null);
+  const [reservationTime, setReservationTime] = useState("");
+  const [reservationPartySize, setReservationPartySize] = useState(2);
+  const [reservationName, setReservationName] = useState("");
+  const [reservationPhone, setReservationPhone] = useState("");
+  const [reservationAvailability, setReservationAvailability] = useState([]);
+  const [reservationCapacity, setReservationCapacity] = useState(0);
+  const [reservationLoading, setReservationLoading] = useState(false);
+  const [reservationMessage, setReservationMessage] = useState("");
   const [repeatOpen, setRepeatOpen] = useState(false);
   const [repeatPhone, setRepeatPhone] = useState("");
   const [repeatDraft, setRepeatDraft] = useState(null);
+  const [repeatOptions, setRepeatOptions] = useState([]);
   const [repeatMessage, setRepeatMessage] = useState("");
   const [repeatLoading, setRepeatLoading] = useState(false);
+  const [repeatSearched, setRepeatSearched] = useState(false);
   const [cart, setCart] = useState([]);
   const [cartOpen, setCartOpen] = useState(false);
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [checkoutName, setCheckoutName] = useState("");
+  const [checkoutPhone, setCheckoutPhone] = useState("");
+  const [checkoutMessage, setCheckoutMessage] = useState("");
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [productModalOpen, setProductModalOpen] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState(null);
   const [productSelection, setProductSelection] = useState({
@@ -699,6 +892,12 @@ export default function StorePage() {
   const [tick, setTick] = useState(false);
   const incentiveZeroRefreshRef = useRef(false);
   const dismissedRewardIncentiveIdsRef = useRef(new Set());
+
+  useEffect(() => {
+    setPortalReady(false);
+    const timer = window.setTimeout(() => setPortalReady(true), 900);
+    return () => window.clearTimeout(timer);
+  }, [partnerSlug, storeSlug]);
 
   const fetchIncentiveSnapshot = useCallback(async (partnerIdValue) => {
     const partnerId = Number(partnerIdValue);
@@ -876,9 +1075,9 @@ export default function StorePage() {
   const themeStyle = useMemo(
     () => {
       const theme = buildBrandThemeVars({
-        brandPrimary: partner?.brandPrimary || "#4B11B2",
-        brandSecondary: partner?.brandSecondary || "#FFBF2D",
-        brandAccent: partner?.brandAccent || BRANDING_DEFAULTS.brandAccent,
+        brandPrimary: BRANDING_DEFAULTS.brandPrimary,
+        brandSecondary: BRANDING_DEFAULTS.brandSecondary,
+        brandAccent: BRANDING_DEFAULTS.brandAccent,
         brandSurface: partner?.brandSurface || "#FFF7E8",
         brandTextColor: partner?.brandTextColor || BRANDING_DEFAULTS.brandTextColor,
         brandFontFamily: partner?.brandFontFamily || BRANDING_DEFAULTS.brandFontFamily,
@@ -1070,6 +1269,128 @@ export default function StorePage() {
     return countryCode;
   }, [partner?.country]);
   const closingSnapshot = useMemo(() => buildClosingSnapshot(now), [now]);
+  const scheduleDays = useMemo(() => buildScheduleDays(now), [now]);
+  const scheduleSlots = useMemo(
+    () => buildScheduleSlots({ store, selectedDate: scheduledAt, nowDate: now }),
+    [now, scheduledAt, store]
+  );
+  const scheduleSelectedMinutes = scheduledAt ? getMinutesOfDay(scheduledAt) : null;
+  const scheduledAtIsValid =
+    scheduledAt && scheduleSelectedMinutes != null && scheduleSlots.includes(scheduleSelectedMinutes);
+  const scheduledOrderLabel = scheduledAtIsValid
+    ? formatScheduledOrderLabel(scheduledAt, now)
+    : "";
+  const reservationDays = scheduleDays;
+  const reservationDateValue = reservationDate ? toLocalDateValue(reservationDate) : "";
+  const reservationCanConfirm =
+    Boolean(store?.id) &&
+    Boolean(reservationDateValue) &&
+    Boolean(reservationTime) &&
+    reservationName.trim().length > 0 &&
+    normalizeRepeatPhoneInput(reservationPhone).length >= 7;
+
+  useEffect(() => {
+    if (!scheduleOpen || scheduledAt) return;
+
+    const firstAvailableDay = scheduleDays.find((day) =>
+      buildScheduleSlots({ store, selectedDate: day.date, nowDate: now }).length > 0
+    );
+
+    if (firstAvailableDay) {
+      setScheduledAt(new Date(firstAvailableDay.date));
+    }
+  }, [now, scheduleDays, scheduleOpen, scheduledAt, store]);
+
+  useEffect(() => {
+    if (!scheduledAt || scheduledAtIsValid || scheduleSelectedMinutes === 0) return;
+
+    setScheduledAt(null);
+  }, [scheduleSelectedMinutes, scheduledAt, scheduledAtIsValid]);
+
+  useEffect(() => {
+    if (!reservationOpen) return;
+
+    setReservationDate((current) => current || new Date(reservationDays[0]?.date || now));
+    setReservationTime("");
+    setReservationMessage("");
+  }, [now, reservationDays, reservationOpen]);
+
+  useEffect(() => {
+    if (!reservationOpen || !store?.id || !reservationDateValue) return undefined;
+
+    let cancelled = false;
+    const params = new URLSearchParams({
+      storeId: String(store.id),
+      date: reservationDateValue,
+      partySize: String(reservationPartySize),
+    });
+
+    setReservationLoading(true);
+    api
+      .get(`/api/reservations/availability?${params.toString()}`)
+      .then((data) => {
+        if (cancelled) return;
+        const availability = Array.isArray(data?.availability) ? data.availability : [];
+        setReservationAvailability(availability);
+        setReservationCapacity(Number(data?.capacity || 0));
+        setReservationTime((current) => {
+          const stillAvailable = availability.some(
+            (slot) => slot.time === current && slot.canFit !== false
+          );
+          return stillAvailable ? current : "";
+        });
+      })
+      .catch((err) => {
+        if (cancelled) return;
+        console.error(err);
+        setReservationAvailability([]);
+        setReservationCapacity(0);
+        setReservationMessage("No pudimos cargar la disponibilidad.");
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setReservationLoading(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [reservationDateValue, reservationOpen, reservationPartySize, store?.id]);
+
+  const createReservation = useCallback(async () => {
+    if (!reservationCanConfirm) return;
+
+    try {
+      setReservationLoading(true);
+      await api.post("/api/reservations", {
+        storeId: Number(store.id),
+        customerName: reservationName.trim(),
+        customerPhone: normalizeRepeatPhoneInput(reservationPhone),
+        partySize: Number(reservationPartySize),
+        reservationDate: reservationDateValue,
+        reservationTime,
+      });
+
+      setReservationTime("");
+      setReservationMessage("");
+      setReservationOpen(false);
+    } catch (err) {
+      console.error(err);
+      setReservationMessage("No se pudo crear la reserva. Revisa la hora o la capacidad.");
+    } finally {
+      setReservationLoading(false);
+    }
+  }, [
+    reservationCanConfirm,
+    reservationDateValue,
+    reservationName,
+    reservationPartySize,
+    reservationPhone,
+    reservationTime,
+    store?.id,
+  ]);
+
   const utilityPills = useMemo(
     () => [
       {
@@ -1999,6 +2320,50 @@ export default function StorePage() {
     () => cart.reduce((sum, item) => sum + getCartLinePayableTotal(item), 0),
     [cart]
   );
+  const confirmScheduledOrder = useCallback(async () => {
+    if (!scheduledAtIsValid) {
+      setCheckoutMessage("Selecciona una hora valida para programar el pedido.");
+      return;
+    }
+
+    const phone = normalizeRepeatPhoneInput(checkoutPhone);
+    if (!checkoutName.trim() || phone.length < 7) {
+      setCheckoutMessage("Introduce nombre y telefono para confirmar el pedido programado.");
+      return;
+    }
+
+    try {
+      setCheckoutLoading(true);
+      setCheckoutMessage("");
+      await api.post("/api/scheduled-orders/confirm", {
+        partnerId: Number(partner?.id || store?.partnerId),
+        storeId: Number(store?.id),
+        customerName: checkoutName.trim(),
+        customerPhone: phone,
+        scheduledFor: scheduledAt.toISOString(),
+        total: cartTotal,
+        currency: partner?.currency || "EUR",
+      });
+
+      setCheckoutMessage("Pedido programado confirmado por SMS.");
+      setCheckoutOpen(false);
+    } catch (err) {
+      console.error(err);
+      setCheckoutMessage("No pudimos enviar la confirmacion del pedido programado.");
+    } finally {
+      setCheckoutLoading(false);
+    }
+  }, [
+    cartTotal,
+    checkoutName,
+    checkoutPhone,
+    partner?.currency,
+    partner?.id,
+    scheduledAt,
+    scheduledAtIsValid,
+    store?.id,
+    store?.partnerId,
+  ]);
   const cartProductSubtotal = useMemo(
     () =>
       cart
@@ -2064,6 +2429,11 @@ export default function StorePage() {
         : [],
     [repeatDraft]
   );
+  const repeatOrderSlots = useMemo(() => {
+    const normalized = Array.isArray(repeatOptions) ? repeatOptions.slice(0, 3) : [];
+    while (normalized.length < 3) normalized.push(null);
+    return normalized;
+  }, [repeatOptions]);
   const incentiveTarget = useMemo(() => {
     if (!activeIncentive) return 0;
 
@@ -2265,24 +2635,30 @@ export default function StorePage() {
     try {
       setRepeatLoading(true);
       setRepeatMessage("");
+      setRepeatSearched(false);
       setRepeatPhone(phone);
       const params = new URLSearchParams({
         partnerId: String(partner?.id || ""),
         storeId: String(store?.id || ""),
         phone,
       });
-      const data = await api.get(`/api/myorders/repeat/latest?${params.toString()}`);
-      const draft = data?.cartDraft || null;
+      const data = await api.get(`/api/myorders/repeat/recent?${params.toString()}`);
+      const orders = Array.isArray(data?.orders) ? data.orders : [];
+      const drafts = orders.map((item) => item?.cartDraft).filter(Boolean).slice(0, 3);
 
-      setRepeatDraft(draft);
+      setRepeatOptions(drafts);
+      setRepeatDraft(null);
+      setRepeatSearched(true);
       setRepeatMessage(
-        draft?.sourceOrderCode
-          ? `Pedido ${draft.sourceOrderCode} encontrado.`
-          : "Pedido anterior encontrado."
+        drafts.length
+          ? "Elige uno de tus ultimos pedidos para repetirlo."
+          : "No encontramos pedidos anteriores para este telefono."
       );
     } catch (err) {
       console.error(err);
       setRepeatDraft(null);
+      setRepeatOptions([]);
+      setRepeatSearched(true);
       setRepeatMessage(
         getApiErrorMessage(err, "No encontramos un pedido anterior para repetir.")
       );
@@ -2291,12 +2667,16 @@ export default function StorePage() {
     }
   };
 
-  const repeatFoundOrder = () => {
-    if (!repeatDraft || repeatPreviewLines.length === 0) return;
+  const repeatFoundOrder = (draft = repeatDraft) => {
+    const lines = Array.isArray(draft?.items)
+      ? draft.items.map((item, index) => normalizeCartLine(item, index))
+      : [];
 
-    setCart(repeatPreviewLines);
+    if (!draft || lines.length === 0) return;
+
+    setCart(lines);
     try {
-      window.localStorage.setItem(cartDraftStorageKey, JSON.stringify(repeatDraft));
+      window.localStorage.setItem(cartDraftStorageKey, JSON.stringify(draft));
     } catch {
       // The in-memory draft is enough if storage is unavailable.
     }
@@ -2463,11 +2843,14 @@ export default function StorePage() {
     );
   }
 
-  if (!store) {
+  if (!store || !portalReady) {
     return (
-      <div className="sf-loading">
-        <div className="sf-loadingCard">Loading store...</div>
-      </div>
+      <OrderPortalTransition
+        title="Loading store"
+        eyebrow="Store launch"
+        mode="store"
+        partnerName={location.state?.storeName || location.state?.partnerName || storeSlug}
+      />
     );
   }
 
@@ -2498,10 +2881,12 @@ export default function StorePage() {
             </span>
             <button
               type="button"
-              className="lsf-cartbtn__count lsf-schedulebtn"
+              className={`lsf-schedulebtn ${scheduledOrderLabel ? "has-schedule" : ""}`}
               onClick={() => setScheduleOpen(true)}
+              title={scheduledOrderLabel || "Programar pedido"}
             >
-              Programar
+              <span className="lsf-schedulebtn__icon" aria-hidden="true">⏱</span>
+              <span className="lsf-schedulebtn__text">{scheduledOrderLabel || "Programar"}</span>
             </button>
 
             <button
@@ -2548,7 +2933,7 @@ export default function StorePage() {
                   {!search && (
                     <span className="sf-engineSearchTicker" aria-hidden="true">
                       <span className="sf-engineSearchTickerTrack">
-                        <span>Buscar pizza o ingrediente, extras o sabores</span>
+                        <span>Buscar pizza o ingrediente...</span>
                       </span>
                     </span>
                   )}
@@ -3101,7 +3486,7 @@ export default function StorePage() {
           <div className="sf-bottomActionGroup">
             <button
               type="button"
-              className="sf-engineBottomBtn"
+              className="sf-engineBottomBtn sf-engineBottomBtn--call"
               onClick={() => {
                 if (phoneHref) window.location.href = phoneHref;
               }}
@@ -3113,7 +3498,7 @@ export default function StorePage() {
             {reservationEnabled && (
               <button
                 type="button"
-                className="sf-engineBottomBtn sf-engineBottomBtn--ghost"
+                className="sf-engineBottomBtn sf-engineBottomBtn--reservation"
                 onClick={() => setReservationOpen(true)}
               >
                 Reservas
@@ -3426,16 +3811,118 @@ export default function StorePage() {
                     <span>Total</span>
                     <strong>EUR {cartTotal.toFixed(2)}</strong>
                   </div>
-                  <button
-                    type="button"
-                    className="sf-primaryBtn"
-                    onClick={() => setCartOpen(false)}
-                  >
-                    Confirmar carrito
-                  </button>
+                  <div className="sf-cartActions">
+                    <button
+                      type="button"
+                      className="sf-secondaryBtn"
+                      onClick={() => setCartOpen(false)}
+                    >
+                      Seguir comprando
+                    </button>
+                    <button
+                      type="button"
+                      className="sf-primaryBtn"
+                      onClick={() => {
+                        setCartOpen(false);
+                        setCheckoutOpen(true);
+                      }}
+                    >
+                      Confirmar carrito
+                    </button>
+                  </div>
                 </div>
               </>
             )}
+          </div>
+        </div>
+      )}
+
+      {checkoutOpen && (
+        <div className="sf-modalOverlay" onClick={() => setCheckoutOpen(false)}>
+          <div
+            className="sf-modalCard sf-checkoutModal"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="sf-cartModalHead">
+              <div>
+                <span>Pago</span>
+                <h3>EUR {cartTotal.toFixed(2)}</h3>
+              </div>
+              <button
+                type="button"
+                className="sf-modalCloseBtn"
+                onClick={() => setCheckoutOpen(false)}
+                aria-label="Cerrar"
+              >
+                x
+              </button>
+            </div>
+
+            <div className="sf-checkoutSummary">
+              <span>Pedido listo para pagar</span>
+              <strong>{cartCount} producto{cartCount === 1 ? "" : "s"}</strong>
+              <p>Total EUR {cartTotal.toFixed(2)}</p>
+              {scheduledOrderLabel && <p>Entrega programada: {scheduledOrderLabel}</p>}
+            </div>
+
+            {scheduledOrderLabel && (
+              <div className="sf-checkoutCustomer">
+                <label>
+                  <span>Nombre</span>
+                  <input
+                    value={checkoutName}
+                    onChange={(event) => {
+                      setCheckoutName(event.target.value);
+                      setCheckoutMessage("");
+                    }}
+                    placeholder="Tu nombre"
+                  />
+                </label>
+                <label>
+                  <span>Telefono</span>
+                  <input
+                    value={checkoutPhone}
+                    onChange={(event) => {
+                      setCheckoutPhone(event.target.value);
+                      setCheckoutMessage("");
+                    }}
+                    placeholder="Telefono"
+                    inputMode="tel"
+                  />
+                </label>
+              </div>
+            )}
+
+            {checkoutMessage && (
+              <div className={`sf-reservationMessage ${checkoutMessage.includes("confirmado") ? "is-success" : ""}`}>
+                {checkoutMessage}
+              </div>
+            )}
+
+            <div className="sf-cartActions">
+              <button
+                type="button"
+                className="sf-secondaryBtn"
+                onClick={() => {
+                  setCheckoutOpen(false);
+                  setCartOpen(true);
+                }}
+              >
+                Volver al carrito
+              </button>
+              <button
+                type="button"
+                className="sf-primaryBtn"
+                onClick={scheduledOrderLabel ? confirmScheduledOrder : undefined}
+                disabled={checkoutLoading}
+              >
+                {checkoutLoading
+                  ? "Confirmando..."
+                  : scheduledOrderLabel
+                  ? "Confirmar programacion"
+                  : "Pagar ahora"}
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -3993,6 +4480,8 @@ export default function StorePage() {
                   onChange={(event) => {
                     setRepeatPhone(normalizeRepeatPhoneInput(event.target.value));
                     setRepeatDraft(null);
+                    setRepeatOptions([]);
+                    setRepeatSearched(false);
                     setRepeatMessage("");
                   }}
                   placeholder="600000000"
@@ -4001,9 +4490,55 @@ export default function StorePage() {
                 />
               </label>
               <button type="submit" className="sf-primaryBtn" disabled={repeatLoading}>
-                {repeatLoading ? "Buscando..." : "Buscar ultimo pedido"}
+                {repeatLoading ? "Buscando..." : "Ver ultimos 3"}
               </button>
             </form>
+
+            {repeatSearched && (
+              <div className="sf-repeatChoices" aria-label="Ultimos tres pedidos">
+                {repeatOrderSlots.map((draft, index) => {
+                  if (!draft) {
+                    return (
+                      <div key={`empty-${index}`} className="sf-repeatChoice is-empty">
+                        <span>Slot {index + 1}</span>
+                        <strong>Sin pedido</strong>
+                        <small>Cuando haya mas compras, apareceran aqui.</small>
+                      </div>
+                    );
+                  }
+
+                  const lines = Array.isArray(draft.items)
+                    ? draft.items.map((item, itemIndex) => normalizeCartLine(item, itemIndex))
+                    : [];
+                  const preview = lines.slice(0, 2);
+                  const total = lines.reduce((sum, line) => sum + getCartLinePayableTotal(line), 0);
+
+                  return (
+                    <button
+                      key={draft.sourceOrderId || draft.sourceOrderCode || index}
+                      type="button"
+                      className="sf-repeatChoice"
+                      onClick={() => repeatFoundOrder(draft)}
+                      disabled={lines.length === 0}
+                    >
+                      <span>Pedido {draft.sourceOrderCode || `#${index + 1}`}</span>
+                      <strong>{formatMoney(total, draft.currency)}</strong>
+                      <small>{formatRepeatDate(draft.createdFromOrderAt)}</small>
+                      <div className="sf-repeatChoiceLines">
+                        {preview.map((line, lineIndex) => (
+                          <em key={line.cartLineId || lineIndex}>
+                            {line.qty}x {line.name}
+                          </em>
+                        ))}
+                        {lines.length > preview.length && (
+                          <em>+{lines.length - preview.length} producto(s)</em>
+                        )}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
 
             {repeatDraft && (
               <div className="sf-repeatSummary">
@@ -4079,38 +4614,298 @@ export default function StorePage() {
 
       {scheduleOpen && (
         <div className="sf-modalOverlay" onClick={() => setScheduleOpen(false)}>
-          <div className="sf-modalCard" onClick={(event) => event.stopPropagation()}>
-            <h3>Programar pedido</h3>
-            <p>
-              Aqui conectaremos el reloj, fecha y horario para programar el pedido
-              desde movil o desktop sin salir del motor.
-            </p>
-            <button
-              type="button"
-              className="sf-secondaryBtn"
-              onClick={() => setScheduleOpen(false)}
-            >
-              Cerrar
-            </button>
+          <div className="sf-modalCard sf-scheduleModal" onClick={(event) => event.stopPropagation()}>
+            <div className="sf-scheduleHead">
+              <div>
+                <span>Entrega</span>
+                <h3>Programar pedido</h3>
+              </div>
+              <button
+                type="button"
+                className="sf-modalCloseBtn"
+                aria-label="Cerrar programacion"
+                onClick={() => setScheduleOpen(false)}
+              >
+                x
+              </button>
+            </div>
+
+            <div className="sf-schedule">
+              <div className="sf-scheduleSection">
+                <div className="sf-scheduleLabel">Fecha</div>
+                <div className="sf-scheduleDaysGrid">
+                  {scheduleDays.map((day) => {
+                    const daySlots = buildScheduleSlots({
+                      store,
+                      selectedDate: day.date,
+                      nowDate: now,
+                    });
+                    const selected = scheduledAt && isSameLocalDay(scheduledAt, day.date);
+                    const disabled = daySlots.length === 0;
+
+                    return (
+                      <button
+                        type="button"
+                        key={day.date.toISOString()}
+                        className={`sf-scheduleDayChip ${selected ? "is-selected" : ""}`}
+                        onClick={() => {
+                          if (disabled) return;
+
+                          const nextDate = new Date(day.date);
+                          const preferredMinutes = scheduledAt ? getMinutesOfDay(scheduledAt) : null;
+
+                          if (preferredMinutes != null && daySlots.includes(preferredMinutes)) {
+                            nextDate.setHours(
+                              Math.floor(preferredMinutes / 60),
+                              preferredMinutes % 60,
+                              0,
+                              0
+                            );
+                          }
+
+                          setScheduledAt(nextDate);
+                        }}
+                        disabled={disabled}
+                      >
+                        {day.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {scheduledAt && (
+                <div className="sf-scheduleSection">
+                  <div className="sf-scheduleLabel">Hora</div>
+
+                  {scheduleSlots.length > 0 ? (
+                    <div className="sf-scheduleHoursGrid">
+                      {scheduleSlots.map((minute) => {
+                        const selected = scheduleSelectedMinutes === minute;
+
+                        return (
+                          <button
+                            type="button"
+                            key={minute}
+                            className={`sf-scheduleHourChip ${selected ? "is-selected" : ""}`}
+                            onClick={() => {
+                              const nextDate = new Date(scheduledAt);
+                              nextDate.setHours(Math.floor(minute / 60), minute % 60, 0, 0);
+                              setScheduledAt(nextDate);
+                            }}
+                          >
+                            {minutesToHHMM(minute)}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <div className="sf-scheduleEmpty">
+                      No quedan bloques disponibles para esta fecha.
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <div className="sf-scheduleFooter">
+                <button
+                  type="button"
+                  className="sf-secondaryBtn"
+                  onClick={() => {
+                    setScheduledAt(null);
+                    setScheduleOpen(false);
+                  }}
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="button"
+                  className="sf-primaryBtn"
+                  onClick={() => {
+                    if (!scheduledAtIsValid) return;
+                    setScheduleOpen(false);
+                  }}
+                  disabled={!scheduledAtIsValid}
+                >
+                  Confirmar
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}
 
       {reservationOpen && (
         <div className="sf-modalOverlay" onClick={() => setReservationOpen(false)}>
-          <div className="sf-modalCard" onClick={(event) => event.stopPropagation()}>
-            <h3>Reservas</h3>
-            <p>
-              Este modal servira para las reservas. Luego decidimos si se queda aqui
-              o si vive en otra pieza del motor.
-            </p>
-            <button
-              type="button"
-              className="sf-secondaryBtn"
-              onClick={() => setReservationOpen(false)}
-            >
-              Cerrar
-            </button>
+          <div
+            className="sf-modalCard sf-scheduleModal sf-reservationModal"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="sf-scheduleHead">
+              <div>
+                <span>Mesa</span>
+                <h3>Reservar mesa</h3>
+              </div>
+              <button
+                type="button"
+                className="sf-modalCloseBtn"
+                aria-label="Cerrar reservas"
+                onClick={() => setReservationOpen(false)}
+              >
+                x
+              </button>
+            </div>
+
+            <div className="sf-schedule sf-reservation">
+              <div className="sf-reservationStore">
+                <span>Tienda</span>
+                <strong>{store?.storeName || "Tienda seleccionada"}</strong>
+                <small>
+                  Capacidad de reservas:{" "}
+                  {reservationCapacity > 0
+                    ? `${reservationCapacity} personas`
+                    : "pendiente de disponibilidad"}
+                </small>
+              </div>
+
+              <div className="sf-reservationForm">
+                <label>
+                  <span>Personas</span>
+                  <select
+                    value={reservationPartySize}
+                    onChange={(event) => {
+                      setReservationPartySize(Number(event.target.value));
+                      setReservationMessage("");
+                    }}
+                  >
+                    {Array.from({ length: 12 }, (_, index) => index + 1).map((value) => (
+                      <option key={value} value={value}>
+                        {value} persona{value === 1 ? "" : "s"}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+
+                <label>
+                  <span>Nombre</span>
+                  <input
+                    value={reservationName}
+                    onChange={(event) => setReservationName(event.target.value)}
+                    placeholder="Tu nombre"
+                  />
+                </label>
+
+                <label>
+                  <span>Telefono</span>
+                  <input
+                    value={reservationPhone}
+                    onChange={(event) => setReservationPhone(event.target.value)}
+                    placeholder="Telefono"
+                    inputMode="tel"
+                  />
+                </label>
+              </div>
+
+              <div className="sf-scheduleSection">
+                <div className="sf-scheduleLabel">Fecha</div>
+                <div className="sf-scheduleDaysGrid">
+                  {reservationDays.map((day) => {
+                    const selected = reservationDate && isSameLocalDay(reservationDate, day.date);
+
+                    return (
+                      <button
+                        type="button"
+                        key={day.date.toISOString()}
+                        className={`sf-scheduleDayChip ${selected ? "is-selected" : ""}`}
+                        onClick={() => {
+                          setReservationDate(new Date(day.date));
+                          setReservationTime("");
+                          setReservationMessage("");
+                        }}
+                      >
+                        {day.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="sf-scheduleSection">
+                <div className="sf-scheduleLabel">Hora</div>
+
+                {reservationLoading && reservationAvailability.length === 0 ? (
+                  <div className="sf-scheduleEmpty">Cargando disponibilidad...</div>
+                ) : reservationAvailability.length > 0 ? (
+                  <div className="sf-scheduleHoursGrid">
+                    {reservationAvailability.map((slot) => {
+                      const occupied = Number(slot.occupied || 0);
+                      const available = Number(slot.available || 0);
+                      const capacity = Number(reservationCapacity || 0);
+                      const ratio = capacity > 0 ? occupied / capacity : 0;
+                      const canFit = slot.canFit !== false && available >= reservationPartySize;
+                      const selected = reservationTime === slot.time;
+                      const level = !canFit
+                        ? "is-full"
+                        : ratio >= 0.7
+                        ? "is-high"
+                        : ratio >= 0.3
+                        ? "is-medium"
+                        : "is-low";
+
+                      return (
+                        <button
+                          type="button"
+                          key={slot.time}
+                          className={`sf-scheduleHourChip sf-reservationSlot ${level} ${
+                            selected ? "is-selected" : ""
+                          }`}
+                          disabled={!canFit}
+                          onClick={() => {
+                            setReservationTime(slot.time);
+                            setReservationMessage("");
+                          }}
+                        >
+                          <span>{slot.time}</span>
+                          <small>{canFit ? `${occupied}/${capacity}` : "Full"}</small>
+                        </button>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="sf-scheduleEmpty">
+                    No hay bloques disponibles para esta fecha.
+                  </div>
+                )}
+              </div>
+
+              {reservationMessage && (
+                <div
+                  className={`sf-reservationMessage ${
+                    reservationMessage.includes("correctamente") ? "is-success" : ""
+                  }`}
+                >
+                  {reservationMessage}
+                </div>
+              )}
+
+              <div className="sf-scheduleFooter">
+                <button
+                  type="button"
+                  className="sf-secondaryBtn"
+                  onClick={() => setReservationOpen(false)}
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="button"
+                  className="sf-primaryBtn"
+                  onClick={createReservation}
+                  disabled={!reservationCanConfirm || reservationLoading}
+                >
+                  {reservationLoading ? "Confirmando..." : "Confirmar reserva"}
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}

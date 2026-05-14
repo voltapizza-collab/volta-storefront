@@ -1,7 +1,7 @@
 export const BRANDING_DEFAULTS = {
-  brandPrimary: "#3513A4",
-  brandSecondary: "#FFBF2D",
-  brandAccent: "#F7A600",
+  brandPrimary: "#3B008B",
+  brandSecondary: "#FFB61C",
+  brandAccent: "#6A3DF0",
   brandSurface: "#FFF7E8",
   brandTextColor: "#171717",
   brandFontFamily: "moderno",

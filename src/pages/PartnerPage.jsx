@@ -36,7 +36,7 @@ export default function PartnerPage() {
   if (!partner) {
     return (
       <div className="sf-loading">
-        <div className="sf-loadingCard">Loading brand...</div>
+        <div className="sf-loadingCard">Cargando partner...</div>
       </div>
     );
   }
@@ -55,7 +55,11 @@ export default function PartnerPage() {
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
             <button
               className="sf-gateButton"
-              onClick={() => navigate(`/${partner.slug}/order`)}
+              onClick={() =>
+                navigate(`/${partner.slug}/order`, {
+                  state: { orderTrail: "landing", partnerName: partner.name },
+                })
+              }
             >
               Order Here
             </button>

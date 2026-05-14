@@ -529,7 +529,13 @@ export default function CouponGallery({ partner }) {
                   partner={partner}
                   onClaim={() => {
                     if (isGameCoupon(card)) {
-                      navigate(`/${partner?.slug}/games/${card.game?.slug || "winning-number"}`);
+                      navigate(`/${partner?.slug}/games/${card.game?.slug || "winning-number"}`, {
+                        state: {
+                          couponTrail: "game",
+                          gameName: card.game?.name || "Premio dorado",
+                          partnerName: partner?.name || "Partner",
+                        },
+                      });
                       return;
                     }
                     setClaimingCard(card);

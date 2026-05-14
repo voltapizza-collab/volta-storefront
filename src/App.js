@@ -9,6 +9,7 @@ import Backoffice from "./pages/Backoffice";
 import CouponGalleryPage from "./pages/CouponGalleryPage";
 import GamePage from "./pages/GamePage";
 import LandingPage from "./pages/LandingPage";
+import ReservationCancelPage from "./pages/ReservationCancelPage";
 import AppLayout from "./components/Layout/AppLayout";
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
 
         {/* ADMI */}
         <Route path="/admin/stores" element={<AdminStoresPage />} />
+        <Route path="/reservation/:id/cancel" element={<ReservationCancelPage />} />
 
         {/* STORE (motor de vents) */}
         <Route path="/:partnerSlug" element={<PartnerPage />} />

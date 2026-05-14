@@ -1,28 +1,98 @@
 .vg-root {
+  position: relative;
   min-height: 100vh;
-  padding: 24px 14px 90px;
-  display: grid;
-  align-content: start;
-  gap: 18px;
-  background:
-    radial-gradient(circle at top left, rgba(255, 191, 45, 0.22), transparent 26%),
-    radial-gradient(circle at bottom right, rgba(249, 38, 114, 0.24), transparent 32%),
-    linear-gradient(180deg, #19123a 0%, #060713 100%);
+  overflow: hidden;
+  padding: 22px 14px 80px;
   color: #fff;
+  background:
+    linear-gradient(118deg, rgba(255, 255, 255, 0.06) 0 8%, transparent 8% 17%, rgba(88, 240, 255, 0.12) 17% 21%, transparent 21% 38%, rgba(255, 82, 226, 0.14) 38% 42%, transparent 42% 100%),
+    radial-gradient(circle at 12% 18%, rgba(255, 47, 123, 0.34), transparent 32%),
+    radial-gradient(circle at 88% 72%, rgba(255, 195, 44, 0.22), transparent 34%),
+    linear-gradient(135deg, #241052 0%, #4f19a6 46%, #ff2d78 100%);
 }
 
-.vg-card {
-  width: min(680px, 100%);
+.vg-root::before,
+.vg-root::after,
+.vg-transitionSparkle {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+.vg-root::before {
+  z-index: 0;
+  background:
+    repeating-linear-gradient(
+      112deg,
+      transparent 0 18px,
+      rgba(255, 255, 255, 0.09) 19px 20px,
+      rgba(93, 239, 255, 0.22) 21px 24px,
+      transparent 25px 62px,
+      rgba(255, 237, 82, 0.16) 63px 65px,
+      transparent 66px 96px
+    ),
+    repeating-linear-gradient(
+      112deg,
+      transparent 0 72px,
+      rgba(255, 255, 255, 0.34) 73px 75px,
+      transparent 76px 128px
+    );
+  mix-blend-mode: screen;
+  opacity: 0.76;
+  animation: vgFoilSlide 3.6s linear infinite;
+}
+
+.vg-root::after {
+  z-index: 0;
+  background:
+    repeating-linear-gradient(
+      115deg,
+      transparent 0 8px,
+      rgba(255, 255, 255, 0.08) 9px 10px,
+      transparent 11px 24px
+    ),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.08), transparent 35%, rgba(255, 255, 255, 0.05));
+  opacity: 0.42;
+  animation: vgFineLines 5s linear infinite;
+}
+
+.vg-transitionSparkle {
+  z-index: 0;
+  background:
+    radial-gradient(circle at 18% 30%, rgba(83, 241, 255, 0.22), transparent 22%),
+    radial-gradient(circle at 74% 20%, rgba(255, 240, 107, 0.16), transparent 20%),
+    linear-gradient(112deg, transparent 0 22%, rgba(255, 255, 255, 0.12) 22% 23%, transparent 23% 45%, rgba(94, 238, 255, 0.14) 45% 47%, transparent 47% 100%),
+    linear-gradient(180deg, rgba(20, 6, 46, 0.22), rgba(8, 3, 20, 0.5));
+}
+
+.vg-layout {
+  position: relative;
+  z-index: 1;
+  width: min(980px, 100%);
+  min-height: calc(100vh - 102px);
   margin: 0 auto;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 28px;
-  background: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.32);
+  display: grid;
+  grid-template-rows: auto minmax(340px, 1fr) auto;
+  gap: 16px;
+}
+
+.vg-block,
+.vg-gamePanel {
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 24px;
+  background:
+    linear-gradient(112deg, rgba(255, 255, 255, 0.1), transparent 28%, rgba(255, 255, 255, 0.08)),
+    rgba(24, 9, 54, 0.68);
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.34),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06);
   backdrop-filter: blur(16px);
 }
 
 .vg-hero {
-  padding: 24px;
+  min-height: 138px;
+  padding: 20px 22px;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 16px;
@@ -30,18 +100,21 @@
 }
 
 .vg-hero img {
-  width: 86px;
-  height: 86px;
+  width: 78px;
+  height: 78px;
   object-fit: contain;
-  border-radius: 22px;
+  border-radius: 18px;
   background: #fff;
   padding: 8px;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.22);
 }
 
 .vg-kicker,
-.vg-card > span,
-.vg-card small {
-  color: rgba(255, 255, 255, 0.72);
+.vg-gamePanel > span,
+.vg-lock > span,
+.vg-gamePanel small,
+.vg-adBanner span {
+  color: rgba(255, 255, 255, 0.74);
   font-size: 0.76rem;
   font-weight: 1000;
   letter-spacing: 0.12em;
@@ -50,29 +123,60 @@
 
 .vg-hero h1 {
   margin: 5px 0;
-  font-size: clamp(2.4rem, 8vw, 4.2rem);
+  color: #fff;
+  font-size: clamp(2.1rem, 7vw, 4rem);
   line-height: 0.92;
-  letter-spacing: -0.06em;
+  letter-spacing: 0;
+  text-wrap: balance;
 }
 
 .vg-hero p,
 .vg-lock p,
-.vg-claim p {
+.vg-claim p,
+.vg-adBanner p {
   margin: 0;
-  color: rgba(255, 255, 255, 0.78);
+  color: rgba(255, 255, 255, 0.8);
   line-height: 1.55;
 }
 
-.vg-number,
-.vg-timing,
-.vg-crust,
-.vg-lock,
-.vg-claim {
+.vg-playBlock {
+  min-height: 340px;
+  padding: 18px;
+  display: grid;
+  align-content: center;
+  gap: 14px;
+}
+
+.vg-gamePanel,
+.vg-lock {
+  width: min(620px, 100%);
+  margin: 0 auto;
   padding: 24px;
   display: grid;
   justify-items: center;
   gap: 16px;
   text-align: center;
+}
+
+.vg-number {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 240, 107, 0.24), transparent 34%),
+    linear-gradient(145deg, rgba(83, 241, 255, 0.14), rgba(255, 82, 226, 0.1)),
+    rgba(24, 9, 54, 0.76);
+}
+
+.vg-timing {
+  background:
+    radial-gradient(circle at top, rgba(255, 82, 226, 0.24), transparent 34%),
+    linear-gradient(145deg, rgba(255, 240, 107, 0.12), rgba(83, 241, 255, 0.12)),
+    rgba(24, 9, 54, 0.76);
+}
+
+.vg-crust {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 191, 45, 0.22), transparent 34%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(83, 241, 255, 0.1)),
+    rgba(24, 9, 54, 0.76);
 }
 
 .vg-digits {
@@ -86,19 +190,25 @@
   display: grid;
   place-items: center;
   border-radius: 18px;
-  background: linear-gradient(180deg, #fff, #ffe49c);
-  color: #21163a;
+  background:
+    linear-gradient(145deg, #ffffff, #d5d9df 24%, #ffffff 40%, #aeb5bf 58%, #ffffff 100%),
+    linear-gradient(180deg, #fff, #ffe49c);
+  color: #154fc6;
   font-size: 3.4rem;
   font-weight: 1000;
-  box-shadow: 0 12px 26px rgba(255, 191, 45, 0.2);
+  box-shadow:
+    0 12px 26px rgba(255, 191, 45, 0.22),
+    inset 0 -6px 12px rgba(42, 58, 84, 0.18);
 }
 
 .vg-clock {
   width: min(320px, 100%);
   padding: 24px;
   border-radius: 28px;
-  background: #090914;
-  color: #ffbf2d;
+  background:
+    radial-gradient(circle at top, rgba(83, 241, 255, 0.14), transparent 42%),
+    #090914;
+  color: #ffef6b;
   font-size: clamp(4rem, 18vw, 7rem);
   font-weight: 1000;
   line-height: 1;
@@ -108,8 +218,27 @@
 }
 
 .vg-clock.is-win {
-  color: #00df8f;
-  box-shadow: 0 0 42px rgba(0, 223, 143, 0.5);
+  color: #53f1ff;
+  box-shadow: 0 0 42px rgba(83, 241, 255, 0.5);
+  animation: vgClockWin 0.72s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.vg-clock.is-miss {
+  color: #ff5f8d;
+  animation: vgClockMiss 0.52s cubic-bezier(0.36, 0, 0.66, -0.56);
+  box-shadow:
+    inset 0 0 0 2px rgba(255, 95, 141, 0.68),
+    0 0 32px rgba(255, 47, 123, 0.52);
+}
+
+.vg-clockHint {
+  margin: -6px 0 0;
+  color: #ffd2df;
+  font-size: 0.82rem;
+  font-weight: 900;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  animation: vgHintPop 0.68s ease both;
 }
 
 .vg-pizzaStage {
@@ -144,8 +273,8 @@
 }
 
 .vg-crustRing.is-win {
-  border-color: #00df8f;
-  box-shadow: 0 0 34px rgba(0, 223, 143, 0.6);
+  border-color: #53f1ff;
+  box-shadow: 0 0 34px rgba(83, 241, 255, 0.6);
 }
 
 .vg-crust label,
@@ -159,20 +288,31 @@
 
 .vg-crust input[type="range"] {
   width: 100%;
-  accent-color: #ffbf2d;
+  accent-color: #ffef6b;
 }
 
 .vg-root button {
   min-height: 48px;
   padding: 0 22px;
-  border: 0;
+  border: 1px solid rgba(255, 255, 255, 0.82);
   border-radius: 999px;
-  background: linear-gradient(135deg, #ffbf2d, #ff4f87);
-  color: #21163a;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.98) 0%, rgba(178, 184, 190, 0.92) 18%, rgba(255, 255, 255, 1) 31%, rgba(144, 151, 161, 0.9) 46%, rgba(246, 250, 255, 0.98) 58%, rgba(168, 174, 184, 0.92) 75%, rgba(255, 255, 255, 1) 100%),
+    linear-gradient(90deg, #ffffff, #d5d9df 48%, #ffffff);
+  color: #0f57c9;
   font: inherit;
   font-weight: 1000;
   cursor: pointer;
-  box-shadow: 0 12px 28px rgba(255, 79, 135, 0.24);
+  box-shadow:
+    0 12px 28px rgba(17, 10, 35, 0.28),
+    0 0 18px rgba(83, 241, 255, 0.18),
+    inset 0 2px 2px rgba(255, 255, 255, 0.95),
+    inset 0 -5px 12px rgba(50, 60, 76, 0.2);
+}
+
+.vg-root button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  filter: saturate(1.12) brightness(1.03);
 }
 
 .vg-root button:disabled {
@@ -198,7 +338,7 @@
 
 .vg-claim strong,
 .vg-lock strong {
-  color: #ffdd7a;
+  color: #ffef6b;
   font-size: clamp(1.8rem, 8vw, 3.2rem);
   font-weight: 1000;
 }
@@ -209,14 +349,165 @@
   font-weight: 900;
 }
 
+.vg-adBanner {
+  min-height: 96px;
+  padding: 18px 20px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(190px, 0.7fr) auto;
+  gap: 16px;
+  align-items: center;
+  background:
+    linear-gradient(112deg, rgba(255, 255, 255, 0.12), transparent 26%, rgba(255, 255, 255, 0.1)),
+    linear-gradient(135deg, rgba(83, 241, 255, 0.22), rgba(255, 82, 226, 0.18)),
+    rgba(24, 9, 54, 0.76);
+}
+
+.vg-adBanner div {
+  display: grid;
+  gap: 4px;
+}
+
+.vg-adBanner strong {
+  font-size: clamp(1.25rem, 3vw, 2rem);
+  line-height: 1;
+}
+
+.vg-endModalBack {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(9, 4, 24, 0.62);
+  backdrop-filter: blur(8px);
+}
+
+.vg-endModal {
+  width: min(520px, 100%);
+  padding: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 240, 107, 0.2), transparent 36%),
+    linear-gradient(135deg, rgba(83, 241, 255, 0.18), rgba(255, 82, 226, 0.2)),
+    rgba(24, 9, 54, 0.96);
+  color: #fff;
+  text-align: center;
+  box-shadow:
+    0 28px 70px rgba(0, 0, 0, 0.46),
+    0 0 38px rgba(83, 241, 255, 0.22),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  animation: vgModalIn 0.24s ease both;
+}
+
+.vg-endModal span {
+  color: #53f1ff;
+  font-size: 0.76rem;
+  font-weight: 1000;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.vg-endModal h2 {
+  margin: 8px 0 8px;
+  font-size: clamp(1.8rem, 7vw, 3.1rem);
+  line-height: 0.95;
+}
+
+.vg-endModal p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.78);
+  line-height: 1.5;
+}
+
+.vg-endActions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+@keyframes vgFoilSlide {
+  to {
+    background-position: 140px 0, -180px 0;
+  }
+}
+
+@keyframes vgFineLines {
+  to {
+    background-position: 72px 0, 0 0;
+  }
+}
+
 @keyframes vgPizzaSpin {
   to {
     transform: rotate(360deg);
   }
 }
 
-@media (max-width: 620px) {
-  .vg-hero {
+@keyframes vgClockMiss {
+  0%,
+  100% {
+    transform: translateX(0) rotate(0deg) scale(1);
+  }
+  15% {
+    transform: translateX(-12px) rotate(-2deg) scale(1.02);
+  }
+  30% {
+    transform: translateX(10px) rotate(2deg) scale(0.99);
+  }
+  45% {
+    transform: translateX(-8px) rotate(-1.5deg) scale(1.02);
+  }
+  60% {
+    transform: translateX(6px) rotate(1deg) scale(1);
+  }
+  78% {
+    transform: translateX(-3px) rotate(-0.5deg) scale(0.99);
+  }
+}
+
+@keyframes vgClockWin {
+  0% {
+    transform: scale(1);
+  }
+  44% {
+    transform: scale(1.08);
+    filter: saturate(1.45) brightness(1.18);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes vgHintPop {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.96);
+  }
+}
+
+@keyframes vgModalIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+}
+
+@media (max-width: 720px) {
+  .vg-root {
+    padding: 14px 10px 60px;
+  }
+
+  .vg-layout {
+    min-height: calc(100vh - 74px);
+    grid-template-rows: auto minmax(320px, 1fr) auto;
+  }
+
+  .vg-hero,
+  .vg-adBanner {
     grid-template-columns: 1fr;
   }
 
@@ -225,9 +516,22 @@
     height: 72px;
   }
 
+  .vg-playBlock {
+    padding: 12px;
+  }
+
+  .vg-gamePanel,
+  .vg-lock {
+    padding: 20px 14px;
+  }
+
   .vg-digits b {
     width: 58px;
     height: 72px;
     font-size: 2.8rem;
+  }
+
+  .vg-adBanner button {
+    width: 100%;
   }
 }

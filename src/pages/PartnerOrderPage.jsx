@@ -1,20 +1,29 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import OrderPortalTransition from "../components/Storefront/OrderPortalTransition";
 import api from "../services/api";
 import "../styles/Storefront.css";
 
 export default function PartnerOrderPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { partnerSlug } = useParams();
 
   const [partner, setPartner] = useState(null);
   const [error, setError] = useState("");
+  const [portalReady, setPortalReady] = useState(false);
   const [serviceMode, setServiceMode] = useState("");
   const [deliveryAddress, setDeliveryAddress] = useState("");
   const [selectedStoreSlug, setSelectedStoreSlug] = useState("");
   const [deliveryResolution, setDeliveryResolution] = useState(null);
   const [deliveryError, setDeliveryError] = useState("");
   const [isResolvingDelivery, setIsResolvingDelivery] = useState(false);
+
+  useEffect(() => {
+    setPortalReady(false);
+    const timer = window.setTimeout(() => setPortalReady(true), 900);
+    return () => window.clearTimeout(timer);
+  }, [partnerSlug]);
 
   useEffect(() => {
     if (!partnerSlug) return;
@@ -127,11 +136,14 @@ export default function PartnerOrderPage() {
     );
   }
 
-  if (!partner) {
+  if (!partner || !portalReady) {
     return (
-      <div className="sf-loading">
-        <div className="sf-loadingCard">Loading order flow...</div>
-      </div>
+      <OrderPortalTransition
+        title="Welcome"
+        eyebrow="Order here"
+        mode="brand"
+        partnerName={location.state?.partnerName || partner?.name || partnerSlug}
+      />
     );
   }
 
@@ -375,7 +387,15 @@ export default function PartnerOrderPage() {
               type="button"
               className="sf-primaryBtn"
               disabled={!canContinue}
-              onClick={() => navigate(`/${partnerSlug}/${selectedStoreSlug}`)}
+              onClick={() =>
+                navigate(`/${partnerSlug}/${selectedStoreSlug}`, {
+                  state: {
+                    orderTrail: "store",
+                    partnerName: partner.name,
+                    storeName: selectedStore?.storeName || selectedStoreSlug,
+                  },
+                })
+              }
             >
               {canContinue
                 ? "Entrar al menu de esta tienda"

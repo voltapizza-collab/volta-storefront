@@ -5,7 +5,13 @@ export default function StoreGate({ store }) {
   const navigate = useNavigate();
 
   const handleOrder = () => {
-    navigate(`/${store.partner.slug}/${store.slug}/menu`);
+    navigate(`/${store.partner.slug}/${store.slug}/menu`, {
+      state: {
+        orderTrail: "menu",
+        partnerName: store.partner?.name || store.partner?.slug,
+        storeName: store.storeName,
+      },
+    });
   };
 
   return (

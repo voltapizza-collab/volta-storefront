@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import CouponPortalTransition from "../components/CouponGallery/CouponPortalTransition";
 import api from "../setupAxios";
+import "../styles/CouponGallery.css";
 import "../styles/Games.css";
 
 const GAME_COPY = {
@@ -33,40 +35,55 @@ const formatNumber = (value) => String(value ?? 0).padStart(3, "0");
 
 function GameShell({ children, context, remainingMs, onBack }) {
   const copy = GAME_COPY[context?.game?.slug] || GAME_COPY["winning-number"];
+  const partnerName = context?.partner?.name || "Volta";
+  const gameName = context?.game?.name || copy.title;
 
   return (
     <main className="vg-root">
-      <section className="vg-card vg-hero">
-        <div>
-          <div className="vg-kicker">{copy.kicker}</div>
-          <h1>{copy.title}</h1>
-          <p>{copy.text}</p>
-        </div>
-        {context?.partner?.brandLogoUrl && (
-          <img src={context.partner.brandLogoUrl} alt={context.partner.name} />
-        )}
-      </section>
-
-      {remainingMs > 0 ? (
-        <section className="vg-card vg-lock">
-          <span>Juego en pausa</span>
-          <strong>{formatCountdown(remainingMs)}</strong>
-          <p>Hace poco hubo un ganador. Vuelve cuando el contador termine.</p>
-          <button type="button" onClick={onBack}>Volver a cupones</button>
+      <div className="vg-transitionSparkle" aria-hidden="true" />
+      <div className="vg-layout">
+        <section className="vg-block vg-hero">
+          <div>
+            <div className="vg-kicker">{copy.kicker}</div>
+            <h1>{gameName}</h1>
+            <p>{copy.text}</p>
+          </div>
+          {context?.partner?.brandLogoUrl && (
+            <img src={context.partner.brandLogoUrl} alt={context.partner.name} />
+          )}
         </section>
-      ) : (
-        children
-      )}
+
+        <section className="vg-block vg-playBlock" aria-label="Area de juego">
+          {remainingMs > 0 ? (
+            <div className="vg-lock">
+              <span>Juego en pausa</span>
+              <strong>{formatCountdown(remainingMs)}</strong>
+              <p>Hace poco hubo un ganador. Vuelve cuando el contador termine.</p>
+              <button type="button" onClick={onBack}>Volver a cupones</button>
+            </div>
+          ) : (
+            children
+          )}
+        </section>
+
+        <section className="vg-block vg-adBanner" aria-label="Informacion de tienda">
+          <div>
+            <span>{partnerName}</span>
+            <strong>Cupones activos en tienda</strong>
+          </div>
+          <p>Guarda tu premio dorado y canjealo en tu siguiente pedido.</p>
+          <button type="button" onClick={onBack}>Ver mas cupones</button>
+        </section>
+      </div>
     </main>
   );
 }
 
-function ClaimPanel({ won, playId, context }) {
+function ClaimPanel({ won, playId, context, partnerSlug, gameSlug }) {
   const [form, setForm] = useState({ name: "", phone: "" });
   const [saving, setSaving] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState("");
-  const { partnerSlug, gameSlug } = useParams();
 
   if (!won || !playId) return null;
 
@@ -97,7 +114,7 @@ function ClaimPanel({ won, playId, context }) {
   };
 
   return (
-    <section className="vg-card vg-claim">
+    <section className="vg-gamePanel vg-claim">
       {result?.coupon ? (
         <>
           <span>Cupon dorado listo</span>
@@ -133,13 +150,28 @@ function ClaimPanel({ won, playId, context }) {
   );
 }
 
-function WinningNumberGame({ context, onPlayed }) {
+function OutOfAttemptsModal({ onContinue, onStore }) {
+  return (
+    <div className="vg-endModalBack" role="dialog" aria-modal="true" aria-labelledby="vg-end-title">
+      <section className="vg-endModal">
+        <span>Intentos agotados</span>
+        <h2 id="vg-end-title">Se acabaron tus 3 oportunidades</h2>
+        <p>Puedes reiniciar el reto ahora o volver a la tienda.</p>
+        <div className="vg-endActions">
+          <button type="button" onClick={onContinue}>Seguir jugando</button>
+          <button type="button" onClick={onStore}>Volver a tienda</button>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function WinningNumberGame({ context, onPlayed, partnerSlug, gameSlug, onBackToStore }) {
   const [attempts, setAttempts] = useState(3);
   const [last, setLast] = useState(null);
   const [won, setWon] = useState(false);
   const [playId, setPlayId] = useState(null);
   const [rolling, setRolling] = useState(false);
-  const { partnerSlug, gameSlug } = useParams();
 
   const play = async () => {
     if (rolling || attempts <= 0 || won) return;
@@ -158,7 +190,7 @@ function WinningNumberGame({ context, onPlayed }) {
 
   return (
     <>
-      <section className="vg-card vg-number">
+      <section className="vg-gamePanel vg-number">
         <span>Numero ganador</span>
         <div className="vg-digits">{formatNumber(context?.targetNumber).split("").map((digit, index) => <b key={index}>{digit}</b>)}</div>
         {last != null && <p>Tu tirada: <strong>{formatNumber(last)}</strong></p>}
@@ -167,20 +199,30 @@ function WinningNumberGame({ context, onPlayed }) {
         </button>
         <small>Intentos restantes: {attempts}</small>
       </section>
-      <ClaimPanel won={won} playId={playId} context={context} />
+      <ClaimPanel won={won} playId={playId} context={context} partnerSlug={partnerSlug} gameSlug={gameSlug} />
+      {attempts <= 0 && !won && (
+        <OutOfAttemptsModal
+          onContinue={() => {
+            setAttempts(3);
+            setLast(null);
+          }}
+          onStore={onBackToStore}
+        />
+      )}
     </>
   );
 }
 
-function PerfectTimingGame({ context, onPlayed }) {
+function PerfectTimingGame({ context, onPlayed, partnerSlug, gameSlug, onBackToStore }) {
   const [running, setRunning] = useState(false);
   const [timeMs, setTimeMs] = useState(0);
   const [attempts, setAttempts] = useState(3);
   const [won, setWon] = useState(false);
   const [playId, setPlayId] = useState(null);
+  const [clockFeedback, setClockFeedback] = useState("");
   const frameRef = useRef(null);
   const startRef = useRef(null);
-  const { partnerSlug, gameSlug } = useParams();
+  const resetTimerRef = useRef(null);
 
   useEffect(() => {
     if (!running) return undefined;
@@ -193,9 +235,13 @@ function PerfectTimingGame({ context, onPlayed }) {
     return () => cancelAnimationFrame(frameRef.current);
   }, [running]);
 
+  useEffect(() => () => window.clearTimeout(resetTimerRef.current), []);
+
   const toggle = async () => {
     if (attempts <= 0 || won) return;
     if (!running) {
+      window.clearTimeout(resetTimerRef.current);
+      setClockFeedback("");
       startRef.current = null;
       setTimeMs(0);
       setRunning(true);
@@ -209,29 +255,51 @@ function PerfectTimingGame({ context, onPlayed }) {
     setWon(Boolean(data.won));
     setPlayId(data.playId || null);
     setAttempts((current) => Math.max(0, current - 1));
+    if (data.won) {
+      setClockFeedback("win");
+    } else {
+      setClockFeedback("miss");
+      resetTimerRef.current = window.setTimeout(() => {
+        setTimeMs(0);
+        setClockFeedback("");
+      }, 680);
+    }
     onPlayed(data);
   };
 
   return (
     <>
-      <section className="vg-card vg-timing">
-        <div className={`vg-clock ${won ? "is-win" : ""}`}>{(timeMs / 1000).toFixed(2)}</div>
+      <section className="vg-gamePanel vg-timing">
+        <div className={`vg-clock ${clockFeedback === "win" ? "is-win" : ""} ${clockFeedback === "miss" ? "is-miss" : ""}`}>
+          {(timeMs / 1000).toFixed(2)}
+        </div>
+        {clockFeedback === "miss" && <p className="vg-clockHint">No era el numero objetivo. Reiniciando...</p>}
         <button type="button" onClick={toggle} disabled={attempts <= 0 || won}>
           {running ? "STOP" : "START"}
         </button>
-        <small>Objetivo: 9.99s · intentos: {attempts}</small>
+        <small>Objetivo: 9.99s - intentos: {attempts}</small>
       </section>
-      <ClaimPanel won={won} playId={playId} context={context} />
+      <ClaimPanel won={won} playId={playId} context={context} partnerSlug={partnerSlug} gameSlug={gameSlug} />
+      {attempts <= 0 && !won && (
+        <OutOfAttemptsModal
+          onContinue={() => {
+            window.clearTimeout(resetTimerRef.current);
+            setAttempts(3);
+            setTimeMs(0);
+            setClockFeedback("");
+          }}
+          onStore={onBackToStore}
+        />
+      )}
     </>
   );
 }
 
-function CrustRingGame({ context, onPlayed }) {
+function CrustRingGame({ context, onPlayed, partnerSlug, gameSlug, onBackToStore }) {
   const [fit, setFit] = useState(86);
   const [won, setWon] = useState(false);
   const [playId, setPlayId] = useState(null);
   const [attempts, setAttempts] = useState(3);
-  const { partnerSlug, gameSlug } = useParams();
 
   const drop = async () => {
     if (attempts <= 0 || won) return;
@@ -244,7 +312,7 @@ function CrustRingGame({ context, onPlayed }) {
 
   return (
     <>
-      <section className="vg-card vg-crust">
+      <section className="vg-gamePanel vg-crust">
         <div className="vg-pizzaStage">
           <div className="vg-pizzaBase" />
           <div className={`vg-crustRing ${won ? "is-win" : ""}`} style={{ width: `${fit}%`, height: `${fit}%` }} />
@@ -265,7 +333,16 @@ function CrustRingGame({ context, onPlayed }) {
         </button>
         <small>Intentos restantes: {attempts}</small>
       </section>
-      <ClaimPanel won={won} playId={playId} context={context} />
+      <ClaimPanel won={won} playId={playId} context={context} partnerSlug={partnerSlug} gameSlug={gameSlug} />
+      {attempts <= 0 && !won && (
+        <OutOfAttemptsModal
+          onContinue={() => {
+            setAttempts(3);
+            setFit(86);
+          }}
+          onStore={onBackToStore}
+        />
+      )}
     </>
   );
 }
@@ -273,18 +350,34 @@ function CrustRingGame({ context, onPlayed }) {
 export default function GamePage({ fixedGameSlug }) {
   const params = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const partnerSlug = params.partnerSlug || "mycrushpizza";
   const gameSlug = fixedGameSlug || params.gameSlug || "winning-number";
   const [context, setContext] = useState(null);
   const [remainingMs, setRemainingMs] = useState(0);
+  const [portalReady, setPortalReady] = useState(false);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    setPortalReady(false);
+    const timer = window.setTimeout(() => setPortalReady(true), 900);
+    return () => window.clearTimeout(timer);
+  }, [partnerSlug, gameSlug]);
 
   useEffect(() => {
     let mounted = true;
-    api.get(`/api/games/${partnerSlug}/${gameSlug}/status`).then(({ data }) => {
-      if (!mounted) return;
-      setContext(data);
-      setRemainingMs(data.remainingMs || 0);
-    });
+    setError("");
+    api
+      .get(`/api/games/${partnerSlug}/${gameSlug}/status`)
+      .then(({ data }) => {
+        if (!mounted) return;
+        setContext(data);
+        setRemainingMs(data.remainingMs || 0);
+      })
+      .catch((requestError) => {
+        console.error(requestError);
+        if (mounted) setError("No se pudo cargar el juego.");
+      });
     return () => {
       mounted = false;
     };
@@ -300,13 +393,38 @@ export default function GamePage({ fixedGameSlug }) {
     const onPlayed = (data) => {
       if (data.remainingMs) setRemainingMs(data.remainingMs);
     };
-    if (gameSlug === "perfect-timing") return <PerfectTimingGame context={context} onPlayed={onPlayed} />;
-    if (gameSlug === "crust-ring") return <CrustRingGame context={context} onPlayed={onPlayed} />;
-    return <WinningNumberGame context={context} onPlayed={onPlayed} />;
-  }, [context, gameSlug]);
+    const props = {
+      context,
+      onPlayed,
+      partnerSlug,
+      gameSlug,
+      onBackToStore: () => navigate(`/${partnerSlug}`),
+    };
+    if (gameSlug === "perfect-timing") return <PerfectTimingGame {...props} />;
+    if (gameSlug === "crust-ring") return <CrustRingGame {...props} />;
+    return <WinningNumberGame {...props} />;
+  }, [context, gameSlug, navigate, partnerSlug]);
 
-  if (!context) {
-    return <main className="vg-root"><section className="vg-card vg-lock">Cargando juego...</section></main>;
+  if (error && portalReady) {
+    return (
+      <main className="vg-root">
+        <div className="vg-transitionSparkle" aria-hidden="true" />
+        <section className="vg-block vg-lock">{error}</section>
+      </main>
+    );
+  }
+
+  if (!context || !portalReady) {
+    const gameName = location.state?.gameName || gameSlug.replaceAll("-", " ");
+    return (
+      <CouponPortalTransition
+        badge="VOLTA PLAY"
+        eyebrow="Activando juego"
+        title="Entrando al premio dorado"
+        steps={["Cupon dorado", gameName, location.state?.partnerName || partnerSlug]}
+        ariaLabel="Entrando al juego del cupon"
+      />
+    );
   }
 
   return (

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import api from "../../setupAxios";
 import "../../styles/CouponGallery.css";
 
@@ -383,6 +383,7 @@ function ClaimModal({ card, partnerId, zipCode, onClose, onClaimed }) {
 
 export default function CouponGallery({ partner }) {
   const navigate = useNavigate();
+  const location = useLocation();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [cards, setCards] = useState([]);
@@ -393,9 +394,16 @@ export default function CouponGallery({ partner }) {
   const [zoneModalOpen, setZoneModalOpen] = useState(false);
   const [zoneError, setZoneError] = useState("");
   const [resolvingZone, setResolvingZone] = useState(false);
+  const [fallbackStorePath, setFallbackStorePath] = useState("");
 
   const partnerId = partner?.id;
   const storageKey = useMemo(() => buildStorageKey(partner), [partner]);
+  const returnToStorePath = useMemo(() => {
+    const statePath = location.state?.returnToStorePath;
+    if (typeof statePath === "string" && statePath.startsWith("/")) return statePath;
+    if (fallbackStorePath) return fallbackStorePath;
+    return partner?.slug ? `/${partner.slug}` : "/";
+  }, [fallbackStorePath, location.state, partner?.slug]);
 
   const loadContext = useCallback(async () => {
     if (!partnerId) return;
@@ -441,6 +449,30 @@ export default function CouponGallery({ partner }) {
     setZipReady(false);
     setZoneModalOpen(true);
   }, [loadContext, partnerId, storageKey]);
+
+  useEffect(() => {
+    if (!partnerId || !partner?.slug) return undefined;
+    if (location.state?.returnToStorePath) return undefined;
+
+    let cancelled = false;
+
+    api
+      .get(`/stores?partnerId=${partnerId}`)
+      .then((response) => {
+        if (cancelled) return;
+        const stores = response?.data;
+        const firstStore = Array.isArray(stores) ? stores.find((store) => store?.slug) : null;
+        setFallbackStorePath(firstStore ? `/${partner.slug}/${firstStore.slug}/menu` : "");
+      })
+      .catch((requestError) => {
+        console.error(requestError);
+        if (!cancelled) setFallbackStorePath("");
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [location.state, partner?.slug, partnerId]);
 
   useEffect(() => {
     if (!zipReady || !zipCode) return;
@@ -498,6 +530,13 @@ export default function CouponGallery({ partner }) {
 
           {zipReady && zipCode && (
             <div className="cg-zoneBar">
+              <button
+                className="cg-storeBackBtn"
+                onClick={() => navigate(returnToStorePath)}
+                type="button"
+              >
+                Volver a tienda
+              </button>
               <div className="cg-zoneBadge">
                 Codigo postal activo: <strong>{zipCode}</strong>
               </div>
@@ -534,6 +573,7 @@ export default function CouponGallery({ partner }) {
                           couponTrail: "game",
                           gameName: card.game?.name || "Premio dorado",
                           partnerName: partner?.name || "Partner",
+                          returnToStorePath,
                         },
                       });
                       return;

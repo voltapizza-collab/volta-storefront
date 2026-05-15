@@ -11,6 +11,7 @@ import {
 } from "../constants/branding";
 
 const TRENDING_TAB = "__TRENDING__";
+const TOP_DEAL_TAB = "__TOP_DEAL__";
 const PROMOS_TAB = "__PROMOS__";
 const UPCOMING_TAB = "__UPCOMING__";
 const HALF_CATEGORY_ID = 3;
@@ -256,6 +257,16 @@ function buildScheduleSlots({ store, selectedDate, nowDate }) {
   return [...slots].sort((left, right) => left - right);
 }
 
+function isFutureReservationSlot(selectedDate, time, nowDate) {
+  if (!selectedDate || !time) return false;
+  if (!isSameLocalDay(selectedDate, nowDate)) return true;
+
+  const slotMinutes = parseStoreTimeToMinutes(time);
+  if (slotMinutes == null) return false;
+
+  return slotMinutes > getMinutesOfDay(nowDate);
+}
+
 function formatLaunchCountdown(launchAt, now) {
   const launchDate = new Date(launchAt);
   if (!launchAt || Number.isNaN(launchDate.getTime())) return "Muy pronto";
@@ -378,6 +389,99 @@ const priceForSize = (priceBySize = {}, size = "M") => {
   }
 
   return 0;
+};
+
+const getDirectDiscountLabel = (discount) => {
+  if (!discount) return "";
+  const value = num(discount.value);
+
+  if (discount.discountType === "PERCENT") {
+    return `${Math.round(value)}% off hoy`;
+  }
+
+  return `EUR ${value.toFixed(2)} off hoy`;
+};
+
+const getOriginalPriceForSize = (item, size = "M") => {
+  if (!item?.originalPriceBySize) return 0;
+  return priceForSize(item.originalPriceBySize, size);
+};
+
+const getDiscountPercentForSize = (item, size = "M") => {
+  const price = priceForSize(item?.priceBySize, size);
+  const originalPrice = getOriginalPriceForSize(item, size);
+
+  if (originalPrice <= price || originalPrice <= 0 || price <= 0) return 0;
+
+  return Math.round(((originalPrice - price) / originalPrice) * 100);
+};
+
+const getDealSize = (item) => {
+  const sizes = Object.keys(item?.priceBySize || {}).filter(
+    (size) => item.priceBySize?.[size] !== "" && item.priceBySize?.[size] != null
+  );
+  return sizes[0] || "M";
+};
+
+const renderDirectDiscountBadge = (item) => {
+  if (!item?.directDiscount) return null;
+
+  return (
+    <span className="lsf-directDiscountBadge">
+      {getDirectDiscountLabel(item.directDiscount)}
+    </span>
+  );
+};
+
+const renderStorefrontPrice = (item, size = "M") => {
+  const price = priceForSize(item?.priceBySize, size);
+  const originalPrice = getOriginalPriceForSize(item, size);
+  const discountPercent = getDiscountPercentForSize(item, size);
+
+  if (originalPrice > price && price > 0) {
+    return (
+      <span className="lsf-card__priceStack">
+        <span className="lsf-card__priceOld">EUR {originalPrice.toFixed(2)}</span>
+        <span className="lsf-card__priceCurrent">
+          EUR {price.toFixed(2)}
+          {discountPercent > 0 && <em>-{discountPercent}%</em>}
+        </span>
+      </span>
+    );
+  }
+
+  return <span className="lsf-card__priceCurrent">EUR {price.toFixed(2)}</span>;
+};
+
+const renderTopDealPrice = (item, size = "M", isTicking = false) => {
+  const price = priceForSize(item?.priceBySize, size);
+  const originalPrice = getOriginalPriceForSize(item, size);
+  const discountPercent = getDiscountPercentForSize(item, size);
+  const hasDiscount = originalPrice > price && price > 0;
+
+  return (
+    <div
+      className={`lsf-topDealPrice ${hasDiscount ? "has-discount" : ""} ${
+        isTicking ? "is-ticking" : ""
+      }`}
+    >
+      <strong>EUR {price.toFixed(2)}</strong>
+      {hasDiscount && <span>EUR {originalPrice.toFixed(2)}</span>}
+      {hasDiscount && discountPercent > 0 && <b>-{discountPercent}%</b>}
+    </div>
+  );
+};
+
+const getTopDealStickerLabel = (item, size = "M") => {
+  const discountPercent = getDiscountPercentForSize(item, size);
+  if (discountPercent > 0) return `-${discountPercent}%`;
+
+  const discount = item?.directDiscount;
+  const value = num(discount?.value);
+  if (!discount || value <= 0) return "";
+
+  if (discount.discountType === "PERCENT") return `-${Math.round(value)}%`;
+  return `-EUR ${value.toFixed(2)}`;
 };
 
 const roundMoney = (value) => Math.round(Number(value || 0) * 100) / 100;
@@ -560,6 +664,17 @@ const getIngredientAllergens = (ingredient) =>
     .map((allergen) => normalizeAllergenLabel(allergen))
     .filter(Boolean);
 
+const normalizeAllergenList = (allergens = []) =>
+  [
+    ...new Set(
+      (Array.isArray(allergens) ? allergens : [])
+        .map((allergen) => normalizeAllergenLabel(allergen))
+        .filter(Boolean)
+    ),
+  ].sort((left, right) =>
+    left.localeCompare(right, "es", { sensitivity: "base" })
+  );
+
 const getAllergensFromIngredients = (ingredients = []) => {
   const allergenSet = new Set();
 
@@ -575,13 +690,14 @@ const getAllergensFromIngredients = (ingredients = []) => {
 };
 
 const renderAllergenNotice = (allergens = []) => {
-  if (!Array.isArray(allergens) || allergens.length === 0) return null;
+  const normalizedAllergens = normalizeAllergenList(allergens);
+  if (normalizedAllergens.length === 0) return null;
 
   return (
     <div className="sf-allergenAlert" role="note" aria-label="Aviso de alergenos">
-      <span>Atencion alergenos</span>
+      <span>Alergenos</span>
       <div>
-        {allergens.map((allergen) => (
+        {normalizedAllergens.map((allergen) => (
           <strong key={allergen}>{allergen}</strong>
         ))}
       </div>
@@ -819,6 +935,7 @@ export default function StorePage() {
   const [portalReady, setPortalReady] = useState(false);
   const [search, setSearch] = useState("");
   const [couponCode, setCouponCode] = useState("");
+  const [couponStatus, setCouponStatus] = useState("");
   const [activeTab, setActiveTab] = useState("");
   const [scheduleOpen, setScheduleOpen] = useState(false);
   const [scheduledAt, setScheduledAt] = useState(null);
@@ -1136,17 +1253,33 @@ export default function StorePage() {
     });
   }, [menu]);
 
-  const tabs = useMemo(
+  const topDeals = useMemo(
+    () => menu.filter((item) => item?.directDiscount),
+    [menu]
+  );
+
+  const commercialTabs = useMemo(
     () => [
       { id: TRENDING_TAB, label: "Trending" },
+      ...(topDeals.length ? [{ id: TOP_DEAL_TAB, label: "Top Deal" }] : []),
       { id: PROMOS_TAB, label: "Promos" },
       ...(upcoming.length ? [{ id: UPCOMING_TAB, label: "Proximos" }] : []),
-      ...categories.map((category) => ({
+    ],
+    [topDeals.length, upcoming.length]
+  );
+
+  const categoryTabs = useMemo(
+    () =>
+      categories.map((category) => ({
         id: category.id,
         label: category.name,
       })),
-    ],
-    [categories, upcoming.length]
+    [categories]
+  );
+
+  const tabs = useMemo(
+    () => [...commercialTabs, ...categoryTabs],
+    [categoryTabs, commercialTabs]
   );
 
   useEffect(() => {
@@ -1177,6 +1310,11 @@ export default function StorePage() {
     return filterPromos(promos, query);
   }, [promos, search]);
 
+  const filteredTopDeals = useMemo(() => {
+    const query = search.trim().toLowerCase();
+    return filterMenuItems(topDeals, query);
+  }, [search, topDeals]);
+
   const fallbackTrending = useMemo(
     () =>
       menu.slice(0, 3).map((item, index) => ({
@@ -1202,7 +1340,7 @@ export default function StorePage() {
   }, [fallbackTrending, search, trending]);
 
   const visibleMenu = useMemo(() => {
-    if (activeTab === PROMOS_TAB || activeTab === UPCOMING_TAB) return [];
+    if (activeTab === PROMOS_TAB || activeTab === UPCOMING_TAB || activeTab === TOP_DEAL_TAB) return [];
 
     if (activeTab === TRENDING_TAB) {
       return [];
@@ -1282,6 +1420,13 @@ export default function StorePage() {
     : "";
   const reservationDays = scheduleDays;
   const reservationDateValue = reservationDate ? toLocalDateValue(reservationDate) : "";
+  const visibleReservationAvailability = useMemo(
+    () =>
+      reservationAvailability.filter((slot) =>
+        isFutureReservationSlot(reservationDate, slot.time, now)
+      ),
+    [now, reservationAvailability, reservationDate]
+  );
   const reservationCanConfirm =
     Boolean(store?.id) &&
     Boolean(reservationDateValue) &&
@@ -1331,10 +1476,13 @@ export default function StorePage() {
       .then((data) => {
         if (cancelled) return;
         const availability = Array.isArray(data?.availability) ? data.availability : [];
+        const futureAvailability = availability.filter((slot) =>
+          isFutureReservationSlot(reservationDate, slot.time, now)
+        );
         setReservationAvailability(availability);
         setReservationCapacity(Number(data?.capacity || 0));
         setReservationTime((current) => {
-          const stillAvailable = availability.some(
+          const stillAvailable = futureAvailability.some(
             (slot) => slot.time === current && slot.canFit !== false
           );
           return stillAvailable ? current : "";
@@ -1356,7 +1504,19 @@ export default function StorePage() {
     return () => {
       cancelled = true;
     };
-  }, [reservationDateValue, reservationOpen, reservationPartySize, store?.id]);
+  }, [now, reservationDate, reservationDateValue, reservationOpen, reservationPartySize, store?.id]);
+
+  useEffect(() => {
+    if (!reservationTime) return;
+
+    const stillVisible = visibleReservationAvailability.some(
+      (slot) => slot.time === reservationTime && slot.canFit !== false
+    );
+
+    if (!stillVisible) {
+      setReservationTime("");
+    }
+  }, [reservationTime, visibleReservationAvailability]);
 
   const createReservation = useCallback(async () => {
     if (!reservationCanConfirm) return;
@@ -2082,6 +2242,7 @@ export default function StorePage() {
       allergens: selectedPurchaseAllergens,
       subtotal: selectedLineTotal,
       image: selectedProduct.image || "",
+      directDiscount: selectedProduct.directDiscount || null,
     };
 
     setCart((current) => [...current, line]);
@@ -2320,6 +2481,14 @@ export default function StorePage() {
     () => cart.reduce((sum, item) => sum + getCartLinePayableTotal(item), 0),
     [cart]
   );
+  const validateCouponCode = (event) => {
+    event.preventDefault();
+
+    const code = couponCode.trim().toUpperCase();
+    setCouponCode(code);
+    setCouponStatus(code ? "Cupon listo para validar" : "Escribe un cupon");
+  };
+
   const confirmScheduledOrder = useCallback(async () => {
     if (!scheduledAtIsValid) {
       setCheckoutMessage("Selecciona una hora valida para programar el pedido.");
@@ -2773,7 +2942,7 @@ export default function StorePage() {
     const sizes = Object.keys(item.priceBySize || {}).filter(
       (size) => item.priceBySize?.[size] !== "" && item.priceBySize?.[size] != null
     );
-    const basePrice = priceForSize(item.priceBySize, sizes[0] || "M");
+    const baseSize = sizes[0] || "M";
     const { line, closer } = buildPizzaLine(item);
 
     return (
@@ -2798,6 +2967,7 @@ export default function StorePage() {
                 </div>
               )}
             </div>
+            {renderDirectDiscountBadge(item)}
 
             <button
               type="button"
@@ -2818,7 +2988,7 @@ export default function StorePage() {
                 </div>
               </div>
               <div className={`lsf-card__price ${tick ? "is-ticking" : ""}`}>
-                EUR {basePrice.toFixed(2)}
+                {renderStorefrontPrice(item, baseSize)}
               </div>
             </div>
           </div>
@@ -2831,6 +3001,79 @@ export default function StorePage() {
             </div>
           </div>
         </div>
+      </div>
+    );
+  };
+
+  const renderTopDealCard = (item) => {
+    const flipped = flippedId === `top-deal-${item.pizzaId}`;
+    const image = item.image || "";
+    const baseSize = getDealSize(item);
+    const discountSticker = getTopDealStickerLabel(item, baseSize);
+    const { line, closer } = buildPizzaLine(item);
+
+    return (
+      <div key={item.pizzaId} className="lsf-topDealItem" role="listitem">
+        <div
+          className={`lsf-card lsf-card--topDeal lsf-flip ${flipped ? "is-flipped" : ""}`}
+          onClick={() =>
+            setFlippedId((current) =>
+              current === `top-deal-${item.pizzaId}` ? null : `top-deal-${item.pizzaId}`
+            )
+          }
+        >
+          <div className="lsf-flip__inner">
+            <div className="lsf-flip__front">
+              <div className="lsf-card__image lsf-topDealImage">
+                {image ? (
+                  <img src={image} alt={item.name} />
+                ) : (
+                  <div className="lsf-card__img is-placeholder">
+                    <span>Deal</span>
+                  </div>
+                )}
+              </div>
+
+              <span className="lsf-topDealBadge">Top Deal</span>
+              {discountSticker && (
+                <span className="lsf-topDealDiscountSticker">
+                  <strong>{discountSticker}</strong>
+                  <small>off</small>
+                </span>
+              )}
+
+              <button
+                type="button"
+                className="lsf-card__addbtn"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  openProductModal(item);
+                }}
+                aria-label={`Comprar ${item.name}`}
+              >
+                Comprar
+              </button>
+
+              <div className="lsf-card__overlay lsf-card__overlay--deal">
+                <div className="lsf-card__ticker">
+                  <div className={`lsf-card__name ${tick ? "is-ticking" : ""}`}>
+                    {item.name}
+                  </div>
+                </div>
+                {renderTopDealPrice(item, baseSize, tick)}
+              </div>
+            </div>
+
+            <div className="lsf-flip__back">
+              <div className="lsf-flip-desc">
+                <div className="lsf-flip-title">Top Deal</div>
+                <div className="lsf-flip-line">{line}</div>
+                <div className="lsf-flip-closer">{closer}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     );
   };
@@ -2895,7 +3138,12 @@ export default function StorePage() {
               onClick={() => setCartOpen(true)}
               aria-label="Abrir carrito"
             >
-              <span aria-hidden="true">🛒</span>
+              <span className="lsf-cartbtn__icon" aria-hidden="true">
+                <svg viewBox="0 0 64 64" focusable="false">
+                  <path d="M8 9h9.2l5.5 28.2c.8 4.1 4.4 7 8.6 7h17.8c3.9 0 7.4-2.5 8.5-6.3l5.4-18.1c.8-2.7-1.2-5.4-4-5.4H22.4l-1.2-6.1C20.8 6.4 19.2 5 17.3 5H8a4 4 0 0 0 0 8Z" />
+                  <path d="M29 58a6 6 0 1 0 0-12 6 6 0 0 0 0 12Zm22 0a6 6 0 1 0 0-12 6 6 0 0 0 0 12Z" />
+                </svg>
+              </span>
               <span className="lsf-cartbtn__count">{cartCount}</span>
               <span className="lsf-cartbtn__total">€{cartTotal.toFixed(2)}</span>
             </button>
@@ -2907,7 +3155,11 @@ export default function StorePage() {
             <button
               type="button"
               className={`sf-offersBtn sf-lsfOfferBtn ${offerVariant.className}`}
-              onClick={() => navigate(`/${partnerSlug}/coupons`)}
+              onClick={() =>
+                navigate(`/${partnerSlug}/coupons`, {
+                  state: { returnToStorePath: `/${partnerSlug}/${storeSlug}/menu` },
+                })
+              }
             >
               <span className="sf-offersBtnLabel">{offerVariant.label}</span>
             </button>
@@ -3069,16 +3321,31 @@ export default function StorePage() {
           </div>
 
           <div className="lsf-tabs" role="tablist" aria-label="Categorias del menu">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                type="button"
-                className={`lsf-tab ${activeTab === tab.id ? "is-active" : ""}`}
-                onClick={() => setActiveTab(tab.id)}
-              >
-                {tab.label}
-              </button>
-            ))}
+            <div className="lsf-segmentTabs" aria-label="Ofertas destacadas">
+              {commercialTabs.map((tab) => (
+                <button
+                  key={tab.id}
+                  type="button"
+                  className={`lsf-tab lsf-tab--segment ${activeTab === tab.id ? "is-active" : ""}`}
+                  onClick={() => setActiveTab(tab.id)}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+
+            <div className="lsf-categoryTabs" aria-label="Categorias">
+              {categoryTabs.map((tab) => (
+                <button
+                  key={tab.id}
+                  type="button"
+                  className={`lsf-tab lsf-tab--category ${activeTab === tab.id ? "is-active" : ""}`}
+                  onClick={() => setActiveTab(tab.id)}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -3102,6 +3369,19 @@ export default function StorePage() {
                     <div className="lsf-grid lsf-grid--searchResults" role="list">
                       {baseFilteredMenu.map((item) => renderProductCard(item))}
                     </div>
+                  </div>
+                </div>
+              )
+            ) : activeTab === TOP_DEAL_TAB ? (
+              filteredTopDeals.length === 0 ? (
+                <div className="sf-engineEmptyState">
+                  <strong>Top Deal</strong>
+                  <p>No hay descuentos directos visibles para esta busqueda.</p>
+                </div>
+              ) : (
+                <div className="lsf-grid-wrap">
+                  <div className="lsf-grid lsf-grid--topDeals" role="list">
+                    {filteredTopDeals.map((item) => renderTopDealCard(item))}
                   </div>
                 </div>
               )
@@ -3212,7 +3492,7 @@ export default function StorePage() {
                       const sizes = Object.keys(item.priceBySize || {}).filter(
                         (size) => item.priceBySize?.[size] !== "" && item.priceBySize?.[size] != null
                       );
-                      const basePrice = priceForSize(item.priceBySize, sizes[0] || "M");
+                      const baseSize = sizes[0] || "M";
                       const { line, closer } = buildPizzaLine(item);
                       const trend = item.trend || {};
                       const soldWeek = Number(trend.soldLast7Days || 0);
@@ -3252,6 +3532,8 @@ export default function StorePage() {
                                   )}
                                 </div>
 
+                                {renderDirectDiscountBadge(item)}
+
                                 <div className="lsf-trendingRank">
                                   <span>#{rank}</span>
                                   <strong>Trending</strong>
@@ -3276,7 +3558,7 @@ export default function StorePage() {
                                     </div>
                                   </div>
                                   <div className={`lsf-card__price ${tick ? "is-ticking" : ""}`}>
-                                    EUR {basePrice.toFixed(2)}
+                                    {renderStorefrontPrice(item, baseSize)}
                                   </div>
                                 </div>
                               </div>
@@ -3330,7 +3612,7 @@ export default function StorePage() {
                           item.priceBySize?.[size] !== "" &&
                           item.priceBySize?.[size] != null
                       );
-                      const basePrice = priceForSize(item.priceBySize, sizes[0] || "M");
+                      const baseSize = sizes[0] || "M";
                       const { line } = buildPizzaLine(item);
 
                       return (
@@ -3357,6 +3639,7 @@ export default function StorePage() {
                               </div>
 
                               <span className="lsf-upcomingBadge">Proximo</span>
+                              {renderDirectDiscountBadge(item)}
                               <span className="lsf-upcomingCountdown">
                                 {formatLaunchCountdown(item.launchAt, now)}
                               </span>
@@ -3378,7 +3661,7 @@ export default function StorePage() {
                                   </div>
                                 </div>
                                 <div className={`lsf-card__price ${tick ? "is-ticking" : ""}`}>
-                                  EUR {basePrice.toFixed(2)}
+                                  {renderStorefrontPrice(item, baseSize)}
                                 </div>
                               </div>
                             </div>
@@ -3413,7 +3696,7 @@ export default function StorePage() {
                     const sizes = Object.keys(item.priceBySize || {}).filter(
                       (size) => item.priceBySize?.[size] !== "" && item.priceBySize?.[size] != null
                     );
-                    const basePrice = priceForSize(item.priceBySize, sizes[0] || "M");
+                    const baseSize = sizes[0] || "M";
                     const { line, closer } = buildPizzaLine(item);
 
                     return (
@@ -3438,6 +3721,7 @@ export default function StorePage() {
                                 </div>
                               )}
                             </div>
+                            {renderDirectDiscountBadge(item)}
 
                             <button
                               type="button"
@@ -3458,7 +3742,7 @@ export default function StorePage() {
                                 </div>
                               </div>
                               <div className={`lsf-card__price ${tick ? "is-ticking" : ""}`}>
-                                EUR {basePrice.toFixed(2)}
+                                {renderStorefrontPrice(item, baseSize)}
                               </div>
                             </div>
                           </div>
@@ -3483,38 +3767,52 @@ export default function StorePage() {
 
       <div className="sf-stickyFooterShell" style={themeStyle}>
         <div className="sf-stickyFooter">
-          <div className="sf-bottomActionGroup">
-            <button
-              type="button"
-              className="sf-engineBottomBtn sf-engineBottomBtn--call"
-              onClick={() => {
-                if (phoneHref) window.location.href = phoneHref;
-              }}
-              disabled={!phoneHref}
-            >
-              Llamar
-            </button>
+          <button
+            type="button"
+            className="sf-engineBottomBtn sf-engineBottomBtn--call"
+            onClick={() => {
+              if (phoneHref) window.location.href = phoneHref;
+            }}
+            disabled={!phoneHref}
+          >
+            <span>Llamar</span>
+          </button>
 
-            {reservationEnabled && (
-              <button
-                type="button"
-                className="sf-engineBottomBtn sf-engineBottomBtn--reservation"
-                onClick={() => setReservationOpen(true)}
-              >
-                Reservas
-              </button>
-            )}
-          </div>
+          <button
+            type="button"
+            className="sf-engineBottomBtn sf-engineBottomBtn--reservation"
+            onClick={() => setReservationOpen(true)}
+            disabled={!reservationEnabled}
+          >
+            <span>Reservas</span>
+          </button>
 
-          <label className="sf-couponDock">
+          <button
+            type="button"
+            className="sf-engineBottomBtn sf-engineBottomBtn--pay"
+            onClick={() => setCheckoutOpen(true)}
+            disabled={cartCount === 0}
+          >
+            <span>Pay now</span>
+            {cartCount > 0 && <small>EUR {cartTotal.toFixed(2)}</small>}
+          </button>
+
+          <form className="sf-couponDock" onSubmit={validateCouponCode}>
             <span className="sf-couponDockIcon">%</span>
             <input
               type="text"
               value={couponCode}
-              onChange={(event) => setCouponCode(event.target.value.toUpperCase())}
-              placeholder="Tienes un cupon?"
+              onChange={(event) => {
+                setCouponCode(event.target.value.toUpperCase());
+                setCouponStatus("");
+              }}
+              placeholder="Codigo cupon"
             />
-          </label>
+            <button type="submit" disabled={!couponCode.trim()}>
+              Validar
+            </button>
+            {couponStatus && <small>{couponStatus}</small>}
+          </form>
 
           <button
             type="button"
@@ -3529,8 +3827,8 @@ export default function StorePage() {
             <span className="sf-bootsTicker" aria-label="Boots para subir posicion en la cola">
               <span className="sf-bootsTickerTrack">
                 <span>Boost UP</span>
-                <span>Go Faster</span>
-                <span>Get It Now!</span>
+                <span>Subir cola</span>
+                <span>Prioridad</span>
               </span>
             </span>
           </button>
@@ -3568,6 +3866,12 @@ export default function StorePage() {
                   )}
                 </div>
 
+                {selectedProduct.directDiscount && (
+                  <div className="sf-directDiscountNotice">
+                    {getDirectDiscountLabel(selectedProduct.directDiscount)}
+                  </div>
+                )}
+
                 <div className="sf-productPickerDesc">
                   {(() => {
                     const { line, closer } = buildPizzaLine(selectedProduct);
@@ -3603,6 +3907,7 @@ export default function StorePage() {
                     {selectedProductSizes.map((size) => {
                       const active = productSelection.size === size;
                       const price = priceForSize(selectedProduct.priceBySize, size);
+                      const originalPrice = getOriginalPriceForSize(selectedProduct, size);
 
                       return (
                         <button
@@ -3617,6 +3922,9 @@ export default function StorePage() {
                           }
                         >
                           <span>{size}</span>
+                          {originalPrice > price && price > 0 && (
+                            <em className="sf-sizeChipOldPrice">EUR {originalPrice.toFixed(2)}</em>
+                          )}
                           <strong>EUR {price.toFixed(2)}</strong>
                         </button>
                       );
@@ -4833,11 +5141,11 @@ export default function StorePage() {
               <div className="sf-scheduleSection">
                 <div className="sf-scheduleLabel">Hora</div>
 
-                {reservationLoading && reservationAvailability.length === 0 ? (
+                {reservationLoading && visibleReservationAvailability.length === 0 ? (
                   <div className="sf-scheduleEmpty">Cargando disponibilidad...</div>
-                ) : reservationAvailability.length > 0 ? (
+                ) : visibleReservationAvailability.length > 0 ? (
                   <div className="sf-scheduleHoursGrid">
-                    {reservationAvailability.map((slot) => {
+                    {visibleReservationAvailability.map((slot) => {
                       const occupied = Number(slot.occupied || 0);
                       const available = Number(slot.available || 0);
                       const capacity = Number(reservationCapacity || 0);

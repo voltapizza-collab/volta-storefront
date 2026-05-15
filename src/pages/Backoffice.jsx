@@ -200,12 +200,14 @@ export default function Backoffice() {
   const isOffersOverviewActive = activeModule === "offers";
   const isOffersCreateActive = activeModule === "offersCreate";
   const isOffersPromosActive = activeModule === "offersPromos";
+  const isOffersDirectDiscountsActive = activeModule === "offersDirectDiscounts";
   const isOffersIncentivesActive = activeModule === "offersIncentives";
   const isOffersGroupActive =
     activeModuleGroup === "offers" ||
     isOffersOverviewActive ||
     isOffersCreateActive ||
     isOffersPromosActive ||
+    isOffersDirectDiscountsActive ||
     isOffersIncentivesActive;
   const isMyOrdersOverviewActive = activeModule === "myorders";
   const isMyOrdersMovementsActive = activeModule === "myordersMovements";
@@ -469,6 +471,16 @@ export default function Backoffice() {
                       Promos
                     </button>
                     <button
+                      className={`bo-subbtn ${isOffersDirectDiscountsActive ? "active" : ""}`}
+                      onClick={() => {
+                        setActiveModule("offersDirectDiscounts");
+                        setActiveModuleGroup("offers");
+                      }}
+                      type="button"
+                    >
+                      Descuentos directos
+                    </button>
+                    <button
                       className={`bo-subbtn ${isOffersIncentivesActive ? "active" : ""}`}
                       onClick={() => {
                         setActiveModule("offersIncentives");
@@ -697,6 +709,10 @@ export default function Backoffice() {
 
           {activeModule === "offersPromos" && auth.partnerId && (
             <CouponsModule partner={auth} initialView="promos" />
+          )}
+
+          {activeModule === "offersDirectDiscounts" && auth.partnerId && (
+            <CouponsModule partner={auth} initialView="directDiscounts" />
           )}
 
           {activeModule === "offersIncentives" && auth.partnerId && (

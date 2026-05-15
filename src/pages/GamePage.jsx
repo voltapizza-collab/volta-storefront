@@ -398,12 +398,12 @@ export default function GamePage({ fixedGameSlug }) {
       onPlayed,
       partnerSlug,
       gameSlug,
-      onBackToStore: () => navigate(`/${partnerSlug}`),
+      onBackToStore: () => navigate(location.state?.returnToStorePath || `/${partnerSlug}`),
     };
     if (gameSlug === "perfect-timing") return <PerfectTimingGame {...props} />;
     if (gameSlug === "crust-ring") return <CrustRingGame {...props} />;
     return <WinningNumberGame {...props} />;
-  }, [context, gameSlug, navigate, partnerSlug]);
+  }, [context, gameSlug, location.state, navigate, partnerSlug]);
 
   if (error && portalReady) {
     return (
@@ -431,7 +431,11 @@ export default function GamePage({ fixedGameSlug }) {
     <GameShell
       context={context}
       remainingMs={remainingMs}
-      onBack={() => navigate(`/${partnerSlug}/coupons`)}
+      onBack={() =>
+        navigate(`/${partnerSlug}/coupons`, {
+          state: { returnToStorePath: location.state?.returnToStorePath },
+        })
+      }
     >
       {gameNode}
     </GameShell>

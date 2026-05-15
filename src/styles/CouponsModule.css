@@ -238,6 +238,10 @@
   gap: 14px 16px;
 }
 
+.cp-formGrid--compact {
+  grid-template-columns: minmax(220px, 360px);
+}
+
 .cp-field {
   display: flex;
   flex-direction: column;
@@ -601,6 +605,134 @@
   border-left: 2px solid #23163b;
   border-bottom: 2px solid #23163b;
   transform: rotate(-45deg);
+}
+
+.cp-directCategory {
+  border-radius: 16px;
+  border: 1px solid rgba(59, 0, 139, 0.08);
+  background: #fff;
+  overflow: hidden;
+}
+
+.cp-directCategory + .cp-directCategory {
+  margin-top: 2px;
+}
+
+.cp-directCategorySummary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: rgba(59, 0, 139, 0.05);
+  color: #23163b;
+  cursor: pointer;
+  list-style: none;
+}
+
+.cp-directCategorySummary::-webkit-details-marker {
+  display: none;
+}
+
+.cp-directCategorySummary::after {
+  content: "+";
+  color: var(--brand-1);
+  font-weight: 900;
+}
+
+.cp-directCategory[open] .cp-directCategorySummary::after {
+  content: "-";
+}
+
+.cp-directCategorySummary strong,
+.cp-directCategorySummary span {
+  min-width: 0;
+}
+
+.cp-directCategorySummary span {
+  color: rgba(34, 21, 52, 0.64);
+  font-weight: 800;
+}
+
+.cp-directCategorySelect,
+.cp-directProductRow {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+}
+
+.cp-directCategorySelect {
+  margin: 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(59, 0, 139, 0.1);
+  background: rgba(255, 249, 239, 0.82);
+  color: #23163b;
+  cursor: pointer;
+}
+
+.cp-directCategorySelect.is-selected {
+  border-color: rgba(255, 182, 28, 0.72);
+  background: linear-gradient(180deg, rgba(255, 211, 110, 0.3), rgba(255, 255, 255, 0.96));
+}
+
+.cp-directCategorySelect span {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.cp-directCategorySelect small {
+  color: rgba(34, 21, 52, 0.62);
+  font-weight: 800;
+}
+
+.cp-directProductList {
+  display: grid;
+  padding: 0 12px 12px;
+}
+
+.cp-directProductRow {
+  min-height: 44px;
+  padding: 10px 12px;
+  border-top: 1px solid rgba(59, 0, 139, 0.06);
+  color: #23163b;
+  cursor: pointer;
+}
+
+.cp-directProductRow:first-child {
+  border-top: none;
+}
+
+.cp-directProductRow.is-selected {
+  background: rgba(255, 211, 110, 0.16);
+}
+
+.cp-directProductRow input,
+.cp-directCategorySelect input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--brand-2);
+}
+
+.cp-directProductRow input:disabled {
+  cursor: default;
+}
+
+.cp-directProductRow span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 800;
+}
+
+.cp-directProductRow em {
+  color: rgba(34, 21, 52, 0.58);
+  font-size: 0.78rem;
+  font-style: normal;
+  font-weight: 900;
 }
 
 .cp-promoBagRow {

@@ -9,6 +9,8 @@ const normalizeZipCode = (value = "") => {
 };
 
 const normalizeZipInput = (value = "") => String(value || "").replace(/\D/g, "").slice(0, 5);
+const COUPON_GALLERY_LEGAL_VERSION = "2026-05-coupon-games-legal-v1";
+const COUPON_GALLERY_LEGAL_KEY = `volta_coupon_gallery_legal_${COUPON_GALLERY_LEGAL_VERSION}`;
 
 const buildStorageKey = (partner) => {
   const partnerKey = partner?.id || partner?.slug || partner?.name || "default";
@@ -206,6 +208,64 @@ function ZoneModal({
   );
 }
 
+function CouponGalleryLegalGate({ open, partnerName, onAccept }) {
+  if (!open) return null;
+
+  return (
+    <div className="cg-modalBack cg-legalGateBack">
+      <div className="cg-modalCard cg-legalGateCard" onMouseDown={(event) => event.stopPropagation()}>
+        <div className="cg-modalHead">
+          <div>
+            <div className="cg-kicker">{partnerName || "Coupon Gallery"}</div>
+            <h3>Condiciones legales de cupones y juegos</h3>
+          </div>
+        </div>
+
+        <div className="cg-legalContent">
+          <p>
+            Antes de ver o reclamar cupones, acepta las condiciones de promociones,
+            juegos, azar, privacidad, cookies necesarias y uso responsable del portal.
+          </p>
+
+          <h4>Cupones y promociones</h4>
+          <ul>
+            <li>Los cupones son promocionales, personales cuando proceda, no acumulables salvo indicacion expresa y no canjeables por efectivo.</li>
+            <li>Cada cupon puede estar limitado por uso, telefono, cliente, zona, tienda, fecha, horario, stock o producto elegible.</li>
+            <li>La obtencion de un cupon no garantiza disponibilidad de producto ni derecho a combinarlo con Promos, Top Deals, Boost u otros descuentos.</li>
+            <li>Los cupones pueden caducar automaticamente y se validan de nuevo antes de aplicarse en el carrito.</li>
+          </ul>
+
+          <h4>Juegos, azar y mayores de edad</h4>
+          <ul>
+            <li>Ruletas, sorteos, retos o dinamicas aleatorias son acciones promocionales sin valor monetario directo.</li>
+            <li>Para participar, reclamar o canjear premios promocionales debes ser <b>mayor de 18 anos</b>.</li>
+            <li>No se permite automatizar participaciones, manipular resultados, crear duplicados, revender cupones o usar datos falsos.</li>
+            <li>Ante fraude, abuso, error tecnico o participacion no elegible, el cupon, premio o pedido asociado puede ser anulado.</li>
+          </ul>
+
+          <h4>Privacidad y cookies</h4>
+          <ul>
+            <li>Tratamos datos necesarios para zona, reclamo, validacion, seguridad, soporte y prevencion de fraude.</li>
+            <li>Podemos solicitar nombre, telefono, codigo postal y datos tecnicos imprescindibles para operar la galeria.</li>
+            <li>Usamos almacenamiento/cookies necesarias para recordar zona, consentimiento, seguridad y funcionamiento del portal.</li>
+            <li>Las cookies analiticas o publicitarias solo se habilitaran si se activan expresamente.</li>
+          </ul>
+
+          <p className="cg-legalNote">
+            Al pulsar "Acepto y continuar" confirmas que has leido y aceptas estas
+            condiciones, eres mayor de 18 anos si participas en juegos/promociones y
+            autorizas el uso de cookies necesarias.
+          </p>
+        </div>
+
+        <button className="cg-primaryBtn cg-legalAccept" type="button" onClick={onAccept}>
+          Acepto y continuar
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function CouponCard({ card, partner, onClaim }) {
   const isUnlimited = card.remaining == null;
   const remaining = isUnlimited ? null : Number(card.remaining || 0);
@@ -395,6 +455,7 @@ export default function CouponGallery({ partner }) {
   const [zoneError, setZoneError] = useState("");
   const [resolvingZone, setResolvingZone] = useState(false);
   const [fallbackStorePath, setFallbackStorePath] = useState("");
+  const [legalAccepted, setLegalAccepted] = useState(false);
 
   const partnerId = partner?.id;
   const storageKey = useMemo(() => buildStorageKey(partner), [partner]);
@@ -404,6 +465,23 @@ export default function CouponGallery({ partner }) {
     if (fallbackStorePath) return fallbackStorePath;
     return partner?.slug ? `/${partner.slug}` : "/";
   }, [fallbackStorePath, location.state, partner?.slug]);
+
+  useEffect(() => {
+    try {
+      setLegalAccepted(window.localStorage.getItem(COUPON_GALLERY_LEGAL_KEY) === "accepted");
+    } catch {
+      setLegalAccepted(false);
+    }
+  }, []);
+
+  const acceptLegalGate = useCallback(() => {
+    try {
+      window.localStorage.setItem(COUPON_GALLERY_LEGAL_KEY, "accepted");
+    } catch {
+      // Continue current session even when storage is unavailable.
+    }
+    setLegalAccepted(true);
+  }, []);
 
   const loadContext = useCallback(async () => {
     if (!partnerId) return;
@@ -567,6 +645,7 @@ export default function CouponGallery({ partner }) {
                   card={card}
                   partner={partner}
                   onClaim={() => {
+                    if (!legalAccepted) return;
                     if (isGameCoupon(card)) {
                       navigate(`/${partner?.slug}/games/${card.game?.slug || "winning-number"}`, {
                         state: {
@@ -594,7 +673,7 @@ export default function CouponGallery({ partner }) {
       </div>
 
       <ZoneModal
-        open={zoneModalOpen}
+        open={legalAccepted && zoneModalOpen}
         partnerName={partner?.name}
         initialZipCode={zipCode}
         saving={resolvingZone}
@@ -613,6 +692,12 @@ export default function CouponGallery({ partner }) {
           onClaimed={loadCards}
         />
       )}
+
+      <CouponGalleryLegalGate
+        open={!legalAccepted}
+        partnerName={partner?.name}
+        onAccept={acceptLegalGate}
+      />
     </div>
   );
 }

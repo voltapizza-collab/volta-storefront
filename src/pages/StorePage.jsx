@@ -4,6 +4,7 @@ import OrderPortalTransition from "../components/Storefront/OrderPortalTransitio
 import api from "../services/api";
 import "../styles/Storefront.css";
 import flagEs from "../assets/flags/es.svg";
+import gridWatermarkLogo from "../assets/logo/the pizza sale enganine.png";
 import {
   BRANDING_DEFAULTS,
   buildBrandThemeVars,
@@ -16,6 +17,8 @@ const PROMOS_TAB = "__PROMOS__";
 const UPCOMING_TAB = "__UPCOMING__";
 const HALF_CATEGORY_ID = 3;
 const CUSTOM_BASE_PRICE_FACTOR = 0.8;
+const STOREFRONT_TERMS_VERSION = "2026-05-full-legal-v1";
+const STOREFRONT_TERMS_KEY = `volta_storefront_terms_${STOREFRONT_TERMS_VERSION}`;
 const DEFAULT_BOOST_SETTINGS = {
   active: true,
   unitPrice: 0.2,
@@ -269,19 +272,19 @@ function isFutureReservationSlot(selectedDate, time, nowDate) {
 
 function formatLaunchCountdown(launchAt, now) {
   const launchDate = new Date(launchAt);
-  if (!launchAt || Number.isNaN(launchDate.getTime())) return "Muy pronto";
+  if (!launchAt || Number.isNaN(launchDate.getTime())) return "MUY PRONTO";
 
   const diffMs = launchDate.getTime() - now.getTime();
-  if (diffMs <= 0) return "Disponible ahora";
+  if (diffMs <= 0) return "DISPONIBLE";
 
   const totalMinutes = Math.ceil(diffMs / 60000);
   const days = Math.floor(totalMinutes / 1440);
   const hours = Math.floor((totalMinutes % 1440) / 60);
   const minutes = totalMinutes % 60;
 
-  if (days > 0) return `${days}d ${hours}h`;
-  if (hours > 0) return `${hours}h ${String(minutes).padStart(2, "0")}m`;
-  return `${minutes}m`;
+  if (days > 0) return `${days}D ${hours}H`;
+  if (hours > 0) return `${hours}H ${String(minutes).padStart(2, "0")}M`;
+  return `${minutes}M`;
 }
 
 function formatLaunchDate(launchAt) {
@@ -402,6 +405,53 @@ const getDirectDiscountLabel = (discount) => {
   return `EUR ${value.toFixed(2)} off hoy`;
 };
 
+const getOfferEndTargetMs = (offer, nowMs) => {
+  const candidates = [];
+
+  if (offer?.expiresAt) {
+    const expiresAtMs = new Date(offer.expiresAt).getTime();
+    if (Number.isFinite(expiresAtMs) && expiresAtMs > nowMs) {
+      candidates.push(expiresAtMs);
+    }
+  }
+
+  const windowEnd = Number(offer?.windowEnd);
+  if (Number.isFinite(windowEnd)) {
+    const zonedNow = getZonedDate(nowMs);
+    const minutesNow = zonedNow.getHours() * 60 + zonedNow.getMinutes();
+    const windowStart =
+      offer?.windowStart == null ? null : Number(offer.windowStart);
+    const crossesMidnight =
+      Number.isFinite(windowStart) && windowStart > windowEnd;
+    const minutesLeft = crossesMidnight
+      ? minutesNow < windowEnd
+        ? windowEnd - minutesNow
+        : 24 * 60 - minutesNow + windowEnd
+      : windowEnd - minutesNow;
+
+    if (minutesLeft > 0) {
+      candidates.push(
+        nowMs +
+          minutesLeft * 60 * 1000 -
+          zonedNow.getSeconds() * 1000 -
+          zonedNow.getMilliseconds()
+      );
+    }
+  }
+
+  if (!candidates.length) return null;
+  return Math.min(...candidates);
+};
+
+const formatOfferCountdown = (offer, nowMs) => {
+  const targetMs = getOfferEndTargetMs(offer, nowMs);
+  if (!targetMs) return "Limitada";
+
+  const diffMs = Math.max(0, targetMs - nowMs);
+
+  return formatDurationMs(diffMs);
+};
+
 const getOriginalPriceForSize = (item, size = "M") => {
   if (!item?.originalPriceBySize) return 0;
   return priceForSize(item.originalPriceBySize, size);
@@ -416,6 +466,13 @@ const getDiscountPercentForSize = (item, size = "M") => {
   return Math.round(((originalPrice - price) / originalPrice) * 100);
 };
 
+const getDiscountSavingForSize = (item, size = "M") => {
+  const price = priceForSize(item?.priceBySize, size);
+  const originalPrice = getOriginalPriceForSize(item, size);
+
+  return Math.max(0, roundMoney(originalPrice - price));
+};
+
 const getDealSize = (item) => {
   const sizes = Object.keys(item?.priceBySize || {}).filter(
     (size) => item.priceBySize?.[size] !== "" && item.priceBySize?.[size] != null
@@ -428,7 +485,267 @@ const renderDirectDiscountBadge = (item) => {
 
   return (
     <span className="lsf-directDiscountBadge">
-      {getDirectDiscountLabel(item.directDiscount)}
+      <strong>{getDirectDiscountLabel(item.directDiscount)}</strong>
+    </span>
+  );
+};
+
+const CartPlusIcon = () => (
+  <svg className="lsf-card__cartIcon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <path
+      d="M5 5h2.1l1.25 8.15a2 2 0 0 0 1.98 1.7h6.2a2 2 0 0 0 1.9-1.37l1.2-3.63H8.05"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M15.5 5.5h5M18 3v5"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+    />
+    <path
+      d="M10 19.5h.01M17 19.5h.01"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="3"
+      strokeLinecap="round"
+    />
+  </svg>
+);
+
+function CouponInfoModal({ open, onClose, onRemove, data }) {
+  const [countdown, setCountdown] = useState("");
+  const [secondsLeft, setSecondsLeft] = useState(null);
+
+  useEffect(() => {
+    if (!open || !data?.coupon?.expiresAt) {
+      setCountdown("");
+      setSecondsLeft(null);
+      return undefined;
+    }
+
+    const tick = () => {
+      const leftMs = Math.max(0, new Date(data.coupon.expiresAt).getTime() - Date.now());
+      const nextSeconds = Math.floor(leftMs / 1000);
+      const hours = Math.floor(nextSeconds / 3600);
+      const minutes = Math.floor((nextSeconds % 3600) / 60);
+      const seconds = nextSeconds % 60;
+
+      setSecondsLeft(nextSeconds);
+      setCountdown(
+        `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`
+      );
+    };
+
+    tick();
+    const timer = window.setInterval(tick, 1000);
+    return () => window.clearInterval(timer);
+  }, [open, data?.coupon?.expiresAt]);
+
+  if (!open || !data) return null;
+
+  const coupon = data.coupon;
+  const severity =
+    secondsLeft == null ? "ok" : secondsLeft <= 15 * 60 ? "critical" : secondsLeft <= 2 * 60 * 60 ? "warning" : "ok";
+
+  return (
+    <div className="sf-modalOverlay" onClick={onClose}>
+      <div className="sf-modalCard sf-couponInfoModal" onClick={(event) => event.stopPropagation()}>
+        <div className="sf-cartModalHead">
+          <div>
+            <span>{data.valid ? "Cupon aplicado" : "Validacion de cupon"}</span>
+            <h3>Condiciones de la oferta</h3>
+          </div>
+          <button type="button" className="sf-modalCloseBtn" onClick={onClose} aria-label="Cerrar">
+            x
+          </button>
+        </div>
+
+        <div className="sf-couponInfoBody">
+          <div className={`sf-couponInfoStatus ${data.valid ? "is-valid" : "is-invalid"}`}>
+            <strong>{data.message || "Revisa el estado del cupon."}</strong>
+            <span>Estado: {data.status || "sin_estado"}</span>
+          </div>
+
+          {coupon ? (
+            <>
+              <p><b>Cupon:</b> <code>{coupon.code}</code></p>
+              <p><b>Beneficio:</b> {formatCouponBenefit(coupon)}</p>
+              <p><b>Caduca:</b> {formatCouponExpiry(coupon.expiresAt)}</p>
+              <p><b>Descuento aplicado:</b> EUR {num(data.discount).toFixed(2)}</p>
+
+              {coupon.expiresAt && (
+                <div className={`sf-couponTimer sf-couponTimer--${severity}`} role="status" aria-live="polite">
+                  <span>Quedan</span>
+                  <strong>{countdown || "--:--:--"}</strong>
+                </div>
+              )}
+
+              <h4>Condiciones</h4>
+              <ul>
+                <li>Valido por <b>1 uso</b> y <b>no acumulable</b> con otros cupones.</li>
+                <li>Se aplica sobre <b>productos</b>, no sobre gastos de envio ni Boost.</li>
+                <li>Debe estar activo, dentro de horario y antes de su caducidad.</li>
+                <li>El cupon se marca como usado al confirmar el pago.</li>
+              </ul>
+            </>
+          ) : (
+            <p>Introduce un codigo valido para ver las condiciones y aplicar el descuento.</p>
+          )}
+        </div>
+
+        <div className="sf-cartActions sf-couponInfoActions">
+          <button type="button" className="sf-primaryBtn" onClick={onClose}>
+            Entendido
+          </button>
+          {(coupon || data.valid) && (
+            <button type="button" className="sf-secondaryBtn" onClick={onRemove}>
+              Quitar cupon
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function StorefrontTermsGateModal({ open, onAccept, partnerName }) {
+  if (!open) return null;
+
+  return (
+    <div className="sf-modalOverlay sf-termsGateOverlay">
+      <div
+        className="sf-modalCard sf-termsGateModal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="sf-terms-title"
+      >
+        <div className="sf-cartModalHead">
+          <div>
+            <span>{partnerName || "Volta Storefront"}</span>
+            <h3 id="sf-terms-title">Terminos, privacidad, cookies y bases legales</h3>
+          </div>
+        </div>
+
+        <div className="sf-termsGateBody">
+          <p>
+            Antes de entrar, acepta en un solo acto las condiciones de compra,
+            privacidad, cookies esenciales y bases legales de promociones. Las
+            cookies necesarias se usan para sesion, carrito, seguridad y guardar
+            esta aceptacion.
+          </p>
+
+          <h4>Identificacion del responsable</h4>
+          <p>
+            MYCRUSHPIZZA, S.L. - CIF B-21998257. Plaza San Antonio 1 - Local A,
+            32004 Ourense (Espana). Contacto: mycrushpizzaspain@gmail.com.
+          </p>
+
+          <h4>Terminos de compra</h4>
+          <ul>
+            <li>Precios en EUR con impuestos incluidos salvo indicacion distinta.</li>
+            <li>Fotos, nombres, alergenos y descripciones buscan ser exactos, pero pueden existir pequenas variaciones.</li>
+            <li>Revisa alergenos antes de confirmar; puede haber trazas por instalaciones compartidas.</li>
+            <li>Productos sujetos a disponibilidad, stock, horario y zona de servicio de la tienda.</li>
+            <li>El contrato de compra se perfecciona al confirmar el pedido y, cuando corresponda, completar el pago.</li>
+            <li>Alimentos preparados o perecederos no admiten desistimiento de 14 dias una vez iniciada la preparacion.</li>
+            <li>Las incidencias deben comunicarse con numero de pedido y, si procede, fotos.</li>
+          </ul>
+
+          <h4>Politica de cupones, promos e incentivos</h4>
+          <ul>
+            <li><b>Los cupones no son acumulables</b> con otros cupones.</li>
+            <li>Un cupon solo aplica sobre <b>productos normales</b> elegibles.</li>
+            <li>Los cupones <b>no aplican</b> sobre Promos, Top Deals, descuentos directos, Boost, envio ni recompensas gratis.</li>
+            <li>Las Promos tienen <b>precio cerrado</b> y no reciben descuentos adicionales.</li>
+            <li>Los Top Deals ya incluyen descuento directo y no reciben cupon.</li>
+            <li>Los incentivos se calculan sobre el <b>gasto neto elegible</b>: productos normales menos cupon aplicado.</li>
+            <li>El cupon se marca como usado al confirmar el pago y debe estar activo, vigente y dentro de sus condiciones.</li>
+          </ul>
+
+          <h4>Bases legales de promociones</h4>
+          <ul>
+            <li>Promos, cupones, Top Deals, Boost e incentivos pueden tener stock, horario, caducidad, zona y condiciones propias.</li>
+            <li>La tienda puede corregir errores evidentes, cancelar abusos, duplicidades o usos fraudulentos.</li>
+            <li>Las recompensas gratis dependen de cumplir el objetivo vigente en el momento de compra.</li>
+            <li>Una promocion puede retirarse o cambiarse por causa tecnica, operativa o de disponibilidad.</li>
+          </ul>
+
+          <h4>Cupones, juegos promocionales y azar</h4>
+          <ul>
+            <li>Los juegos, ruletas, sorteos, dinamicas de azar o retos del portal son <b>promocionales</b> y no constituyen dinero, saldo ni premio canjeable en efectivo.</li>
+            <li>Para participar o canjear recompensas promocionales debes ser <b>mayor de 18 anos</b>.</li>
+            <li>Cada cupon o premio puede estar limitado a <b>1 uso</b>, una cuenta, un telefono, una zona, una tienda, una fecha, un horario o un stock disponible.</li>
+            <li>Los cupones obtenidos en juegos pueden requerir validacion, estar asociados a un telefono/cliente y caducar automaticamente.</li>
+            <li>No se permite automatizar participaciones, crear duplicados, revender cupones, manipular resultados o usar datos falsos.</li>
+            <li>Si se detecta abuso, fraude, error tecnico o participacion no elegible, la tienda puede anular el cupon, premio o pedido asociado.</li>
+            <li>La obtencion de un cupon no garantiza disponibilidad de producto; el descuento solo se aplica si el pedido cumple todas las condiciones vigentes.</li>
+          </ul>
+
+          <h4>Privacidad y comunicaciones</h4>
+          <ul>
+            <li>Tratamos datos de contacto, pedido, direccion o tienda, pago, soporte y datos tecnicos necesarios.</li>
+            <li>Finalidades: gestionar pedido, cobro, entrega/recogida, soporte, seguridad, facturacion y obligaciones legales.</li>
+            <li>El pago se procesa mediante pasarela certificada; no almacenamos numeros completos de tarjeta.</li>
+            <li>Podemos usar proveedores de hosting, pago, mensajeria, mapas y soporte bajo garantias legales.</li>
+            <li>Puedes ejercer derechos de acceso, rectificacion, supresion, oposicion, limitacion y portabilidad por email.</li>
+          </ul>
+
+          <h4>Cookies</h4>
+          <ul>
+            <li>Usamos cookies o almacenamiento local <b>necesario</b> para carrito, sesion, seguridad, preferencias y aceptacion legal.</li>
+            <li>Servicios de pago o mapas pueden usar cookies tecnicas propias para seguridad y funcionamiento.</li>
+            <li>Las cookies analiticas o publicitarias solo se habilitaran si se activan expresamente en el portal.</li>
+            <li>Puedes borrar o bloquear cookies desde el navegador; algunas funciones podrian dejar de funcionar.</li>
+          </ul>
+
+          <p className="sf-termsGateNote">
+            Al pulsar "Acepto y entrar" confirmas que has leido y aceptas estos
+            terminos, condiciones promocionales, politica de privacidad, cookies
+            necesarias y bases legales del portal.
+          </p>
+        </div>
+
+        <div className="sf-termsGateActions">
+          <button type="button" className="sf-primaryBtn" onClick={onAccept}>
+            Acepto y entrar
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const renderDiscountPrice = ({
+  price,
+  originalPrice = 0,
+  discountPercent = 0,
+  isTicking = false,
+  className = "",
+}) => {
+  const hasDiscount = originalPrice > price && price > 0 && discountPercent > 0;
+
+  if (!hasDiscount) {
+    return (
+      <span className={`lsf-card__priceCurrent ${isTicking ? "is-ticking" : ""} ${className}`}>
+        EUR {price.toFixed(2)}
+      </span>
+    );
+  }
+
+  return (
+    <span
+      className={`lsf-card__priceStack has-discount ${isTicking ? "is-ticking" : ""} ${className}`}
+    >
+      <span className="lsf-card__priceOld">EUR {originalPrice.toFixed(2)}</span>
+      <span className="lsf-card__priceRow">
+        <strong className="lsf-card__priceCurrent">EUR {price.toFixed(2)}</strong>
+        <em>-{discountPercent}%</em>
+      </span>
     </span>
   );
 };
@@ -438,19 +755,7 @@ const renderStorefrontPrice = (item, size = "M") => {
   const originalPrice = getOriginalPriceForSize(item, size);
   const discountPercent = getDiscountPercentForSize(item, size);
 
-  if (originalPrice > price && price > 0) {
-    return (
-      <span className="lsf-card__priceStack">
-        <span className="lsf-card__priceOld">EUR {originalPrice.toFixed(2)}</span>
-        <span className="lsf-card__priceCurrent">
-          EUR {price.toFixed(2)}
-          {discountPercent > 0 && <em>-{discountPercent}%</em>}
-        </span>
-      </span>
-    );
-  }
-
-  return <span className="lsf-card__priceCurrent">EUR {price.toFixed(2)}</span>;
+  return renderDiscountPrice({ price, originalPrice, discountPercent });
 };
 
 const renderTopDealPrice = (item, size = "M", isTicking = false) => {
@@ -460,15 +765,30 @@ const renderTopDealPrice = (item, size = "M", isTicking = false) => {
   const hasDiscount = originalPrice > price && price > 0;
 
   return (
-    <div
-      className={`lsf-topDealPrice ${hasDiscount ? "has-discount" : ""} ${
-        isTicking ? "is-ticking" : ""
-      }`}
-    >
-      <strong>EUR {price.toFixed(2)}</strong>
-      {hasDiscount && <span>EUR {originalPrice.toFixed(2)}</span>}
-      {hasDiscount && discountPercent > 0 && <b>-{discountPercent}%</b>}
-    </div>
+    renderDiscountPrice({
+      price,
+      originalPrice: hasDiscount ? originalPrice : 0,
+      discountPercent,
+      isTicking,
+      className: "lsf-topDealPrice",
+    })
+  );
+};
+
+const renderPromoPrice = (promo, menu = [], isTicking = false) => {
+  const promoPrice = num(promo?.totalPrice);
+  const originalTotal = getPromoOriginalTotal(promo, menu);
+  const discountPercent = getPromoDiscountPercent(promo, menu);
+  const hasDiscount = originalTotal > promoPrice && promoPrice > 0;
+
+  return (
+    renderDiscountPrice({
+      price: promoPrice,
+      originalPrice: hasDiscount ? originalTotal : 0,
+      discountPercent,
+      isTicking,
+      className: "lsf-topDealPrice lsf-promoPriceStack",
+    })
   );
 };
 
@@ -481,22 +801,27 @@ const getTopDealStickerLabel = (item, size = "M") => {
   if (!discount || value <= 0) return "";
 
   if (discount.discountType === "PERCENT") return `-${Math.round(value)}%`;
-  return `-EUR ${value.toFixed(2)}`;
+  return "";
 };
 
 const roundMoney = (value) => Math.round(Number(value || 0) * 100) / 100;
 
 const formatDurationMs = (value) => {
   const totalSeconds = Math.max(0, Math.floor(Number(value || 0) / 1000));
-  const hours = Math.floor(totalSeconds / 3600);
+  const days = Math.floor(totalSeconds / 86400);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
   const minutes = Math.floor((totalSeconds % 3600) / 60);
   const seconds = totalSeconds % 60;
 
-  if (hours > 0) {
-    return `${hours}h ${String(minutes).padStart(2, "0")}m ${String(seconds).padStart(2, "0")}s`;
+  if (days > 0) {
+    return `${days}D ${hours}H`;
   }
 
-  return `${minutes}m ${String(seconds).padStart(2, "0")}s`;
+  if (hours > 0) {
+    return `${hours}H ${String(minutes).padStart(2, "0")}M ${String(seconds).padStart(2, "0")}S`;
+  }
+
+  return `${minutes}M ${String(seconds).padStart(2, "0")}S`;
 };
 
 const getZonedDate = (nowMs) => {
@@ -849,6 +1174,7 @@ const normalizeCartLine = (line, index = 0) => {
     rewardPizzaId: line?.rewardPizzaId ?? null,
     promoId: line?.promoId ?? null,
     promoItems: Array.isArray(line?.promoItems) ? line.promoItems : [],
+    directDiscount: line?.directDiscount || null,
   };
 };
 
@@ -859,12 +1185,35 @@ const isIncentiveRewardCartLine = (line) => {
   return source === "incentive_reward" || type === "INCENTIVE_REWARD";
 };
 
+const isCouponCartLine = (line) => {
+  const source = String(line?.source || "").trim();
+  const type = String(line?.type || "").trim();
+
+  return source === "coupon" || type === "COUPON";
+};
+
+const isCouponEligibleCartLine = (line) => {
+  const source = String(line?.source || "").trim();
+  const type = String(line?.type || "").trim();
+
+  if (isCouponCartLine(line)) return false;
+  if (isIncentiveRewardCartLine(line)) return false;
+  if (source === "queue_boost" || type === "queue_boost") return false;
+  if (source === "promo" || type === "PROMO") return false;
+  if (source === "offer" || type === "OFFER") return false;
+  if (source === "discount" || type === "DISCOUNT") return false;
+  if (line?.directDiscount) return false;
+
+  return num(line?.subtotal) > 0;
+};
+
 const isIncentiveEligibleCartLine = (line) => {
   const source = String(line?.source || "").trim();
   const type = String(line?.type || "").trim();
 
   if (NON_INCENTIVE_LINE_SOURCES.has(source)) return false;
   if (NON_INCENTIVE_LINE_TYPES.has(type)) return false;
+  if (line?.directDiscount) return false;
 
   return true;
 };
@@ -884,6 +1233,91 @@ function formatPromoDate(value) {
     month: "short",
   }).format(date);
 }
+
+const formatCouponBenefit = (coupon) => {
+  if (!coupon) return "Sin beneficio disponible";
+
+  if (coupon.kind === "AMOUNT") {
+    return `Descuento fijo (-EUR ${num(coupon.amount).toFixed(2)})`;
+  }
+
+  if (coupon.kind === "PERCENT") {
+    const percent = num(coupon.percent);
+    const cap = coupon.maxAmount != null ? ` (tope EUR ${num(coupon.maxAmount).toFixed(2)})` : "";
+    return `Descuento ${percent}%${cap}`;
+  }
+
+  return coupon.title || "Cupon";
+};
+
+const formatCouponExpiry = (value) => {
+  if (!value) return "Sin caducidad definida";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "Sin caducidad definida";
+
+  return new Intl.DateTimeFormat("es-ES", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  }).format(date);
+};
+
+const findPromoMenuItem = (promoItem, menu = []) => {
+  const itemId = Number(promoItem?.pizzaId ?? promoItem?.id ?? promoItem?.productId);
+  if (itemId) {
+    const byId = menu.find((item) => Number(item?.pizzaId) === itemId);
+    if (byId) return byId;
+  }
+
+  const itemName = normalizeSearchText(promoItem?.name);
+  if (!itemName) return null;
+
+  return menu.find((item) => normalizeSearchText(item?.name) === itemName) || null;
+};
+
+const getPromoOriginalTotal = (promo, menu = []) => {
+  const promoItems = Array.isArray(promo?.items) ? promo.items : [];
+
+  return roundMoney(
+    promoItems.reduce((sum, promoItem) => {
+      const menuItem = findPromoMenuItem(promoItem, menu);
+      const size = promoItem?.size || getDealSize(menuItem);
+      const qty = Math.max(1, Number(promoItem?.quantity || promoItem?.qty || 1));
+      const price =
+        priceForSize(menuItem?.originalPriceBySize, size) ||
+        priceForSize(menuItem?.priceBySize, size) ||
+        num(promoItem?.price || promoItem?.unitPrice || promoItem?.amount);
+
+      return sum + price * qty;
+    }, 0)
+  );
+};
+
+const getPromoDiscountPercent = (promo, menu = []) => {
+  const originalTotal = getPromoOriginalTotal(promo, menu);
+  const promoPrice = num(promo?.totalPrice);
+
+  if (originalTotal <= promoPrice || originalTotal <= 0 || promoPrice <= 0) return 0;
+  return Math.round(((originalTotal - promoPrice) / originalTotal) * 100);
+};
+
+const sortTopDealsByDiscount = (items = []) =>
+  items.slice().sort((left, right) => {
+    const leftSize = getDealSize(left);
+    const rightSize = getDealSize(right);
+    const byPercent =
+      getDiscountPercentForSize(right, rightSize) -
+      getDiscountPercentForSize(left, leftSize);
+    if (byPercent !== 0) return byPercent;
+
+    return (
+      getDiscountSavingForSize(right, rightSize) -
+      getDiscountSavingForSize(left, leftSize)
+    );
+  });
 
 function countryCodeToFlag(code) {
   const normalized = String(code || "").trim().toUpperCase();
@@ -936,6 +1370,10 @@ export default function StorePage() {
   const [search, setSearch] = useState("");
   const [couponCode, setCouponCode] = useState("");
   const [couponStatus, setCouponStatus] = useState("");
+  const [couponInfoOpen, setCouponInfoOpen] = useState(false);
+  const [couponInfoData, setCouponInfoData] = useState(null);
+  const [couponLoading, setCouponLoading] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const [activeTab, setActiveTab] = useState("");
   const [scheduleOpen, setScheduleOpen] = useState(false);
   const [scheduledAt, setScheduledAt] = useState(null);
@@ -959,8 +1397,6 @@ export default function StorePage() {
   const [cart, setCart] = useState([]);
   const [cartOpen, setCartOpen] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
-  const [checkoutName, setCheckoutName] = useState("");
-  const [checkoutPhone, setCheckoutPhone] = useState("");
   const [checkoutMessage, setCheckoutMessage] = useState("");
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [productModalOpen, setProductModalOpen] = useState(false);
@@ -1009,6 +1445,23 @@ export default function StorePage() {
   const [tick, setTick] = useState(false);
   const incentiveZeroRefreshRef = useRef(false);
   const dismissedRewardIncentiveIdsRef = useRef(new Set());
+
+  useEffect(() => {
+    try {
+      setTermsAccepted(window.localStorage.getItem(STOREFRONT_TERMS_KEY) === "accepted");
+    } catch {
+      setTermsAccepted(false);
+    }
+  }, []);
+
+  const acceptStorefrontTerms = useCallback(() => {
+    try {
+      window.localStorage.setItem(STOREFRONT_TERMS_KEY, "accepted");
+    } catch {
+      // Ignore storage failures; the current session can still continue.
+    }
+    setTermsAccepted(true);
+  }, []);
 
   useEffect(() => {
     setPortalReady(false);
@@ -1189,6 +1642,27 @@ export default function StorePage() {
     }
   }, [cartDraftStorageKey]);
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const paymentStatus = params.get("payment");
+
+    if (paymentStatus === "success") {
+      setCheckoutMessage("Pago recibido. Tu pedido ya entro en la cola de la pizzeria.");
+      setCheckoutOpen(true);
+      setCart([]);
+      try {
+        window.localStorage.removeItem(cartDraftStorageKey);
+      } catch {
+        // Ignore storage cleanup failures.
+      }
+    }
+
+    if (paymentStatus === "cancel") {
+      setCheckoutMessage("Pago cancelado. Puedes seguir comprando o intentarlo de nuevo.");
+      setCheckoutOpen(true);
+    }
+  }, [cartDraftStorageKey]);
+
   const themeStyle = useMemo(
     () => {
       const theme = buildBrandThemeVars({
@@ -1213,6 +1687,7 @@ export default function StorePage() {
         "--sf-theme-on-accent": theme.onAccent,
         "--sf-theme-on-surface": theme.onSurface,
         "--sf-font-family": theme.fontFamily,
+        "--sf-grid-watermark-logo": `url("${partner?.brandLogoUrl || gridWatermarkLogo}")`,
       };
     },
     [partner]
@@ -1254,7 +1729,7 @@ export default function StorePage() {
   }, [menu]);
 
   const topDeals = useMemo(
-    () => menu.filter((item) => item?.directDiscount),
+    () => sortTopDealsByDiscount(menu.filter((item) => item?.directDiscount)),
     [menu]
   );
 
@@ -1307,8 +1782,10 @@ export default function StorePage() {
 
   const filteredPromos = useMemo(() => {
     const query = search.trim().toLowerCase();
-    return filterPromos(promos, query);
-  }, [promos, search]);
+    return filterPromos(promos, query)
+      .slice()
+      .sort((left, right) => getPromoDiscountPercent(right, menu) - getPromoDiscountPercent(left, menu));
+  }, [menu, promos, search]);
 
   const filteredTopDeals = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -2252,7 +2729,6 @@ export default function StorePage() {
       // Ignore storage cleanup failures.
     }
     setProductModalOpen(false);
-    setCartOpen(true);
   };
 
   const decProductQty = () => {
@@ -2376,7 +2852,6 @@ export default function StorePage() {
       // Ignore storage cleanup failures.
     }
     setHalfModalOpen(false);
-    setCartOpen(true);
   };
 
   const updateCustomIngredient = (ingredient, updates) => {
@@ -2470,62 +2945,173 @@ export default function StorePage() {
       // Ignore storage cleanup failures.
     }
     setCustomModalOpen(false);
-    setCartOpen(true);
   };
 
   const cartCount = useMemo(
-    () => cart.reduce((sum, item) => sum + getCartLineQty(item), 0),
+    () => cart.filter((item) => !isCouponCartLine(item)).reduce((sum, item) => sum + getCartLineQty(item), 0),
     [cart]
   );
   const cartTotal = useMemo(
     () => cart.reduce((sum, item) => sum + getCartLinePayableTotal(item), 0),
     [cart]
   );
-  const validateCouponCode = (event) => {
+  const couponEligibleSubtotal = useMemo(
+    () => cart.filter(isCouponEligibleCartLine).reduce((sum, item) => sum + num(item.subtotal), 0),
+    [cart]
+  );
+  const couponDiscountTotal = useMemo(
+    () => cart.filter(isCouponCartLine).reduce((sum, item) => sum + Math.abs(num(item.subtotal)), 0),
+    [cart]
+  );
+  const removeCouponFromCart = useCallback(() => {
+    setCart((current) => current.filter((line) => !isCouponCartLine(line)));
+    setCouponCode("");
+    setCouponStatus("");
+    setCouponInfoData(null);
+  }, []);
+  const validateCouponCode = async (event) => {
     event.preventDefault();
 
     const code = couponCode.trim().toUpperCase();
     setCouponCode(code);
-    setCouponStatus(code ? "Cupon listo para validar" : "Escribe un cupon");
-  };
 
-  const confirmScheduledOrder = useCallback(async () => {
-    if (!scheduledAtIsValid) {
-      setCheckoutMessage("Selecciona una hora valida para programar el pedido.");
+    if (!code) {
+      const emptyData = {
+        valid: false,
+        status: "empty",
+        message: "Escribe un cupon para validarlo.",
+        coupon: null,
+        discount: 0,
+      };
+      setCouponStatus(emptyData.message);
+      setCouponInfoData(emptyData);
+      setCouponInfoOpen(true);
       return;
     }
 
-    const phone = normalizeRepeatPhoneInput(checkoutPhone);
-    if (!checkoutName.trim() || phone.length < 7) {
-      setCheckoutMessage("Introduce nombre y telefono para confirmar el pedido programado.");
+    try {
+      setCouponLoading(true);
+      setCouponStatus("Validando cupon...");
+      const data = await api.post("/api/coupons/validate", {
+        partnerId: Number(partner?.id || store?.partnerId),
+        storeId: Number(store?.id),
+        code,
+        subtotal: couponEligibleSubtotal,
+      });
+
+      setCouponInfoData(data);
+      setCouponInfoOpen(true);
+      setCouponStatus(data?.message || "Cupon revisado.");
+
+      if (data?.valid && num(data.discount) > 0 && data?.coupon?.code) {
+        const discount = Math.min(num(data.discount), couponEligibleSubtotal);
+        const line = {
+          cartLineId: `coupon-${data.coupon.code}`,
+          type: "COUPON",
+          source: "coupon",
+          couponId: data.coupon.id,
+          couponCode: data.coupon.code,
+          name: `Cupon ${data.coupon.code}`,
+          category: "Descuento",
+          size: data.coupon.title || "Oferta",
+          qty: 1,
+          price: -discount,
+          subtotal: -discount,
+          discount,
+          coupon: data.coupon,
+        };
+
+        setCart((current) => [
+          ...current.filter((item) => !isCouponCartLine(item)),
+          line,
+        ]);
+        setCartOpen(true);
+      } else {
+        setCart((current) => current.filter((item) => !isCouponCartLine(item)));
+      }
+    } catch (err) {
+      console.error(err);
+      const errorData = {
+        valid: false,
+        status: "error",
+        message: "No pudimos validar el cupon ahora.",
+        coupon: null,
+        discount: 0,
+      };
+      setCouponStatus(errorData.message);
+      setCouponInfoData(errorData);
+      setCouponInfoOpen(true);
+    } finally {
+      setCouponLoading(false);
+    }
+  };
+
+  const startStripeCheckout = useCallback(async () => {
+    if (!cartCount || cartTotal <= 0) {
+      setCheckoutMessage("Agrega productos al carrito antes de pagar.");
       return;
     }
 
     try {
       setCheckoutLoading(true);
       setCheckoutMessage("");
-      await api.post("/api/scheduled-orders/confirm", {
+      const serviceMode = String(location.state?.serviceMode || "pickup").toLowerCase();
+      const deliveryResolution = location.state?.deliveryResolution || {};
+      const deliveryMethod = serviceMode === "delivery" ? "COURIER" : "PICKUP";
+      const deliveryCoords = deliveryResolution?.coords || {};
+      const checkoutResponse = await api.post("/api/checkout/session", {
         partnerId: Number(partner?.id || store?.partnerId),
         storeId: Number(store?.id),
-        customerName: checkoutName.trim(),
-        customerPhone: phone,
-        scheduledFor: scheduledAt.toISOString(),
+        cart,
         total: cartTotal,
         currency: partner?.currency || "EUR",
+        scheduledFor: scheduledAtIsValid ? scheduledAt.toISOString() : null,
+        delivery: {
+          method: deliveryMethod,
+          address:
+            serviceMode === "delivery"
+              ? location.state?.deliveryAddress || deliveryResolution?.formattedAddress || ""
+              : "",
+          lat: deliveryCoords?.lat,
+          lng: deliveryCoords?.lng,
+        },
+        frontendOrigin: window.location.origin,
+        returnPath: window.location.pathname,
       });
+      const checkoutData = checkoutResponse?.data || checkoutResponse || {};
+      const checkoutUrl =
+        checkoutData?.url ||
+        checkoutData?.session?.url ||
+        checkoutData?.checkout?.url ||
+        checkoutData?.data?.url;
 
-      setCheckoutMessage("Pedido programado confirmado por SMS.");
-      setCheckoutOpen(false);
+      if (checkoutUrl) {
+        window.location.assign(checkoutUrl);
+        return;
+      }
+
+      console.warn("[StorePage] checkout session without url", checkoutData);
+      setCheckoutMessage("Stripe no devolvio una URL de pago. Intentalo de nuevo.");
     } catch (err) {
       console.error(err);
-      setCheckoutMessage("No pudimos enviar la confirmacion del pedido programado.");
+      const errorCode = err.response?.data?.error;
+      const messages = {
+        stripe_not_configured: "Stripe no esta configurado para esta tienda.",
+        coupon_not_available: "El cupon ya no esta disponible. Quitalo y valida de nuevo.",
+        coupon_not_applicable: "El cupon ya no aplica a este carrito.",
+        amount_too_low: "El importe es demasiado bajo para procesar el pago.",
+        stripe_session_url_missing: "Stripe creo la sesion sin URL de pago. Intentalo de nuevo.",
+        checkout_failed: "Stripe no pudo crear la sesion de pago.",
+      };
+      setCheckoutMessage(messages[errorCode] || "No pudimos iniciar el pago.");
     } finally {
       setCheckoutLoading(false);
     }
   }, [
+    cart,
+    cartCount,
     cartTotal,
-    checkoutName,
-    checkoutPhone,
+    location.state,
     partner?.currency,
     partner?.id,
     scheduledAt,
@@ -2534,11 +3120,14 @@ export default function StorePage() {
     store?.partnerId,
   ]);
   const cartProductSubtotal = useMemo(
-    () =>
-      cart
+    () => {
+      const eligibleGross = cart
         .filter(isIncentiveEligibleCartLine)
-        .reduce((sum, item) => sum + num(item.subtotal), 0),
-    [cart]
+        .reduce((sum, item) => sum + num(item.subtotal), 0);
+
+      return Math.max(0, roundMoney(eligibleGross - couponDiscountTotal));
+    },
+    [cart, couponDiscountTotal]
   );
   const cartHasBoost = useMemo(
     () => cart.some((line) => line?.source === "queue_boost"),
@@ -2851,7 +3440,6 @@ export default function StorePage() {
     }
     setRepeatMessage("Pedido repetido y anadido al carrito.");
     setRepeatOpen(false);
-    setCartOpen(true);
   };
 
   const addPromoLine = (promo) => {
@@ -2892,7 +3480,6 @@ export default function StorePage() {
     } catch {
       // Ignore storage cleanup failures.
     }
-    setCartOpen(true);
   };
 
   const activateBoots = () => {
@@ -2933,7 +3520,32 @@ export default function StorePage() {
     }
     setBootsMessage("Boost anadido al carrito. Se cobrara al finalizar la compra.");
     setBootsOpen(false);
-    setCartOpen(true);
+  };
+
+  const renderProductOfferOverlay = (item, baseSize, countdownOverride = null) => {
+    const countdownLabel =
+      countdownOverride?.label ||
+      (item?.directDiscount ? formatOfferCountdown(item.directDiscount, incentiveNowMs) : "");
+    const countdownPrefix =
+      countdownOverride?.prefix || (countdownLabel ? "Termina en:" : "");
+
+    return (
+      <div className={`lsf-card__overlay ${countdownLabel ? "lsf-card__overlay--withCountdown" : ""}`}>
+        <div className="lsf-card__ticker">
+          <div className={`lsf-card__name ${tick ? "is-ticking" : ""}`}>
+            {item.name}
+          </div>
+        </div>
+        <div className={`lsf-card__price ${tick ? "is-ticking" : ""}`}>
+          {renderStorefrontPrice(item, baseSize)}
+        </div>
+        {countdownLabel && (
+          <span className="lsf-offerCountdownInline">
+            {countdownPrefix} {countdownLabel}
+          </span>
+        )}
+      </div>
+    );
   };
 
   const renderProductCard = (item) => {
@@ -2967,7 +3579,7 @@ export default function StorePage() {
                 </div>
               )}
             </div>
-            {renderDirectDiscountBadge(item)}
+            {renderDirectDiscountBadge(item, incentiveNowMs)}
 
             <button
               type="button"
@@ -2978,19 +3590,10 @@ export default function StorePage() {
               }}
               aria-label={`Comprar ${item.name}`}
             >
-              Comprar
+              <CartPlusIcon />
             </button>
 
-            <div className="lsf-card__overlay">
-              <div className="lsf-card__ticker">
-                <div className={`lsf-card__name ${tick ? "is-ticking" : ""}`}>
-                  {item.name}
-                </div>
-              </div>
-              <div className={`lsf-card__price ${tick ? "is-ticking" : ""}`}>
-                {renderStorefrontPrice(item, baseSize)}
-              </div>
-            </div>
+            {renderProductOfferOverlay(item, baseSize)}
           </div>
 
           <div className="lsf-flip__back">
@@ -3010,6 +3613,7 @@ export default function StorePage() {
     const image = item.image || "";
     const baseSize = getDealSize(item);
     const discountSticker = getTopDealStickerLabel(item, baseSize);
+    const countdownLabel = formatOfferCountdown(item.directDiscount, incentiveNowMs);
     const { line, closer } = buildPizzaLine(item);
 
     return (
@@ -3051,16 +3655,19 @@ export default function StorePage() {
                 }}
                 aria-label={`Comprar ${item.name}`}
               >
-                Comprar
+                <CartPlusIcon />
               </button>
 
-              <div className="lsf-card__overlay lsf-card__overlay--deal">
+              <div className="lsf-card__overlay lsf-card__overlay--deal lsf-card__overlay--withCountdown">
                 <div className="lsf-card__ticker">
                   <div className={`lsf-card__name ${tick ? "is-ticking" : ""}`}>
                     {item.name}
                   </div>
                 </div>
                 {renderTopDealPrice(item, baseSize, tick)}
+                <span className="lsf-offerCountdownInline">
+                  Termina en: {countdownLabel}
+                </span>
               </div>
             </div>
 
@@ -3398,6 +4005,8 @@ export default function StorePage() {
                       const promoFlipId = `promo-${promo.id}`;
                       const flipped = flippedId === promoFlipId;
                       const promoItems = Array.isArray(promo.items) ? promo.items : [];
+                      const promoDiscountPercent = getPromoDiscountPercent(promo, menu);
+                      const promoCountdown = formatOfferCountdown(promo, incentiveNowMs);
 
                       return (
                         <div
@@ -3423,6 +4032,12 @@ export default function StorePage() {
                               </div>
 
                               <span className="lsf-promoBadge">Promo</span>
+                              {promoDiscountPercent > 0 && (
+                                <span className="lsf-topDealDiscountSticker lsf-promoDiscountSticker">
+                                  <strong>-{promoDiscountPercent}%</strong>
+                                  <small>off</small>
+                                </span>
+                              )}
 
                               <button
                                 type="button"
@@ -3433,18 +4048,19 @@ export default function StorePage() {
                                 }}
                                 aria-label={`Elegir promo ${promo.title}`}
                               >
-                                Elegir
+                                <CartPlusIcon />
                               </button>
 
-                              <div className="lsf-card__overlay">
+                              <div className="lsf-card__overlay lsf-card__overlay--withCountdown">
                                 <div className="lsf-card__ticker">
                                   <div className={`lsf-card__name ${tick ? "is-ticking" : ""}`}>
                                     {promo.title}
                                   </div>
                                 </div>
-                                <div className={`lsf-card__price ${tick ? "is-ticking" : ""}`}>
-                                  EUR {Number(promo.totalPrice || 0).toFixed(2)}
-                                </div>
+                                {renderPromoPrice(promo, menu, tick)}
+                                <span className="lsf-offerCountdownInline">
+                                  Termina en: {promoCountdown}
+                                </span>
                               </div>
                             </div>
 
@@ -3532,7 +4148,7 @@ export default function StorePage() {
                                   )}
                                 </div>
 
-                                {renderDirectDiscountBadge(item)}
+                                {renderDirectDiscountBadge(item, incentiveNowMs)}
 
                                 <div className="lsf-trendingRank">
                                   <span>#{rank}</span>
@@ -3548,19 +4164,10 @@ export default function StorePage() {
                                   }}
                                   aria-label={`Comprar ${item.name}`}
                                 >
-                                  Comprar
+                                  <CartPlusIcon />
                                 </button>
 
-                                <div className="lsf-card__overlay">
-                                  <div className="lsf-card__ticker">
-                                    <div className={`lsf-card__name ${tick ? "is-ticking" : ""}`}>
-                                      {item.name}
-                                    </div>
-                                  </div>
-                                  <div className={`lsf-card__price ${tick ? "is-ticking" : ""}`}>
-                                    {renderStorefrontPrice(item, baseSize)}
-                                  </div>
-                                </div>
+                                {renderProductOfferOverlay(item, baseSize)}
                               </div>
 
                               <div className="lsf-flip__back">
@@ -3639,10 +4246,7 @@ export default function StorePage() {
                               </div>
 
                               <span className="lsf-upcomingBadge">Proximo</span>
-                              {renderDirectDiscountBadge(item)}
-                              <span className="lsf-upcomingCountdown">
-                                {formatLaunchCountdown(item.launchAt, now)}
-                              </span>
+                              {renderDirectDiscountBadge(item, incentiveNowMs)}
 
                               <button
                                 type="button"
@@ -3651,19 +4255,13 @@ export default function StorePage() {
                                 disabled
                                 aria-label={`${item.name} aun no disponible`}
                               >
-                                Soon
+                                <CartPlusIcon />
                               </button>
 
-                              <div className="lsf-card__overlay">
-                                <div className="lsf-card__ticker">
-                                  <div className={`lsf-card__name ${tick ? "is-ticking" : ""}`}>
-                                    {item.name}
-                                  </div>
-                                </div>
-                                <div className={`lsf-card__price ${tick ? "is-ticking" : ""}`}>
-                                  {renderStorefrontPrice(item, baseSize)}
-                                </div>
-                              </div>
+                              {renderProductOfferOverlay(item, baseSize, {
+                                prefix: "Comienza en:",
+                                label: formatLaunchCountdown(item.launchAt, now),
+                              })}
                             </div>
 
                             <div className="lsf-flip__back">
@@ -3721,7 +4319,7 @@ export default function StorePage() {
                                 </div>
                               )}
                             </div>
-                            {renderDirectDiscountBadge(item)}
+                            {renderDirectDiscountBadge(item, incentiveNowMs)}
 
                             <button
                               type="button"
@@ -3732,19 +4330,10 @@ export default function StorePage() {
                               }}
                               aria-label={`Comprar ${item.name}`}
                             >
-                              Comprar
+                              <CartPlusIcon />
                             </button>
 
-                            <div className="lsf-card__overlay">
-                              <div className="lsf-card__ticker">
-                                <div className={`lsf-card__name ${tick ? "is-ticking" : ""}`}>
-                                  {item.name}
-                                </div>
-                              </div>
-                              <div className={`lsf-card__price ${tick ? "is-ticking" : ""}`}>
-                                {renderStorefrontPrice(item, baseSize)}
-                              </div>
-                            </div>
+                            {renderProductOfferOverlay(item, baseSize)}
                           </div>
 
                           <div className="lsf-flip__back">
@@ -3808,8 +4397,8 @@ export default function StorePage() {
               }}
               placeholder="Codigo cupon"
             />
-            <button type="submit" disabled={!couponCode.trim()}>
-              Validar
+            <button type="submit" disabled={couponLoading}>
+              {couponLoading ? "..." : "Validar"}
             </button>
             {couponStatus && <small>{couponStatus}</small>}
           </form>
@@ -4040,6 +4629,8 @@ export default function StorePage() {
                             {" -> "}
                             #{line.boost?.targetPosition || line.size}
                           </span>
+                        ) : isCouponCartLine(line) ? (
+                          <span>{line.size || "Descuento aplicado al carrito"}</span>
                         ) : isIncentiveRewardCartLine(line) ? null : line.type === "PROMO" ? (
                           <span>
                             {Array.isArray(line.promoItems) && line.promoItems.length
@@ -4085,6 +4676,8 @@ export default function StorePage() {
                         <strong>
                           {isIncentiveRewardCartLine(line)
                             ? `Ahorras EUR ${Math.abs(num(line.subtotal)).toFixed(2)}`
+                            : isCouponCartLine(line)
+                            ? `-EUR ${Math.abs(num(line.subtotal)).toFixed(2)}`
                             : `EUR ${num(line.subtotal).toFixed(2)}`}
                         </strong>
                         <button
@@ -4113,8 +4706,14 @@ export default function StorePage() {
                 <div className="sf-cartFoot">
                   <div className="sf-cartFootLine">
                     <span>Subtotal</span>
-                    <strong>EUR {cartTotal.toFixed(2)}</strong>
+                    <strong>EUR {(cartTotal + couponDiscountTotal).toFixed(2)}</strong>
                   </div>
+                  {couponDiscountTotal > 0 && (
+                    <div className="sf-cartFootLine">
+                      <span>Cupon</span>
+                      <strong>-EUR {couponDiscountTotal.toFixed(2)}</strong>
+                    </div>
+                  )}
                   <div className="sf-cartFootLine sf-cartFootLine--total">
                     <span>Total</span>
                     <strong>EUR {cartTotal.toFixed(2)}</strong>
@@ -4148,12 +4747,12 @@ export default function StorePage() {
       {checkoutOpen && (
         <div className="sf-modalOverlay" onClick={() => setCheckoutOpen(false)}>
           <div
-            className="sf-modalCard sf-checkoutModal"
+            className="sf-modalCard sf-checkoutModal sf-payNowModal"
             onClick={(event) => event.stopPropagation()}
           >
             <div className="sf-cartModalHead">
               <div>
-                <span>Pago</span>
+                <span>Pay now</span>
                 <h3>EUR {cartTotal.toFixed(2)}</h3>
               </div>
               <button
@@ -4166,43 +4765,12 @@ export default function StorePage() {
               </button>
             </div>
 
-            <div className="sf-checkoutSummary">
-              <span>Pedido listo para pagar</span>
-              <strong>{cartCount} producto{cartCount === 1 ? "" : "s"}</strong>
-              <p>Total EUR {cartTotal.toFixed(2)}</p>
-              {scheduledOrderLabel && <p>Entrega programada: {scheduledOrderLabel}</p>}
-            </div>
-
-            {scheduledOrderLabel && (
-              <div className="sf-checkoutCustomer">
-                <label>
-                  <span>Nombre</span>
-                  <input
-                    value={checkoutName}
-                    onChange={(event) => {
-                      setCheckoutName(event.target.value);
-                      setCheckoutMessage("");
-                    }}
-                    placeholder="Tu nombre"
-                  />
-                </label>
-                <label>
-                  <span>Telefono</span>
-                  <input
-                    value={checkoutPhone}
-                    onChange={(event) => {
-                      setCheckoutPhone(event.target.value);
-                      setCheckoutMessage("");
-                    }}
-                    placeholder="Telefono"
-                    inputMode="tel"
-                  />
-                </label>
-              </div>
-            )}
-
             {checkoutMessage && (
-              <div className={`sf-reservationMessage ${checkoutMessage.includes("confirmado") ? "is-success" : ""}`}>
+              <div className={`sf-reservationMessage ${
+                checkoutMessage.includes("confirmado") || checkoutMessage.includes("Pago recibido")
+                  ? "is-success"
+                  : ""
+              }`}>
                 {checkoutMessage}
               </div>
             )}
@@ -4211,23 +4779,18 @@ export default function StorePage() {
               <button
                 type="button"
                 className="sf-secondaryBtn"
-                onClick={() => {
-                  setCheckoutOpen(false);
-                  setCartOpen(true);
-                }}
+                onClick={() => setCheckoutOpen(false)}
               >
-                Volver al carrito
+                Seguir comprando
               </button>
               <button
                 type="button"
                 className="sf-primaryBtn"
-                onClick={scheduledOrderLabel ? confirmScheduledOrder : undefined}
+                onClick={startStripeCheckout}
                 disabled={checkoutLoading}
               >
                 {checkoutLoading
-                  ? "Confirmando..."
-                  : scheduledOrderLabel
-                  ? "Confirmar programacion"
+                  ? "Abriendo Stripe..."
                   : "Pagar ahora"}
               </button>
             </div>
@@ -5321,6 +5884,22 @@ export default function StorePage() {
           </div>
         </div>
       )}
+
+      <CouponInfoModal
+        open={couponInfoOpen}
+        data={couponInfoData}
+        onClose={() => setCouponInfoOpen(false)}
+        onRemove={() => {
+          removeCouponFromCart();
+          setCouponInfoOpen(false);
+        }}
+      />
+
+      <StorefrontTermsGateModal
+        open={portalReady && !termsAccepted}
+        partnerName={partner?.name || store?.partnerName || store?.storeName}
+        onAccept={acceptStorefrontTerms}
+      />
     </div>
   );
 }

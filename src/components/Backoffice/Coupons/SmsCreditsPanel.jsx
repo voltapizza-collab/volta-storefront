@@ -97,7 +97,7 @@ export default function SmsCreditsPanel({ partnerId }) {
         <div className="cp-kicker">Mensajes</div>
         <h3>{loading ? "Cargando saldo..." : `${formatNumber(balance?.smsCredits)} disponibles`}</h3>
         <p>
-          {formatNumber(balance?.smsConsumed)} usados · {formatNumber(balance?.smsRecharged)} recargados
+          {formatNumber(balance?.smsConsumed)} usados - {formatNumber(balance?.smsRecharged)} recargados
         </p>
       </div>
 

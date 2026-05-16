@@ -393,6 +393,9 @@ export default function PartnerOrderPage() {
                     orderTrail: "store",
                     partnerName: partner.name,
                     storeName: selectedStore?.storeName || selectedStoreSlug,
+                    serviceMode,
+                    deliveryAddress: deliveryAddress.trim(),
+                    deliveryResolution,
                   },
                 })
               }

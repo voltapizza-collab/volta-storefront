@@ -21,12 +21,12 @@ import api from "../setupAxios";
 
 export default function Backoffice() {
   const initialSmsPaymentStatus = new URLSearchParams(window.location.search).get("sms_payment");
-  const [activeModule, setActiveModule] = useState(initialSmsPaymentStatus ? "offers" : "inventory");
-  const [activeModuleGroup, setActiveModuleGroup] = useState(initialSmsPaymentStatus ? "offers" : "inventory");
+  const [activeModule, setActiveModule] = useState(initialSmsPaymentStatus ? "customersCommunications" : "inventory");
+  const [activeModuleGroup, setActiveModuleGroup] = useState(initialSmsPaymentStatus ? "customers" : "inventory");
   const [expandedModules, setExpandedModules] = useState({
     pizzaCreator: false,
-    customers: false,
-    offers: Boolean(initialSmsPaymentStatus),
+    customers: Boolean(initialSmsPaymentStatus),
+    offers: false,
     myorders: false,
     finance: false,
     settings: false,
@@ -478,7 +478,7 @@ export default function Backoffice() {
                       }}
                       type="button"
                     >
-                      Descuentos directos
+                      Top Deals
                     </button>
                     <button
                       className={`bo-subbtn ${isOffersIncentivesActive ? "active" : ""}`}

@@ -818,7 +818,7 @@
 }
 
 .sf-offersBtn:hover {
-  transform: translateY(-1px);
+  transform: translateY(-4px);
 }
 
 .sf-offersBtn.is-sunset {
@@ -1826,7 +1826,7 @@
 }
 
 .sf-engineBottomBtn:hover:not(:disabled) {
-  transform: translateY(-1px);
+  transform: translateY(-4px);
   box-shadow:
     inset 0 0 0 1px rgba(255, 255, 255, 0.55),
     0 10px 18px rgba(17, 17, 17, 0.18);
@@ -1929,11 +1929,14 @@
 }
 
 .sf-engineBottomBtn--reservation:hover:not(:disabled) {
+  transform: translateY(-4px);
+  filter: saturate(1.12);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.38),
-    inset 0 -5px 0 rgba(27, 8, 62, 0.3),
-    0 8px 0 #240051,
-    0 16px 26px rgba(255, 47, 167, 0.24);
+    inset 0 -5px 0 rgba(27, 8, 62, 0.28),
+    0 10px 0 #240051,
+    0 19px 30px rgba(255, 47, 167, 0.27),
+    0 0 18px rgba(255, 182, 28, 0.2);
 }
 
 @keyframes sfFooterCallPulse {
@@ -2404,7 +2407,7 @@
 }
 
 .sf-engineBottomBtn:hover:not(:disabled) {
-  transform: translateY(-1px);
+  transform: translateY(-4px);
   filter: saturate(1.12);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.42),
@@ -2511,6 +2514,15 @@
     inset 0 -5px 0 rgba(25, 0, 62, 0.36),
     0 7px 0 color-mix(in srgb, var(--brand-1) 82%, #000),
     0 13px 22px rgba(106, 61, 240, 0.28);
+}
+
+.sf-engineBottomBtn--reservation:hover:not(:disabled) {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.38),
+    inset 0 -5px 0 rgba(25, 0, 62, 0.3),
+    0 9px 0 color-mix(in srgb, var(--brand-1) 82%, #000),
+    0 17px 28px rgba(106, 61, 240, 0.34),
+    0 0 18px rgba(106, 61, 240, 0.22);
 }
 
 .sf-engineBottomBtn--pay {
@@ -2704,6 +2716,17 @@
     inset 0 -3px 0 rgba(59, 0, 139, 0.1),
     0 7px 0 color-mix(in srgb, var(--brand-1, #3b008b) 82%, #000000),
     0 14px 24px rgba(106, 61, 240, 0.24);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+}
+
+.sf-couponDock:hover {
+  transform: translateY(-4px);
+  filter: saturate(1.08);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.86),
+    inset 0 -3px 0 rgba(59, 0, 139, 0.08),
+    0 9px 0 color-mix(in srgb, var(--brand-1, #3b008b) 82%, #000000),
+    0 18px 28px rgba(106, 61, 240, 0.26);
 }
 
 .sf-couponDockIcon {
@@ -2733,6 +2756,12 @@
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.24),
     0 6px 12px rgba(59, 0, 139, 0.18);
+  transition: transform 0.18s ease, filter 0.18s ease;
+}
+
+.sf-couponDock button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: saturate(1.12);
 }
 
 .sf-couponDock button:disabled {
@@ -2751,6 +2780,170 @@
   font-weight: 850;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.sf-couponInfoModal {
+  width: min(560px, calc(100vw - 28px));
+}
+
+.sf-couponInfoBody {
+  display: grid;
+  gap: 10px;
+  color: #171717;
+}
+
+.sf-couponInfoBody p {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+.sf-couponInfoBody code {
+  padding: 2px 5px;
+  border-radius: 6px;
+  background: #f2f2f6;
+  font-weight: 900;
+}
+
+.sf-couponInfoBody h4 {
+  margin: 6px 0 0;
+  font-size: 0.9rem;
+}
+
+.sf-couponInfoBody ul {
+  margin: 0;
+  padding-left: 20px;
+  font-size: 0.88rem;
+  line-height: 1.25;
+}
+
+.sf-couponInfoStatus {
+  display: grid;
+  gap: 4px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: #fff1f5;
+  color: #9f0038;
+  border: 1px solid rgba(244, 0, 70, 0.16);
+}
+
+.sf-couponInfoStatus.is-valid {
+  background: #effff2;
+  color: #08751b;
+  border-color: rgba(8, 117, 27, 0.18);
+}
+
+.sf-couponInfoStatus strong {
+  font-size: 0.94rem;
+}
+
+.sf-couponInfoStatus span {
+  font-size: 0.76rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.sf-couponTimer {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  padding: 12px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #ff2f7d, #ff0062);
+  color: #ffffff;
+  box-shadow: 0 12px 22px rgba(244, 0, 70, 0.22);
+}
+
+.sf-couponTimer--warning {
+  background: linear-gradient(135deg, #ffb61c, #ff5f00);
+}
+
+.sf-couponTimer--critical {
+  background: linear-gradient(135deg, #e00022, #7a0014);
+}
+
+.sf-couponTimer span {
+  font-size: 0.68rem;
+  font-weight: 1000;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.sf-couponTimer strong {
+  font-size: 1.65rem;
+  font-weight: 1000;
+  line-height: 1;
+}
+
+.sf-couponInfoActions {
+  margin-top: 14px;
+}
+
+.sf-termsGateOverlay {
+  z-index: 90;
+  align-items: center;
+  background:
+    radial-gradient(circle at 18% 14%, rgba(255, 182, 28, 0.2), transparent 30%),
+    radial-gradient(circle at 82% 78%, rgba(106, 61, 240, 0.22), transparent 34%),
+    rgba(12, 7, 20, 0.72);
+  backdrop-filter: blur(10px);
+}
+
+.sf-termsGateModal {
+  width: min(640px, calc(100vw - 28px));
+  max-height: min(760px, calc(100vh - 40px));
+}
+
+.sf-termsGateBody {
+  display: grid;
+  gap: 12px;
+  max-height: min(520px, 58vh);
+  overflow: auto;
+  padding-right: 4px;
+  color: #171717;
+}
+
+.sf-termsGateBody p {
+  margin: 0;
+  color: rgba(23, 23, 23, 0.78);
+  font-size: 0.92rem;
+  line-height: 1.42;
+}
+
+.sf-termsGateBody .sf-termsGateNote {
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(255, 182, 28, 0.16);
+  color: #240051;
+  font-weight: 850;
+}
+
+.sf-termsGateBody h4 {
+  margin: 4px 0 0;
+  color: #240051;
+  font-size: 0.94rem;
+  font-weight: 1000;
+}
+
+.sf-termsGateBody ul {
+  margin: 0;
+  padding-left: 19px;
+  font-size: 0.88rem;
+  line-height: 1.3;
+}
+
+.sf-termsGateBody li + li {
+  margin-top: 4px;
+}
+
+.sf-termsGateActions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+.sf-termsGateActions .sf-primaryBtn {
+  min-width: 190px;
 }
 
 .sf-footerStatus--boots {
@@ -2775,6 +2968,17 @@
     0 15px 26px rgba(255, 182, 28, 0.28),
     0 0 24px rgba(106, 61, 240, 0.22);
   cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+}
+
+.sf-footerStatus--boots:hover:not(:disabled) {
+  transform: translateY(-4px);
+  filter: saturate(1.1);
+  box-shadow:
+    inset 0 0 0 2px rgba(255, 255, 255, 0.46),
+    0 10px 0 var(--brand-1),
+    0 19px 30px rgba(255, 182, 28, 0.31),
+    0 0 26px rgba(106, 61, 240, 0.26);
 }
 
 .sf-footerStatus--boots::after {
@@ -3956,6 +4160,24 @@
 
 .sf-checkoutModal {
   width: min(520px, 100%);
+}
+
+.sf-payNowModal {
+  width: min(430px, 100%);
+}
+
+.sf-payNowModal .sf-cartModalHead {
+  padding-bottom: 12px;
+}
+
+.sf-payNowModal .sf-cartActions {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.sf-payNowModal .sf-primaryBtn,
+.sf-payNowModal .sf-secondaryBtn {
+  min-height: 52px;
+  font-weight: 950;
 }
 
 .sf-checkoutSummary {
@@ -5807,7 +6029,7 @@
   cursor: pointer;
   overflow: visible;
   box-shadow: none;
-  transform: none;
+  transform: translateY(-2px);
   transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
 }
 
@@ -5830,7 +6052,7 @@
 }
 
 .sf-repeatOrderBtn:hover {
-  transform: translateY(-2px);
+  transform: translateY(-4px);
   filter: saturate(1.18) contrast(1.04);
   box-shadow: none;
 }
@@ -5936,6 +6158,9 @@
 }
 
 .sf-engineGridStage--lsf {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   min-height: 420px;
   border-radius: 22px;
   background:
@@ -5943,6 +6168,24 @@
     #ffffff;
   padding: 18px 26px 22px;
   box-shadow: none;
+}
+
+.sf-engineGridStage--lsf::before {
+  content: "";
+  position: absolute;
+  inset: 24px 42px;
+  z-index: 0;
+  pointer-events: none;
+  background: rgba(17, 17, 17, 0.055);
+  opacity: 0.9;
+  transform: rotate(-2deg);
+  mask: var(--sf-grid-watermark-logo) center / min(68%, 560px) no-repeat;
+  -webkit-mask: var(--sf-grid-watermark-logo) center / min(68%, 560px) no-repeat;
+}
+
+.sf-engineGridStage--lsf > * {
+  position: relative;
+  z-index: 1;
 }
 
 .lsf-wrapper {
@@ -6051,7 +6294,7 @@
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.52),
     0 8px 18px rgba(59, 0, 139, 0.08);
-  transform: none;
+  transform: translateY(-2px);
   transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
 }
 
@@ -6060,7 +6303,7 @@
 }
 
 .lsf-cartbtn:hover {
-  transform: translateY(-1px);
+  transform: translateY(-4px);
   filter: saturate(1.12);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.58),
@@ -6361,6 +6604,13 @@
   font-size: 0.88rem;
   font-weight: 900;
   cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+}
+
+.lsf-buildmode:hover {
+  transform: translateY(-4px);
+  filter: saturate(1.08);
+  box-shadow: 0 9px 16px rgba(249, 38, 114, 0.16);
 }
 
 .lsf-buildmode.is-active {
@@ -6548,7 +6798,7 @@
 .lsf-flip__inner {
   position: relative;
   width: 100%;
-  height: 222px;
+  height: 252px;
   transform-style: preserve-3d;
   transition: transform 0.45s;
 }
@@ -6567,16 +6817,16 @@
 
 .lsf-flip__front {
   display: grid;
-  grid-template-rows: minmax(0, 166px) auto;
-  gap: 7px;
-  padding: 10px;
+  grid-template-rows: minmax(0, 154px) auto;
+  gap: 20px;
+  padding: 10px 10px 14px;
   background: transparent;
   transition: opacity 0.25s ease;
 }
 
 .lsf-card__image {
   width: 100%;
-  height: 166px;
+  height: 154px;
   aspect-ratio: 1 / 1;
   overflow: hidden;
   position: relative;
@@ -6675,6 +6925,14 @@
   text-overflow: ellipsis;
   transform: rotate(-4deg);
   box-shadow: 0 8px 14px rgba(17, 17, 17, 0.16);
+}
+
+.lsf-directDiscountBadge strong {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: inherit;
 }
 
 .lsf-trendingPanel {
@@ -6788,7 +7046,7 @@
 .lsf-topDealBadge {
   position: absolute;
   left: 10px;
-  bottom: 44px;
+  bottom: 86px;
   z-index: 5;
   display: inline-flex;
   align-items: center;
@@ -6841,6 +7099,41 @@
   letter-spacing: 0.08em;
 }
 
+.lsf-offerCountdown {
+  position: absolute;
+  z-index: 6;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 24px;
+  max-width: calc(100% - 82px);
+  padding: 0 9px;
+  border-radius: 999px;
+  background: rgba(17, 17, 17, 0.9);
+  color: #ffffff;
+  font-size: 0.58rem;
+  font-weight: 1000;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-shadow: 0 8px 16px rgba(17, 17, 17, 0.2);
+}
+
+.lsf-offerCountdown--deal {
+  right: 10px;
+  bottom: 44px;
+}
+
+.lsf-offerCountdown--promo {
+  right: 10px;
+  bottom: 44px;
+  background: linear-gradient(135deg, #111111, #3b008b);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+}
+
 .lsf-card--upcoming {
   background:
     radial-gradient(circle at 18% 8%, rgba(255, 255, 255, 0.92), transparent 34%),
@@ -6884,10 +7177,32 @@
 
 .lsf-upcomingCountdown {
   right: 10px;
-  bottom: 48px;
+  bottom: 42px;
+  display: inline-grid;
+  justify-items: end;
+  gap: 2px;
+  min-height: 34px;
+  padding: 5px 9px;
   background: #111;
   color: #fff;
   border: 1px solid rgba(255, 255, 255, 0.24);
+}
+
+.lsf-upcomingCountdown span,
+.lsf-upcomingCountdown b {
+  max-width: 100%;
+  overflow: hidden;
+  line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lsf-upcomingCountdown span {
+  font-size: 0.52rem;
+}
+
+.lsf-upcomingCountdown b {
+  font-size: 0.78rem;
 }
 
 .lsf-card__addbtn--disabled {
@@ -6923,6 +7238,14 @@
   letter-spacing: 0.04em;
 }
 
+.lsf-promoDiscountSticker {
+  top: 42px;
+  left: 10px;
+  min-width: 44px;
+  min-height: 38px;
+  background: linear-gradient(135deg, #3b008b 0%, #f92672 100%);
+}
+
 .lsf-promoFlipDesc {
   gap: 8px;
 }
@@ -6949,35 +7272,46 @@
   top: 10px;
   right: 10px;
   z-index: 5;
-  width: 50px;
-  height: 25px;
-  border: none;
-  border-radius: 20%;
+  width: 38px;
+  height: 38px;
+  border: 2px solid #111;
+  border-radius: 999px;
   display: grid;
   place-items: center;
-  background: #f92672;
-  color: #ffffff;
-  font-size: 9px;
-  font-weight: 900;
+  background: rgba(255, 255, 255, 0.96);
+  color: #111;
   line-height: 1;
   cursor: pointer;
   transform: translateZ(1px);
   box-shadow:
-    0 6px 16px rgba(0, 0, 0, 0.25),
-    0 2px 6px rgba(0, 0, 0, 0.2);
+    0 8px 16px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  transition: transform 0.16s ease, box-shadow 0.16s ease, filter 0.16s ease;
 }
 
 .lsf-card--trending .lsf-card__addbtn {
   top: 9px;
   right: 9px;
-  width: 46px;
-  height: 23px;
-  border-radius: 8px;
-  box-shadow: 0 5px 10px rgba(17, 17, 17, 0.16);
+  width: 36px;
+  height: 36px;
+}
+
+.lsf-card__addbtn:hover:not(:disabled) {
+  transform: translateZ(1px) translateY(-2px);
+  filter: saturate(1.08);
+  box-shadow:
+    0 10px 18px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.94);
 }
 
 .lsf-card__addbtn:active {
   transform: translateZ(1px) scale(0.92);
+}
+
+.lsf-card__cartIcon {
+  width: 22px;
+  height: 22px;
+  display: block;
 }
 
 .lsf-card__overlay {
@@ -6988,15 +7322,57 @@
   z-index: 2;
   display: grid;
   grid-template-columns: minmax(0, 1fr) max-content;
-  align-items: end;
+  align-items: start;
   gap: 10px;
-  padding: 1px 2px 2px;
+  min-height: 42px;
+  padding: 2px 2px 4px;
   background: transparent;
   backdrop-filter: none;
 }
 
 .lsf-card__overlay--deal {
+  align-items: start;
+}
+
+.lsf-card__overlay--withCountdown {
+  grid-template-rows: auto auto;
+  row-gap: 5px;
+}
+
+.lsf-offerCountdownInline {
+  grid-column: 2;
+  justify-self: end;
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
+  min-height: 22px;
+  max-width: 152px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: rgba(17, 17, 17, 0.9);
+  color: #ffffff;
+  font-size: 0.58rem;
+  font-weight: 1000;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-shadow: 0 6px 12px rgba(17, 17, 17, 0.18);
+  animation: lsf-countdown-float 2.8s ease-in-out infinite;
+}
+
+@keyframes lsf-countdown-float {
+  0%,
+  100% {
+    transform: translateY(0);
+    box-shadow: 0 6px 12px rgba(17, 17, 17, 0.18);
+  }
+  50% {
+    transform: translateY(-2px);
+    box-shadow: 0 9px 15px rgba(17, 17, 17, 0.22);
+  }
 }
 
 .lsf-card__ticker {
@@ -7014,7 +7390,7 @@
   color: #111;
   font-size: 0.98rem;
   font-weight: 1000;
-  line-height: 1;
+  line-height: 1.05;
   text-transform: uppercase;
   text-overflow: clip;
   transform: none;
@@ -7043,7 +7419,7 @@
 
 .lsf-card__price {
   display: inline-flex;
-  align-items: baseline;
+  align-items: flex-start;
   justify-content: flex-end;
   gap: 4px;
   min-width: 0;
@@ -7061,14 +7437,18 @@
   justify-items: end;
   gap: 0;
   line-height: 1;
+  min-width: 0;
+  white-space: nowrap;
 }
 
 .lsf-card__priceCurrent {
   color: #24142c;
 }
 
-.lsf-card__priceStack .lsf-card__priceCurrent {
+.lsf-card__priceStack.has-discount .lsf-card__priceCurrent {
   color: #f40046;
+  font-weight: 1000;
+  line-height: 1;
 }
 
 .lsf-card__priceStack em {
@@ -7080,6 +7460,14 @@
   animation: none;
 }
 
+.lsf-card__priceRow {
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 0;
+  min-width: 0;
+}
+
 .lsf-card__priceOld {
   color: rgba(17, 17, 17, 0.48);
   font-size: 0.62rem;
@@ -7089,16 +7477,16 @@
 }
 
 .lsf-topDealPrice {
-  display: inline-flex;
-  align-items: baseline;
-  justify-content: flex-end;
-  gap: 5px;
+  display: inline-grid;
+  justify-items: end;
+  gap: 0;
   min-width: 0;
   white-space: nowrap;
+  line-height: 1;
   transform-origin: right center;
 }
 
-.lsf-topDealPrice strong {
+.lsf-topDealPrice .lsf-card__priceCurrent {
   color: #24142c;
   font-size: 1.02rem;
   font-weight: 1000;
@@ -7107,11 +7495,12 @@
   animation: none;
 }
 
-.lsf-topDealPrice.has-discount strong {
+.lsf-topDealPrice.has-discount .lsf-card__priceCurrent,
+.lsf-topDealPrice.has-discount .lsf-card__priceRow .lsf-card__priceCurrent {
   color: #f40046;
 }
 
-.lsf-topDealPrice span {
+.lsf-topDealPrice .lsf-card__priceOld {
   color: rgba(17, 17, 17, 0.48);
   font-size: 0.68rem;
   font-weight: 900;
@@ -7119,9 +7508,10 @@
   animation: none;
 }
 
-.lsf-topDealPrice b {
+.lsf-topDealPrice em {
   color: #f92672;
   font-size: 0.72rem;
+  font-style: normal;
   font-weight: 1000;
   line-height: 1;
   animation: none;
@@ -7163,13 +7553,13 @@
 
 .lsf-card__price.is-ticking .lsf-card__priceStack > span:not(.lsf-card__priceOld),
 .lsf-card__price.is-ticking .lsf-card__priceStack em,
-.lsf-topDealPrice.is-ticking strong,
-.lsf-topDealPrice.is-ticking b {
+.lsf-topDealPrice.is-ticking .lsf-card__priceCurrent,
+.lsf-topDealPrice.is-ticking em {
   animation: lsf-price-color-pop 0.65s ease-in-out;
 }
 
 .lsf-card__price.is-ticking .lsf-card__priceOld,
-.lsf-topDealPrice.is-ticking span {
+.lsf-topDealPrice.is-ticking .lsf-card__priceOld {
   animation: lsf-price-muted-pop 0.65s ease-in-out;
 }
 
@@ -7498,7 +7888,7 @@
   }
 
   .lsf-flip__inner {
-    height: 222px;
+    height: 252px;
   }
 
   .lsf-trendingPanel {
@@ -7837,37 +8227,37 @@
   }
 
   .lsf-flip__inner {
-    height: 218px;
+    height: 250px;
   }
 
   .lsf-flip__front {
-    grid-template-rows: minmax(0, 162px) auto;
-    padding: 10px;
+    grid-template-rows: minmax(0, 152px) auto;
+    gap: 17px;
+    padding: 10px 10px 14px;
   }
 
   .lsf-card__image {
-    height: 162px;
+    height: 152px;
     border-radius: 13px;
   }
 
   .lsf-card__name,
   .lsf-card__price,
   .lsf-topDealPanel > span,
-  .lsf-topDealPrice strong {
+  .lsf-topDealPrice .lsf-card__priceCurrent {
     font-size: 0.96rem;
   }
 
   .lsf-card__priceOld,
-  .lsf-topDealPrice span {
+  .lsf-topDealPrice .lsf-card__priceOld {
     font-size: 0.6rem;
   }
 
   .lsf-card__addbtn {
     top: 9px;
     right: 9px;
-    width: 48px;
-    height: 24px;
-    border-radius: 8px;
+    width: 36px;
+    height: 36px;
   }
 
   .lsf-trendingPanel {
@@ -8091,6 +8481,6 @@
   }
 
   .lsf-flip__inner {
-    height: 222px;
+    height: 252px;
   }
 }

@@ -217,7 +217,7 @@ export default function DirectDiscountsPanel({ partnerId }) {
   };
 
   const deleteDiscount = async (discountId) => {
-    if (!window.confirm("Eliminar descuento directo?")) return;
+    if (!window.confirm("Eliminar Top Deal?")) return;
 
     try {
       await api.delete(`/api/direct-discounts/${discountId}?partnerId=${partnerId}`);
@@ -225,7 +225,7 @@ export default function DirectDiscountsPanel({ partnerId }) {
       loadAll();
     } catch (error) {
       console.error(error);
-      setMessage("No se pudo eliminar el descuento.");
+      setMessage("No se pudo eliminar el Top Deal.");
     }
   };
 
@@ -258,17 +258,17 @@ export default function DirectDiscountsPanel({ partnerId }) {
     try {
       if (editingId) {
         await api.put(`/api/direct-discounts/${editingId}`, payload);
-        setMessage("Descuento actualizado.");
+        setMessage("Top Deal actualizado.");
       } else {
         await api.post("/api/direct-discounts", payload);
-        setMessage("Descuento creado.");
+        setMessage("Top Deal creado.");
       }
 
       resetForm();
       loadAll();
     } catch (error) {
       console.error(error);
-      setMessage(error.response?.data?.error || "No se pudo guardar el descuento.");
+      setMessage(error.response?.data?.error || "No se pudo guardar el Top Deal.");
     } finally {
       setSaving(false);
     }
@@ -282,8 +282,8 @@ export default function DirectDiscountsPanel({ partnerId }) {
     <div className="cp-promosLayout">
       <form className="cp-card cp-form cp-directDiscountBuilder" onSubmit={submit}>
         <div>
-          <div className="cp-kicker">Descuentos directos</div>
-          <h3>{editingId ? "Editar descuento" : "Crear descuento directo"}</h3>
+          <div className="cp-kicker">Top Deals</div>
+          <h3>{editingId ? "Editar Top Deal" : "Crear Top Deal"}</h3>
         </div>
 
         <div className="cp-formGrid">
@@ -365,7 +365,7 @@ export default function DirectDiscountsPanel({ partnerId }) {
                 />
                 <span>
                   <strong>Seleccionar categoria completa</strong>
-                  <small>Todos los productos actuales de {group.name} recibiran este descuento.</small>
+                  <small>Todos los productos actuales de {group.name} recibiran este Top Deal.</small>
                 </span>
               </label>
 
@@ -448,7 +448,7 @@ export default function DirectDiscountsPanel({ partnerId }) {
             </button>
           )}
           <button className="cp-primaryBtn" disabled={saving} type="submit">
-            {saving ? "Guardando..." : editingId ? "Actualizar descuento" : "Crear descuento"}
+            {saving ? "Guardando..." : editingId ? "Actualizar Top Deal" : "Crear Top Deal"}
           </button>
         </div>
 
@@ -457,17 +457,17 @@ export default function DirectDiscountsPanel({ partnerId }) {
 
       <section className="cp-card">
         <div className="cp-kicker">Activos</div>
-        <h3>Descuentos directos publicados</h3>
+        <h3>Top Deals publicados</h3>
 
         {loading ? (
-          <div className="cp-stateCard">Cargando descuentos...</div>
+          <div className="cp-stateCard">Cargando Top Deals...</div>
         ) : (
           <div className="cp-tableWrap">
             <table className="cp-table">
               <thead>
                 <tr>
                   <th>Nombre</th>
-                  <th>Descuento</th>
+                  <th>Top Deal</th>
                   <th>Productos</th>
                   <th>Tiendas</th>
                   <th>Acciones</th>
@@ -498,7 +498,7 @@ export default function DirectDiscountsPanel({ partnerId }) {
                 ))}
                 {!discounts.length && (
                   <tr>
-                    <td colSpan="5">No hay descuentos directos todavia.</td>
+                    <td colSpan="5">No hay Top Deals todavia.</td>
                   </tr>
                 )}
               </tbody>

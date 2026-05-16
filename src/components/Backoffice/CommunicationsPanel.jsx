@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import api from "../../setupAxios";
 import { COUPON_SEGMENTS } from "../../constants/coupons";
+import SmsCreditsPanel from "./Coupons/SmsCreditsPanel";
 import "../../styles/CouponsModule.css";
 
 const normalizeComparableText = (value = "") =>
@@ -349,9 +350,12 @@ export default function CommunicationsPanel({ partnerId }) {
   };
 
   return (
-    <form className="cp-card cp-form" onSubmit={sendSms}>
-      <div className="cp-kicker">Comunicacion</div>
-      <h3>Enviar SMS a clientes</h3>
+    <div className="cp-communicationStack">
+      <SmsCreditsPanel partnerId={partnerId} />
+
+      <form className="cp-card cp-form" onSubmit={sendSms}>
+        <div className="cp-kicker">Comunicacion</div>
+        <h3>Enviar SMS a clientes</h3>
       <div className="cp-helper">
         Usa la misma segmentacion de cupones: cliente individual, segmentos, tiendas, codigos postales o toda la base.
       </div>
@@ -595,7 +599,8 @@ export default function CommunicationsPanel({ partnerId }) {
         </button>
       </div>
 
-      {feedback && <div className="cp-feedback">{feedback}</div>}
-    </form>
+        {feedback && <div className="cp-feedback">{feedback}</div>}
+      </form>
+    </div>
   );
 }

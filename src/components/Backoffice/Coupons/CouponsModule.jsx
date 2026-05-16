@@ -3,7 +3,6 @@ import OfferCreatePanel from "./OfferCreatePanel";
 import OfferRedemptions from "./OfferRedemptions";
 import PromosPanel from "./PromosPanel";
 import DirectDiscountsPanel from "./DirectDiscountsPanel";
-import SmsCreditsPanel from "./SmsCreditsPanel";
 import IncentivesPanel from "./IncentivesPanel";
 import "../../../styles/CouponsModule.css";
 
@@ -18,11 +17,9 @@ export default function CouponsModule({ partner, initialView = "overview" }) {
           <div>
             <div className="cp-kicker">Coupons</div>
             <h2>Gestion de ofertas y cupones</h2>
-            <p>Desde aqui se crean ofertas publicas para CouponGallery y envios privados para clientes o grupos.</p>
+            <p>Desde aqui se crean cupones, promos, Top Deals e incentivos.</p>
           </div>
         </div>
-
-        {activeView === "overview" && <SmsCreditsPanel partnerId={partnerId} />}
 
         {activeView === "overview" && <OffersOverview partnerId={partnerId} />}
         {activeView === "create" && <OfferCreatePanel partnerId={partnerId} />}

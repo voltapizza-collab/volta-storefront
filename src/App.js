@@ -11,6 +11,7 @@ import GamePage from "./pages/GamePage";
 import LandingPage from "./pages/LandingPage";
 import ReservationCancelPage from "./pages/ReservationCancelPage";
 import AppLayout from "./components/Layout/AppLayout";
+import PosApp from "./pos/PosApp";
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
         {/* BACKOFFICE */}
         <Route path="/Backoffice/*" element={<Backoffice />} />
         <Route path="/backoffice/*" element={<Backoffice />} />
+        <Route path="/pos" element={<PosApp />} />
         <Route path="/jugar" element={<GamePage fixedGameSlug="winning-number" />} />
         <Route path="/perfect-timing" element={<GamePage fixedGameSlug="perfect-timing" />} />
       </Routes>

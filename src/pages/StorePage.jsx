@@ -1396,7 +1396,6 @@ export default function StorePage() {
   const [repeatSearched, setRepeatSearched] = useState(false);
   const [cart, setCart] = useState([]);
   const [cartOpen, setCartOpen] = useState(false);
-  const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [checkoutMessage, setCheckoutMessage] = useState("");
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [productModalOpen, setProductModalOpen] = useState(false);
@@ -1572,6 +1571,50 @@ export default function StorePage() {
   }, [fetchIncentiveSnapshot, partner?.id]);
 
   useEffect(() => {
+    if (!partner?.id || !store?.id) return undefined;
+
+    const visitorKey = "volta_storefront_visitor_id";
+    let visitorId = "";
+
+    try {
+      visitorId = window.localStorage.getItem(visitorKey) || "";
+      if (!visitorId) {
+        visitorId = `visitor-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+        window.localStorage.setItem(visitorKey, visitorId);
+      }
+    } catch {
+      visitorId = `visitor-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+    }
+
+    const sendPresence = () => {
+      if (document.visibilityState === "hidden") return;
+
+      const state = checkoutLoading ? "checkout" : cartOpen || cart.length > 0 ? "cart" : "browsing";
+
+      api
+        .post("/api/presence/heartbeat", {
+          partnerId: Number(partner.id),
+          storeId: Number(store.id),
+          visitorId,
+          state,
+          path: window.location.pathname,
+        })
+        .catch((err) => {
+          console.warn("[presence] heartbeat failed", err);
+        });
+    };
+
+    sendPresence();
+    const intervalId = window.setInterval(sendPresence, 15000);
+    document.addEventListener("visibilitychange", sendPresence);
+
+    return () => {
+      window.clearInterval(intervalId);
+      document.removeEventListener("visibilitychange", sendPresence);
+    };
+  }, [cart.length, cartOpen, checkoutLoading, partner?.id, store?.id]);
+
+  useEffect(() => {
     const intervalId = window.setInterval(() => {
       setTick(true);
       window.setTimeout(() => setTick(false), 600);
@@ -1648,7 +1691,7 @@ export default function StorePage() {
 
     if (paymentStatus === "success") {
       setCheckoutMessage("Pago recibido. Tu pedido ya entro en la cola de la pizzeria.");
-      setCheckoutOpen(true);
+      setCartOpen(true);
       setCart([]);
       try {
         window.localStorage.removeItem(cartDraftStorageKey);
@@ -1659,7 +1702,7 @@ export default function StorePage() {
 
     if (paymentStatus === "cancel") {
       setCheckoutMessage("Pago cancelado. Puedes seguir comprando o intentarlo de nuevo.");
-      setCheckoutOpen(true);
+      setCartOpen(true);
     }
   }, [cartDraftStorageKey]);
 
@@ -3092,6 +3135,7 @@ export default function StorePage() {
 
       console.warn("[StorePage] checkout session without url", checkoutData);
       setCheckoutMessage("Stripe no devolvio una URL de pago. Intentalo de nuevo.");
+      setCartOpen(true);
     } catch (err) {
       console.error(err);
       const errorCode = err.response?.data?.error;
@@ -3104,6 +3148,7 @@ export default function StorePage() {
         checkout_failed: "Stripe no pudo crear la sesion de pago.",
       };
       setCheckoutMessage(messages[errorCode] || "No pudimos iniciar el pago.");
+      setCartOpen(true);
     } finally {
       setCheckoutLoading(false);
     }
@@ -4379,11 +4424,11 @@ export default function StorePage() {
           <button
             type="button"
             className="sf-engineBottomBtn sf-engineBottomBtn--pay"
-            onClick={() => setCheckoutOpen(true)}
-            disabled={cartCount === 0}
+            onClick={startStripeCheckout}
+            disabled={cartCount === 0 || checkoutLoading}
           >
-            <span>Pay now</span>
-            {cartCount > 0 && <small>EUR {cartTotal.toFixed(2)}</small>}
+            <span>{checkoutLoading ? "Opening..." : "Pay now"}</span>
+            {cartCount > 0 && !checkoutLoading && <small>EUR {cartTotal.toFixed(2)}</small>}
           </button>
 
           <form className="sf-couponDock" onSubmit={validateCouponCode}>
@@ -4397,7 +4442,7 @@ export default function StorePage() {
               }}
               placeholder="Codigo cupon"
             />
-            <button type="submit" disabled={couponLoading}>
+            <button type="submit" disabled={couponLoading || couponCode.trim().length === 0}>
               {couponLoading ? "..." : "Validar"}
             </button>
             {couponStatus && <small>{couponStatus}</small>}
@@ -4607,6 +4652,14 @@ export default function StorePage() {
               </button>
             </div>
 
+            {checkoutMessage && (
+              <div className={`sf-reservationMessage ${
+                checkoutMessage.includes("Pago recibido") ? "is-success" : ""
+              }`}>
+                {checkoutMessage}
+              </div>
+            )}
+
             {cart.length === 0 ? (
               <div className="sf-cartEmpty">Carrito vacio.</div>
             ) : (
@@ -4729,71 +4782,15 @@ export default function StorePage() {
                     <button
                       type="button"
                       className="sf-primaryBtn"
-                      onClick={() => {
-                        setCartOpen(false);
-                        setCheckoutOpen(true);
-                      }}
+                      onClick={startStripeCheckout}
+                      disabled={checkoutLoading}
                     >
-                      Confirmar carrito
+                      {checkoutLoading ? "Abriendo Stripe..." : "Pagar ahora"}
                     </button>
                   </div>
                 </div>
               </>
             )}
-          </div>
-        </div>
-      )}
-
-      {checkoutOpen && (
-        <div className="sf-modalOverlay" onClick={() => setCheckoutOpen(false)}>
-          <div
-            className="sf-modalCard sf-checkoutModal sf-payNowModal"
-            onClick={(event) => event.stopPropagation()}
-          >
-            <div className="sf-cartModalHead">
-              <div>
-                <span>Pay now</span>
-                <h3>EUR {cartTotal.toFixed(2)}</h3>
-              </div>
-              <button
-                type="button"
-                className="sf-modalCloseBtn"
-                onClick={() => setCheckoutOpen(false)}
-                aria-label="Cerrar"
-              >
-                x
-              </button>
-            </div>
-
-            {checkoutMessage && (
-              <div className={`sf-reservationMessage ${
-                checkoutMessage.includes("confirmado") || checkoutMessage.includes("Pago recibido")
-                  ? "is-success"
-                  : ""
-              }`}>
-                {checkoutMessage}
-              </div>
-            )}
-
-            <div className="sf-cartActions">
-              <button
-                type="button"
-                className="sf-secondaryBtn"
-                onClick={() => setCheckoutOpen(false)}
-              >
-                Seguir comprando
-              </button>
-              <button
-                type="button"
-                className="sf-primaryBtn"
-                onClick={startStripeCheckout}
-                disabled={checkoutLoading}
-              >
-                {checkoutLoading
-                  ? "Abriendo Stripe..."
-                  : "Pagar ahora"}
-              </button>
-            </div>
           </div>
         </div>
       )}
@@ -4994,7 +4991,7 @@ export default function StorePage() {
       )}
 
       {customModalOpen && (
-        <div className="sf-modalOverlay" onClick={() => setCustomModalOpen(false)}>
+        <div className="sf-modalOverlay sf-modalOverlay--custom" onClick={() => setCustomModalOpen(false)}>
           <div
             className="sf-modalCard sf-productModal sf-customModal"
             onClick={(event) => event.stopPropagation()}
@@ -5084,225 +5081,227 @@ export default function StorePage() {
                   )}
                 </div>
 
-                <section className="sf-customAccordion">
-                  <button
-                    type="button"
-                    className={`sf-customAccordionHead ${
-                      !selectedCustomCategory ? "is-disabled" : ""
-                    }`}
-                    onClick={() => {
-                      if (!selectedCustomCategory) return;
-                      setCustomOpenSection((current) =>
-                        current === "BASE" ? null : "BASE"
-                      );
-                    }}
-                  >
-                    <span>BASE</span>
-                    <strong>
-                      {selectedCustomBase && (
-                        `${selectedCustomBase.baseName}${customSize ? ` ${customSize}` : ""}`
-                      )}
-                      {!selectedCustomBase && "Primero elige categoria"}
-                    </strong>
-                  </button>
+                <div className="sf-customBuilderBody">
+                  <section className="sf-customAccordion">
+                    <button
+                      type="button"
+                      className={`sf-customAccordionHead ${
+                        !selectedCustomCategory ? "is-disabled" : ""
+                      }`}
+                      onClick={() => {
+                        if (!selectedCustomCategory) return;
+                        setCustomOpenSection((current) =>
+                          current === "BASE" ? null : "BASE"
+                        );
+                      }}
+                    >
+                      <span>BASE</span>
+                      <strong>
+                        {selectedCustomBase && (
+                          `${selectedCustomBase.baseName}${customSize ? ` ${customSize}` : ""}`
+                        )}
+                        {!selectedCustomBase && "Primero elige categoria"}
+                      </strong>
+                    </button>
 
-                  {customOpenSection === "BASE" && selectedCustomBase && (
-                    <div className="sf-customAccordionBody">
-                      <div className="sf-customBaseSummary">
-                        <span>{selectedCustomBase.baseName}</span>
-                        <small>{selectedCustomBase.products.length} productos de referencia</small>
-                      </div>
+                    {customOpenSection === "BASE" && selectedCustomBase && (
+                      <div className="sf-customAccordionBody">
+                        <div className="sf-customBaseSummary">
+                          <span>{selectedCustomBase.baseName}</span>
+                          <small>{selectedCustomBase.products.length} productos de referencia</small>
+                        </div>
 
-                      <div className="sf-productPickerRow sf-productPickerRow--stack">
-                        <span>Tamano</span>
-                        <div className="sf-sizeOptions">
-                          {getAvailableSizes(selectedCustomBase).map((size) => {
-                            const active = customSize === size;
-                            const price = priceForSize(
-                              selectedCustomBase.priceBySize,
-                              size
-                            );
+                        <div className="sf-productPickerRow sf-productPickerRow--stack">
+                          <span>Tamano</span>
+                          <div className="sf-sizeOptions">
+                            {getAvailableSizes(selectedCustomBase).map((size) => {
+                              const active = customSize === size;
+                              const price = priceForSize(
+                                selectedCustomBase.priceBySize,
+                                size
+                              );
 
-                            return (
-                              <button
-                                key={size}
-                                type="button"
-                                className={`sf-sizeChip ${active ? "is-active" : ""}`}
-                                onClick={() => {
-                                  setCustomSize(size);
-                                  setCustomOpenSection(
-                                    customOrderedCategories[0] || "BASE"
-                                  );
-                                }}
-                              >
-                                <span>{size}</span>
-                                <strong>EUR {price.toFixed(2)}</strong>
-                              </button>
-                            );
-                          })}
+                              return (
+                                <button
+                                  key={size}
+                                  type="button"
+                                  className={`sf-sizeChip ${active ? "is-active" : ""}`}
+                                  onClick={() => {
+                                    setCustomSize(size);
+                                    setCustomOpenSection(
+                                      customOrderedCategories[0] || "BASE"
+                                    );
+                                  }}
+                                >
+                                  <span>{size}</span>
+                                  <strong>EUR {price.toFixed(2)}</strong>
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+
+                        <div className="sf-productPickerRow">
+                          <span>Qty</span>
+                          <div className="sf-qtyControl">
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setCustomQty((qty) =>
+                                  Math.max(1, Number(qty || 1) - 1)
+                                )
+                              }
+                              disabled={Number(customQty || 1) <= 1}
+                            >
+                              -
+                            </button>
+                            <strong>{customQty}</strong>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setCustomQty((qty) =>
+                                  Math.min(12, Number(qty || 1) + 1)
+                                )
+                              }
+                            >
+                              +
+                            </button>
+                          </div>
                         </div>
                       </div>
+                    )}
+                  </section>
 
-                      <div className="sf-productPickerRow">
-                        <span>Qty</span>
-                        <div className="sf-qtyControl">
-                          <button
-                            type="button"
-                            onClick={() =>
-                              setCustomQty((qty) =>
-                                Math.max(1, Number(qty || 1) - 1)
-                              )
-                            }
-                            disabled={Number(customQty || 1) <= 1}
-                          >
-                            -
-                          </button>
-                          <strong>{customQty}</strong>
-                          <button
-                            type="button"
-                            onClick={() =>
-                              setCustomQty((qty) =>
-                                Math.min(12, Number(qty || 1) + 1)
-                              )
-                            }
-                          >
-                            +
-                          </button>
-                        </div>
+                  {selectedCustomCategory && customHasSize && customUsesLoading && (
+                    <div className="sf-customEmptyLine">Cargando opciones para {selectedCustomCategory.name}...</div>
+                  )}
+
+                  {selectedCustomCategory &&
+                    customHasSize &&
+                    !customUsesLoading &&
+                    customOrderedCategories.length === 0 && (
+                      <div className="sf-customEmptyLine">
+                        No hay ingredientes personalizables configurados para {selectedCustomCategory.name}.
                       </div>
-                    </div>
-                  )}
-                </section>
+                    )}
 
-                {selectedCustomCategory && customHasSize && customUsesLoading && (
-                  <div className="sf-customEmptyLine">Cargando opciones para {selectedCustomCategory.name}...</div>
-                )}
+                  {customOrderedCategories.map((categoryName) => {
+                    const ingredients = customIngredientsByCategory[categoryName] || [];
+                    const selectedCount = ingredients.filter((ingredient) =>
+                      selectedCustomIngredientIds.includes(Number(ingredient.id))
+                    ).length;
+                    const isOpen = customOpenSection === categoryName;
+                    const isLocked = !customHasBase || !customHasSize;
 
-                {selectedCustomCategory &&
-                  customHasSize &&
-                  !customUsesLoading &&
-                  customOrderedCategories.length === 0 && (
-                    <div className="sf-customEmptyLine">
-                      No hay ingredientes personalizables configurados para {selectedCustomCategory.name}.
-                    </div>
-                  )}
+                    return (
+                      <section key={categoryName} className="sf-customAccordion">
+                        <button
+                          type="button"
+                          className={`sf-customAccordionHead ${isLocked ? "is-disabled" : ""}`}
+                          onClick={() => {
+                            if (isLocked) return;
+                            setCustomOpenSection((current) =>
+                              current === categoryName ? null : categoryName
+                            );
+                          }}
+                        >
+                          <span>{categoryName}</span>
+                          <strong>
+                            {selectedCount > 0
+                              ? `${selectedCount} seleccionado${selectedCount === 1 ? "" : "s"}`
+                              : isLocked
+                              ? "Completa el paso anterior"
+                              : "Elegir"}
+                          </strong>
+                        </button>
 
-                {customOrderedCategories.map((categoryName) => {
-                  const ingredients = customIngredientsByCategory[categoryName] || [];
-                  const selectedCount = ingredients.filter((ingredient) =>
-                    selectedCustomIngredientIds.includes(Number(ingredient.id))
-                  ).length;
-                  const isOpen = customOpenSection === categoryName;
-                  const isLocked = !customHasBase || !customHasSize;
+                        {isOpen && !isLocked && (
+                          <div className="sf-customAccordionBody">
+                            {ingredients.map((ingredient) => {
+                              const selected = customIngredients[ingredient.id] || null;
 
-                  return (
-                    <section key={categoryName} className="sf-customAccordion">
-                      <button
-                        type="button"
-                        className={`sf-customAccordionHead ${isLocked ? "is-disabled" : ""}`}
-                        onClick={() => {
-                          if (isLocked) return;
-                          setCustomOpenSection((current) =>
-                            current === categoryName ? null : categoryName
-                          );
-                        }}
-                      >
-                        <span>{categoryName}</span>
-                        <strong>
-                          {selectedCount > 0
-                            ? `${selectedCount} seleccionado${selectedCount === 1 ? "" : "s"}`
-                            : isLocked
-                            ? "Completa el paso anterior"
-                            : "Elegir"}
-                        </strong>
-                      </button>
-
-                      {isOpen && !isLocked && (
-                        <div className="sf-customAccordionBody">
-                          {ingredients.map((ingredient) => {
-                            const selected = customIngredients[ingredient.id] || null;
-
-                            return (
-                              <div key={ingredient.id} className="sf-customIngredient">
-                                <div className="sf-customIngredientHead">
-                                  <strong>{ingredient.name}</strong>
-                                  <span>
-                                    {customUsesLoading
-                                      ? "..."
-                                      : `EUR ${getCustomIngredientUnitPrice(ingredient).toFixed(2)}`}
-                                  </span>
-                                </div>
-
-                                <div className="sf-customPlacement">
-                                  {["FULL", "LEFT", "RIGHT"].map((placement) => (
-                                    <button
-                                      key={placement}
-                                      type="button"
-                                      className={`sf-sizeChip ${
-                                        selected?.placement === placement ? "is-active" : ""
-                                      }`}
-                                      onClick={() =>
-                                        updateCustomIngredient(ingredient, {
-                                          placement,
-                                          quantity: selected?.quantity || "SIMPLE",
-                                        })
-                                      }
-                                    >
-                                      <span>{placement}</span>
-                                    </button>
-                                  ))}
-                                </div>
-
-                                {selected?.placement && (
-                                  <div className="sf-customIngredientExpanded">
-                                    <div className="sf-customToggle">
-                                      {["SIMPLE", "DOUBLE"].map((quantity) => (
-                                        <button
-                                          key={quantity}
-                                          type="button"
-                                          className={`sf-sizeChip ${
-                                            selected.quantity === quantity ? "is-active" : ""
-                                          }`}
-                                          onClick={() => {
-                                            updateCustomIngredient(ingredient, { quantity });
-                                            setCustomOpenSection(
-                                              getNextCustomSection(categoryName)
-                                            );
-                                          }}
-                                        >
-                                          <span>{quantity}</span>
-                                        </button>
-                                      ))}
-                                    </div>
-                                    <strong>
-                                      EUR {getCustomIngredientPrice(selected).toFixed(2)}
-                                    </strong>
-                                    <button
-                                      type="button"
-                                      className="sf-modalCloseBtn sf-customRemove"
-                                      onClick={() => removeCustomIngredient(ingredient.id)}
-                                      aria-label={`Quitar ${ingredient.name}`}
-                                    >
-                                      x
-                                    </button>
+                              return (
+                                <div key={ingredient.id} className="sf-customIngredient">
+                                  <div className="sf-customIngredientHead">
+                                    <strong>{ingredient.name}</strong>
+                                    <span>
+                                      {customUsesLoading
+                                        ? "..."
+                                        : `EUR ${getCustomIngredientUnitPrice(ingredient).toFixed(2)}`}
+                                    </span>
                                   </div>
-                                )}
-                              </div>
-                            );
-                          })}
-                        </div>
-                      )}
-                    </section>
-                  );
-                })}
 
-                <div className="sf-productPickerNotice">
-                  {customMissingSteps.length > 0
-                    ? `Para avanzar necesitas ${customMissingSteps.join(", ")}.`
-                    : "Puedes anadirlo al carrito o seguir personalizando."}
+                                  <div className="sf-customPlacement">
+                                    {["FULL", "LEFT", "RIGHT"].map((placement) => (
+                                      <button
+                                        key={placement}
+                                        type="button"
+                                        className={`sf-sizeChip ${
+                                          selected?.placement === placement ? "is-active" : ""
+                                        }`}
+                                        onClick={() =>
+                                          updateCustomIngredient(ingredient, {
+                                            placement,
+                                            quantity: selected?.quantity || "SIMPLE",
+                                          })
+                                        }
+                                      >
+                                        <span>{placement}</span>
+                                      </button>
+                                    ))}
+                                  </div>
+
+                                  {selected?.placement && (
+                                    <div className="sf-customIngredientExpanded">
+                                      <div className="sf-customToggle">
+                                        {["SIMPLE", "DOUBLE"].map((quantity) => (
+                                          <button
+                                            key={quantity}
+                                            type="button"
+                                            className={`sf-sizeChip ${
+                                              selected.quantity === quantity ? "is-active" : ""
+                                            }`}
+                                            onClick={() => {
+                                              updateCustomIngredient(ingredient, { quantity });
+                                              setCustomOpenSection(
+                                                getNextCustomSection(categoryName)
+                                              );
+                                            }}
+                                          >
+                                            <span>{quantity}</span>
+                                          </button>
+                                        ))}
+                                      </div>
+                                      <strong>
+                                        EUR {getCustomIngredientPrice(selected).toFixed(2)}
+                                      </strong>
+                                      <button
+                                        type="button"
+                                        className="sf-modalCloseBtn sf-customRemove"
+                                        onClick={() => removeCustomIngredient(ingredient.id)}
+                                        aria-label={`Quitar ${ingredient.name}`}
+                                      >
+                                        x
+                                      </button>
+                                    </div>
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </section>
+                    );
+                  })}
+
+                  <div className="sf-productPickerNotice">
+                    {customMissingSteps.length > 0
+                      ? `Para avanzar necesitas ${customMissingSteps.join(", ")}.`
+                      : "Puedes anadirlo al carrito o seguir personalizando."}
+                  </div>
+
+                  {renderAllergenNotice(customSelectedAllergens)}
                 </div>
-
-                {renderAllergenNotice(customSelectedAllergens)}
 
                 <div className="sf-productPickerActions sf-builderStickyActions">
                   <div className="sf-builderTotal">

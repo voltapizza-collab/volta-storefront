@@ -1,0 +1,1348 @@
+.pos-shell,
+.pos-loginScreen {
+  min-height: 100vh;
+  min-height: 100dvh;
+  --pos-brand-1: var(--brand-1, #3b008b);
+  --pos-brand-2: var(--brand-2, #ffb61c);
+  --pos-brand-3: var(--brand-3, #6a3df0);
+  --pos-pink: #f92672;
+  --pos-ink: #171717;
+  --pos-line: rgba(59, 0, 139, 0.16);
+  background:
+    linear-gradient(135deg, rgba(59, 0, 139, 0.08), rgba(255, 182, 28, 0.08)),
+    #f7f4ff;
+  color: var(--pos-ink);
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.pos-shell {
+  display: flex;
+  flex-direction: column;
+}
+
+.pos-shell--visitors {
+  background:
+    linear-gradient(135deg, rgba(255, 182, 28, 0.24), rgba(249, 38, 114, 0.1)),
+    #fffaf0;
+}
+
+.pos-shell--stale {
+  background:
+    linear-gradient(135deg, rgba(255, 182, 28, 0.22), rgba(106, 61, 240, 0.08)),
+    #fffbeb;
+}
+
+.pos-shell--offline {
+  background:
+    linear-gradient(135deg, rgba(220, 38, 38, 0.13), rgba(59, 0, 139, 0.08)),
+    #fef2f2;
+}
+
+.pos-loginScreen {
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.pos-loginPanel {
+  width: min(460px, 100%);
+  background: #fff;
+  border: 1px solid #dfe3e8;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 18px 50px rgba(15, 23, 42, 0.12);
+}
+
+.pos-kicker {
+  display: block;
+  color: var(--pos-brand-3);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.pos-loginPanel h1,
+.pos-topbar h1 {
+  margin: 4px 0 0;
+  font-size: 20px;
+  line-height: 1.05;
+}
+
+.pos-loginPanel p {
+  margin: 12px 0 20px;
+  color: #5d6673;
+  line-height: 1.45;
+}
+
+.pos-loginPanel label {
+  display: grid;
+  gap: 7px;
+  margin-top: 14px;
+  color: #303846;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.pos-loginPanel select {
+  min-height: 44px;
+  border: 1px solid #ccd3dd;
+  border-radius: 8px;
+  background: #fff;
+  padding: 0 12px;
+  font: inherit;
+}
+
+.pos-loginPanel button,
+.pos-actionGrid button,
+.pos-sectionHead button,
+.pos-ghostBtn {
+  min-height: 42px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--pos-pink);
+  color: #fff;
+  padding: 0 16px;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.pos-loginPanel button {
+  width: 100%;
+  margin-top: 22px;
+}
+
+.pos-loginPanel button:disabled,
+.pos-actionGrid button:disabled,
+.pos-sectionHead button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.pos-topbar {
+  position: relative;
+  min-height: 96px;
+  display: grid;
+  grid-template-columns: minmax(190px, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px 46px;
+  background:
+    linear-gradient(90deg, rgba(59, 0, 139, 0.97), rgba(106, 61, 240, 0.94) 62%, rgba(249, 38, 114, 0.92));
+  border-bottom: 3px solid var(--pos-brand-2);
+  box-shadow: 0 12px 34px rgba(59, 0, 139, 0.22);
+}
+
+.pos-menuBtn {
+  position: relative;
+  top: auto;
+  right: auto;
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 50%;
+  background: rgba(23, 23, 23, 0.18);
+  color: #fff;
+  font: inherit;
+  font-size: 0;
+  font-weight: 900;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.pos-menuBtn::before,
+.pos-menuBtn::after {
+  content: "";
+  width: 13px;
+  height: 2px;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 5px 0 #fff;
+}
+
+.pos-menuBtn::after {
+  display: none;
+}
+
+.pos-menuBtn:hover {
+  background: rgba(249, 38, 114, 0.72);
+}
+
+.pos-logoutPill {
+  position: static;
+  min-height: 30px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--pos-pink);
+  color: #fff;
+  padding: 0 12px;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 900;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.pos-menuPanel {
+  position: absolute;
+  left: 12px;
+  bottom: 44px;
+  z-index: 5;
+  display: grid;
+  gap: 6px;
+  min-width: 160px;
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  border-radius: 8px;
+  background: rgba(23, 23, 23, 0.82);
+  padding: 8px;
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.25);
+}
+
+.pos-menuPanel button {
+  min-height: 34px;
+  border: 0;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 900;
+  text-align: left;
+  padding: 0 10px;
+  cursor: pointer;
+}
+
+.pos-storeIdentity {
+  min-width: 0;
+  color: #fff;
+}
+
+.pos-storeIdentity .pos-kicker {
+  color: var(--pos-brand-2);
+}
+
+.pos-storeIdentity h1 {
+  color: #fff;
+}
+
+.pos-storeIdentity small {
+  display: block;
+  margin-top: 4px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.pos-printInline {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.pos-printInline span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.16);
+}
+
+.pos-printInline.fail span {
+  background: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.18);
+}
+
+.pos-printInline.virtual span {
+  background: #facc15;
+  box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.2);
+}
+
+.pos-printInline small {
+  color: #7a8291;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: none;
+}
+
+.pos-storeToggle {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  bottom: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pos-storeToggle .app-toggle-label {
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 9px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.pos-storeToggle .app-toggle-btn {
+  width: 42px;
+  height: 24px;
+  position: relative;
+  display: block;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+  padding: 0;
+  cursor: pointer;
+}
+
+.pos-storeToggle .app-toggle-btn.on {
+  background: rgba(34, 197, 94, 0.9);
+}
+
+.pos-storeToggle .app-toggle-btn.off {
+  background: rgba(148, 163, 184, 0.72);
+}
+
+.pos-storeToggle .app-toggle-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.pos-storeToggle .app-toggle-knob {
+  position: absolute;
+  top: 50%;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.28);
+  transform: translateY(-50%);
+  transition: transform 0.18s ease;
+}
+
+.pos-storeToggle .app-toggle-btn.on .app-toggle-knob {
+  transform: translate(18px, -50%);
+}
+
+.pos-topMetrics {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+  min-width: 0;
+  padding-right: 0;
+  overflow-x: auto;
+}
+
+.pos-topActions {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding-right: 10px;
+  margin-right: 4px;
+  border-right: 1px solid rgba(255, 255, 255, 0.32);
+  flex: 0 0 auto;
+}
+
+.pos-modeTabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 10px 12px 0;
+}
+
+.pos-modeTabs button {
+  min-height: 38px;
+  border: 1px solid rgba(59, 0, 139, 0.18);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.82);
+  color: var(--pos-brand-1);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.pos-modeTabs button.active {
+  background: var(--pos-brand-1);
+  color: #fff;
+}
+
+.pos-topChip {
+  width: 76px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  padding: 0 8px;
+  backdrop-filter: blur(12px);
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
+.pos-chipText {
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.pos-topChip strong {
+  min-width: 14px;
+  font-size: 16px;
+  line-height: 1;
+  text-align: right;
+}
+
+.pos-topChip--visitors.is-active {
+  border-color: rgba(255, 182, 28, 0.72);
+  background: rgba(255, 182, 28, 0.2);
+  box-shadow: 0 0 0 3px rgba(255, 182, 28, 0.12);
+}
+
+.pos-syncChip {
+  width: 76px;
+}
+
+.pos-signalDot,
+.pos-chipIcon {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #98a2b3;
+  flex: 0 0 auto;
+}
+
+.pos-chipIcon {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  border-radius: 0;
+  background: transparent;
+}
+
+.pos-chipIcon--queue span {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.pos-chipIcon--queue span:first-child {
+  left: 1px;
+  top: 2px;
+}
+
+.pos-chipIcon--queue span:first-child::after,
+.pos-chipIcon--queue span:last-child::after {
+  content: "";
+  position: absolute;
+  left: -2px;
+  top: 10px;
+  width: 12px;
+  height: 8px;
+  border-radius: 8px 8px 2px 2px;
+  background: #fff;
+}
+
+.pos-chipIcon--queue span:last-child {
+  right: 1px;
+  top: 1px;
+}
+
+.pos-chipIcon--queue span:last-child::after {
+  width: 14px;
+  height: 10px;
+}
+
+.pos-chipIcon--visitor {
+  width: 21px;
+  height: 18px;
+}
+
+.pos-chipIcon--visitor span:first-child {
+  position: absolute;
+  left: 1px;
+  top: 1px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.pos-chipIcon--visitor span:nth-child(2) {
+  position: absolute;
+  left: 0;
+  top: 12px;
+  width: 13px;
+  height: 6px;
+  border-radius: 8px 8px 3px 3px;
+  background: #fff;
+}
+
+.pos-chipIcon--visitor span:last-child {
+  position: absolute;
+  right: 0;
+  bottom: 1px;
+  width: 9px;
+  height: 9px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+
+.pos-chipIcon--visitor span:last-child::after {
+  content: "";
+  position: absolute;
+  right: -5px;
+  bottom: -4px;
+  width: 8px;
+  height: 3px;
+  border-radius: 999px;
+  background: #fff;
+  transform: rotate(45deg);
+  transform-origin: left center;
+}
+
+.pos-syncChip {
+  border: 0;
+  font: inherit;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.pos-syncChip:disabled {
+  cursor: default;
+}
+
+.pos-syncChip .pos-signalDot {
+  background: #16a34a;
+  box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.18);
+}
+
+.pos-syncChip--stale .pos-signalDot,
+.pos-syncChip--checking .pos-signalDot {
+  background: var(--pos-brand-2);
+  box-shadow: 0 0 0 4px rgba(255, 182, 28, 0.22);
+}
+
+.pos-syncChip--offline .pos-signalDot {
+  background: #ef4444;
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.22);
+}
+
+.pos-syncChip.is-syncing .pos-signalDot {
+  animation: voltaPulse 0.62s steps(2, end) infinite;
+}
+
+@keyframes voltaPulse {
+  0% {
+    transform: scale(0.85);
+    background: var(--pos-brand-2);
+    box-shadow: 0 0 0 2px rgba(255, 182, 28, 0.2);
+  }
+  50% {
+    transform: scale(1.25);
+    background: var(--pos-pink);
+    box-shadow: 0 0 0 8px rgba(249, 38, 114, 0.22);
+  }
+  100% {
+    transform: scale(0.85);
+    background: var(--pos-brand-2);
+    box-shadow: 0 0 0 2px rgba(255, 182, 28, 0.2);
+  }
+}
+
+.pos-message {
+  position: fixed;
+  right: 18px;
+  top: 88px;
+  z-index: 20;
+  max-width: 360px;
+  border: 1px solid #f9b3cf;
+  border-radius: 8px;
+  background: #fff0f6;
+  color: #9a174d;
+  padding: 11px 14px;
+  font: inherit;
+  font-weight: 800;
+  text-align: left;
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.16);
+  cursor: pointer;
+}
+
+.pos-sectionHead span {
+  display: block;
+  color: #697386;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.pos-trustAlert {
+  display: grid;
+  gap: 4px;
+  margin: 0 18px 14px;
+  border: 2px solid #dc2626;
+  border-radius: 8px;
+  background: #fee2e2;
+  color: #991b1b;
+  padding: 14px 16px;
+}
+
+.pos-trustAlert strong {
+  font-size: 18px;
+}
+
+.pos-trustAlert--stale {
+  border-color: #f59e0b;
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.pos-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+  padding: 14px 18px 18px;
+  flex: 1;
+  align-content: start;
+}
+
+.pos-ordersPane,
+.pos-sideSection {
+  background: #fff;
+  border: 1px solid var(--pos-line);
+  border-radius: 8px;
+  min-width: 0;
+  box-shadow: 0 14px 36px rgba(59, 0, 139, 0.08);
+}
+
+.pos-ordersPane {
+  padding: 14px;
+}
+
+.pos-workspace--ticket .pos-ordersPane {
+  min-height: 520px;
+}
+
+.pos-actionsPane {
+  display: grid;
+  gap: 14px;
+  align-content: start;
+}
+
+.pos-sideSection {
+  padding: 14px;
+}
+
+.pos-sectionHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.pos-sectionHead h2 {
+  margin: 2px 0 0;
+  font-size: 20px;
+  line-height: 1.1;
+}
+
+.pos-sectionHead h2 + small {
+  display: block;
+  margin-top: 3px;
+  color: #697386;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.pos-sectionHead button {
+  min-height: 34px;
+  background: #151515;
+  padding-inline: 12px;
+  font-size: 13px;
+}
+
+.pos-orderList {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 2px;
+  padding: 2px 2px 14px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.pos-orderList::-webkit-scrollbar {
+  height: 6px;
+}
+
+.pos-orderList::-webkit-scrollbar-thumb {
+  background: rgba(106, 61, 240, 0.32);
+  border-radius: 999px;
+}
+
+.pos-orderCard {
+  position: relative;
+  flex: 0 0 min(330px, 86vw);
+  width: min(330px, 86vw);
+  height: 198px;
+  scroll-snap-align: start;
+  border: 2px solid #e5e8ee;
+  border-radius: 8px;
+  background: #fff;
+  padding: 12px;
+  text-align: left;
+  color: inherit;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.pos-orderCard.is-boosted {
+  border-color: #facc15;
+  background: linear-gradient(180deg, #fffbeb 0%, #fff 62%);
+  box-shadow: 0 12px 32px rgba(180, 83, 9, 0.16);
+  animation: posBoostPulse 1.15s ease-in-out infinite;
+}
+
+@keyframes posBoostPulse {
+  0%,
+  100% {
+    border-color: #facc15;
+    box-shadow:
+      0 0 0 0 rgba(250, 204, 21, 0.34),
+      0 12px 32px rgba(180, 83, 9, 0.16);
+  }
+
+  50% {
+    border-color: #f59e0b;
+    box-shadow:
+      0 0 0 5px rgba(250, 204, 21, 0.2),
+      0 18px 40px rgba(180, 83, 9, 0.22);
+  }
+}
+
+.pos-orderCard:focus-visible,
+.pos-orderCard:hover {
+  border-color: var(--pos-brand-3);
+  box-shadow: 0 0 0 3px rgba(106, 61, 240, 0.14);
+}
+
+.pos-boostBadge {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  border-radius: 999px;
+  background: #151515;
+  color: #facc15;
+  padding: 4px 8px;
+  font-size: 10px;
+  font-weight: 1000;
+  letter-spacing: 0.04em;
+}
+
+.pos-orderMain,
+.pos-orderMeta {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: baseline;
+}
+
+.pos-orderMain strong {
+  font-size: 22px;
+  line-height: 1.05;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+}
+
+.pos-orderMain span {
+  color: var(--pos-pink);
+  font-weight: 900;
+}
+
+.pos-orderMeta {
+  margin-top: 2px;
+  color: #697386;
+  font-size: 13px;
+}
+
+.pos-orderMeta b {
+  color: #151515;
+  font-size: 15px;
+}
+
+.pos-orderContext {
+  margin-top: 6px;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 800;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pos-orderBoost {
+  margin-top: 5px;
+  color: #92400e;
+  font-size: 11px;
+  font-weight: 1000;
+  text-transform: uppercase;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pos-queueCount {
+  min-width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--pos-brand-3);
+  color: #fff;
+  font-size: 14px;
+}
+
+.pos-items {
+  display: grid;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.pos-orderCard .pos-items {
+  max-height: 56px;
+  overflow: hidden;
+}
+
+.pos-itemLine {
+  display: grid;
+  gap: 2px;
+}
+
+.pos-itemLine strong {
+  font-size: 14px;
+}
+
+.pos-itemLine small,
+.pos-muted {
+  color: #697386;
+}
+
+.pos-empty,
+.pos-emptySmall {
+  display: grid;
+  gap: 4px;
+  border: 1px dashed #ccd3dd;
+  border-radius: 8px;
+  padding: 28px;
+  color: #697386;
+  text-align: center;
+}
+
+.pos-empty strong {
+  color: #151515;
+  font-size: 22px;
+}
+
+.pos-empty small {
+  color: #697386;
+}
+
+.pos-empty--visitors {
+  border-color: #f97316;
+  background: #fff7ed;
+  color: #9a3412;
+}
+
+.pos-empty--visitors strong {
+  color: #c2410c;
+  font-size: 30px;
+}
+
+.pos-chill {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  margin-bottom: 8px;
+}
+
+.pos-chill span {
+  font-size: 58px;
+  line-height: 1;
+}
+
+.pos-chill strong {
+  color: #a8a8a8;
+  font-family: "Permanent Marker", Inter, system-ui, sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  transform: rotate(-2deg);
+}
+
+.pos-ticketPreview {
+  background: #fbfbfc;
+  border: 1px solid #e5e8ee;
+  border-radius: 8px;
+  padding: 14px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+}
+
+.pos-ticketPreview--empty {
+  color: #697386;
+  font-family: inherit;
+  text-align: center;
+}
+
+.pos-ticketBrand {
+  text-align: center;
+  font-weight: 900;
+}
+
+.pos-ticketCode {
+  margin-top: 4px;
+  text-align: center;
+  font-size: 26px;
+  font-weight: 900;
+}
+
+.pos-ticketMeta,
+.pos-ticketTotal {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 10px;
+  border-top: 1px dashed #c7ced9;
+  padding-top: 8px;
+}
+
+.pos-ticketBlock,
+.pos-ticketItems {
+  margin-top: 10px;
+  border-top: 1px dashed #c7ced9;
+  padding-top: 8px;
+}
+
+.pos-ticketBlock span {
+  display: block;
+  color: #697386;
+  font-size: 11px;
+}
+
+.pos-ticketBlock strong,
+.pos-ticketBlock small {
+  display: block;
+  margin-top: 2px;
+}
+
+.pos-ticketBlock--boost {
+  border: 1px solid rgba(250, 204, 21, 0.55);
+  border-radius: 8px;
+  background: #fffbeb;
+  padding: 10px;
+}
+
+.pos-ticketBlock--boost span,
+.pos-ticketBlock--boost strong {
+  color: #92400e;
+}
+
+.pos-ticketTotal strong {
+  font-size: 20px;
+}
+
+.pos-ticketFocus {
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.pos-ticketFocus .pos-ticketPreview {
+  min-height: 360px;
+}
+
+.pos-actionGrid--ticket {
+  position: sticky;
+  bottom: 10px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.92);
+  padding-top: 10px;
+  backdrop-filter: blur(10px);
+}
+
+.pos-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-top: 1px solid rgba(59, 0, 139, 0.12);
+  background: rgba(255, 255, 255, 0.82);
+  color: #4b5563;
+  padding: 8px 14px;
+  font-size: 12px;
+  font-weight: 800;
+  margin-top: auto;
+}
+
+.pos-footer .pos-printInline {
+  color: #374151;
+}
+
+.pos-modalBack {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  background: rgba(15, 23, 42, 0.56);
+  padding: 16px;
+}
+
+.pos-reservationModal {
+  width: min(420px, 100%);
+  max-height: min(680px, 88dvh);
+  overflow: auto;
+  border: 1px solid rgba(59, 0, 139, 0.16);
+  border-radius: 10px;
+  background: #fff;
+  padding: 14px;
+  box-shadow: 0 24px 70px rgba(15, 23, 42, 0.28);
+}
+
+.pos-reservationList {
+  display: grid;
+  gap: 8px;
+}
+
+.pos-reservationRow {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2px 10px;
+  min-height: 58px;
+  border: 1px solid rgba(59, 0, 139, 0.14);
+  border-radius: 8px;
+  background: #fbfbfc;
+  color: var(--pos-ink);
+  padding: 9px 10px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.pos-reservationRow strong {
+  grid-row: span 2;
+  color: var(--pos-pink);
+  font-size: 18px;
+  align-self: center;
+}
+
+.pos-reservationRow span {
+  font-weight: 900;
+}
+
+.pos-reservationRow small {
+  color: #697386;
+  font-weight: 800;
+}
+
+.pos-reservationRow.active {
+  border-color: var(--pos-brand-3);
+  box-shadow: 0 0 0 3px rgba(106, 61, 240, 0.14);
+}
+
+.pos-reservationsFab {
+  position: fixed;
+  right: 22px;
+  bottom: 48px;
+  z-index: 50;
+  width: 54px;
+  height: 54px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: #eef2ff;
+  color: var(--pos-brand-3);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.18);
+  cursor: pointer;
+}
+
+.pos-reservationsFab span {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.pos-reservationsFab strong {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 20px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: #151515;
+  color: #fff;
+  font-size: 11px;
+}
+
+.pos-reservationsFab.active {
+  background: var(--pos-pink);
+  color: #fff;
+}
+
+.pos-storePanel {
+  padding: 14px 12px 18px;
+  flex: 1;
+}
+
+.pos-inventoryPane {
+  background: #fff;
+  border: 1px solid var(--pos-line);
+  border-radius: 8px;
+  padding: 14px;
+  box-shadow: 0 14px 36px rgba(59, 0, 139, 0.08);
+}
+
+.pos-invHeadActions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pos-invSearchBtn {
+  width: 38px;
+  min-width: 38px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+}
+
+.pos-invSearchBtn span {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+}
+
+.pos-invSearchBtn span::before {
+  content: "";
+  position: absolute;
+  right: -8px;
+  bottom: -5px;
+  width: 10px;
+  height: 3px;
+  border-radius: 999px;
+  background: #fff;
+  transform: rotate(45deg);
+}
+
+.pos-inlineAlert {
+  border: 1px solid rgba(249, 38, 114, 0.24);
+  border-radius: 8px;
+  background: #fff0f6;
+  color: #9a174d;
+  padding: 10px 12px;
+  font-size: 13px;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.pos-inventoryList {
+  display: grid;
+  gap: 10px;
+}
+
+.pos-invSearchView {
+  display: grid;
+  gap: 12px;
+}
+
+.pos-invSearchBar {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 8px;
+}
+
+.pos-invSearchBar button {
+  min-height: 42px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--pos-brand-1);
+  color: #fff;
+  padding: 0 14px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.pos-invSearchBar input {
+  min-width: 0;
+  min-height: 42px;
+  border: 1px solid rgba(59, 0, 139, 0.18);
+  border-radius: 8px;
+  padding: 0 12px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.pos-invItems--search {
+  padding: 0;
+}
+
+.pos-invCategory {
+  border: 1px solid rgba(59, 0, 139, 0.12);
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f8f6ff;
+}
+
+.pos-invCategoryBtn {
+  width: 100%;
+  min-height: 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 0;
+  background: #f1eef7;
+  color: var(--pos-ink);
+  padding: 0 14px;
+  font: inherit;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.pos-invCategoryBtn strong {
+  color: var(--pos-brand-3);
+}
+
+.pos-invItems {
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+}
+
+.pos-invItem {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-radius: 8px;
+  background: #fff;
+  padding: 8px 10px;
+}
+
+.pos-invItem span {
+  display: grid;
+  gap: 2px;
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1.15;
+}
+
+.pos-invItem span small {
+  color: #697386;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: none;
+}
+
+.pos-invItem.is-inactive span small {
+  color: #94a3b8;
+}
+
+.pos-invItem.is-inactive {
+  color: #8b95a5;
+  background: #f8fafc;
+}
+
+.pos-invToggle {
+  flex: 0 0 auto;
+  min-width: 78px;
+  min-height: 30px;
+  border: 0;
+  border-radius: 999px;
+  padding: 0 12px;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.pos-invToggle.on {
+  background: #dcfce7;
+  color: #047857;
+}
+
+.pos-invToggle.off {
+  background: #e5e7eb;
+  color: #475569;
+}
+
+.pos-invToggle:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.pos-actionGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.pos-actionGrid button:last-child {
+  background: #151515;
+}
+
+@media (max-width: 860px) {
+  .pos-topbar,
+  .pos-workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .pos-workspace {
+    padding-inline: 12px;
+  }
+
+  .pos-topbar {
+    align-items: stretch;
+  }
+
+  .pos-topMetrics {
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding-bottom: 2px;
+  }
+
+  .pos-topChip,
+  .pos-syncChip,
+  .pos-deviceStatus {
+    flex: 0 0 auto;
+  }
+}

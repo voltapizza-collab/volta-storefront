@@ -1316,25 +1316,71 @@
   font-size: 58px;
   line-height: 1;
   filter:
-    drop-shadow(0 0 7px rgba(0, 255, 102, 0.34))
-    drop-shadow(0 0 12px rgba(0, 255, 102, 0.22));
+    drop-shadow(0 3px 0 rgba(75, 17, 178, 0.12))
+    drop-shadow(0 0 7px rgba(255, 216, 77, 0.24))
+    drop-shadow(0 0 14px rgba(106, 61, 240, 0.16))
+    drop-shadow(0 0 20px rgba(0, 210, 180, 0.1));
+  animation: posChillIconPulse 3.8s ease-in-out infinite;
 }
 
 .pos-chill strong {
   position: relative;
-  color: #4b5563;
-  font-family: "Permanent Marker", Inter, system-ui, sans-serif;
-  font-size: 21px;
-  font-weight: 900;
+  color: rgba(17, 17, 17, 0.42);
+  font-family: "Brush Script MT", "Segoe Script", "Lucida Handwriting", cursive;
+  font-size: 16px;
+  font-weight: 700;
   line-height: 1.05;
-  transform: rotate(-2deg) skewX(-3deg);
-  -webkit-text-stroke: 0.7px #bef264;
+  transform: rotate(-3deg);
+  -webkit-text-stroke: 0;
   text-shadow:
-    0 1px 0 #111827,
-    0 0 3px rgba(0, 255, 102, 0.58),
-    0 0 9px rgba(0, 255, 102, 0.36);
-  filter: drop-shadow(0 0 7px rgba(0, 255, 102, 0.24));
-  animation: posTextPulse 1.9s ease-in-out infinite;
+    0 1px 0 rgba(255, 255, 255, 0.95),
+    0 0 6px rgba(255, 216, 77, 0.28),
+    0 0 12px rgba(106, 61, 240, 0.18),
+    0 0 18px rgba(0, 210, 180, 0.12);
+  filter:
+    drop-shadow(0 0 3px rgba(255, 216, 77, 0.25))
+    drop-shadow(0 0 8px rgba(106, 61, 240, 0.14));
+  animation: posChillSoftPulse 3.8s ease-in-out infinite;
+}
+
+@keyframes posChillSoftPulse {
+  0%,
+  100% {
+    color: rgba(17, 17, 17, 0.42);
+    text-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.95),
+      0 0 6px rgba(255, 216, 77, 0.3),
+      0 0 12px rgba(106, 61, 240, 0.18),
+      0 0 18px rgba(0, 210, 180, 0.12);
+  }
+
+  50% {
+    color: rgba(17, 17, 17, 0.5);
+    text-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.95),
+      0 0 8px rgba(255, 191, 45, 0.42),
+      0 0 18px rgba(249, 38, 114, 0.2),
+      0 0 24px rgba(106, 61, 240, 0.18);
+  }
+}
+
+@keyframes posChillIconPulse {
+  0%,
+  100% {
+    filter:
+      drop-shadow(0 3px 0 rgba(75, 17, 178, 0.12))
+      drop-shadow(0 0 7px rgba(255, 216, 77, 0.24))
+      drop-shadow(0 0 14px rgba(106, 61, 240, 0.16))
+      drop-shadow(0 0 20px rgba(0, 210, 180, 0.1));
+  }
+
+  50% {
+    filter:
+      drop-shadow(0 3px 0 rgba(75, 17, 178, 0.14))
+      drop-shadow(0 0 9px rgba(255, 191, 45, 0.34))
+      drop-shadow(0 0 18px rgba(249, 38, 114, 0.18))
+      drop-shadow(0 0 26px rgba(106, 61, 240, 0.16));
+  }
 }
 
 .pos-idleClockCard {
@@ -1393,6 +1439,43 @@
   text-transform: uppercase;
   opacity: 1;
   text-shadow: none;
+}
+
+.pos-dayInfoGrid {
+  width: min(100%, 360px);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.pos-idleClockCard .pos-dayInfoChip {
+  display: grid;
+  gap: 2px;
+  min-height: 48px;
+  border: 1px solid rgba(106, 61, 240, 0.1);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(255, 250, 240, 0.72));
+  padding: 8px 9px;
+  text-align: left;
+}
+
+.pos-dayInfoChip em {
+  color: rgba(17, 17, 17, 0.48);
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 1000;
+  letter-spacing: 0.08em;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.pos-dayInfoChip b {
+  color: #3b008b;
+  font-size: 11px;
+  font-weight: 950;
+  line-height: 1.2;
 }
 
 @keyframes posTextPulse {
@@ -1631,6 +1714,135 @@
 .pos-reservationsFab.active {
   background: var(--pos-pink);
   color: #fff;
+}
+
+.pos-customerHelpFab {
+  position: fixed;
+  left: 22px;
+  bottom: 48px;
+  z-index: 50;
+  width: 54px;
+  height: 54px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 40% 30%, #fff8c7, #ffd84d 52%, #f2b705);
+  color: #3b008b;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.55),
+    0 10px 30px rgba(15, 23, 42, 0.18);
+  cursor: pointer;
+}
+
+.pos-customerHelpFab span {
+  font-size: 25px;
+  line-height: 1;
+  transform: translateY(1px);
+}
+
+.pos-customerHelpFab strong {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  width: 20px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--pos-brand-1);
+  font-size: 13px;
+  font-weight: 1000;
+  box-shadow: 0 4px 12px rgba(59, 0, 139, 0.18);
+}
+
+.pos-customerHelpFab.active {
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.62),
+    0 0 0 4px rgba(255, 216, 77, 0.2),
+    0 12px 34px rgba(15, 23, 42, 0.2);
+}
+
+.pos-customerHelpModal {
+  max-width: min(560px, calc(100vw - 28px));
+}
+
+.pos-customerHelpForm {
+  display: grid;
+  gap: 12px;
+}
+
+.pos-customerHelpForm label {
+  display: grid;
+  gap: 6px;
+  color: #4b5563;
+  font-size: 11px;
+  font-weight: 1000;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.pos-customerHelpForm select,
+.pos-customerHelpForm textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid rgba(59, 0, 139, 0.18);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--pos-ink);
+  padding: 10px 11px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  outline: none;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.pos-customerHelpForm textarea {
+  resize: vertical;
+  min-height: 96px;
+}
+
+.pos-customerHelpTarget {
+  display: grid;
+  gap: 3px;
+  border: 1px solid rgba(255, 216, 77, 0.5);
+  border-radius: 8px;
+  background: #fff9df;
+  padding: 10px 11px;
+}
+
+.pos-customerHelpTarget strong {
+  color: var(--pos-brand-1);
+  font-size: 15px;
+}
+
+.pos-customerHelpTarget span,
+.pos-customerHelpTarget small {
+  color: #4b5563;
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.pos-customerHelpTemplates {
+  display: grid;
+  gap: 7px;
+}
+
+.pos-customerHelpTemplates button {
+  border: 1px solid rgba(59, 0, 139, 0.12);
+  border-radius: 8px;
+  background: #fbfbfc;
+  color: #3b008b;
+  padding: 9px 10px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 850;
+  text-align: left;
+  cursor: pointer;
 }
 
 .pos-storePanel {

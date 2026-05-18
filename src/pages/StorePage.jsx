@@ -17,7 +17,7 @@ const PROMOS_TAB = "__PROMOS__";
 const UPCOMING_TAB = "__UPCOMING__";
 const HALF_CATEGORY_ID = 3;
 const CUSTOM_BASE_PRICE_FACTOR = 0.8;
-const STOREFRONT_TERMS_VERSION = "2026-05-full-legal-v1";
+const STOREFRONT_TERMS_VERSION = "2026-05-full-legal-v3";
 const STOREFRONT_TERMS_KEY = `volta_storefront_terms_${STOREFRONT_TERMS_VERSION}`;
 const DEFAULT_BOOST_SETTINGS = {
   active: true,
@@ -26,6 +26,20 @@ const DEFAULT_BOOST_SETTINGS = {
   voltaSharePercent: 25,
   partnerSharePercent: 75,
 };
+
+const normalizeCheckoutPhoneInput = (value) => {
+  const digits = String(value || "").replace(/\D/g, "");
+  if (digits.length === 9) return digits;
+  if (digits.length === 11 && digits.startsWith("34")) return digits.slice(2);
+  if (digits.length > 9) return digits.slice(-9);
+  return digits;
+};
+
+const hasBasicCustomerProfile = (profile) =>
+  Boolean(
+    String(profile?.name || "").trim() &&
+      normalizeCheckoutPhoneInput(profile?.phone).length === 9
+  );
 const NON_INCENTIVE_LINE_SOURCES = new Set([
   "queue_boost",
   "incentive_reward",
@@ -654,6 +668,16 @@ function StorefrontTermsGateModal({ open, onAccept, partnerName }) {
             <li>El contrato de compra se perfecciona al confirmar el pedido y, cuando corresponda, completar el pago.</li>
             <li>Alimentos preparados o perecederos no admiten desistimiento de 14 dias una vez iniciada la preparacion.</li>
             <li>Las incidencias deben comunicarse con numero de pedido y, si procede, fotos.</li>
+          </ul>
+
+          <h4>Politica de prioridad Boost</h4>
+          <ul>
+            <li>Un pedido con Boost activo tiene prioridad operativa sobre cualquier pedido sin Boost, bajo cualquier circunstancia.</li>
+            <li>Todos los pedidos con Boost se colocan siempre al inicio de la cola de pedidos pendientes.</li>
+            <li>Dentro del bloque Boost, la prioridad depende del puesto comprado por el cliente: el puesto 1 es la prioridad mas alta, seguido por el puesto 2, puesto 3 y sucesivos.</li>
+            <li>Despues de los pedidos Boost, los pedidos de clientes VIP tienen prioridad sobre el resto de pedidos sin Boost.</li>
+            <li>Cuando varios pedidos Boost compiten por la misma intensidad, se ordenan por credito de cola, momento de pago y antiguedad del pedido.</li>
+            <li>El Boost no cambia la disponibilidad de productos, horarios, zona de servicio ni el resto de condiciones del pedido.</li>
           </ul>
 
           <h4>Politica de cupones, promos e incentivos</h4>
@@ -1398,6 +1422,12 @@ export default function StorePage() {
   const [cartOpen, setCartOpen] = useState(false);
   const [checkoutMessage, setCheckoutMessage] = useState("");
   const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [checkoutProfileOpen, setCheckoutProfileOpen] = useState(false);
+  const [checkoutProfileForm, setCheckoutProfileForm] = useState({
+    name: "",
+    phone: "",
+  });
+  const [savedCustomerProfile, setSavedCustomerProfile] = useState(null);
   const [productModalOpen, setProductModalOpen] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState(null);
   const [productSelection, setProductSelection] = useState({
@@ -1670,6 +1700,31 @@ export default function StorePage() {
     () => `volta-repeat-cart-draft:${partnerSlug || "partner"}:${storeSlug || "store"}`,
     [partnerSlug, storeSlug]
   );
+  const customerProfileStorageKey = useMemo(
+    () => `volta-checkout-customer:${partnerSlug || "partner"}`,
+    [partnerSlug]
+  );
+
+  useEffect(() => {
+    try {
+      const stored = window.localStorage.getItem(customerProfileStorageKey);
+      const parsed = stored ? JSON.parse(stored) : null;
+      if (hasBasicCustomerProfile(parsed)) {
+        const normalized = {
+          id: parsed.id || parsed.customerId || null,
+          name: String(parsed.name || "").trim(),
+          phone: normalizeCheckoutPhoneInput(parsed.phone),
+        };
+        setSavedCustomerProfile(normalized);
+        setCheckoutProfileForm((current) => ({
+          name: current.name || normalized.name,
+          phone: current.phone || normalized.phone,
+        }));
+      }
+    } catch {
+      setSavedCustomerProfile(null);
+    }
+  }, [customerProfileStorageKey]);
 
   useEffect(() => {
     try {
@@ -3089,9 +3144,30 @@ export default function StorePage() {
     }
   };
 
-  const startStripeCheckout = useCallback(async () => {
+  const startStripeCheckout = useCallback(async (profileOverride = null) => {
+    if (profileOverride?.preventDefault) {
+      profileOverride = null;
+    }
+
     if (!cartCount || cartTotal <= 0) {
       setCheckoutMessage("Agrega productos al carrito antes de pagar.");
+      return;
+    }
+
+    const basicProfile = hasBasicCustomerProfile(profileOverride)
+      ? profileOverride
+      : hasBasicCustomerProfile(savedCustomerProfile)
+      ? savedCustomerProfile
+      : null;
+
+    if (!basicProfile) {
+      setCheckoutProfileForm((current) => ({
+        name: current.name || "",
+        phone: normalizeCheckoutPhoneInput(current.phone || repeatPhone),
+      }));
+      setCheckoutProfileOpen(true);
+      setCartOpen(false);
+      setCheckoutMessage("");
       return;
     }
 
@@ -3102,6 +3178,18 @@ export default function StorePage() {
       const deliveryResolution = location.state?.deliveryResolution || {};
       const deliveryMethod = serviceMode === "delivery" ? "COURIER" : "PICKUP";
       const deliveryCoords = deliveryResolution?.coords || {};
+      const deliveryAddress =
+        serviceMode === "delivery"
+          ? location.state?.deliveryAddress || deliveryResolution?.formattedAddress || ""
+          : "";
+      const deliveryAddressLine2 =
+        serviceMode === "delivery" ? location.state?.deliveryAddressLine2 || "" : "";
+      const checkoutProfile = {
+        id: basicProfile.id || basicProfile.customerId || null,
+        name: String(basicProfile.name || "").trim(),
+        phone: normalizeCheckoutPhoneInput(basicProfile.phone),
+        address_1: [deliveryAddress, deliveryAddressLine2].filter(Boolean).join(", "),
+      };
       const checkoutResponse = await api.post("/api/checkout/session", {
         partnerId: Number(partner?.id || store?.partnerId),
         storeId: Number(store?.id),
@@ -3109,12 +3197,11 @@ export default function StorePage() {
         total: cartTotal,
         currency: partner?.currency || "EUR",
         scheduledFor: scheduledAtIsValid ? scheduledAt.toISOString() : null,
+        customer: checkoutProfile,
         delivery: {
           method: deliveryMethod,
-          address:
-            serviceMode === "delivery"
-              ? location.state?.deliveryAddress || deliveryResolution?.formattedAddress || ""
-              : "",
+          address: deliveryAddress,
+          addressLine2: deliveryAddressLine2,
           lat: deliveryCoords?.lat,
           lng: deliveryCoords?.lng,
         },
@@ -3129,6 +3216,18 @@ export default function StorePage() {
         checkoutData?.data?.url;
 
       if (checkoutUrl) {
+        try {
+          const nextProfile = {
+            id: checkoutData?.customerId || checkoutProfile.id || null,
+            name: checkoutProfile.name,
+            phone: checkoutProfile.phone,
+          };
+          window.localStorage.setItem(customerProfileStorageKey, JSON.stringify(nextProfile));
+          setSavedCustomerProfile(nextProfile);
+        } catch {
+          setSavedCustomerProfile(checkoutProfile);
+        }
+        setCheckoutProfileOpen(false);
         window.location.assign(checkoutUrl);
         return;
       }
@@ -3143,6 +3242,7 @@ export default function StorePage() {
         stripe_not_configured: "Stripe no esta configurado para esta tienda.",
         coupon_not_available: "El cupon ya no esta disponible. Quitalo y valida de nuevo.",
         coupon_not_applicable: "El cupon ya no aplica a este carrito.",
+        customer_profile_required: "Necesitamos tu nombre y telefono para hacer seguimiento al pedido.",
         amount_too_low: "El importe es demasiado bajo para procesar el pago.",
         stripe_session_url_missing: "Stripe creo la sesion sin URL de pago. Intentalo de nuevo.",
         checkout_failed: "Stripe no pudo crear la sesion de pago.",
@@ -3156,11 +3256,14 @@ export default function StorePage() {
     cart,
     cartCount,
     cartTotal,
+    customerProfileStorageKey,
     location.state,
     partner?.currency,
     partner?.id,
+    repeatPhone,
     scheduledAt,
     scheduledAtIsValid,
+    savedCustomerProfile,
     store?.id,
     store?.partnerId,
   ]);
@@ -3482,6 +3585,24 @@ export default function StorePage() {
       window.localStorage.setItem(cartDraftStorageKey, JSON.stringify(draft));
     } catch {
       // The in-memory draft is enough if storage is unavailable.
+    }
+    if (hasBasicCustomerProfile(draft?.customerData)) {
+      const repeatProfile = {
+        id: draft.customerData.id || draft.customerId || null,
+        name: String(draft.customerData.name || "").trim(),
+        phone: normalizeCheckoutPhoneInput(draft.customerData.phone),
+      };
+
+      setSavedCustomerProfile(repeatProfile);
+      setCheckoutProfileForm({
+        name: repeatProfile.name,
+        phone: repeatProfile.phone,
+      });
+      try {
+        window.localStorage.setItem(customerProfileStorageKey, JSON.stringify(repeatProfile));
+      } catch {
+        // Current state is enough if storage is unavailable.
+      }
     }
     setRepeatMessage("Pedido repetido y anadido al carrito.");
     setRepeatOpen(false);
@@ -4427,7 +4548,7 @@ export default function StorePage() {
             onClick={startStripeCheckout}
             disabled={cartCount === 0 || checkoutLoading}
           >
-            <span>{checkoutLoading ? "Opening..." : "Pay now"}</span>
+            <span>{checkoutLoading ? "Estas muy cerca" : "Pay now"}</span>
             {cartCount > 0 && !checkoutLoading && <small>EUR {cartTotal.toFixed(2)}</small>}
           </button>
 
@@ -4785,12 +4906,112 @@ export default function StorePage() {
                       onClick={startStripeCheckout}
                       disabled={checkoutLoading}
                     >
-                      {checkoutLoading ? "Abriendo Stripe..." : "Pagar ahora"}
+                      {checkoutLoading ? "Preparando tu pago..." : "Pagar ahora"}
                     </button>
                   </div>
                 </div>
               </>
             )}
+          </div>
+        </div>
+      )}
+
+      {checkoutProfileOpen && (
+        <div className="sf-modalOverlay" onClick={() => !checkoutLoading && setCheckoutProfileOpen(false)}>
+          <div
+            className="sf-modalCard sf-checkoutProfileModal"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="sf-cartModalHead">
+              <div>
+                <span>Seguimiento del pedido</span>
+                <h3>Datos de contacto</h3>
+              </div>
+              <button
+                type="button"
+                className="sf-modalCloseBtn"
+                onClick={() => setCheckoutProfileOpen(false)}
+                disabled={checkoutLoading}
+                aria-label="Cerrar"
+              >
+                x
+              </button>
+            </div>
+
+            <form
+              className="sf-checkoutProfileForm"
+              onSubmit={(event) => {
+                event.preventDefault();
+                const nextProfile = {
+                  name: String(checkoutProfileForm.name || "").trim(),
+                  phone: normalizeCheckoutPhoneInput(checkoutProfileForm.phone),
+                };
+
+                if (!hasBasicCustomerProfile(nextProfile)) {
+                  setCheckoutMessage("Escribe tu nombre y un telefono de 9 digitos.");
+                  return;
+                }
+
+                setSavedCustomerProfile(nextProfile);
+                startStripeCheckout(nextProfile);
+              }}
+            >
+              <label>
+                <span>Nombre</span>
+                <input
+                  type="text"
+                  value={checkoutProfileForm.name}
+                  onChange={(event) =>
+                    setCheckoutProfileForm((current) => ({
+                      ...current,
+                      name: event.target.value,
+                    }))
+                  }
+                  placeholder="Tu nombre"
+                  autoComplete="name"
+                  disabled={checkoutLoading}
+                />
+              </label>
+
+              <label>
+                <span>Telefono</span>
+                <input
+                  type="tel"
+                  value={checkoutProfileForm.phone}
+                  onChange={(event) =>
+                    setCheckoutProfileForm((current) => ({
+                      ...current,
+                      phone: event.target.value,
+                    }))
+                  }
+                  placeholder="612345678"
+                  autoComplete="tel"
+                  disabled={checkoutLoading}
+                />
+              </label>
+
+              {checkoutMessage && (
+                <div className="sf-reservationMessage">{checkoutMessage}</div>
+              )}
+
+              <div className="sf-cartActions">
+                <button
+                  type="button"
+                  className="sf-secondaryBtn"
+                  onClick={() => setCheckoutProfileOpen(false)}
+                  disabled={checkoutLoading}
+                >
+                  Volver
+                </button>
+                <button
+                  type="submit"
+                  className="sf-primaryBtn"
+                  disabled={checkoutLoading}
+                >
+                  {checkoutLoading ? "Preparando tu pago..." : "Continuar al pago"}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

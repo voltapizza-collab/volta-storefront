@@ -22,8 +22,10 @@
 
 .pos-shell--visitors {
   background:
-    linear-gradient(135deg, rgba(255, 182, 28, 0.24), rgba(249, 38, 114, 0.1)),
-    #fffaf0;
+    radial-gradient(circle at 74% 18%, rgba(255, 182, 28, 0.52), transparent 28%),
+    radial-gradient(circle at 18% 30%, rgba(249, 38, 114, 0.22), transparent 30%),
+    linear-gradient(135deg, rgba(59, 0, 139, 0.11), rgba(255, 182, 28, 0.16)),
+    #fff8d8;
 }
 
 .pos-shell--stale {
@@ -643,6 +645,21 @@
   min-height: 520px;
 }
 
+.pos-workspace--visitorAlert {
+  padding: 0;
+  flex: 1;
+  align-content: stretch;
+}
+
+.pos-ordersPane--visitorAlert {
+  min-height: 100%;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+}
+
 .pos-actionsPane {
   display: grid;
   gap: 14px;
@@ -704,14 +721,17 @@
 
 .pos-orderCard {
   position: relative;
-  flex: 0 0 min(330px, 86vw);
-  width: min(330px, 86vw);
-  height: 198px;
+  flex: 0 0 min(390px, 90vw);
+  width: min(390px, 90vw);
+  min-height: 356px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
   scroll-snap-align: start;
   border: 2px solid #e5e8ee;
   border-radius: 8px;
   background: #fff;
-  padding: 12px;
+  padding: 13px;
   text-align: left;
   color: inherit;
   cursor: pointer;
@@ -719,10 +739,16 @@
 }
 
 .pos-orderCard.is-boosted {
-  border-color: #facc15;
-  background: linear-gradient(180deg, #fffbeb 0%, #fff 62%);
+  border-color: #f4c34d;
+  background: linear-gradient(180deg, #fff8df 0%, #fff 62%);
   box-shadow: 0 12px 32px rgba(180, 83, 9, 0.16);
   animation: posBoostPulse 1.15s ease-in-out infinite;
+}
+
+.pos-orderCard.is-vip:not(.is-boosted) {
+  border-color: rgba(106, 61, 240, 0.36);
+  background: linear-gradient(180deg, #f7f3ff 0%, #fff 58%);
+  box-shadow: 0 12px 32px rgba(106, 61, 240, 0.12);
 }
 
 @keyframes posBoostPulse {
@@ -748,17 +774,270 @@
   box-shadow: 0 0 0 3px rgba(106, 61, 240, 0.14);
 }
 
-.pos-boostBadge {
+.pos-boostSeal {
   position: absolute;
-  right: 10px;
-  bottom: 10px;
-  border-radius: 999px;
-  background: #151515;
-  color: #facc15;
-  padding: 4px 8px;
+  right: 12px;
+  bottom: 12px;
+  z-index: 2;
+  width: 50px;
+  height: 50px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  background: var(--seal-bg);
+  color: var(--seal-text);
+  clip-path: polygon(
+    50% 0%,
+    56% 11%,
+    66% 4%,
+    70% 17%,
+    83% 13%,
+    83% 27%,
+    96% 31%,
+    89% 42%,
+    100% 50%,
+    89% 58%,
+    96% 69%,
+    83% 73%,
+    83% 87%,
+    70% 83%,
+    66% 96%,
+    56% 89%,
+    50% 100%,
+    44% 89%,
+    34% 96%,
+    30% 83%,
+    17% 87%,
+    17% 73%,
+    4% 69%,
+    11% 58%,
+    0% 50%,
+    11% 42%,
+    4% 31%,
+    17% 27%,
+    17% 13%,
+    30% 17%,
+    34% 4%,
+    44% 11%
+  );
+  padding: 0;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  transform: rotate(-8deg);
+  box-shadow:
+    inset 0 0 0 2px rgba(255, 255, 255, 0.44),
+    inset 0 0 16px rgba(255, 255, 255, 0.34),
+    0 10px 20px rgba(59, 0, 139, 0.18);
+}
+
+.pos-boostSeal--gold {
+  --seal-bg: linear-gradient(145deg, #fff3a9, #d6a31e 52%, #f8d866);
+  --seal-text: #4c3200;
+  --seal-label: #6f4d08;
+  --seal-glow: rgba(255, 255, 255, 0.74);
+}
+
+.pos-boostSeal--silver {
+  --seal-bg: linear-gradient(145deg, #ffffff, #b6c0c9 52%, #edf2f7);
+  --seal-text: #26313b;
+  --seal-label: #52606d;
+  --seal-glow: rgba(255, 255, 255, 0.82);
+}
+
+.pos-boostSeal--bronze {
+  --seal-bg: linear-gradient(145deg, #ffd9b1, #b56a28 52%, #e29b59);
+  --seal-text: #3d210c;
+  --seal-label: #5b2f10;
+  --seal-glow: rgba(255, 226, 184, 0.7);
+}
+
+.pos-boostSeal span {
+  position: relative;
+  z-index: 1;
+  line-height: 1;
+  text-align: center;
+  display: block;
+  margin-top: 1px;
+  color: var(--seal-label);
+  font-size: 8px;
+  font-weight: 1000;
+  letter-spacing: 0.01em;
+  text-shadow:
+    0 1px 0 var(--seal-glow),
+    0 0 5px var(--seal-glow);
+}
+
+.pos-boostSeal::before,
+.pos-boostSeal::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.pos-boostSeal::before {
+  inset: 8px;
+  border: 1px dashed rgba(76, 50, 0, 0.34);
+}
+
+.pos-boostSeal::after {
+  inset: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+}
+
+.pos-vipPriorityBadge {
+  border: 1px solid rgba(106, 61, 240, 0.26);
+  border-radius: 8px;
+  background: linear-gradient(90deg, #ffffff, #fff5cf);
+  color: var(--pos-brand-1);
+  padding: 9px 10px;
   font-size: 10px;
   font-weight: 1000;
-  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  box-shadow: inset 3px 0 0 #facc15;
+}
+
+.pos-orderIdRow,
+.pos-orderCustomerTop,
+.pos-orderContact,
+.pos-orderSummary {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+}
+
+.pos-orderIdRow span,
+.pos-orderCustomerTop span,
+.pos-orderItemsTitle {
+  display: block;
+  color: #697386;
+  font-size: 10px;
+  font-weight: 1000;
+  text-transform: uppercase;
+}
+
+.pos-orderIdRow strong {
+  display: block;
+  margin-top: 1px;
+  color: #151515;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.pos-orderIdRow em {
+  min-width: 42px;
+  border-radius: 999px;
+  background: var(--pos-brand-1);
+  color: #fff;
+  padding: 7px 9px;
+  font-style: normal;
+  font-size: 13px;
+  font-weight: 1000;
+  text-align: center;
+}
+
+.pos-orderCustomerCard {
+  display: grid;
+  gap: 7px;
+  border: 1px solid rgba(106, 61, 240, 0.16);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(255, 182, 28, 0.13), rgba(106, 61, 240, 0.08)),
+    #fff;
+  padding: 10px;
+}
+
+.pos-orderCustomerTop strong {
+  display: block;
+  margin-top: 1px;
+  color: #151515;
+  font-size: 18px;
+  line-height: 1.05;
+  word-break: break-word;
+}
+
+.pos-segmentBadge {
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: var(--pos-brand-1);
+  padding: 6px 9px;
+  font-size: 10px;
+  font-weight: 1000;
+  text-transform: uppercase;
+}
+
+.pos-segmentBadge--s2,
+.pos-segmentBadge--s4 {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.pos-segmentBadge--s3 {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.pos-segmentBadge--s5 {
+  background: linear-gradient(180deg, #fff8db, #ffd66e);
+  color: var(--pos-brand-1);
+  box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.16);
+}
+
+.pos-orderTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.pos-orderTags span {
+  border-radius: 999px;
+  background: rgba(59, 0, 139, 0.08);
+  color: #3b008b;
+  padding: 4px 7px;
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.pos-orderContact,
+.pos-orderAddress {
+  color: #334155;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.pos-orderContact span:last-child {
+  color: #6a3df0;
+}
+
+.pos-orderAddress {
+  min-height: 18px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pos-orderSummary {
+  border-top: 1px solid #eef0f4;
+  border-bottom: 1px solid #eef0f4;
+  padding: 7px 0;
+  color: #697386;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.pos-orderSummary span:first-child {
+  color: var(--pos-pink);
+}
+
+.pos-orderSummary b {
+  color: #151515;
+  font-size: 14px;
+}
+
+.pos-orderItemsTitle {
+  margin-top: 1px;
 }
 
 .pos-orderMain,
@@ -834,7 +1113,7 @@
 }
 
 .pos-orderCard .pos-items {
-  max-height: 56px;
+  max-height: 78px;
   overflow: hidden;
 }
 
@@ -873,34 +1152,264 @@
 }
 
 .pos-empty--visitors {
-  border-color: #f97316;
-  background: #fff7ed;
-  color: #9a3412;
+  position: relative;
+  min-height: calc(100dvh - 214px);
+  place-content: center;
+  overflow: hidden;
+  border: 0;
+  border-radius: 0;
+  background:
+    radial-gradient(circle at 50% 48%, rgba(255, 255, 255, 0.32), transparent 24%),
+    radial-gradient(circle at 50% 48%, rgba(255, 246, 176, 0.48), transparent 42%),
+    linear-gradient(145deg, color-mix(in srgb, var(--pos-brand-2) 82%, #fff) 0%, var(--pos-brand-2) 56%, #d99400 100%);
+  color: transparent;
+  isolation: isolate;
+  animation: posVisitorVoltaGlow 2.2s ease-in-out infinite;
+}
+
+.pos-empty--visitors > * {
+  position: relative;
+  z-index: 1;
+}
+
+.pos-empty--visitors::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 48%;
+  z-index: 0;
+  width: min(110vw, 760px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background:
+    repeating-radial-gradient(
+      circle,
+      rgba(255, 255, 255, 0) 0 12%,
+      rgba(255, 255, 255, 0.18) 12.4% 13.2%,
+      rgba(59, 0, 139, 0.12) 13.6% 14.2%,
+      rgba(255, 255, 255, 0) 14.8% 21%
+    );
+  opacity: 0.78;
+  animation: posVisitorWaterWaves 2.05s ease-out infinite;
+}
+
+.pos-empty--visitors::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 48%;
+  z-index: 0;
+  width: min(68vw, 420px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.2), transparent 64%);
+  box-shadow:
+    0 0 90px rgba(255, 255, 255, 0.22),
+    0 0 150px rgba(59, 0, 139, 0.12);
+  pointer-events: none;
 }
 
 .pos-empty--visitors strong {
-  color: #c2410c;
-  font-size: 30px;
+  display: none;
+}
+
+.pos-empty--visitors span,
+.pos-empty--visitors small {
+  display: none;
+}
+
+.pos-visitorSignal {
+  position: relative;
+  width: clamp(112px, 32vw, 190px);
+  height: clamp(112px, 32vw, 190px);
+  display: grid;
+  place-items: center;
+  justify-self: center;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, #fff 0 13%, #fff4bd 13.5% 22%, var(--pos-brand-2) 23% 34%, #3b008b 35% 39%, transparent 40%),
+    radial-gradient(circle, rgba(255, 255, 255, 0.62), rgba(255, 182, 28, 0.18) 58%, transparent 62%);
+  box-shadow:
+    0 0 0 8px rgba(255, 255, 255, 0.18),
+    0 0 34px rgba(255, 255, 255, 0.42),
+    0 0 90px rgba(59, 0, 139, 0.24);
+  animation: posVisitorBeaconPulse 1.4s ease-in-out infinite;
+}
+
+.pos-visitorSignal span {
+  position: absolute;
+  inset: -18px;
+  border: 2px solid rgba(255, 255, 255, 0.58);
+  border-radius: 50%;
+  box-shadow: 0 0 18px rgba(59, 0, 139, 0.12);
+  animation: posVisitorSignal 2.1s ease-out infinite;
+}
+
+.pos-visitorSignal span:nth-child(2) {
+  animation-delay: 0.32s;
+}
+
+.pos-visitorSignal span:nth-child(3) {
+  animation-delay: 0.64s;
+}
+
+@keyframes posVisitorVoltaGlow {
+  0%,
+  100% {
+    filter: saturate(1) brightness(1);
+  }
+
+  50% {
+    filter: saturate(1.08) brightness(1.03);
+  }
+}
+
+@keyframes posVisitorSignal {
+  0% {
+    opacity: 0.78;
+    transform: scale(0.3);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(3.85);
+  }
+}
+
+@keyframes posVisitorBeaconPulse {
+  0%,
+  100% {
+    transform: scale(0.96);
+  }
+
+  50% {
+    transform: scale(1.04);
+  }
+}
+
+@keyframes posVisitorWaterWaves {
+  0% {
+    opacity: 0.3;
+    transform: translate(-50%, -50%) scale(0.72);
+  }
+
+  48% {
+    opacity: 0.82;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.08);
+  }
 }
 
 .pos-chill {
   display: grid;
   justify-items: center;
-  gap: 2px;
+  gap: 4px;
   margin-bottom: 8px;
 }
 
 .pos-chill span {
   font-size: 58px;
   line-height: 1;
+  filter:
+    drop-shadow(0 0 7px rgba(0, 255, 102, 0.34))
+    drop-shadow(0 0 12px rgba(0, 255, 102, 0.22));
 }
 
 .pos-chill strong {
-  color: #a8a8a8;
+  position: relative;
+  color: #4b5563;
   font-family: "Permanent Marker", Inter, system-ui, sans-serif;
-  font-size: 15px;
-  font-weight: 400;
-  transform: rotate(-2deg);
+  font-size: 21px;
+  font-weight: 900;
+  line-height: 1.05;
+  transform: rotate(-2deg) skewX(-3deg);
+  -webkit-text-stroke: 0.7px #bef264;
+  text-shadow:
+    0 1px 0 #111827,
+    0 0 3px rgba(0, 255, 102, 0.58),
+    0 0 9px rgba(0, 255, 102, 0.36);
+  filter: drop-shadow(0 0 7px rgba(0, 255, 102, 0.24));
+  animation: posTextPulse 1.9s ease-in-out infinite;
+}
+
+.pos-idleClockCard {
+  display: grid;
+  gap: 9px;
+  justify-items: center;
+  margin-top: 14px;
+  border: 1px solid rgba(106, 61, 240, 0.14);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(255, 191, 45, 0.16), rgba(106, 61, 240, 0.08) 46%, rgba(255, 255, 255, 0.92)),
+    #ffffff;
+  padding: 18px 18px 16px;
+  color: #171717;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.72),
+    0 14px 36px rgba(59, 0, 139, 0.08);
+}
+
+.pos-idleClockCard span {
+  color: var(--pos-brand-1);
+  font-size: 11px;
+  font-weight: 1000;
+  text-transform: uppercase;
+}
+
+.pos-idleClockCard strong {
+  width: min(100%, 320px);
+  border: 1px solid rgba(106, 61, 240, 0.12);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, #ffffff, #fffaf0);
+  padding: 13px 14px 11px;
+  font-family: "Digital-7", "DSEG7 Classic", "Share Tech Mono", "Courier New", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 48px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  color: #5a21c8;
+  -webkit-text-fill-color: currentColor;
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.9),
+    0 0 16px rgba(106, 61, 240, 0.16);
+  box-shadow:
+    inset 0 -2px 0 rgba(255, 191, 45, 0.18),
+    0 8px 22px rgba(106, 61, 240, 0.08);
+}
+
+.pos-idleClockCard small {
+  color: rgba(17, 17, 17, 0.68);
+  font-size: 12px;
+  font-weight: 1000;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 1;
+  text-shadow: none;
+}
+
+@keyframes posTextPulse {
+  0%,
+  100% {
+    opacity: 0.9;
+    filter:
+      drop-shadow(0 0 3px rgba(0, 255, 102, 0.28))
+      drop-shadow(0 0 8px rgba(0, 255, 102, 0.18));
+  }
+
+  50% {
+    opacity: 1;
+    filter:
+      drop-shadow(0 0 5px rgba(0, 255, 102, 0.42))
+      drop-shadow(0 0 13px rgba(0, 255, 102, 0.26));
+  }
 }
 
 .pos-ticketPreview {
@@ -968,6 +1477,18 @@
 .pos-ticketBlock--boost span,
 .pos-ticketBlock--boost strong {
   color: #92400e;
+}
+
+.pos-ticketBlock--vip {
+  border: 1px solid rgba(106, 61, 240, 0.22);
+  border-radius: 8px;
+  background: #f7f3ff;
+  padding: 10px;
+}
+
+.pos-ticketBlock--vip span,
+.pos-ticketBlock--vip strong {
+  color: var(--pos-brand-1);
 }
 
 .pos-ticketTotal strong {

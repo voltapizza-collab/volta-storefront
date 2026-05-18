@@ -17,7 +17,19 @@ const request = async (path, options = {}) => {
   if (!res.ok) {
     const text = await res.text();
     console.error("API error:", text);
-    throw new Error(text || "API error");
+    let data = null;
+    try {
+      data = text ? JSON.parse(text) : null;
+    } catch {
+      data = null;
+    }
+    const error = new Error(data?.message || data?.error || text || "API error");
+    error.response = {
+      status: res.status,
+      data,
+      text,
+    };
+    throw error;
   }
 
   return res.json();

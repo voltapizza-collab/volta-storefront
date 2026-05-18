@@ -42,35 +42,21 @@ export default function PartnerPage() {
   }
 
   return (
-    <div className="sf-shell">
-      <div className="sf-wrap sf-gate">
-        <div className="sf-gateCard">
-          <div className="sf-kicker">Partner Landing</div>
-          <h1 className="sf-gateTitle">{partner.name}</h1>
-
-          <p className="sf-gateMeta">
-            {partner.country || ""} · {partner.stores?.length || 0} tiendas activas
-          </p>
-
-          <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-            <button
-              className="sf-gateButton"
-              onClick={() =>
-                navigate(`/${partner.slug}/order`, {
-                  state: { orderTrail: "landing", partnerName: partner.name },
-                })
-              }
-            >
-              Order Here
-            </button>
-            <button
-              className="sf-secondaryBtn"
-              onClick={() => navigate(`/${partner.slug}/coupons`)}
-            >
-              Coupon Gallery
-            </button>
-          </div>
-        </div>
+    <div className="sf-shell sf-shell--partnerGate">
+      <div className="sf-wrap sf-gate sf-gate--buttonOnly">
+        <button
+          type="button"
+          className="sf-partnerOrderButton"
+          onClick={() =>
+            navigate(`/${partner.slug}/order`, {
+              state: { orderTrail: "landing", partnerName: partner.name },
+            })
+          }
+          aria-label={`Order Here - ${partner.name}`}
+        >
+          <span className="sf-partnerOrderButton__label">Order Here</span>
+          <span className="sf-partnerOrderButton__pulse" aria-hidden="true" />
+        </button>
       </div>
     </div>
   );

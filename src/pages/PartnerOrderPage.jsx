@@ -1,8 +1,54 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import OrderPortalTransition from "../components/Storefront/OrderPortalTransition";
 import api from "../services/api";
 import "../styles/Storefront.css";
+
+const GOOGLE_KEY = process.env.REACT_APP_GOOGLE_KEY || "";
+const GOOGLE_PLACES_SCRIPT_ID = "volta-google-places-script";
+
+const normalizeSearchText = (value) =>
+  String(value || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim();
+
+const formatCityName = (value) =>
+  String(value || "")
+    .trim()
+    .split(/\s+/)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+    .join(" ");
+
+const loadGooglePlaces = (apiKey) =>
+  new Promise((resolve, reject) => {
+    if (!apiKey) {
+      reject(new Error("Google key missing"));
+      return;
+    }
+
+    if (window.google?.maps?.places) {
+      resolve(window.google);
+      return;
+    }
+
+    const existingScript = document.getElementById(GOOGLE_PLACES_SCRIPT_ID);
+    if (existingScript) {
+      existingScript.addEventListener("load", () => resolve(window.google), { once: true });
+      existingScript.addEventListener("error", reject, { once: true });
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.id = GOOGLE_PLACES_SCRIPT_ID;
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
+    script.async = true;
+    script.defer = true;
+    script.onload = () => resolve(window.google);
+    script.onerror = reject;
+    document.head.appendChild(script);
+  });
 
 export default function PartnerOrderPage() {
   const navigate = useNavigate();
@@ -13,11 +59,20 @@ export default function PartnerOrderPage() {
   const [error, setError] = useState("");
   const [portalReady, setPortalReady] = useState(false);
   const [serviceMode, setServiceMode] = useState("");
+  const [pickupModalOpen, setPickupModalOpen] = useState(false);
+  const [pickupCityFilter, setPickupCityFilter] = useState("");
+  const [recentStoreSlugs, setRecentStoreSlugs] = useState([]);
+  const [deliveryModalOpen, setDeliveryModalOpen] = useState(false);
   const [deliveryAddress, setDeliveryAddress] = useState("");
+  const [deliveryAddressLine2, setDeliveryAddressLine2] = useState("");
   const [selectedStoreSlug, setSelectedStoreSlug] = useState("");
   const [deliveryResolution, setDeliveryResolution] = useState(null);
   const [deliveryError, setDeliveryError] = useState("");
   const [isResolvingDelivery, setIsResolvingDelivery] = useState(false);
+  const [placesReady, setPlacesReady] = useState(false);
+  const [placesMessage, setPlacesMessage] = useState("");
+  const addressInputRef = useRef(null);
+  const autocompleteRef = useRef(null);
 
   useEffect(() => {
     setPortalReady(false);
@@ -51,82 +106,239 @@ export default function PartnerOrderPage() {
     return stores.find((store) => store.slug === selectedStoreSlug) || null;
   }, [stores, selectedStoreSlug]);
 
-  const storeStepReady = !!selectedStoreSlug;
-  const addressStepReady =
-    serviceMode !== "delivery" || !!deliveryAddress.trim();
-
-  const canContinue =
-    !!serviceMode &&
-    storeStepReady &&
-    (serviceMode !== "delivery" ||
-      (addressStepReady && deliveryResolution?.withinRange));
+  const pickupHistoryKey = useMemo(
+    () => `volta-pickup-stores:${partnerSlug || "partner"}`,
+    [partnerSlug]
+  );
 
   useEffect(() => {
-    if (serviceMode !== "delivery") {
-      setDeliveryResolution(null);
-      setDeliveryError("");
-      setIsResolvingDelivery(false);
-      return;
+    try {
+      const parsed = JSON.parse(window.localStorage.getItem(pickupHistoryKey) || "[]");
+      setRecentStoreSlugs(Array.isArray(parsed) ? parsed.filter(Boolean).slice(0, 3) : []);
+    } catch {
+      setRecentStoreSlugs([]);
     }
+  }, [pickupHistoryKey]);
+
+  const recentPickupStores = useMemo(
+    () =>
+      recentStoreSlugs
+        .map((slug) => stores.find((store) => store.slug === slug))
+        .filter(Boolean),
+    [recentStoreSlugs, stores]
+  );
+
+  const pickupCities = useMemo(() => {
+    const seen = new Set();
+    return stores
+      .map((store) => String(store.city || "").trim())
+      .filter(Boolean)
+      .filter((city) => {
+        const key = normalizeSearchText(city);
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      })
+      .sort((left, right) => left.localeCompare(right, "es"));
+  }, [stores]);
+
+  useEffect(() => {
+    if (!pickupModalOpen || !pickupCities.length) return;
+
+    const currentCityStillExists = pickupCities.some(
+      (city) => normalizeSearchText(city) === normalizeSearchText(pickupCityFilter)
+    );
+
+    if (currentCityStillExists) return;
+
+    const recentCity = recentPickupStores.find((store) => store.city)?.city;
+    setPickupCityFilter(recentCity || pickupCities[0]);
+  }, [pickupCities, pickupCityFilter, pickupModalOpen, recentPickupStores]);
+
+  const filteredPickupStores = useMemo(() => {
+    const cityFilter = normalizeSearchText(pickupCityFilter);
+
+    if (!cityFilter) return stores;
+
+    return stores.filter((store) => {
+      const city = normalizeSearchText(store.city);
+      return city === cityFilter;
+    });
+  }, [pickupCityFilter, stores]);
+
+  const pickupReady = serviceMode === "pickup" && Boolean(selectedStoreSlug);
+  const deliveryReady =
+    serviceMode === "delivery" &&
+    Boolean(deliveryAddress.trim()) &&
+    Boolean(deliveryResolution?.withinRange) &&
+    Boolean(selectedStoreSlug);
+  const canContinue = pickupReady || deliveryReady;
+
+  const resetDelivery = useCallback(() => {
+    setDeliveryResolution(null);
+    setDeliveryError("");
+    setSelectedStoreSlug("");
+  }, []);
+
+  const rememberPickupStore = useCallback(
+    (storeSlug) => {
+      if (!storeSlug) return;
+
+      setRecentStoreSlugs((current) => {
+        const next = [storeSlug, ...current.filter((slug) => slug !== storeSlug)].slice(0, 3);
+
+        try {
+          window.localStorage.setItem(pickupHistoryKey, JSON.stringify(next));
+        } catch {
+          // Current session state is enough if storage is unavailable.
+        }
+
+        return next;
+      });
+    },
+    [pickupHistoryKey]
+  );
+
+  const goToPickupStore = useCallback(
+    (store) => {
+      if (!store?.slug || !partner) return;
+
+      rememberPickupStore(store.slug);
+      setSelectedStoreSlug(store.slug);
+      setPickupModalOpen(false);
+
+      navigate(`/${partnerSlug}/${store.slug}`, {
+        state: {
+          orderTrail: "store",
+          partnerName: partner.name,
+          storeName: store.storeName || store.slug,
+          serviceMode: "pickup",
+          deliveryAddress: "",
+          deliveryAddressLine2: "",
+          deliveryResolution: null,
+        },
+      });
+    },
+    [navigate, partner, partnerSlug, rememberPickupStore]
+  );
+
+  useEffect(() => {
+    if (!deliveryModalOpen || serviceMode !== "delivery") return undefined;
+
+    let cancelled = false;
+    let listener = null;
+
+    loadGooglePlaces(GOOGLE_KEY)
+      .then((google) => {
+        if (cancelled || !addressInputRef.current || !google?.maps?.places) return;
+
+        const country = String(partner?.country || "").trim().toLowerCase();
+        const options = {
+          fields: ["formatted_address", "geometry", "name"],
+          types: ["address"],
+          ...(country.length === 2 ? { componentRestrictions: { country } } : {}),
+        };
+
+        autocompleteRef.current = new google.maps.places.Autocomplete(
+          addressInputRef.current,
+          options
+        );
+        listener = autocompleteRef.current.addListener("place_changed", () => {
+          const place = autocompleteRef.current?.getPlace();
+          const nextAddress =
+            place?.formatted_address ||
+            addressInputRef.current?.value ||
+            "";
+
+          setDeliveryAddress(nextAddress);
+          resetDelivery();
+        });
+
+        setPlacesReady(true);
+        setPlacesMessage("Google Places activo");
+      })
+      .catch((err) => {
+        console.warn("[delivery places] unavailable", err?.message || err);
+        setPlacesReady(false);
+        setPlacesMessage("Busqueda manual");
+      });
+
+    return () => {
+      cancelled = true;
+      if (listener?.remove) listener.remove();
+    };
+  }, [deliveryModalOpen, partner?.country, resetDelivery, serviceMode]);
+
+  const resolveDeliveryAddress = async (event) => {
+    event?.preventDefault();
 
     const trimmedAddress = deliveryAddress.trim();
-
     if (!trimmedAddress) {
-      setSelectedStoreSlug("");
-      setDeliveryResolution(null);
-      setDeliveryError("");
-      setIsResolvingDelivery(false);
+      setDeliveryError("Escribe una direccion para revisar cobertura.");
       return;
     }
 
-    const timer = setTimeout(async () => {
-      try {
-        setIsResolvingDelivery(true);
-        setDeliveryError("");
+    if (!deliveryAddressLine2.trim()) {
+      setDeliveryError("Indica piso, puerta o casa para completar el envio.");
+      return;
+    }
 
-        const resolution = await api.post(
-          `/partners/${partnerSlug}/delivery/resolve`,
-          { address: trimmedAddress }
-        );
+    try {
+      setIsResolvingDelivery(true);
+      setDeliveryError("");
 
-        setDeliveryResolution(resolution);
-        setSelectedStoreSlug(resolution?.nearestStore?.slug || "");
-      } catch (err) {
-        console.error(err);
-        setDeliveryResolution(null);
+      const resolution = await api.post(
+        `/partners/${partnerSlug}/delivery/resolve`,
+        { address: trimmedAddress }
+      );
+
+      setDeliveryResolution(resolution);
+
+      if (resolution?.withinRange && resolution?.nearestStore?.slug) {
+        setSelectedStoreSlug(resolution.nearestStore.slug);
+        setDeliveryModalOpen(false);
+        navigate(`/${partnerSlug}/${resolution.nearestStore.slug}`, {
+          state: {
+            orderTrail: "store",
+            partnerName: partner?.name,
+            storeName: resolution.nearestStore.storeName || resolution.nearestStore.slug,
+            serviceMode: "delivery",
+            deliveryAddress: trimmedAddress,
+            deliveryAddressLine2: deliveryAddressLine2.trim(),
+            deliveryResolution: resolution,
+          },
+        });
+      } else {
         setSelectedStoreSlug("");
-        setDeliveryError(
-          err?.message || "No pudimos validar la direccion en este momento."
-        );
-      } finally {
-        setIsResolvingDelivery(false);
+        setDeliveryError("Esta direccion esta fuera del area de cobertura.");
       }
-    }, 650);
-
-    return () => clearTimeout(timer);
-  }, [deliveryAddress, partnerSlug, serviceMode]);
-
-  const deliverySummary = useMemo(() => {
-    if (!partner) return "";
-
-    if (partner.deliveryPricingMode === "VARIABLE") {
-      const base = Number(partner.deliveryFeeBase || 2);
-      const baseKm = Number(partner.deliveryBaseKm || 5);
-      const extra = Number(partner.deliveryExtraPerKm || 1);
-
-      return `Base EUR ${base.toFixed(2)} hasta ${baseKm.toFixed(
-        0
-      )} km y EUR ${extra.toFixed(2)} por km extra`;
+    } catch (err) {
+      console.error(err);
+      setDeliveryResolution(null);
+      setSelectedStoreSlug("");
+      setDeliveryError(
+        err?.message || "No pudimos revisar la cobertura en este momento."
+      );
+    } finally {
+      setIsResolvingDelivery(false);
     }
+  };
 
-    if (partner.deliveryFeeFixed != null) {
-      return `Precio fijo EUR ${Number(partner.deliveryFeeFixed).toFixed(
-        2
-      )} cada ${Number(partner.deliveryFeeBlockSize || 5)} pizzas`;
-    }
+  const continueToMenu = () => {
+    if (!canContinue) return;
 
-    return "Precio delivery pendiente de configurar";
-  }, [partner]);
+    navigate(`/${partnerSlug}/${selectedStoreSlug}`, {
+      state: {
+        orderTrail: "store",
+        partnerName: partner.name,
+        storeName: selectedStore?.storeName || selectedStoreSlug,
+        serviceMode,
+        deliveryAddress: deliveryAddress.trim(),
+        deliveryAddressLine2: deliveryAddressLine2.trim(),
+        deliveryResolution,
+      },
+    });
+  };
 
   if (error) {
     return (
@@ -150,7 +362,7 @@ export default function PartnerOrderPage() {
   return (
     <div className="sf-shell">
       <div className="sf-wrap sf-entry">
-        <section className="sf-entryCard">
+        <section className="sf-entryCard sf-entryCard--lean">
           <div className="sf-entryTopbar">
             <button
               type="button"
@@ -161,12 +373,13 @@ export default function PartnerOrderPage() {
             </button>
           </div>
 
-          <div className="sf-entryHeader">
-            <div className="sf-kicker">Inicio de compra</div>
-            <h1 className="sf-entryTitle">{partner.name}</h1>
+          <div className="sf-entryHeader sf-entryHeader--orderStart">
+            <div className="sf-kicker">Pedido online</div>
+            <span className="sf-orderBrand">{partner.name}</span>
+            <h1 className="sf-entryTitle">Elige como recibirlo</h1>
             <p className="sf-entryLead">
-              Primero definimos como quieres recibir el pedido y que tienda va a
-              atenderlo. Despues si entramos al menu de esa sucursal.
+              Resolvemos este paso antes de mostrar el menu para que el pedido
+              llegue con la tienda correcta desde el principio.
             </p>
           </div>
 
@@ -178,14 +391,15 @@ export default function PartnerOrderPage() {
               }`}
               onClick={() => {
                 setServiceMode("pickup");
-                setDeliveryResolution(null);
-                setDeliveryError("");
+                resetDelivery();
+                setPickupModalOpen(true);
               }}
             >
+              <span className="sf-serviceMark" aria-hidden="true">01</span>
               <span className="sf-serviceEyebrow">Recoger</span>
-              <strong className="sf-serviceTitle">Voy por mi pedido</strong>
+              <strong className="sf-serviceTitle">En tienda</strong>
               <span className="sf-serviceBody">
-                Elige una tienda activa y entra directo al menu de esa sucursal.
+                Elige sucursal y pasa directo al menu.
               </span>
             </button>
 
@@ -196,182 +410,42 @@ export default function PartnerOrderPage() {
               }`}
               onClick={() => {
                 setServiceMode("delivery");
-                setSelectedStoreSlug("");
+                setDeliveryModalOpen(true);
               }}
             >
+              <span className="sf-serviceMark" aria-hidden="true">02</span>
               <span className="sf-serviceEyebrow">Domicilio</span>
-              <strong className="sf-serviceTitle">Quiero envio</strong>
+              <strong className="sf-serviceTitle">Enviar a casa</strong>
               <span className="sf-serviceBody">
-                Capturamos una direccion base y fijamos la tienda antes de
-                comprar.
+                Busca tu direccion con Google y confirma cobertura.
               </span>
             </button>
           </div>
 
           {serviceMode === "delivery" && (
             <div
-              className={`sf-modePanel sf-stepPanel ${
-                addressStepReady ? "is-complete" : "is-pending"
+              className={`sf-deliveryStatus ${
+                deliveryReady ? "is-ready" : deliveryError ? "is-error" : ""
               }`}
             >
-              <div className="sf-stepHead">
-                <div>
-                  <div className="sf-stepTag">Paso 1</div>
-                  <div className="sf-fieldLabel">Direccion de referencia</div>
-                </div>
-                <span className={`sf-stepState ${addressStepReady ? "is-on" : ""}`}>
-                  {addressStepReady ? "Lista" : "Pendiente"}
-                </span>
+              <div>
+                <span>{deliveryReady ? "Domicilio listo" : "Domicilio"}</span>
+                <strong>
+                  {deliveryReady
+                    ? deliveryResolution?.formattedAddress || deliveryAddress
+                    : deliveryError || "Falta confirmar cobertura"}
+                </strong>
+                {deliveryReady && deliveryAddressLine2.trim() && (
+                  <small>{deliveryAddressLine2.trim()}</small>
+                )}
               </div>
-
-              <label className="sf-fieldLabel" htmlFor="partner-delivery-address">
-                Escribela como punto de partida
-              </label>
-              <input
-                id="partner-delivery-address"
-                className="sf-input"
-                type="text"
-                value={deliveryAddress}
-                onChange={(e) => setDeliveryAddress(e.target.value)}
-                placeholder="Calle, numero, portal..."
-              />
-
-              {!addressStepReady ? (
-                <p className="sf-inlineText">
-                  Completa esta direccion para desbloquear claramente el
-                  siguiente paso.
-                </p>
-              ) : isResolvingDelivery ? (
-                <p className="sf-inlineText">
-                  Validando direccion y calculando la tienda mas cercana...
-                </p>
-              ) : deliveryError ? (
-                <div className="sf-inlineStat">
-                  <span className="sf-inlineLabel">Direccion no validada</span>
-                  <strong className="sf-inlineValue">{deliveryAddress}</strong>
-                  <span className="sf-inlineText">{deliveryError}</span>
-                </div>
-              ) : (
-                <div className="sf-inlineStat sf-inlineStat--success">
-                  <span className="sf-inlineLabel">Direccion capturada</span>
-                  <strong className="sf-inlineValue">
-                    {deliveryResolution?.formattedAddress || deliveryAddress}
-                  </strong>
-                  <span className="sf-inlineText">
-                    {deliveryResolution?.coords
-                      ? `Coordenadas detectadas: ${deliveryResolution.coords.lat.toFixed(
-                          5
-                        )}, ${deliveryResolution.coords.lng.toFixed(5)}`
-                      : "Direccion pendiente de geocodificacion."}
-                  </span>
-                </div>
-              )}
-            </div>
-          )}
-
-          {!!stores.length && serviceMode === "pickup" && (
-            <div
-              className={`sf-modePanel sf-stepPanel ${
-                storeStepReady ? "is-complete" : "is-pending"
-              }`}
-            >
-              <div className="sf-stepHead">
-                <div>
-                  <div className="sf-stepTag">
-                    {serviceMode === "delivery" ? "Paso 2" : "Paso 1"}
-                  </div>
-                  <div className="sf-fieldLabel">Selecciona tienda</div>
-                </div>
-                <span className={`sf-stepState ${storeStepReady ? "is-on" : ""}`}>
-                  {storeStepReady ? "Elegida" : "Pendiente"}
-                </span>
-              </div>
-
-              <div className="sf-storeGrid">
-                {stores.map((store) => {
-                  const isSelected = store.slug === selectedStoreSlug;
-
-                  return (
-                    <button
-                      key={store.id}
-                      type="button"
-                      className={`sf-storeCard ${isSelected ? "is-selected" : ""}`}
-                      onClick={() => setSelectedStoreSlug(store.slug)}
-                    >
-                      <span className="sf-storeCardKicker">Tienda activa</span>
-                      <strong className="sf-storeCardTitle">{store.storeName}</strong>
-                      <span className="sf-storeCardMeta">
-                        {store.city || "Sin ciudad"}
-                        {partner.country ? `, ${partner.country}` : ""}
-                      </span>
-                      <span className="sf-storeCardState">
-                        {isSelected
-                          ? "Esta es la tienda elegida"
-                          : "Tocar para elegir"}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-
-            </div>
-          )}
-
-          {!!stores.length &&
-            serviceMode === "delivery" &&
-            addressStepReady &&
-            !isResolvingDelivery && (
-            <div
-              className={`sf-modePanel sf-stepPanel ${
-                canContinue ? "is-complete" : "is-pending"
-              }`}
-            >
-              <div className="sf-stepHead">
-                <div>
-                  <div className="sf-stepTag">Tienda automatica</div>
-                  <div className="sf-fieldLabel">Sucursal asignada</div>
-                </div>
-                <span className={`sf-stepState ${selectedStore ? "is-on" : ""}`}>
-                  {selectedStore ? "Resuelta" : "Buscando"}
-                </span>
-              </div>
-
-              {selectedStore && deliveryResolution ? (
-                <div className="sf-inlineStat sf-inlineStat--success">
-                  <span className="sf-inlineLabel">Tienda asignada</span>
-                  <strong className="sf-inlineValue">{selectedStore.storeName}</strong>
-                  <span className="sf-inlineText">
-                    {selectedStore.city || ""}
-                    {selectedStore.city ? "," : ""}
-                    {" "}
-                    {partner.country || ""}
-                  </span>
-                  <span className="sf-inlineText">
-                    {partner.deliveryRadiusKm != null
-                      ? `Km maximos ${Number(partner.deliveryRadiusKm).toFixed(1)} km.`
-                      : "Km maximos pendientes."}
-                  </span>
-                  <span className="sf-inlineText">
-                    Distancia estimada {deliveryResolution.nearestStore.distanceKm.toFixed(
-                      2
-                    )} km. {deliverySummary}.
-                  </span>
-                </div>
-              ) : deliveryResolution && !deliveryResolution.withinRange ? (
-                <div className="sf-inlineStat">
-                  <span className="sf-inlineLabel">Fuera de zona</span>
-                  <strong className="sf-inlineValue">
-                    {deliveryResolution.nearestStore?.storeName || "Sin tienda"}
-                  </strong>
-                  <span className="sf-inlineText">
-                    La direccion supera el radio maximo de entrega.
-                  </span>
-                </div>
-              ) : (
-                <p className="sf-inlineText">
-                  No hay una tienda disponible para asignar este pedido a domicilio.
-                </p>
-              )}
+              <button
+                type="button"
+                className="sf-secondaryBtn"
+                onClick={() => setDeliveryModalOpen(true)}
+              >
+                {deliveryReady ? "Cambiar" : "Completar"}
+              </button>
             </div>
           )}
 
@@ -387,26 +461,203 @@ export default function PartnerOrderPage() {
               type="button"
               className="sf-primaryBtn"
               disabled={!canContinue}
-              onClick={() =>
-                navigate(`/${partnerSlug}/${selectedStoreSlug}`, {
-                  state: {
-                    orderTrail: "store",
-                    partnerName: partner.name,
-                    storeName: selectedStore?.storeName || selectedStoreSlug,
-                    serviceMode,
-                    deliveryAddress: deliveryAddress.trim(),
-                    deliveryResolution,
-                  },
-                })
-              }
+              onClick={continueToMenu}
             >
-              {canContinue
-                ? "Entrar al menu de esta tienda"
-                : "Completa los pasos para continuar"}
+                  {canContinue ? "Entrar al menu" : "Elige una opcion"}
             </button>
           </div>
         </section>
       </div>
+
+      {pickupModalOpen && (
+        <div className="sf-modalOverlay" onClick={() => setPickupModalOpen(false)}>
+          <div
+            className="sf-modalCard sf-pickupModal"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="sf-cartModalHead">
+              <div>
+                <span>Recoger</span>
+                <h3>Elige una tienda</h3>
+              </div>
+              <button
+                type="button"
+                className="sf-modalCloseBtn"
+                onClick={() => setPickupModalOpen(false)}
+                aria-label="Cerrar"
+              >
+                x
+              </button>
+            </div>
+
+            {pickupCities.length > 0 && (
+              <div className="sf-pickupCityPanel">
+                <span>Ciudades disponibles</span>
+                <div className="sf-pickupCityRow" aria-label="Ciudades disponibles">
+                  {pickupCities.map((city) => {
+                    const cityCount = stores.filter(
+                      (store) => normalizeSearchText(store.city) === normalizeSearchText(city)
+                    ).length;
+
+                    return (
+                      <button
+                        key={city}
+                        type="button"
+                        className={
+                          normalizeSearchText(pickupCityFilter) === normalizeSearchText(city)
+                            ? "is-active"
+                            : ""
+                        }
+                        onClick={() => setPickupCityFilter(city)}
+                      >
+                        <strong>{formatCityName(city)}</strong>
+                        <small>
+                          {cityCount} tienda{cityCount === 1 ? "" : "s"} activa
+                          {cityCount === 1 ? "" : "s"}
+                        </small>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            <div className="sf-pickupList">
+              {filteredPickupStores.length ? (
+                filteredPickupStores.map((store) => (
+                  <button
+                    key={store.id}
+                    type="button"
+                    className="sf-pickupStoreOption"
+                    onClick={() => goToPickupStore(store)}
+                  >
+                    <span>
+                      {recentStoreSlugs.includes(store.slug) ? "Reciente" : "Disponible"}
+                    </span>
+                    <strong>{store.storeName}</strong>
+                    <small>
+                      {store.city ? `${formatCityName(store.city)} - tienda activa` : "Tienda activa"}
+                    </small>
+                  </button>
+                ))
+              ) : (
+                <div className="sf-pickupEmpty">
+                  <strong>No tenemos tiendas en esa ciudad</strong>
+                  <span>Prueba con otra ciudad disponible de la lista.</span>
+                </div>
+              )}
+            </div>
+
+            {pickupCities.length > 1 && (
+              <p className="sf-pickupHint">
+                Elige la ciudad y luego toca la tienda activa donde quieres recoger.
+              </p>
+            )}
+          </div>
+        </div>
+      )}
+
+      {deliveryModalOpen && (
+        <div
+          className="sf-modalOverlay"
+          onClick={() => !isResolvingDelivery && setDeliveryModalOpen(false)}
+        >
+          <div
+            className="sf-modalCard sf-deliveryModal"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="sf-cartModalHead">
+              <div>
+                <span>Domicilio</span>
+                <h3>Direccion de entrega</h3>
+              </div>
+              <button
+                type="button"
+                className="sf-modalCloseBtn"
+                onClick={() => setDeliveryModalOpen(false)}
+                disabled={isResolvingDelivery}
+                aria-label="Cerrar"
+              >
+                x
+              </button>
+            </div>
+
+            <form className="sf-deliveryForm" onSubmit={resolveDeliveryAddress}>
+              <label>
+                <span>Calle y numero</span>
+                <em className={`sf-googlePlaceHint ${placesReady ? "is-ready" : ""}`}>
+                  {placesMessage || "Preparando Google Places"}
+                </em>
+                <input
+                  ref={addressInputRef}
+                  type="text"
+                  value={deliveryAddress}
+                  onChange={(event) => {
+                    setDeliveryAddress(event.target.value);
+                    resetDelivery();
+                  }}
+                  placeholder="Busca tu direccion"
+                  autoComplete="street-address"
+                  disabled={isResolvingDelivery}
+                />
+              </label>
+
+              <label>
+                <span>Piso, puerta o casa</span>
+                <input
+                  type="text"
+                  value={deliveryAddressLine2}
+                  onChange={(event) => setDeliveryAddressLine2(event.target.value)}
+                  placeholder="1B, bajo, casa azul..."
+                  autoComplete="address-line2"
+                  required
+                  disabled={isResolvingDelivery}
+                />
+              </label>
+
+              {deliveryError && (
+                <div className="sf-deliveryCoverage is-error">
+                  <strong>{deliveryError}</strong>
+                  <span>Puedes cambiar la direccion o elegir recogida.</span>
+                </div>
+              )}
+
+              {deliveryResolution?.withinRange && !deliveryError && (
+                <div className="sf-deliveryCoverage is-ready">
+                  <strong>Cobertura disponible</strong>
+                  <span>
+                    {deliveryResolution.deliveryFee != null
+                      ? `Envio EUR ${Number(deliveryResolution.deliveryFee).toFixed(2)}`
+                      : "Direccion dentro del area de reparto."}
+                  </span>
+                </div>
+              )}
+
+              <div className="sf-deliveryModalActions">
+                <button
+                  type="button"
+                  className="sf-secondaryBtn"
+                  onClick={() => {
+                    setServiceMode("pickup");
+                    setDeliveryModalOpen(false);
+                    resetDelivery();
+                  }}
+                  disabled={isResolvingDelivery}
+                >
+                  Recoger
+                </button>
+                <button
+                  type="submit"
+                  className="sf-primaryBtn"
+                  disabled={isResolvingDelivery}
+                >
+                  {isResolvingDelivery ? "Revisando..." : "Confirmar direccion"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -86,6 +86,20 @@ const getOrderContext = (order) => {
 
 const isBoostedOrder = (order) => Boolean(order?.boost?.active);
 
+const getBoostTier = (order) => {
+  const target = Number(order?.boost?.targetPosition || order?.queuePosition || 1);
+  if (target <= 1) return 1;
+  if (target === 2) return 2;
+  return 3;
+};
+
+const getBoostSealTone = (order) => {
+  const tier = getBoostTier(order);
+  if (tier === 1) return "gold";
+  if (tier === 2) return "silver";
+  return "bronze";
+};
+
 const getBoostText = (order) => {
   if (!isBoostedOrder(order)) return "";
 
@@ -96,6 +110,45 @@ const getBoostText = (order) => {
   if (credit > 0) return `Subio ${credit} posicion${credit === 1 ? "" : "es"}`;
   return "Prioridad activa";
 };
+
+const CUSTOMER_SEGMENT_META = {
+  S1: { label: "Potencial", tone: "s1" },
+  S2: { label: "Nuevo", tone: "s2" },
+  S3: { label: "Dormido", tone: "s3" },
+  S4: { label: "Activo", tone: "s4" },
+  S5: { label: "VIP", tone: "s5" },
+};
+
+const getCustomerName = (order) =>
+  String(order?.customerData?.name || "").trim() || "Cliente sin nombre";
+
+const getCustomerSegment = (order) => {
+  const key = String(order?.customerData?.segment || "").trim().toUpperCase();
+  return CUSTOMER_SEGMENT_META[key] || { label: key || "Sin segmento", tone: "default" };
+};
+
+const isVipOrder = (order) =>
+  String(order?.customerData?.segment || "").trim().toUpperCase() === "S5";
+
+const getCustomerTags = (order) => {
+  const customer = order?.customerData || {};
+  const count = Number(customer.orderCount || 0);
+  const segment = String(customer.segment || "").trim().toUpperCase();
+  const activity = String(customer.activity || "").trim().toUpperCase();
+  const tags = [];
+
+  if (customer.isRestricted) tags.push("Revisar");
+  if (segment === "S5") tags.push("VIP");
+  if (count <= 1 || segment === "S1" || segment === "S2") tags.push("Cliente nuevo");
+  if (count >= 3) tags.push(`${count} pedidos`);
+  if (activity === "HOT") tags.push("Reciente");
+  if (activity === "COLD") tags.push("Dormido");
+
+  return [...new Set(tags)].slice(0, 3);
+};
+
+const getCustomerAddress = (order) =>
+  String(order?.customerData?.address_1 || order?.address_1 || "").trim();
 
 const formatElapsed = (value) => {
   if (!value) return "nunca";
@@ -244,6 +297,12 @@ function TicketPreview({ order }) {
               Boost pagado: {formatMoney(order.boost.amount, order.currency || "EUR")}
             </small>
           )}
+        </div>
+      )}
+      {isVipOrder(order) && (
+        <div className="pos-ticketBlock pos-ticketBlock--vip">
+          <span>Prioridad VIP</span>
+          <strong>Cliente VIP despues de Boost</strong>
         </div>
       )}
       <div className="pos-ticketBlock">
@@ -585,6 +644,7 @@ export default function PosApp() {
     : "online";
   const hasVisitors = Number(presence.activeVisitors || 0) > 0;
   const showVisitorAlert = orders.length === 0 && trustState === "online" && hasVisitors;
+  const showModeTabs = activePanel !== "orders" || Boolean(selectedOrder) || orders.length > 0;
   const shellClassName = [
     "pos-shell",
     `pos-shell--${trustState}`,
@@ -600,6 +660,25 @@ export default function PosApp() {
       : trustState === "checking"
       ? "Conectando"
       : "Sin conexion";
+  const idleClockTime = useMemo(
+    () =>
+      new Intl.DateTimeFormat("es-ES", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false,
+      }).format(new Date(clockTick)),
+    [clockTick]
+  );
+  const idleClockDate = useMemo(
+    () =>
+      new Intl.DateTimeFormat("es-ES", {
+        weekday: "short",
+        day: "2-digit",
+        month: "short",
+      }).format(new Date(clockTick)),
+    [clockTick]
+  );
 
   useEffect(() => {
     const timer = window.setInterval(() => setClockTick(Date.now()), 1000);
@@ -934,22 +1013,24 @@ export default function PosApp() {
         </button>
       )}
 
-      <nav className="pos-modeTabs" aria-label="POS section">
-        <button
-          type="button"
-          className={activePanel === "orders" ? "active" : ""}
-          onClick={() => setActivePanel("orders")}
-        >
-          Orders
-        </button>
-        <button
-          type="button"
-          className={activePanel === "inventory" ? "active" : ""}
-          onClick={() => setActivePanel("inventory")}
-        >
-          Inventory
-        </button>
-      </nav>
+      {showModeTabs && (
+        <nav className="pos-modeTabs" aria-label="POS section">
+          <button
+            type="button"
+            className={activePanel === "orders" ? "active" : ""}
+            onClick={() => setActivePanel("orders")}
+          >
+            Orders
+          </button>
+          <button
+            type="button"
+            className={activePanel === "inventory" ? "active" : ""}
+            onClick={() => setActivePanel("inventory")}
+          >
+            Inventory
+          </button>
+        </nav>
+      )}
 
       {trustState === "offline" && (
         <section className="pos-trustAlert">
@@ -969,8 +1050,16 @@ export default function PosApp() {
       )}
 
       {activePanel === "orders" && (
-      <div className={`pos-workspace ${selectedOrder ? "pos-workspace--ticket" : "pos-workspace--queue"}`}>
-        <section className="pos-ordersPane">
+      <div
+        className={`pos-workspace ${
+          selectedOrder
+            ? "pos-workspace--ticket"
+            : showVisitorAlert
+            ? "pos-workspace--visitorAlert"
+            : "pos-workspace--queue"
+        }`}
+      >
+        <section className={`pos-ordersPane ${showVisitorAlert ? "pos-ordersPane--visitorAlert" : ""}`}>
           {selectedOrder ? (
             <div className="pos-ticketFocus">
               <div className="pos-sectionHead">
@@ -996,33 +1085,45 @@ export default function PosApp() {
             </div>
           ) : orders.length === 0 ? (
             <>
-              <div className="pos-sectionHead">
-                <div>
-                  <span>Pedidos pendientes</span>
-                  <h2>Operacion de cocina</h2>
-                </div>
-              </div>
-            <div className={`pos-empty ${showVisitorAlert ? "pos-empty--visitors" : ""}`}>
               {!showVisitorAlert && (
+                <div className="pos-sectionHead">
+                  <div>
+                    <span>Pedidos pendientes</span>
+                    <h2>Operacion de cocina</h2>
+                  </div>
+                </div>
+              )}
+            <div className={`pos-empty ${showVisitorAlert ? "pos-empty--visitors" : ""}`}>
+              {showVisitorAlert ? (
+                <div className="pos-visitorSignal" aria-hidden="true">
+                  <span />
+                  <span />
+                  <span />
+                </div>
+              ) : (
                 <div className="pos-chill">
                   <span>🐒</span>
                   <strong>Chill For Now ;)</strong>
                 </div>
               )}
-              <strong>
-                {showVisitorAlert
-                  ? `${presence.activeVisitors} visitante(s) en tienda`
-                  : "Sin pedidos pendientes"}
-              </strong>
-              <span>
-                {showVisitorAlert
-                  ? `${presence.checkoutVisitors || 0} en checkout · ${presence.cartVisitors || 0} con carrito`
-                  : trustState === "online"
-                  ? "Cola confirmada con el servidor."
-                  : "Esperando una lectura confiable del servidor."}
-              </span>
-              <small>Ultima revision OK: {formatElapsed(syncHealth.lastOkAt)}</small>
+              {!showVisitorAlert && (
+                <>
+                  <strong>Sin pedidos pendientes</strong>
+                  <span>
+                    {trustState === "online"
+                      ? "Cola confirmada con el servidor."
+                      : "Esperando una lectura confiable del servidor."}
+                  </span>
+                  <small>Ultima revision OK: {formatElapsed(syncHealth.lastOkAt)}</small>
+                </>
+              )}
             </div>
+            {!showVisitorAlert && (
+              <section className="pos-idleClockCard" aria-label="Reloj digital">
+                <strong>{idleClockTime}</strong>
+                <small>{idleClockDate}</small>
+              </section>
+            )}
             </>
           ) : (
             <div className="pos-queueStage">
@@ -1035,31 +1136,84 @@ export default function PosApp() {
               </div>
 
               <div className="pos-orderList" aria-label="Cola de pedidos">
-                {orders.map((order) => (
-                  <button
-                    key={order.id}
-                    type="button"
-                    className={`pos-orderCard ${isBoostedOrder(order) ? "is-boosted" : ""}`}
-                    onClick={() => setSelectedOrderId(order.id)}
-                  >
-                    {isBoostedOrder(order) && (
-                      <div className="pos-boostBadge">BOOST</div>
-                    )}
-                    <div className="pos-orderMain">
-                      <strong>{order.code}</strong>
-                      <span>{getOrderType(order)}</span>
-                    </div>
-                    <div className="pos-orderMeta">
-                      <span>{formatTime(order.date || order.createdAt)}</span>
-                      <b>{formatMoney(order.total, order.currency || "EUR")}</b>
-                    </div>
-                    <div className="pos-orderContext">{getOrderContext(order)}</div>
-                    {isBoostedOrder(order) && (
-                      <div className="pos-orderBoost">{getBoostText(order)}</div>
-                    )}
-                    <OrderItems order={order} />
-                  </button>
-                ))}
+                {orders.map((order) => {
+                  const segment = getCustomerSegment(order);
+                  const tags = getCustomerTags(order);
+                  const address = getCustomerAddress(order);
+                  const boosted = isBoostedOrder(order);
+                  const vip = isVipOrder(order);
+
+                  return (
+                    <button
+                      key={order.id}
+                      type="button"
+                      className={`pos-orderCard ${boosted ? "is-boosted" : ""} ${
+                        vip ? "is-vip" : ""
+                      }`}
+                      onClick={() => setSelectedOrderId(order.id)}
+                    >
+                      {boosted && (
+                        <div className={`pos-boostSeal pos-boostSeal--${getBoostSealTone(order)}`}>
+                          <span>BOOTS</span>
+                        </div>
+                      )}
+
+                      <div className="pos-orderIdRow">
+                        <div>
+                          <span>Pedido</span>
+                          <strong>{order.code}</strong>
+                        </div>
+                        <em>#{order.queuePosition || "-"}</em>
+                      </div>
+
+                      <div className="pos-orderCustomerCard">
+                        <div className="pos-orderCustomerTop">
+                          <div>
+                            <span>Cliente</span>
+                            <strong>{getCustomerName(order)}</strong>
+                          </div>
+                          <b className={`pos-segmentBadge pos-segmentBadge--${segment.tone}`}>
+                            {segment.label}
+                          </b>
+                        </div>
+
+                        {tags.length > 0 && (
+                          <div className="pos-orderTags">
+                            {tags.map((tag) => (
+                              <span key={tag}>{tag}</span>
+                            ))}
+                          </div>
+                        )}
+
+                        <div className="pos-orderContact">
+                          <span>{order.customerData?.phone || "Sin telefono"}</span>
+                          {order.customerData?.code && <span>{order.customerData.code}</span>}
+                        </div>
+
+                        <div className="pos-orderAddress">
+                          {address || getOrderContext(order) || "Sin direccion"}
+                        </div>
+                      </div>
+
+                      <div className="pos-orderSummary">
+                        <span>{getOrderType(order)}</span>
+                        <span>{formatTime(order.date || order.createdAt)}</span>
+                        <b>{formatMoney(order.total, order.currency || "EUR")}</b>
+                      </div>
+
+                      {!boosted && vip && (
+                        <div className="pos-vipPriorityBadge">VIP prioridad despues de Boost</div>
+                      )}
+
+                      {boosted && (
+                        <div className="pos-orderBoost">{getBoostText(order)}</div>
+                      )}
+
+                      <div className="pos-orderItemsTitle">Pidio</div>
+                      <OrderItems order={order} />
+                    </button>
+                  );
+                })}
               </div>
             </div>
           )}

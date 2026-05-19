@@ -3372,24 +3372,48 @@
 
 .sf-couponInfoModal {
   width: min(560px, calc(100vw - 28px));
+  background: #ffffff;
+  color: #171717;
+  border: 1px solid rgba(59, 0, 139, 0.18);
+}
+
+.sf-couponInfoModal .sf-cartModalHead {
+  border-bottom: 1px solid rgba(17, 17, 17, 0.08);
+  padding-bottom: 14px;
+}
+
+.sf-couponInfoModal .sf-cartModalHead span {
+  color: #6a3df0;
+}
+
+.sf-couponInfoModal .sf-cartModalHead h3 {
+  color: #111111;
 }
 
 .sf-couponInfoBody {
   display: grid;
-  gap: 10px;
+  gap: 12px;
   color: #171717;
 }
 
 .sf-couponInfoBody p {
   margin: 0;
+  color: #25212d;
   font-size: 0.9rem;
   line-height: 1.35;
+}
+
+.sf-couponInfoBody b,
+.sf-couponInfoBody strong,
+.sf-couponInfoBody li {
+  color: #171717;
 }
 
 .sf-couponInfoBody code {
   padding: 2px 5px;
   border-radius: 6px;
-  background: #f2f2f6;
+  background: #f2ecff;
+  color: #3b008b;
   font-weight: 900;
 }
 
@@ -3401,6 +3425,7 @@
 .sf-couponInfoBody ul {
   margin: 0;
   padding-left: 20px;
+  color: #25212d;
   font-size: 0.88rem;
   line-height: 1.25;
 }
@@ -3409,7 +3434,7 @@
   display: grid;
   gap: 4px;
   padding: 10px 12px;
-  border-radius: 14px;
+  border-radius: 8px;
   background: #fff1f5;
   color: #9f0038;
   border: 1px solid rgba(244, 0, 70, 0.16);
@@ -3422,10 +3447,12 @@
 }
 
 .sf-couponInfoStatus strong {
+  color: inherit;
   font-size: 0.94rem;
 }
 
 .sf-couponInfoStatus span {
+  color: inherit;
   font-size: 0.76rem;
   font-weight: 900;
   text-transform: uppercase;
@@ -3465,6 +3492,12 @@
 
 .sf-couponInfoActions {
   margin-top: 14px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.sf-couponInfoActions .sf-secondaryBtn,
+.sf-couponInfoActions .sf-primaryBtn {
+  color: #3b008b;
 }
 
 .sf-termsGateOverlay {
@@ -4760,6 +4793,10 @@
   align-items: center;
 }
 
+.sf-cartActions--confirmation {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .sf-cartActions .sf-primaryBtn,
 .sf-cartActions .sf-secondaryBtn {
   width: 100%;
@@ -5050,6 +5087,15 @@
 .sf-reservationMessage.is-success {
   border-color: rgba(22, 163, 74, 0.28);
   background: color-mix(in srgb, #16a34a 10%, #ffffff);
+}
+
+.sf-trackingInlineLink {
+  display: inline-flex;
+  margin-left: 10px;
+  color: #0f7a35;
+  font-weight: 1000;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .sf-checkoutProfileModal {

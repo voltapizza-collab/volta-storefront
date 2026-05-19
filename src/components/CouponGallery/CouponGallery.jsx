@@ -361,7 +361,10 @@ function ClaimModal({ card, partnerId, zipCode, onClose, onClaimed }) {
         zipCode,
       });
 
-      setResult(data.coupon || null);
+      setResult({
+        coupon: data.coupon || null,
+        delivery: data.delivery || null,
+      });
       onClaimed();
     } catch (requestError) {
       console.error(requestError);
@@ -391,16 +394,23 @@ function ClaimModal({ card, partnerId, zipCode, onClose, onClaimed }) {
           </button>
         </div>
 
-        {result ? (
+        {result?.coupon ? (
           <div className="cg-claimSuccess">
             <strong>Cupon reservado</strong>
             <p>
-              Codigo: <b>{result.code}</b>
+              Codigo: <b>{result.coupon.code}</b>
             </p>
             <p>
               Vence:{" "}
-              {result.expiresAt ? new Date(result.expiresAt).toLocaleString("es-ES") : "sin fecha"}
+              {result.coupon.expiresAt ? new Date(result.coupon.expiresAt).toLocaleString("es-ES") : "sin fecha"}
             </p>
+            {result.delivery && (
+              <p>
+                {result.delivery.sent
+                  ? "Te enviamos el cupon por SMS."
+                  : "Cupon reservado, pero el SMS no pudo salir ahora. Guarda el codigo."}
+              </p>
+            )}
             <button className="cg-primaryBtn" onClick={onClose} type="button">
               Entendido
             </button>

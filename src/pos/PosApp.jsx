@@ -62,6 +62,105 @@ const lineQty = (item) => {
   return Number.isFinite(qty) && qty > 0 ? qty : 1;
 };
 
+const escapeHtml = (value) =>
+  String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+
+const buildWindowsPrintTicketHtml = (order) => {
+  const items = asArray(order?.products);
+  const customer = order?.customerData || {};
+  const orderCode = order?.code || order?.id || "-";
+
+  return `<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Ticket ${escapeHtml(orderCode)}</title>
+    <style>
+      @page { size: 58mm auto; margin: 4mm; }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        color: #111;
+        background: #fff;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 11px;
+        line-height: 1.28;
+      }
+      .ticket { width: 50mm; }
+      .center { text-align: center; }
+      .brand { font-size: 15px; font-weight: 900; letter-spacing: 0; }
+      .code { margin-top: 3px; font-size: 20px; font-weight: 900; }
+      .block { border-top: 1px dashed #111; margin-top: 8px; padding-top: 7px; }
+      .row { display: flex; justify-content: space-between; gap: 8px; }
+      .item { margin-top: 5px; }
+      .item strong { display: block; font-size: 12px; }
+      .muted { color: #444; }
+      .total { margin-top: 9px; padding-top: 8px; border-top: 2px solid #111; font-size: 15px; font-weight: 900; }
+    </style>
+  </head>
+  <body>
+    <main class="ticket">
+      <div class="center brand">VOLTA POS</div>
+      <div class="center code">${escapeHtml(orderCode)}</div>
+      <section class="block">
+        <div>Tienda: ${escapeHtml(order?.storeName || "-")}</div>
+        <div>Tipo: ${escapeHtml(getOrderType(order))}</div>
+        <div>Hora: ${escapeHtml(formatTime(order?.date || order?.createdAt))}</div>
+      </section>
+      <section class="block">
+        <div>Cliente: ${escapeHtml(customer.name || "-")}</div>
+        <div>Telefono: ${escapeHtml(customer.phone || "-")}</div>
+        ${customer.address_1 ? `<div>Direccion: ${escapeHtml(customer.address_1)}</div>` : ""}
+      </section>
+      <section class="block">
+        ${
+          items.length
+            ? items
+                .map((item) => {
+                  const size = item?.size || item?.selectedSize || "";
+                  const note = item?.notes || item?.note || item?.comment || "";
+                  return `<div class="item"><strong>${escapeHtml(lineQty(item))} x ${escapeHtml(
+                    lineName(item)
+                  )}${size ? ` ${escapeHtml(size)}` : ""}</strong>${
+                    note ? `<span class="muted">${escapeHtml(note)}</span>` : ""
+                  }</div>`;
+                })
+                .join("")
+            : `<div class="muted">Sin items</div>`
+        }
+      </section>
+      <section class="total row">
+        <span>Total</span>
+        <span>${escapeHtml(formatMoney(order?.total, order?.currency || "EUR"))}</span>
+      </section>
+    </main>
+    <script>
+      window.onload = () => {
+        window.focus();
+        window.print();
+      };
+    </script>
+  </body>
+</html>`;
+};
+
+const printOrderWithWindowsDialog = (order) => {
+  if (typeof window === "undefined" || !order) return false;
+
+  const printWindow = window.open("", "_blank", "width=420,height=640");
+  if (!printWindow) return false;
+
+  printWindow.document.open();
+  printWindow.document.write(buildWindowsPrintTicketHtml(order));
+  printWindow.document.close();
+  return true;
+};
+
 const getOrderType = (order) => {
   const raw = [order?.delivery, order?.type]
     .filter(Boolean)
@@ -119,18 +218,54 @@ const CUSTOMER_SEGMENT_META = {
   S5: { label: "VIP", tone: "s5" },
 };
 
-const createTone = (ctx, { frequency, startAt, duration, volume, type = "sine" }) => {
+const createTone = (
+  ctx,
+  { frequency, startAt, duration, volume, type = "sine", attack = 0.018 }
+) => {
   const oscillator = ctx.createOscillator();
   const gain = ctx.createGain();
   oscillator.type = type;
   oscillator.frequency.setValueAtTime(frequency, startAt);
   gain.gain.setValueAtTime(0.0001, startAt);
-  gain.gain.exponentialRampToValueAtTime(Math.max(volume, 0.0001), startAt + 0.018);
+  gain.gain.exponentialRampToValueAtTime(Math.max(volume, 0.0001), startAt + attack);
   gain.gain.exponentialRampToValueAtTime(0.0001, startAt + duration);
   oscillator.connect(gain);
   gain.connect(ctx.destination);
   oscillator.start(startAt);
   oscillator.stop(startAt + duration + 0.03);
+};
+
+const playOrderCommandAlert = (ctx, startAt, boosted = false) => {
+  const transpose = boosted ? 1.08 : 1;
+  const notes = [
+    { frequency: 196, offset: 0, duration: 0.18, volume: 0.07, type: "square", attack: 0.006 },
+    { frequency: 392, offset: 0.05, duration: 0.2, volume: 0.06, type: "sawtooth", attack: 0.008 },
+    { frequency: 523.25, offset: 0.24, duration: 0.16, volume: 0.052, type: "square", attack: 0.007 },
+    { frequency: 659.25, offset: 0.4, duration: 0.18, volume: 0.048, type: "sawtooth", attack: 0.008 },
+    { frequency: 783.99, offset: 0.58, duration: 0.26, volume: 0.046, type: "square", attack: 0.01 },
+    { frequency: 1046.5, offset: 0.9, duration: 0.2, volume: 0.038, type: "triangle", attack: 0.012 },
+    { frequency: 880, offset: 1.12, duration: 0.34, volume: 0.034, type: "sawtooth", attack: 0.014 },
+  ];
+
+  notes.forEach((note) => {
+    createTone(ctx, {
+      frequency: note.frequency * transpose,
+      startAt: startAt + note.offset,
+      duration: note.duration,
+      volume: note.volume,
+      type: note.type,
+      attack: note.attack,
+    });
+  });
+
+  createTone(ctx, {
+    frequency: 130.81 * transpose,
+    startAt,
+    duration: 0.9,
+    volume: boosted ? 0.038 : 0.032,
+    type: "triangle",
+    attack: 0.012,
+  });
 };
 
 const orderHasBoost = (order) => Boolean(order?.boost?.active);
@@ -684,12 +819,17 @@ export default function PosApp() {
   const [orders, setOrders] = useState([]);
   const [activePanel, setActivePanel] = useState("orders");
   const [selectedOrderId, setSelectedOrderId] = useState(null);
+  const [dayOrders, setDayOrders] = useState([]);
+  const [dayOrdersKpis, setDayOrdersKpis] = useState(null);
+  const [dayOrdersLoading, setDayOrdersLoading] = useState(false);
+  const [dayOrdersError, setDayOrdersError] = useState("");
   const [loadingSetup, setLoadingSetup] = useState(true);
   const [loadingOrders, setLoadingOrders] = useState(false);
   const [storeActive, setStoreActive] = useState(true);
   const [savingStore, setSavingStore] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [message, setMessage] = useState("");
+  const [newOrderNotice, setNewOrderNotice] = useState(null);
   const [reservations, setReservations] = useState([]);
   const [reservationsOpen, setReservationsOpen] = useState(false);
   const [activeReservationId, setActiveReservationId] = useState(null);
@@ -698,6 +838,7 @@ export default function PosApp() {
   const [customerHelpOrderId, setCustomerHelpOrderId] = useState("");
   const [customerHelpText, setCustomerHelpText] = useState("");
   const [customerHelpEmoji, setCustomerHelpEmoji] = useState(() => pickCustomerHelpEmoji());
+  const [, setAudioReady] = useState(false);
   const [storeMeta, setStoreMeta] = useState(null);
   const [dayInfo, setDayInfo] = useState({
     loading: false,
@@ -720,11 +861,18 @@ export default function PosApp() {
   const seenIdsRef = useRef(new Set());
   const boostStateRef = useRef(new Map());
   const audioCtxRef = useRef(null);
+  const audioUnlockedRef = useRef(false);
+  const audioPrimedRef = useRef(false);
+  const audioPendingOrderAlertRef = useRef(false);
   const alertSoundRef = useRef(null);
+  const newOrderSoundRef = useRef(null);
 
   const selectedOrder = useMemo(
-    () => orders.find((order) => order.id === selectedOrderId) || null,
-    [orders, selectedOrderId]
+    () =>
+      orders.find((order) => order.id === selectedOrderId) ||
+      dayOrders.find((order) => order.id === selectedOrderId) ||
+      null,
+    [dayOrders, orders, selectedOrderId]
   );
   const customerHelpOrder = useMemo(
     () => orders.find((order) => String(order.id) === String(customerHelpOrderId)) || null,
@@ -740,7 +888,7 @@ export default function PosApp() {
   const printerLabel = printerStatus.realConnected
     ? "Print OK"
     : printerStatus.virtualReady
-    ? "Print virtual"
+    ? "Print Windows"
     : "Print fail";
   const activeReservation =
     reservations.find((reservation) => reservation.id === activeReservationId) || null;
@@ -757,6 +905,12 @@ export default function PosApp() {
   const hasVisitors = Number(presence.activeVisitors || 0) > 0;
   const showVisitorAlert = orders.length === 0 && trustState === "online" && hasVisitors;
   const showModeTabs = activePanel !== "orders" || Boolean(selectedOrder) || orders.length > 0;
+  const showOrderUtilityFabs =
+    activePanel === "orders" &&
+    !selectedOrder &&
+    !showVisitorAlert &&
+    !reservationsOpen &&
+    !customerHelpOpen;
   const shellClassName = [
     "pos-shell",
     `pos-shell--${trustState}`,
@@ -809,7 +963,25 @@ export default function PosApp() {
     return () => window.clearInterval(timer);
   }, []);
 
-  const getAudioContext = useCallback(() => {
+  const playOrderMelodyOnContext = useCallback((ctx, boosted = false) => {
+    if (!ctx) return;
+
+    const now = ctx.currentTime + 0.01;
+    playOrderCommandAlert(ctx, now, boosted);
+
+    if (boosted) {
+      createTone(ctx, {
+        frequency: 1174.66,
+        startAt: now + 1.44,
+        duration: 0.26,
+        volume: 0.032,
+        type: "square",
+        attack: 0.012,
+      });
+    }
+  }, []);
+
+  const unlockAudioContext = useCallback(async () => {
     if (typeof window === "undefined") return null;
 
     const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -820,51 +992,97 @@ export default function PosApp() {
     }
 
     if (audioCtxRef.current.state === "suspended") {
-      audioCtxRef.current.resume().catch(() => {});
+      try {
+        await audioCtxRef.current.resume();
+      } catch {
+        return null;
+      }
     }
 
+    if (audioCtxRef.current.state !== "running") return null;
+
+    audioUnlockedRef.current = true;
+    setAudioReady(true);
+    if (!audioPrimedRef.current) {
+      const now = audioCtxRef.current.currentTime + 0.01;
+      createTone(audioCtxRef.current, {
+        frequency: 440,
+        startAt: now,
+        duration: 0.04,
+        volume: 0.0008,
+        type: "sine",
+        attack: 0.005,
+      });
+      audioPrimedRef.current = true;
+    }
     return audioCtxRef.current;
   }, []);
 
-  useEffect(() => {
-    const unlockAudio = () => getAudioContext();
-
-    window.addEventListener("pointerdown", unlockAudio, { passive: true });
-    window.addEventListener("keydown", unlockAudio);
-
-    return () => {
-      window.removeEventListener("pointerdown", unlockAudio);
-      window.removeEventListener("keydown", unlockAudio);
-    };
-  }, [getAudioContext]);
+  const getUnlockedAudioContext = useCallback(() => {
+    if (!audioUnlockedRef.current || !audioCtxRef.current) return null;
+    if (audioCtxRef.current.state !== "running") return null;
+    return audioCtxRef.current;
+  }, []);
 
   const playNewOrderSound = useCallback(() => {
-    const ctx = getAudioContext();
-    if (!ctx) return;
-
-    const now = ctx.currentTime + 0.01;
-    createTone(ctx, { frequency: 740, startAt: now, duration: 0.13, volume: 0.075 });
-    createTone(ctx, { frequency: 930, startAt: now + 0.14, duration: 0.15, volume: 0.06 });
-  }, [getAudioContext]);
+    const ctx = getUnlockedAudioContext();
+    if (!ctx) return false;
+    playOrderMelodyOnContext(ctx, false);
+    audioPendingOrderAlertRef.current = false;
+    return true;
+  }, [getUnlockedAudioContext, playOrderMelodyOnContext]);
 
   const playBoostSound = useCallback(() => {
-    const ctx = getAudioContext();
-    if (!ctx) return;
+    const ctx = getUnlockedAudioContext();
+    if (!ctx) return false;
+    playOrderMelodyOnContext(ctx, true);
+    audioPendingOrderAlertRef.current = false;
+    return true;
+  }, [getUnlockedAudioContext, playOrderMelodyOnContext]);
 
-    const now = ctx.currentTime + 0.01;
-    createTone(ctx, { frequency: 880, startAt: now, duration: 0.11, volume: 0.08, type: "triangle" });
-    createTone(ctx, { frequency: 1175, startAt: now + 0.11, duration: 0.13, volume: 0.08, type: "triangle" });
-    createTone(ctx, { frequency: 1480, startAt: now + 0.24, duration: 0.18, volume: 0.065, type: "triangle" });
-  }, [getAudioContext]);
+  const stopNewOrderSoundLoop = useCallback(() => {
+    if (newOrderSoundRef.current) {
+      window.clearInterval(newOrderSoundRef.current);
+      newOrderSoundRef.current = null;
+    }
+  }, []);
+
+  const startNewOrderSoundLoop = useCallback((boosted = false) => {
+    stopNewOrderSoundLoop();
+
+    const playOnce = boosted ? playBoostSound : playNewOrderSound;
+    if (!playOnce()) {
+      audioPendingOrderAlertRef.current = true;
+    }
+    newOrderSoundRef.current = window.setInterval(playOnce, 5200);
+  }, [playBoostSound, playNewOrderSound, stopNewOrderSoundLoop]);
+
+  useEffect(() => {
+    const unlockAudio = () => {
+      unlockAudioContext().then(() => {
+        if (audioPendingOrderAlertRef.current && orders.length > 0) {
+          startNewOrderSoundLoop(orders.some(orderHasBoost));
+        }
+      });
+    };
+
+    window.addEventListener("pointerdown", unlockAudio, { passive: true, capture: true });
+    window.addEventListener("keydown", unlockAudio, { capture: true });
+
+    return () => {
+      window.removeEventListener("pointerdown", unlockAudio, { capture: true });
+      window.removeEventListener("keydown", unlockAudio, { capture: true });
+    };
+  }, [orders, startNewOrderSoundLoop, unlockAudioContext]);
 
   const playAlertPulse = useCallback(() => {
-    const ctx = getAudioContext();
+    const ctx = getUnlockedAudioContext();
     if (!ctx) return;
 
     const now = ctx.currentTime + 0.01;
-    createTone(ctx, { frequency: 560, startAt: now, duration: 0.18, volume: 0.032 });
-    createTone(ctx, { frequency: 660, startAt: now + 0.2, duration: 0.2, volume: 0.026 });
-  }, [getAudioContext]);
+    createTone(ctx, { frequency: 493.88, startAt: now, duration: 0.2, volume: 0.017, type: "triangle" });
+    createTone(ctx, { frequency: 587.33, startAt: now + 0.22, duration: 0.24, volume: 0.014, type: "triangle" });
+  }, [getUnlockedAudioContext]);
 
   useEffect(() => {
     const loadSetup = async () => {
@@ -891,6 +1109,7 @@ export default function PosApp() {
     if (!session?.partnerId || !session?.storeId) return;
 
     try {
+      await unlockAudioContext();
       setLoadingOrders(true);
       const lastAttemptAt = new Date().toISOString();
       setSyncHealth((current) => ({
@@ -923,16 +1142,21 @@ export default function PosApp() {
           !previousBoostState.get(item.id)
       );
 
-      if (previousSeen.size > 0 && incoming.length > 0) {
+      if (incoming.length > 0) {
+        const primaryIncoming = incomingBoosted[0] || incoming[0];
         setMessage(`${incoming.length} pedido(s) nuevo(s) en ${session.storeName}.`);
+        setNewOrderNotice({
+          id: `${primaryIncoming.id}-${Date.now()}`,
+          order: primaryIncoming,
+          count: incoming.length,
+          boosted: incomingBoosted.length > 0,
+        });
       }
 
-      if (previousSeen.size > 0) {
-        if (incomingBoosted.length > 0 || newlyBoosted.length > 0) {
-          playBoostSound();
-        } else if (incoming.length > 0) {
-          playNewOrderSound();
-        }
+      if (incomingBoosted.length > 0 || (previousSeen.size > 0 && newlyBoosted.length > 0)) {
+        startNewOrderSoundLoop(true);
+      } else if (incoming.length > 0) {
+        startNewOrderSoundLoop(false);
       }
 
       if (presenceResponse?.data?.presence) {
@@ -964,7 +1188,31 @@ export default function PosApp() {
     } finally {
       setLoadingOrders(false);
     }
-  }, [playBoostSound, playNewOrderSound, session]);
+  }, [session, startNewOrderSoundLoop, unlockAudioContext]);
+
+  const loadDayOrders = useCallback(async () => {
+    if (!session?.partnerId || !session?.storeId) return;
+
+    try {
+      setDayOrdersLoading(true);
+      setDayOrdersError("");
+      const response = await api.get("/api/myorders/summary", {
+        params: {
+          partnerId: session.partnerId,
+          storeId: session.storeId,
+          period: "today",
+        },
+      });
+      const data = response.data || {};
+      setDayOrders(Array.isArray(data?.orders) ? data.orders : []);
+      setDayOrdersKpis(data?.kpis || null);
+    } catch (error) {
+      console.error(error);
+      setDayOrdersError("No se pudieron cargar las ordenes del dia.");
+    } finally {
+      setDayOrdersLoading(false);
+    }
+  }, [session?.partnerId, session?.storeId]);
 
   useEffect(() => {
     if (!session) return undefined;
@@ -1175,6 +1423,7 @@ export default function PosApp() {
   }, [customerHelpOpen, customerHelpOrderId, customerHelpText, orders, selectedOrder]);
 
   const startSession = (nextSession) => {
+    unlockAudioContext();
     localStorage.setItem(POS_SESSION_KEY, JSON.stringify(nextSession));
     setSession(nextSession);
     setMessage("POS virtual emparejado.");
@@ -1218,12 +1467,22 @@ export default function PosApp() {
   const printOrder = async (order) => {
     if (!order) return;
 
+    const openedWindowsPrint = printOrderWithWindowsDialog(order);
+
     try {
       const job = await mockPrinter.printOrder(order);
-      setMessage(`Ticket ${job.code || job.orderId} enviado a impresora virtual.`);
+      setMessage(
+        openedWindowsPrint
+          ? `Ticket ${job.code || job.orderId} abierto para imprimir en Windows.`
+          : `Ticket ${job.code || job.orderId} guardado en impresora virtual. El navegador bloqueo la ventana de impresion.`
+      );
     } catch (error) {
       console.error(error);
-      setMessage("No se pudo imprimir el ticket virtual.");
+      setMessage(
+        openedWindowsPrint
+          ? "Ticket abierto para imprimir en Windows, pero no se pudo guardar en la impresora virtual."
+          : "No se pudo imprimir el ticket virtual."
+      );
     }
   };
 
@@ -1283,6 +1542,32 @@ export default function PosApp() {
     window.open(url, "_blank", "noopener,noreferrer");
     setCustomerHelpOpen(false);
     setMessage(`Consulta preparada para ${customerHelpOrder.code || customerHelpOrder.id}.`);
+  };
+
+  const acceptNewOrderNotice = () => {
+    stopNewOrderSoundLoop();
+    setNewOrderNotice(null);
+    setActivePanel("orders");
+    setSelectedOrderId(null);
+  };
+
+  const openDayOrders = () => {
+    setMenuOpen(false);
+    setSelectedOrderId(null);
+    setActivePanel("dayOrders");
+    loadDayOrders();
+  };
+
+  const activateOrderAudio = async () => {
+    const ctx = await unlockAudioContext();
+
+    if (!ctx) {
+      setMessage("El navegador no permitio activar el sonido todavia.");
+      return;
+    }
+
+    playOrderMelodyOnContext(ctx, false);
+    setMessage("Sonido de pedidos activado.");
   };
 
   if (!session) {
@@ -1376,23 +1661,17 @@ export default function PosApp() {
 
         {menuOpen && (
           <div className="pos-menuPanel">
-            <button
-              type="button"
-              onClick={() => {
-                setMessage("Ordenes del dia: modulo en preparacion.");
-                setMenuOpen(false);
-              }}
-            >
+            <button type="button" onClick={openDayOrders}>
               Ordenes del dia
             </button>
             <button
               type="button"
-              onClick={() => {
-                setMessage("Ventas de hoy: modulo en preparacion.");
+              onClick={async () => {
+                await activateOrderAudio();
                 setMenuOpen(false);
               }}
             >
-              Ventas de hoy
+              Probar sonido pedido
             </button>
           </div>
         )}
@@ -1409,7 +1688,10 @@ export default function PosApp() {
           <button
             type="button"
             className={activePanel === "orders" ? "active" : ""}
-            onClick={() => setActivePanel("orders")}
+            onClick={() => {
+              setSelectedOrderId(null);
+              setActivePanel("orders");
+            }}
           >
             Orders
           </button>
@@ -1639,6 +1921,56 @@ export default function PosApp() {
         </main>
       )}
 
+      {activePanel === "dayOrders" && (
+        <div className="pos-workspace pos-workspace--dayOrders">
+          <section className="pos-ordersPane pos-dayOrdersPane">
+            <div className="pos-sectionHead">
+              <div>
+                <span>Operaciones del dia</span>
+                <h2>Tickets de hoy</h2>
+                <small>
+                  {dayOrdersKpis
+                    ? `${dayOrdersKpis.ordersCount || 0} pedidos · ${formatMoney(dayOrdersKpis.revenue, dayOrders[0]?.currency || "EUR")}`
+                    : "Resumen de pedidos y ventas"}
+                </small>
+              </div>
+              <button type="button" onClick={loadDayOrders} disabled={dayOrdersLoading}>
+                Sync
+              </button>
+            </div>
+
+            {dayOrdersError && <div className="pos-emptySmall">{dayOrdersError}</div>}
+
+            {dayOrdersLoading && dayOrders.length === 0 ? (
+              <div className="pos-emptySmall">Cargando tickets del dia...</div>
+            ) : dayOrders.length === 0 ? (
+              <div className="pos-emptySmall">Todavia no hay pedidos registrados hoy.</div>
+            ) : (
+              <div className="pos-dayOrdersList" aria-label="Tickets del dia">
+                {dayOrders.map((order) => (
+                  <button
+                    key={order.id}
+                    type="button"
+                    className="pos-dayOrderTicket"
+                    onClick={() => {
+                      setSelectedOrderId(order.id);
+                      setActivePanel("orders");
+                    }}
+                  >
+                    <span>{formatTime(order.date || order.createdAt)}</span>
+                    <strong>{order.code || `Pedido ${order.id}`}</strong>
+                    <small>
+                      {getCustomerName(order)} · {lineName(asArray(order.products)[0] || {})}
+                    </small>
+                    <b>{formatMoney(order.total, order.currency || "EUR")}</b>
+                  </button>
+                ))}
+              </div>
+            )}
+          </section>
+        </div>
+      )}
+
       {reservationsOpen && (
         <div className="pos-modalBack" onClick={() => setReservationsOpen(false)}>
           <section className="pos-reservationModal" onClick={(event) => event.stopPropagation()}>
@@ -1781,15 +2113,56 @@ export default function PosApp() {
         </div>
       )}
 
+      {newOrderNotice && (
+        <div className="pos-newOrderNoticeBack" role="presentation">
+          <section
+            className="pos-newOrderNotice"
+            role="alertdialog"
+            aria-modal="true"
+            aria-labelledby="pos-new-order-title"
+            aria-describedby="pos-new-order-copy"
+          >
+            <div className="pos-newOrderNoticeSignal" aria-hidden="true">
+              <span />
+              <span />
+              <span />
+            </div>
+            <div className="pos-newOrderNoticeCopy">
+              <span>{newOrderNotice.boosted ? "Prioridad Volta" : "Cola de cocina"}</span>
+              <h2 id="pos-new-order-title">Pedido nuevo</h2>
+              <p id="pos-new-order-copy">
+                {newOrderNotice.count > 1
+                  ? `${newOrderNotice.count} pedidos entraron ahora.`
+                  : `${getCustomerName(newOrderNotice.order)} acaba de pedir.`}
+              </p>
+            </div>
+
+            <div className="pos-newOrderNoticeTicket">
+              <span>{newOrderNotice.order.code || `Pedido ${newOrderNotice.order.id}`}</span>
+              <strong>{formatMoney(newOrderNotice.order.total, newOrderNotice.order.currency || "EUR")}</strong>
+              <small>
+                {getOrderType(newOrderNotice.order)} ·{" "}
+                {formatTime(newOrderNotice.order.date || newOrderNotice.order.createdAt)}
+              </small>
+            </div>
+
+            <button type="button" className="pos-newOrderAcceptBtn" onClick={acceptNewOrderNotice}>
+              <span>Aceptar</span>
+              <small>pedido</small>
+            </button>
+          </section>
+        </div>
+      )}
+
       <footer className="pos-footer">
         <span>© {new Date().getFullYear()} voltaPizza · POS v01</span>
         <div className={`pos-printInline ${printerTone}`}>
           <span />
           {printerLabel}
-          <small>{printerStatus.realConnected ? printerStatus.label : "sin impresora real"}</small>
+          <small>{printerStatus.realConnected ? printerStatus.label : "modo prueba"}</small>
         </div>
       </footer>
-      {!showVisitorAlert && (
+      {showOrderUtilityFabs && (
         <>
       <button
         type="button"

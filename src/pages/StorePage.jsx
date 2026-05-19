@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import OrderPortalTransition from "../components/Storefront/OrderPortalTransition";
 import api from "../services/api";
 import "../styles/Storefront.css";
@@ -531,7 +531,7 @@ const CartPlusIcon = () => (
   </svg>
 );
 
-function CouponInfoModal({ open, onClose, onRemove, data }) {
+function CouponInfoModal({ open, onClose, onRemove, onBackToCoupons, data }) {
   const [countdown, setCountdown] = useState("");
   const [secondsLeft, setSecondsLeft] = useState(null);
 
@@ -614,7 +614,10 @@ function CouponInfoModal({ open, onClose, onRemove, data }) {
 
         <div className="sf-cartActions sf-couponInfoActions">
           <button type="button" className="sf-primaryBtn" onClick={onClose}>
-            Entendido
+            Volver a la tienda
+          </button>
+          <button type="button" className="sf-secondaryBtn" onClick={onBackToCoupons}>
+            Ver cupones
           </button>
           {(coupon || data.valid) && (
             <button type="button" className="sf-secondaryBtn" onClick={onRemove}>
@@ -1421,6 +1424,7 @@ export default function StorePage() {
   const [cart, setCart] = useState([]);
   const [cartOpen, setCartOpen] = useState(false);
   const [checkoutMessage, setCheckoutMessage] = useState("");
+  const [checkoutTrackingCode, setCheckoutTrackingCode] = useState("");
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [checkoutProfileOpen, setCheckoutProfileOpen] = useState(false);
   const [checkoutProfileForm, setCheckoutProfileForm] = useState({
@@ -1741,24 +1745,83 @@ export default function StorePage() {
   }, [cartDraftStorageKey]);
 
   useEffect(() => {
+    try {
+      if (cart.length === 0) {
+        window.localStorage.removeItem(cartDraftStorageKey);
+        return;
+      }
+
+      window.localStorage.setItem(
+        cartDraftStorageKey,
+        JSON.stringify({
+          source: "active_cart",
+          savedAt: new Date().toISOString(),
+          items: cart,
+        })
+      );
+    } catch {
+      // Ignore storage failures; checkout can continue without persistence.
+    }
+  }, [cart, cartDraftStorageKey]);
+
+  useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const paymentStatus = params.get("payment");
+    const orderCode = params.get("order_code") || "";
+    const sessionId = params.get("session_id") || "";
+    let cancelled = false;
 
     if (paymentStatus === "success") {
-      setCheckoutMessage("Pago recibido. Tu pedido ya entro en la cola de la pizzeria.");
+      setCheckoutTrackingCode(orderCode);
+      setCheckoutMessage("Confirmando el pago con Stripe para pasar el pedido a cocina...");
       setCartOpen(true);
-      setCart([]);
-      try {
-        window.localStorage.removeItem(cartDraftStorageKey);
-      } catch {
-        // Ignore storage cleanup failures.
-      }
+
+      const confirmPayment = async () => {
+        try {
+          if (sessionId) {
+            const confirmation = await api.post("/api/checkout/session/confirm", {
+              sessionId,
+            });
+            if (!cancelled && confirmation?.orderCode) {
+              setCheckoutTrackingCode(confirmation.orderCode);
+            }
+          }
+
+          if (cancelled) return;
+
+          setCheckoutMessage(
+            orderCode || sessionId
+              ? "Pago recibido. Tu pedido ya entro en cocina. Tambien te enviamos el enlace de seguimiento por SMS."
+              : "Pago recibido. Tu pedido ya entro en cocina."
+          );
+          setCart([]);
+          try {
+            window.localStorage.removeItem(cartDraftStorageKey);
+          } catch {
+            // Ignore storage cleanup failures.
+          }
+        } catch (error) {
+          console.error("[StorePage] payment confirmation failed", error);
+          if (!cancelled) {
+            setCheckoutMessage(
+              "Pago recibido en Stripe. Estamos confirmando la entrada en cocina; actualiza el seguimiento en unos segundos."
+            );
+          }
+        }
+      };
+
+      confirmPayment();
     }
 
     if (paymentStatus === "cancel") {
+      setCheckoutTrackingCode("");
       setCheckoutMessage("Pago cancelado. Puedes seguir comprando o intentarlo de nuevo.");
       setCartOpen(true);
     }
+
+    return () => {
+      cancelled = true;
+    };
   }, [cartDraftStorageKey]);
 
   const themeStyle = useMemo(
@@ -2821,11 +2884,6 @@ export default function StorePage() {
     };
 
     setCart((current) => [...current, line]);
-    try {
-      window.localStorage.removeItem(cartDraftStorageKey);
-    } catch {
-      // Ignore storage cleanup failures.
-    }
     setProductModalOpen(false);
   };
 
@@ -2837,9 +2895,8 @@ export default function StorePage() {
   };
 
   const incProductQty = () => {
-    const stockMax =
-      selectedProduct?.stock == null ? 12 : Math.max(1, Number(selectedProduct.stock));
-    const max = Math.min(12, stockMax || 12);
+    const rawStock = Number(selectedProduct?.stock);
+    const max = Number.isFinite(rawStock) && rawStock > 1 ? Math.min(12, rawStock) : 12;
     setProductSelection((current) => ({
       ...current,
       qty: Math.min(max, Number(current.qty || 1) + 1),
@@ -2944,11 +3001,6 @@ export default function StorePage() {
     };
 
     setCart((current) => [...current, line]);
-    try {
-      window.localStorage.removeItem(cartDraftStorageKey);
-    } catch {
-      // Ignore storage cleanup failures.
-    }
     setHalfModalOpen(false);
   };
 
@@ -3037,11 +3089,6 @@ export default function StorePage() {
     };
 
     setCart((current) => [...current, line]);
-    try {
-      window.localStorage.removeItem(cartDraftStorageKey);
-    } catch {
-      // Ignore storage cleanup failures.
-    }
     setCustomModalOpen(false);
   };
 
@@ -3641,11 +3688,6 @@ export default function StorePage() {
     };
 
     setCart((current) => [...current, line]);
-    try {
-      window.localStorage.removeItem(cartDraftStorageKey);
-    } catch {
-      // Ignore storage cleanup failures.
-    }
   };
 
   const activateBoots = () => {
@@ -3679,11 +3721,6 @@ export default function StorePage() {
     };
 
     setCart((current) => [...current, boostLine]);
-    try {
-      window.localStorage.removeItem(cartDraftStorageKey);
-    } catch {
-      // Ignore storage cleanup failures.
-    }
     setBootsMessage("Boost anadido al carrito. Se cobrara al finalizar la compra.");
     setBootsOpen(false);
   };
@@ -4760,8 +4797,12 @@ export default function StorePage() {
           >
             <div className="sf-cartModalHead">
               <div>
-                <span>Carrito</span>
-                <h3>EUR {cartTotal.toFixed(2)}</h3>
+                <span>{cart.length === 0 && checkoutMessage ? "Pedido confirmado" : "Carrito"}</span>
+                <h3>
+                  {cart.length === 0 && checkoutMessage
+                    ? "Pago recibido"
+                    : `EUR ${cartTotal.toFixed(2)}`}
+                </h3>
               </div>
               <button
                 type="button"
@@ -4778,11 +4819,37 @@ export default function StorePage() {
                 checkoutMessage.includes("Pago recibido") ? "is-success" : ""
               }`}>
                 {checkoutMessage}
+                {checkoutTrackingCode && (
+                  <Link to={`/seguimiento/${checkoutTrackingCode}`} className="sf-trackingInlineLink">
+                    Ver seguimiento
+                  </Link>
+                )}
               </div>
             )}
 
             {cart.length === 0 ? (
-              <div className="sf-cartEmpty">Carrito vacio.</div>
+              checkoutMessage ? (
+                <div className="sf-cartActions sf-cartActions--confirmation">
+                  {checkoutTrackingCode && (
+                    <Link to={`/seguimiento/${checkoutTrackingCode}`} className="sf-primaryBtn">
+                      Ver seguimiento
+                    </Link>
+                  )}
+                  <button
+                    type="button"
+                    className="sf-secondaryBtn"
+                    onClick={() => {
+                      setCheckoutMessage("");
+                      setCheckoutTrackingCode("");
+                      setCartOpen(false);
+                    }}
+                  >
+                    Volver a la tienda
+                  </button>
+                </div>
+              ) : (
+                <div className="sf-cartEmpty">Carrito vacio.</div>
+              )
             ) : (
               <>
                 <div className="sf-cartList">
@@ -6112,6 +6179,15 @@ export default function StorePage() {
         onRemove={() => {
           removeCouponFromCart();
           setCouponInfoOpen(false);
+        }}
+        onBackToCoupons={() => {
+          setCouponInfoOpen(false);
+          navigate(`/${partnerSlug}/coupons`, {
+            state: {
+              returnTo: `/${partnerSlug}/${storeSlug}`,
+              couponCode: couponInfoData?.coupon?.code || couponCode || "",
+            },
+          });
         }}
       />
 

@@ -43,9 +43,9 @@ const lineQty = (item) => {
 };
 
 export const mockPrinter = {
-  id: "mock-thermal-58",
-  label: "Impresora virtual 58mm",
-  mode: "MOCK",
+  id: "windows-browser-print",
+  label: "Impresion Windows temporal",
+  mode: "WINDOWS_TEST",
 
   getStatus() {
     return {

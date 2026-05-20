@@ -12,6 +12,28 @@ const normalizeZipInput = (value = "") => String(value || "").replace(/\D/g, "")
 const COUPON_GALLERY_LEGAL_VERSION = "2026-05-coupon-games-legal-v1";
 const COUPON_GALLERY_LEGAL_KEY = `volta_coupon_gallery_legal_${COUPON_GALLERY_LEGAL_VERSION}`;
 
+const withCouponQuery = (path, code) => {
+  const basePath = String(path || "/");
+  const [pathname, rawSearch = ""] = basePath.split("?");
+  const params = new URLSearchParams(rawSearch);
+  params.set("coupon", String(code || "").trim().toUpperCase());
+  params.set("couponSource", "gallery");
+  params.set("openCoupon", "1");
+  return `${pathname || "/"}?${params.toString()}`;
+};
+
+const localizeRedeemUrl = (url, fallbackPath, code) => {
+  const fallback = withCouponQuery(fallbackPath, code);
+  if (!url) return fallback;
+
+  try {
+    const parsed = new URL(url);
+    return withCouponQuery(`${parsed.pathname}${parsed.search}`, code);
+  } catch {
+    return String(url).startsWith("/") ? withCouponQuery(url, code) : fallback;
+  }
+};
+
 const buildStorageKey = (partner) => {
   const partnerKey = partner?.id || partner?.slug || partner?.name || "default";
   return `volta_coupon_gallery_zip_${partnerKey}`;
@@ -340,11 +362,33 @@ function CouponCard({ card, partner, onClaim }) {
   );
 }
 
-function ClaimModal({ card, partnerId, zipCode, onClose, onClaimed }) {
+function ClaimModal({ card, partnerId, zipCode, redeemBasePath, onClose, onClaimed, onGoToRedeem }) {
   const [form, setForm] = useState({ name: "", phone: "" });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [result, setResult] = useState(null);
+  const [copiedCoupon, setCopiedCoupon] = useState(false);
+  const couponCode = result?.coupon?.code || "";
+  const redeemPath = result?.coupon
+    ? localizeRedeemUrl(result.delivery?.redeemUrl, redeemBasePath, couponCode)
+    : "";
+  const publicRedeemUrl =
+    redeemPath && typeof window !== "undefined" ? `${window.location.origin}${redeemPath}` : "";
+
+  const copyCouponCode = async ({ goToRedeem = false } = {}) => {
+    if (!couponCode) return;
+
+    try {
+      await navigator.clipboard.writeText(couponCode);
+      setCopiedCoupon(true);
+      window.setTimeout(() => setCopiedCoupon(false), 1400);
+      if (goToRedeem) {
+        window.setTimeout(() => onGoToRedeem(redeemPath), 180);
+      }
+    } catch {
+      setError("No pudimos copiar el cupon. Manten pulsado el codigo para copiarlo.");
+    }
+  };
 
   const submit = async (event) => {
     event.preventDefault();
@@ -383,10 +427,10 @@ function ClaimModal({ card, partnerId, zipCode, onClose, onClaimed }) {
 
   return (
     <div className="cg-modalBack" onMouseDown={onClose}>
-      <div className="cg-modalCard" onMouseDown={(event) => event.stopPropagation()}>
+      <div className="cg-modalCard cg-claimModalCard" onMouseDown={(event) => event.stopPropagation()}>
         <div className="cg-modalHead">
           <div>
-            <div className="cg-kicker">Coupon Gallery</div>
+            <div className="cg-kicker">Volta Coupon Gallery</div>
             <h3>{card.title}</h3>
           </div>
           <button className="cg-ghostBtn" onClick={onClose} type="button">
@@ -396,24 +440,50 @@ function ClaimModal({ card, partnerId, zipCode, onClose, onClaimed }) {
 
         {result?.coupon ? (
           <div className="cg-claimSuccess">
-            <strong>Cupon reservado</strong>
-            <p>
-              Codigo: <b>{result.coupon.code}</b>
+            <div className="cg-successHero">
+              <span>Listo para pedir</span>
+              <button
+                type="button"
+                className={`cg-copyCouponBtn ${copiedCoupon ? "is-copied" : ""}`}
+                onClick={() => copyCouponCode({ goToRedeem: true })}
+                aria-label="Copiar cupon e ir a la tienda"
+                title="Copiar cupon e ir a la tienda"
+              >
+                <span className="cg-copyCouponIcon" aria-hidden="true" />
+                <small>{copiedCoupon ? "Copiado" : "Copiar"}</small>
+              </button>
+              <div className="cg-couponCodeRow">
+                <strong>{result.coupon.code}</strong>
+              </div>
+            </div>
+            <p className="cg-successCopy">
+              Tu cupon queda reservado. El enlace abre la pagina de pedido con el codigo ya colocado en la caja de validacion.
             </p>
-            <p>
+            <div className="cg-redeemPanel">
+              <span>Enlace directo de canje</span>
+              <a href={redeemPath} onClick={(event) => event.stopPropagation()}>
+                {publicRedeemUrl}
+              </a>
+            </div>
+            <p className="cg-successMeta">
               Vence:{" "}
-              {result.coupon.expiresAt ? new Date(result.coupon.expiresAt).toLocaleString("es-ES") : "sin fecha"}
+              <b>{result.coupon.expiresAt ? new Date(result.coupon.expiresAt).toLocaleString("es-ES") : "sin fecha"}</b>
             </p>
             {result.delivery && (
-              <p>
+              <p className="cg-successMeta">
                 {result.delivery.sent
-                  ? "Te enviamos el cupon por SMS."
-                  : "Cupon reservado, pero el SMS no pudo salir ahora. Guarda el codigo."}
+                  ? "Tambien enviamos este enlace por SMS."
+                  : "El SMS no pudo salir ahora. Guarda el codigo o usa el enlace directo."}
               </p>
             )}
-            <button className="cg-primaryBtn" onClick={onClose} type="button">
-              Entendido
-            </button>
+            <div className="cg-claimActions">
+              <button className="cg-primaryBtn" onClick={() => onGoToRedeem(redeemPath)} type="button">
+                Ir al pedido
+              </button>
+              <button className="cg-ghostBtn" onClick={onClose} type="button">
+                Seguir viendo cupones
+              </button>
+            </div>
           </div>
         ) : (
           <form className="cg-claimForm" onSubmit={submit}>
@@ -436,7 +506,7 @@ function ClaimModal({ card, partnerId, zipCode, onClose, onClaimed }) {
             </label>
 
             <div className="cg-helperBox">
-              Reclamas este cupon para el codigo postal <strong>{zipCode}</strong>.
+              Reclamas este cupon para el codigo postal <strong>{zipCode}</strong>. Al reservarlo te damos un enlace directo para pedir con el codigo listo.
             </div>
 
             {error && <div className="cg-error">{error}</div>}
@@ -550,7 +620,7 @@ export default function CouponGallery({ partner }) {
         if (cancelled) return;
         const stores = response?.data;
         const firstStore = Array.isArray(stores) ? stores.find((store) => store?.slug) : null;
-        setFallbackStorePath(firstStore ? `/${partner.slug}/${firstStore.slug}/menu` : "");
+        setFallbackStorePath(firstStore ? `/${partner.slug}/${firstStore.slug}` : "");
       })
       .catch((requestError) => {
         console.error(requestError);
@@ -698,8 +768,10 @@ export default function CouponGallery({ partner }) {
           card={claimingCard}
           partnerId={partnerId}
           zipCode={zipCode}
+          redeemBasePath={returnToStorePath}
           onClose={() => setClaimingCard(null)}
           onClaimed={loadCards}
+          onGoToRedeem={(path) => navigate(path || returnToStorePath)}
         />
       )}
 

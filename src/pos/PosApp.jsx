@@ -27,6 +27,57 @@ const formatTime = (value) => {
   }).format(date);
 };
 
+const getOrderScheduledFor = (order) =>
+  order?.scheduledFor ||
+  order?.customerData?.scheduledFor ||
+  order?.customerData?.delivery?.scheduledFor ||
+  null;
+
+const formatScheduledTime = (value) => {
+  if (!value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+
+  return new Intl.DateTimeFormat("es-ES", {
+    weekday: "short",
+    day: "2-digit",
+    month: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(date);
+};
+
+const formatCountdown = (milliseconds) => {
+  const totalSeconds = Math.max(Math.ceil(milliseconds / 1000), 0);
+  const days = Math.floor(totalSeconds / 86400);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  if (days > 0) return `${days}d ${hours}h`;
+  if (hours > 0) {
+    return `${hours}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+  }
+
+  return `${minutes}:${String(seconds).padStart(2, "0")}`;
+};
+
+const getScheduledOrderState = (order, nowMs = Date.now()) => {
+  const scheduledFor = getOrderScheduledFor(order);
+  const scheduledAtMs = scheduledFor ? new Date(scheduledFor).getTime() : NaN;
+  const hasSchedule = Number.isFinite(scheduledAtMs);
+  const remainingMs = hasSchedule ? scheduledAtMs - nowMs : 0;
+
+  return {
+    hasSchedule,
+    locked: hasSchedule && remainingMs > 0,
+    scheduledFor,
+    label: hasSchedule ? formatScheduledTime(scheduledFor) : "",
+    countdown: hasSchedule ? formatCountdown(remainingMs) : "",
+    remainingMs,
+  };
+};
+
 const parseMaybeJson = (value, fallback) => {
   if (value == null) return fallback;
   if (typeof value !== "string") return value;
@@ -74,6 +125,8 @@ const buildWindowsPrintTicketHtml = (order) => {
   const items = asArray(order?.products);
   const customer = order?.customerData || {};
   const orderCode = order?.code || order?.id || "-";
+  const schedule = getScheduledOrderState(order);
+  const showAddress = isDeliveryOrder(order) && customer.address_1;
 
   return `<!doctype html>
 <html>
@@ -111,11 +164,16 @@ const buildWindowsPrintTicketHtml = (order) => {
         <div>Tienda: ${escapeHtml(order?.storeName || "-")}</div>
         <div>Tipo: ${escapeHtml(getOrderType(order))}</div>
         <div>Hora: ${escapeHtml(formatTime(order?.date || order?.createdAt))}</div>
+        ${
+          schedule.hasSchedule
+            ? `<div>Programado: ${escapeHtml(schedule.label)}</div>`
+            : ""
+        }
       </section>
       <section class="block">
         <div>Cliente: ${escapeHtml(customer.name || "-")}</div>
         <div>Telefono: ${escapeHtml(customer.phone || "-")}</div>
-        ${customer.address_1 ? `<div>Direccion: ${escapeHtml(customer.address_1)}</div>` : ""}
+        ${showAddress ? `<div>Direccion: ${escapeHtml(customer.address_1)}</div>` : ""}
       </section>
       <section class="block">
         ${
@@ -171,6 +229,8 @@ const getOrderType = (order) => {
   if (raw.includes("LOCAL")) return "Local";
   return String(order?.type || order?.delivery || "-");
 };
+
+const isDeliveryOrder = (order) => getOrderType(order) === "Delivery";
 
 const getOrderContext = (order) => {
   const type = getOrderType(order);
@@ -379,7 +439,9 @@ const getCustomerTags = (order) => {
 };
 
 const getCustomerAddress = (order) =>
-  String(order?.customerData?.address_1 || order?.address_1 || "").trim();
+  isDeliveryOrder(order)
+    ? String(order?.customerData?.address_1 || order?.address_1 || "").trim()
+    : "";
 
 const formatElapsed = (value) => {
   if (!value) return "nunca";
@@ -507,6 +569,9 @@ function TicketPreview({ order }) {
     );
   }
 
+  const schedule = getScheduledOrderState(order);
+  const address = getCustomerAddress(order);
+
   return (
     <div className="pos-ticketPreview">
       <div className="pos-ticketBrand">VOLTA POS</div>
@@ -519,6 +584,12 @@ function TicketPreview({ order }) {
         <span>Operacion</span>
         <strong>{getOrderType(order)}</strong>
       </div>
+      {schedule.hasSchedule && (
+        <div className={`pos-ticketBlock pos-ticketBlock--scheduled ${schedule.locked ? "is-locked" : ""}`}>
+          <span>Pedido programado</span>
+          <strong>{schedule.label}</strong>
+        </div>
+      )}
       {isBoostedOrder(order) && (
         <div className="pos-ticketBlock pos-ticketBlock--boost">
           <span>Boost priority</span>
@@ -541,10 +612,10 @@ function TicketPreview({ order }) {
         <strong>{order.customerData?.name || "-"}</strong>
         <small>{order.customerData?.phone || ""}</small>
       </div>
-      {order.customerData?.address_1 && (
+      {address && (
         <div className="pos-ticketBlock">
           <span>Direccion</span>
-          <strong>{order.customerData.address_1}</strong>
+          <strong>{address}</strong>
         </div>
       )}
       <div className="pos-ticketItems">
@@ -830,6 +901,8 @@ export default function PosApp() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [newOrderNotice, setNewOrderNotice] = useState(null);
+  const [readyConfirmOrder, setReadyConfirmOrder] = useState(null);
+  const [readyButtonToast, setReadyButtonToast] = useState(null);
   const [reservations, setReservations] = useState([]);
   const [reservationsOpen, setReservationsOpen] = useState(false);
   const [activeReservationId, setActiveReservationId] = useState(null);
@@ -874,6 +947,9 @@ export default function PosApp() {
       null,
     [dayOrders, orders, selectedOrderId]
   );
+  const selectedOrderSchedule = selectedOrder
+    ? getScheduledOrderState(selectedOrder, clockTick)
+    : null;
   const customerHelpOrder = useMemo(
     () => orders.find((order) => String(order.id) === String(customerHelpOrderId)) || null,
     [customerHelpOrderId, orders]
@@ -1486,18 +1562,53 @@ export default function PosApp() {
     }
   };
 
+  const showReadyBlockedToast = () => {
+    const toast = {
+      id: Date.now(),
+      text: "Espera el momento 🧘‍♂️",
+    };
+    setReadyButtonToast(toast);
+    window.setTimeout(() => {
+      setReadyButtonToast((current) => (current?.id === toast.id ? null : current));
+    }, 1800);
+  };
+
   const markReady = async (order) => {
     if (!order) return;
 
+    const schedule = getScheduledOrderState(order, clockTick);
+    if (schedule.locked) {
+      showReadyBlockedToast();
+      return;
+    }
+
     try {
-      await api.patch(`/api/myorders/${order.id}/ready`);
+      const response = await api.patch(`/api/myorders/${order.id}/ready`);
+      const notification = response.data?.notification;
       setOrders((current) => current.filter((item) => item.id !== order.id));
       setSelectedOrderId(null);
-      setMessage(`Pedido ${order.code || order.id} marcado como listo.`);
+      setReadyConfirmOrder(null);
+      setMessage(
+        notification?.ok
+          ? `Pedido ${order.code || order.id} marcado como listo. Cliente notificado.`
+          : `Pedido ${order.code || order.id} marcado como listo. Revisa la notificacion al cliente.`
+      );
     } catch (error) {
       console.error(error);
       setMessage(error.response?.data?.error || "No se pudo marcar como listo.");
     }
+  };
+
+  const requestMarkReady = (order) => {
+    if (!order) return;
+
+    const schedule = getScheduledOrderState(order, clockTick);
+    if (schedule.locked) {
+      showReadyBlockedToast();
+      return;
+    }
+
+    setReadyConfirmOrder(order);
   };
 
   const completeReservation = async () => {
@@ -1751,9 +1862,23 @@ export default function PosApp() {
                 <button type="button" onClick={() => printOrder(selectedOrder)}>
                   Imprimir
                 </button>
-                <button type="button" onClick={() => markReady(selectedOrder)}>
-                  Ready
-                </button>
+                <div className="pos-readyButtonWrap">
+                  <button
+                    type="button"
+                    className={selectedOrderSchedule?.locked ? "is-scheduledLocked" : ""}
+                    aria-disabled={selectedOrderSchedule?.locked || undefined}
+                    onClick={() => requestMarkReady(selectedOrder)}
+                  >
+                    {selectedOrderSchedule?.locked
+                      ? `Ready ${selectedOrderSchedule.countdown}`
+                      : "Ready"}
+                  </button>
+                  {readyButtonToast && selectedOrderSchedule?.locked && (
+                    <span key={readyButtonToast.id} className="pos-readyButtonToast">
+                      {readyButtonToast.text}
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
           ) : orders.length === 0 ? (
@@ -1836,6 +1961,7 @@ export default function PosApp() {
                   const address = getCustomerAddress(order);
                   const boosted = isBoostedOrder(order);
                   const vip = isVipOrder(order);
+                  const schedule = getScheduledOrderState(order, clockTick);
 
                   return (
                     <button
@@ -1843,6 +1969,8 @@ export default function PosApp() {
                       type="button"
                       className={`pos-orderCard ${boosted ? "is-boosted" : ""} ${
                         vip ? "is-vip" : ""
+                      } ${schedule.locked ? "is-scheduledLocked" : ""} ${
+                        schedule.hasSchedule && !schedule.locked ? "is-scheduledReady" : ""
                       }`}
                       onClick={() => setSelectedOrderId(order.id)}
                     >
@@ -1894,6 +2022,13 @@ export default function PosApp() {
                         <span>{formatTime(order.date || order.createdAt)}</span>
                         <b>{formatMoney(order.total, order.currency || "EUR")}</b>
                       </div>
+
+                      {schedule.hasSchedule && (
+                        <div className={`pos-orderSchedule ${schedule.locked ? "is-locked" : ""}`}>
+                          <span>Programado</span>
+                          <strong>{schedule.label}</strong>
+                        </div>
+                      )}
 
                       {!boosted && vip && (
                         <div className="pos-vipPriorityBadge">VIP prioridad despues de Boost</div>
@@ -2107,6 +2242,36 @@ export default function PosApp() {
                 disabled={!customerHelpOrder || !customerHelpText.trim()}
               >
                 Abrir WhatsApp
+              </button>
+            </div>
+          </section>
+        </div>
+      )}
+
+      {readyConfirmOrder && (
+        <div className="pos-modalBack" onClick={() => setReadyConfirmOrder(null)}>
+          <section
+            className="pos-reservationModal pos-readyConfirmModal"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="pos-sectionHead">
+              <div>
+                <span>Confirmar Ready</span>
+                <h2>Estas seguro de marcar como listo?</h2>
+                <small>{readyConfirmOrder.code || `Pedido ${readyConfirmOrder.id}`}</small>
+              </div>
+            </div>
+
+            <div className="pos-readyConfirmCopy">
+              Se enviara la notificacion respectiva al cliente.
+            </div>
+
+            <div className="pos-actionGrid">
+              <button type="button" onClick={() => markReady(readyConfirmOrder)}>
+                Si, marcar listo
+              </button>
+              <button type="button" onClick={() => setReadyConfirmOrder(null)}>
+                Cancelar
               </button>
             </div>
           </section>

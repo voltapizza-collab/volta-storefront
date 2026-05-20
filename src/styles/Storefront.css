@@ -3322,8 +3322,16 @@
 .sf-couponDock input {
   min-width: 0;
   height: 100%;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: #16072f;
   font-size: 0.8rem;
-  font-weight: 850;
+  font-weight: 950;
+}
+
+.sf-couponDock input::placeholder {
+  color: rgba(22, 7, 47, 0.58);
 }
 
 .sf-couponDock button {
@@ -3363,9 +3371,9 @@
   right: 78px;
   bottom: 5px;
   overflow: hidden;
-  color: rgba(33, 22, 52, 0.58);
+  color: #3b008b;
   font-size: 0.56rem;
-  font-weight: 850;
+  font-weight: 950;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -3492,7 +3500,7 @@
 
 .sf-couponInfoActions {
   margin-top: 14px;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .sf-couponInfoActions .sf-secondaryBtn,
@@ -4795,10 +4803,14 @@
 
 .sf-cartActions--confirmation {
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 2px;
 }
 
 .sf-cartActions .sf-primaryBtn,
 .sf-cartActions .sf-secondaryBtn {
+  box-sizing: border-box;
+  min-width: 0;
   width: 100%;
   min-height: 44px;
 }
@@ -4813,6 +4825,44 @@
 .sf-cartActions .sf-secondaryBtn:hover {
   background: color-mix(in srgb, var(--sf-theme-primary, #4B11B2) 8%, #ffffff);
   color: color-mix(in srgb, var(--sf-theme-primary, #4B11B2) 88%, #111);
+}
+
+.sf-cartActions--confirmation .sf-primaryBtn,
+.sf-cartActions--confirmation .sf-secondaryBtn {
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 18px;
+  padding-inline: 14px;
+  text-align: center;
+  text-decoration: none;
+}
+
+.sf-cartActions--confirmation .sf-primaryBtn {
+  border: 2px solid var(--sf-theme-primary, #4B11B2);
+  background: var(--sf-theme-primary, #4B11B2);
+  color: #fff;
+  box-shadow:
+    0 10px 22px color-mix(in srgb, var(--sf-theme-primary, #4B11B2) 22%, transparent),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.16);
+}
+
+.sf-cartActions--confirmation .sf-primaryBtn:hover {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+}
+
+.sf-cartActions--confirmation .sf-secondaryBtn {
+  border-color: color-mix(in srgb, var(--sf-theme-primary, #4B11B2) 54%, #111);
+  background: #fff;
+  color: var(--sf-theme-primary, #4B11B2);
+  box-shadow: none;
+}
+
+.sf-cartActions--confirmation .sf-primaryBtn:only-child,
+.sf-cartActions--confirmation .sf-secondaryBtn:only-child {
+  grid-column: 1 / -1;
 }
 
 .sf-scheduleModal {

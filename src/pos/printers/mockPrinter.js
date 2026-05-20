@@ -42,6 +42,34 @@ const lineQty = (item) => {
   return Number.isFinite(qty) && qty > 0 ? qty : 1;
 };
 
+const getScheduledFor = (order) =>
+  order?.scheduledFor ||
+  order?.customerData?.scheduledFor ||
+  order?.customerData?.delivery?.scheduledFor ||
+  null;
+
+const formatScheduledFor = (value) => {
+  if (!value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+
+  return new Intl.DateTimeFormat("es-ES", {
+    day: "2-digit",
+    month: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(date);
+};
+
+const isDeliveryOrder = (order) => {
+  const raw = [order?.delivery, order?.type]
+    .filter(Boolean)
+    .map((value) => String(value).toUpperCase())
+    .join(" ");
+
+  return raw.includes("DELIVERY") || raw.includes("COURIER");
+};
+
 export const mockPrinter = {
   id: "windows-browser-print",
   label: "Impresion Windows temporal",
@@ -69,12 +97,17 @@ export const mockPrinter = {
   async printOrder(order) {
     const printedAt = new Date().toISOString();
     const items = readOrderItems(order);
+    const scheduledFor = formatScheduledFor(getScheduledFor(order));
     const lines = [
       "VOLTA POS VIRTUAL",
       `Pedido: ${order?.code || order?.id || "-"}`,
       `Tienda: ${order?.storeName || "-"}`,
+      ...(scheduledFor ? [`PROGRAMADO: ${scheduledFor}`] : []),
       `Cliente: ${order?.customerData?.name || "-"}`,
       `Telefono: ${order?.customerData?.phone || "-"}`,
+      ...(isDeliveryOrder(order) && order?.customerData?.address_1
+        ? [`Direccion: ${order.customerData.address_1}`]
+        : []),
       "------------------------------",
       ...items.map((item) => {
         const size = item?.size || item?.selectedSize || "";

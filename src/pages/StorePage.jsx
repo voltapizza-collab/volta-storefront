@@ -531,7 +531,7 @@ const CartPlusIcon = () => (
   </svg>
 );
 
-function CouponInfoModal({ open, onClose, onRemove, onBackToCoupons, data }) {
+function CouponInfoModal({ open, onClose, onRemove, onValidate, data }) {
   const [countdown, setCountdown] = useState("");
   const [secondsLeft, setSecondsLeft] = useState(null);
 
@@ -588,8 +588,8 @@ function CouponInfoModal({ open, onClose, onRemove, onBackToCoupons, data }) {
           {coupon ? (
             <>
               <p><b>Cupon:</b> <code>{coupon.code}</code></p>
-              <p><b>Beneficio:</b> {formatCouponBenefit(coupon)}</p>
-              <p><b>Caduca:</b> {formatCouponExpiry(coupon.expiresAt)}</p>
+              {coupon.id && <p><b>Beneficio:</b> {formatCouponBenefit(coupon)}</p>}
+              {coupon.expiresAt && <p><b>Caduca:</b> {formatCouponExpiry(coupon.expiresAt)}</p>}
               <p><b>Descuento aplicado:</b> EUR {num(data.discount).toFixed(2)}</p>
 
               {coupon.expiresAt && (
@@ -613,11 +613,8 @@ function CouponInfoModal({ open, onClose, onRemove, onBackToCoupons, data }) {
         </div>
 
         <div className="sf-cartActions sf-couponInfoActions">
-          <button type="button" className="sf-primaryBtn" onClick={onClose}>
-            Volver a la tienda
-          </button>
-          <button type="button" className="sf-secondaryBtn" onClick={onBackToCoupons}>
-            Ver cupones
+          <button type="button" className="sf-primaryBtn" onClick={onValidate}>
+            Validar cupon
           </button>
           {(coupon || data.valid) && (
             <button type="button" className="sf-secondaryBtn" onClick={onRemove}>
@@ -1478,6 +1475,7 @@ export default function StorePage() {
   const [tick, setTick] = useState(false);
   const incentiveZeroRefreshRef = useRef(false);
   const dismissedRewardIncentiveIdsRef = useRef(new Set());
+  const autoCouponApplyRef = useRef("");
 
   useEffect(() => {
     try {
@@ -3114,10 +3112,11 @@ export default function StorePage() {
     setCouponStatus("");
     setCouponInfoData(null);
   }, []);
-  const validateCouponCode = async (event) => {
-    event.preventDefault();
-
-    const code = couponCode.trim().toUpperCase();
+  const applyCouponCode = useCallback(async (
+    rawCode,
+    { openInfo = true, openCartOnValid = true } = {}
+  ) => {
+    const code = String(rawCode || "").trim().toUpperCase();
     setCouponCode(code);
 
     if (!code) {
@@ -3130,7 +3129,21 @@ export default function StorePage() {
       };
       setCouponStatus(emptyData.message);
       setCouponInfoData(emptyData);
-      setCouponInfoOpen(true);
+      if (openInfo) setCouponInfoOpen(true);
+      return;
+    }
+
+    if (couponEligibleSubtotal <= 0) {
+      const pendingData = {
+        valid: false,
+        status: "waiting_for_cart",
+        message: "Codigo listo. Agrega productos elegibles para validar el descuento.",
+        coupon: { code },
+        discount: 0,
+      };
+      setCouponStatus(pendingData.message);
+      setCouponInfoData(pendingData);
+      if (openInfo) setCouponInfoOpen(true);
       return;
     }
 
@@ -3145,7 +3158,7 @@ export default function StorePage() {
       });
 
       setCouponInfoData(data);
-      setCouponInfoOpen(true);
+      if (openInfo) setCouponInfoOpen(true);
       setCouponStatus(data?.message || "Cupon revisado.");
 
       if (data?.valid && num(data.discount) > 0 && data?.coupon?.code) {
@@ -3170,7 +3183,7 @@ export default function StorePage() {
           ...current.filter((item) => !isCouponCartLine(item)),
           line,
         ]);
-        setCartOpen(true);
+        if (openCartOnValid) setCartOpen(true);
       } else {
         setCart((current) => current.filter((item) => !isCouponCartLine(item)));
       }
@@ -3185,11 +3198,60 @@ export default function StorePage() {
       };
       setCouponStatus(errorData.message);
       setCouponInfoData(errorData);
-      setCouponInfoOpen(true);
+      if (openInfo) setCouponInfoOpen(true);
     } finally {
       setCouponLoading(false);
     }
+  }, [couponEligibleSubtotal, partner?.id, store?.id, store?.partnerId]);
+
+  const validateCouponCode = async (event) => {
+    event.preventDefault();
+    await applyCouponCode(couponCode, { openInfo: true, openCartOnValid: true });
   };
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const incomingCoupon = String(params.get("coupon") || "").trim().toUpperCase();
+    const shouldOpenCouponInfo =
+      params.get("openCoupon") === "1" || params.get("couponSource") === "gallery";
+
+    if (!incomingCoupon) return;
+
+    setCouponCode(incomingCoupon);
+
+    if (params.get("openCart") === "1") {
+      setCartOpen(true);
+    }
+
+    if (!store?.id || !(partner?.id || store?.partnerId)) return;
+
+    if (couponEligibleSubtotal <= 0) {
+      const pendingData = {
+        valid: false,
+        status: "waiting_for_cart",
+        message: "Codigo listo. Agrega productos elegibles para validar el descuento.",
+        coupon: { code: incomingCoupon },
+        discount: 0,
+      };
+      setCouponStatus(pendingData.message);
+      setCouponInfoData(pendingData);
+      if (shouldOpenCouponInfo) setCouponInfoOpen(true);
+      return;
+    }
+
+    const applyKey = `${incomingCoupon}:${store.id}:${couponEligibleSubtotal.toFixed(2)}`;
+    if (autoCouponApplyRef.current === applyKey) return;
+    autoCouponApplyRef.current = applyKey;
+
+    applyCouponCode(incomingCoupon, { openInfo: shouldOpenCouponInfo, openCartOnValid: true });
+  }, [
+    applyCouponCode,
+    couponEligibleSubtotal,
+    location.search,
+    partner?.id,
+    store?.id,
+    store?.partnerId,
+  ]);
 
   const startStripeCheckout = useCallback(async (profileOverride = null) => {
     if (profileOverride?.preventDefault) {
@@ -3292,6 +3354,7 @@ export default function StorePage() {
         customer_profile_required: "Necesitamos tu nombre y telefono para hacer seguimiento al pedido.",
         amount_too_low: "El importe es demasiado bajo para procesar el pago.",
         stripe_session_url_missing: "Stripe creo la sesion sin URL de pago. Intentalo de nuevo.",
+        database_unavailable: "No pudimos conectar con la base de datos. Intentalo de nuevo en unos segundos.",
         checkout_failed: "Stripe no pudo crear la sesion de pago.",
       };
       setCheckoutMessage(messages[errorCode] || "No pudimos iniciar el pago.");
@@ -3967,7 +4030,7 @@ export default function StorePage() {
               className={`sf-offersBtn sf-lsfOfferBtn ${offerVariant.className}`}
               onClick={() =>
                 navigate(`/${partnerSlug}/coupons`, {
-                  state: { returnToStorePath: `/${partnerSlug}/${storeSlug}/menu` },
+                  state: { returnToStorePath: `/${partnerSlug}/${storeSlug}` },
                 })
               }
             >
@@ -6180,13 +6243,10 @@ export default function StorePage() {
           removeCouponFromCart();
           setCouponInfoOpen(false);
         }}
-        onBackToCoupons={() => {
-          setCouponInfoOpen(false);
-          navigate(`/${partnerSlug}/coupons`, {
-            state: {
-              returnTo: `/${partnerSlug}/${storeSlug}`,
-              couponCode: couponInfoData?.coupon?.code || couponCode || "",
-            },
+        onValidate={() => {
+          applyCouponCode(couponInfoData?.coupon?.code || couponCode, {
+            openInfo: true,
+            openCartOnValid: true,
           });
         }}
       />

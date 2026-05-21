@@ -4,9 +4,11 @@ import { mockPrinter } from "./printers/mockPrinter";
 import "../styles/PosApp.css";
 
 const POS_SESSION_KEY = "volta_pos_virtual_session";
+const POS_ACCEPTED_NOTICE_KEY_PREFIX = "volta_pos_accepted_order_notices";
 const POLL_MS = 10000;
 const STALE_AFTER_MS = 25_000;
 const OFFLINE_AFTER_MS = 60_000;
+const MAX_ACCEPTED_NOTICE_IDS = 500;
 
 const formatMoney = (value, currency = "EUR") =>
   new Intl.NumberFormat("es-ES", {
@@ -78,6 +80,37 @@ const getScheduledOrderState = (order, nowMs = Date.now()) => {
   };
 };
 
+const isSameLocalDay = (left, right) =>
+  left instanceof Date &&
+  right instanceof Date &&
+  !Number.isNaN(left.getTime()) &&
+  !Number.isNaN(right.getTime()) &&
+  left.getFullYear() === right.getFullYear() &&
+  left.getMonth() === right.getMonth() &&
+  left.getDate() === right.getDate();
+
+const formatClockTime = (value) => {
+  if (!value) return "";
+  const date = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+
+  return new Intl.DateTimeFormat("es-ES", {
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(date);
+};
+
+const formatCalendarDate = (value) => {
+  const date = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(date.getTime())) return "Hoy";
+
+  return new Intl.DateTimeFormat("es-ES", {
+    weekday: "long",
+    day: "2-digit",
+    month: "long",
+  }).format(date);
+};
+
 const parseMaybeJson = (value, fallback) => {
   if (value == null) return fallback;
   if (typeof value !== "string") return value;
@@ -86,6 +119,31 @@ const parseMaybeJson = (value, fallback) => {
     return JSON.parse(value);
   } catch {
     return fallback;
+  }
+};
+
+const getAcceptedNoticeStorageKey = (storeId) =>
+  `${POS_ACCEPTED_NOTICE_KEY_PREFIX}:${storeId || "global"}`;
+
+const readAcceptedNoticeIds = (storeId) => {
+  if (typeof window === "undefined" || !storeId) return new Set();
+
+  try {
+    const ids = JSON.parse(localStorage.getItem(getAcceptedNoticeStorageKey(storeId)) || "[]");
+    return new Set((Array.isArray(ids) ? ids : []).map((id) => String(id)));
+  } catch {
+    return new Set();
+  }
+};
+
+const writeAcceptedNoticeIds = (storeId, ids) => {
+  if (typeof window === "undefined" || !storeId) return;
+
+  const nextIds = [...ids].map((id) => String(id)).slice(-MAX_ACCEPTED_NOTICE_IDS);
+  try {
+    localStorage.setItem(getAcceptedNoticeStorageKey(storeId), JSON.stringify(nextIds));
+  } catch {
+    // The POS can keep working even if the browser refuses local persistence.
   }
 };
 
@@ -111,6 +169,98 @@ const lineName = (item) => {
 const lineQty = (item) => {
   const qty = Number(item?.quantity ?? item?.qty ?? item?.cantidad ?? 1);
   return Number.isFinite(qty) && qty > 0 ? qty : 1;
+};
+
+const isCustomBuildLine = (item) =>
+  String(item?.type || "").toUpperCase() === "CUSTOM_BUILD" ||
+  String(item?.cartLineId || "").startsWith("custom-");
+
+const isIncentiveRewardLine = (item) =>
+  String(item?.source || "").toLowerCase() === "incentive_reward" ||
+  String(item?.type || "").toUpperCase() === "INCENTIVE_REWARD";
+
+const isHalfAndHalfLine = (item) =>
+  Boolean(item?.leftName && item?.rightName) ||
+  String(item?.cartLineId || "").startsWith("half-");
+
+const formatIngredientPlacement = (value) => {
+  const raw = String(value || "").toUpperCase();
+  if (raw === "FULL") return "Entera";
+  if (raw === "LEFT") return "Mitad izquierda";
+  if (raw === "RIGHT") return "Mitad derecha";
+  return value ? String(value) : "";
+};
+
+const formatIngredientQuantity = (value) => {
+  const raw = String(value || "").toUpperCase();
+  if (raw === "DOUBLE") return "Doble";
+  if (raw === "SIMPLE") return "Simple";
+  return value ? String(value) : "";
+};
+
+const formatExtraSide = (value) => {
+  const raw = String(value || "").toUpperCase();
+  if (raw === "A" || raw === "LEFT") return "Mitad A";
+  if (raw === "B" || raw === "RIGHT") return "Mitad B";
+  if (raw === "FULL" || raw === "ALL") return "Entera";
+  return value ? String(value) : "";
+};
+
+const getIngredientDetails = (item) =>
+  asArray(item?.ingredients)
+    .map((ingredient) => {
+      const name = String(ingredient?.name || ingredient?.label || ingredient || "").trim();
+      if (!name) return "";
+
+      const placement = ingredient?.placementLabel || formatIngredientPlacement(ingredient?.placement);
+      const quantity = ingredient?.quantityLabel || formatIngredientQuantity(ingredient?.quantity);
+      const detail = [placement, quantity].filter(Boolean).join(" - ");
+      return detail ? `${name}: ${detail}` : name;
+    })
+    .filter(Boolean);
+
+const getLineDetailRows = (item) => {
+  const rows = [];
+  const customMeta = item?.customMeta || {};
+
+  if (isIncentiveRewardLine(item)) {
+    rows.push("Incentivo: premio gratis");
+  }
+
+  if (isHalfAndHalfLine(item)) {
+    if (item.leftName) rows.push(`Mitad A: ${item.leftName}`);
+    if (item.rightName) rows.push(`Mitad B: ${item.rightName}`);
+  }
+
+  getIngredientDetails(item).forEach((detail) => rows.push(detail));
+
+  if (isCustomBuildLine(item) && !getIngredientDetails(item).length) {
+    rows.push("Personalizacion sin ingredientes guardados");
+  }
+
+  asArray(item?.extras)
+    .map((extra) => {
+      const name = extra?.label || extra?.name || extra?.code || extra;
+      if (!name) return "";
+      const side = formatExtraSide(extra?.side || extra?.placement);
+      return side ? `Extra ${side}: ${name}` : `Extra: ${name}`;
+    })
+    .filter(Boolean)
+    .forEach((extra) => rows.push(extra));
+
+  if (isCustomBuildLine(item)) {
+    const baseName =
+      customMeta.baseProductName ||
+      customMeta.baseName ||
+      customMeta.categoryName ||
+      "";
+    const visibleName = lineName(item);
+    if (baseName && !visibleName.toLowerCase().includes(String(baseName).toLowerCase())) {
+      rows.push(`Tipo: ${baseName}`);
+    }
+  }
+
+  return rows;
 };
 
 const escapeHtml = (value) =>
@@ -152,6 +302,8 @@ const buildWindowsPrintTicketHtml = (order) => {
       .row { display: flex; justify-content: space-between; gap: 8px; }
       .item { margin-top: 5px; }
       .item strong { display: block; font-size: 12px; }
+      .item ul { margin: 3px 0 0 0; padding-left: 11px; }
+      .item li { margin: 1px 0; }
       .muted { color: #444; }
       .total { margin-top: 9px; padding-top: 8px; border-top: 2px solid #111; font-size: 15px; font-weight: 900; }
     </style>
@@ -182,10 +334,17 @@ const buildWindowsPrintTicketHtml = (order) => {
                 .map((item) => {
                   const size = item?.size || item?.selectedSize || "";
                   const note = item?.notes || item?.note || item?.comment || "";
+                  const detailRows = getLineDetailRows(item);
                   return `<div class="item"><strong>${escapeHtml(lineQty(item))} x ${escapeHtml(
                     lineName(item)
-                  )}${size ? ` ${escapeHtml(size)}` : ""}</strong>${
+                  )}${size ? ` ${escapeHtml(size)}` : ""}${
+                    isIncentiveRewardLine(item) ? " [REGALO]" : ""
+                  }</strong>${
                     note ? `<span class="muted">${escapeHtml(note)}</span>` : ""
+                  }${
+                    detailRows.length
+                      ? `<ul>${detailRows.map((detail) => `<li>${escapeHtml(detail)}</li>`).join("")}</ul>`
+                      : ""
                   }</div>`;
                 })
                 .join("")
@@ -424,18 +583,14 @@ const isVipOrder = (order) =>
 const getCustomerTags = (order) => {
   const customer = order?.customerData || {};
   const count = Number(customer.orderCount || 0);
-  const segment = String(customer.segment || "").trim().toUpperCase();
-  const activity = String(customer.activity || "").trim().toUpperCase();
-  const tags = [];
+  const averageTicket = Number(customer.averageTicket || 0);
+  const trend = String(customer.trend || "").trim();
 
-  if (customer.isRestricted) tags.push("Revisar");
-  if (segment === "S5") tags.push("VIP");
-  if (count <= 1 || segment === "S1" || segment === "S2") tags.push("Cliente nuevo");
-  if (count >= 3) tags.push(`${count} pedidos`);
-  if (activity === "HOT") tags.push("Reciente");
-  if (activity === "COLD") tags.push("Dormido");
-
-  return [...new Set(tags)].slice(0, 3);
+  return [
+    `${count} pedido${count === 1 ? "" : "s"}`,
+    `Ticket ${formatMoney(averageTicket, order?.currency || "EUR")}`,
+    trend || "Sin tendencia",
+  ];
 };
 
 const getCustomerAddress = (order) =>
@@ -462,17 +617,22 @@ function OrderItems({ order }) {
     <div className="pos-items">
       {products.map((item, index) => {
         const size = item?.size || item?.selectedSize || "";
-        const extras = asArray(item?.extras)
-          .map((extra) => extra?.label || extra?.name || extra?.code || extra)
-          .filter(Boolean);
+        const detailRows = getLineDetailRows(item);
 
         return (
           <div key={`${order.id}-${index}`} className="pos-itemLine">
             <strong>
               {lineName(item)}
               {size ? ` ${size}` : ""} x{lineQty(item)}
+              {isIncentiveRewardLine(item) && <span className="pos-lineBadge">REGALO</span>}
             </strong>
-            {extras.length > 0 && <small>+ {extras.join(", ")}</small>}
+            {detailRows.length > 0 && (
+              <ul className="pos-itemDetails">
+                {detailRows.map((detail, detailIndex) => (
+                  <li key={`${order.id}-${index}-${detailIndex}`}>{detail}</li>
+                ))}
+              </ul>
+            )}
           </div>
         );
       })}
@@ -654,13 +814,7 @@ function PosInventory({ session }) {
       });
       const items = Array.isArray(response.data) ? response.data : [];
       setIngredients(items);
-
-      const firstCategory = items
-        .map((item) => String(item.category || "OTROS").toUpperCase().trim())
-        .filter(Boolean)
-        .sort((left, right) => left.localeCompare(right, "es", { sensitivity: "base" }))[0];
-
-      setOpenCategory((current) => current || firstCategory || "");
+      setOpenCategory("");
       setMessage("");
     } catch (error) {
       console.error(error);
@@ -905,7 +1059,7 @@ export default function PosApp() {
   const [readyButtonToast, setReadyButtonToast] = useState(null);
   const [reservations, setReservations] = useState([]);
   const [reservationsOpen, setReservationsOpen] = useState(false);
-  const [activeReservationId, setActiveReservationId] = useState(null);
+  const [activeCalendarEventId, setActiveCalendarEventId] = useState(null);
   const [loadingReservations, setLoadingReservations] = useState(false);
   const [customerHelpOpen, setCustomerHelpOpen] = useState(false);
   const [customerHelpOrderId, setCustomerHelpOrderId] = useState("");
@@ -932,6 +1086,8 @@ export default function PosApp() {
   });
   const [clockTick, setClockTick] = useState(Date.now());
   const seenIdsRef = useRef(new Set());
+  const ordersRef = useRef([]);
+  const acceptedNoticeIdsRef = useRef(new Set());
   const boostStateRef = useRef(new Map());
   const audioCtxRef = useRef(null);
   const audioUnlockedRef = useRef(false);
@@ -966,8 +1122,6 @@ export default function PosApp() {
     : printerStatus.virtualReady
     ? "Print Windows"
     : "Print fail";
-  const activeReservation =
-    reservations.find((reservation) => reservation.id === activeReservationId) || null;
   const lastOkAgeMs = syncHealth.lastOkAt
     ? clockTick - new Date(syncHealth.lastOkAt).getTime()
     : Infinity;
@@ -1025,11 +1179,84 @@ export default function PosApp() {
     () => getRegionForCity(storeMeta?.city || session?.storeCity || ""),
     [session?.storeCity, storeMeta?.city]
   );
+  const calendarEvents = useMemo(() => {
+    const today = new Date(clockTick);
+    const reservationEvents = reservations
+      .map((reservation) => {
+        const reservationDate = reservation.reservationDateTime
+          ? new Date(reservation.reservationDateTime)
+          : new Date(`${reservation.reservationDate || ""}T${reservation.reservationTime || "00:00"}`);
+        const fallbackTime = reservation.reservationTime || formatClockTime(reservationDate);
+
+        return {
+          id: `reservation-${reservation.id}`,
+          type: "reservation",
+          tone: "reservation",
+          time: fallbackTime,
+          sortAt: Number.isNaN(reservationDate.getTime()) ? 0 : reservationDate.getTime(),
+          title: reservation.customerName || "Reserva",
+          subtitle: `${reservation.partySize || "-"} pers. - ${reservation.customerPhone || "Sin telefono"}`,
+          meta: reservation.notes || "Reserva de mesa",
+          reservation,
+        };
+      });
+
+    const scheduledOrderEvents = orders
+      .map((order) => {
+        const schedule = getScheduledOrderState(order, clockTick);
+        if (!schedule.hasSchedule) return null;
+
+        const scheduledDate = new Date(schedule.scheduledFor);
+        if (!isSameLocalDay(scheduledDate, today)) return null;
+
+        const items = asArray(order.products);
+
+        return {
+          id: `scheduled-${order.id}`,
+          type: "scheduled",
+          tone: "scheduled",
+          time: formatClockTime(scheduledDate),
+          sortAt: scheduledDate.getTime(),
+          title: getCustomerName(order),
+          subtitle: `${order.code || `Pedido ${order.id}`} - ${formatMoney(order.total, order.currency || "EUR")}`,
+          meta: items.length ? `${lineQty(items[0])} x ${lineName(items[0])}` : "Pedido programado",
+          schedule,
+          order,
+        };
+      })
+      .filter(Boolean);
+
+    return [...reservationEvents, ...scheduledOrderEvents].sort((left, right) => {
+      if (left.sortAt !== right.sortAt) return left.sortAt - right.sortAt;
+      return left.title.localeCompare(right.title);
+    });
+  }, [clockTick, orders, reservations]);
+  const activeCalendarEvent =
+    calendarEvents.find((event) => event.id === activeCalendarEventId) || null;
+  const activeReservation =
+    activeCalendarEvent?.type === "reservation" ? activeCalendarEvent.reservation : null;
+  const hasReservationCalendarEvents = calendarEvents.some(
+    (event) => event.type === "reservation"
+  );
+  const hasScheduledCalendarEvents = calendarEvents.some((event) => event.type === "scheduled");
+  const reservationsFabClass = [
+    "pos-reservationsFab",
+    calendarEvents.length > 0 ? "active" : "",
+    hasReservationCalendarEvents ? "has-reservations" : "",
+    hasScheduledCalendarEvents ? "has-scheduled" : "",
+    hasReservationCalendarEvents && hasScheduledCalendarEvents ? "has-both" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   useEffect(() => {
     const timer = window.setInterval(() => setClockTick(Date.now()), 1000);
     return () => window.clearInterval(timer);
   }, []);
+
+  useEffect(() => {
+    ordersRef.current = orders;
+  }, [orders]);
 
   useEffect(() => {
     const timer = window.setInterval(() => {
@@ -1121,6 +1348,7 @@ export default function PosApp() {
       window.clearInterval(newOrderSoundRef.current);
       newOrderSoundRef.current = null;
     }
+    audioPendingOrderAlertRef.current = false;
   }, []);
 
   const startNewOrderSoundLoop = useCallback((boosted = false) => {
@@ -1209,11 +1437,15 @@ export default function PosApp() {
       const items = Array.isArray(ordersResponse.data?.items) ? ordersResponse.data.items : [];
       const previousSeen = seenIdsRef.current;
       const previousBoostState = boostStateRef.current;
-      const incoming = items.filter((item) => !previousSeen.has(item.id));
+      const acceptedNoticeIds = acceptedNoticeIdsRef.current;
+      const incoming = items.filter(
+        (item) => !previousSeen.has(item.id) && !acceptedNoticeIds.has(String(item.id))
+      );
       const incomingBoosted = incoming.filter(orderHasBoost);
       const newlyBoosted = items.filter(
         (item) =>
           previousSeen.has(item.id) &&
+          !acceptedNoticeIds.has(String(item.id)) &&
           orderHasBoost(item) &&
           !previousBoostState.get(item.id)
       );
@@ -1224,6 +1456,7 @@ export default function PosApp() {
         setNewOrderNotice({
           id: `${primaryIncoming.id}-${Date.now()}`,
           order: primaryIncoming,
+          orderIds: incoming.map((item) => item.id),
           count: incoming.length,
           boosted: incomingBoosted.length > 0,
         });
@@ -1237,6 +1470,11 @@ export default function PosApp() {
 
       if (presenceResponse?.data?.presence) {
         setPresence(presenceResponse.data.presence);
+      }
+
+      if (items.length === 0 && ordersRef.current.length > 0) {
+        setMessage("Lectura inconsistente: manteniendo pedidos no marcados como listos.");
+        return;
       }
 
       const lastOkAt = new Date().toISOString();
@@ -1294,6 +1532,7 @@ export default function PosApp() {
     if (!session) return undefined;
 
     seenIdsRef.current = new Set();
+    acceptedNoticeIdsRef.current = readAcceptedNoticeIds(session.storeId);
     boostStateRef.current = new Map();
     loadOrders();
     const timer = window.setInterval(loadOrders, POLL_MS);
@@ -1469,9 +1708,6 @@ export default function PosApp() {
       const response = await api.get(`/api/reservations/today/${session.storeId}`);
       const items = Array.isArray(response.data) ? response.data : [];
       setReservations(items);
-      setActiveReservationId((current) =>
-        current && items.some((item) => item.id === current) ? current : null
-      );
     } catch (error) {
       console.error(error);
       setMessage("No se pudieron cargar las reservas de hoy.");
@@ -1481,9 +1717,22 @@ export default function PosApp() {
   }, [session?.storeId]);
 
   useEffect(() => {
-    if (!session?.storeId) return;
+    if (!session?.storeId) return undefined;
+
     loadReservations();
+    const timer = window.setInterval(loadReservations, POLL_MS);
+    return () => window.clearInterval(timer);
   }, [loadReservations, session?.storeId]);
+
+  useEffect(() => {
+    if (!reservationsOpen) return;
+
+    setActiveCalendarEventId((current) =>
+      current && calendarEvents.some((event) => event.id === current)
+        ? current
+        : calendarEvents[0]?.id || null
+    );
+  }, [calendarEvents, reservationsOpen]);
 
   useEffect(() => {
     if (!customerHelpOpen) return;
@@ -1612,12 +1861,16 @@ export default function PosApp() {
   };
 
   const completeReservation = async () => {
-    if (!activeReservationId) return;
+    if (!activeReservation) return;
+
+    const confirmed = window.confirm("Estas seguro de completar esta reserva?");
+    if (!confirmed) return;
 
     try {
-      await api.patch(`/api/reservations/${activeReservationId}/complete`);
-      setReservations((current) => current.filter((item) => item.id !== activeReservationId));
-      setActiveReservationId(null);
+      await api.patch(`/api/reservations/${activeReservation.id}/complete`);
+      setReservations((current) => current.filter((item) => item.id !== activeReservation.id));
+      setActiveCalendarEventId(null);
+      setReservationsOpen(false);
       setMessage("Reserva completada.");
     } catch (error) {
       console.error(error);
@@ -1656,10 +1909,26 @@ export default function PosApp() {
   };
 
   const acceptNewOrderNotice = () => {
+    const acceptedIds = newOrderNotice?.orderIds?.length
+      ? newOrderNotice.orderIds
+      : newOrderNotice?.order?.id
+      ? [newOrderNotice.order.id]
+      : [];
+
+    if (acceptedIds.length > 0 && session?.storeId) {
+      const nextAccepted = new Set(acceptedNoticeIdsRef.current);
+      acceptedIds.forEach((id) => nextAccepted.add(String(id)));
+      acceptedNoticeIdsRef.current = nextAccepted;
+      writeAcceptedNoticeIds(session.storeId, nextAccepted);
+    }
+
     stopNewOrderSoundLoop();
     setNewOrderNotice(null);
     setActivePanel("orders");
     setSelectedOrderId(null);
+    if (newOrderNotice?.order) {
+      setMessage(`Pedido ${newOrderNotice.order.code || newOrderNotice.order.id} aceptado en POS.`);
+    }
   };
 
   const openDayOrders = () => {
@@ -2112,7 +2381,8 @@ export default function PosApp() {
             <div className="pos-sectionHead">
               <div>
                 <span>Calendario</span>
-                <h2>Reservas de hoy</h2>
+                <h2>Hoy en cocina</h2>
+                <small>{formatCalendarDate(clockTick)}</small>
               </div>
               <button type="button" onClick={() => setReservationsOpen(false)}>
                 Cerrar
@@ -2120,32 +2390,62 @@ export default function PosApp() {
             </div>
 
             {loadingReservations && (
-              <div className="pos-emptySmall">Cargando reservas...</div>
+              <div className="pos-emptySmall">Cargando calendario...</div>
             )}
 
-            {!loadingReservations && reservations.length === 0 && (
-              <div className="pos-emptySmall">No hay reservas para hoy.</div>
+            {!loadingReservations && calendarEvents.length === 0 && (
+              <div className="pos-emptySmall">No hay reservas ni pedidos programados para hoy.</div>
             )}
 
-            {!loadingReservations && reservations.length > 0 && (
-              <div className="pos-reservationList">
-                {reservations.map((reservation) => (
-                  <button
-                    key={reservation.id}
-                    type="button"
-                    className={`pos-reservationRow ${
-                      activeReservationId === reservation.id ? "active" : ""
-                    }`}
-                    onClick={() => setActiveReservationId(reservation.id)}
-                  >
-                    <strong>{reservation.reservationTime}</strong>
-                    <span>{reservation.customerName}</span>
-                    <small>
-                      {reservation.partySize} pers. - {reservation.customerPhone || "-"}
-                    </small>
-                  </button>
-                ))}
-              </div>
+            {!loadingReservations && calendarEvents.length > 0 && (
+              <>
+                <div className="pos-calendarLegend" aria-label="Leyenda del calendario">
+                  <span className="is-reservation">Reserva</span>
+                  <span className="is-scheduled">Pedido programado</span>
+                </div>
+
+                <div className="pos-reservationList">
+                  {calendarEvents.map((event) => (
+                    <button
+                      key={event.id}
+                      type="button"
+                      className={`pos-reservationRow pos-reservationRow--${event.tone} ${
+                        activeCalendarEventId === event.id ? "active" : ""
+                      }`}
+                      onClick={() => setActiveCalendarEventId(event.id)}
+                    >
+                      <strong>{event.time}</strong>
+                      <span>{event.title}</span>
+                      <small>{event.subtitle}</small>
+                    </button>
+                  ))}
+                </div>
+
+                {activeCalendarEvent && (
+                  <div className={`pos-calendarDetail pos-calendarDetail--${activeCalendarEvent.tone}`}>
+                    <span>
+                      {activeCalendarEvent.type === "reservation"
+                        ? "Reserva de mesa"
+                        : "Pedido programado"}
+                    </span>
+                    <strong>{activeCalendarEvent.title}</strong>
+                    <small>{activeCalendarEvent.subtitle}</small>
+                    <p>{activeCalendarEvent.meta}</p>
+                    {activeCalendarEvent.type === "scheduled" && activeCalendarEvent.order && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSelectedOrderId(activeCalendarEvent.order.id);
+                          setReservationsOpen(false);
+                          setActivePanel("orders");
+                        }}
+                      >
+                        Abrir ticket
+                      </button>
+                    )}
+                  </div>
+                )}
+              </>
             )}
 
             <div className="pos-actionGrid">
@@ -2157,7 +2457,7 @@ export default function PosApp() {
                 onClick={completeReservation}
                 disabled={!activeReservation}
               >
-                Complete
+                Completar reserva
               </button>
             </div>
           </section>
@@ -2340,15 +2640,15 @@ export default function PosApp() {
       </button>
       <button
         type="button"
-        className={`pos-reservationsFab ${reservations.length > 0 ? "active" : ""}`}
+        className={reservationsFabClass}
         onClick={() => {
           setReservationsOpen(true);
           loadReservations();
         }}
-        title="Reservas de hoy"
+        title="Calendario de hoy"
       >
         <span aria-hidden="true">📅</span>
-        {reservations.length > 0 && <strong>{reservations.length}</strong>}
+        {calendarEvents.length > 0 && <strong>{calendarEvents.length}</strong>}
       </button>
         </>
       )}

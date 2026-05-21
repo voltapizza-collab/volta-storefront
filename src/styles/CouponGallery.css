@@ -1337,8 +1337,8 @@
   width: 100%;
   display: grid;
   justify-items: center;
-  gap: 8px;
-  padding: 18px 82px 18px 16px;
+  gap: 10px;
+  padding: 18px;
   border-radius: 22px;
   background:
     linear-gradient(135deg, #4f19a6 0%, #214fd1 46%, #ff2f74 100%);
@@ -1365,24 +1365,27 @@
 }
 
 .cg-couponCodeRow {
+  min-width: 0;
   width: 100%;
-  display: block;
+  display: grid;
+  place-items: center;
+  text-align: center;
 }
 
 .cg-copyCouponBtn {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 58px;
-  min-height: 56px;
-  display: grid;
+  position: static;
+  width: min(230px, 100%);
+  min-height: 44px;
+  display: inline-grid;
+  grid-template-columns: auto auto;
   place-items: center;
-  gap: 3px;
+  justify-content: center;
+  gap: 8px;
   border: 1px solid rgba(255, 191, 45, 0.46);
-  border-radius: 16px;
-  background: rgba(255, 191, 45, 0.14);
+  border-radius: 999px;
+  background: rgba(255, 191, 45, 0.18);
   color: #ffbf2d;
-  padding: 7px 6px;
+  padding: 8px 14px;
   font: inherit;
   cursor: pointer;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
@@ -1390,7 +1393,7 @@
 
 .cg-copyCouponBtn small {
   color: currentColor;
-  font-size: 0.58rem;
+  font-size: 0.68rem;
   font-weight: 1000;
   line-height: 1;
   text-transform: uppercase;
@@ -1408,8 +1411,8 @@
 
 .cg-copyCouponIcon {
   position: relative;
-  width: 21px;
-  height: 25px;
+  width: 16px;
+  height: 19px;
   display: block;
 }
 
@@ -1425,7 +1428,7 @@
   left: 0;
   bottom: 0;
   width: 16px;
-  height: 19px;
+  height: 17px;
   opacity: 0.72;
 }
 
@@ -1433,7 +1436,7 @@
   right: 0;
   top: 0;
   width: 17px;
-  height: 21px;
+  height: 18px;
   box-shadow: inset -5px 5px 0 rgba(255, 255, 255, 0.22);
 }
 
@@ -1446,45 +1449,15 @@
   text-align: center;
 }
 
-.cg-redeemPanel {
-  width: 100%;
-  display: grid;
-  gap: 7px;
-  padding: 13px 14px;
-  border-radius: 18px;
-  background: #16072f;
-  color: #fff;
-  box-shadow:
-    0 14px 28px rgba(18, 10, 42, 0.22),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.1);
-}
-
-.cg-redeemPanel span {
-  color: rgba(255, 255, 255, 0.72);
-  font-size: 0.7rem;
-  font-weight: 1000;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.cg-redeemPanel a {
-  color: #ffd978;
-  font-size: 0.86rem;
-  font-weight: 900;
-  line-height: 1.25;
-  overflow-wrap: anywhere;
-  text-decoration: none;
-}
-
-.cg-redeemPanel a:hover {
-  text-decoration: underline;
-}
-
 .cg-claimActions {
   width: 100%;
   display: grid;
   grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
   gap: 10px;
+}
+
+.cg-claimActions--single {
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .cg-claimActions .cg-primaryBtn,
@@ -1536,6 +1509,10 @@
   }
 
   .cg-successHero {
-    padding-right: 72px;
+    padding: 16px;
+  }
+
+  .cg-copyCouponBtn {
+    width: 100%;
   }
 }

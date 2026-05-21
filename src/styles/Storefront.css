@@ -4794,6 +4794,16 @@
   font-size: 1.08rem;
 }
 
+.sf-cartMinimumNotice {
+  border: 1px solid rgba(249, 38, 114, 0.2);
+  border-radius: 14px;
+  background: color-mix(in srgb, #f92672 8%, #ffffff);
+  color: #171717;
+  padding: 10px 12px;
+  font-weight: 900;
+  line-height: 1.35;
+}
+
 .sf-cartActions {
   display: grid;
   grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
@@ -5009,6 +5019,12 @@
   min-height: 44px;
 }
 
+.sf-scheduleFooter .sf-primaryBtn.is-softDisabled {
+  opacity: 0.68;
+  cursor: pointer;
+  filter: saturate(0.82);
+}
+
 .sf-reservationModal {
   width: min(640px, 100%);
 }
@@ -5026,6 +5042,53 @@
   background:
     radial-gradient(circle at 12% 18%, rgba(255, 255, 255, 0.78), transparent 34%),
     color-mix(in srgb, #f92672 9%, #ffffff);
+}
+
+.sf-reservationStore.is-missing,
+.sf-reservationForm label.is-missing input,
+.sf-reservationForm label.is-missing select,
+.sf-scheduleSection.is-missing .sf-scheduleDaysGrid,
+.sf-scheduleSection.is-missing .sf-scheduleHoursGrid,
+.sf-scheduleSection.is-missing .sf-scheduleEmpty {
+  border-color: #f92672;
+  box-shadow: 0 0 0 3px rgba(249, 38, 114, 0.13);
+}
+
+.sf-reservationStore.is-shaking,
+.sf-reservationForm label.is-shaking input,
+.sf-reservationForm label.is-shaking select,
+.sf-scheduleSection.is-shaking .sf-scheduleDaysGrid,
+.sf-scheduleSection.is-shaking .sf-scheduleHoursGrid,
+.sf-scheduleSection.is-shaking .sf-scheduleEmpty {
+  animation: sfReservationFieldShake 0.46s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+
+.sf-scheduleSection.is-missing .sf-scheduleLabel,
+.sf-reservationForm label.is-missing span {
+  color: #f92672;
+}
+
+@keyframes sfReservationFieldShake {
+  10%,
+  90% {
+    transform: translateX(-1px);
+  }
+
+  20%,
+  80% {
+    transform: translateX(2px);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translateX(-4px);
+  }
+
+  40%,
+  60% {
+    transform: translateX(4px);
+  }
 }
 
 .sf-reservationStore span,
@@ -6869,18 +6932,18 @@
 
 .lsf-top__actions {
   --sf-top-action-radius: 14px;
-  --sf-top-action-height: 42px;
+  --sf-top-action-height: 36px;
   --sf-top-action-bg: color-mix(in srgb, #f92672 10%, #ffffff);
   --sf-top-action-border: color-mix(in srgb, #f92672 34%, #d9d4dc);
   --sf-top-action-text: #4B11B2;
   position: relative;
   isolation: isolate;
   display: grid;
-  grid-template-columns: minmax(206px, 1fr) 190px 132px;
+  grid-template-columns: minmax(206px, 1fr) 148px 132px;
   align-items: center;
   justify-content: end;
   gap: 7px;
-  width: min(574px, 100%);
+  width: min(532px, 100%);
   justify-self: end;
   padding: 6px;
   border: 1px solid color-mix(in srgb, var(--brand-3, #6a3df0) 26%, #ffffff);
@@ -6903,7 +6966,7 @@
   z-index: -1;
   border-radius: 19px;
   background:
-    linear-gradient(90deg, transparent 0 calc(100% - 310px), rgba(59, 0, 139, 0.1) calc(100% - 310px) calc(100% - 309px), transparent calc(100% - 309px) 100%),
+    linear-gradient(90deg, transparent 0 calc(100% - 268px), rgba(59, 0, 139, 0.1) calc(100% - 268px) calc(100% - 267px), transparent calc(100% - 267px) 100%),
     linear-gradient(90deg, transparent 0 calc(100% - 139px), rgba(255, 182, 28, 0.24) calc(100% - 139px) calc(100% - 138px), transparent calc(100% - 138px) 100%);
   pointer-events: none;
 }
@@ -7089,10 +7152,10 @@
   position: relative;
   isolation: isolate;
   display: grid;
-  grid-template-columns: 36px minmax(0, 1fr);
+  grid-template-columns: 28px minmax(0, 1fr);
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
   width: 100%;
   min-width: 0;
   min-height: var(--sf-top-action-height, 42px);
@@ -7103,7 +7166,7 @@
     radial-gradient(circle at 22% 12%, rgba(255, 182, 28, 0.58), transparent 25%),
     radial-gradient(circle at 84% 78%, rgba(255, 255, 255, 0.18), transparent 30%),
     linear-gradient(135deg, #2b006c 0%, var(--brand-3, #6a3df0) 58%, #8b65ff 100%);
-  padding: 0 13px 0 7px;
+  padding: 0 10px 0 5px;
   border-radius: var(--sf-top-action-radius, 14px);
   color: var(--white, #ffffff);
   font-weight: 900;
@@ -7111,23 +7174,23 @@
   overflow: hidden;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.34),
-    inset 0 -10px 0 rgba(0, 0, 0, 0.22),
-    inset 0 -16px 22px rgba(0, 0, 0, 0.18),
-    0 7px 0 color-mix(in srgb, var(--brand-1, #3b008b) 82%, #000000),
-    0 12px 24px rgba(106, 61, 240, 0.28);
-  transform: translateY(-2px);
+    inset 0 -7px 0 rgba(0, 0, 0, 0.2),
+    inset 0 -12px 18px rgba(0, 0, 0, 0.16),
+    0 4px 0 color-mix(in srgb, var(--brand-1, #3b008b) 82%, #000000),
+    0 8px 18px rgba(106, 61, 240, 0.2);
+  transform: translateY(0);
   transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
 }
 
 .lsf-schedulebtn:hover {
-  transform: translateY(-4px);
+  transform: translateY(-2px);
   filter: saturate(1.08);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.38),
-    inset 0 -10px 0 rgba(0, 0, 0, 0.2),
-    inset 0 -16px 22px rgba(0, 0, 0, 0.15),
-    0 9px 0 color-mix(in srgb, var(--brand-1, #3b008b) 82%, #000000),
-    0 16px 28px rgba(106, 61, 240, 0.3);
+    inset 0 -7px 0 rgba(0, 0, 0, 0.18),
+    inset 0 -12px 18px rgba(0, 0, 0, 0.14),
+    0 5px 0 color-mix(in srgb, var(--brand-1, #3b008b) 82%, #000000),
+    0 10px 20px rgba(106, 61, 240, 0.24);
 }
 
 .lsf-schedulebtn:active {
@@ -7153,8 +7216,8 @@
 .lsf-schedulebtn__icon {
   position: relative;
   z-index: 1;
-  width: 32px;
-  height: 32px;
+  width: 26px;
+  height: 26px;
   display: grid;
   place-items: center;
   border-radius: 999px;
@@ -7162,7 +7225,7 @@
     radial-gradient(circle at 34% 24%, var(--white, #ffffff), rgba(255, 255, 255, 0.64) 34%, transparent 35%),
     linear-gradient(135deg, var(--brand-2, #ffb61c), #ffe17a);
   color: var(--brand-1, #3b008b);
-  font-size: 1.02rem;
+  font-size: 0.84rem;
   line-height: 1;
   box-shadow:
     inset 0 -3px 0 rgba(59, 0, 139, 0.16),
@@ -7186,9 +7249,9 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   line-height: 1;
-  font-size: 0.86rem;
+  font-size: 0.72rem;
   font-weight: 1000;
-  letter-spacing: 0.052em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--brand-2, #ffb61c);
   text-shadow:
@@ -7206,10 +7269,10 @@
   color: var(--brand-1, #3b008b);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.34),
-    inset 0 -10px 0 rgba(0, 0, 0, 0.22),
-    inset 0 -16px 22px rgba(0, 0, 0, 0.18),
-    0 7px 0 color-mix(in srgb, var(--brand-1, #3b008b) 82%, #000000),
-    0 14px 26px rgba(255, 182, 28, 0.34);
+    inset 0 -7px 0 rgba(0, 0, 0, 0.2),
+    inset 0 -12px 18px rgba(0, 0, 0, 0.16),
+    0 4px 0 color-mix(in srgb, var(--brand-1, #3b008b) 82%, #000000),
+    0 9px 20px rgba(255, 182, 28, 0.26);
 }
 
 .lsf-schedulebtn.has-schedule .lsf-schedulebtn__icon {
@@ -8579,7 +8642,7 @@
 
   .lsf-top__actions {
     width: 100%;
-    grid-template-columns: minmax(148px, 1.2fr) repeat(2, minmax(112px, 1fr));
+    grid-template-columns: minmax(148px, 1.25fr) minmax(104px, 0.82fr) minmax(112px, 1fr);
     justify-content: center;
     justify-self: stretch;
     gap: 8px;
@@ -8699,7 +8762,7 @@
   .lsf-schedulebtn,
   .lsf-cartbtn {
     width: 100%;
-    min-height: 38px;
+    min-height: 36px;
     justify-content: center;
     border-radius: var(--sf-top-action-radius, 14px);
   }

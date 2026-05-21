@@ -768,6 +768,11 @@
   line-height: 1.5;
 }
 
+.bo-policyBlock {
+  display: grid;
+  gap: 14px;
+}
+
 .bo-settingsError,
 .bo-settingsSuccess {
   padding: 14px 16px;
@@ -1157,6 +1162,435 @@
   box-shadow: 0 16px 30px rgba(255, 182, 28, 0.14);
 }
 
+.bo-buttonGallery {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.bo-buttonCard {
+  min-height: 210px;
+  padding: 18px;
+  border-radius: 22px;
+  border: 1px solid rgba(41, 11, 94, 0.12);
+  background: linear-gradient(180deg, #ffffff, #fffaf4);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.bo-buttonCard.is-disabled {
+  opacity: 0.56;
+}
+
+.bo-buttonCardTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.bo-buttonCardTop span,
+.bo-buttonCard small {
+  color: rgba(36, 22, 57, 0.62);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.bo-buttonCardTop strong {
+  display: block;
+  margin-top: 4px;
+  color: #1c1230;
+  font-size: 18px;
+}
+
+.bo-fixedButtonBadge {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 26px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: rgba(80, 0, 160, 0.1);
+  color: var(--brand-1);
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.bo-toggleControl {
+  flex: 0 0 auto;
+  cursor: pointer;
+}
+
+.bo-toggleControl input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.bo-toggleControl i {
+  width: 46px;
+  height: 26px;
+  border-radius: 999px;
+  background: rgba(36, 22, 57, 0.16);
+  display: block;
+  position: relative;
+  transition: background 0.18s ease;
+}
+
+.bo-toggleControl i::after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: 3px;
+  left: 3px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 4px 10px rgba(36, 22, 57, 0.18);
+  transition: transform 0.18s ease;
+}
+
+.bo-toggleControl input:checked + i {
+  background: var(--brand-1);
+}
+
+.bo-toggleControl input:checked + i::after {
+  transform: translateX(20px);
+}
+
+.bo-buttonPreviewRail {
+  min-height: 76px;
+  border-radius: 18px;
+  background:
+    linear-gradient(135deg, rgba(53, 19, 164, 0.07), rgba(255, 182, 28, 0.12));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+}
+
+.bo-buttonPreview,
+.bo-buttonPreviewCoupon {
+  max-width: 100%;
+  min-height: 42px;
+  border: none;
+  border-radius: 999px;
+  padding: 10px 18px;
+  background: var(--brand-1);
+  color: #fff;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.bo-buttonPreview--pay {
+  min-width: min(260px, 100%);
+  background: linear-gradient(90deg, var(--brand-2), #171717 52%, var(--brand-1));
+  color: #fff;
+  text-transform: uppercase;
+}
+
+.bo-buttonPreview--boost {
+  background: linear-gradient(135deg, #fff8d8, #e5c346);
+  color: #281b00;
+  border: 1px solid rgba(41, 11, 94, 0.14);
+}
+
+.bo-storefrontButtonPreview {
+  max-width: 100%;
+  min-height: 42px;
+  border-radius: 999px;
+  border: 1px solid rgba(80, 0, 160, 0.18);
+  padding: 10px 18px;
+  background: #fff;
+  color: var(--brand-1);
+  font-weight: 900;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 10px 18px rgba(80, 0, 160, 0.08);
+}
+
+.bo-storefrontButtonPreview strong {
+  font: inherit;
+  color: inherit;
+  white-space: nowrap;
+}
+
+.bo-storefrontButtonPreview--selectProducts {
+  min-width: 190px;
+  background: #fff;
+  color: #2b8fff;
+  border: none;
+  border-radius: 0;
+  font-style: italic;
+  text-transform: uppercase;
+  text-shadow: 1px 1px 0 #ffffff, 2px 2px 0 rgba(31, 126, 255, 0.2);
+  box-shadow: none;
+  font-size: 20px;
+}
+
+.bo-storefrontButtonPreview--halfAndHalf,
+.bo-storefrontButtonPreview--customPizza,
+.bo-storefrontButtonPreview--repeatOrder {
+  border-color: rgba(80, 0, 160, 0.22);
+  background: #fff;
+  color: #5a19e6;
+}
+
+.bo-storefrontButtonPreview--scheduleOrder {
+  background:
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0 4px, transparent 4px 10px),
+    linear-gradient(135deg, #ffb61c, #4b008f);
+  border: 2px solid #ffb61c;
+  color: #fff;
+  text-transform: uppercase;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.32);
+}
+
+.bo-storefrontButtonPreview--call,
+.bo-storefrontButtonPreview--reservations {
+  background:
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0 4px, transparent 4px 10px),
+    linear-gradient(135deg, #ff4e90, #f6a000);
+  color: #fff;
+  border: 2px solid #ffb61c;
+  box-shadow: 0 8px 0 #3b008b, 0 14px 24px rgba(59, 0, 139, 0.18);
+}
+
+.bo-storefrontButtonPreview--reservations {
+  background: linear-gradient(135deg, #7c39ff, #ff7b39);
+}
+
+.bo-storefrontButtonPreview--payNow {
+  min-width: min(260px, 100%);
+  background: linear-gradient(90deg, var(--brand-2), #171717 52%, var(--brand-1));
+  color: #fff;
+  text-transform: uppercase;
+  border: none;
+}
+
+.bo-storefrontButtonPreview--couponCode {
+  min-width: 190px;
+  justify-content: flex-start;
+  background: #fff;
+  color: #4b008f;
+}
+
+.bo-storefrontButtonPreview--couponCode span {
+  font-size: 18px;
+}
+
+.bo-storefrontButtonPreview--boost {
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.22) 0 5px, transparent 5px 12px),
+    linear-gradient(135deg, #fff49a, #ffca1c);
+  color: #23163b;
+  border: 1px solid rgba(59, 0, 139, 0.26);
+  text-transform: uppercase;
+}
+
+.bo-storefrontButtonPreview--boost span {
+  min-height: 22px;
+  padding: 0 6px;
+  border-radius: 4px;
+  background: #fff;
+  color: #23163b;
+  font-size: 10px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.bo-buttonVariantLink {
+  align-self: flex-start;
+  border: none;
+  background: transparent;
+  color: var(--brand-1);
+  font-weight: 800;
+  padding: 0;
+  cursor: pointer;
+}
+
+.bo-modeSection {
+  display: grid;
+  gap: 16px;
+  padding-top: 8px;
+}
+
+.bo-modeSectionHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.bo-modeSectionHead span {
+  border-radius: 999px;
+  background: rgba(53, 19, 164, 0.08);
+  color: var(--brand-1);
+  padding: 10px 14px;
+  font-size: 12px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.bo-modeGallery {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.bo-modeCard {
+  min-height: 260px;
+  padding: 16px;
+  border-radius: 22px;
+  border: 1px solid rgba(41, 11, 94, 0.12);
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.bo-modeCard.is-active {
+  border-color: rgba(255, 182, 28, 0.76);
+  box-shadow: 0 16px 30px rgba(255, 182, 28, 0.14);
+}
+
+.bo-modeCard.is-coming {
+  opacity: 0.68;
+}
+
+.bo-modePreview {
+  min-height: 92px;
+  border-radius: 18px;
+  padding: 12px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  align-items: end;
+}
+
+.bo-modePreview span,
+.bo-modePreview i,
+.bo-modePreview strong {
+  display: block;
+  border-radius: 999px;
+}
+
+.bo-modePreview span {
+  grid-column: 1 / -1;
+  height: 28px;
+}
+
+.bo-modePreview i,
+.bo-modePreview strong {
+  height: 36px;
+}
+
+.bo-modePreview--volta {
+  background: linear-gradient(135deg, #fff7e8, #ffffff);
+}
+
+.bo-modePreview--volta span {
+  background: #3b008b;
+}
+
+.bo-modePreview--volta i {
+  background: #ffb61c;
+}
+
+.bo-modePreview--volta strong {
+  background: #f92672;
+}
+
+.bo-modePreview--dark {
+  background: #16121e;
+}
+
+.bo-modePreview--dark span {
+  background: #2d2442;
+}
+
+.bo-modePreview--dark i {
+  background: #6a3df0;
+}
+
+.bo-modePreview--dark strong {
+  background: #f4b740;
+}
+
+.bo-modePreview--sepia {
+  background: #f4e4cb;
+}
+
+.bo-modePreview--sepia span {
+  background: #7c4b2a;
+}
+
+.bo-modePreview--sepia i {
+  background: #c9823a;
+}
+
+.bo-modePreview--sepia strong {
+  background: #2f241c;
+}
+
+.bo-modePreview--clean {
+  background: #f6f7fb;
+}
+
+.bo-modePreview--clean span {
+  background: #ffffff;
+  border: 1px solid rgba(41, 11, 94, 0.12);
+}
+
+.bo-modePreview--clean i {
+  background: #2d2a35;
+}
+
+.bo-modePreview--clean strong {
+  background: #ffb61c;
+}
+
+.bo-modeCardCopy {
+  display: grid;
+  gap: 6px;
+  flex: 1;
+}
+
+.bo-modeCardCopy span {
+  color: rgba(53, 19, 164, 0.74);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.bo-modeCardCopy strong {
+  color: #1c1230;
+  font-size: 18px;
+}
+
+.bo-modeCardCopy p {
+  margin: 0;
+  color: rgba(36, 22, 57, 0.68);
+  line-height: 1.45;
+  font-size: 13px;
+}
+
+.bo-modeCard button {
+  border: none;
+  border-radius: 999px;
+  padding: 11px 14px;
+  background: rgba(53, 19, 164, 0.08);
+  color: var(--brand-1);
+  font-weight: 900;
+}
+
 @media (max-width: 900px) {
   .bo-settingsHeader,
   .bo-switchRow {
@@ -1169,6 +1603,8 @@
   .bo-settingsGrid--single,
   .bo-settingsGrid--triple,
   .bo-settingsGrid--doubleTight,
+  .bo-buttonGallery,
+  .bo-modeGallery,
   .bo-brandingStageFooter {
     grid-template-columns: 1fr;
   }

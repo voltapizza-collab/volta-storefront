@@ -42,6 +42,97 @@ const lineQty = (item) => {
   return Number.isFinite(qty) && qty > 0 ? qty : 1;
 };
 
+const isCustomBuildLine = (item) =>
+  String(item?.type || "").toUpperCase() === "CUSTOM_BUILD" ||
+  String(item?.cartLineId || "").startsWith("custom-");
+
+const isIncentiveRewardLine = (item) =>
+  String(item?.source || "").toLowerCase() === "incentive_reward" ||
+  String(item?.type || "").toUpperCase() === "INCENTIVE_REWARD";
+
+const isHalfAndHalfLine = (item) =>
+  Boolean(item?.leftName && item?.rightName) ||
+  String(item?.cartLineId || "").startsWith("half-");
+
+const formatIngredientPlacement = (value) => {
+  const raw = String(value || "").toUpperCase();
+  if (raw === "FULL") return "Entera";
+  if (raw === "LEFT") return "Mitad izquierda";
+  if (raw === "RIGHT") return "Mitad derecha";
+  return value ? String(value) : "";
+};
+
+const formatIngredientQuantity = (value) => {
+  const raw = String(value || "").toUpperCase();
+  if (raw === "DOUBLE") return "Doble";
+  if (raw === "SIMPLE") return "Simple";
+  return value ? String(value) : "";
+};
+
+const formatExtraSide = (value) => {
+  const raw = String(value || "").toUpperCase();
+  if (raw === "A" || raw === "LEFT") return "Mitad A";
+  if (raw === "B" || raw === "RIGHT") return "Mitad B";
+  if (raw === "FULL" || raw === "ALL") return "Entera";
+  return value ? String(value) : "";
+};
+
+const readArray = (value) => (Array.isArray(value) ? value : []);
+
+const getLineDetailRows = (item) => {
+  const rows = [];
+  const customMeta = item?.customMeta || {};
+
+  if (isIncentiveRewardLine(item)) {
+    rows.push("Incentivo: premio gratis");
+  }
+
+  if (isHalfAndHalfLine(item)) {
+    if (item.leftName) rows.push(`Mitad A: ${item.leftName}`);
+    if (item.rightName) rows.push(`Mitad B: ${item.rightName}`);
+  }
+
+  const ingredientRows = [];
+  readArray(item?.ingredients).forEach((ingredient) => {
+    const name = String(ingredient?.name || ingredient?.label || ingredient || "").trim();
+    if (!name) return;
+
+    const placement = ingredient?.placementLabel || formatIngredientPlacement(ingredient?.placement);
+    const quantity = ingredient?.quantityLabel || formatIngredientQuantity(ingredient?.quantity);
+    const detail = [placement, quantity].filter(Boolean).join(" - ");
+    ingredientRows.push(detail ? `${name}: ${detail}` : name);
+  });
+  rows.push(...ingredientRows);
+
+  if (isCustomBuildLine(item) && !ingredientRows.length) {
+    rows.push("Personalizacion sin ingredientes guardados");
+  }
+
+  readArray(item?.extras)
+    .map((extra) => {
+      const name = extra?.label || extra?.name || extra?.code || extra;
+      if (!name) return "";
+      const side = formatExtraSide(extra?.side || extra?.placement);
+      return side ? `Extra ${side}: ${name}` : `Extra: ${name}`;
+    })
+    .filter(Boolean)
+    .forEach((extra) => rows.push(extra));
+
+  if (isCustomBuildLine(item)) {
+    const baseName =
+      customMeta.baseProductName ||
+      customMeta.baseName ||
+      customMeta.categoryName ||
+      "";
+    const visibleName = lineName(item);
+    if (baseName && !visibleName.toLowerCase().includes(String(baseName).toLowerCase())) {
+      rows.push(`Tipo: ${baseName}`);
+    }
+  }
+
+  return rows;
+};
+
 const getScheduledFor = (order) =>
   order?.scheduledFor ||
   order?.customerData?.scheduledFor ||
@@ -109,9 +200,12 @@ export const mockPrinter = {
         ? [`Direccion: ${order.customerData.address_1}`]
         : []),
       "------------------------------",
-      ...items.map((item) => {
+      ...items.flatMap((item) => {
         const size = item?.size || item?.selectedSize || "";
-        return `${lineName(item)} ${size} x${lineQty(item)}`.trim();
+        return [
+          `${lineName(item)} ${size} x${lineQty(item)}${isIncentiveRewardLine(item) ? " [REGALO]" : ""}`.trim(),
+          ...getLineDetailRows(item).map((detail) => `  - ${detail}`),
+        ];
       }),
       "------------------------------",
       `Total: ${Number(order?.total || 0).toFixed(2)} ${order?.currency || "EUR"}`,

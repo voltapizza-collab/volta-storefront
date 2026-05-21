@@ -1263,12 +1263,43 @@
 }
 
 .pos-itemLine strong {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
   font-size: 14px;
+}
+
+.pos-lineBadge {
+  display: inline-grid;
+  place-items: center;
+  min-height: 16px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: #fff3bf;
+  color: #8a4b00;
+  font-size: 9px;
+  font-weight: 1000;
+  line-height: 1;
 }
 
 .pos-itemLine small,
 .pos-muted {
   color: #697386;
+}
+
+.pos-itemDetails {
+  display: grid;
+  gap: 2px;
+  margin: 1px 0 0;
+  padding-left: 14px;
+  color: #4b5563;
+  font-size: 11px;
+  line-height: 1.25;
+}
+
+.pos-itemDetails li::marker {
+  color: var(--pos-brand-3);
 }
 
 .pos-empty,
@@ -2114,6 +2145,42 @@
   gap: 8px;
 }
 
+.pos-calendarLegend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.pos-calendarLegend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 26px;
+  border: 1px solid rgba(17, 17, 17, 0.08);
+  border-radius: 999px;
+  background: #fff;
+  padding: 0 10px;
+  color: #171717;
+  font-size: 11px;
+  font-weight: 1000;
+}
+
+.pos-calendarLegend span::before {
+  content: "";
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+}
+
+.pos-calendarLegend .is-reservation::before {
+  background: #6d28d9;
+}
+
+.pos-calendarLegend .is-scheduled::before {
+  background: #facc15;
+}
+
 .pos-reservationRow {
   display: grid;
   grid-template-columns: auto 1fr;
@@ -2128,11 +2195,33 @@
   cursor: pointer;
 }
 
+.pos-reservationRow--reservation {
+  border-color: rgba(109, 40, 217, 0.24);
+  background:
+    linear-gradient(90deg, rgba(109, 40, 217, 0.12), transparent 34%),
+    #fbfbfc;
+}
+
+.pos-reservationRow--scheduled {
+  border-color: rgba(234, 179, 8, 0.42);
+  background:
+    linear-gradient(90deg, rgba(250, 204, 21, 0.32), transparent 34%),
+    #fffdf2;
+}
+
 .pos-reservationRow strong {
   grid-row: span 2;
   color: var(--pos-pink);
   font-size: 18px;
   align-self: center;
+}
+
+.pos-reservationRow--reservation strong {
+  color: #6d28d9;
+}
+
+.pos-reservationRow--scheduled strong {
+  color: #a16207;
 }
 
 .pos-reservationRow span {
@@ -2147,6 +2236,65 @@
 .pos-reservationRow.active {
   border-color: var(--pos-brand-3);
   box-shadow: 0 0 0 3px rgba(106, 61, 240, 0.14);
+}
+
+.pos-reservationRow--scheduled.active {
+  border-color: #eab308;
+  box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.2);
+}
+
+.pos-calendarDetail {
+  display: grid;
+  gap: 4px;
+  margin-top: 10px;
+  border: 1px solid rgba(109, 40, 217, 0.18);
+  border-radius: 10px;
+  background: #fbfbff;
+  padding: 12px;
+}
+
+.pos-calendarDetail--scheduled {
+  border-color: rgba(234, 179, 8, 0.38);
+  background: #fffbea;
+}
+
+.pos-calendarDetail span {
+  color: #697386;
+  font-size: 11px;
+  font-weight: 1000;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.pos-calendarDetail strong {
+  color: var(--pos-ink);
+  font-size: 20px;
+  font-weight: 950;
+  line-height: 1.05;
+}
+
+.pos-calendarDetail small {
+  color: #4b5563;
+  font-weight: 900;
+}
+
+.pos-calendarDetail p {
+  margin: 4px 0 0;
+  color: #171717;
+  font-size: 13px;
+  font-weight: 850;
+}
+
+.pos-calendarDetail button {
+  width: 100%;
+  min-height: 38px;
+  margin-top: 8px;
+  border: 0;
+  border-radius: 8px;
+  background: #171717;
+  color: #fff;
+  font-weight: 950;
+  cursor: pointer;
 }
 
 .pos-reservationsFab {
@@ -2186,8 +2334,33 @@
 }
 
 .pos-reservationsFab.active {
-  background: var(--pos-pink);
+  background: #eef2ff;
+  color: var(--pos-brand-3);
+}
+
+.pos-reservationsFab.active.has-reservations {
+  background: #6d28d9;
   color: #fff;
+}
+
+.pos-reservationsFab.active.has-scheduled {
+  background: #facc15;
+  color: #3b2800;
+}
+
+.pos-reservationsFab.active.has-both {
+  background:
+    linear-gradient(135deg, #6d28d9 0 48%, #facc15 52% 100%);
+  color: #fff;
+  box-shadow:
+    0 10px 30px rgba(15, 23, 42, 0.18),
+    0 0 0 4px rgba(250, 204, 21, 0.18);
+}
+
+.pos-reservationsFab.active.has-both strong {
+  background: linear-gradient(135deg, #6d28d9 0 45%, #facc15 55% 100%);
+  color: #fff;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.32);
 }
 
 .pos-customerHelpFab {

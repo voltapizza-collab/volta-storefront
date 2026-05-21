@@ -9,6 +9,7 @@ import PizzaCreatorOverview from "../components/Backoffice/PizzaCreatorOverview"
 import SettingsModule from "../components/Backoffice/SettingsModule";
 import SettingsDeliveryModule from "../components/Backoffice/SettingsDeliveryModule";
 import SettingsBrandingModule from "../components/Backoffice/SettingsBrandingModule";
+import SettingsPoliciesModule from "../components/Backoffice/SettingsPoliciesModule";
 import CustomersModule from "../components/Backoffice/CustomersModule";
 import CommunicationsPanel from "../components/Backoffice/CommunicationsPanel";
 import CouponsModule from "../components/Backoffice/Coupons/CouponsModule";
@@ -29,6 +30,7 @@ export default function Backoffice() {
     offers: false,
     myorders: false,
     finance: false,
+    stores: false,
     settings: false,
   });
   const [partners, setPartners] = useState([]);
@@ -184,11 +186,13 @@ export default function Backoffice() {
     isPizzaCreatorProductsActive ||
     isPizzaCreatorExtrasActive;
   const isSettingsOverviewActive = activeModule === "settings";
+  const isSettingsPoliciesActive = activeModule === "settingsPolicies";
   const isSettingsDeliveryActive = activeModule === "settingsDelivery";
   const isSettingsBrandingActive = activeModule === "settingsBranding";
   const isSettingsGroupActive =
     activeModuleGroup === "settings" ||
     isSettingsOverviewActive ||
+    isSettingsPoliciesActive ||
     isSettingsDeliveryActive ||
     isSettingsBrandingActive;
   const isCustomersOverviewActive = activeModule === "customers";
@@ -221,6 +225,12 @@ export default function Backoffice() {
     activeModuleGroup === "finance" ||
     isFinanceOverviewActive ||
     isFinanceBillingActive;
+  const isStoresListActive = activeModule === "stores";
+  const isStoresLocationsActive = activeModule === "storesLocations";
+  const isStoresGroupActive =
+    activeModuleGroup === "stores" ||
+    isStoresListActive ||
+    isStoresLocationsActive;
 
   if (loadingPartners) {
     return (
@@ -383,17 +393,57 @@ export default function Backoffice() {
               )}
 
               <button
-                className={`bo-btn ${
-                  activeModuleGroup === "stores" ? "active" : ""
+                className={`bo-btn bo-btnAccordion ${
+                  isStoresGroupActive ? "active" : ""
+                } ${
+                  expandedModules.stores ? "open" : ""
                 }`}
                 onClick={() => {
-                  setActiveModule("stores");
-                  setActiveModuleGroup("stores");
+                  setExpandedModules((prev) => {
+                    const nextOpen = !prev.stores;
+
+                    if (!nextOpen && activeModuleGroup === "stores") {
+                      setActiveModule("inventory");
+                      setActiveModuleGroup("inventory");
+                    } else if (nextOpen) {
+                      setActiveModule("stores");
+                      setActiveModuleGroup("stores");
+                    }
+
+                    return {
+                      ...prev,
+                      stores: nextOpen,
+                    };
+                  });
                 }}
                 type="button"
               >
-                Stores
+                <span>Stores</span>
+                <span className="bo-btnChevron">
+                  {expandedModules.stores ? "v" : "^"}
+                </span>
               </button>
+
+              {expandedModules.stores && (
+                <div
+                  className={`bo-subnav ${
+                    isStoresGroupActive ? "is-active-group" : ""
+                  }`}
+                >
+                  <button
+                    className={`bo-subbtn ${
+                      isStoresLocationsActive ? "active" : ""
+                    }`}
+                    onClick={() => {
+                      setActiveModule("storesLocations");
+                      setActiveModuleGroup("stores");
+                    }}
+                    type="button"
+                  >
+                    Locations
+                  </button>
+                </div>
+              )}
 
               <button
                 className={`bo-btn bo-btnAccordion ${
@@ -588,6 +638,19 @@ export default function Backoffice() {
                 >
                   <button
                     className={`bo-subbtn ${
+                      isSettingsPoliciesActive ? "active" : ""
+                    }`}
+                    onClick={() => {
+                      setActiveModule("settingsPolicies");
+                      setActiveModuleGroup("settings");
+                    }}
+                    type="button"
+                  >
+                    Policies
+                  </button>
+
+                  <button
+                    className={`bo-subbtn ${
                       isSettingsDeliveryActive ? "active" : ""
                     }`}
                     onClick={() => {
@@ -636,6 +699,15 @@ export default function Backoffice() {
             <AdminStoresPage
               initialPartnerId={String(auth.partnerId)}
               lockPartner
+              view="stores"
+            />
+          )}
+
+          {activeModule === "storesLocations" && auth.partnerId && (
+            <AdminStoresPage
+              initialPartnerId={String(auth.partnerId)}
+              lockPartner
+              view="locations"
             />
           )}
 
@@ -688,7 +760,19 @@ export default function Backoffice() {
                 setActiveModule("settingsBranding");
                 setActiveModuleGroup("settings");
               }}
+              onOpenPolicies={() => {
+                setExpandedModules((prev) => ({
+                  ...prev,
+                  settings: true,
+                }));
+                setActiveModule("settingsPolicies");
+                setActiveModuleGroup("settings");
+              }}
             />
+          )}
+
+          {activeModule === "settingsPolicies" && auth.partnerId && (
+            <SettingsPoliciesModule partner={auth} />
           )}
 
           {activeModule === "settingsDelivery" && auth.partnerId && (

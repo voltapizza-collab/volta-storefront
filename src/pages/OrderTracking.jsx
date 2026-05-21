@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useCallback } from "react";
-import { useParams, Link } from "react-router-dom";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
+import { useParams, Link, useLocation } from "react-router-dom";
 import api from "../setupAxios";
 import "../styles/OrderTracking.css";
 
@@ -23,10 +23,16 @@ const stageIndex = (stage) => {
 
 export default function OrderTracking() {
   const { code } = useParams();
+  const location = useLocation();
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState("");
   const [data, setData] = useState(null);
+  const [boostOpen, setBoostOpen] = useState(false);
+  const [boostQuote, setBoostQuote] = useState(null);
+  const [boostTarget, setBoostTarget] = useState("1");
+  const [boostLoading, setBoostLoading] = useState(false);
+  const [boostMessage, setBoostMessage] = useState("");
 
   const fetchStatus = useCallback(async ({ quiet = false } = {}) => {
     try {
@@ -60,6 +66,103 @@ export default function OrderTracking() {
 
     return () => clearInterval(interval);
   }, [data?.stage, fetchStatus]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const sessionId = params.get("session_id");
+    const boostPayment = params.get("boost_payment");
+
+    if (!sessionId || boostPayment !== "success") return;
+
+    let cancelled = false;
+    api
+      .post("/api/checkout/session/confirm", { sessionId })
+      .then(() => {
+        if (!cancelled) {
+          setBoostMessage("Boost pagado y aplicado.");
+          fetchStatus({ quiet: true });
+        }
+      })
+      .catch((e) => {
+        if (!cancelled) {
+          setBoostMessage(e.response?.data?.error || "No pudimos confirmar el pago de Boost.");
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [fetchStatus, location.search]);
+
+  const loadBoostQuote = useCallback(async (targetPosition = boostTarget) => {
+    if (!code) return null;
+
+    try {
+      setBoostLoading(true);
+      setBoostMessage("");
+      const { data: response } = await api.get("/api/myorders/boosts/quote", {
+        params: {
+          orderCode: code,
+          targetPosition,
+        },
+      });
+      const quote = response?.quote || null;
+      setBoostQuote(quote);
+      if (quote?.targetPosition) setBoostTarget(String(quote.targetPosition));
+      return quote;
+    } catch (e) {
+      const message = e.response?.data?.error || "No se pudo calcular Boost para este pedido.";
+      setBoostMessage(message);
+      setBoostQuote(null);
+      return null;
+    } finally {
+      setBoostLoading(false);
+    }
+  }, [boostTarget, code]);
+
+  const openBoostModal = async () => {
+    setBoostOpen(true);
+    await loadBoostQuote("1");
+  };
+
+  const activateBoost = async () => {
+    if (!boostQuote || boostQuote.positionsToJump <= 0) return;
+
+    try {
+      setBoostLoading(true);
+      setBoostMessage("");
+      const { data: response } = await api.post("/api/myorders/boosts/activate", {
+        orderCode: code,
+        targetPosition: boostTarget,
+        source: "tracking",
+        frontendOrigin: window.location.origin,
+        returnPath: `/seguimiento/${code}`,
+      });
+
+      if (response?.url) {
+        window.location.href = response.url;
+        return;
+      }
+
+      setBoostMessage("No pudimos abrir el pago de Boost.");
+    } catch (e) {
+      const errorCode = e.response?.data?.error;
+      setBoostMessage(
+        errorCode === "boost_amount_too_low"
+          ? "Boost no alcanza el minimo de pago. Revisa el precio de Boost."
+          : errorCode || "No se pudo abrir el pago de Boost."
+      );
+    } finally {
+      setBoostLoading(false);
+    }
+  };
+
+  const boostOptions = useMemo(() => {
+    const current = Number(boostQuote?.currentPosition || data?.queuePosition || 0);
+    if (!Number.isFinite(current) || current <= 1) return [];
+
+    return Array.from({ length: Math.min(current - 1, 4) }, (_, index) => index + 1);
+  }, [boostQuote?.currentPosition, data?.queuePosition]);
 
   if (loading) {
     return (
@@ -128,11 +231,13 @@ export default function OrderTracking() {
             </>
           ) : data?.boost?.available ? (
             <>
-              <h2>Buen lugar para Boost</h2>
+              <h2>Sube tu pedido en la cola</h2>
               <p>
-                Esta pantalla es el sitio correcto para ofrecer subir posiciones
-                despues del pago, manteniendo al cliente dentro del seguimiento.
+                Puedes activar prioridad despues del pago mientras el pedido sigue en preparacion.
               </p>
+              <button type="button" className="ot-boostBtn" onClick={openBoostModal}>
+                Ver opciones Boost
+              </button>
             </>
           ) : (
             <>
@@ -151,18 +256,104 @@ export default function OrderTracking() {
           {refreshing ? "Actualizando..." : "Actualizar estado"}
         </button>
 
-        <div className="ot-banner">
-          <img
-            src="https://res.cloudinary.com/djtswalha/image/upload/v1770542789/myCrushPizzaBannerCampa%C3%B1a1_s1qxmk.png"
-            alt="MyCrushPizza"
-            loading="lazy"
-          />
-        </div>
+        <section className="ot-nextStep">
+          <span>Siguiente paso</span>
+          <h2>
+            {data?.stage === "READY"
+              ? "Tu pedido ya esta listo"
+              : data?.delivery === "COURIER"
+              ? "La tienda prepara la salida"
+              : "Ten a mano tu codigo"}
+          </h2>
+          <p>
+            {data?.stage === "READY"
+              ? "Puedes volver a la tienda para repetir, guardar favoritos o ver nuevas ofertas."
+              : data?.delivery === "COURIER"
+              ? "Cuando este listo, la tienda gestionara la entrega. Revisa este seguimiento si necesitas confirmar el estado."
+              : `Muestra ${data?.code || "tu codigo"} al recoger. Si quieres pedir algo mas, vuelve a la tienda sin perder este seguimiento.`}
+          </p>
+        </section>
 
         <Link to={storePath} className="ot-btn">
           Volver a la tienda
         </Link>
       </section>
+
+      {boostOpen && (
+        <div className="ot-modalOverlay" onClick={() => setBoostOpen(false)}>
+          <section className="ot-boostModal" onClick={(event) => event.stopPropagation()}>
+            <div className="ot-modalHead">
+              <div>
+                <span>Boost de seguimiento</span>
+                <h2>Subir posicion</h2>
+              </div>
+              <button type="button" onClick={() => setBoostOpen(false)} aria-label="Cerrar">
+                x
+              </button>
+            </div>
+
+            <div className="ot-boostCurrent">
+              <span>Posicion actual</span>
+              <strong>#{boostQuote?.currentPosition || data?.queuePosition || "--"}</strong>
+              <small>Pedido {data?.code}</small>
+            </div>
+
+            <div className="ot-boostOptions" role="radiogroup" aria-label="Nueva posicion">
+              {boostOptions.length === 0 ? (
+                <div className="ot-boostEmpty">
+                  Este pedido ya esta en la mejor posicion disponible.
+                </div>
+              ) : (
+                boostOptions.map((target) => (
+                  <button
+                    key={target}
+                    type="button"
+                    className={String(boostTarget) === String(target) ? "active" : ""}
+                    onClick={() => {
+                      setBoostTarget(String(target));
+                      loadBoostQuote(String(target));
+                    }}
+                  >
+                    <span>Ir a #{target}</span>
+                    <small>
+                      {target === 1 ? "Maxima prioridad" : `Subir hasta posicion ${target}`}
+                    </small>
+                  </button>
+                ))
+              )}
+            </div>
+
+            {boostQuote && (
+              <div className="ot-boostQuote">
+                <span>Saltos</span>
+                <strong>{boostQuote.positionsToJump}</strong>
+                <span>Total</span>
+                <strong>{formatMoney(boostQuote.amount, boostQuote.currency)}</strong>
+              </div>
+            )}
+
+            {boostMessage && <div className="ot-boostMessage">{boostMessage}</div>}
+
+            <div className="ot-modalActions">
+              <button type="button" className="ot-btn ot-btn-secondary" onClick={() => setBoostOpen(false)}>
+                Cancelar
+              </button>
+              <button
+                type="button"
+                className="ot-btn"
+                onClick={activateBoost}
+                disabled={boostLoading || !boostQuote || boostQuote.positionsToJump <= 0}
+              >
+                {boostLoading
+                  ? "Procesando..."
+                  : boostQuote
+                  ? `Activar - ${formatMoney(boostQuote.amount, boostQuote.currency)}`
+                  : "Activar Boost"}
+              </button>
+            </div>
+          </section>
+        </div>
+      )}
     </main>
   );
 }

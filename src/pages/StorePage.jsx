@@ -10,6 +10,7 @@ import {
   buildBrandThemeVars,
   getOfferButtonVariant,
 } from "../constants/branding";
+import { normalizeStorefrontButtonConfig } from "../constants/storefrontButtons";
 
 const TRENDING_TAB = "__TRENDING__";
 const TOP_DEAL_TAB = "__TOP_DEAL__";
@@ -531,7 +532,7 @@ const CartPlusIcon = () => (
   </svg>
 );
 
-function CouponInfoModal({ open, onClose, onRemove, onValidate, data }) {
+function CouponInfoModal({ open, onClose, onRemove, onValidate, validating = false, data }) {
   const [countdown, setCountdown] = useState("");
   const [secondsLeft, setSecondsLeft] = useState(null);
 
@@ -613,8 +614,8 @@ function CouponInfoModal({ open, onClose, onRemove, onValidate, data }) {
         </div>
 
         <div className="sf-cartActions sf-couponInfoActions">
-          <button type="button" className="sf-primaryBtn" onClick={onValidate}>
-            Validar cupon
+          <button type="button" className="sf-primaryBtn" onClick={onValidate} disabled={validating}>
+            {validating ? "Validando..." : "Validar cupon"}
           </button>
           {(coupon || data.valid) && (
             <button type="button" className="sf-secondaryBtn" onClick={onRemove}>
@@ -1174,8 +1175,28 @@ const normalizeCartLine = (line, index = 0) => {
   const extras = Array.isArray(line?.extras)
     ? line.extras.map((extra) => ({
         id: extra?.id ?? extra?.ingredientId ?? extra?.code ?? `extra-${index}`,
+        ingredientId: extra?.ingredientId ?? extra?.id ?? null,
         name: extra?.name ?? extra?.label ?? extra?.ingredientName ?? "Extra",
+        label: extra?.label ?? extra?.name ?? extra?.ingredientName ?? "Extra",
+        side: extra?.side || extra?.placement || "",
+        placement: extra?.placement || extra?.side || "",
+        allergens: Array.isArray(extra?.allergens) ? extra.allergens : [],
         price: num(extra?.price ?? extra?.amount),
+      }))
+    : [];
+  const ingredients = Array.isArray(line?.ingredients)
+    ? line.ingredients.map((ingredient) => ({
+        id: ingredient?.id ?? ingredient?.ingredientId ?? null,
+        ingredientId: ingredient?.ingredientId ?? ingredient?.id ?? null,
+        name: ingredient?.name ?? ingredient?.label ?? "Ingrediente",
+        category: ingredient?.category || "OTROS",
+        placement: ingredient?.placement || "",
+        quantity: ingredient?.quantity || "SIMPLE",
+        placementLabel: ingredient?.placementLabel || "",
+        quantityLabel: ingredient?.quantityLabel || "",
+        basePrice: num(ingredient?.basePrice),
+        price: num(ingredient?.price),
+        allergens: Array.isArray(ingredient?.allergens) ? ingredient.allergens : [],
       }))
     : [];
   const extrasTotal = extras.reduce((sum, extra) => sum + num(extra.price), 0);
@@ -1184,16 +1205,26 @@ const normalizeCartLine = (line, index = 0) => {
   return {
     cartLineId: line?.cartLineId || line?.repeatLineId || `${Date.now()}-${index}`,
     pizzaId: line?.pizzaId ?? line?.id ?? null,
+    mainPizzaId: line?.mainPizzaId ?? null,
+    mainName: line?.mainName || "",
+    leftPizzaId: line?.leftPizzaId ?? null,
+    rightPizzaId: line?.rightPizzaId ?? null,
+    leftName: line?.leftName || "",
+    rightName: line?.rightName || "",
     name: line?.name || line?.label || "Producto",
     category: line?.category || "",
     size: line?.size || line?.selectedSize || "M",
     qty,
     price,
     extras,
+    ingredients,
+    allergens: Array.isArray(line?.allergens) ? line.allergens : [],
     subtotal,
     type,
     image: line?.image || "",
     source,
+    customMeta: line?.customMeta && typeof line.customMeta === "object" ? line.customMeta : null,
+    halfMeta: line?.halfMeta && typeof line.halfMeta === "object" ? line.halfMeta : null,
     incentiveId: line?.incentiveId ?? null,
     rewardPizzaId: line?.rewardPizzaId ?? null,
     promoId: line?.promoId ?? null,
@@ -1411,6 +1442,8 @@ export default function StorePage() {
   const [reservationCapacity, setReservationCapacity] = useState(0);
   const [reservationLoading, setReservationLoading] = useState(false);
   const [reservationMessage, setReservationMessage] = useState("");
+  const [reservationMissingFields, setReservationMissingFields] = useState([]);
+  const [reservationShaking, setReservationShaking] = useState(false);
   const [repeatOpen, setRepeatOpen] = useState(false);
   const [repeatPhone, setRepeatPhone] = useState("");
   const [repeatDraft, setRepeatDraft] = useState(null);
@@ -1825,9 +1858,9 @@ export default function StorePage() {
   const themeStyle = useMemo(
     () => {
       const theme = buildBrandThemeVars({
-        brandPrimary: BRANDING_DEFAULTS.brandPrimary,
-        brandSecondary: BRANDING_DEFAULTS.brandSecondary,
-        brandAccent: BRANDING_DEFAULTS.brandAccent,
+        brandPrimary: partner?.brandPrimary || BRANDING_DEFAULTS.brandPrimary,
+        brandSecondary: partner?.brandSecondary || BRANDING_DEFAULTS.brandSecondary,
+        brandAccent: partner?.brandAccent || BRANDING_DEFAULTS.brandAccent,
         brandSurface: partner?.brandSurface || "#FFF7E8",
         brandTextColor: partner?.brandTextColor || BRANDING_DEFAULTS.brandTextColor,
         brandFontFamily: partner?.brandFontFamily || BRANDING_DEFAULTS.brandFontFamily,
@@ -1858,6 +1891,16 @@ export default function StorePage() {
         partner?.brandOfferButtonStyle || BRANDING_DEFAULTS.brandOfferButtonStyle
       ),
     [partner?.brandOfferButtonStyle]
+  );
+
+  const storefrontButtons = useMemo(
+    () => normalizeStorefrontButtonConfig(partner?.storefrontButtonConfig),
+    [partner?.storefrontButtonConfig]
+  );
+
+  const isStorefrontButtonVisible = useCallback(
+    (buttonId) => storefrontButtons[buttonId] !== false,
+    [storefrontButtons]
   );
 
   const categories = useMemo(() => {
@@ -2069,6 +2112,36 @@ export default function StorePage() {
     Boolean(reservationTime) &&
     reservationName.trim().length > 0 &&
     normalizeRepeatPhoneInput(reservationPhone).length >= 7;
+  const reservationMissingSet = useMemo(
+    () => new Set(reservationMissingFields),
+    [reservationMissingFields]
+  );
+  const reservationMissingClass = (field) =>
+    reservationMissingSet.has(field)
+      ? `is-missing ${reservationShaking ? "is-shaking" : ""}`
+      : "";
+  const clearReservationMissing = useCallback((field) => {
+    setReservationMissingFields((current) => current.filter((item) => item !== field));
+  }, []);
+  const triggerReservationMissingShake = useCallback(() => {
+    const missingFields = [];
+
+    if (!store?.id) missingFields.push("store");
+    if (!reservationDateValue) missingFields.push("date");
+    if (!reservationTime) missingFields.push("time");
+    if (reservationName.trim().length === 0) missingFields.push("name");
+    if (normalizeRepeatPhoneInput(reservationPhone).length < 7) missingFields.push("phone");
+
+    setReservationMissingFields(missingFields);
+
+    if (missingFields.length === 0) return false;
+
+    setReservationShaking(false);
+    window.setTimeout(() => setReservationShaking(true), 0);
+    window.setTimeout(() => setReservationShaking(false), 560);
+    setReservationMessage("Completa los campos marcados para confirmar la reserva.");
+    return true;
+  }, [reservationDateValue, reservationName, reservationPhone, reservationTime, store?.id]);
 
   useEffect(() => {
     if (!scheduleOpen || scheduledAt) return;
@@ -2094,6 +2167,8 @@ export default function StorePage() {
     setReservationDate((current) => current || new Date(reservationDays[0]?.date || now));
     setReservationTime("");
     setReservationMessage("");
+    setReservationMissingFields([]);
+    setReservationShaking(false);
   }, [now, reservationDays, reservationOpen]);
 
   useEffect(() => {
@@ -2109,8 +2184,9 @@ export default function StorePage() {
     setReservationLoading(true);
     api
       .get(`/api/reservations/availability?${params.toString()}`)
-      .then((data) => {
+      .then((response) => {
         if (cancelled) return;
+        const data = response?.data || response || {};
         const availability = Array.isArray(data?.availability) ? data.availability : [];
         const futureAvailability = availability.filter((slot) =>
           isFutureReservationSlot(reservationDate, slot.time, now)
@@ -2155,7 +2231,10 @@ export default function StorePage() {
   }, [reservationTime, visibleReservationAvailability]);
 
   const createReservation = useCallback(async () => {
-    if (!reservationCanConfirm) return;
+    if (!reservationCanConfirm) {
+      triggerReservationMissingShake();
+      return;
+    }
 
     try {
       setReservationLoading(true);
@@ -2185,6 +2264,7 @@ export default function StorePage() {
     reservationPhone,
     reservationTime,
     store?.id,
+    triggerReservationMissingShake,
   ]);
 
   const utilityPills = useMemo(
@@ -3046,7 +3126,9 @@ export default function StorePage() {
     if (!selectedCustomCategory || !customReady) return;
 
     const ingredients = Object.entries(customIngredients).map(([id, data]) => {
-      const catalogIngredient = customIngredientsCatalog.find(
+      const catalogIngredient = scopedCustomIngredientsCatalog.find(
+        (ingredient) => Number(ingredient.id) === Number(id)
+      ) || customIngredientsCatalog.find(
         (ingredient) => Number(ingredient.id) === Number(id)
       );
 
@@ -3054,8 +3136,19 @@ export default function StorePage() {
         id: Number(id),
         ingredientId: Number(id),
         name: catalogIngredient?.name || data.name || "Ingrediente",
+        category: catalogIngredient?.category || "OTROS",
         placement: data.placement,
         quantity: data.quantity,
+        placementLabel:
+          data.placement === "FULL"
+            ? "Entera"
+            : data.placement === "LEFT"
+            ? "Mitad izquierda"
+            : data.placement === "RIGHT"
+            ? "Mitad derecha"
+            : data.placement,
+        quantityLabel: data.quantity === "DOUBLE" ? "Doble" : "Simple",
+        basePrice: Number(data.basePrice || catalogIngredient?.costPrice || 0),
         allergens: Array.isArray(catalogIngredient?.allergens)
           ? catalogIngredient.allergens
           : [],
@@ -3080,6 +3173,8 @@ export default function StorePage() {
         categoryId: selectedCustomCategory.categoryId,
         categoryName: selectedCustomCategory.name,
         baseName: selectedCustomCategory.baseName,
+        basePizzaId: selectedCustomBase?.pizzaId || selectedCustomCategory.samplePizzaId || null,
+        baseProductName: selectedCustomBase?.name || selectedCustomCategory.baseName || selectedCustomCategory.name,
         pricingRule: "CATEGORY_BASELINE",
         basePriceFactor: CUSTOM_BASE_PRICE_FACTOR,
       },
@@ -3098,6 +3193,13 @@ export default function StorePage() {
     () => cart.reduce((sum, item) => sum + getCartLinePayableTotal(item), 0),
     [cart]
   );
+  const minimumPaymentAmount = useMemo(() => {
+    const value = Number(partner?.minimumPaymentAmount || 0);
+    return Number.isFinite(value) && value > 0 ? value : 0;
+  }, [partner?.minimumPaymentAmount]);
+  const minimumPaymentMissing = Math.max(0, minimumPaymentAmount - cartTotal);
+  const cartBelowMinimumPayment =
+    cartCount > 0 && minimumPaymentAmount > 0 && minimumPaymentMissing > 0.004;
   const couponEligibleSubtotal = useMemo(
     () => cart.filter(isCouponEligibleCartLine).reduce((sum, item) => sum + num(item.subtotal), 0),
     [cart]
@@ -3130,7 +3232,7 @@ export default function StorePage() {
       setCouponStatus(emptyData.message);
       setCouponInfoData(emptyData);
       if (openInfo) setCouponInfoOpen(true);
-      return;
+      return emptyData;
     }
 
     if (couponEligibleSubtotal <= 0) {
@@ -3144,18 +3246,19 @@ export default function StorePage() {
       setCouponStatus(pendingData.message);
       setCouponInfoData(pendingData);
       if (openInfo) setCouponInfoOpen(true);
-      return;
+      return pendingData;
     }
 
     try {
       setCouponLoading(true);
       setCouponStatus("Validando cupon...");
-      const data = await api.post("/api/coupons/validate", {
+      const response = await api.post("/api/coupons/validate", {
         partnerId: Number(partner?.id || store?.partnerId),
         storeId: Number(store?.id),
         code,
         subtotal: couponEligibleSubtotal,
       });
+      const data = response?.data || response || {};
 
       setCouponInfoData(data);
       if (openInfo) setCouponInfoOpen(true);
@@ -3187,6 +3290,8 @@ export default function StorePage() {
       } else {
         setCart((current) => current.filter((item) => !isCouponCartLine(item)));
       }
+
+      return data;
     } catch (err) {
       console.error(err);
       const errorData = {
@@ -3199,6 +3304,7 @@ export default function StorePage() {
       setCouponStatus(errorData.message);
       setCouponInfoData(errorData);
       if (openInfo) setCouponInfoOpen(true);
+      return errorData;
     } finally {
       setCouponLoading(false);
     }
@@ -3253,6 +3359,28 @@ export default function StorePage() {
     store?.partnerId,
   ]);
 
+  useEffect(() => {
+    const code = String(couponCode || couponInfoData?.coupon?.code || "").trim().toUpperCase();
+    if (!code || !store?.id || !(partner?.id || store?.partnerId)) return;
+    if (couponEligibleSubtotal <= 0) return;
+    if (cart.some(isCouponCartLine)) return;
+
+    const applyKey = `cart:${code}:${store.id}:${couponEligibleSubtotal.toFixed(2)}`;
+    if (autoCouponApplyRef.current === applyKey) return;
+    autoCouponApplyRef.current = applyKey;
+
+    applyCouponCode(code, { openInfo: false, openCartOnValid: false });
+  }, [
+    applyCouponCode,
+    cart,
+    couponCode,
+    couponEligibleSubtotal,
+    couponInfoData?.coupon?.code,
+    partner?.id,
+    store?.id,
+    store?.partnerId,
+  ]);
+
   const startStripeCheckout = useCallback(async (profileOverride = null) => {
     if (profileOverride?.preventDefault) {
       profileOverride = null;
@@ -3260,6 +3388,17 @@ export default function StorePage() {
 
     if (!cartCount || cartTotal <= 0) {
       setCheckoutMessage("Agrega productos al carrito antes de pagar.");
+      return;
+    }
+
+    if (cartBelowMinimumPayment) {
+      setCheckoutMessage(
+        `El pago minimo es ${formatMoney(
+          minimumPaymentAmount,
+          partner?.currency || "EUR"
+        )}. Faltan ${formatMoney(minimumPaymentMissing, partner?.currency || "EUR")}.`
+      );
+      setCartOpen(true);
       return;
     }
 
@@ -3353,6 +3492,10 @@ export default function StorePage() {
         coupon_not_applicable: "El cupon ya no aplica a este carrito.",
         customer_profile_required: "Necesitamos tu nombre y telefono para hacer seguimiento al pedido.",
         amount_too_low: "El importe es demasiado bajo para procesar el pago.",
+        minimum_payment_not_met: `El pago minimo es ${formatMoney(
+          err.response?.data?.minimumPaymentAmount || minimumPaymentAmount,
+          partner?.currency || "EUR"
+        )}.`,
         stripe_session_url_missing: "Stripe creo la sesion sin URL de pago. Intentalo de nuevo.",
         database_unavailable: "No pudimos conectar con la base de datos. Intentalo de nuevo en unos segundos.",
         checkout_failed: "Stripe no pudo crear la sesion de pago.",
@@ -3366,8 +3509,11 @@ export default function StorePage() {
     cart,
     cartCount,
     cartTotal,
+    cartBelowMinimumPayment,
     customerProfileStorageKey,
     location.state,
+    minimumPaymentAmount,
+    minimumPaymentMissing,
     partner?.currency,
     partner?.id,
     repeatPhone,
@@ -3974,7 +4120,9 @@ export default function StorePage() {
     <div className="sf-shell" style={themeStyle}>
       <div className="sf-wrap sf-menu">
         <section className="sf-storeHeader">
-          <div className="sf-storeHeaderTitle">Selecciona productos</div>
+          {isStorefrontButtonVisible("selectProducts") && (
+            <div className="sf-storeHeaderTitle">Selecciona productos</div>
+          )}
 
           <div className="lsf-top__actions">
             <span className="sf-engineUtilityPill sf-lsfStoreTicker" aria-label={`${partner?.name || store.storeName}, ${store?.city || "Ciudad"}, ${store.storeName}`}>
@@ -3995,15 +4143,17 @@ export default function StorePage() {
                 </span>
               </span>
             </span>
-            <button
-              type="button"
-              className={`lsf-schedulebtn ${scheduledOrderLabel ? "has-schedule" : ""}`}
-              onClick={() => setScheduleOpen(true)}
-              title={scheduledOrderLabel || "Programar pedido"}
-            >
-              <span className="lsf-schedulebtn__icon" aria-hidden="true">⏱</span>
-              <span className="lsf-schedulebtn__text">{scheduledOrderLabel || "Programar"}</span>
-            </button>
+            {isStorefrontButtonVisible("scheduleOrder") && (
+              <button
+                type="button"
+                className={`lsf-schedulebtn ${scheduledOrderLabel ? "has-schedule" : ""}`}
+                onClick={() => setScheduleOpen(true)}
+                title={scheduledOrderLabel || "Programar pedido"}
+              >
+                <span className="lsf-schedulebtn__icon" aria-hidden="true">⏱</span>
+                <span className="lsf-schedulebtn__text">{scheduledOrderLabel || "Programar"}</span>
+              </button>
+            )}
 
             <button
               type="button"
@@ -4025,32 +4175,38 @@ export default function StorePage() {
 
         <section className="sf-lsfSurface lsf-wrapper lsf-mobile">
           <div className="sf-lsfActionSearchLine">
-            <button
-              type="button"
-              className={`sf-offersBtn sf-lsfOfferBtn ${offerVariant.className}`}
-              onClick={() =>
-                navigate(`/${partnerSlug}/coupons`, {
-                  state: { returnToStorePath: `/${partnerSlug}/${storeSlug}` },
-                })
-              }
-            >
-              <span className="sf-offersBtnLabel">{offerVariant.label}</span>
-            </button>
+            {isStorefrontButtonVisible("coupons") && (
+              <button
+                type="button"
+                className={`sf-offersBtn sf-lsfOfferBtn ${offerVariant.className}`}
+                onClick={() =>
+                  navigate(`/${partnerSlug}/coupons`, {
+                    state: { returnToStorePath: `/${partnerSlug}/${storeSlug}` },
+                  })
+                }
+              >
+                <span className="sf-offersBtnLabel">{offerVariant.label}</span>
+              </button>
+            )}
 
-            <button
-              type="button"
-              className={`lsf-buildmode ${halfModalOpen ? "is-active" : ""}`}
-              onClick={openHalfModal}
-            >
-              Mitad / Mitad
-            </button>
-            <button
-              type="button"
-              className={`lsf-buildmode ${customModalOpen ? "is-active" : ""}`}
-              onClick={openCustomModal}
-            >
-              Arma tu pizza
-            </button>
+            {isStorefrontButtonVisible("halfAndHalf") && (
+              <button
+                type="button"
+                className={`lsf-buildmode ${halfModalOpen ? "is-active" : ""}`}
+                onClick={openHalfModal}
+              >
+                Mitad / Mitad
+              </button>
+            )}
+            {isStorefrontButtonVisible("customPizza") && (
+              <button
+                type="button"
+                className={`lsf-buildmode ${customModalOpen ? "is-active" : ""}`}
+                onClick={openCustomModal}
+              >
+                Arma tu pizza
+              </button>
+            )}
 
             <div className="sf-lsfSearchCluster">
               <div className="sf-engineSearchRow sf-engineSearchRow--lsf">
@@ -4116,32 +4272,34 @@ export default function StorePage() {
                 </div>
               </div>
 
-              <button
-                type="button"
-                className={`sf-repeatOrderBtn ${cartCount > 0 ? "has-draft" : ""}`}
-                onClick={() => setRepeatOpen(true)}
-                aria-label="Repetir pedido anterior"
-                title="Repetir pedido anterior"
-              >
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path
-                    d="M8 7H5v-3M5.6 7A7.2 7.2 0 1 1 4.9 14"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M9 12h6M12 9v6"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.2"
-                    strokeLinecap="round"
-                  />
-                </svg>
-                <span>Repetir pedido</span>
-              </button>
+              {isStorefrontButtonVisible("repeatOrder") && (
+                <button
+                  type="button"
+                  className={`sf-repeatOrderBtn ${cartCount > 0 ? "has-draft" : ""}`}
+                  onClick={() => setRepeatOpen(true)}
+                  aria-label="Repetir pedido anterior"
+                  title="Repetir pedido anterior"
+                >
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path
+                      d="M8 7H5v-3M5.6 7A7.2 7.2 0 1 1 4.9 14"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M9 12h6M12 9v6"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.2"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  <span>Repetir pedido</span>
+                </button>
+              )}
             </div>
           </div>
 
@@ -4622,71 +4780,81 @@ export default function StorePage() {
 
       <div className="sf-stickyFooterShell" style={themeStyle}>
         <div className="sf-stickyFooter">
-          <button
-            type="button"
-            className="sf-engineBottomBtn sf-engineBottomBtn--call"
-            onClick={() => {
-              if (phoneHref) window.location.href = phoneHref;
-            }}
-            disabled={!phoneHref}
-          >
-            <span>Llamar</span>
-          </button>
-
-          <button
-            type="button"
-            className="sf-engineBottomBtn sf-engineBottomBtn--reservation"
-            onClick={() => setReservationOpen(true)}
-            disabled={!reservationEnabled}
-          >
-            <span>Reservas</span>
-          </button>
-
-          <button
-            type="button"
-            className="sf-engineBottomBtn sf-engineBottomBtn--pay"
-            onClick={startStripeCheckout}
-            disabled={cartCount === 0 || checkoutLoading}
-          >
-            <span>{checkoutLoading ? "Estas muy cerca" : "Pay now"}</span>
-            {cartCount > 0 && !checkoutLoading && <small>EUR {cartTotal.toFixed(2)}</small>}
-          </button>
-
-          <form className="sf-couponDock" onSubmit={validateCouponCode}>
-            <span className="sf-couponDockIcon">%</span>
-            <input
-              type="text"
-              value={couponCode}
-              onChange={(event) => {
-                setCouponCode(event.target.value.toUpperCase());
-                setCouponStatus("");
+          {isStorefrontButtonVisible("call") && (
+            <button
+              type="button"
+              className="sf-engineBottomBtn sf-engineBottomBtn--call"
+              onClick={() => {
+                if (phoneHref) window.location.href = phoneHref;
               }}
-              placeholder="Codigo cupon"
-            />
-            <button type="submit" disabled={couponLoading || couponCode.trim().length === 0}>
-              {couponLoading ? "..." : "Validar"}
+              disabled={!phoneHref}
+            >
+              <span>Llamar</span>
             </button>
-            {couponStatus && <small>{couponStatus}</small>}
-          </form>
+          )}
 
-          <button
-            type="button"
-            className="sf-footerStatus sf-footerStatus--boots"
-            onClick={() => setBootsOpen(true)}
-            disabled={boostSettings.active === false}
-          >
-            <span className="sf-bootsCounter" aria-label={`Posicion ${bootsPositionLabel} en espera`}>
-              <span>POS</span>
-              <strong>{bootsPositionLabel}</strong>
-            </span>
-            <span className="sf-bootsTicker" aria-label="Boots para subir posicion en la cola">
-              <span className="sf-bootsTickerTrack">
-                <span>Boost UP</span>
-                <span>Subir cola</span>
-                <span>Prioridad</span>
+          {isStorefrontButtonVisible("reservations") && (
+            <button
+              type="button"
+              className="sf-engineBottomBtn sf-engineBottomBtn--reservation"
+              onClick={() => setReservationOpen(true)}
+              disabled={!reservationEnabled}
+            >
+              <span>Reservas</span>
+            </button>
+          )}
+
+          {isStorefrontButtonVisible("payNow") && (
+            <button
+              type="button"
+              className="sf-engineBottomBtn sf-engineBottomBtn--pay"
+              onClick={startStripeCheckout}
+              disabled={cartCount === 0 || checkoutLoading}
+            >
+              <span>{checkoutLoading ? "Estas muy cerca" : "Pay now"}</span>
+              {cartCount > 0 && !checkoutLoading && <small>EUR {cartTotal.toFixed(2)}</small>}
+            </button>
+          )}
+
+          {isStorefrontButtonVisible("couponCode") && (
+            <form className="sf-couponDock" onSubmit={validateCouponCode}>
+              <span className="sf-couponDockIcon">%</span>
+              <input
+                type="text"
+                value={couponCode}
+                onChange={(event) => {
+                  setCouponCode(event.target.value.toUpperCase());
+                  setCouponStatus("");
+                }}
+                placeholder="Codigo cupon"
+              />
+              <button type="submit" disabled={couponLoading || couponCode.trim().length === 0}>
+                {couponLoading ? "..." : "Validar"}
+              </button>
+              {couponStatus && <small>{couponStatus}</small>}
+            </form>
+          )}
+
+          {isStorefrontButtonVisible("boost") && (
+            <button
+              type="button"
+              className="sf-footerStatus sf-footerStatus--boots"
+              onClick={() => setBootsOpen(true)}
+              disabled={boostSettings.active === false}
+            >
+              <span className="sf-bootsCounter" aria-label={`Posicion ${bootsPositionLabel} en espera`}>
+                <span>POS</span>
+                <strong>{bootsPositionLabel}</strong>
               </span>
-            </span>
-          </button>
+              <span className="sf-bootsTicker" aria-label="Boots para subir posicion en la cola">
+                <span className="sf-bootsTickerTrack">
+                  <span>Boost UP</span>
+                  <span>Subir cola</span>
+                  <span>Prioridad</span>
+                </span>
+              </span>
+            </button>
+          )}
         </div>
       </div>
 
@@ -5022,6 +5190,12 @@ export default function StorePage() {
                     <span>Total</span>
                     <strong>EUR {cartTotal.toFixed(2)}</strong>
                   </div>
+                  {cartBelowMinimumPayment && (
+                    <div className="sf-cartMinimumNotice">
+                      Pago minimo {formatMoney(minimumPaymentAmount, partner?.currency || "EUR")}.
+                      Faltan {formatMoney(minimumPaymentMissing, partner?.currency || "EUR")}.
+                    </div>
+                  )}
                   <div className="sf-cartActions">
                     <button
                       type="button"
@@ -5978,7 +6152,7 @@ export default function StorePage() {
             </div>
 
             <div className="sf-schedule sf-reservation">
-              <div className="sf-reservationStore">
+              <div className={`sf-reservationStore ${reservationMissingClass("store")}`}>
                 <span>Tienda</span>
                 <strong>{store?.storeName || "Tienda seleccionada"}</strong>
                 <small>
@@ -6007,27 +6181,35 @@ export default function StorePage() {
                   </select>
                 </label>
 
-                <label>
+                <label className={reservationMissingClass("name")}>
                   <span>Nombre</span>
                   <input
                     value={reservationName}
-                    onChange={(event) => setReservationName(event.target.value)}
+                    onChange={(event) => {
+                      setReservationName(event.target.value);
+                      clearReservationMissing("name");
+                      setReservationMessage("");
+                    }}
                     placeholder="Tu nombre"
                   />
                 </label>
 
-                <label>
+                <label className={reservationMissingClass("phone")}>
                   <span>Telefono</span>
                   <input
                     value={reservationPhone}
-                    onChange={(event) => setReservationPhone(event.target.value)}
+                    onChange={(event) => {
+                      setReservationPhone(event.target.value);
+                      clearReservationMissing("phone");
+                      setReservationMessage("");
+                    }}
                     placeholder="Telefono"
                     inputMode="tel"
                   />
                 </label>
               </div>
 
-              <div className="sf-scheduleSection">
+              <div className={`sf-scheduleSection ${reservationMissingClass("date")}`}>
                 <div className="sf-scheduleLabel">Fecha</div>
                 <div className="sf-scheduleDaysGrid">
                   {reservationDays.map((day) => {
@@ -6042,6 +6224,8 @@ export default function StorePage() {
                           setReservationDate(new Date(day.date));
                           setReservationTime("");
                           setReservationMessage("");
+                          clearReservationMissing("date");
+                          clearReservationMissing("time");
                         }}
                       >
                         {day.label}
@@ -6051,7 +6235,7 @@ export default function StorePage() {
                 </div>
               </div>
 
-              <div className="sf-scheduleSection">
+              <div className={`sf-scheduleSection ${reservationMissingClass("time")}`}>
                 <div className="sf-scheduleLabel">Hora</div>
 
                 {reservationLoading && visibleReservationAvailability.length === 0 ? (
@@ -6084,6 +6268,7 @@ export default function StorePage() {
                           onClick={() => {
                             setReservationTime(slot.time);
                             setReservationMessage("");
+                            clearReservationMissing("time");
                           }}
                         >
                           <span>{slot.time}</span>
@@ -6119,9 +6304,10 @@ export default function StorePage() {
                 </button>
                 <button
                   type="button"
-                  className="sf-primaryBtn"
+                  className={`sf-primaryBtn ${!reservationCanConfirm ? "is-softDisabled" : ""}`}
                   onClick={createReservation}
-                  disabled={!reservationCanConfirm || reservationLoading}
+                  disabled={reservationLoading}
+                  aria-disabled={!reservationCanConfirm}
                 >
                   {reservationLoading ? "Confirmando..." : "Confirmar reserva"}
                 </button>
@@ -6238,16 +6424,21 @@ export default function StorePage() {
       <CouponInfoModal
         open={couponInfoOpen}
         data={couponInfoData}
+        validating={couponLoading}
         onClose={() => setCouponInfoOpen(false)}
         onRemove={() => {
           removeCouponFromCart();
           setCouponInfoOpen(false);
         }}
-        onValidate={() => {
-          applyCouponCode(couponInfoData?.coupon?.code || couponCode, {
+        onValidate={async () => {
+          const result = await applyCouponCode(couponInfoData?.coupon?.code || couponCode, {
             openInfo: true,
             openCartOnValid: true,
           });
+          if (result?.valid) {
+            setCouponInfoOpen(false);
+            setCartOpen(true);
+          }
         }}
       />
 

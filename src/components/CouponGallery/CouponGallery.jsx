@@ -39,6 +39,21 @@ const buildStorageKey = (partner) => {
   return `volta_coupon_gallery_zip_${partnerKey}`;
 };
 
+const getVisitorId = () => {
+  const visitorKey = "volta_storefront_visitor_id";
+
+  try {
+    let visitorId = window.localStorage.getItem(visitorKey) || "";
+    if (!visitorId) {
+      visitorId = `visitor-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+      window.localStorage.setItem(visitorKey, visitorId);
+    }
+    return visitorId;
+  } catch {
+    return `visitor-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+  }
+};
+
 const getDisplayType = (type = "") => {
   switch (String(type || "").toUpperCase()) {
     case "FIXED_PERCENT":
@@ -372,8 +387,6 @@ function ClaimModal({ card, partnerId, zipCode, redeemBasePath, onClose, onClaim
   const redeemPath = result?.coupon
     ? localizeRedeemUrl(result.delivery?.redeemUrl, redeemBasePath, couponCode)
     : "";
-  const publicRedeemUrl =
-    redeemPath && typeof window !== "undefined" ? `${window.location.origin}${redeemPath}` : "";
 
   const copyCouponCode = async ({ goToRedeem = false } = {}) => {
     if (!couponCode) return;
@@ -442,44 +455,28 @@ function ClaimModal({ card, partnerId, zipCode, redeemBasePath, onClose, onClaim
           <div className="cg-claimSuccess">
             <div className="cg-successHero">
               <span>Listo para pedir</span>
+              <div className="cg-couponCodeRow">
+                <strong>{result.coupon.code}</strong>
+              </div>
               <button
                 type="button"
                 className={`cg-copyCouponBtn ${copiedCoupon ? "is-copied" : ""}`}
                 onClick={() => copyCouponCode({ goToRedeem: true })}
-                aria-label="Copiar cupon e ir a la tienda"
-                title="Copiar cupon e ir a la tienda"
+                aria-label="Copiar cupon e ir al pedido"
+                title="Copiar cupon e ir al pedido"
               >
                 <span className="cg-copyCouponIcon" aria-hidden="true" />
-                <small>{copiedCoupon ? "Copiado" : "Copiar"}</small>
+                <small>{copiedCoupon ? "Copiado" : "Copiar e ir"}</small>
               </button>
-              <div className="cg-couponCodeRow">
-                <strong>{result.coupon.code}</strong>
-              </div>
             </div>
             <p className="cg-successCopy">
-              Tu cupon queda reservado. El enlace abre la pagina de pedido con el codigo ya colocado en la caja de validacion.
+              Copiamos el codigo y abrimos la tienda con el cupon listo para validarse.
             </p>
-            <div className="cg-redeemPanel">
-              <span>Enlace directo de canje</span>
-              <a href={redeemPath} onClick={(event) => event.stopPropagation()}>
-                {publicRedeemUrl}
-              </a>
-            </div>
             <p className="cg-successMeta">
               Vence:{" "}
               <b>{result.coupon.expiresAt ? new Date(result.coupon.expiresAt).toLocaleString("es-ES") : "sin fecha"}</b>
             </p>
-            {result.delivery && (
-              <p className="cg-successMeta">
-                {result.delivery.sent
-                  ? "Tambien enviamos este enlace por SMS."
-                  : "El SMS no pudo salir ahora. Guarda el codigo o usa el enlace directo."}
-              </p>
-            )}
-            <div className="cg-claimActions">
-              <button className="cg-primaryBtn" onClick={() => onGoToRedeem(redeemPath)} type="button">
-                Ir al pedido
-              </button>
+            <div className="cg-claimActions cg-claimActions--single">
               <button className="cg-ghostBtn" onClick={onClose} type="button">
                 Seguir viendo cupones
               </button>
@@ -506,7 +503,7 @@ function ClaimModal({ card, partnerId, zipCode, redeemBasePath, onClose, onClaim
             </label>
 
             <div className="cg-helperBox">
-              Reclamas este cupon para el codigo postal <strong>{zipCode}</strong>. Al reservarlo te damos un enlace directo para pedir con el codigo listo.
+              Reclamas este cupon para el codigo postal <strong>{zipCode}</strong>. Al reservarlo podras copiar el codigo e ir al pedido con el cupon listo.
             </div>
 
             {error && <div className="cg-error">{error}</div>}
@@ -535,6 +532,7 @@ export default function CouponGallery({ partner }) {
   const [zoneError, setZoneError] = useState("");
   const [resolvingZone, setResolvingZone] = useState(false);
   const [fallbackStorePath, setFallbackStorePath] = useState("");
+  const [fallbackStoreId, setFallbackStoreId] = useState(null);
   const [legalAccepted, setLegalAccepted] = useState(false);
 
   const partnerId = partner?.id;
@@ -610,7 +608,6 @@ export default function CouponGallery({ partner }) {
 
   useEffect(() => {
     if (!partnerId || !partner?.slug) return undefined;
-    if (location.state?.returnToStorePath) return undefined;
 
     let cancelled = false;
 
@@ -619,18 +616,58 @@ export default function CouponGallery({ partner }) {
       .then((response) => {
         if (cancelled) return;
         const stores = response?.data;
-        const firstStore = Array.isArray(stores) ? stores.find((store) => store?.slug) : null;
-        setFallbackStorePath(firstStore ? `/${partner.slug}/${firstStore.slug}` : "");
+        const safeStores = Array.isArray(stores) ? stores : [];
+        const returnPath = String(location.state?.returnToStorePath || "");
+        const returnStoreSlug = returnPath.split("/").filter(Boolean).at(-1);
+        const selectedStore =
+          safeStores.find((store) => store?.slug && store.slug === returnStoreSlug) ||
+          safeStores.find((store) => store?.slug) ||
+          null;
+        setFallbackStorePath(selectedStore ? `/${partner.slug}/${selectedStore.slug}` : "");
+        setFallbackStoreId(selectedStore?.id || null);
       })
       .catch((requestError) => {
         console.error(requestError);
-        if (!cancelled) setFallbackStorePath("");
+        if (!cancelled) {
+          setFallbackStorePath("");
+          setFallbackStoreId(null);
+        }
       });
 
     return () => {
       cancelled = true;
     };
   }, [location.state, partner?.slug, partnerId]);
+
+  useEffect(() => {
+    if (!partnerId || !fallbackStoreId) return undefined;
+
+    const visitorId = getVisitorId();
+    const sendPresence = () => {
+      if (document.visibilityState === "hidden") return;
+
+      api
+        .post("/api/presence/heartbeat", {
+          partnerId: Number(partnerId),
+          storeId: Number(fallbackStoreId),
+          visitorId,
+          state: "browsing",
+          path: window.location.pathname,
+        })
+        .catch((requestError) => {
+          console.warn("[presence] coupon gallery heartbeat failed", requestError);
+        });
+    };
+
+    sendPresence();
+    const intervalId = window.setInterval(sendPresence, 15000);
+    document.addEventListener("visibilitychange", sendPresence);
+
+    return () => {
+      window.clearInterval(intervalId);
+      document.removeEventListener("visibilitychange", sendPresence);
+    };
+  }, [fallbackStoreId, partnerId]);
 
   useEffect(() => {
     if (!zipReady || !zipCode) return;

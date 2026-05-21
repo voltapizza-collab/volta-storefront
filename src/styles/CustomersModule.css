@@ -189,6 +189,11 @@
   background: #fff;
 }
 
+.cu-toolbar input.cu-search {
+  min-width: 320px;
+  max-width: 420px;
+}
+
 .cu-filterBar {
   display: flex;
   align-items: flex-start;

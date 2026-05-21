@@ -75,6 +75,9 @@ const toCoordinate = (value) => {
   return Number.isFinite(parsed) ? parsed : null;
 };
 
+const hasUsableCoordinates = (lat, lng) =>
+  lat != null && lng != null && !(Number(lat) === 0 && Number(lng) === 0);
+
 const svgToDataUrl = (svg) => `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
 
 const createStorePinIcon = (google, active) => ({
@@ -816,6 +819,8 @@ function MapPanel({
   const mapNodeRef = useRef(null);
   const mapRef = useRef(null);
   const markersRef = useRef([]);
+  const geocodingRef = useRef(new Set());
+  const [postalCoordinates, setPostalCoordinates] = useState({});
   const storeMarkers = useMemo(
     () =>
       stores
@@ -858,14 +863,100 @@ function MapPanel({
   const customerMarkers = useMemo(
     () =>
       customers
-        .map((customer) => ({
-          ...customer,
-          lat: toCoordinate(customer.lat),
-          lng: toCoordinate(customer.lng),
-        }))
-        .filter((customer) => customer.lat != null && customer.lng != null),
-    [customers]
+        .map((customer) => {
+          const lat = toCoordinate(customer.lat);
+          const lng = toCoordinate(customer.lng);
+          const territoryLat = toCoordinate(customer.territoryLat);
+          const territoryLng = toCoordinate(customer.territoryLng);
+          const useCustomerCoordinates = hasUsableCoordinates(lat, lng);
+          const useTerritoryCoordinates = hasUsableCoordinates(territoryLat, territoryLng);
+          const postalCoordinate = postalCoordinates[String(customer.postalCode || "")] || null;
+
+          return {
+            ...customer,
+            lat: useCustomerCoordinates
+              ? lat
+              : useTerritoryCoordinates
+                ? territoryLat
+                : postalCoordinate?.lat,
+            lng: useCustomerCoordinates
+              ? lng
+              : useTerritoryCoordinates
+                ? territoryLng
+                : postalCoordinate?.lng,
+          };
+        })
+        .filter((customer) => hasUsableCoordinates(customer.lat, customer.lng)),
+    [customers, postalCoordinates]
   );
+
+  useEffect(() => {
+    if (!GOOGLE_KEY || !showCustomers) return undefined;
+
+    const missingPostalCodes = [
+      ...new Set(
+        customers
+          .filter((customer) => {
+            const lat = toCoordinate(customer.lat);
+            const lng = toCoordinate(customer.lng);
+            const territoryLat = toCoordinate(customer.territoryLat);
+            const territoryLng = toCoordinate(customer.territoryLng);
+            const postalCode = String(customer.postalCode || "").trim();
+
+            return (
+              postalCode &&
+              postalCode !== "Sin CP" &&
+              !hasUsableCoordinates(lat, lng) &&
+              !hasUsableCoordinates(territoryLat, territoryLng) &&
+              !postalCoordinates[postalCode] &&
+              !geocodingRef.current.has(postalCode)
+            );
+          })
+          .map((customer) => String(customer.postalCode || "").trim())
+      ),
+    ];
+
+    if (!missingPostalCodes.length) return undefined;
+
+    let cancelled = false;
+
+    loadGoogleMaps(GOOGLE_KEY)
+      .then((google) => {
+        if (cancelled) return;
+
+        const geocoder = new google.maps.Geocoder();
+        missingPostalCodes.forEach((postalCode) => {
+          geocodingRef.current.add(postalCode);
+          geocoder.geocode(
+            {
+              address: `${postalCode}, Spain`,
+              componentRestrictions: { country: "ES" },
+            },
+            (results, status) => {
+              if (cancelled || status !== "OK") return;
+
+              const location = results?.[0]?.geometry?.location;
+              const lat = typeof location?.lat === "function" ? location.lat() : null;
+              const lng = typeof location?.lng === "function" ? location.lng() : null;
+
+              if (!hasUsableCoordinates(lat, lng)) return;
+
+              setPostalCoordinates((current) => ({
+                ...current,
+                [postalCode]: { lat, lng },
+              }));
+            }
+          );
+        });
+      })
+      .catch((error) => {
+        console.error("POSTAL GEOCODE LOAD ERROR:", error);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [customers, postalCoordinates, showCustomers]);
 
   useEffect(() => {
     if (!mapRef.current || String(selectedStoreId) === "all") return;
@@ -1103,7 +1194,12 @@ function MapPanel({
   );
 }
 
-export default function AdminStoresPage({ initialPartnerId = "", lockPartner = false }) {
+export default function AdminStoresPage({
+  initialPartnerId = "",
+  lockPartner = false,
+  view = "stores",
+}) {
+  const isLocationsView = view === "locations";
   const [partners, setPartners] = useState([]);
   const [selectedPartnerId, setSelectedPartnerId] = useState("");
   const [stores, setStores] = useState([]);
@@ -1166,7 +1262,10 @@ export default function AdminStoresPage({ initialPartnerId = "", lockPartner = f
           selectedPartnerId ||
           initialPartnerId ||
           String(loadedPartners[0]?.id || "");
-        await Promise.all([loadStores(nextPartnerId), loadCustomers(nextPartnerId)]);
+        await Promise.all([
+          loadStores(nextPartnerId),
+          isLocationsView ? loadCustomers(nextPartnerId) : Promise.resolve(),
+        ]);
         setPageError("");
       } catch (requestError) {
         console.error("ADMIN STORES BOOTSTRAP ERROR:", requestError);
@@ -1177,7 +1276,7 @@ export default function AdminStoresPage({ initialPartnerId = "", lockPartner = f
     };
 
     bootstrap();
-  }, [initialPartnerId, loadCustomers, loadPartners, loadStores, selectedPartnerId]);
+  }, [initialPartnerId, isLocationsView, loadCustomers, loadPartners, loadStores, selectedPartnerId]);
 
   useEffect(() => {
     if (!initialPartnerId) return;
@@ -1186,11 +1285,14 @@ export default function AdminStoresPage({ initialPartnerId = "", lockPartner = f
 
   useEffect(() => {
     if (!selectedPartnerId) return;
-    Promise.all([loadStores(selectedPartnerId), loadCustomers(selectedPartnerId)]).catch((requestError) => {
+    Promise.all([
+      loadStores(selectedPartnerId),
+      isLocationsView ? loadCustomers(selectedPartnerId) : Promise.resolve(),
+    ]).catch((requestError) => {
       console.error("FILTER STORES ERROR:", requestError);
       setPageError("No pudimos filtrar las tiendas del partner.");
     });
-  }, [loadCustomers, loadStores, selectedPartnerId]);
+  }, [isLocationsView, loadCustomers, loadStores, selectedPartnerId]);
 
   useEffect(() => {
     if (!stores.length) {
@@ -1208,7 +1310,11 @@ export default function AdminStoresPage({ initialPartnerId = "", lockPartner = f
     () =>
       customers.map((customer) => ({
         ...customer,
-        postalCode: customer.zipCode || extractPostalCode(customer.address_1) || "Sin CP",
+        postalCode:
+          customer.zipCode ||
+          customer.territoryZipCode ||
+          extractPostalCode(customer.address_1) ||
+          "Sin CP",
         temperature: getCustomerTemperature(customer.daysOff),
       })),
     [customers]
@@ -1245,18 +1351,24 @@ export default function AdminStoresPage({ initialPartnerId = "", lockPartner = f
 
   const visibleCustomers = useMemo(
     () =>
-      scopedCustomers.filter((customer) => {
-        const matchesPostal =
-          customerPostalCode === "all" ? true : customer.postalCode === customerPostalCode;
-        const matchesTemperature =
-          customerTemperatureFilter === "all"
-            ? true
-            : customerTemperatureFilter === "hot"
-              ? customer.temperature === "Caliente"
-              : customer.temperature === "Frio";
+      scopedCustomers
+        .filter((customer) => {
+          const matchesPostal =
+            customerPostalCode === "all" ? true : customer.postalCode === customerPostalCode;
+          const matchesTemperature =
+            customerTemperatureFilter === "all"
+              ? true
+              : customerTemperatureFilter === "hot"
+                ? customer.temperature === "Caliente"
+                : customer.temperature === "Frio";
 
-        return matchesPostal && matchesTemperature;
-      }),
+          return matchesPostal && matchesTemperature;
+        })
+        .sort((left, right) =>
+          String(left.name || "").localeCompare(String(right.name || ""), "es", {
+            sensitivity: "base",
+          })
+        ),
     [customerPostalCode, customerTemperatureFilter, scopedCustomers]
   );
 
@@ -1387,7 +1499,7 @@ export default function AdminStoresPage({ initialPartnerId = "", lockPartner = f
     return (
       <div className="sc-page">
         <div className="sc-card">
-          <h2>Stores</h2>
+          <h2>{isLocationsView ? "Locations" : "Stores"}</h2>
           <p>Cargando modulo...</p>
         </div>
       </div>
@@ -1399,8 +1511,12 @@ export default function AdminStoresPage({ initialPartnerId = "", lockPartner = f
       <div className="sc-page">
         <header className="sc-header">
           <div>
-            <h2>Stores</h2>
-            <p className="sc-subtitle">Transplante SaaS del modulo de tiendas con capa partner.</p>
+            <h2>{isLocationsView ? "Locations" : "Stores"}</h2>
+            <p className="sc-subtitle">
+              {isLocationsView
+                ? "Mapa, clientes y filtros para analizar el territorio."
+                : "Lista de tiendas y funciones operativas del partner."}
+            </p>
           </div>
 
           <div className="sc-headerActions">
@@ -1417,9 +1533,16 @@ export default function AdminStoresPage({ initialPartnerId = "", lockPartner = f
               ))}
             </select>
 
-            <button className="sc-btn primary" onClick={() => setShowAdd(true)} type="button">
-              + Add store
-            </button>
+            {!isLocationsView && (
+              <button
+                className="sc-btn primary sc-addStoreBtn"
+                onClick={() => setShowAdd(true)}
+                type="button"
+              >
+                <span className="sc-btnIcon" aria-hidden="true">+</span>
+                <span>Add Stores</span>
+              </button>
+            )}
           </div>
         </header>
 
@@ -1429,6 +1552,7 @@ export default function AdminStoresPage({ initialPartnerId = "", lockPartner = f
           </div>
         )}
 
+        {!isLocationsView && (
         <section className="sc-card">
           <h3>Stores list</h3>
 
@@ -1521,7 +1645,9 @@ export default function AdminStoresPage({ initialPartnerId = "", lockPartner = f
             </tbody>
           </table>
         </section>
+        )}
 
+        {isLocationsView && (
         <section className="sc-card sc-mapCard">
           <div className="sc-cardHead sc-mapHead">
             <div>
@@ -1611,9 +1737,10 @@ export default function AdminStoresPage({ initialPartnerId = "", lockPartner = f
             onBoostCustomer={setBoostCustomer}
           />
         </section>
+        )}
       </div>
 
-      {boostCustomer && (
+      {isLocationsView && boostCustomer && (
         <OfferCreatePanelCustomer
           partnerId={selectedPartnerId}
           customer={boostCustomer}

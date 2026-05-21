@@ -115,6 +115,23 @@
   box-shadow: 0 10px 22px rgba(255, 182, 28, 0.24);
 }
 
+.sc-addStoreBtn {
+  min-height: 38px;
+  padding: 9px 16px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.sc-btnIcon {
+  font-size: 18px;
+  line-height: 1;
+}
+
 .sc-btn.ghost {
   background: rgba(255, 255, 255, 0.96);
   color: var(--brand-1);

@@ -23,9 +23,9 @@ const temperatureCards = [
 const segmentCards = [
   { key: "S1", shortLabel: "Potencial", description: "0 compras" },
   { key: "S2", shortLabel: "Nuevo", description: "1 compra" },
-  { key: "S3", shortLabel: "Dormido", description: "Bajo su media" },
-  { key: "S4", shortLabel: "Activo", description: "En linea con su media" },
-  { key: "S5", shortLabel: "VIP", description: "Supera objetivo +15%" },
+  { key: "S3", shortLabel: "Dormido", description: "30+ dias sin compra" },
+  { key: "S4", shortLabel: "Activo", description: "2+ compras recientes" },
+  { key: "S5", shortLabel: "VIP", description: "10+ compras o ticket alto" },
 ];
 
 const displayESPhone = (phone = "") => {
@@ -37,6 +37,14 @@ const displayESPhone = (phone = "") => {
 };
 
 const buildTrend = (customer) => {
+  const explicitTrend = String(customer?.trend || "").trim();
+  if (explicitTrend) {
+    const normalized = explicitTrend.toLowerCase();
+    if (normalized.includes("alza")) return { label: explicitTrend, tone: "up", hint: "Ultimo ticket por encima de su media" };
+    if (normalized.includes("baj")) return { label: explicitTrend, tone: "down", hint: "Ultimo ticket por debajo de su media" };
+    return { label: explicitTrend, tone: "steady", hint: "Ticket en linea con su historial" };
+  }
+
   const daysOff = Number(customer?.daysOff ?? 0);
   const segment = String(customer?.segment || "");
 
@@ -264,7 +272,7 @@ export default function CustomersModule({ partner }) {
   }, [countryQuery, storeQuery, territory.countries]);
 
   const loadRows = useCallback(
-    async (countryValue = "", storeValue = "", zipDigits = "", phoneDigits = "") => {
+    async (countryValue = "", storeValue = "", zipDigits = "", searchText = "") => {
       if (!partnerId) return;
 
       const params = new URLSearchParams({
@@ -276,7 +284,7 @@ export default function CustomersModule({ partner }) {
       if (storeValue) params.set("storeId", storeValue);
       if (segmentFilter) params.set("segment", segmentFilter);
       if (temperatureFilter) params.set("temperature", temperatureFilter);
-      if (phoneDigits) params.set("q", phoneDigits);
+      if (searchText.trim()) params.set("q", searchText.trim());
       if (zipDigits) params.set("zip", zipDigits);
 
       const response = await api.get(`/api/customers/admin?${params.toString()}`);
@@ -311,7 +319,7 @@ export default function CustomersModule({ partner }) {
       try {
         setLoading(true);
         setError("");
-        await loadRows(activeCountry, storeQuery, zipQuery, normalizePhone(query));
+        await loadRows(activeCountry, storeQuery, zipQuery, query);
       } catch (requestError) {
         console.error("CUSTOMERS SEARCH ERROR:", requestError);
         setError("No pudimos filtrar customers.");
@@ -390,7 +398,7 @@ export default function CustomersModule({ partner }) {
         await api.post("/api/customers", finalPayload);
       }
 
-      await Promise.all([loadRows(activeCountry, storeQuery, zipQuery, normalizePhone(query)), loadStats()]);
+      await Promise.all([loadRows(activeCountry, storeQuery, zipQuery, query), loadStats()]);
       setShowModal(false);
       setEditing(null);
     } catch (requestError) {
@@ -408,7 +416,7 @@ export default function CustomersModule({ partner }) {
     try {
       setSaving(true);
       await api.delete(`/api/customers/${editing.id}`);
-      await Promise.all([loadRows(activeCountry, storeQuery, zipQuery, normalizePhone(query)), loadStats()]);
+      await Promise.all([loadRows(activeCountry, storeQuery, zipQuery, query), loadStats()]);
       setShowModal(false);
       setEditing(null);
     } catch (requestError) {
@@ -429,7 +437,7 @@ export default function CustomersModule({ partner }) {
         reason,
       });
 
-      await Promise.all([loadRows(activeCountry, storeQuery, zipQuery, normalizePhone(query)), loadStats()]);
+      await Promise.all([loadRows(activeCountry, storeQuery, zipQuery, query), loadStats()]);
     } catch (requestError) {
       console.error("TOGGLE RESTRICT ERROR:", requestError);
       setError("No pudimos cambiar el estado del customer.");
@@ -440,7 +448,7 @@ export default function CustomersModule({ partner }) {
     try {
       setSaving(true);
       await api.post("/api/customers/resegment", { partnerId });
-      await Promise.all([loadRows(activeCountry, storeQuery, zipQuery, normalizePhone(query)), loadStats()]);
+      await Promise.all([loadRows(activeCountry, storeQuery, zipQuery, query), loadStats()]);
     } catch (requestError) {
       console.error("RESEGMENT ERROR:", requestError);
       setError("No pudimos recalcular segmentos.");
@@ -559,8 +567,8 @@ export default function CustomersModule({ partner }) {
           <input
             className="cu-search"
             value={query}
-            onChange={(event) => setQuery(normalizePhone(event.target.value))}
-            placeholder="Phone"
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Buscar nombre, telefono, CP, direccion..."
           />
         </div>
 
@@ -732,7 +740,7 @@ export default function CustomersModule({ partner }) {
           onClose={() => setBoosting(null)}
           onDone={async () => {
             setBoosting(null);
-            await Promise.all([loadRows(activeCountry, storeQuery, zipQuery, normalizePhone(query)), loadStats()]);
+            await Promise.all([loadRows(activeCountry, storeQuery, zipQuery, query), loadStats()]);
           }}
         />
       )}

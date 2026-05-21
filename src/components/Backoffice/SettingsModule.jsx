@@ -2,9 +2,12 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import api from "../../setupAxios";
 import {
   BRANDING_DEFAULTS,
-  getBrandFontOption,
   getOfferButtonVariant,
 } from "../../constants/branding";
+import {
+  STOREFRONT_BUTTON_ITEMS,
+  normalizeStorefrontButtonConfig,
+} from "../../constants/storefrontButtons";
 
 const formatCurrency = (value) => {
   const numeric = Number(value || 0);
@@ -14,7 +17,7 @@ const formatCurrency = (value) => {
   }).format(Number.isFinite(numeric) ? numeric : 0);
 };
 
-export default function SettingsModule({ partner, onOpenDelivery, onOpenBranding }) {
+export default function SettingsModule({ partner, onOpenDelivery, onOpenBranding, onOpenPolicies }) {
   const [loading, setLoading] = useState(true);
   const [partnerData, setPartnerData] = useState(null);
 
@@ -50,22 +53,6 @@ export default function SettingsModule({ partner, onOpenDelivery, onOpenBranding
     } pizzas.`;
   }, [partnerData]);
 
-  const brandingPalette = useMemo(
-    () => [
-      partnerData?.brandPrimary || "#3513A4",
-      partnerData?.brandSecondary || "#FFBF2D",
-      partnerData?.brandAccent || BRANDING_DEFAULTS.brandAccent,
-      partnerData?.brandSurface || "#FFF7E8",
-      partnerData?.brandTextColor || BRANDING_DEFAULTS.brandTextColor,
-    ],
-    [partnerData]
-  );
-
-  const brandFont = useMemo(
-    () => getBrandFontOption(partnerData?.brandFontFamily || BRANDING_DEFAULTS.brandFontFamily),
-    [partnerData?.brandFontFamily]
-  );
-
   const offerVariant = useMemo(
     () =>
       getOfferButtonVariant(
@@ -73,6 +60,12 @@ export default function SettingsModule({ partner, onOpenDelivery, onOpenBranding
       ),
     [partnerData?.brandOfferButtonStyle]
   );
+  const minimumPaymentAmount = Number(partnerData?.minimumPaymentAmount || 0);
+  const buttonConfig = useMemo(
+    () => normalizeStorefrontButtonConfig(partnerData?.storefrontButtonConfig),
+    [partnerData?.storefrontButtonConfig]
+  );
+  const visibleButtonCount = Object.values(buttonConfig).filter(Boolean).length;
 
   return (
     <section className="bo-settingsShell">
@@ -83,7 +76,7 @@ export default function SettingsModule({ partner, onOpenDelivery, onOpenBranding
             <h2 className="bo-settingsTitle">Capa global del partner</h2>
             <p className="bo-settingsHint">
               Este modulo padre resume como estamos configurando el motor del partner.
-              Desde aqui entramos a los hijos de entregas y personalizacion.
+              Desde aqui entramos a policies, entregas y personalizacion.
             </p>
           </div>
           <div className="bo-settingsStoreChip">
@@ -92,6 +85,35 @@ export default function SettingsModule({ partner, onOpenDelivery, onOpenBranding
         </div>
 
         <div className="bo-settingsOverviewGrid">
+          <article className="bo-settingsSummaryCard">
+            <div className="bo-settingsSummaryTop">
+              <div>
+                <div className="bo-settingsEyebrow">Policies</div>
+                <h3 className="bo-settingsSectionTitle">Politicas de empresa</h3>
+              </div>
+              <button
+                type="button"
+                className="bo-settingsMiniCta"
+                onClick={onOpenPolicies}
+              >
+                Abrir
+              </button>
+            </div>
+
+            <div className="bo-settingsMetricRow">
+              <span>Pago minimo</span>
+              <strong>
+                {minimumPaymentAmount > 0
+                  ? formatCurrency(minimumPaymentAmount)
+                  : "Sin minimo"}
+              </strong>
+            </div>
+            <p className="bo-settingsCardHint">
+              Centraliza el pago minimo, logo e identidad base sin abrir
+              controles libres de color por boton.
+            </p>
+          </article>
+
           <article className="bo-settingsSummaryCard">
             <div className="bo-settingsSummaryTop">
               <div>
@@ -132,7 +154,7 @@ export default function SettingsModule({ partner, onOpenDelivery, onOpenBranding
             <div className="bo-settingsSummaryTop">
               <div>
                 <div className="bo-settingsEyebrow">Personalizacion</div>
-                <h3 className="bo-settingsSectionTitle">Marca y look del motor</h3>
+                <h3 className="bo-settingsSectionTitle">Botones y modos</h3>
               </div>
               <button
                 type="button"
@@ -143,37 +165,21 @@ export default function SettingsModule({ partner, onOpenDelivery, onOpenBranding
               </button>
             </div>
 
-            <div className="bo-brandingPreview">
-              <div className="bo-brandingPreviewLogo">
-                {partnerData?.brandLogoUrl ? (
-                  <img src={partnerData.brandLogoUrl} alt={partnerData?.name || "Partner"} />
-                ) : (
-                  <span>Sin logo</span>
-                )}
-              </div>
-
-              <div className="bo-brandingPreviewMeta">
-                <strong style={{ fontFamily: brandFont.family }}>{brandFont.label}</strong>
-                <span className={`sf-offersBtn bo-brandingPreviewOffer ${offerVariant.className}`}>
-                  <span className="sf-offersBtnLabel">{offerVariant.label}</span>
-                </span>
-              </div>
-
-              <div className="bo-brandingSwatches">
-                {brandingPalette.map((color) => (
-                  <span
-                    key={color}
-                    className="bo-brandingSwatch"
-                    style={{ background: color }}
-                    title={color}
-                  />
-                ))}
-              </div>
+            <div className="bo-settingsMetricRow">
+              <span>Botones visibles</span>
+              <strong>
+                {visibleButtonCount}/{STOREFRONT_BUTTON_ITEMS.length}
+              </strong>
+            </div>
+            <div className="bo-settingsMetricRow">
+              <span>Boton cupones</span>
+              <strong>{offerVariant.name}</strong>
             </div>
 
             <p className="bo-settingsCardHint">
-              Aqui controlaremos logo y paleta base para que cada motor tenga identidad
-              propia antes de entrar a la construccion grafica.
+              Activa u oculta llamadas, reservas, programar, Pay Now, cupones,
+              Boost y el resto de botones. Los modos cambian el aspecto general
+              desde opciones cerradas de Volta.
             </p>
           </article>
         </div>

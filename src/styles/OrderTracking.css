@@ -137,6 +137,21 @@
   font-size: 20px;
 }
 
+.ot-boostBtn {
+  min-height: 42px;
+  justify-self: start;
+  border: 0;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #ffb61c, #ff2f74 58%, #3b008b);
+  color: #fff;
+  padding: 0 16px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 1000;
+  cursor: pointer;
+  box-shadow: 0 12px 28px rgba(154, 23, 77, 0.2);
+}
+
 .ot-btn {
   min-height: 46px;
   display: inline-grid;
@@ -163,21 +178,187 @@
   cursor: wait;
 }
 
-.ot-banner {
-  overflow: hidden;
+.ot-nextStep {
+  display: grid;
+  gap: 7px;
+  border: 1px solid rgba(255, 182, 28, 0.34);
   border-radius: 8px;
-  background: #f3f4f6;
+  background:
+    radial-gradient(circle at 8% 20%, rgba(255, 182, 28, 0.2), transparent 34%),
+    linear-gradient(135deg, #fff8dc, #fff);
+  padding: 14px;
 }
 
-.ot-banner img {
-  display: block;
-  width: 100%;
-  max-height: 160px;
-  object-fit: cover;
+.ot-nextStep span {
+  color: #9a174d;
+  font-size: 12px;
+  font-weight: 1000;
+  text-transform: uppercase;
+}
+
+.ot-nextStep h2 {
+  margin: 0;
+  color: #141018;
+  font-size: 20px;
+  letter-spacing: 0;
+}
+
+.ot-nextStep p {
+  margin: 0;
+  color: #5f6674;
+  font-size: 14px;
+  font-weight: 750;
+  line-height: 1.45;
 }
 
 .ot-error h1 {
   margin: 0;
   color: #9a174d;
   font-size: 28px;
+}
+
+.ot-modalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: grid;
+  place-items: center;
+  background: rgba(13, 8, 24, 0.54);
+  padding: 18px;
+}
+
+.ot-boostModal {
+  width: min(460px, 100%);
+  display: grid;
+  gap: 16px;
+  border: 1px solid rgba(255, 182, 28, 0.28);
+  border-radius: 8px;
+  background: #fff;
+  color: #141018;
+  padding: clamp(18px, 5vw, 26px);
+  box-shadow: 0 24px 70px rgba(13, 8, 24, 0.34);
+}
+
+.ot-modalHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.ot-modalHead span {
+  color: #6a3df0;
+  font-size: 12px;
+  font-weight: 1000;
+  text-transform: uppercase;
+}
+
+.ot-modalHead h2 {
+  margin: 4px 0 0;
+  color: #111;
+  font-size: 28px;
+  line-height: 1;
+}
+
+.ot-modalHead button {
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(59, 0, 139, 0.14);
+  border-radius: 50%;
+  background: #fff;
+  color: #111;
+  font: inherit;
+  font-weight: 1000;
+  cursor: pointer;
+}
+
+.ot-boostCurrent,
+.ot-boostQuote {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 4px 12px;
+  border-radius: 8px;
+  background: #f7f4ff;
+  padding: 13px 14px;
+}
+
+.ot-boostCurrent span,
+.ot-boostQuote span {
+  color: #5f6674;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.ot-boostCurrent strong,
+.ot-boostQuote strong {
+  color: #3b008b;
+  font-size: 24px;
+  font-weight: 1000;
+}
+
+.ot-boostCurrent small {
+  grid-column: 1 / -1;
+  color: #5f6674;
+  font-weight: 800;
+}
+
+.ot-boostOptions {
+  display: grid;
+  gap: 8px;
+}
+
+.ot-boostOptions button {
+  display: grid;
+  gap: 3px;
+  border: 1px solid rgba(59, 0, 139, 0.14);
+  border-radius: 8px;
+  background: #fff;
+  color: #141018;
+  padding: 12px 14px;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+
+.ot-boostOptions button.active {
+  border-color: rgba(255, 182, 28, 0.72);
+  background: #fff8dc;
+  box-shadow: inset 0 0 0 2px rgba(255, 182, 28, 0.24);
+}
+
+.ot-boostOptions span {
+  color: #141018;
+  font-weight: 1000;
+}
+
+.ot-boostOptions small,
+.ot-boostEmpty {
+  color: #5f6674;
+  font-weight: 800;
+}
+
+.ot-boostEmpty,
+.ot-boostMessage {
+  border-radius: 8px;
+  background: #f7f4ff;
+  padding: 12px 14px;
+}
+
+.ot-boostMessage {
+  color: #3b008b;
+  font-weight: 900;
+}
+
+.ot-modalActions {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: 10px;
+}
+
+@media (max-width: 560px) {
+  .ot-modalActions {
+    grid-template-columns: 1fr;
+  }
 }

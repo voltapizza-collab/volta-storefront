@@ -1558,6 +1558,9 @@ export default function StorePage() {
   const [tick, setTick] = useState(false);
   const tabsScrollerRef = useRef(null);
   const tabsAutoPauseUntilRef = useRef(0);
+  const tabsScrollRafRef = useRef(0);
+  const tabsScrollOriginRef = useRef("");
+  const ignoreTabsScrollUntilRef = useRef(0);
   const gridSwipeRef = useRef(null);
   const suppressGridClickUntilRef = useRef(0);
   const incentiveZeroRefreshRef = useRef(false);
@@ -2113,6 +2116,62 @@ export default function StorePage() {
     [activeTab, isProductSearchActive, selectStorefrontTab, tabs]
   );
 
+  const syncActiveTabFromTabsScroll = useCallback(() => {
+    const scroller = tabsScrollerRef.current;
+    if (!scroller || isProductSearchActive || !categoryTabs.length) return;
+
+    const categoryButtons = Array.from(
+      scroller.querySelectorAll(".lsf-categoryTabs .lsf-tab--category")
+    );
+    if (!categoryButtons.length) return;
+
+    const segment = scroller.querySelector(".lsf-segmentTabs");
+    const segmentRect = segment?.getBoundingClientRect();
+    const scrollerRect = scroller.getBoundingClientRect();
+    const markerX = Math.min(
+      scrollerRect.right - 24,
+      Math.max(scrollerRect.left, segmentRect ? segmentRect.right + 8 : scrollerRect.left + 8)
+    );
+
+    let closestButton = categoryButtons[0];
+    let closestDistance = Number.POSITIVE_INFINITY;
+
+    categoryButtons.forEach((button) => {
+      const rect = button.getBoundingClientRect();
+      if (rect.right < scrollerRect.left || rect.left > scrollerRect.right) return;
+
+      const distance =
+        rect.left <= markerX && rect.right >= markerX
+          ? 0
+          : Math.abs(rect.left - markerX);
+
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closestButton = button;
+      }
+    });
+
+    const nextTabId = closestButton?.dataset?.tabId;
+    if (!nextTabId) return;
+
+    tabsScrollOriginRef.current = "scroll";
+    setActiveTab((current) => (current === nextTabId ? current : nextTabId));
+  }, [categoryTabs.length, isProductSearchActive]);
+
+  const handleTabsScroll = useCallback(() => {
+    pauseTabsTicker(6200);
+    if (performance.now() < ignoreTabsScrollUntilRef.current) return;
+
+    if (tabsScrollRafRef.current) {
+      window.cancelAnimationFrame(tabsScrollRafRef.current);
+    }
+
+    tabsScrollRafRef.current = window.requestAnimationFrame(() => {
+      tabsScrollRafRef.current = 0;
+      syncActiveTabFromTabsScroll();
+    });
+  }, [pauseTabsTicker, syncActiveTabFromTabsScroll]);
+
   const handleGridPointerDown = useCallback((event) => {
     if (event.pointerType === "mouse" && event.button !== 0) return;
     if (event.target?.closest?.("button, a, input, textarea, select")) return;
@@ -2263,9 +2322,15 @@ export default function StorePage() {
     const scroller = tabsScrollerRef.current;
     if (!scroller || !activeTab) return;
 
+    if (tabsScrollOriginRef.current === "scroll") {
+      tabsScrollOriginRef.current = "";
+      return;
+    }
+
     const escapedActiveTab =
       window.CSS?.escape?.(activeTab) || String(activeTab).replace(/"/g, '\\"');
     const activeButton = scroller.querySelector(`[data-tab-id="${escapedActiveTab}"]`);
+    ignoreTabsScrollUntilRef.current = performance.now() + 520;
     activeButton?.scrollIntoView?.({
       behavior: "smooth",
       block: "nearest",
@@ -4369,37 +4434,108 @@ export default function StorePage() {
     );
   }
 
+  const renderStoreInfoTicker = () => (
+    <span
+      className="sf-engineUtilityPill sf-lsfStoreTicker"
+      aria-label={`${partner?.name || store.storeName}, ${store?.city || "Ciudad"}, ${store.storeName}`}
+      data-mobile-label={`${store?.city || "Ciudad"} - ${store.storeName}`}
+    >
+      <span className="sf-engineUtilityPillTicker">
+        <span className="sf-engineUtilityPillTrack">
+          <span className="sf-engineUtilityPillLine">
+            {partner?.name || store.storeName}
+          </span>
+          <span className="sf-engineUtilityPillLine">
+            {store?.city || "Ciudad"}
+          </span>
+          <span className="sf-engineUtilityPillLine">
+            <span className="sf-engineUtilityPillInline">
+              <CountryFlag countryCode={partner?.country} />
+              <span>{store.storeName}</span>
+            </span>
+          </span>
+        </span>
+      </span>
+    </span>
+  );
+
+  // eslint-disable-next-line no-unused-vars
+  const renderScheduleButton = () =>
+    isStorefrontButtonVisible("scheduleOrder") ? (
+      <button
+        type="button"
+        className={`lsf-schedulebtn ${scheduledOrderLabel ? "has-schedule" : ""}`}
+        onClick={() => setScheduleOpen(true)}
+        title={scheduledOrderLabel || "Programar pedido"}
+      >
+        <span className="lsf-schedulebtn__icon" aria-hidden="true">â±</span>
+        <span className="lsf-schedulebtn__text">{scheduledOrderLabel || "Programar"}</span>
+      </button>
+    ) : null;
+
+  // eslint-disable-next-line no-unused-vars
+  const renderCartButton = () => (
+    <button
+      type="button"
+      className={`lsf-cartbtn ${cartCount > 0 ? "is-active" : ""}`}
+      onClick={() => setCartOpen(true)}
+      aria-label="Abrir carrito"
+    >
+      <span className="lsf-cartbtn__icon" aria-hidden="true">
+        <svg viewBox="0 0 64 64" focusable="false">
+          <path d="M8 9h9.2l5.5 28.2c.8 4.1 4.4 7 8.6 7h17.8c3.9 0 7.4-2.5 8.5-6.3l5.4-18.1c.8-2.7-1.2-5.4-4-5.4H22.4l-1.2-6.1C20.8 6.4 19.2 5 17.3 5H8a4 4 0 0 0 0 8Z" />
+          <path d="M29 58a6 6 0 1 0 0-12 6 6 0 0 0 0 12Zm22 0a6 6 0 1 0 0-12 6 6 0 0 0 0 12Z" />
+        </svg>
+      </span>
+      <span className="lsf-cartbtn__count">{cartCount}</span>
+      <span className="lsf-cartbtn__total">â‚¬{cartTotal.toFixed(2)}</span>
+    </button>
+  );
+
+  const renderScheduleButtonSafe = () =>
+    isStorefrontButtonVisible("scheduleOrder") ? (
+      <button
+        type="button"
+        className={`lsf-schedulebtn ${scheduledOrderLabel ? "has-schedule" : ""}`}
+        onClick={() => setScheduleOpen(true)}
+        title={scheduledOrderLabel || "Programar pedido"}
+      >
+        <span className="lsf-schedulebtn__icon" aria-hidden="true">{"\u23F1\uFE0F"}</span>
+        <span className="lsf-schedulebtn__text">{scheduledOrderLabel || "Programar"}</span>
+      </button>
+    ) : null;
+
+  const renderCartButtonSafe = () => (
+    <button
+      type="button"
+      className={`lsf-cartbtn ${cartCount > 0 ? "is-active" : ""}`}
+      onClick={() => setCartOpen(true)}
+      aria-label="Abrir carrito"
+    >
+      <span className="lsf-cartbtn__icon" aria-hidden="true">
+        <svg viewBox="0 0 64 64" focusable="false">
+          <path d="M8 9h9.2l5.5 28.2c.8 4.1 4.4 7 8.6 7h17.8c3.9 0 7.4-2.5 8.5-6.3l5.4-18.1c.8-2.7-1.2-5.4-4-5.4H22.4l-1.2-6.1C20.8 6.4 19.2 5 17.3 5H8a4 4 0 0 0 0 8Z" />
+          <path d="M29 58a6 6 0 1 0 0-12 6 6 0 0 0 0 12Zm22 0a6 6 0 1 0 0-12 6 6 0 0 0 0 12Z" />
+        </svg>
+      </span>
+      <span className="lsf-cartbtn__count">{cartCount}</span>
+      <span className="lsf-cartbtn__total">{"\u20AC"}{cartTotal.toFixed(2)}</span>
+    </button>
+  );
+
   return (
     <div className="sf-shell" style={themeStyle}>
       <div className="sf-wrap sf-menu">
-        <section className="sf-storeHeader">
+        <section className="sf-storeHeader sf-storeHeader--desktop">
+
           {isStorefrontButtonVisible("selectProducts") && (
-            <div className="sf-storeHeaderTitle">Selecciona productos</div>
+            <div className="sf-storeHeaderTitle sf-storeHeaderTitle--desktop">
+              Selecciona productos
+            </div>
           )}
 
           <div className="lsf-top__actions">
-            <span
-              className="sf-engineUtilityPill sf-lsfStoreTicker"
-              aria-label={`${partner?.name || store.storeName}, ${store?.city || "Ciudad"}, ${store.storeName}`}
-              data-mobile-label={`${store?.city || "Ciudad"} - ${store.storeName}`}
-            >
-              <span className="sf-engineUtilityPillTicker">
-                <span className="sf-engineUtilityPillTrack">
-                  <span className="sf-engineUtilityPillLine">
-                    {partner?.name || store.storeName}
-                  </span>
-                  <span className="sf-engineUtilityPillLine">
-                    {store?.city || "Ciudad"}
-                  </span>
-                  <span className="sf-engineUtilityPillLine">
-                    <span className="sf-engineUtilityPillInline">
-                      <CountryFlag countryCode={partner?.country} />
-                      <span>{store.storeName}</span>
-                    </span>
-                  </span>
-                </span>
-              </span>
-            </span>
+            {renderStoreInfoTicker()}
             {isStorefrontButtonVisible("scheduleOrder") && (
               <button
                 type="button"
@@ -4427,10 +4563,26 @@ export default function StorePage() {
               <span className="lsf-cartbtn__count">{cartCount}</span>
               <span className="lsf-cartbtn__total">€{cartTotal.toFixed(2)}</span>
             </button>
+            {renderScheduleButtonSafe()}
+            {renderCartButtonSafe()}
+          </div>
+        </section>
+
+        <section className="sf-storeHeader sf-storeHeader--mobile">
+          {renderStoreInfoTicker()}
+          <div className="lsf-top__actions">
+            {renderScheduleButtonSafe()}
+            {renderCartButtonSafe()}
           </div>
         </section>
 
         <section className="sf-lsfSurface lsf-wrapper lsf-mobile">
+          {isStorefrontButtonVisible("selectProducts") && (
+            <div className="sf-storeHeaderTitle sf-storeHeaderTitle--mobileSeparator">
+              Selecciona productos
+            </div>
+          )}
+
           <div className="sf-lsfActionSearchLine">
             {isStorefrontButtonVisible("coupons") && (
               <button
@@ -4570,7 +4722,10 @@ export default function StorePage() {
                 <span className="sf-incentiveEyebrow">
                   {incentiveEyebrow}
                 </span>
-                <strong>{incentiveMessage}</strong>
+                <strong className="sf-incentiveMessageTicker">
+                  <span>{incentiveMessage}</span>
+                  <span aria-hidden="true">{incentiveMessage}</span>
+                </strong>
               </div>
               {!incentiveUnlocked && (
                 <div className="sf-incentiveSignal" aria-label="Estado del incentivo">
@@ -4582,7 +4737,10 @@ export default function StorePage() {
             {incentiveUnlocked ? (
               <div className="sf-incentiveRewardStage" aria-label="Incentivo desbloqueado">
                 <span>Felicidades</span>
-                <strong>{incentiveRewardLabel} listo para este pedido</strong>
+                <strong>
+                  {incentiveRewardLabel}
+                  <span className="sf-incentiveRewardDesktopSuffix"> listo para este pedido</span>
+                </strong>
                 <span>Volta reward</span>
               </div>
             ) : activeIncentive ? (
@@ -4615,6 +4773,7 @@ export default function StorePage() {
             aria-label="Categorias del menu"
             onPointerDown={() => pauseTabsTicker(6200)}
             onWheel={() => pauseTabsTicker(6200)}
+            onScroll={handleTabsScroll}
           >
             <div
               className={`lsf-segmentTabs is-count-${commercialTabs.length}`}

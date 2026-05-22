@@ -1905,6 +1905,21 @@
   letter-spacing: 0.03em;
 }
 
+.sf-incentiveRewardStage .sf-incentiveRewardDesktopSuffix {
+  display: inline;
+  position: static;
+  z-index: auto;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  line-height: inherit;
+  text-transform: inherit;
+  letter-spacing: inherit;
+  white-space: inherit;
+}
+
 @keyframes sfIncentiveSweep {
   0% {
     transform: translateX(-120%);
@@ -6610,6 +6625,28 @@
   box-shadow: 0 10px 18px rgba(58, 34, 19, 0.06);
 }
 
+.sf-storeHeader--mobile,
+.sf-storeHeaderTitle--mobileSeparator {
+  display: none;
+}
+
+.sf-menu > .sf-storeHeaderTitle--mobileSeparator {
+  grid-area: auto;
+  grid-column: 1 / -1;
+}
+
+.sf-incentiveMessageTicker span[aria-hidden="true"] {
+  display: none;
+}
+
+.sf-incentiveRewardDesktopSuffix {
+  display: inline;
+}
+
+.sf-storeHeader--desktop .lsf-top__actions > button:nth-of-type(-n + 2) {
+  display: none;
+}
+
 .sf-lsfSurface {
   position: sticky;
   top: 86px;
@@ -8744,37 +8781,50 @@
   }
 
   .sf-storeHeader {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(88px, 0.82fr) minmax(0, 1fr) minmax(98px, 0.88fr);
+    grid-template-areas:
+      "schedule info cart";
     gap: 8px;
     padding: 8px 2px 10px;
-    margin-bottom: 12px;
+    margin-bottom: 4px;
+  }
+
+  .sf-storeHeader--desktop {
+    display: none;
+  }
+
+  .sf-storeHeader--mobile {
+    display: grid;
+  }
+
+  .sf-storeHeaderTitle--mobileSeparator {
+    display: block;
+    width: 100%;
+    margin: -3px 0 8px;
+    padding: 0 2px 2px;
   }
 
   .sf-storeHeaderTitle {
     width: 100%;
     font-size: clamp(1.15rem, 7vw, 1.62rem);
     line-height: 1.02;
-    text-align: left;
+    text-align: center;
     white-space: normal;
     text-wrap: balance;
   }
 
   .lsf-top__actions {
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px;
+    display: contents;
   }
 
   .sf-lsfStoreTicker {
-    grid-column: 1 / -1;
     width: 100%;
     min-width: 0;
-    min-height: 44px;
-    height: 44px;
-    justify-content: flex-end;
-    font-size: 0.88rem;
-    padding-right: 8px;
+    min-height: 36px;
+    height: 36px;
+    justify-content: center;
+    font-size: 0.7rem;
+    padding: 0 8px;
   }
 
   .lsf-top__actions .lsf-schedulebtn,
@@ -9268,22 +9318,36 @@
   .sf-storeHeader {
     position: relative;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 124px;
+    grid-template-columns: minmax(78px, 0.82fr) minmax(0, 1fr) minmax(90px, 0.88fr);
     grid-template-areas:
-      "title cart"
-      "ticker schedule";
+      "schedule info cart";
     column-gap: 8px;
     row-gap: 5px;
     align-items: center;
     justify-items: stretch;
     padding: 2px 0 2px;
-    margin-bottom: 3px;
+    margin-bottom: 2px;
+  }
+
+  .sf-storeHeader--desktop {
+    display: none;
+  }
+
+  .sf-storeHeader--mobile {
+    display: grid;
+  }
+
+  .sf-storeHeaderTitle--mobileSeparator {
+    display: block;
+    width: 100%;
+    margin: -2px 0 7px;
+    padding: 0 0 2px;
   }
 
   .sf-storeHeaderTitle {
     grid-area: title;
     min-width: 0;
-    justify-self: start;
+    justify-self: stretch;
     padding-right: 0;
     color: #4285f4;
     font-family: "Bungee Shade", Impact, "Arial Black", sans-serif;
@@ -9292,7 +9356,7 @@
     font-weight: 1000;
     line-height: 0.96;
     letter-spacing: 0;
-    text-align: left;
+    text-align: center;
     text-transform: uppercase;
     white-space: nowrap;
     text-shadow:
@@ -9314,16 +9378,16 @@
   }
 
   .sf-lsfStoreTicker {
-    grid-area: ticker;
+    grid-area: info;
     min-height: 38px;
     height: 38px;
-    padding: 0 12px;
+    padding: 0 8px;
     border-radius: 16px;
-    justify-content: flex-start;
+    justify-content: center;
     background:
       linear-gradient(135deg, rgba(255, 182, 28, 0.22), rgba(106, 61, 240, 0.08)),
       #fff;
-    text-align: left;
+    text-align: center;
   }
 
   .sf-lsfStoreTicker::before {
@@ -9342,7 +9406,7 @@
     display: grid;
     width: 100%;
     gap: 0.22rem;
-    justify-items: start;
+    justify-items: center;
     line-height: 1.2rem;
     animation: sfStoreTickerMobile 6.8s ease-in-out infinite;
   }
@@ -9352,11 +9416,11 @@
     width: 100%;
     overflow: hidden;
     color: #251044;
-    font-size: 0.69rem;
+    font-size: 0.62rem;
     font-weight: 1000;
     letter-spacing: 0.02em;
     line-height: 1.2rem;
-    text-align: left;
+    text-align: center;
     text-overflow: ellipsis;
     text-shadow: 0 1px 0 #ffffff;
     text-transform: uppercase;
@@ -9500,8 +9564,12 @@
   }
 
   .sf-engineSearchRow--lsf .sf-engineSearchWrap {
-    grid-template-columns: minmax(0, 1fr) 38px 38px;
+    grid-template-columns: minmax(0, 1fr) 38px;
     border-radius: 16px;
+  }
+
+  .sf-engineSearchRow--lsf .sf-imageSearchBtn {
+    display: none;
   }
 
   .sf-engineSearchRow--lsf .sf-engineSearch,
@@ -9514,7 +9582,7 @@
 
   .sf-engineSearchTicker {
     left: 13px;
-    right: 80px;
+    right: 44px;
     font-size: 0.74rem;
   }
 
@@ -9591,45 +9659,143 @@
   }
 
   .sf-incentiveBanner--lsf {
-    margin: 8px 0 6px;
-    padding: 11px 12px;
+    margin: 5px 0 5px;
+    padding: 9px 10px 10px;
     border-radius: 16px;
+    gap: 7px;
   }
 
-  .sf-incentiveCopy strong {
-    font-size: 0.82rem;
-    line-height: 1.2;
+  .sf-incentiveBanner--lsf.is-complete {
+    min-height: 90px;
+    align-content: center;
+  }
+
+  .sf-incentiveBanner--lsf.is-complete .sf-incentiveHead {
+    display: none;
+  }
+
+  .sf-incentiveHead {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "label timer"
+      "message message";
+    align-items: start;
+    column-gap: 7px;
+    row-gap: 4px;
+  }
+
+  .sf-incentiveCopy {
+    display: contents;
+  }
+
+  .sf-incentiveEyebrow {
+    grid-area: label;
+    align-self: center;
+    display: block;
+    font-size: 0.68rem;
+    line-height: 1.05;
+  }
+
+  .sf-incentiveMessageTicker {
+    grid-area: message;
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    overflow: hidden;
+    gap: 28px;
+    font-size: 0.76rem;
+    line-height: 1.12;
+    white-space: nowrap;
+  }
+
+  .sf-incentiveMessageTicker span {
+    display: inline-block;
+    min-width: max-content;
+    animation: sfIncentiveMessageMarquee 13s linear infinite;
+  }
+
+  .sf-incentiveMessageTicker span[aria-hidden="true"] {
+    display: inline-block;
+  }
+
+  .sf-incentiveSignal {
+    grid-area: timer;
+    justify-self: end;
   }
 
   .sf-incentiveTimer {
     width: fit-content;
     max-width: 100%;
     min-width: 0;
-    padding: 8px 10px;
-    font-size: 0.7rem;
+    padding: 6px 8px;
+    font-size: 0.62rem;
+  }
+
+  @keyframes sfIncentiveMessageMarquee {
+    0%,
+    14% {
+      transform: translateX(0);
+    }
+    86%,
+    100% {
+      transform: translateX(calc(-100% - 28px));
+    }
+  }
+
+  .sf-incentiveProgressTrack {
+    height: 18px;
+  }
+
+  .sf-incentiveProgressMarker {
+    min-width: 34px;
+    padding: 3px 6px;
+    font-size: 0.64rem;
+  }
+
+  .sf-incentiveBanner--lsf.is-complete .sf-incentiveRewardStage {
+    min-height: 48px;
+    grid-template-columns: 1fr;
+    justify-items: center;
+    padding: 8px 12px;
+    border-radius: 14px;
+  }
+
+  .sf-incentiveBanner--lsf.is-complete .sf-incentiveRewardStage > span {
+    display: none;
+  }
+
+  .sf-incentiveBanner--lsf.is-complete .sf-incentiveRewardStage strong {
+    font-size: 0.9rem;
+    line-height: 1.12;
+  }
+
+  .sf-incentiveBanner--lsf.is-complete .sf-incentiveRewardDesktopSuffix {
+    display: none;
   }
 
   .lsf-tabs {
     position: relative;
-    gap: 8px;
+    gap: 10px;
     margin-top: 6px;
     padding: 5px 0 3px;
     overflow-x: auto;
-    mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 26px), transparent 100%);
+    mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 24px), transparent 100%);
+    scroll-padding-left: 126px;
   }
 
   .lsf-segmentTabs {
     position: sticky;
     left: 0;
-    z-index: 3;
-    width: 112px;
+    z-index: 5;
+    width: 118px;
     height: 40px;
     display: grid;
     grid-auto-flow: row;
     grid-auto-rows: 40px;
     align-items: stretch;
     gap: 0;
-    flex: 0 0 112px;
+    flex: 0 0 118px;
     overflow: hidden;
     padding: 0;
     border: 1px solid rgba(255, 0, 92, 0.28);
@@ -9638,7 +9804,7 @@
       radial-gradient(circle at 12% 50%, rgba(255, 255, 255, 0.32), transparent 34%),
       linear-gradient(135deg, #ff005c 0%, #ff7a00 100%);
     box-shadow:
-      9px 0 14px rgba(255, 250, 241, 0.92),
+      12px 0 18px rgba(255, 250, 241, 0.96),
       0 10px 22px rgba(249, 38, 114, 0.18),
       inset 0 1px 0 rgba(255, 255, 255, 0.42);
   }
@@ -9650,7 +9816,7 @@
   .lsf-categoryTabs {
     position: relative;
     z-index: 1;
-    padding-left: 0;
+    padding-left: 4px;
     border-left: 0;
   }
 
@@ -9665,10 +9831,16 @@
     width: 100%;
     min-height: 40px;
     height: 40px;
+    padding: 4px 8px;
     border: 0;
     border-radius: 0;
     background: transparent;
     color: #fff;
+    font-family: Impact, "Arial Black", "Avenir Next", sans-serif;
+    font-size: 0.84rem;
+    font-weight: 1000;
+    letter-spacing: 0.01em;
+    line-height: 0.95;
     text-shadow: 0 1px 0 rgba(18, 0, 25, 0.34);
     transform: translateY(0);
     animation: lsfMobileSegmentTicker 8.8s ease-in-out infinite;

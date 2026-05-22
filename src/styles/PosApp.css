@@ -142,8 +142,11 @@
   right: auto;
   width: 30px;
   height: 30px;
-  display: grid;
-  place-items: center;
+  flex: 0 0 30px;
+  display: inline-grid;
+  place-content: center;
+  align-items: center;
+  justify-items: center;
   border: 1px solid rgba(255, 255, 255, 0.28);
   border-radius: 50%;
   background: rgba(23, 23, 23, 0.18);
@@ -162,10 +165,14 @@
 
 .pos-menuBtn::before {
   content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
   width: 13px;
   height: 2px;
   border-radius: 999px;
   background: #fff;
+  transform: translate(-50%, -50%);
   box-shadow:
     0 -5px 0 #fff,
     0 5px 0 #fff;
@@ -177,7 +184,12 @@
 
 .pos-logoutPill {
   position: static;
+  height: 30px;
   min-height: 30px;
+  display: inline-grid;
+  place-items: center;
+  align-items: center;
+  justify-items: center;
   border: 0;
   border-radius: 999px;
   background: var(--pos-pink);
@@ -186,6 +198,7 @@
   font: inherit;
   font-size: 11px;
   font-weight: 900;
+  line-height: 1;
   cursor: pointer;
   z-index: 2;
 }
@@ -351,7 +364,9 @@
 .pos-topActions {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
+  height: 34px;
   padding-right: 10px;
   margin-right: 4px;
   border-right: 1px solid rgba(255, 255, 255, 0.32);
@@ -525,30 +540,156 @@
 }
 
 .pos-syncChip {
-  border: 0;
+  border: 1px solid rgba(255, 255, 255, 0.36);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   font: inherit;
   font-weight: 900;
   cursor: pointer;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0 18%, transparent 19% 100%),
+    linear-gradient(180deg, rgba(16, 185, 129, 0.28), rgba(16, 185, 129, 0.08)),
+    rgba(13, 8, 24, 0.64);
+  color: #fff;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.42),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.42),
+    0 0 0 1px rgba(16, 185, 129, 0.24),
+    0 7px 18px rgba(13, 8, 24, 0.24);
+  transform: translateY(0);
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    background 0.12s ease;
 }
 
-.pos-syncChip:disabled {
-  cursor: default;
+.pos-syncChip::before {
+  content: "";
+  position: absolute;
+  inset: 2px 8px 2px 34px;
+  z-index: 0;
+  border-radius: 999px;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.16) 0 2px,
+      transparent 2px 5px
+    );
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.pos-syncChip:hover,
+.pos-syncChip:focus-visible {
+  transform: translateY(-1px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.52),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.42),
+    0 0 0 2px rgba(255, 255, 255, 0.16),
+    0 0 18px rgba(16, 185, 129, 0.28),
+    0 10px 22px rgba(13, 8, 24, 0.28);
+}
+
+.pos-syncChip:active {
+  transform: translateY(2px) scale(0.98);
+  box-shadow:
+    inset 0 2px 6px rgba(0, 0, 0, 0.38),
+    0 3px 10px rgba(13, 8, 24, 0.18);
+}
+
+.pos-syncChip--stale,
+.pos-syncChip--checking {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.38) 0 20%, transparent 21% 100%),
+    linear-gradient(180deg, rgba(255, 216, 77, 0.96), rgba(217, 119, 6, 0.92));
+  border-color: rgba(255, 250, 214, 0.72);
+  color: #2a174d;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.56),
+    inset 0 -1px 0 rgba(120, 53, 15, 0.3),
+    0 0 0 1px rgba(255, 216, 77, 0.32),
+    0 0 18px rgba(255, 216, 77, 0.26),
+    0 8px 18px rgba(13, 8, 24, 0.22);
+}
+
+.pos-syncChip--stale .pos-chipText,
+.pos-syncChip--checking .pos-chipText {
+  color: #2a174d;
+}
+
+.pos-syncChip--offline {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.32) 0 20%, transparent 21% 100%),
+    linear-gradient(180deg, #fb7185, #be123c);
+  border-color: rgba(255, 228, 230, 0.62);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.46),
+    inset 0 -1px 0 rgba(76, 5, 25, 0.34),
+    0 0 0 1px rgba(244, 63, 94, 0.3),
+    0 0 18px rgba(244, 63, 94, 0.28),
+    0 8px 18px rgba(13, 8, 24, 0.22);
+}
+
+.pos-syncChip::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 -34px;
+  z-index: 0;
+  width: 30px;
+  transform: skewX(-22deg);
+  background: rgba(255, 255, 255, 0.32);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.pos-syncChip:hover::after,
+.pos-syncChip.is-syncing::after {
+  animation: posSyncSweep 1.1s ease-in-out infinite;
 }
 
 .pos-syncChip .pos-signalDot {
-  background: #16a34a;
-  box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.18);
+  position: relative;
+  z-index: 1;
+  width: 10px;
+  height: 10px;
+  color: #34d399;
+  background: #34d399;
+  box-shadow:
+    0 0 0 3px rgba(52, 211, 153, 0.2),
+    0 0 12px rgba(52, 211, 153, 0.72);
+}
+
+.pos-syncChip .pos-signalDot::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  opacity: 0.2;
+  animation: posSyncRing 1.7s ease-out infinite;
 }
 
 .pos-syncChip--stale .pos-signalDot,
 .pos-syncChip--checking .pos-signalDot {
-  background: var(--pos-brand-2);
-  box-shadow: 0 0 0 4px rgba(255, 182, 28, 0.22);
+  background: #fff;
+  color: #fff;
+  box-shadow:
+    0 0 0 3px rgba(255, 255, 255, 0.28),
+    0 0 14px rgba(255, 255, 255, 0.86);
 }
 
 .pos-syncChip--offline .pos-signalDot {
-  background: #ef4444;
-  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.22);
+  background: #fff;
+  color: #fff;
+  box-shadow:
+    0 0 0 3px rgba(255, 255, 255, 0.24),
+    0 0 14px rgba(255, 255, 255, 0.8);
+}
+
+.pos-syncChip .pos-chipText {
+  position: relative;
+  z-index: 1;
 }
 
 .pos-syncChip.is-syncing .pos-signalDot {
@@ -570,6 +711,31 @@
     transform: scale(0.85);
     background: var(--pos-brand-2);
     box-shadow: 0 0 0 2px rgba(255, 182, 28, 0.2);
+  }
+}
+
+@keyframes posSyncSweep {
+  0% {
+    opacity: 0;
+    transform: translateX(0) skewX(-22deg);
+  }
+  18% {
+    opacity: 0.65;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(130px) skewX(-22deg);
+  }
+}
+
+@keyframes posSyncRing {
+  0% {
+    transform: scale(0.62);
+    opacity: 0.36;
+  }
+  100% {
+    transform: scale(1.7);
+    opacity: 0;
   }
 }
 
@@ -1703,7 +1869,8 @@
   padding-top: 8px;
 }
 
-.pos-ticketBlock span {
+.pos-ticketBlock span,
+.pos-ticketItems > span {
   display: block;
   color: #697386;
   font-size: 11px;
@@ -1736,6 +1903,33 @@
 
 .pos-ticketBlock--vip span,
 .pos-ticketBlock--vip strong {
+  color: var(--pos-brand-1);
+}
+
+.pos-ticketBlock--priority {
+  border-radius: 6px;
+  padding-left: 8px;
+}
+
+.pos-ticketBlock--priority-normal {
+  box-shadow: inset 3px 0 0 #c7ced9;
+}
+
+.pos-ticketBlock--priority-boost {
+  box-shadow: inset 3px 0 0 #f59e0b;
+}
+
+.pos-ticketBlock--priority-boost span,
+.pos-ticketBlock--priority-boost strong {
+  color: #92400e;
+}
+
+.pos-ticketBlock--priority-vip {
+  box-shadow: inset 3px 0 0 var(--pos-brand-1);
+}
+
+.pos-ticketBlock--priority-vip span,
+.pos-ticketBlock--priority-vip strong {
   color: var(--pos-brand-1);
 }
 
@@ -2393,10 +2587,11 @@
   position: absolute;
   top: -5px;
   right: -5px;
-  width: 20px;
+  min-width: 20px;
   height: 20px;
   display: grid;
   place-items: center;
+  padding: 0 5px;
   border-radius: 50%;
   background: #fff;
   color: var(--pos-brand-1);
@@ -2410,6 +2605,35 @@
     inset 0 0 0 1px rgba(255, 255, 255, 0.62),
     0 0 0 4px rgba(255, 216, 77, 0.2),
     0 12px 34px rgba(15, 23, 42, 0.2);
+}
+
+.pos-customerHelpFab.has-unread {
+  animation: posCustomerHelpPulse 1.4s ease-in-out infinite;
+}
+
+.pos-customerHelpFab.has-unread strong {
+  background: #f92672;
+  color: #fff;
+  box-shadow:
+    0 4px 12px rgba(249, 38, 114, 0.3),
+    0 0 0 3px rgba(249, 38, 114, 0.16);
+}
+
+@keyframes posCustomerHelpPulse {
+  0%,
+  100% {
+    transform: translateY(0);
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.55),
+      0 10px 30px rgba(15, 23, 42, 0.18);
+  }
+  50% {
+    transform: translateY(-2px);
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.65),
+      0 0 0 5px rgba(249, 38, 114, 0.16),
+      0 14px 34px rgba(249, 38, 114, 0.24);
+  }
 }
 
 .pos-customerHelpModal {
@@ -2429,6 +2653,15 @@
   font-weight: 1000;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+}
+
+.pos-customerHelpForm label small {
+  color: #697386;
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 0;
+  text-align: right;
+  text-transform: none;
 }
 
 .pos-customerHelpForm select,
@@ -2474,6 +2707,67 @@
   font-weight: 850;
 }
 
+.pos-customerHelpThread {
+  display: grid;
+  gap: 8px;
+  max-height: 220px;
+  overflow: auto;
+  border: 1px solid rgba(59, 0, 139, 0.1);
+  border-radius: 8px;
+  background: #fbfbfc;
+  padding: 10px;
+}
+
+.pos-customerHelpBubble {
+  display: grid;
+  gap: 3px;
+  width: fit-content;
+  max-width: min(92%, 380px);
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+.pos-customerHelpBubble span {
+  font-size: 10px;
+  font-weight: 1000;
+  text-transform: uppercase;
+}
+
+.pos-customerHelpBubble strong {
+  color: inherit;
+  font-size: 13px;
+  line-height: 1.3;
+  white-space: pre-wrap;
+}
+
+.pos-customerHelpBubble.is-operator {
+  justify-self: end;
+  background: #3b008b;
+  color: #fff;
+}
+
+.pos-customerHelpBubble.is-operator span {
+  color: rgba(255, 255, 255, 0.76);
+}
+
+.pos-customerHelpBubble.is-customer {
+  justify-self: start;
+  background: #fff9df;
+  color: #141018;
+  border: 1px solid rgba(255, 216, 77, 0.52);
+}
+
+.pos-customerHelpBubble.is-customer span {
+  color: #92400e;
+}
+
+.pos-customerHelpEmpty {
+  color: #697386;
+  font-size: 12px;
+  font-weight: 850;
+  text-align: center;
+}
+
 .pos-readyConfirmModal {
   display: grid;
   gap: 12px;
@@ -2487,24 +2781,6 @@
   padding: 11px 12px;
   font-size: 13px;
   font-weight: 850;
-}
-
-.pos-customerHelpTemplates {
-  display: grid;
-  gap: 7px;
-}
-
-.pos-customerHelpTemplates button {
-  border: 1px solid rgba(59, 0, 139, 0.12);
-  border-radius: 8px;
-  background: #fbfbfc;
-  color: #3b008b;
-  padding: 9px 10px;
-  font: inherit;
-  font-size: 12px;
-  font-weight: 850;
-  text-align: left;
-  cursor: pointer;
 }
 
 .pos-storePanel {

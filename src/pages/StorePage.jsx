@@ -1055,6 +1055,41 @@ const renderAllergenNotice = (allergens = []) => {
   );
 };
 
+const formatCustomPlacementLabel = (value) => {
+  const raw = String(value || "").toUpperCase();
+  if (raw === "FULL") return "Entera";
+  if (raw === "LEFT") return "Mitad izquierda";
+  if (raw === "RIGHT") return "Mitad derecha";
+  return value ? String(value) : "";
+};
+
+const formatCustomQuantityLabel = (value) => {
+  const raw = String(value || "").toUpperCase();
+  if (raw === "DOUBLE") return "Doble";
+  if (raw === "SIMPLE") return "Simple";
+  return value ? String(value) : "";
+};
+
+const buildCustomIngredientDetail = (ingredient) => {
+  const name = String(ingredient?.name || ingredient?.label || "Ingrediente").trim();
+  const placement =
+    ingredient?.placementLabel || formatCustomPlacementLabel(ingredient?.placement);
+  const quantity =
+    ingredient?.quantityLabel || formatCustomQuantityLabel(ingredient?.quantity);
+  const meta = [placement, quantity].filter(Boolean).join(" - ");
+
+  return {
+    ingredientId: ingredient?.ingredientId ?? ingredient?.id ?? null,
+    name,
+    category: ingredient?.category || "OTROS",
+    placement: ingredient?.placement || "",
+    quantity: ingredient?.quantity || "SIMPLE",
+    placementLabel: placement,
+    quantityLabel: quantity,
+    label: meta ? `${name}: ${meta}` : name,
+  };
+};
+
 const buildPizzaLine = (item) => {
   const ingredients = Array.isArray(item?.ingredients)
     ? item.ingredients.map((ingredient) => capWords(ingredient?.name)).filter(Boolean)
@@ -1199,6 +1234,20 @@ const normalizeCartLine = (line, index = 0) => {
         allergens: Array.isArray(ingredient?.allergens) ? ingredient.allergens : [],
       }))
     : [];
+  const customDetails =
+    line?.customDetails && typeof line.customDetails === "object"
+      ? {
+          ...line.customDetails,
+          ingredients: Array.isArray(line.customDetails.ingredients)
+            ? line.customDetails.ingredients.map(buildCustomIngredientDetail)
+            : ingredients.map(buildCustomIngredientDetail),
+        }
+      : ingredients.length
+      ? {
+          ingredients: ingredients.map(buildCustomIngredientDetail),
+          summary: ingredients.map((ingredient) => buildCustomIngredientDetail(ingredient).label).join(" | "),
+        }
+      : null;
   const extrasTotal = extras.reduce((sum, extra) => sum + num(extra.price), 0);
   const subtotal = num(line?.subtotal) || (price + extrasTotal) * qty;
 
@@ -1223,6 +1272,7 @@ const normalizeCartLine = (line, index = 0) => {
     type,
     image: line?.image || "",
     source,
+    customDetails,
     customMeta: line?.customMeta && typeof line.customMeta === "object" ? line.customMeta : null,
     halfMeta: line?.halfMeta && typeof line.halfMeta === "object" ? line.halfMeta : null,
     incentiveId: line?.incentiveId ?? null,
@@ -1506,6 +1556,10 @@ export default function StorePage() {
   const [incentiveNowMs, setIncentiveNowMs] = useState(() => Date.now());
   const [flippedId, setFlippedId] = useState(null);
   const [tick, setTick] = useState(false);
+  const tabsScrollerRef = useRef(null);
+  const tabsAutoPauseUntilRef = useRef(0);
+  const gridSwipeRef = useRef(null);
+  const suppressGridClickUntilRef = useRef(0);
   const incentiveZeroRefreshRef = useRef(false);
   const dismissedRewardIncentiveIdsRef = useRef(new Set());
   const autoCouponApplyRef = useRef("");
@@ -2032,6 +2086,193 @@ export default function StorePage() {
 
   const activeTabLabel =
     tabs.find((tab) => tab.id === activeTab)?.label || "Trending";
+
+  const pauseTabsTicker = useCallback((durationMs = 5200) => {
+    tabsAutoPauseUntilRef.current = performance.now() + durationMs;
+  }, []);
+
+  const selectStorefrontTab = useCallback(
+    (tabId, pauseDurationMs = 5200) => {
+      pauseTabsTicker(pauseDurationMs);
+      setActiveTab(tabId);
+    },
+    [pauseTabsTicker]
+  );
+
+  const moveStorefrontTab = useCallback(
+    (direction) => {
+      if (isProductSearchActive || tabs.length < 2) return;
+
+      const currentIndex = Math.max(
+        0,
+        tabs.findIndex((tab) => tab.id === activeTab)
+      );
+      const nextIndex = (currentIndex + direction + tabs.length) % tabs.length;
+      selectStorefrontTab(tabs[nextIndex].id, 6400);
+    },
+    [activeTab, isProductSearchActive, selectStorefrontTab, tabs]
+  );
+
+  const handleGridPointerDown = useCallback((event) => {
+    if (event.pointerType === "mouse" && event.button !== 0) return;
+    if (event.target?.closest?.("button, a, input, textarea, select")) return;
+
+    gridSwipeRef.current = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      lastX: event.clientX,
+      startedAt: performance.now(),
+      swiping: false,
+    };
+  }, []);
+
+  const handleGridPointerMove = useCallback(
+    (event) => {
+      const gesture = gridSwipeRef.current;
+      if (!gesture || gesture.pointerId !== event.pointerId) return;
+
+      gesture.lastX = event.clientX;
+      const deltaX = event.clientX - gesture.startX;
+      const deltaY = event.clientY - gesture.startY;
+
+      if (Math.abs(deltaX) > 18 && Math.abs(deltaX) > Math.abs(deltaY) * 1.25) {
+        gesture.swiping = true;
+        pauseTabsTicker(6200);
+      }
+    },
+    [pauseTabsTicker]
+  );
+
+  const handleGridPointerEnd = useCallback(
+    (event) => {
+      const gesture = gridSwipeRef.current;
+      if (!gesture || gesture.pointerId !== event.pointerId) return;
+
+      gridSwipeRef.current = null;
+      const deltaX = event.clientX - gesture.startX;
+      const deltaY = event.clientY - gesture.startY;
+      const elapsed = performance.now() - gesture.startedAt;
+      const isHorizontalSwipe =
+        Math.abs(deltaX) >= 48 &&
+        Math.abs(deltaX) > Math.abs(deltaY) * 1.18 &&
+        elapsed < 900;
+
+      if (!isHorizontalSwipe) return;
+
+      suppressGridClickUntilRef.current = performance.now() + 360;
+      moveStorefrontTab(deltaX < 0 ? 1 : -1);
+    },
+    [moveStorefrontTab]
+  );
+
+  const handleGridClickCapture = useCallback((event) => {
+    if (performance.now() < suppressGridClickUntilRef.current) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  }, []);
+
+  const handleGridTouchStart = useCallback((event) => {
+    if (event.target?.closest?.("button, a, input, textarea, select")) return;
+    const touch = event.touches?.[0];
+    if (!touch) return;
+
+    gridSwipeRef.current = {
+      pointerId: "touch",
+      startX: touch.clientX,
+      startY: touch.clientY,
+      lastX: touch.clientX,
+      startedAt: performance.now(),
+      swiping: false,
+    };
+  }, []);
+
+  const handleGridTouchMove = useCallback(
+    (event) => {
+      const gesture = gridSwipeRef.current;
+      const touch = event.touches?.[0];
+      if (!gesture || gesture.pointerId !== "touch" || !touch) return;
+
+      gesture.lastX = touch.clientX;
+      const deltaX = touch.clientX - gesture.startX;
+      const deltaY = touch.clientY - gesture.startY;
+
+      if (Math.abs(deltaX) > 18 && Math.abs(deltaX) > Math.abs(deltaY) * 1.25) {
+        gesture.swiping = true;
+        pauseTabsTicker(6200);
+      }
+    },
+    [pauseTabsTicker]
+  );
+
+  const handleGridTouchEnd = useCallback(
+    (event) => {
+      const gesture = gridSwipeRef.current;
+      const touch = event.changedTouches?.[0];
+      if (!gesture || gesture.pointerId !== "touch" || !touch) return;
+
+      gridSwipeRef.current = null;
+      const deltaX = touch.clientX - gesture.startX;
+      const deltaY = touch.clientY - gesture.startY;
+      const elapsed = performance.now() - gesture.startedAt;
+      const isHorizontalSwipe =
+        Math.abs(deltaX) >= 48 &&
+        Math.abs(deltaX) > Math.abs(deltaY) * 1.18 &&
+        elapsed < 900;
+
+      if (!isHorizontalSwipe) return;
+
+      suppressGridClickUntilRef.current = performance.now() + 360;
+      moveStorefrontTab(deltaX < 0 ? 1 : -1);
+    },
+    [moveStorefrontTab]
+  );
+
+  useEffect(() => {
+    const scroller = tabsScrollerRef.current;
+    if (!scroller || tabs.length < 5) return undefined;
+
+    let frame = 0;
+    let lastTimestamp = performance.now();
+    tabsAutoPauseUntilRef.current = performance.now() + 2600;
+
+    const tickTabs = (timestamp) => {
+      const elapsed = Math.min(40, timestamp - lastTimestamp);
+      lastTimestamp = timestamp;
+
+      if (
+        timestamp > tabsAutoPauseUntilRef.current &&
+        document.visibilityState === "visible" &&
+        scroller.scrollWidth > scroller.clientWidth + 4
+      ) {
+        scroller.scrollLeft += elapsed * 0.028;
+        if (scroller.scrollLeft >= scroller.scrollWidth - scroller.clientWidth - 2) {
+          scroller.scrollLeft = 0;
+        }
+      }
+
+      frame = window.requestAnimationFrame(tickTabs);
+    };
+
+    frame = window.requestAnimationFrame(tickTabs);
+    return () => window.cancelAnimationFrame(frame);
+  }, [tabs.length]);
+
+  useEffect(() => {
+    const scroller = tabsScrollerRef.current;
+    if (!scroller || !activeTab) return;
+
+    const escapedActiveTab =
+      window.CSS?.escape?.(activeTab) || String(activeTab).replace(/"/g, '\\"');
+    const activeButton = scroller.querySelector(`[data-tab-id="${escapedActiveTab}"]`);
+    activeButton?.scrollIntoView?.({
+      behavior: "smooth",
+      block: "nearest",
+      inline: "center",
+    });
+  }, [activeTab]);
+
   const reservationEnabled = Boolean(store?.acceptsReservations);
   const storePhone = String(store?.tlf || "").trim();
   const phoneHref = storePhone
@@ -3155,6 +3396,7 @@ export default function StorePage() {
         price: getCustomIngredientPrice(data),
       };
     });
+    const customDetailIngredients = ingredients.map(buildCustomIngredientDetail);
 
     const line = {
       cartLineId: `custom-${selectedCustomCategory.key}-${Date.now()}`,
@@ -3169,6 +3411,15 @@ export default function StorePage() {
       allergens: customSelectedAllergens,
       extras: [],
       subtotal: customGrandTotal,
+      customDetails: {
+        categoryName: selectedCustomCategory.name,
+        baseProductName:
+          selectedCustomBase?.name ||
+          selectedCustomCategory.baseName ||
+          selectedCustomCategory.name,
+        ingredients: customDetailIngredients,
+        summary: customDetailIngredients.map((ingredient) => ingredient.label).join(" | "),
+      },
       customMeta: {
         categoryId: selectedCustomCategory.categoryId,
         categoryName: selectedCustomCategory.name,
@@ -3491,6 +3742,8 @@ export default function StorePage() {
         coupon_not_available: "El cupon ya no esta disponible. Quitalo y valida de nuevo.",
         coupon_not_applicable: "El cupon ya no aplica a este carrito.",
         customer_profile_required: "Necesitamos tu nombre y telefono para hacer seguimiento al pedido.",
+        custom_build_missing_ingredients:
+          "La pizza personalizada no tiene ingredientes guardados. Quitala y vuelve a armarla.",
         amount_too_low: "El importe es demasiado bajo para procesar el pago.",
         minimum_payment_not_met: `El pago minimo es ${formatMoney(
           err.response?.data?.minimumPaymentAmount || minimumPaymentAmount,
@@ -4125,7 +4378,11 @@ export default function StorePage() {
           )}
 
           <div className="lsf-top__actions">
-            <span className="sf-engineUtilityPill sf-lsfStoreTicker" aria-label={`${partner?.name || store.storeName}, ${store?.city || "Ciudad"}, ${store.storeName}`}>
+            <span
+              className="sf-engineUtilityPill sf-lsfStoreTicker"
+              aria-label={`${partner?.name || store.storeName}, ${store?.city || "Ciudad"}, ${store.storeName}`}
+              data-mobile-label={`${store?.city || "Ciudad"} - ${store.storeName}`}
+            >
               <span className="sf-engineUtilityPillTicker">
                 <span className="sf-engineUtilityPillTrack">
                   <span className="sf-engineUtilityPillLine">
@@ -4351,14 +4608,25 @@ export default function StorePage() {
             ) : null}
           </div>
 
-          <div className="lsf-tabs" role="tablist" aria-label="Categorias del menu">
-            <div className="lsf-segmentTabs" aria-label="Ofertas destacadas">
+          <div
+            className="lsf-tabs"
+            ref={tabsScrollerRef}
+            role="tablist"
+            aria-label="Categorias del menu"
+            onPointerDown={() => pauseTabsTicker(6200)}
+            onWheel={() => pauseTabsTicker(6200)}
+          >
+            <div
+              className={`lsf-segmentTabs is-count-${commercialTabs.length}`}
+              aria-label="Ofertas destacadas"
+            >
               {commercialTabs.map((tab) => (
                 <button
                   key={tab.id}
                   type="button"
+                  data-tab-id={tab.id}
                   className={`lsf-tab lsf-tab--segment ${activeTab === tab.id ? "is-active" : ""}`}
-                  onClick={() => setActiveTab(tab.id)}
+                  onClick={() => selectStorefrontTab(tab.id)}
                 >
                   {tab.label}
                 </button>
@@ -4370,8 +4638,9 @@ export default function StorePage() {
                 <button
                   key={tab.id}
                   type="button"
+                  data-tab-id={tab.id}
                   className={`lsf-tab lsf-tab--category ${activeTab === tab.id ? "is-active" : ""}`}
-                  onClick={() => setActiveTab(tab.id)}
+                  onClick={() => selectStorefrontTab(tab.id)}
                 >
                   {tab.label}
                 </button>
@@ -4383,7 +4652,18 @@ export default function StorePage() {
        
 
         <section className="sf-engineCard sf-engineCard--lsf">
-          <div className="sf-engineGridStage sf-engineGridStage--lsf">
+          <div
+            className="sf-engineGridStage sf-engineGridStage--lsf"
+            onPointerDown={handleGridPointerDown}
+            onPointerMove={handleGridPointerMove}
+            onPointerUp={handleGridPointerEnd}
+            onPointerCancel={handleGridPointerEnd}
+            onTouchStart={handleGridTouchStart}
+            onTouchMove={handleGridTouchMove}
+            onTouchEnd={handleGridTouchEnd}
+            onTouchCancel={handleGridTouchEnd}
+            onClickCapture={handleGridClickCapture}
+          >
             {isProductSearchActive ? (
               baseFilteredMenu.length === 0 ? (
                 <div className="sf-engineEmptyState">

@@ -5,10 +5,9 @@
   padding: 22px 14px 80px;
   color: #fff;
   background:
-    linear-gradient(118deg, rgba(255, 255, 255, 0.06) 0 8%, transparent 8% 17%, rgba(88, 240, 255, 0.12) 17% 21%, transparent 21% 38%, rgba(255, 82, 226, 0.14) 38% 42%, transparent 42% 100%),
-    radial-gradient(circle at 12% 18%, rgba(255, 47, 123, 0.34), transparent 32%),
-    radial-gradient(circle at 88% 72%, rgba(255, 195, 44, 0.22), transparent 34%),
-    linear-gradient(135deg, #241052 0%, #4f19a6 46%, #ff2d78 100%);
+    repeating-linear-gradient(108deg, transparent 0 18px, rgba(255, 255, 255, 0.08) 19px 20px, transparent 21px 58px),
+    linear-gradient(118deg, rgba(255, 191, 45, 0.2) 0 10%, transparent 10% 23%, rgba(83, 241, 255, 0.18) 23% 30%, transparent 30% 55%, rgba(255, 47, 116, 0.22) 55% 69%, transparent 69% 100%),
+    conic-gradient(from 210deg at 22% 50%, #101a44 0deg, #4f19a6 95deg, #ff2f74 185deg, #ffc32d 245deg, #214fd1 318deg, #101a44 360deg);
 }
 
 .vg-root::before,
@@ -69,44 +68,69 @@
 .vg-layout {
   position: relative;
   z-index: 1;
-  width: min(980px, 100%);
+  width: min(1060px, 100%);
   min-height: calc(100vh - 102px);
   margin: 0 auto;
   display: grid;
-  grid-template-rows: auto minmax(340px, 1fr) auto;
+  grid-template-rows: auto minmax(420px, 1fr) auto;
   gap: 16px;
 }
 
 .vg-block,
 .vg-gamePanel {
   border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 24px;
+  border-radius: 26px;
   background:
-    linear-gradient(112deg, rgba(255, 255, 255, 0.1), transparent 28%, rgba(255, 255, 255, 0.08)),
-    rgba(24, 9, 54, 0.68);
+    linear-gradient(112deg, rgba(255, 255, 255, 0.16), transparent 28%, rgba(255, 255, 255, 0.1)),
+    rgba(22, 11, 48, 0.72);
   box-shadow:
-    0 24px 60px rgba(0, 0, 0, 0.34),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+    0 24px 60px rgba(0, 0, 0, 0.32),
+    0 0 0 1px rgba(255, 191, 45, 0.08),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.07);
   backdrop-filter: blur(16px);
 }
 
 .vg-hero {
-  min-height: 138px;
-  padding: 20px 22px;
+  position: relative;
+  min-height: 154px;
+  padding: 22px 24px;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 16px;
   align-items: center;
+  overflow: hidden;
+  background:
+    linear-gradient(135deg, rgba(15, 26, 68, 0.9), rgba(79, 25, 166, 0.76) 46%, rgba(255, 47, 116, 0.2)),
+    rgba(24, 9, 54, 0.82);
+}
+
+.vg-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, transparent 0 42%, rgba(255, 255, 255, 0.12) 43% 44%, transparent 45% 100%),
+    repeating-linear-gradient(112deg, transparent 0 24px, rgba(255, 191, 45, 0.12) 25px 27px, transparent 28px 64px);
+  opacity: 0.78;
+  pointer-events: none;
+}
+
+.vg-hero > * {
+  position: relative;
+  z-index: 1;
 }
 
 .vg-hero img {
-  width: 78px;
-  height: 78px;
+  width: 92px;
+  height: 92px;
   object-fit: contain;
   border-radius: 18px;
   background: #fff;
   padding: 8px;
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.22);
+  transform: rotate(2deg);
+  box-shadow:
+    0 18px 34px rgba(0, 0, 0, 0.28),
+    0 0 0 5px rgba(255, 255, 255, 0.12);
 }
 
 .vg-kicker,
@@ -122,12 +146,13 @@
 }
 
 .vg-hero h1 {
-  margin: 5px 0;
+  margin: 6px 0;
   color: #fff;
-  font-size: clamp(2.1rem, 7vw, 4rem);
+  font-size: clamp(2.6rem, 7vw, 5rem);
   line-height: 0.92;
   letter-spacing: 0;
   text-wrap: balance;
+  text-shadow: 0 5px 20px rgba(0, 0, 0, 0.32);
 }
 
 .vg-hero p,
@@ -139,19 +164,58 @@
   line-height: 1.55;
 }
 
+.vg-heroChips {
+  margin-top: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.vg-heroChips span {
+  min-height: 30px;
+  display: inline-grid;
+  place-items: center;
+  padding: 0 12px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff6c2;
+  font-size: 0.72rem;
+  font-weight: 1000;
+  text-transform: uppercase;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+
 .vg-playBlock {
-  min-height: 340px;
-  padding: 18px;
+  position: relative;
+  min-height: 420px;
+  padding: clamp(16px, 4vw, 30px);
   display: grid;
   align-content: center;
   gap: 14px;
+  overflow: hidden;
+  background:
+    linear-gradient(90deg, rgba(83, 241, 255, 0.08), transparent 28%, rgba(255, 191, 45, 0.08) 68%, rgba(255, 47, 116, 0.1)),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.04) 0 1px, transparent 1px 22px),
+    rgba(24, 9, 54, 0.72);
+}
+
+.vg-playBlock::before {
+  content: "";
+  position: absolute;
+  inset: 18px;
+  border: 1px dashed rgba(255, 255, 255, 0.14);
+  border-radius: 22px;
+  pointer-events: none;
 }
 
 .vg-gamePanel,
 .vg-lock {
-  width: min(620px, 100%);
+  position: relative;
+  z-index: 1;
+  width: min(700px, 100%);
   margin: 0 auto;
-  padding: 24px;
+  padding: clamp(22px, 5vw, 38px);
   display: grid;
   justify-items: center;
   gap: 16px;
@@ -167,9 +231,13 @@
 
 .vg-timing {
   background:
-    radial-gradient(circle at top, rgba(255, 82, 226, 0.24), transparent 34%),
-    linear-gradient(145deg, rgba(255, 240, 107, 0.12), rgba(83, 241, 255, 0.12)),
-    rgba(24, 9, 54, 0.76);
+    linear-gradient(135deg, rgba(255, 191, 45, 0.18), transparent 26%, rgba(83, 241, 255, 0.15) 72%, rgba(255, 47, 116, 0.14)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.04)),
+    rgba(9, 14, 36, 0.88);
+  box-shadow:
+    0 26px 62px rgba(0, 0, 0, 0.32),
+    0 0 0 1px rgba(83, 241, 255, 0.22),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08);
 }
 
 .vg-crust {
@@ -202,19 +270,37 @@
 }
 
 .vg-clock {
-  width: min(320px, 100%);
-  padding: 24px;
-  border-radius: 28px;
+  width: min(390px, 100%);
+  padding: 28px 24px 30px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 30px;
   background:
-    radial-gradient(circle at top, rgba(83, 241, 255, 0.14), transparent 42%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.06), transparent 38%),
     #090914;
   color: #ffef6b;
-  font-size: clamp(4rem, 18vw, 7rem);
+  font-size: clamp(4.6rem, 18vw, 8.2rem);
   font-weight: 1000;
   line-height: 1;
   box-shadow:
     inset 0 0 0 1px rgba(255, 255, 255, 0.12),
-    0 0 34px rgba(255, 191, 45, 0.22);
+    inset 0 -16px 30px rgba(0, 0, 0, 0.42),
+    0 20px 45px rgba(0, 0, 0, 0.34),
+    0 0 34px rgba(255, 191, 45, 0.28);
+  text-shadow: 0 0 20px rgba(255, 239, 107, 0.22);
+}
+
+.vg-stageKicker {
+  min-height: 28px;
+  display: inline-grid;
+  place-items: center;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: rgba(255, 191, 45, 0.16);
+  color: #ffef6b;
+  font-size: 0.72rem;
+  font-weight: 1000;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
 }
 
 .vg-clock.is-win {
@@ -294,30 +380,52 @@
 .vg-root button {
   min-height: 48px;
   padding: 0 22px;
-  border: 1px solid rgba(255, 255, 255, 0.82);
+  border: 0;
   border-radius: 999px;
   background:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.98) 0%, rgba(178, 184, 190, 0.92) 18%, rgba(255, 255, 255, 1) 31%, rgba(144, 151, 161, 0.9) 46%, rgba(246, 250, 255, 0.98) 58%, rgba(168, 174, 184, 0.92) 75%, rgba(255, 255, 255, 1) 100%),
-    linear-gradient(90deg, #ffffff, #d5d9df 48%, #ffffff);
-  color: #0f57c9;
+    linear-gradient(135deg, #ffbf2d 0%, #ff2f74 48%, #4f19a6 100%);
+  color: #fff;
   font: inherit;
   font-weight: 1000;
   cursor: pointer;
   box-shadow:
-    0 12px 28px rgba(17, 10, 35, 0.28),
-    0 0 18px rgba(83, 241, 255, 0.18),
-    inset 0 2px 2px rgba(255, 255, 255, 0.95),
-    inset 0 -5px 12px rgba(50, 60, 76, 0.2);
+    0 14px 28px rgba(79, 25, 166, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    inset 0 -4px 10px rgba(42, 0, 95, 0.24);
 }
 
 .vg-root button:hover:not(:disabled) {
-  transform: translateY(-1px);
-  filter: saturate(1.12) brightness(1.03);
+  transform: translateY(-2px);
+  filter: saturate(1.12) brightness(1.04);
 }
 
 .vg-root button:disabled {
   opacity: 0.48;
   cursor: not-allowed;
+}
+
+.vg-gamePanel > button {
+  min-width: 136px;
+  min-height: 54px;
+  border: 2px solid rgba(255, 255, 255, 0.52);
+  background:
+    linear-gradient(135deg, #fff6c2 0%, #ffbf2d 44%, #ff2f74 100%);
+  color: #2a005f;
+  box-shadow:
+    0 16px 32px rgba(255, 191, 45, 0.22),
+    0 0 0 4px rgba(255, 191, 45, 0.12),
+    inset 0 2px 0 rgba(255, 255, 255, 0.58),
+    inset 0 -5px 12px rgba(79, 25, 166, 0.18);
+}
+
+.vg-adBanner button {
+  background:
+    linear-gradient(135deg, #ffffff 0%, #fff3b0 42%, #ffbf2d 100%);
+  color: #2a005f;
+  box-shadow:
+    0 12px 28px rgba(255, 191, 45, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.72),
+    inset 0 -4px 10px rgba(79, 25, 166, 0.12);
 }
 
 .vg-claim {
@@ -345,7 +453,7 @@
 
 .vg-error {
   margin: 0;
-  color: #ffb8c9;
+  color: #b0003a;
   font-weight: 900;
 }
 
@@ -399,6 +507,364 @@
     0 0 38px rgba(83, 241, 255, 0.22),
     inset 0 0 0 1px rgba(255, 255, 255, 0.08);
   animation: vgModalIn 0.24s ease both;
+}
+
+.vg-prizeModalBack {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background:
+    repeating-linear-gradient(112deg, rgba(255, 255, 255, 0.08) 0 2px, transparent 2px 34px),
+    linear-gradient(135deg, rgba(83, 241, 255, 0.18), rgba(255, 191, 45, 0.16) 48%, rgba(255, 47, 116, 0.18)),
+    rgba(9, 4, 24, 0.72);
+  backdrop-filter: blur(10px);
+}
+
+.vg-prizeModal {
+  position: relative;
+  width: min(620px, 100%);
+  border: 1px solid rgba(255, 191, 45, 0.46);
+  border-radius: 30px;
+  background:
+    linear-gradient(120deg, rgba(255, 255, 255, 0.86), rgba(255, 248, 236, 0.98)),
+    #fff8ec;
+  color: #fff;
+  padding: clamp(18px, 5vw, 28px);
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.5),
+    0 0 44px rgba(255, 191, 45, 0.28),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.76);
+  animation: vgPrizeIn 0.34s cubic-bezier(0.22, 1, 0.36, 1) both;
+  overflow: hidden;
+}
+
+.vg-prizeModal::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(106deg, transparent 0 21px, rgba(255, 47, 116, 0.08) 22px 23px, transparent 24px 52px),
+    linear-gradient(90deg, rgba(255, 191, 45, 0.18), transparent 36%, rgba(83, 241, 255, 0.12));
+  pointer-events: none;
+}
+
+.vg-prizeModal::after {
+  content: "";
+  position: absolute;
+  left: -18px;
+  right: -18px;
+  top: 50%;
+  height: 36px;
+  transform: translateY(-50%);
+  background:
+    radial-gradient(circle at 0 50%, transparent 0 17px, rgba(255, 255, 255, 0.9) 18px 100%),
+    radial-gradient(circle at 100% 50%, transparent 0 17px, rgba(255, 255, 255, 0.9) 18px 100%);
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.vg-prizeSuccess,
+.vg-prizeForm {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  text-align: center;
+  padding: clamp(18px, 4vw, 24px);
+  border-radius: 24px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.76), rgba(255, 248, 236, 0.8));
+  color: #21163a;
+  box-shadow: inset 0 0 0 1px rgba(42, 0, 95, 0.08);
+}
+
+.vg-prizeSuccess span,
+.vg-prizeForm span {
+  color: #4f19a6;
+  font-size: 0.76rem;
+  font-weight: 1000;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.vg-prizeSuccess h2,
+.vg-prizeForm h2 {
+  margin: 0;
+  color: #21163a;
+  font-size: clamp(2.2rem, 8vw, 4rem);
+  line-height: 0.95;
+}
+
+.vg-prizeSuccess p,
+.vg-prizeForm p {
+  margin: 0;
+  color: #2a2040;
+  line-height: 1.5;
+}
+
+.vg-prizeCoupon {
+  position: relative;
+  width: min(500px, 100%);
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  padding: 20px 18px 18px;
+  border-radius: 24px;
+  background:
+    linear-gradient(135deg, #4f19a6 0%, #214fd1 45%, #ff2f74 100%);
+  color: #fff;
+  box-shadow:
+    0 20px 38px rgba(79, 25, 166, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  overflow: hidden;
+}
+
+.vg-prizeCoupon::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(112deg, transparent 0 22px, rgba(255, 255, 255, 0.16) 23px 24px, transparent 25px 52px),
+    linear-gradient(90deg, rgba(255, 191, 45, 0.24), transparent 32%, rgba(83, 241, 255, 0.14));
+  opacity: 0.7;
+}
+
+.vg-prizeCoupon > * {
+  position: relative;
+  z-index: 1;
+}
+
+.vg-prizeCoupon small {
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 1000;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.vg-prizeCode {
+  width: 100%;
+  min-width: 0;
+  display: grid;
+  place-items: center;
+}
+
+.vg-prizeCode strong {
+  display: block;
+  max-width: 100%;
+  color: #fff;
+  font-family: "Roboto Mono", "Courier New", monospace;
+  font-size: clamp(1.65rem, 7vw, 3rem);
+  font-weight: 1000;
+  line-height: 1;
+  letter-spacing: 0;
+  overflow-wrap: anywhere;
+  text-align: center;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.16);
+}
+
+.vg-prizeForm input {
+  width: min(420px, 100%);
+  min-height: 50px;
+  box-sizing: border-box;
+  border: 1px solid rgba(42, 0, 95, 0.12);
+  border-radius: 14px;
+  background: #fff;
+  color: #21163a;
+  padding: 0 14px;
+  font: inherit;
+  font-weight: 850;
+  box-shadow: inset 0 1px 0 rgba(42, 0, 95, 0.04);
+}
+
+.vg-prizeForm button {
+  min-width: 210px;
+  min-height: 54px;
+  background:
+    linear-gradient(135deg, #ffbf2d 0%, #ff2f74 54%, #4f19a6 100%);
+  color: #fff;
+  box-shadow:
+    0 16px 34px rgba(255, 47, 116, 0.24),
+    0 0 0 4px rgba(255, 191, 45, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    inset 0 -5px 12px rgba(42, 0, 95, 0.22);
+}
+
+.vg-prizeActions {
+  width: min(460px, 100%);
+  display: grid;
+  grid-template-columns: 1fr 1.25fr;
+  gap: 10px;
+}
+
+.vg-prizeActions button {
+  min-height: 52px;
+}
+
+.vg-prizeActions button:first-child {
+  border: 1px solid rgba(79, 25, 166, 0.18);
+  background: rgba(255, 255, 255, 0.78);
+  color: #4f19a6;
+  box-shadow:
+    0 10px 22px rgba(42, 0, 95, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.vg-prizeActions button:last-child {
+  background:
+    linear-gradient(135deg, #4f19a6 0%, #214fd1 46%, #ff2f74 100%);
+  color: #fff;
+  box-shadow:
+    0 14px 28px rgba(79, 25, 166, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.24),
+    inset 0 -5px 12px rgba(42, 0, 95, 0.22);
+}
+
+.vg-prizeActions button.is-copied {
+  color: #166534;
+  filter: saturate(1.2) brightness(1.04);
+}
+
+.vg-copyCouponBtn {
+  position: static;
+  width: min(240px, 100%);
+  min-height: 44px;
+  display: inline-grid;
+  grid-template-columns: auto auto;
+  place-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid rgba(255, 239, 107, 0.78);
+  border-radius: 999px;
+  background:
+    linear-gradient(135deg, #fff6c2 0%, #ffbf2d 100%);
+  color: #2a005f;
+  padding: 8px 14px;
+  font: inherit;
+  cursor: pointer;
+  box-shadow:
+    0 12px 24px rgba(0, 0, 0, 0.18),
+    0 0 0 4px rgba(255, 191, 45, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.65),
+    inset 0 -4px 9px rgba(79, 25, 166, 0.12);
+}
+
+.vg-copyCouponBtn small {
+  color: currentColor;
+  font-size: 0.68rem;
+  font-weight: 1000;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.vg-copyCouponBtn:hover {
+  background:
+    linear-gradient(135deg, #ffffff 0%, #ffbf2d 100%);
+  transform: translateY(-1px);
+}
+
+.vg-copyCouponBtn.is-copied {
+  background:
+    linear-gradient(135deg, #53f1ff 0%, #ffbf2d 100%);
+  color: #21163a;
+}
+
+.vg-copyCouponIcon {
+  position: relative;
+  width: 16px;
+  height: 19px;
+  display: block;
+}
+
+.vg-copyCouponIcon::before,
+.vg-copyCouponIcon::after {
+  content: "";
+  position: absolute;
+  border-radius: 4px;
+  background: currentColor;
+}
+
+.vg-copyCouponIcon::before {
+  left: 0;
+  bottom: 0;
+  width: 16px;
+  height: 17px;
+  opacity: 0.72;
+}
+
+.vg-copyCouponIcon::after {
+  right: 0;
+  top: 0;
+  width: 17px;
+  height: 18px;
+  box-shadow: inset -5px 5px 0 rgba(255, 255, 255, 0.22);
+}
+
+.vg-prizeMeta {
+  color: #2a2040;
+  font-size: 0.92rem;
+}
+
+.vg-prizeBurst {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.vg-prizeBurst span {
+  position: absolute;
+  width: 10px;
+  height: 18px;
+  border-radius: 3px;
+  background: #ffbf2d;
+  animation: vgPrizeConfetti 1.15s ease-out both;
+}
+
+.vg-prizeBurst span:nth-child(1) {
+  left: 12%;
+  top: 5%;
+  background: #53f1ff;
+  animation-delay: 0.04s;
+}
+
+.vg-prizeBurst span:nth-child(2) {
+  left: 26%;
+  top: 0;
+  background: #ff2f74;
+  animation-delay: 0.14s;
+}
+
+.vg-prizeBurst span:nth-child(3) {
+  right: 22%;
+  top: 4%;
+  background: #ffbf2d;
+  animation-delay: 0.08s;
+}
+
+.vg-prizeBurst span:nth-child(4) {
+  right: 10%;
+  top: 12%;
+  background: #4f19a6;
+  animation-delay: 0.18s;
+}
+
+.vg-prizeBurst span:nth-child(5) {
+  left: 16%;
+  bottom: 5%;
+  background: #ffbf2d;
+  animation-delay: 0.24s;
+}
+
+.vg-prizeBurst span:nth-child(6) {
+  right: 18%;
+  bottom: 8%;
+  background: #53f1ff;
+  animation-delay: 0.2s;
 }
 
 .vg-endModal span {
@@ -496,6 +962,34 @@
   }
 }
 
+@keyframes vgPrizeIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.94) rotate(-0.5deg);
+  }
+  70% {
+    transform: translateY(-2px) scale(1.01) rotate(0.25deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotate(0deg);
+  }
+}
+
+@keyframes vgPrizeConfetti {
+  from {
+    opacity: 0;
+    transform: translateY(-18px) rotate(0deg) scale(0.8);
+  }
+  22% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.78;
+    transform: translateY(42px) rotate(154deg) scale(1);
+  }
+}
+
 @media (max-width: 720px) {
   .vg-root {
     padding: 14px 10px 60px;
@@ -503,7 +997,7 @@
 
   .vg-layout {
     min-height: calc(100vh - 74px);
-    grid-template-rows: auto minmax(320px, 1fr) auto;
+    grid-template-rows: auto minmax(360px, 1fr) auto;
   }
 
   .vg-hero,
@@ -520,6 +1014,10 @@
     padding: 12px;
   }
 
+  .vg-playBlock::before {
+    inset: 10px;
+  }
+
   .vg-gamePanel,
   .vg-lock {
     padding: 20px 14px;
@@ -533,5 +1031,14 @@
 
   .vg-adBanner button {
     width: 100%;
+  }
+
+  .vg-prizeActions {
+    grid-template-columns: 1fr;
+  }
+
+  .vg-prizeSuccess,
+  .vg-prizeForm {
+    padding: 18px 12px;
   }
 }

@@ -119,6 +119,211 @@
   padding-left: 12px;
 }
 
+.ot-chat {
+  display: grid;
+  gap: 10px;
+  border: 1px solid rgba(59, 0, 139, 0.14);
+  border-radius: 8px;
+  background: #fbfbfc;
+  padding: 10px;
+}
+
+.ot-chat.is-focused {
+  border-color: rgba(249, 38, 114, 0.42);
+  background: #fff7fb;
+  box-shadow: 0 0 0 4px rgba(249, 38, 114, 0.08);
+}
+
+.ot-chat.is-open {
+  padding: 14px;
+}
+
+.ot-chat.has-messages:not(.is-open) {
+  border-color: rgba(255, 182, 28, 0.76);
+  background:
+    linear-gradient(135deg, #fff8dc, #fff 72%);
+  box-shadow:
+    0 0 0 4px rgba(255, 182, 28, 0.12),
+    0 12px 28px rgba(154, 23, 77, 0.1);
+  animation: otChatAttention 1.8s ease-in-out infinite;
+}
+
+.ot-chatToggle {
+  min-height: 54px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 3px 12px;
+  align-items: center;
+  border: 0;
+  border-radius: 8px;
+  background: #fff;
+  color: #141018;
+  padding: 11px 12px;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+  box-shadow: inset 0 0 0 1px rgba(106, 61, 240, 0.12);
+}
+
+.ot-chat.has-messages:not(.is-open) .ot-chatToggle {
+  background:
+    radial-gradient(circle at 8% 50%, rgba(249, 38, 114, 0.16), transparent 30%),
+    #fff;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 182, 28, 0.52),
+    0 8px 18px rgba(255, 182, 28, 0.12);
+}
+
+.ot-chatToggle span {
+  color: #6a3df0;
+  font-size: 12px;
+  font-weight: 1000;
+  text-transform: uppercase;
+}
+
+.ot-chatToggle strong {
+  grid-row: span 2;
+  align-self: center;
+  border-radius: 999px;
+  background: #3b008b;
+  color: #fff;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 1000;
+}
+
+.ot-chat.has-messages:not(.is-open) .ot-chatToggle strong {
+  background: linear-gradient(135deg, #ffb61c, #f92672 58%, #3b008b);
+  box-shadow:
+    0 0 0 4px rgba(249, 38, 114, 0.12),
+    0 9px 20px rgba(154, 23, 77, 0.2);
+}
+
+.ot-chatToggle small {
+  color: #5f6674;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.ot-chat.has-messages:not(.is-open) .ot-chatToggle small {
+  color: #9a174d;
+  font-weight: 1000;
+}
+
+@keyframes otChatAttention {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+.ot-chat > span,
+.ot-chatForm label span {
+  color: #6a3df0;
+  font-size: 12px;
+  font-weight: 1000;
+  text-transform: uppercase;
+}
+
+.ot-chat h2 {
+  margin: 0;
+  color: #111;
+  font-size: 20px;
+}
+
+.ot-chatThread {
+  display: grid;
+  gap: 8px;
+  max-height: 260px;
+  overflow: auto;
+}
+
+.ot-chatBubble {
+  display: grid;
+  gap: 4px;
+  width: fit-content;
+  max-width: 92%;
+  border-radius: 8px;
+  padding: 9px 11px;
+}
+
+.ot-chatBubble small {
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.ot-chatBubble strong {
+  font-size: 14px;
+  line-height: 1.35;
+  white-space: pre-wrap;
+}
+
+.ot-chatBubble.is-operator {
+  justify-self: start;
+  border: 1px solid rgba(255, 182, 28, 0.42);
+  background: #fff8dc;
+  color: #141018;
+}
+
+.ot-chatBubble.is-operator small {
+  color: #92400e;
+}
+
+.ot-chatBubble.is-customer {
+  justify-self: end;
+  background: #3b008b;
+  color: #fff;
+}
+
+.ot-chatBubble.is-customer small {
+  color: rgba(255, 255, 255, 0.76);
+}
+
+.ot-chatEmpty,
+.ot-chatMessage {
+  border-radius: 8px;
+  background: #fff;
+  color: #5f6674;
+  padding: 11px 12px;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.ot-chatForm {
+  display: grid;
+  gap: 10px;
+}
+
+.ot-chatForm label {
+  display: grid;
+  gap: 6px;
+}
+
+.ot-chatForm textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid rgba(59, 0, 139, 0.18);
+  border-radius: 8px;
+  background: #fff;
+  color: #141018;
+  padding: 11px 12px;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 750;
+  line-height: 1.35;
+  resize: vertical;
+  outline: none;
+}
+
+.ot-chatMessage {
+  color: #3b008b;
+  font-weight: 900;
+}
+
 .ot-boost {
   display: grid;
   gap: 7px;
@@ -358,6 +563,176 @@
 }
 
 @media (max-width: 560px) {
+  .ot-page {
+    min-height: 100dvh;
+    align-items: start;
+    padding: 10px 8px;
+  }
+
+  .ot-card {
+    width: min(352px, 100%);
+    gap: 10px;
+    padding: 13px 11px;
+    border-radius: 7px;
+    box-shadow: 0 10px 28px rgba(31, 21, 53, 0.1);
+  }
+
+  .ot-head {
+    gap: 3px;
+  }
+
+  .ot-head span,
+  .ot-boost span,
+  .ot-nextStep span,
+  .ot-chatToggle span {
+    font-size: 10px;
+    line-height: 1;
+  }
+
+  .ot-head h1 {
+    max-width: 260px;
+    font-size: 25px;
+    line-height: 0.92;
+  }
+
+  .ot-head p {
+    font-size: 13px;
+    line-height: 1.15;
+  }
+
+  .ot-summary {
+    min-height: 42px;
+    padding: 8px 12px;
+    gap: 8px;
+  }
+
+  .ot-summary strong {
+    font-size: 22px;
+    line-height: 1;
+  }
+
+  .ot-summary span {
+    font-size: 10px;
+    line-height: 1.1;
+    text-align: right;
+  }
+
+  .ot-steps {
+    gap: 4px;
+    padding: 0 2px;
+  }
+
+  .ot-step {
+    gap: 4px;
+    font-size: 10px;
+    line-height: 1.05;
+  }
+
+  .ot-dot {
+    width: 15px;
+    height: 15px;
+    border-width: 2px;
+  }
+
+  .ot-step.active .ot-dot {
+    box-shadow: 0 0 0 4px rgba(255, 182, 28, 0.16);
+  }
+
+  .ot-message {
+    padding-left: 10px;
+    font-size: 13px;
+    line-height: 1.32;
+  }
+
+  .ot-chat {
+    gap: 6px;
+    padding: 8px;
+  }
+
+  .ot-chatToggle {
+    min-height: 44px;
+    padding: 8px 9px;
+    gap: 2px 8px;
+  }
+
+  .ot-chatToggle strong {
+    padding: 7px 10px;
+    font-size: 11px;
+  }
+
+  .ot-chatToggle small {
+    font-size: 12px;
+    line-height: 1.12;
+  }
+
+  .ot-boost {
+    gap: 5px;
+    padding: 10px 12px;
+  }
+
+  .ot-boost h2 {
+    font-size: 18px;
+    line-height: 1;
+  }
+
+  .ot-boost p {
+    font-size: 13px;
+    line-height: 1.28;
+  }
+
+  .ot-boostBtn {
+    min-height: 38px;
+    padding: 0 13px;
+    font-size: 13px;
+  }
+
+  .ot-btn {
+    min-height: 41px;
+    padding: 0 14px;
+    font-size: 14px;
+  }
+
+  .ot-nextStep {
+    gap: 4px;
+    padding: 10px 12px;
+  }
+
+  .ot-nextStep h2 {
+    font-size: 18px;
+    line-height: 1.05;
+  }
+
+  .ot-nextStep p {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    font-size: 12px;
+    line-height: 1.28;
+  }
+
+  .ot-chat.is-open {
+    padding: 10px;
+  }
+
+  .ot-chat h2 {
+    font-size: 17px;
+  }
+
+  .ot-chatThread {
+    max-height: 176px;
+  }
+
+  .ot-chatForm {
+    gap: 7px;
+  }
+
+  .ot-chatForm textarea {
+    min-height: 86px;
+    padding: 9px 10px;
+    font-size: 13px;
+  }
+
   .ot-modalActions {
     grid-template-columns: 1fr;
   }

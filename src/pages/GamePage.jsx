@@ -33,13 +33,24 @@ const formatCountdown = (ms) => {
 
 const formatNumber = (value) => String(value ?? 0).padStart(3, "0");
 
+const withCouponQuery = (path, code) => {
+  const basePath = String(path || "/");
+  const [pathname, rawSearch = ""] = basePath.split("?");
+  const params = new URLSearchParams(rawSearch);
+  params.set("coupon", String(code || "").trim().toUpperCase());
+  params.set("couponSource", "game");
+  params.set("openCoupon", "1");
+  return `${pathname || "/"}?${params.toString()}`;
+};
+
 function GameShell({ children, context, remainingMs, onBack }) {
   const copy = GAME_COPY[context?.game?.slug] || GAME_COPY["winning-number"];
   const partnerName = context?.partner?.name || "Volta";
   const gameName = context?.game?.name || copy.title;
+  const gameSlug = context?.game?.slug || "winning-number";
 
   return (
-    <main className="vg-root">
+    <main className={`vg-root vg-root-${gameSlug}`}>
       <div className="vg-transitionSparkle" aria-hidden="true" />
       <div className="vg-layout">
         <section className="vg-block vg-hero">
@@ -47,6 +58,11 @@ function GameShell({ children, context, remainingMs, onBack }) {
             <div className="vg-kicker">{copy.kicker}</div>
             <h1>{gameName}</h1>
             <p>{copy.text}</p>
+            <div className="vg-heroChips" aria-label="Detalles del juego">
+              <span>Premio dorado</span>
+              <span>3 intentos</span>
+              <span>Cupon instantaneo</span>
+            </div>
           </div>
           {context?.partner?.brandLogoUrl && (
             <img src={context.partner.brandLogoUrl} alt={context.partner.name} />
@@ -79,13 +95,31 @@ function GameShell({ children, context, remainingMs, onBack }) {
   );
 }
 
-function ClaimPanel({ won, playId, context, partnerSlug, gameSlug }) {
+function ClaimPanel({ won, playId, context, partnerSlug, gameSlug, redeemBasePath, onGoToRedeem }) {
   const [form, setForm] = useState({ name: "", phone: "" });
   const [saving, setSaving] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState("");
+  const [copiedCoupon, setCopiedCoupon] = useState(false);
+  const couponCode = result?.coupon?.code || "";
+  const redeemPath = couponCode ? withCouponQuery(redeemBasePath || `/${partnerSlug}`, couponCode) : "";
 
   if (!won || !playId) return null;
+
+  const copyCouponCode = async ({ goToRedeem = false } = {}) => {
+    if (!couponCode) return;
+
+    try {
+      await navigator.clipboard.writeText(couponCode);
+      setCopiedCoupon(true);
+      window.setTimeout(() => setCopiedCoupon(false), 1400);
+      if (goToRedeem) {
+        window.setTimeout(() => onGoToRedeem(redeemPath), 180);
+      }
+    } catch {
+      setError("No pudimos copiar el cupon. Manten pulsado el codigo para copiarlo.");
+    }
+  };
 
   const submit = async (event) => {
     event.preventDefault();
@@ -114,39 +148,92 @@ function ClaimPanel({ won, playId, context, partnerSlug, gameSlug }) {
   };
 
   return (
-    <section className="vg-gamePanel vg-claim">
-      {result?.coupon ? (
-        <>
-          <span>Cupon dorado listo</span>
-          <strong>{result.coupon.code}</strong>
-          <p>
-            {result.sms?.sent
-              ? "Te lo enviamos por SMS."
-              : "El codigo queda reservado. Si no llega SMS, puedes usar este codigo."}
-          </p>
-        </>
-      ) : (
-        <form onSubmit={submit}>
-          <span>Ganaste</span>
-          <strong>{context?.game?.name || "Premio dorado"}</strong>
-          <input
-            value={form.name}
-            onChange={(event) => setForm((current) => ({ ...current, name: event.target.value }))}
-            placeholder="Tu nombre"
-          />
-          <input
-            value={form.phone}
-            onChange={(event) => setForm((current) => ({ ...current, phone: event.target.value }))}
-            placeholder="Telefono"
-            inputMode="tel"
-          />
-          {error && <p className="vg-error">{error}</p>}
-          <button type="submit" disabled={saving}>
-            {saving ? "Reclamando..." : "Enviar cupon por SMS"}
-          </button>
-        </form>
-      )}
-    </section>
+    <div className="vg-prizeModalBack" role="dialog" aria-modal="true" aria-labelledby="vg-prize-title">
+      <section className="vg-prizeModal">
+        {result?.coupon ? (
+          <div className="vg-prizeSuccess">
+            <div className="vg-prizeBurst" aria-hidden="true">
+              <span />
+              <span />
+              <span />
+              <span />
+              <span />
+              <span />
+            </div>
+            <span>Premio desbloqueado</span>
+            <h2 id="vg-prize-title">Acabas de ganar</h2>
+            <div className="vg-prizeCoupon">
+              <small>Listo para pedir</small>
+              <div className="vg-prizeCode">
+                <strong>{result.coupon.code}</strong>
+              </div>
+              <button
+                type="button"
+                className={`vg-copyCouponBtn ${copiedCoupon ? "is-copied" : ""}`}
+                onClick={() => copyCouponCode({ goToRedeem: true })}
+                aria-label="Copiar cupon e ir al pedido"
+                title="Copiar cupon e ir al pedido"
+              >
+                <span className="vg-copyCouponIcon" aria-hidden="true" />
+                <small>{copiedCoupon ? "Copiado" : "Copiar e ir"}</small>
+              </button>
+            </div>
+            <p>
+              {result.sms?.sent
+                ? "Tambien te lo enviamos por SMS. Puedes copiarlo y validarlo ahora."
+                : "El codigo queda reservado. Copialo y validalo en tu pedido."}
+            </p>
+            {result.coupon.expiresAt && (
+              <p className="vg-prizeMeta">
+                Vence: <b>{new Date(result.coupon.expiresAt).toLocaleString("es-ES")}</b>
+              </p>
+            )}
+            {error && <p className="vg-error">{error}</p>}
+            <div className="vg-prizeActions">
+              <button
+                type="button"
+                className={copiedCoupon ? "is-copied" : ""}
+                onClick={() => copyCouponCode()}
+              >
+                Solo copiar
+              </button>
+              <button type="button" onClick={() => copyCouponCode({ goToRedeem: true })}>
+                Ir a validar
+              </button>
+            </div>
+          </div>
+        ) : (
+          <form className="vg-prizeForm" onSubmit={submit}>
+            <div className="vg-prizeBurst" aria-hidden="true">
+              <span />
+              <span />
+              <span />
+              <span />
+              <span />
+              <span />
+            </div>
+            <span>Ganaste</span>
+            <h2 id="vg-prize-title">Premio desbloqueado</h2>
+            <p>Reserva tu cupon para usarlo en el pedido. Despues podras copiarlo e ir directo a validarlo.</p>
+            <input
+              value={form.name}
+              onChange={(event) => setForm((current) => ({ ...current, name: event.target.value }))}
+              placeholder="Tu nombre"
+            />
+            <input
+              value={form.phone}
+              onChange={(event) => setForm((current) => ({ ...current, phone: event.target.value }))}
+              placeholder="Telefono"
+              inputMode="tel"
+            />
+            {error && <p className="vg-error">{error}</p>}
+            <button type="submit" disabled={saving}>
+              {saving ? "Reclamando..." : "Reclamar cupon"}
+            </button>
+          </form>
+        )}
+      </section>
+    </div>
   );
 }
 
@@ -166,7 +253,7 @@ function OutOfAttemptsModal({ onContinue, onStore }) {
   );
 }
 
-function WinningNumberGame({ context, onPlayed, partnerSlug, gameSlug, onBackToStore }) {
+function WinningNumberGame({ context, onPlayed, partnerSlug, gameSlug, onBackToStore, redeemBasePath, onGoToRedeem }) {
   const [attempts, setAttempts] = useState(3);
   const [last, setLast] = useState(null);
   const [won, setWon] = useState(false);
@@ -199,7 +286,15 @@ function WinningNumberGame({ context, onPlayed, partnerSlug, gameSlug, onBackToS
         </button>
         <small>Intentos restantes: {attempts}</small>
       </section>
-      <ClaimPanel won={won} playId={playId} context={context} partnerSlug={partnerSlug} gameSlug={gameSlug} />
+      <ClaimPanel
+        won={won}
+        playId={playId}
+        context={context}
+        partnerSlug={partnerSlug}
+        gameSlug={gameSlug}
+        redeemBasePath={redeemBasePath}
+        onGoToRedeem={onGoToRedeem}
+      />
       {attempts <= 0 && !won && (
         <OutOfAttemptsModal
           onContinue={() => {
@@ -213,7 +308,7 @@ function WinningNumberGame({ context, onPlayed, partnerSlug, gameSlug, onBackToS
   );
 }
 
-function PerfectTimingGame({ context, onPlayed, partnerSlug, gameSlug, onBackToStore }) {
+function PerfectTimingGame({ context, onPlayed, partnerSlug, gameSlug, onBackToStore, redeemBasePath, onGoToRedeem }) {
   const [running, setRunning] = useState(false);
   const [timeMs, setTimeMs] = useState(0);
   const [attempts, setAttempts] = useState(3);
@@ -270,6 +365,7 @@ function PerfectTimingGame({ context, onPlayed, partnerSlug, gameSlug, onBackToS
   return (
     <>
       <section className="vg-gamePanel vg-timing">
+        <div className="vg-stageKicker">Reto activo</div>
         <div className={`vg-clock ${clockFeedback === "win" ? "is-win" : ""} ${clockFeedback === "miss" ? "is-miss" : ""}`}>
           {(timeMs / 1000).toFixed(2)}
         </div>
@@ -279,7 +375,15 @@ function PerfectTimingGame({ context, onPlayed, partnerSlug, gameSlug, onBackToS
         </button>
         <small>Objetivo: 9.99s - intentos: {attempts}</small>
       </section>
-      <ClaimPanel won={won} playId={playId} context={context} partnerSlug={partnerSlug} gameSlug={gameSlug} />
+      <ClaimPanel
+        won={won}
+        playId={playId}
+        context={context}
+        partnerSlug={partnerSlug}
+        gameSlug={gameSlug}
+        redeemBasePath={redeemBasePath}
+        onGoToRedeem={onGoToRedeem}
+      />
       {attempts <= 0 && !won && (
         <OutOfAttemptsModal
           onContinue={() => {
@@ -295,7 +399,7 @@ function PerfectTimingGame({ context, onPlayed, partnerSlug, gameSlug, onBackToS
   );
 }
 
-function CrustRingGame({ context, onPlayed, partnerSlug, gameSlug, onBackToStore }) {
+function CrustRingGame({ context, onPlayed, partnerSlug, gameSlug, onBackToStore, redeemBasePath, onGoToRedeem }) {
   const [fit, setFit] = useState(86);
   const [won, setWon] = useState(false);
   const [playId, setPlayId] = useState(null);
@@ -333,7 +437,15 @@ function CrustRingGame({ context, onPlayed, partnerSlug, gameSlug, onBackToStore
         </button>
         <small>Intentos restantes: {attempts}</small>
       </section>
-      <ClaimPanel won={won} playId={playId} context={context} partnerSlug={partnerSlug} gameSlug={gameSlug} />
+      <ClaimPanel
+        won={won}
+        playId={playId}
+        context={context}
+        partnerSlug={partnerSlug}
+        gameSlug={gameSlug}
+        redeemBasePath={redeemBasePath}
+        onGoToRedeem={onGoToRedeem}
+      />
       {attempts <= 0 && !won && (
         <OutOfAttemptsModal
           onContinue={() => {
@@ -391,7 +503,7 @@ export default function GamePage({ fixedGameSlug }) {
 
   const gameNode = useMemo(() => {
     const onPlayed = (data) => {
-      if (data.remainingMs) setRemainingMs(data.remainingMs);
+      if (!data.won && data.remainingMs) setRemainingMs(data.remainingMs);
     };
     const props = {
       context,
@@ -399,6 +511,8 @@ export default function GamePage({ fixedGameSlug }) {
       partnerSlug,
       gameSlug,
       onBackToStore: () => navigate(location.state?.returnToStorePath || `/${partnerSlug}`),
+      redeemBasePath: location.state?.returnToStorePath || `/${partnerSlug}`,
+      onGoToRedeem: (path) => navigate(path || location.state?.returnToStorePath || `/${partnerSlug}`),
     };
     if (gameSlug === "perfect-timing") return <PerfectTimingGame {...props} />;
     if (gameSlug === "crust-ring") return <CrustRingGame {...props} />;

@@ -583,11 +583,23 @@ function ReservationsModal({ store, onClose }) {
     }
   };
 
+  const reservationStatusLabel = (status) => {
+    const normalized = String(status || "").toLowerCase();
+    if (normalized === "pending") return "Pendiente";
+    if (normalized === "confirmed") return "Confirmada";
+    if (normalized === "complete" || normalized === "completed") return "Completada";
+    if (normalized === "cancel" || normalized === "canceled" || normalized === "cancelled") return "Cancelada";
+    return status || "-";
+  };
+
   return (
     <div className="sc-modalBack" onMouseDown={onClose}>
-      <div className="sc-modalBox sc-modalBox--wide" onMouseDown={(event) => event.stopPropagation()}>
+      <div className="sc-modalBox sc-modalBox--wide sc-reservationsModal" onMouseDown={(event) => event.stopPropagation()}>
         <header className="sc-modalHead">
-          <h3>Reservations - {store.storeName}</h3>
+          <div>
+            <span className="sc-modalEyebrow">Reservas</span>
+            <h3>{store.storeName}</h3>
+          </div>
           <button className="sc-iconBtn" onClick={onClose} type="button">
             x
           </button>
@@ -597,88 +609,96 @@ function ReservationsModal({ store, onClose }) {
           {error ? (
             <div className="sc-emptyState">{error}</div>
           ) : (
-            <table className="store-table">
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Time</th>
-                  <th>Name</th>
-                  <th>Phone</th>
-                  <th>People</th>
-                  <th>Status</th>
-                  <th className="actions">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {[...rows]
-                  .sort((left, right) => {
-                    const order = {
-                      pending: 0,
-                      confirmed: 1,
-                      completed: 2,
-                      canceled: 3,
-                      cancelled: 3,
-                    };
+            <div className="sc-reservationsTableWrap">
+              <table className="store-table sc-reservationsTable">
+                <thead>
+                  <tr>
+                    <th>Fecha</th>
+                    <th>Hora</th>
+                    <th>Cliente</th>
+                    <th>Telefono</th>
+                    <th>Personas</th>
+                    <th>Estado</th>
+                    <th className="actions">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[...rows]
+                    .sort((left, right) => {
+                      const order = {
+                        pending: 0,
+                        confirmed: 1,
+                        completed: 2,
+                        canceled: 3,
+                        cancelled: 3,
+                      };
 
-                    const statusDiff =
-                      (order[String(left.status || "").toLowerCase()] ?? 9) -
-                      (order[String(right.status || "").toLowerCase()] ?? 9);
+                      const statusDiff =
+                        (order[String(left.status || "").toLowerCase()] ?? 9) -
+                        (order[String(right.status || "").toLowerCase()] ?? 9);
 
-                    if (statusDiff !== 0) return statusDiff;
+                      if (statusDiff !== 0) return statusDiff;
 
-                    const leftDate = new Date(`${left.reservationDate}T${left.reservationTime}`);
-                    const rightDate = new Date(`${right.reservationDate}T${right.reservationTime}`);
-                    return leftDate - rightDate;
-                  })
-                  .map((row) => {
-                    const normalizedStatus = String(row.status || "").toLowerCase();
-                    const formattedDate = row.reservationDate
-                      ? new Date(row.reservationDate).toLocaleDateString("es-ES")
-                      : "-";
+                      const leftDate = new Date(`${left.reservationDate}T${left.reservationTime}`);
+                      const rightDate = new Date(`${right.reservationDate}T${right.reservationTime}`);
+                      return leftDate - rightDate;
+                    })
+                    .map((row) => {
+                      const normalizedStatus = String(row.status || "").toLowerCase();
+                      const formattedDate = row.reservationDate
+                        ? new Date(row.reservationDate).toLocaleDateString("es-ES")
+                        : "-";
 
-                    return (
-                      <tr key={row.id}>
-                        <td>{formattedDate}</td>
-                        <td>{row.reservationTime}</td>
-                        <td>{row.customerName}</td>
-                        <td>{row.customerPhone}</td>
-                        <td>{row.partySize}</td>
-                        <td>{row.status}</td>
-                        <td className="actions">
-                          {normalizedStatus === "pending" || normalizedStatus === "confirmed" ? (
-                            <>
-                              <button
-                                className="table-btn complete"
-                                onClick={() => patchReservationStatus(row.id, "complete")}
-                                type="button"
-                              >
-                                Complete
-                              </button>
-                              <button
-                                className="table-btn danger"
-                                onClick={() => patchReservationStatus(row.id, "cancel")}
-                                type="button"
-                              >
-                                Cancel
-                              </button>
-                            </>
-                          ) : (
-                            <button className="table-btn" disabled type="button">
-                              Closed
-                            </button>
-                          )}
-                        </td>
-                      </tr>
-                    );
-                  })}
-              </tbody>
-            </table>
+                      return (
+                        <tr key={row.id}>
+                          <td>{formattedDate}</td>
+                          <td>{row.reservationTime}</td>
+                          <td>{row.customerName}</td>
+                          <td>{row.customerPhone}</td>
+                          <td>{row.partySize}</td>
+                          <td>
+                            <span className={`sc-reservationStatus is-${normalizedStatus || "unknown"}`}>
+                              {reservationStatusLabel(row.status)}
+                            </span>
+                          </td>
+                          <td className="actions">
+                            <div className="sc-reservationActions">
+                              {normalizedStatus === "pending" || normalizedStatus === "confirmed" ? (
+                                <>
+                                  <button
+                                    className="table-btn complete"
+                                    onClick={() => patchReservationStatus(row.id, "complete")}
+                                    type="button"
+                                  >
+                                    Completar
+                                  </button>
+                                  <button
+                                    className="table-btn danger"
+                                    onClick={() => patchReservationStatus(row.id, "cancel")}
+                                    type="button"
+                                  >
+                                    Cancelar
+                                  </button>
+                                </>
+                              ) : (
+                                <button className="table-btn" disabled type="button">
+                                  Cerrada
+                                </button>
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
 
         <footer className="sc-modalFooter">
           <button className="sc-btn ghost" onClick={onClose} type="button">
-            Close
+            Cerrar
           </button>
         </footer>
       </div>

@@ -5,8 +5,9 @@ import "../styles/PosApp.css";
 
 const POS_SESSION_KEY = "volta_pos_virtual_session";
 const POS_ACCEPTED_NOTICE_KEY_PREFIX = "volta_pos_accepted_order_notices";
-const POLL_MS = 10000;
-const STALE_AFTER_MS = 25_000;
+const POLL_MS = 5000;
+const POS_REQUEST_TIMEOUT_MS = 8000;
+const STALE_AFTER_MS = 15_000;
 const OFFLINE_AFTER_MS = 60_000;
 const MAX_ACCEPTED_NOTICE_IDS = 500;
 
@@ -24,6 +25,17 @@ const formatTime = (value) => {
   return new Intl.DateTimeFormat("es-ES", {
     day: "2-digit",
     month: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(date);
+};
+
+const formatChatTime = (value) => {
+  if (!value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+
+  return new Intl.DateTimeFormat("es-ES", {
     hour: "2-digit",
     minute: "2-digit",
   }).format(date);
@@ -206,9 +218,16 @@ const formatExtraSide = (value) => {
   return value ? String(value) : "";
 };
 
-const getIngredientDetails = (item) =>
-  asArray(item?.ingredients)
+const getIngredientDetails = (item) => {
+  const directIngredients = asArray(item?.ingredients);
+  const detailIngredients = directIngredients.length
+    ? directIngredients
+    : asArray(item?.customDetails?.ingredients);
+
+  return detailIngredients
     .map((ingredient) => {
+      if (ingredient?.label) return String(ingredient.label).trim();
+
       const name = String(ingredient?.name || ingredient?.label || ingredient || "").trim();
       if (!name) return "";
 
@@ -218,10 +237,11 @@ const getIngredientDetails = (item) =>
       return detail ? `${name}: ${detail}` : name;
     })
     .filter(Boolean);
+};
 
 const getLineDetailRows = (item) => {
   const rows = [];
-  const customMeta = item?.customMeta || {};
+  const customMeta = item?.customMeta || item?.customDetails || {};
 
   if (isIncentiveRewardLine(item)) {
     rows.push("Incentivo: premio gratis");
@@ -276,6 +296,7 @@ const buildWindowsPrintTicketHtml = (order) => {
   const customer = order?.customerData || {};
   const orderCode = order?.code || order?.id || "-";
   const schedule = getScheduledOrderState(order);
+  const priority = getOrderPriority(order);
   const showAddress = isDeliveryOrder(order) && customer.address_1;
 
   return `<!doctype html>
@@ -304,6 +325,7 @@ const buildWindowsPrintTicketHtml = (order) => {
       .item strong { display: block; font-size: 12px; }
       .item ul { margin: 3px 0 0 0; padding-left: 11px; }
       .item li { margin: 1px 0; }
+      .sectionTitle { margin-bottom: 5px; font-size: 10px; font-weight: 900; text-transform: uppercase; }
       .muted { color: #444; }
       .total { margin-top: 9px; padding-top: 8px; border-top: 2px solid #111; font-size: 15px; font-weight: 900; }
     </style>
@@ -315,6 +337,8 @@ const buildWindowsPrintTicketHtml = (order) => {
       <section class="block">
         <div>Tienda: ${escapeHtml(order?.storeName || "-")}</div>
         <div>Tipo: ${escapeHtml(getOrderType(order))}</div>
+        <div>Prioridad: ${escapeHtml(priority.value)}</div>
+        ${priority.detail ? `<div>${escapeHtml(priority.detail)}</div>` : ""}
         <div>Hora: ${escapeHtml(formatTime(order?.date || order?.createdAt))}</div>
         ${
           schedule.hasSchedule
@@ -328,6 +352,7 @@ const buildWindowsPrintTicketHtml = (order) => {
         ${showAddress ? `<div>Direccion: ${escapeHtml(customer.address_1)}</div>` : ""}
       </section>
       <section class="block">
+        <div class="sectionTitle">Pedido</div>
         ${
           items.length
             ? items
@@ -424,6 +449,7 @@ const getBoostText = (order) => {
   const credit = Number(order?.boost?.queueCredit || 0);
   const target = Number(order?.boost?.targetPosition || 0);
 
+  if (target === 1) return "Primero por Boost";
   if (credit > 0 && target > 0) return `Subio ${credit} a posicion ${target}`;
   if (credit > 0) return `Subio ${credit} posicion${credit === 1 ? "" : "es"}`;
   return "Prioridad activa";
@@ -547,20 +573,6 @@ const getLocalDateParts = (date = new Date()) => {
   };
 };
 
-const normalizeWhatsAppPhone = (value) => {
-  const digits = String(value || "").replace(/\D/g, "");
-  if (!digits) return "";
-  if (digits.startsWith("00")) return digits.slice(2);
-  if (digits.length === 9) return `34${digits}`;
-  return digits;
-};
-
-const CUSTOMER_HELP_TEMPLATES = [
-  "Disculpa, para preparar bien tu pedido: esta indicacion aplica a toda la pizza o solo a una mitad?",
-  "Confirmas si quieres quitar ese ingrediente de todo el pedido o solo de una pizza?",
-  "Tenemos una duda de cocina con tu pedido. Nos confirmas como prefieres que lo preparemos?",
-];
-
 const CUSTOMER_HELP_EMOJIS = ["🙋", "🙋🏻‍♀️", "🙋🏻‍♂️", "🙋🏽‍♂️", "🙋🏿", "🧕"];
 
 const pickCustomerHelpEmoji = (current = "") => {
@@ -572,6 +584,18 @@ const pickCustomerHelpEmoji = (current = "") => {
 const getCustomerName = (order) =>
   String(order?.customerData?.name || "").trim() || "Cliente sin nombre";
 
+const getUnreadCustomerChatMessages = (order) =>
+  asArray(order?.customerData?.chatMessages).filter(
+    (message) => String(message?.sender || "").toUpperCase() === "CUSTOMER" && !message?.readAt
+  );
+
+const getUnreadCustomerChatIds = (orders = []) =>
+  orders.flatMap((order) =>
+    getUnreadCustomerChatMessages(order).map(
+      (message) => `${order.id}:${message.id || message.createdAt || message.text}`
+    )
+  );
+
 const getCustomerSegment = (order) => {
   const key = String(order?.customerData?.segment || "").trim().toUpperCase();
   return CUSTOMER_SEGMENT_META[key] || { label: key || "Sin segmento", tone: "default" };
@@ -579,6 +603,36 @@ const getCustomerSegment = (order) => {
 
 const isVipOrder = (order) =>
   String(order?.customerData?.segment || "").trim().toUpperCase() === "S5";
+
+const getOrderPriority = (order) => {
+  if (isBoostedOrder(order)) {
+    return {
+      tone: "boost",
+      label: "Prioridad",
+      value: getBoostText(order),
+      detail:
+        order?.boost?.amount > 0
+          ? `Boost pagado: ${formatMoney(order.boost.amount, order.currency || "EUR")}`
+          : "",
+    };
+  }
+
+  if (isVipOrder(order)) {
+    return {
+      tone: "vip",
+      label: "Prioridad",
+      value: "Cliente VIP despues de Boost",
+      detail: "",
+    };
+  }
+
+  return {
+    tone: "normal",
+    label: "Prioridad",
+    value: "Cola normal",
+    detail: "",
+  };
+};
 
 const getCustomerTags = (order) => {
   const customer = order?.customerData || {};
@@ -731,6 +785,7 @@ function TicketPreview({ order }) {
 
   const schedule = getScheduledOrderState(order);
   const address = getCustomerAddress(order);
+  const priority = getOrderPriority(order);
 
   return (
     <div className="pos-ticketPreview">
@@ -750,23 +805,11 @@ function TicketPreview({ order }) {
           <strong>{schedule.label}</strong>
         </div>
       )}
-      {isBoostedOrder(order) && (
-        <div className="pos-ticketBlock pos-ticketBlock--boost">
-          <span>Boost priority</span>
-          <strong>{getBoostText(order)}</strong>
-          {order.boost?.amount > 0 && (
-            <small>
-              Boost pagado: {formatMoney(order.boost.amount, order.currency || "EUR")}
-            </small>
-          )}
-        </div>
-      )}
-      {isVipOrder(order) && (
-        <div className="pos-ticketBlock pos-ticketBlock--vip">
-          <span>Prioridad VIP</span>
-          <strong>Cliente VIP despues de Boost</strong>
-        </div>
-      )}
+      <div className={`pos-ticketBlock pos-ticketBlock--priority pos-ticketBlock--priority-${priority.tone}`}>
+        <span>{priority.label}</span>
+        <strong>{priority.value}</strong>
+        {priority.detail && <small>{priority.detail}</small>}
+      </div>
       <div className="pos-ticketBlock">
         <span>Cliente</span>
         <strong>{order.customerData?.name || "-"}</strong>
@@ -779,6 +822,7 @@ function TicketPreview({ order }) {
         </div>
       )}
       <div className="pos-ticketItems">
+        <span>Pedido</span>
         <OrderItems order={order} />
       </div>
       {order.notes && (
@@ -1064,6 +1108,7 @@ export default function PosApp() {
   const [customerHelpOpen, setCustomerHelpOpen] = useState(false);
   const [customerHelpOrderId, setCustomerHelpOrderId] = useState("");
   const [customerHelpText, setCustomerHelpText] = useState("");
+  const [customerHelpSending, setCustomerHelpSending] = useState(false);
   const [customerHelpEmoji, setCustomerHelpEmoji] = useState(() => pickCustomerHelpEmoji());
   const [, setAudioReady] = useState(false);
   const [storeMeta, setStoreMeta] = useState(null);
@@ -1095,6 +1140,10 @@ export default function PosApp() {
   const audioPendingOrderAlertRef = useRef(false);
   const alertSoundRef = useRef(null);
   const newOrderSoundRef = useRef(null);
+  const chatUnreadIdsRef = useRef(new Set());
+  const chatUnreadInitializedRef = useRef(false);
+  const loadOrdersRequestRef = useRef(0);
+  const loadingOrdersRef = useRef(false);
 
   const selectedOrder = useMemo(
     () =>
@@ -1109,6 +1158,10 @@ export default function PosApp() {
   const customerHelpOrder = useMemo(
     () => orders.find((order) => String(order.id) === String(customerHelpOrderId)) || null,
     [customerHelpOrderId, orders]
+  );
+  const unreadCustomerMessageCount = useMemo(
+    () => orders.reduce((sum, order) => sum + getUnreadCustomerChatMessages(order).length, 0),
+    [orders]
   );
 
   const printerStatus = mockPrinter.getStatus();
@@ -1343,6 +1396,17 @@ export default function PosApp() {
     return true;
   }, [getUnlockedAudioContext, playOrderMelodyOnContext]);
 
+  const playCustomerMessageSound = useCallback(() => {
+    const ctx = getUnlockedAudioContext();
+    if (!ctx) return false;
+
+    const now = ctx.currentTime + 0.01;
+    createTone(ctx, { frequency: 659.25, startAt: now, duration: 0.12, volume: 0.032, type: "sine" });
+    createTone(ctx, { frequency: 880, startAt: now + 0.14, duration: 0.14, volume: 0.027, type: "triangle" });
+    createTone(ctx, { frequency: 1174.66, startAt: now + 0.31, duration: 0.18, volume: 0.022, type: "sine" });
+    return true;
+  }, [getUnlockedAudioContext]);
+
   const stopNewOrderSoundLoop = useCallback(() => {
     if (newOrderSoundRef.current) {
       window.clearInterval(newOrderSoundRef.current);
@@ -1409,11 +1473,16 @@ export default function PosApp() {
     loadSetup();
   }, []);
 
-  const loadOrders = useCallback(async () => {
+  const loadOrders = useCallback(async ({ force = false } = {}) => {
     if (!session?.partnerId || !session?.storeId) return;
+    if (loadingOrdersRef.current && !force) return;
+
+    const requestId = loadOrdersRequestRef.current + 1;
+    loadOrdersRequestRef.current = requestId;
 
     try {
       await unlockAudioContext();
+      loadingOrdersRef.current = true;
       setLoadingOrders(true);
       const lastAttemptAt = new Date().toISOString();
       setSyncHealth((current) => ({
@@ -1426,14 +1495,20 @@ export default function PosApp() {
           params: {
             partnerId: session.partnerId,
             storeId: session.storeId,
+            _ts: Date.now(),
           },
+          timeout: POS_REQUEST_TIMEOUT_MS,
         }),
         api.get(`/api/presence/stores/${session.storeId}/status`, {
           params: {
             partnerId: session.partnerId,
+            _ts: Date.now(),
           },
+          timeout: POS_REQUEST_TIMEOUT_MS,
         }).catch(() => null),
       ]);
+      if (requestId !== loadOrdersRequestRef.current) return;
+
       const items = Array.isArray(ordersResponse.data?.items) ? ordersResponse.data.items : [];
       const previousSeen = seenIdsRef.current;
       const previousBoostState = boostStateRef.current;
@@ -1472,10 +1547,19 @@ export default function PosApp() {
         setPresence(presenceResponse.data.presence);
       }
 
-      if (items.length === 0 && ordersRef.current.length > 0) {
-        setMessage("Lectura inconsistente: manteniendo pedidos no marcados como listos.");
-        return;
+      const previousUnreadIds = chatUnreadIdsRef.current;
+      const nextUnreadIds = new Set(getUnreadCustomerChatIds(items));
+      const newUnreadIds = [...nextUnreadIds].filter((id) => !previousUnreadIds.has(id));
+      if (chatUnreadInitializedRef.current && newUnreadIds.length > 0) {
+        playCustomerMessageSound();
+        setMessage(
+          newUnreadIds.length === 1
+            ? "Nueva respuesta de cliente en el chat."
+            : `${newUnreadIds.length} respuestas nuevas de clientes.`
+        );
       }
+      chatUnreadIdsRef.current = nextUnreadIds;
+      chatUnreadInitializedRef.current = true;
 
       const lastOkAt = new Date().toISOString();
       setSyncHealth({
@@ -1492,6 +1576,7 @@ export default function PosApp() {
         current && items.some((item) => item.id === current) ? current : null
       );
     } catch (error) {
+      if (requestId !== loadOrdersRequestRef.current) return;
       console.error(error);
       setSyncHealth((current) => ({
         ...current,
@@ -1500,9 +1585,12 @@ export default function PosApp() {
       }));
       setMessage(error.response?.data?.error || "No se pudo leer la cola del POS.");
     } finally {
-      setLoadingOrders(false);
+      if (requestId === loadOrdersRequestRef.current) {
+        loadingOrdersRef.current = false;
+        setLoadingOrders(false);
+      }
     }
-  }, [session, startNewOrderSoundLoop, unlockAudioContext]);
+  }, [playCustomerMessageSound, session, startNewOrderSoundLoop, unlockAudioContext]);
 
   const loadDayOrders = useCallback(async () => {
     if (!session?.partnerId || !session?.storeId) return;
@@ -1534,10 +1622,38 @@ export default function PosApp() {
     seenIdsRef.current = new Set();
     acceptedNoticeIdsRef.current = readAcceptedNoticeIds(session.storeId);
     boostStateRef.current = new Map();
+    chatUnreadIdsRef.current = new Set();
+    chatUnreadInitializedRef.current = false;
     loadOrders();
     const timer = window.setInterval(loadOrders, POLL_MS);
     return () => window.clearInterval(timer);
   }, [loadOrders, session]);
+
+  useEffect(() => {
+    if (!session) return undefined;
+
+    const forceRead = () => {
+      loadOrders();
+    };
+
+    const watchdog = window.setInterval(() => {
+      const lastOkMs = syncHealth.lastOkAt ? new Date(syncHealth.lastOkAt).getTime() : 0;
+      if (!lastOkMs || Date.now() - lastOkMs > STALE_AFTER_MS) {
+        loadOrders();
+      }
+    }, Math.max(3000, Math.floor(POLL_MS / 2)));
+
+    window.addEventListener("focus", forceRead);
+    window.addEventListener("online", forceRead);
+    document.addEventListener("visibilitychange", forceRead);
+
+    return () => {
+      window.clearInterval(watchdog);
+      window.removeEventListener("focus", forceRead);
+      window.removeEventListener("online", forceRead);
+      document.removeEventListener("visibilitychange", forceRead);
+    };
+  }, [loadOrders, session, syncHealth.lastOkAt]);
 
   useEffect(() => {
     if (!showVisitorAlert) {
@@ -1741,11 +1857,43 @@ export default function PosApp() {
     if (fallbackOrder && !orders.some((order) => String(order.id) === String(customerHelpOrderId))) {
       setCustomerHelpOrderId(String(fallbackOrder.id));
     }
+  }, [customerHelpOpen, customerHelpOrderId, orders, selectedOrder]);
 
-    if (!customerHelpText.trim()) {
-      setCustomerHelpText(CUSTOMER_HELP_TEMPLATES[0]);
-    }
-  }, [customerHelpOpen, customerHelpOrderId, customerHelpText, orders, selectedOrder]);
+  useEffect(() => {
+    if (!customerHelpOpen || !customerHelpOrder?.id) return;
+    if (!getUnreadCustomerChatMessages(customerHelpOrder).length) return;
+
+    let cancelled = false;
+    api
+      .patch(`/api/myorders/${customerHelpOrder.id}/messages/read`)
+      .then((response) => {
+        if (cancelled) return;
+        const messages = response.data?.messages || [];
+        setOrders((current) =>
+          current.map((order) =>
+            order.id === customerHelpOrder.id
+              ? {
+                  ...order,
+                  customerData: {
+                    ...order.customerData,
+                    chatMessages: messages,
+                  },
+                }
+              : order
+          )
+        );
+        chatUnreadIdsRef.current = new Set(
+          [...chatUnreadIdsRef.current].filter((id) => !id.startsWith(`${customerHelpOrder.id}:`))
+        );
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [customerHelpOpen, customerHelpOrder]);
 
   const startSession = (nextSession) => {
     unlockAudioContext();
@@ -1878,14 +2026,13 @@ export default function PosApp() {
     }
   };
 
-  const sendCustomerHelpQuestion = () => {
+  const sendCustomerHelpQuestion = async () => {
     if (!customerHelpOrder) {
       setMessage("Selecciona un pedido para consultar al cliente.");
       return;
     }
 
-    const phone = normalizeWhatsAppPhone(customerHelpOrder.customerData?.phone);
-    if (!phone) {
+    if (!customerHelpOrder.customerData?.phone) {
       setMessage("Ese pedido no tiene telefono para consultar al cliente.");
       return;
     }
@@ -1896,16 +2043,43 @@ export default function PosApp() {
       return;
     }
 
-    const text = [
-      `Hola ${getCustomerName(customerHelpOrder)}, somos ${session.storeName}.`,
-      `Tenemos una duda sobre tu pedido ${customerHelpOrder.code || customerHelpOrder.id}:`,
-      question,
-    ].join("\n\n");
-    const url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
-
-    window.open(url, "_blank", "noopener,noreferrer");
-    setCustomerHelpOpen(false);
-    setMessage(`Consulta preparada para ${customerHelpOrder.code || customerHelpOrder.id}.`);
+    try {
+      setCustomerHelpSending(true);
+      const response = await api.post(`/api/myorders/${customerHelpOrder.id}/messages`, {
+        text: question,
+      });
+      const messages = response.data?.messages || [];
+      setOrders((current) =>
+        current.map((order) =>
+          order.id === customerHelpOrder.id
+            ? {
+                ...order,
+                customerData: {
+                  ...order.customerData,
+                  chatMessages: messages,
+                },
+              }
+            : order
+        )
+      );
+      setCustomerHelpText("");
+      setMessage(
+        response.data?.notification?.ok
+          ? `Mensaje enviado al cliente de ${customerHelpOrder.code || customerHelpOrder.id}.`
+          : `Mensaje guardado, pero revisa el envio SMS.`
+      );
+    } catch (error) {
+      console.error(error);
+      const code = error.response?.data?.error;
+      const messages = {
+        bad_message: "Escribe un mensaje para el cliente.",
+        order_not_found: "No encontramos ese pedido.",
+        valid_order_id_required: "Selecciona un pedido valido.",
+      };
+      setMessage(messages[code] || "No se pudo enviar el mensaje al cliente.");
+    } finally {
+      setCustomerHelpSending(false);
+    }
   };
 
   const acceptNewOrderNotice = () => {
@@ -2028,9 +2202,9 @@ export default function PosApp() {
 
           <button
             type="button"
-            className={`pos-topChip pos-syncChip pos-syncChip--${trustState} ${loadingOrders ? "is-syncing" : ""}`}
-            onClick={loadOrders}
-            disabled={loadingOrders}
+      className={`pos-topChip pos-syncChip pos-syncChip--${trustState} ${loadingOrders ? "is-syncing" : ""}`}
+            onClick={() => loadOrders({ force: true })}
+            aria-busy={loadingOrders}
             title={`Estado: ${trustLabel}. Ultima revision OK: ${formatElapsed(syncHealth.lastOkAt)}`}
           >
             <span className="pos-signalDot" />
@@ -2508,16 +2682,28 @@ export default function PosApp() {
                   </div>
                 )}
 
-                <div className="pos-customerHelpTemplates">
-                  {CUSTOMER_HELP_TEMPLATES.map((template) => (
-                    <button
-                      key={template}
-                      type="button"
-                      onClick={() => setCustomerHelpText(template)}
-                    >
-                      {template}
-                    </button>
-                  ))}
+                <div className="pos-customerHelpThread" aria-label="Chat del pedido">
+                  {Array.isArray(customerHelpOrder?.customerData?.chatMessages) &&
+                  customerHelpOrder.customerData.chatMessages.length > 0 ? (
+                    customerHelpOrder.customerData.chatMessages.map((chatMessage) => (
+                      <div
+                        key={chatMessage.id}
+                        className={`pos-customerHelpBubble ${
+                          chatMessage.sender === "CUSTOMER" ? "is-customer" : "is-operator"
+                        }`}
+                      >
+                        <span>
+                          {chatMessage.sender === "CUSTOMER" ? "Cliente" : "POS"}
+                          {chatMessage.createdAt ? ` · ${formatChatTime(chatMessage.createdAt)}` : ""}
+                        </span>
+                        <strong>{chatMessage.text}</strong>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="pos-customerHelpEmpty">
+                      Todavia no hay mensajes en este pedido.
+                    </div>
+                  )}
                 </div>
 
                 <label>
@@ -2525,9 +2711,11 @@ export default function PosApp() {
                   <textarea
                     value={customerHelpText}
                     onChange={(event) => setCustomerHelpText(event.target.value)}
-                    rows={4}
-                    placeholder="Escribe aqui la duda exacta para el cliente..."
+                    rows={5}
+                    maxLength={600}
+                    placeholder="Escribe aqui el mensaje exacto para el cliente..."
                   />
+                  <small>{customerHelpText.trim().length}/600</small>
                 </label>
               </div>
             )}
@@ -2539,9 +2727,9 @@ export default function PosApp() {
               <button
                 type="button"
                 onClick={sendCustomerHelpQuestion}
-                disabled={!customerHelpOrder || !customerHelpText.trim()}
+                disabled={!customerHelpOrder || !customerHelpText.trim() || customerHelpSending}
               >
-                Abrir WhatsApp
+                {customerHelpSending ? "Enviando..." : "Enviar SMS"}
               </button>
             </div>
           </section>
@@ -2631,12 +2819,18 @@ export default function PosApp() {
         <>
       <button
         type="button"
-        className={`pos-customerHelpFab ${selectedOrder ? "active" : ""}`}
+        className={`pos-customerHelpFab ${selectedOrder ? "active" : ""} ${
+          unreadCustomerMessageCount > 0 ? "has-unread" : ""
+        }`}
         onClick={() => setCustomerHelpOpen(true)}
-        title="Consultar al cliente por una duda del pedido"
+        title={
+          unreadCustomerMessageCount > 0
+            ? `${unreadCustomerMessageCount} mensaje(s) de cliente sin leer`
+            : "Consultar al cliente por una duda del pedido"
+        }
       >
         <span aria-hidden="true">{customerHelpEmoji}</span>
-        <strong>?</strong>
+        <strong>{unreadCustomerMessageCount > 0 ? unreadCustomerMessageCount : "?"}</strong>
       </button>
       <button
         type="button"

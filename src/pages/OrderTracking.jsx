@@ -9,6 +9,19 @@ const formatMoney = (value, currency = "EUR") =>
     currency: currency || "EUR",
   }).format(Number(value || 0));
 
+const formatChatTime = (value) => {
+  if (!value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+
+  return new Intl.DateTimeFormat("es-ES", {
+    day: "2-digit",
+    month: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(date);
+};
+
 const steps = [
   { key: "AWAITING_PAYMENT", label: "Pago" },
   { key: "PREPARING", label: "En preparacion" },
@@ -33,6 +46,14 @@ export default function OrderTracking() {
   const [boostTarget, setBoostTarget] = useState("1");
   const [boostLoading, setBoostLoading] = useState(false);
   const [boostMessage, setBoostMessage] = useState("");
+  const [chatText, setChatText] = useState("");
+  const [chatSending, setChatSending] = useState(false);
+  const [chatMessage, setChatMessage] = useState("");
+  const [chatOpen, setChatOpen] = useState(false);
+  const chatRequested = useMemo(() => {
+    const params = new URLSearchParams(location.search);
+    return params.get("chat") === "1";
+  }, [location.search]);
 
   const fetchStatus = useCallback(async ({ quiet = false } = {}) => {
     try {
@@ -93,6 +114,16 @@ export default function OrderTracking() {
       cancelled = true;
     };
   }, [fetchStatus, location.search]);
+
+  useEffect(() => {
+    if (!chatRequested || loading) return;
+
+    setChatOpen(true);
+    window.setTimeout(() => {
+      document.getElementById("chat")?.scrollIntoView({ behavior: "smooth", block: "center" });
+      document.getElementById("chat-reply")?.focus();
+    }, 150);
+  }, [chatRequested, loading]);
 
   const loadBoostQuote = useCallback(async (targetPosition = boostTarget) => {
     if (!code) return null;
@@ -157,6 +188,30 @@ export default function OrderTracking() {
     }
   };
 
+  const sendChatReply = async (event) => {
+    event.preventDefault();
+    const text = chatText.trim();
+    if (!text) return;
+
+    try {
+      setChatSending(true);
+      setChatMessage("");
+      const { data: response } = await api.post(`/api/sales/seguimiento/${code}/messages`, {
+        text,
+      });
+      setData((current) => ({
+        ...(current || {}),
+        chatMessages: response?.messages || current?.chatMessages || [],
+      }));
+      setChatText("");
+      setChatMessage("Respuesta enviada a cocina.");
+    } catch (e) {
+      setChatMessage(e.response?.data?.message || "No pudimos enviar la respuesta.");
+    } finally {
+      setChatSending(false);
+    }
+  };
+
   const boostOptions = useMemo(() => {
     const current = Number(boostQuote?.currentPosition || data?.queuePosition || 0);
     if (!Number.isFinite(current) || current <= 1) return [];
@@ -188,6 +243,7 @@ export default function OrderTracking() {
   const currentIndex = stageIndex(data?.stage);
   const storePath =
     data?.partnerSlug && data?.storeSlug ? `/${data.partnerSlug}/${data.storeSlug}` : "/";
+  const chatMessages = Array.isArray(data?.chatMessages) ? data.chatMessages : [];
 
   return (
     <main className="ot-page">
@@ -218,6 +274,73 @@ export default function OrderTracking() {
         </div>
 
         <p className="ot-message">{data?.message}</p>
+
+        <section
+          className={`ot-chat ${chatRequested ? "is-focused" : ""} ${chatOpen ? "is-open" : ""} ${
+            chatMessages.length > 0 ? "has-messages" : ""
+          }`}
+          id="chat"
+        >
+          <button
+            type="button"
+            className="ot-chatToggle"
+            onClick={() => setChatOpen((current) => !current)}
+            aria-expanded={chatOpen}
+          >
+            <span>Chat con cocina</span>
+            <strong>{chatOpen ? "Cerrar chat" : "Abrir chat"}</strong>
+            <small>
+              {chatMessages.length > 0
+                ? `${chatMessages.length} mensaje${chatMessages.length === 1 ? "" : "s"}`
+                : "Responder a la tienda"}
+            </small>
+          </button>
+
+          {chatOpen && (
+            <>
+              <h2>Responder a la tienda</h2>
+              <div className="ot-chatThread" aria-label="Mensajes del pedido">
+                {chatMessages.length > 0 ? (
+                  chatMessages.map((message) => (
+                    <div
+                      key={message.id}
+                      className={`ot-chatBubble ${
+                        message.sender === "CUSTOMER" ? "is-customer" : "is-operator"
+                      }`}
+                    >
+                      <small>
+                        {message.sender === "CUSTOMER" ? "Tu" : "Tienda"}
+                        {message.createdAt ? ` - ${formatChatTime(message.createdAt)}` : ""}
+                      </small>
+                      <strong>{message.text}</strong>
+                    </div>
+                  ))
+                ) : (
+                  <div className="ot-chatEmpty">
+                    Si la tienda necesita aclarar algo, el mensaje aparecera aqui.
+                  </div>
+                )}
+              </div>
+              <form className="ot-chatForm" onSubmit={sendChatReply}>
+                <label>
+                  <span>Tu respuesta</span>
+                  <textarea
+                    id="chat-reply"
+                    value={chatText}
+                    onChange={(event) => setChatText(event.target.value)}
+                    rows={4}
+                    maxLength={600}
+                    placeholder="Escribe la respuesta para cocina..."
+                  />
+                </label>
+                {chatMessage && <div className="ot-chatMessage">{chatMessage}</div>}
+                <button type="submit" className="ot-btn" disabled={chatSending || !chatText.trim()}>
+                  {chatSending ? "Enviando..." : "Enviar respuesta"}
+                </button>
+              </form>
+            </>
+          )}
+        </section>
 
         <section className={`ot-boost ${data?.boost?.active ? "active" : ""}`}>
           <span>Boost</span>

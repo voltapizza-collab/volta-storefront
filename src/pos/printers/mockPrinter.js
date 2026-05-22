@@ -77,11 +77,21 @@ const formatExtraSide = (value) => {
   return value ? String(value) : "";
 };
 
-const readArray = (value) => (Array.isArray(value) ? value : []);
+const readArray = (value) => {
+  if (Array.isArray(value)) return value;
+  if (typeof value !== "string") return [];
+
+  try {
+    const parsed = JSON.parse(value);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+};
 
 const getLineDetailRows = (item) => {
   const rows = [];
-  const customMeta = item?.customMeta || {};
+  const customMeta = item?.customMeta || item?.customDetails || {};
 
   if (isIncentiveRewardLine(item)) {
     rows.push("Incentivo: premio gratis");
@@ -93,7 +103,16 @@ const getLineDetailRows = (item) => {
   }
 
   const ingredientRows = [];
-  readArray(item?.ingredients).forEach((ingredient) => {
+  const sourceIngredients = readArray(item?.ingredients).length
+    ? readArray(item?.ingredients)
+    : readArray(item?.customDetails?.ingredients);
+
+  sourceIngredients.forEach((ingredient) => {
+    if (ingredient?.label) {
+      ingredientRows.push(String(ingredient.label).trim());
+      return;
+    }
+
     const name = String(ingredient?.name || ingredient?.label || ingredient || "").trim();
     if (!name) return;
 

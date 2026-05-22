@@ -189,6 +189,22 @@ export default function PromosPanel({ partnerId }) {
     }));
   };
 
+  const buildPromoItem = (pizza) => {
+    const sizeOptions = getPizzaSizes(pizza);
+    const defaultSize = sizeOptions[0] || "";
+
+    return {
+      pizzaId: pizza.id,
+      name: pizza.name,
+      category: pizza.categoryName || pizza.category || "Sin categoria",
+      quantity: 1,
+      size: defaultSize,
+      sizeOptions,
+      priceBySize: pizza.priceBySize || {},
+      unitPrice: getSizePrice({ priceBySize: pizza.priceBySize }, defaultSize),
+    };
+  };
+
   const addItem = (pizza) => {
     setForm((prev) => {
       const existing = prev.items.find((item) => item.pizzaId === pizza.id);
@@ -200,24 +216,38 @@ export default function PromosPanel({ partnerId }) {
         };
       }
 
-      const sizeOptions = getPizzaSizes(pizza);
-      const defaultSize = sizeOptions[0] || "";
+      return {
+        ...prev,
+        items: [...prev.items, buildPromoItem(pizza)],
+      };
+    });
+  };
+
+  const isItemSelected = (pizzaId) => form.items.some((item) => item.pizzaId === pizzaId);
+
+  const isCategorySelected = (group) =>
+    group.rows.length > 0 && group.rows.every((pizza) => isItemSelected(pizza.id));
+
+  const toggleCategory = (group) => {
+    setForm((prev) => {
+      const categoryIds = new Set(group.rows.map((pizza) => pizza.id));
+      const currentIds = new Set(prev.items.map((item) => item.pizzaId));
+      const allSelected = group.rows.length > 0 && group.rows.every((pizza) => currentIds.has(pizza.id));
+
+      if (allSelected) {
+        return {
+          ...prev,
+          items: prev.items.filter((item) => !categoryIds.has(item.pizzaId)),
+        };
+      }
+
+      const missingItems = group.rows
+        .filter((pizza) => !currentIds.has(pizza.id))
+        .map((pizza) => buildPromoItem(pizza));
 
       return {
         ...prev,
-        items: [
-          ...prev.items,
-          {
-            pizzaId: pizza.id,
-            name: pizza.name,
-            category: pizza.categoryName || pizza.category || "Sin categoria",
-            quantity: 1,
-            size: defaultSize,
-            sizeOptions,
-            priceBySize: pizza.priceBySize || {},
-            unitPrice: getSizePrice({ priceBySize: pizza.priceBySize }, defaultSize),
-          },
-        ],
+        items: [...prev.items, ...missingItems],
       };
     });
   };
@@ -334,6 +364,8 @@ export default function PromosPanel({ partnerId }) {
   };
 
   const selectedFileName = form.imageFile?.name || (existingImage ? "Imagen actual" : "Sin archivo");
+  const selectedProductCount = form.items.length;
+  const selectedCategoryCount = pizzasByCategory.filter(isCategorySelected).length;
 
   const normalizePromoItem = (item) => {
     const pizza = pizzaById.get(item.pizzaId);
@@ -479,30 +511,51 @@ export default function PromosPanel({ partnerId }) {
         <div className="cp-promoPicker">
           <div>
             <div className="cp-kicker">Productos</div>
-            <div className="cp-helper">Selecciona productos por categoria para meterlos en la bolsa.</div>
+            <div className="cp-helper">
+              {selectedProductCount} seleccionados: {selectedCategoryCount} categoria
+              {selectedCategoryCount === 1 ? "" : "s"} completa{selectedCategoryCount === 1 ? "" : "s"} y{" "}
+              {selectedProductCount} producto{selectedProductCount === 1 ? "" : "s"} en bolsa.
+            </div>
           </div>
 
           {pizzasByCategory.map((group, index) => (
-            <details key={group.category} className="cp-promoCategory" open={index === 0}>
-              <summary className="cp-promoCategoryHead">
+            <details key={group.category} className="cp-directCategory" open={index === 0}>
+              <summary className="cp-directCategorySummary">
                 <strong>{group.category}</strong>
                 <span>{group.rows.length} productos</span>
               </summary>
 
-              <div className="cp-promoProductGrid">
-                {group.rows.map((pizza) => (
-                  <button
-                    key={pizza.id}
-                    type="button"
-                    className={`cp-promoProductBtn ${
-                      form.items.some((item) => item.pizzaId === pizza.id) ? "is-selected" : ""
-                    }`}
-                    onClick={() => addItem(pizza)}
-                  >
-                    <span className="cp-promoProductCheck" aria-hidden="true" />
-                    <strong>{pizza.name}</strong>
-                  </button>
-                ))}
+              <label className={`cp-directCategorySelect ${isCategorySelected(group) ? "is-selected" : ""}`}>
+                <input
+                  type="checkbox"
+                  checked={isCategorySelected(group)}
+                  onChange={() => toggleCategory(group)}
+                />
+                <span>
+                  <strong>Seleccionar categoria completa</strong>
+                  <small>Todos los productos de {group.category} se agregan a la bolsa.</small>
+                </span>
+              </label>
+
+              <div className="cp-directProductList">
+                {group.rows.map((pizza) => {
+                  const selected = isItemSelected(pizza.id);
+
+                  return (
+                    <label
+                      key={pizza.id}
+                      className={`cp-directProductRow ${selected ? "is-selected" : ""}`}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={selected}
+                        onChange={() => addItem(pizza)}
+                      />
+                      <span>{pizza.name}</span>
+                      {selected && <em>En bolsa</em>}
+                    </label>
+                  );
+                })}
               </div>
             </details>
           ))}

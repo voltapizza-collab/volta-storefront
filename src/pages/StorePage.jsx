@@ -1556,6 +1556,8 @@ export default function StorePage() {
   const [incentiveNowMs, setIncentiveNowMs] = useState(() => Date.now());
   const [flippedId, setFlippedId] = useState(null);
   const [tick, setTick] = useState(false);
+  const [lsfSurfaceDocked, setLsfSurfaceDocked] = useState(false);
+  const lsfSurfaceRef = useRef(null);
   const tabsScrollerRef = useRef(null);
   const tabsAutoPauseUntilRef = useRef(0);
   const tabsScrollRafRef = useRef(0);
@@ -1563,10 +1565,56 @@ export default function StorePage() {
   const tabsScrollOriginRef = useRef("");
   const ignoreTabsScrollUntilRef = useRef(0);
   const gridSwipeRef = useRef(null);
+  const halfSwipeRef = useRef(null);
   const suppressGridClickUntilRef = useRef(0);
   const incentiveZeroRefreshRef = useRef(false);
   const dismissedRewardIncentiveIdsRef = useRef(new Set());
   const autoCouponApplyRef = useRef("");
+  const lsfSurfaceStickySuspended = Boolean(
+    productModalOpen ||
+      cartOpen ||
+      checkoutProfileOpen ||
+      checkoutLoading ||
+      halfModalOpen ||
+      customModalOpen ||
+      repeatOpen ||
+      scheduleOpen ||
+      reservationOpen ||
+      bootsOpen ||
+      couponInfoOpen ||
+      (portalReady && !termsAccepted)
+  );
+
+  useEffect(() => {
+    let rafId = 0;
+
+    const updateDockedState = () => {
+      rafId = 0;
+      const surface = lsfSurfaceRef.current;
+      if (!surface || window.innerWidth > 560 || lsfSurfaceStickySuspended) {
+        setLsfSurfaceDocked(false);
+        return;
+      }
+
+      const rect = surface.getBoundingClientRect();
+      setLsfSurfaceDocked(rect.top <= 1 && window.scrollY > 12);
+    };
+
+    const requestUpdate = () => {
+      if (rafId) return;
+      rafId = window.requestAnimationFrame(updateDockedState);
+    };
+
+    requestUpdate();
+    window.addEventListener("scroll", requestUpdate, { passive: true });
+    window.addEventListener("resize", requestUpdate);
+
+    return () => {
+      if (rafId) window.cancelAnimationFrame(rafId);
+      window.removeEventListener("scroll", requestUpdate);
+      window.removeEventListener("resize", requestUpdate);
+    };
+  }, [lsfSurfaceStickySuspended]);
 
   useEffect(() => {
     try {
@@ -3385,6 +3433,51 @@ export default function StorePage() {
     });
   };
 
+  const handleHalfPointerStart = (event, side, canNavigate) => {
+    if (!canNavigate || event.target?.closest?.("button, a, input, textarea, select")) return;
+    if (typeof window !== "undefined" && window.innerWidth > 720) return;
+
+    halfSwipeRef.current = {
+      side,
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      startedAt: performance.now(),
+      swiping: false,
+    };
+  };
+
+  const handleHalfPointerMove = (event) => {
+    const gesture = halfSwipeRef.current;
+    if (!gesture || gesture.pointerId !== event.pointerId) return;
+
+    const deltaX = event.clientX - gesture.startX;
+    const deltaY = event.clientY - gesture.startY;
+
+    if (Math.abs(deltaY) > 14 && Math.abs(deltaY) > Math.abs(deltaX) * 1.18) {
+      gesture.swiping = true;
+      if (event.cancelable) event.preventDefault();
+    }
+  };
+
+  const handleHalfPointerEnd = (event) => {
+    const gesture = halfSwipeRef.current;
+    if (!gesture || gesture.pointerId !== event.pointerId) return;
+
+    halfSwipeRef.current = null;
+    const deltaX = event.clientX - gesture.startX;
+    const deltaY = event.clientY - gesture.startY;
+    const elapsed = performance.now() - gesture.startedAt;
+    const isVerticalSwipe =
+      Math.abs(deltaY) >= 44 &&
+      Math.abs(deltaY) > Math.abs(deltaX) * 1.18 &&
+      elapsed < 900;
+
+    if (isVerticalSwipe) {
+      moveHalf(gesture.side, deltaY < 0 ? 1 : -1);
+    }
+  };
+
   const toggleHalfExtra = (side, ingredientId) => {
     setHalfExtras((current) => ({
       ...current,
@@ -4642,235 +4735,258 @@ export default function StorePage() {
           </div>
         </section>
 
-        <section className="sf-lsfSurface lsf-wrapper lsf-mobile">
-          {isStorefrontButtonVisible("selectProducts") && (
-            <div className="sf-storeHeaderTitle sf-storeHeaderTitle--mobileSeparator">
-              Selecciona productos
-            </div>
-          )}
+        {isStorefrontButtonVisible("selectProducts") && (
+          <div className="sf-storeHeaderTitle sf-storeHeaderTitle--mobileSeparator">
+            Selecciona productos
+          </div>
+        )}
 
-          <div className="sf-lsfActionSearchLine">
-            {isStorefrontButtonVisible("coupons") && (
-              <button
-                type="button"
-                className={`sf-offersBtn sf-lsfOfferBtn ${offerVariant.className}`}
-                onClick={() =>
-                  navigate(`/${partnerSlug}/coupons`, {
-                    state: { returnToStorePath: `/${partnerSlug}/${storeSlug}` },
-                  })
-                }
-              >
-                <span className="sf-offersBtnLabel">{offerVariant.label}</span>
-              </button>
-            )}
+        <section
+          ref={lsfSurfaceRef}
+          className={`sf-lsfSurface lsf-wrapper lsf-mobile ${
+            lsfSurfaceStickySuspended
+              ? "is-sticky-suspended"
+              : lsfSurfaceDocked
+                ? "is-docked"
+                : ""
+          }`}
+        >
+          <div className="sf-lsfNavCeiling">
+            <div className="sf-lsfActionSearchLine">
+              {isStorefrontButtonVisible("coupons") && (
+                <button
+                  type="button"
+                  className={`sf-offersBtn sf-lsfOfferBtn ${offerVariant.className}`}
+                  onClick={() =>
+                    navigate(`/${partnerSlug}/coupons`, {
+                      state: { returnToStorePath: `/${partnerSlug}/${storeSlug}` },
+                    })
+                  }
+                >
+                  <span className="sf-offersBtnLabel">{offerVariant.label}</span>
+                </button>
+              )}
 
-            {isStorefrontButtonVisible("halfAndHalf") && (
-              <button
-                type="button"
-                className={`lsf-buildmode ${halfModalOpen ? "is-active" : ""}`}
-                onClick={openHalfModal}
-              >
-                Mitad / Mitad
-              </button>
-            )}
-            {isStorefrontButtonVisible("customPizza") && (
-              <button
-                type="button"
-                className={`lsf-buildmode ${customModalOpen ? "is-active" : ""}`}
-                onClick={openCustomModal}
-              >
-                Arma tu pizza
-              </button>
-            )}
+              {isStorefrontButtonVisible("halfAndHalf") && (
+                <button
+                  type="button"
+                  className={`lsf-buildmode ${halfModalOpen ? "is-active" : ""}`}
+                  onClick={openHalfModal}
+                >
+                  Mitad / Mitad
+                </button>
+              )}
+              {isStorefrontButtonVisible("customPizza") && (
+                <button
+                  type="button"
+                  className={`lsf-buildmode ${customModalOpen ? "is-active" : ""}`}
+                  onClick={openCustomModal}
+                >
+                  Arma tu pizza
+                </button>
+              )}
 
-            <div className="sf-lsfSearchCluster">
-              <div className="sf-engineSearchRow sf-engineSearchRow--lsf">
-                <div className="sf-engineSearchWrap">
-                  {!search && (
-                    <span className="sf-engineSearchTicker" aria-hidden="true">
-                      <span className="sf-engineSearchTickerTrack">
-                        <span>Buscar pizza o ingrediente...</span>
+              <div className="sf-lsfSearchCluster">
+                <div className="sf-engineSearchRow sf-engineSearchRow--lsf">
+                  <div className="sf-engineSearchWrap">
+                    {!search && (
+                      <span className="sf-engineSearchTicker" aria-hidden="true">
+                        <span className="sf-engineSearchTickerTrack">
+                          <span>Buscar pizza o ingrediente...</span>
+                        </span>
                       </span>
-                    </span>
-                  )}
-                  <input
-                    className="sf-engineSearch"
-                    type="search"
-                    placeholder=""
-                    value={search}
-                    onChange={(event) => setSearch(event.target.value)}
-                  />
+                    )}
+                    <input
+                      className="sf-engineSearch"
+                      type="search"
+                      placeholder=""
+                      value={search}
+                      onChange={(event) => setSearch(event.target.value)}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter") {
+                          event.currentTarget.blur();
+                        }
+                      }}
+                    />
+                    <button
+                      type="button"
+                      className="sf-imageSearchBtn"
+                      aria-label="Buscar por imagen en construccion"
+                      data-tooltip="En construccion"
+                      onClick={(event) => event.preventDefault()}
+                    >
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path
+                          d="M8 4H5.8A1.8 1.8 0 0 0 4 5.8V8M16 4h2.2A1.8 1.8 0 0 1 20 5.8V8M4 16v2.2A1.8 1.8 0 0 0 5.8 20H8M20 16v2.2A1.8 1.8 0 0 1 18.2 20H16"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                        />
+                        <circle
+                          cx="12"
+                          cy="12"
+                          r="3.2"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                        />
+                      </svg>
+                    </button>
+                    <button
+                      type="button"
+                      className="sf-engineSearchBtn"
+                      aria-label="Buscar"
+                      onClick={() => {
+                        document.activeElement?.blur?.();
+                      }}
+                    >
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <circle
+                          cx="11"
+                          cy="11"
+                          r="6.5"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.2"
+                        />
+                        <path
+                          d="M16 16l4 4"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.2"
+                          strokeLinecap="round"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+
+                {isStorefrontButtonVisible("repeatOrder") && (
                   <button
                     type="button"
-                    className="sf-imageSearchBtn"
-                    aria-label="Buscar por imagen en construccion"
-                    data-tooltip="En construccion"
-                    onClick={(event) => event.preventDefault()}
+                    className={`sf-repeatOrderBtn ${cartCount > 0 ? "has-draft" : ""}`}
+                    onClick={() => setRepeatOpen(true)}
+                    aria-label="Repetir pedido anterior"
+                    title="Repetir pedido anterior"
                   >
                     <svg viewBox="0 0 24 24" aria-hidden="true">
                       <path
-                        d="M8 4H5.8A1.8 1.8 0 0 0 4 5.8V8M16 4h2.2A1.8 1.8 0 0 1 20 5.8V8M4 16v2.2A1.8 1.8 0 0 0 5.8 20H8M20 16v2.2A1.8 1.8 0 0 1 18.2 20H16"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                      />
-                      <circle
-                        cx="12"
-                        cy="12"
-                        r="3.2"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                      />
-                    </svg>
-                  </button>
-                  <button type="button" className="sf-engineSearchBtn" aria-label="Buscar">
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <circle
-                        cx="11"
-                        cy="11"
-                        r="6.5"
+                        d="M8 7H5v-3M5.6 7A7.2 7.2 0 1 1 4.9 14"
                         fill="none"
                         stroke="currentColor"
                         strokeWidth="2.2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                       />
                       <path
-                        d="M16 16l4 4"
+                        d="M9 12h6M12 9v6"
                         fill="none"
                         stroke="currentColor"
                         strokeWidth="2.2"
                         strokeLinecap="round"
                       />
                     </svg>
+                    <span className="sf-repeatOrderBtn__mark" aria-hidden="true">R</span>
+                    <span className="sf-repeatOrderBtn__label">Repetir pedido</span>
                   </button>
-                </div>
+                )}
               </div>
-
-              {isStorefrontButtonVisible("repeatOrder") && (
-                <button
-                  type="button"
-                  className={`sf-repeatOrderBtn ${cartCount > 0 ? "has-draft" : ""}`}
-                  onClick={() => setRepeatOpen(true)}
-                  aria-label="Repetir pedido anterior"
-                  title="Repetir pedido anterior"
-                >
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path
-                      d="M8 7H5v-3M5.6 7A7.2 7.2 0 1 1 4.9 14"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M9 12h6M12 9v6"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.2"
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                  <span className="sf-repeatOrderBtn__mark" aria-hidden="true">R</span>
-                  <span className="sf-repeatOrderBtn__label">Repetir pedido</span>
-                </button>
-              )}
-            </div>
-          </div>
-
-          <div
-            className={`sf-incentiveBanner sf-incentiveBanner--lsf ${
-              incentiveUnlocked ? "is-complete" : ""
-            } ${activeIncentive ? "is-active" : nextIncentive ? "is-waiting" : "is-idle"}`}
-          >
-            <div className="sf-incentiveHead">
-              <div className="sf-incentiveCopy">
-                <span className="sf-incentiveEyebrow">
-                  {incentiveEyebrow}
-                </span>
-                <strong className="sf-incentiveMessageTicker">
-                  <span>{incentiveMessage}</span>
-                  <span aria-hidden="true">{incentiveMessage}</span>
-                </strong>
-              </div>
-              {!incentiveUnlocked && (
-                <div className="sf-incentiveSignal" aria-label="Estado del incentivo">
-                  <span className="sf-incentiveTimer">{incentiveCounterLabel}</span>
-                </div>
-              )}
             </div>
 
-            {incentiveUnlocked ? (
-              <div className="sf-incentiveRewardStage" aria-label="Incentivo desbloqueado">
-                <span>Felicidades</span>
-                <strong>
-                  {incentiveRewardLabel}
-                  <span className="sf-incentiveRewardDesktopSuffix"> listo para este pedido</span>
-                </strong>
-                <span>Volta reward</span>
-              </div>
-            ) : activeIncentive ? (
-              <div className="sf-incentiveProgress" aria-label="Progreso del incentivo">
-                <div className="sf-incentiveProgressTrack">
-                  <span
-                    className="sf-incentiveProgressFill"
-                    style={{ width: `${Math.round(incentiveProgress * 100)}%` }}
-                  />
-                  <span
-                    className="sf-incentiveProgressStripes"
-                    style={{ width: `${Math.round(incentiveProgress * 100)}%` }}
-                  />
-                  <span className="sf-incentiveProgressGlow" />
-                  <span
-                    className="sf-incentiveProgressMarker"
-                    style={{ left: `${Math.min(96, Math.max(4, incentivePercent))}%` }}
-                  >
-                    {activeIncentive ? `${incentivePercent}%` : "--"}
-                  </span>
-                </div>
-              </div>
-            ) : null}
-          </div>
-
-          <div
-            className="lsf-tabs"
-            ref={tabsScrollerRef}
-            role="tablist"
-            aria-label="Categorias del menu"
-            onPointerDown={() => pauseTabsTicker(6200)}
-            onWheel={() => pauseTabsTicker(6200)}
-            onScroll={handleTabsScroll}
-          >
             <div
-              className={`lsf-segmentTabs is-count-${commercialTabs.length}`}
-              aria-label="Ofertas destacadas"
+              className={`sf-incentiveBanner sf-incentiveBanner--lsf ${
+                incentiveUnlocked ? "is-complete" : ""
+              } ${activeIncentive ? "is-active" : nextIncentive ? "is-waiting" : "is-idle"}`}
             >
-              {commercialTabs.map((tab) => (
-                <button
-                  key={tab.id}
-                  type="button"
-                  data-tab-id={tab.id}
-                  className={`lsf-tab lsf-tab--segment ${activeTab === tab.id ? "is-active" : ""}`}
-                  onClick={() => selectStorefrontTab(tab.id)}
-                >
-                  {tab.label}
-                </button>
-              ))}
+              <div className="sf-incentiveHead">
+                <div className="sf-incentiveCopy">
+                  <span className="sf-incentiveEyebrow">
+                    {incentiveEyebrow}
+                  </span>
+                  <strong className="sf-incentiveMessageTicker">
+                    <span>{incentiveMessage}</span>
+                    <span aria-hidden="true">{incentiveMessage}</span>
+                  </strong>
+                </div>
+                {!incentiveUnlocked && (
+                  <div className="sf-incentiveSignal" aria-label="Estado del incentivo">
+                    <span className="sf-incentiveTimer">{incentiveCounterLabel}</span>
+                  </div>
+                )}
+              </div>
+
+              {incentiveUnlocked ? (
+                <div className="sf-incentiveRewardStage" aria-label="Incentivo desbloqueado">
+                  <span>Felicidades</span>
+                  <strong>
+                    {incentiveRewardLabel}
+                    <span className="sf-incentiveRewardDesktopSuffix"> listo para este pedido</span>
+                  </strong>
+                  <span>Volta reward</span>
+                </div>
+              ) : activeIncentive ? (
+                <div className="sf-incentiveProgress" aria-label="Progreso del incentivo">
+                  <div className="sf-incentiveProgressTrack">
+                    <span
+                      className="sf-incentiveProgressFill"
+                      style={{ width: `${Math.round(incentiveProgress * 100)}%` }}
+                    />
+                    <span
+                      className="sf-incentiveProgressStripes"
+                      style={{ width: `${Math.round(incentiveProgress * 100)}%` }}
+                    />
+                    <span className="sf-incentiveProgressGlow" />
+                    <span
+                      className="sf-incentiveProgressMarker"
+                      style={{ left: `${Math.min(96, Math.max(4, incentivePercent))}%` }}
+                    >
+                      {activeIncentive ? `${incentivePercent}%` : "--"}
+                    </span>
+                  </div>
+                </div>
+              ) : null}
             </div>
 
-            <div className="lsf-categoryTabs" aria-label="Categorias">
-              {categoryTabs.map((tab) => (
-                <button
-                  key={tab.id}
-                  type="button"
-                  data-tab-id={tab.id}
-                  className={`lsf-tab lsf-tab--category ${activeTab === tab.id ? "is-active" : ""}`}
-                  onClick={() => selectStorefrontTab(tab.id)}
-                >
-                  {tab.label}
-                </button>
-              ))}
+            <div
+              className="lsf-tabs"
+              ref={tabsScrollerRef}
+              role="tablist"
+              aria-label="Categorias del menu"
+              onPointerDown={() => pauseTabsTicker(6200)}
+              onWheel={() => pauseTabsTicker(6200)}
+              onScroll={handleTabsScroll}
+            >
+              <div
+                className={`lsf-segmentTabs is-count-${commercialTabs.length}`}
+                aria-label="Ofertas destacadas"
+              >
+                {commercialTabs.map((tab) => (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    data-tab-id={tab.id}
+                    className={`lsf-tab lsf-tab--segment ${activeTab === tab.id ? "is-active" : ""}`}
+                    onClick={() => selectStorefrontTab(tab.id)}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+
+              <div className="lsf-categoryTabs" aria-label="Categorias">
+                {categoryTabs.map((tab) => (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    data-tab-id={tab.id}
+                    className={`lsf-tab lsf-tab--category ${activeTab === tab.id ? "is-active" : ""}`}
+                    onClick={() => selectStorefrontTab(tab.id)}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </section>
@@ -5331,7 +5447,16 @@ export default function StorePage() {
           )}
 
           {isStorefrontButtonVisible("couponCode") && (
-            <form className="sf-couponDock" onSubmit={validateCouponCode}>
+            <form
+              className={`sf-couponDock ${couponCode.trim() ? "has-code" : ""}`}
+              onSubmit={validateCouponCode}
+              onClick={(event) => {
+                if (!couponCode.trim()) return;
+                if (couponLoading) return;
+                if (event.target.closest("input")) return;
+                event.currentTarget.requestSubmit?.();
+              }}
+            >
               <span className="sf-couponDockIcon">%</span>
               <input
                 type="text"
@@ -5340,12 +5465,28 @@ export default function StorePage() {
                   setCouponCode(event.target.value.toUpperCase());
                   setCouponStatus("");
                 }}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    event.preventDefault();
+                    event.currentTarget.blur();
+                    event.currentTarget.form?.requestSubmit?.();
+                  }
+                }}
                 placeholder="Codigo cupon"
               />
               <button type="submit" disabled={couponLoading || couponCode.trim().length === 0}>
                 {couponLoading ? "..." : "Validar"}
               </button>
-              <span className="sf-couponDockTicker" aria-live="polite">
+              <span
+                className={`sf-couponDockTicker ${
+                  couponFooterPercent > 0
+                    ? "is-applied"
+                    : couponCode.trim()
+                      ? "is-ready"
+                      : ""
+                }`}
+                aria-live="polite"
+              >
                 <span>
                   {couponFooterPercent > 0
                     ? `${couponFooterPercent}% OFF`
@@ -5357,8 +5498,8 @@ export default function StorePage() {
                   {couponFooterPercent > 0
                     ? "Aplicado"
                     : couponCode.trim()
-                      ? "Toca aqui"
-                      : "Codigo off"}
+                      ? "Validar"
+                      : "¡AQUI..!"}
                 </span>
               </span>
               {couponStatus && <small>{couponStatus}</small>}
@@ -5887,7 +6028,16 @@ export default function StorePage() {
                     const canNavigate = getHalfNavigableItems(otherIndex).length > 1;
 
                     return (
-                    <div key={side} className="sf-halfSlot">
+                    <div
+                      key={side}
+                      className={`sf-halfSlot ${canNavigate ? "is-swipeable" : ""}`}
+                      onPointerDown={(event) => handleHalfPointerStart(event, side, canNavigate)}
+                      onPointerMove={handleHalfPointerMove}
+                      onPointerUp={handleHalfPointerEnd}
+                      onPointerCancel={() => {
+                        halfSwipeRef.current = null;
+                      }}
+                    >
                       <div className="sf-halfSlotLabel">Mitad {side}</div>
                       <button
                         type="button"

@@ -1468,51 +1468,415 @@
 }
 
 @media (max-width: 700px) {
+  .cg-shell {
+    padding: 8px 6px 76px;
+    overflow-x: hidden;
+  }
+
+  .cg-wrap,
+  .cg-stateCard {
+    width: 100%;
+  }
+
+  .cg-hero,
+  .cg-card,
+  .cg-stateCard,
+  .cg-modalCard {
+    border-radius: 18px;
+  }
+
+  .cg-hero {
+    padding: 12px;
+  }
+
+  .cg-kicker {
+    margin-bottom: 5px;
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+  }
+
+  .cg-hero h1 {
+    font-size: clamp(1.45rem, 8vw, 2.05rem);
+    line-height: 0.98;
+    letter-spacing: -0.03em;
+  }
+
+  .cg-hero p {
+    margin-top: 6px;
+    font-size: 0.78rem;
+    line-height: 1.3;
+  }
+
+  .cg-zoneBar {
+    margin-top: 10px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+    align-items: stretch;
+  }
+
+  .cg-storeBackBtn,
+  .cg-zoneBadge,
+  .cg-ghostBtn {
+    min-height: 34px;
+    padding: 7px 9px;
+    border-radius: 12px;
+    justify-content: center;
+    text-align: center;
+    font-size: 0.7rem;
+    line-height: 1.05;
+  }
+
+  .cg-zoneBadge {
+    display: grid;
+    gap: 2px;
+  }
+
+  .cg-zoneBadge strong {
+    display: block;
+    font-size: 0.8rem;
+  }
+
+  .cg-galleryRail {
+    width: 100%;
+    margin-left: 0;
+    transform: none;
+    overflow: visible;
+  }
+
   .cg-grid {
-    padding-inline: 18px;
+    margin-top: 10px;
+    gap: 10px;
+    padding: 10px 13vw 18px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 13vw;
   }
 
   .cg-card {
-    flex-basis: min(78vw, 310px);
-    width: min(78vw, 310px);
+    flex-basis: 74vw;
+    width: 74vw;
+    max-width: 292px;
+    aspect-ratio: 68 / 92;
     min-height: 0;
-    padding: 18px;
+    padding: 13px;
+    gap: 9px;
+    scroll-snap-align: center;
+    transform: translateY(0) scale(0.98);
+  }
+
+  .cg-card::before {
+    inset: 9px;
+    border-radius: 17px;
+  }
+
+  .cg-cardTop {
+    gap: 5px;
+  }
+
+  .cg-cardBadge,
+  .cg-cardType {
+    min-height: 21px;
+    padding: 4px 7px;
+    font-size: 0.5rem;
+    letter-spacing: 0.04em;
+  }
+
+  .cg-cardBody {
+    gap: 7px;
+  }
+
+  .cg-cardEyebrow {
+    font-size: 0.62rem;
+    letter-spacing: 0.09em;
   }
 
   .cg-cardTitle {
-    font-size: clamp(2.2rem, 12vw, 4rem);
+    font-size: clamp(1.85rem, 13vw, 3rem);
+    line-height: 0.95;
+  }
+
+  .cg-cardSubtitle {
+    max-width: 100%;
+    margin-top: 8px;
+    padding: 7px 9px;
+    border-radius: 10px;
+    font-size: 0.62rem;
+    line-height: 1.18;
+    letter-spacing: 0.06em;
+  }
+
+  .cg-cardHint,
+  .cg-cardGameLine {
+    font-size: 0.66rem;
   }
 
   .cg-cardFooter {
     align-items: center;
+    gap: 7px;
+    padding: 0 1px 3px;
+  }
+
+  .cg-cardStockLabel {
+    font-size: 0.52rem;
+  }
+
+  .cg-cardStockValue {
+    min-width: 30px;
+    padding: 4px 7px;
+    font-size: 0.78rem;
   }
 
   .cg-claimBtn {
-    min-width: 116px;
+    min-width: 96px;
+  }
+
+  .cg-ctaViewport,
+  .cg-ctaWord {
+    height: 34px;
+  }
+
+  .cg-ctaWord {
+    font-size: 0.66rem;
+    letter-spacing: 0.06em;
+  }
+
+  .cg-empty,
+  .cg-stateCard {
+    padding: 12px;
+    font-size: 0.82rem;
   }
 
   .cg-modalHead {
-    flex-direction: column;
-    align-items: stretch;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
   }
 
-  .cg-zoneBar {
-    align-items: stretch;
+  .cg-modalBack {
+    padding: 8px;
+    align-items: center;
+    justify-items: center;
+    overflow-y: auto;
+  }
+
+  .cg-modalCard {
+    width: 100%;
+    max-height: calc(100dvh - 16px);
+    overflow-y: auto;
+    padding: 14px;
+  }
+
+  .cg-legalGateCard,
+  .cg-zoneCard,
+  .cg-claimModalCard {
+    width: 100%;
+    max-height: calc(100dvh - 16px);
+    min-height: 0;
+    padding: 14px;
+    border-radius: 18px;
+  }
+
+  .cg-legalGateCard .cg-modalHead {
+    margin-bottom: 8px;
+  }
+
+  .cg-legalGateCard .cg-modalHead h3 {
+    font-size: 1.08rem;
+    line-height: 1.04;
+  }
+
+  .cg-legalContent {
+    gap: 8px;
+    max-height: calc(100dvh - 154px);
+    padding-right: 2px;
+  }
+
+  .cg-legalContent p {
+    font-size: 0.78rem;
+    line-height: 1.28;
+  }
+
+  .cg-legalContent h4 {
+    font-size: 0.82rem;
+  }
+
+  .cg-legalContent ul {
+    padding-left: 16px;
+    font-size: 0.76rem;
+    line-height: 1.22;
+  }
+
+  .cg-legalContent .cg-legalNote {
+    padding: 8px;
+    border-radius: 12px;
+  }
+
+  .cg-legalAccept {
+    margin-top: 10px;
+    min-width: 0;
+    width: 100%;
   }
 
   .cg-claimModalCard {
-    padding: 22px;
+    padding: 14px;
+  }
+
+  .cg-claimModalCard .cg-modalHead {
+    margin-bottom: 10px;
+  }
+
+  .cg-claimModalCard h3 {
+    margin-top: 5px;
+    font-size: 1.18rem;
+    line-height: 1.04;
+  }
+
+  .cg-claimModalCard .cg-ghostBtn {
+    min-height: 32px;
+    padding-inline: 10px;
+  }
+
+  .cg-zoneTitle {
+    max-width: 100%;
+    font-size: 1.46rem;
+    line-height: 1;
+    text-align: center;
+    text-wrap: balance;
+  }
+
+  .cg-zoneText {
+    margin-top: 8px;
+    max-width: 320px;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 0.82rem;
+    line-height: 1.35;
+    text-align: center;
+  }
+
+  .cg-zoneForm {
+    margin-top: 12px;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .cg-field {
+    gap: 5px;
+    max-width: 100%;
+    align-items: center;
+  }
+
+  .cg-field span {
+    font-size: 0.78rem;
+    letter-spacing: 0.02em;
+  }
+
+  .cg-field input {
+    width: 100%;
+    height: 46px;
+    padding: 0 12px;
+    border-radius: 14px;
+    font-size: 16px;
+    text-align: center;
+  }
+
+  .cg-zoneCard .cg-field {
+    max-width: 280px;
+  }
+
+  .cg-zoneCard .cg-field input {
+    max-width: 280px;
+  }
+
+  .cg-zoneMetaRow {
+    margin-top: 0;
+    gap: 8px;
+    max-width: 100%;
+  }
+
+  .cg-zoneDivider {
+    gap: 7px;
+    width: 100%;
+    font-size: 0.64rem;
+    letter-spacing: 0.04em;
+    line-height: 1.15;
+  }
+
+  .cg-locationBtn {
+    min-height: 74px;
+    max-width: none;
+    padding: 9px;
+    gap: 6px;
+    border-radius: 16px;
+    font-size: 0.78rem;
+  }
+
+  .cg-zoneCard .cg-locationBtn {
+    max-width: 100%;
+  }
+
+  .cg-locationIcon {
+    width: 38px;
+    height: 38px;
+    flex-basis: 38px;
+  }
+
+  .cg-locationIcon svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .cg-primaryBtn {
+    min-height: 46px;
+    max-width: none;
+    font-size: 0.86rem;
+  }
+
+  .cg-claimForm {
+    gap: 10px;
+  }
+
+  .cg-helperBox {
+    padding: 10px;
+    border-radius: 14px;
+    font-size: 0.78rem;
+    line-height: 1.25;
+  }
+
+  .cg-error {
+    padding: 10px;
+    border-radius: 12px;
+    font-size: 0.78rem;
   }
 
   .cg-claimActions {
     grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .cg-claimActions .cg-primaryBtn,
+  .cg-claimActions .cg-ghostBtn {
+    min-height: 44px;
   }
 
   .cg-successHero {
-    padding: 16px;
+    padding: 12px;
+    border-radius: 16px;
+  }
+
+  .cg-successHero strong {
+    font-size: clamp(1.1rem, 7vw, 1.7rem);
+  }
+
+  .cg-successCopy,
+  .cg-successMeta {
+    font-size: 0.78rem;
+    line-height: 1.28;
   }
 
   .cg-copyCouponBtn {
     width: 100%;
+    min-height: 40px;
   }
 }

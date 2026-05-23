@@ -2674,6 +2674,12 @@
   color: var(--sf-theme-text-soft, rgba(0, 0, 0, 0.7));
 }
 
+.sf-footerMiniTicker,
+.sf-couponDockTicker,
+.sf-bootsMobileTicker {
+  display: none;
+}
+
 .sf-footerStatus {
   display: grid;
   align-content: center;
@@ -6894,6 +6900,10 @@
   animation: sfRepeatTextPulse 2.4s ease-in-out infinite;
 }
 
+.sf-repeatOrderBtn .sf-repeatOrderBtn__mark {
+  display: none;
+}
+
 @keyframes sfRepeatTextPulse {
   0%,
   100% {
@@ -8781,12 +8791,13 @@
   }
 
   .sf-storeHeader {
-    grid-template-columns: minmax(88px, 0.82fr) minmax(0, 1fr) minmax(98px, 0.88fr);
+    grid-template-columns: minmax(100px, 0.88fr) minmax(0, 1fr) minmax(108px, 0.92fr);
     grid-template-areas:
       "schedule info cart";
-    gap: 8px;
-    padding: 8px 2px 10px;
-    margin-bottom: 4px;
+    gap: 6px;
+    padding: 8px 8px 11px;
+    margin-bottom: 6px;
+    overflow: hidden;
   }
 
   .sf-storeHeader--desktop {
@@ -8800,7 +8811,7 @@
   .sf-storeHeaderTitle--mobileSeparator {
     display: block;
     width: 100%;
-    margin: -3px 0 8px;
+    margin: -3px 0 16px;
     padding: 0 2px 2px;
   }
 
@@ -8840,30 +8851,60 @@
     border-radius: var(--sf-top-action-radius, 14px);
   }
 
+  .lsf-schedulebtn {
+    grid-template-columns: 26px minmax(0, 1fr);
+    gap: 4px;
+    padding: 0 7px 0 5px;
+    transform: none;
+  }
+
+  .lsf-schedulebtn__icon {
+    width: 26px;
+    height: 26px;
+  }
+
+  .lsf-schedulebtn__text {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
   .lsf-cartbtn {
-    gap: 6px;
-    grid-template-columns: 30px 28px minmax(0, auto);
-    padding: 5px 8px;
+    gap: 4px;
+    grid-template-columns: 26px 26px minmax(0, 1fr);
+    padding: 5px 6px;
+  }
+
+  .lsf-cartbtn__icon,
+  .lsf-cartbtn__count {
+    width: 26px;
+    height: 26px;
   }
 
   .lsf-cartbtn__icon {
-    width: 30px;
-    height: 30px;
+    box-shadow:
+      inset 0 -3px 0 rgba(0, 0, 0, 0.12),
+      0 0 0 1px rgba(255, 255, 255, 0.78),
+      0 5px 10px rgba(0, 0, 0, 0.1);
   }
 
   .lsf-cartbtn__icon svg {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
   }
 
   .lsf-cartbtn__count {
-    width: 28px;
-    height: 28px;
+    border-width: 1px;
     font-size: 0.86rem;
+    box-shadow:
+      inset 0 -3px 0 rgba(0, 0, 0, 0.16),
+      0 5px 10px rgba(59, 0, 139, 0.22);
   }
 
   .lsf-cartbtn__total {
-    font-size: 0.76rem;
+    min-width: 0;
+    font-size: 0.78rem;
+    justify-self: end;
   }
 
   .sf-lsfSurface {
@@ -8891,6 +8932,25 @@
     padding: 0 8px;
     font-size: 0.72rem;
     line-height: 1.05;
+  }
+
+  .sf-lsfActionSearchLine .sf-lsfOfferBtn {
+    border: 2px solid #cfff00;
+    color: #111111 !important;
+  }
+
+  .sf-lsfActionSearchLine .sf-lsfOfferBtn .sf-offersBtnLabel {
+    background: none !important;
+    color: #000000 !important;
+    font-family: "Arial Black", Impact, "Avenir Next", system-ui, sans-serif !important;
+    font-size: 0.88rem !important;
+    letter-spacing: 0 !important;
+    line-height: 1;
+    text-transform: uppercase !important;
+    text-shadow: none !important;
+    -webkit-background-clip: initial !important;
+    -webkit-text-fill-color: #000000 !important;
+    animation: none !important;
   }
 
   .sf-lsfSearchCluster {
@@ -9318,15 +9378,16 @@
   .sf-storeHeader {
     position: relative;
     display: grid;
-    grid-template-columns: minmax(78px, 0.82fr) minmax(0, 1fr) minmax(90px, 0.88fr);
+    grid-template-columns: minmax(92px, 0.9fr) minmax(0, 1fr) minmax(100px, 0.96fr);
     grid-template-areas:
       "schedule info cart";
-    column-gap: 8px;
+    column-gap: 5px;
     row-gap: 5px;
     align-items: center;
     justify-items: stretch;
-    padding: 2px 0 2px;
-    margin-bottom: 2px;
+    padding: 3px 8px 5px;
+    margin-bottom: 4px;
+    overflow: hidden;
   }
 
   .sf-storeHeader--desktop {
@@ -9340,7 +9401,7 @@
   .sf-storeHeaderTitle--mobileSeparator {
     display: block;
     width: 100%;
-    margin: -2px 0 7px;
+    margin: -2px 0 17px;
     padding: 0 0 2px;
   }
 
@@ -9440,7 +9501,7 @@
     grid-template-columns: 23px minmax(0, 1fr);
     gap: 3px;
     justify-content: center;
-    padding: 0 6px;
+    padding: 0 6px 0 5px;
   }
 
   .lsf-schedulebtn__icon {
@@ -9466,9 +9527,9 @@
     top: auto;
     right: auto;
     width: 100%;
-    grid-template-columns: 25px 24px minmax(0, 1fr);
-    gap: 5px;
-    padding: 5px 7px;
+    grid-template-columns: 23px 23px minmax(0, 1fr);
+    gap: 4px;
+    padding: 5px 5px;
     transform: none;
     z-index: 2;
   }
@@ -9479,17 +9540,32 @@
 
   .lsf-cartbtn__icon,
   .lsf-cartbtn__count {
-    width: 25px;
-    height: 25px;
+    width: 23px;
+    height: 23px;
+  }
+
+  .lsf-cartbtn__icon {
+    box-shadow:
+      inset 0 -3px 0 rgba(0, 0, 0, 0.12),
+      0 0 0 1px rgba(255, 255, 255, 0.78),
+      0 5px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .lsf-cartbtn__count {
+    border-width: 1px;
+    box-shadow:
+      inset 0 -3px 0 rgba(0, 0, 0, 0.16),
+      0 5px 10px rgba(59, 0, 139, 0.22);
   }
 
   .lsf-cartbtn__icon svg {
-    width: 17px;
-    height: 17px;
+    width: 16px;
+    height: 16px;
   }
 
   .lsf-cartbtn__total {
-    font-size: 0.66rem;
+    min-width: 0;
+    font-size: 0.68rem;
     justify-self: end;
   }
 
@@ -9537,12 +9613,36 @@
 
   .sf-lsfActionSearchLine .sf-lsfOfferBtn {
     background:
-      repeating-linear-gradient(-35deg, rgba(255, 255, 255, 0.18) 0 4px, transparent 4px 10px),
-      linear-gradient(135deg, #3b008b 0%, #7b2cff 48%, #ff2fa7 100%) !important;
-    color: #fff35c !important;
-    text-shadow:
-      0 1px 0 #120019,
-      0 0 10px rgba(255, 243, 92, 0.38) !important;
+      linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--sf-theme-accent, #ff4e90) 88%, white),
+        color-mix(in srgb, var(--sf-theme-accent, #ff4e90) 72%, #ff9a62)
+      ) !important;
+    border-color: #cfff00;
+    border-width: 2px;
+    color: #111111 !important;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.34),
+      0 10px 20px rgba(255, 79, 135, 0.18);
+    text-shadow: none !important;
+  }
+
+  .sf-lsfActionSearchLine .sf-lsfOfferBtn::before {
+    display: block;
+  }
+
+  .sf-lsfActionSearchLine .sf-lsfOfferBtn .sf-offersBtnLabel {
+    background: none !important;
+    color: #000000 !important;
+    font-family: "Arial Black", Impact, "Avenir Next", system-ui, sans-serif !important;
+    font-size: 0.88rem !important;
+    letter-spacing: 0 !important;
+    line-height: 1;
+    text-transform: uppercase !important;
+    text-shadow: none !important;
+    -webkit-background-clip: initial !important;
+    -webkit-text-fill-color: #000000 !important;
+    animation: none !important;
   }
 
   .sf-lsfActionSearchLine .lsf-buildmode.is-active {
@@ -9598,7 +9698,7 @@
     border-radius: 16px;
     border: 2px solid rgba(18, 0, 25, 0.72);
     background:
-      radial-gradient(circle at 24% 18%, rgba(255, 243, 92, 0.9), transparent 30%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.76), transparent 44%),
       linear-gradient(135deg, rgba(51, 237, 143, 0.96), rgba(0, 229, 255, 0.82));
     color: #120019;
     box-shadow:
@@ -9612,7 +9712,7 @@
   .sf-repeatOrderBtn.has-draft {
     border-color: rgba(18, 0, 25, 0.72);
     background:
-      radial-gradient(circle at 24% 18%, rgba(255, 243, 92, 0.9), transparent 30%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.78), transparent 44%),
       linear-gradient(135deg, rgba(51, 237, 143, 0.96), rgba(0, 229, 255, 0.82));
     box-shadow:
       inset 0 -3px 0 rgba(18, 0, 25, 0.18),
@@ -9621,10 +9721,28 @@
   }
 
   .sf-repeatOrderBtn::before {
+    content: "";
+    position: absolute;
+    inset: 2px;
+    z-index: 0;
+    display: block;
+    border-radius: 13px;
+    pointer-events: none;
+    clip-path: polygon(0 0, 62% 0, 43% 100%, 0 100%);
+    background:
+      radial-gradient(circle at 84% 18%, rgba(0, 229, 255, 0.6), transparent 28%),
+      radial-gradient(circle at 20% 88%, rgba(255, 243, 92, 0.64), transparent 31%),
+      repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0 4px, rgba(184, 24, 116, 0.2) 4px 8px, transparent 8px 14px),
+      linear-gradient(135deg, rgba(255, 47, 167, 0.95) 0%, rgba(123, 44, 255, 0.9) 48%, rgba(0, 229, 255, 0.9) 100%);
+    background-size: 180px 180px, 180px 180px, 200px 200px, auto;
+    animation: sfOffersDiagonalMove 20s linear infinite;
+  }
+
+  .sf-repeatOrderBtn::after {
     display: none;
   }
 
-  .sf-repeatOrderBtn span {
+  .sf-repeatOrderBtn .sf-repeatOrderBtn__label {
     position: absolute;
     width: 1px;
     height: 1px;
@@ -9634,13 +9752,44 @@
   }
 
   .sf-repeatOrderBtn svg {
-    width: 24px;
-    height: 24px;
-    padding: 0;
+    position: relative;
+    z-index: 1;
+    position: absolute;
+    inset: 3px 4px auto auto;
+    width: 12px;
+    height: 12px;
+    padding: 1px;
     margin: 0;
     background: transparent;
-    color: currentColor;
+    color: rgba(18, 0, 25, 0.88);
     box-shadow: none;
+    transform: none;
+  }
+
+  .sf-repeatOrderBtn .sf-repeatOrderBtn__mark {
+    position: relative;
+    z-index: 1;
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: none;
+    overflow: visible;
+    clip: auto;
+    color: #ffffff;
+    font-family: "Arial Black", "Avenir Next", system-ui, sans-serif;
+    margin-top: 5px;
+    margin-left: -3px;
+    font-size: 1.22rem;
+    font-weight: 1000;
+    line-height: 1;
+    letter-spacing: 0;
+    text-align: center;
+    text-shadow:
+      0 1px 0 #120019,
+      2px 2px 0 rgba(255, 47, 167, 0.92),
+      -1.5px -1.5px 0 rgba(0, 229, 255, 0.78),
+      0 0 10px rgba(255, 243, 92, 0.62);
+    animation: sfRepeatTextPulse 2.4s ease-in-out infinite;
   }
 
   @keyframes sfRepeatMobileBob {
@@ -9682,7 +9831,7 @@
       "message message";
     align-items: start;
     column-gap: 7px;
-    row-gap: 4px;
+    row-gap: 8px;
   }
 
   .sf-incentiveCopy {
@@ -9704,6 +9853,7 @@
     min-width: 0;
     overflow: hidden;
     gap: 28px;
+    margin-top: 1px;
     font-size: 0.76rem;
     line-height: 1.12;
     white-space: nowrap;
@@ -9782,6 +9932,7 @@
     overflow-x: auto;
     mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 24px), transparent 100%);
     scroll-padding-left: 126px;
+    scroll-snap-type: none;
   }
 
   .lsf-segmentTabs {
@@ -9825,6 +9976,7 @@
     padding: 8px 11px;
     border-radius: 999px;
     font-size: 0.78rem;
+    scroll-snap-align: none;
   }
 
   .lsf-tab--segment {
@@ -9836,12 +9988,14 @@
     border-radius: 0;
     background: transparent;
     color: #fff;
-    font-family: Impact, "Arial Black", "Avenir Next", sans-serif;
-    font-size: 0.84rem;
+    font-family: "Avenir Next", "Montserrat", "Arial Black", system-ui, sans-serif;
+    font-size: 0.76rem;
     font-weight: 1000;
-    letter-spacing: 0.01em;
-    line-height: 0.95;
-    text-shadow: 0 1px 0 rgba(18, 0, 25, 0.34);
+    letter-spacing: 0;
+    line-height: 1.05;
+    text-align: center;
+    text-shadow: 0 1px 1px rgba(58, 10, 0, 0.28);
+    -webkit-text-stroke: 0.25px rgba(255, 255, 255, 0.42);
     transform: translateY(0);
     animation: lsfMobileSegmentTicker 8.8s ease-in-out infinite;
   }
@@ -9864,8 +10018,11 @@
   .lsf-tab--segment.is-active {
     border: 0;
     background: transparent;
-    color: #fff35c;
+    color: #fff8aa;
     box-shadow: none;
+    text-shadow:
+      0 1px 1px rgba(58, 10, 0, 0.35),
+      0 0 8px rgba(255, 248, 170, 0.5);
   }
 
   .lsf-tab--category {
@@ -9877,19 +10034,39 @@
     0%,
     19%,
     100% {
-      transform: translateY(0);
+      transform: translateY(0) scale(1);
+      filter: brightness(1);
+    }
+    22% {
+      transform: translateY(0) scale(1.07);
+      filter: brightness(1.18) saturate(1.2);
     }
     25%,
     44% {
-      transform: translateY(-40px);
+      transform: translateY(-40px) scale(1);
+      filter: brightness(1);
+    }
+    47% {
+      transform: translateY(-40px) scale(1.07);
+      filter: brightness(1.18) saturate(1.2);
     }
     50%,
     69% {
-      transform: translateY(-80px);
+      transform: translateY(-80px) scale(1);
+      filter: brightness(1);
+    }
+    72% {
+      transform: translateY(-80px) scale(1.07);
+      filter: brightness(1.18) saturate(1.2);
     }
     75%,
     94% {
-      transform: translateY(-120px);
+      transform: translateY(-120px) scale(1);
+      filter: brightness(1);
+    }
+    97% {
+      transform: translateY(-120px) scale(1.07);
+      filter: brightness(1.18) saturate(1.2);
     }
   }
 
@@ -9897,15 +10074,30 @@
     0%,
     25%,
     100% {
-      transform: translateY(0);
+      transform: translateY(0) scale(1);
+      filter: brightness(1);
+    }
+    29% {
+      transform: translateY(0) scale(1.07);
+      filter: brightness(1.18) saturate(1.2);
     }
     34%,
     58% {
-      transform: translateY(-40px);
+      transform: translateY(-40px) scale(1);
+      filter: brightness(1);
+    }
+    62% {
+      transform: translateY(-40px) scale(1.07);
+      filter: brightness(1.18) saturate(1.2);
     }
     67%,
     91% {
-      transform: translateY(-80px);
+      transform: translateY(-80px) scale(1);
+      filter: brightness(1);
+    }
+    95% {
+      transform: translateY(-80px) scale(1.07);
+      filter: brightness(1.18) saturate(1.2);
     }
   }
 
@@ -9913,21 +10105,40 @@
     0%,
     38%,
     100% {
-      transform: translateY(0);
+      transform: translateY(0) scale(1);
+      filter: brightness(1);
+    }
+    43% {
+      transform: translateY(0) scale(1.07);
+      filter: brightness(1.18) saturate(1.2);
     }
     48%,
     88% {
-      transform: translateY(-40px);
+      transform: translateY(-40px) scale(1);
+      filter: brightness(1);
+    }
+    93% {
+      transform: translateY(-40px) scale(1.07);
+      filter: brightness(1.18) saturate(1.2);
     }
   }
 
   .sf-engineGridStage--lsf {
-    min-height: 420px;
-    padding: 12px 14px 22px;
+    min-height: 0;
+    padding: 10px 10px 16px;
     border-radius: 18px;
-    background:
-      linear-gradient(90deg, var(--sf-theme-accent, #f92672) 0 7px, transparent 7px calc(100% - 7px), var(--sf-theme-accent, #f92672) calc(100% - 7px)),
-      #ffffff;
+    border: 2px solid color-mix(in srgb, var(--sf-theme-accent, #f92672) 84%, #6a3df0);
+    background: #ffffff;
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.78),
+      0 8px 18px rgba(106, 61, 240, 0.1);
+  }
+
+  .sf-engineCard--lsf {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    margin-top: -4px;
   }
 
   .sf-engineGridStage--lsf::before {
@@ -9941,7 +10152,7 @@
   .lsf-grid--topDeals,
   .lsf-grid--searchResults {
     grid-template-columns: 1fr;
-    gap: 14px;
+    gap: 12px;
   }
 
   .lsf-flip__inner {
@@ -9950,8 +10161,8 @@
 
   .lsf-flip__front {
     grid-template-rows: minmax(0, 166px) auto;
-    gap: 12px;
-    padding: 10px 10px 13px;
+    gap: 13px;
+    padding: 11px 11px 14px;
   }
 
   .lsf-card__image {
@@ -9972,15 +10183,15 @@
   }
 
   .sf-stickyFooterShell {
-    padding: 6px 7px calc(7px + env(safe-area-inset-bottom));
+    padding: 10px 11px calc(8px + env(safe-area-inset-bottom)) 7px;
     background: linear-gradient(180deg, transparent, rgba(255, 247, 232, 0.96) 18%);
   }
 
   .sf-stickyFooter {
-    --sf-footer-action-height: 38px;
+    --sf-footer-action-height: 40px;
     --sf-footer-radius: 16px;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 6px;
+    gap: 7px;
     padding: 6px;
     border-radius: 20px;
   }
@@ -9996,7 +10207,7 @@
     grid-column: auto;
     min-width: 0;
     min-height: 40px;
-    height: 40px;
+    height: var(--sf-footer-action-height);
     border-radius: 15px;
   }
 
@@ -10019,6 +10230,36 @@
     line-height: 1;
     background: transparent;
     box-shadow: none;
+  }
+
+  .sf-footerMiniTicker {
+    display: none;
+    width: 100%;
+    height: 1rem;
+    place-items: center;
+    overflow: hidden;
+    color: #ffffff;
+    font-size: 0.5rem;
+    font-weight: 1000;
+    line-height: 1rem;
+    text-align: center;
+    text-transform: uppercase;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.34);
+  }
+
+  .sf-footerMiniTicker span {
+    grid-area: 1 / 1;
+    color: inherit !important;
+    font-size: inherit;
+    animation: none;
+  }
+
+  .sf-footerMiniTicker span::before {
+    content: none !important;
+  }
+
+  .sf-footerMiniTicker span + span {
+    display: none;
   }
 
   .sf-engineBottomBtn--call span::before,
@@ -10050,10 +10291,10 @@
 
   .sf-couponDock {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     place-items: center;
-    gap: 6px;
-    padding: 0;
+    gap: 0;
+    padding: 0 6px;
   }
 
   .sf-engineBottomBtn {
@@ -10074,72 +10315,147 @@
 
   .sf-engineBottomBtn--pay {
     grid-column: 1 / -1;
-    min-height: 44px;
-    height: 44px;
+    min-height: 48px;
+    height: 48px;
     padding: 0 12px;
     order: -1;
+    margin-bottom: 5px;
   }
 
   .sf-engineBottomBtn--pay span,
   .sf-engineBottomBtn--pay small,
   .sf-engineBottomBtn--pay:disabled span {
-    position: static;
-    transform: none !important;
-    animation: none;
-    -webkit-text-stroke: 0;
-    text-shadow: none;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) !important;
+    -webkit-text-stroke: 0.7px rgba(255, 255, 255, 0.98);
+    text-shadow:
+      -1.8px -1.8px 0 #ffffff,
+      1.8px 1.8px 0 #ffffff,
+      0 0 10px rgba(255, 255, 255, 0.82);
   }
 
   .sf-engineBottomBtn--pay small {
-    margin-top: 2px;
-    color: rgba(255, 255, 255, 0.78);
-    font-size: 0.72rem;
+    display: block;
+    margin-top: 0;
+    color: var(--brand-2);
+    font-size: 1.02rem;
+    font-weight: 1000;
+    animation: sfMobilePayAmountCycle 3.4s ease-in-out infinite;
+  }
+
+  .sf-engineBottomBtn--pay span {
+    color: var(--brand-2);
+    font-size: 1.02rem;
+    font-weight: 1000;
+    animation: sfMobilePayLabelCycle 3.4s ease-in-out infinite;
   }
 
   .sf-couponDock {
     border-radius: var(--sf-footer-radius);
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(244, 241, 248, 0.96));
+    color: var(--brand-1, #3b008b);
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.78),
-      0 7px 15px rgba(106, 61, 240, 0.12);
+      inset 0 1px 0 rgba(255, 255, 255, 0.82),
+      inset 0 -3px 0 rgba(59, 0, 139, 0.1),
+      0 7px 0 rgba(59, 0, 139, 0.72),
+      0 13px 22px rgba(106, 61, 240, 0.18);
   }
 
   .sf-couponDockIcon {
-    font-size: 1.12rem;
+    display: none;
+  }
+
+  .sf-couponDockTicker {
+    position: relative;
+    z-index: 2;
+    grid-area: 1 / 1;
+    pointer-events: none;
+    width: auto;
+    max-width: calc(100% - 6px);
+    height: 1.1rem;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    color: #ffffff;
+    font-size: 0.56rem;
+    font-weight: 1000;
+    line-height: 1.1rem;
+    text-align: center;
+    text-transform: uppercase;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.38);
+  }
+
+  .sf-couponDockTicker span {
+    grid-area: 1 / 1;
+    max-width: 100%;
+    padding: 0 5px;
+    border-radius: 7px;
+    background: var(--brand-1, #3b008b);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    animation: sfFooterTextCycleA 3.8s ease-in-out infinite;
+  }
+
+  .sf-couponDockTicker span + span {
+    animation-name: sfFooterTextCycleB;
   }
 
   .sf-couponDock input {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    opacity: 0;
-    pointer-events: none;
+    position: relative;
+    z-index: 1;
+    grid-area: 1 / 1;
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+    pointer-events: auto;
+    border: 0;
+    background: transparent;
+    color: transparent;
+    font-size: 0.68rem;
+    font-weight: 950;
+    text-align: center;
+    text-transform: uppercase;
+    caret-color: var(--brand-1, #3b008b);
+  }
+
+  .sf-couponDock input::placeholder {
+    color: transparent;
+  }
+
+  .sf-couponDock:focus-within input {
+    color: var(--brand-1, #3b008b);
+  }
+
+  .sf-couponDock:focus-within input::placeholder {
+    color: color-mix(in srgb, var(--brand-1, #3b008b) 56%, transparent);
   }
 
   .sf-couponDock button {
     display: none;
   }
 
+  .sf-couponDock:focus-within .sf-couponDockTicker {
+    display: none;
+  }
+
   .sf-footerStatus--boots {
     grid-template-columns: 1fr;
     place-items: center;
-    padding: 0;
+    padding: 0 6px;
     border-radius: var(--sf-footer-radius);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.78),
+      inset 0 -4px 0 rgba(59, 0, 139, 0.12),
+      0 7px 0 color-mix(in srgb, var(--brand-1, #3b008b) 82%, #000000),
+      0 13px 22px rgba(106, 61, 240, 0.2);
   }
 
   .sf-bootsCounter {
-    width: 100%;
-    height: 100%;
-    padding: 0;
-    border-radius: inherit;
-    background: transparent;
-  }
-
-  .sf-bootsCounter span {
-    font-size: 0.45rem;
-  }
-
-  .sf-bootsCounter strong {
-    font-size: 1.02rem;
+    display: none;
   }
 
   .sf-bootsTicker,
@@ -10147,18 +10463,64 @@
     display: none;
   }
 
-  .sf-engineBottomBtn--call span,
-  .sf-engineBottomBtn--reservation span {
+  .sf-bootsMobileTicker {
+    display: grid;
+    width: 100%;
+    height: 1.1rem;
+    place-items: center;
+    overflow: hidden;
+    color: #171717;
+    font-size: 0.64rem;
+    font-weight: 1000;
+    line-height: 1.1rem;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .sf-bootsMobileTicker span {
+    grid-area: 1 / 1;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    animation: sfFooterTextCycleA 4s ease-in-out infinite;
+  }
+
+  .sf-bootsMobileTicker span + span {
+    animation-name: sfFooterTextCycleB;
+  }
+
+  .sf-engineBottomBtn--call > span,
+  .sf-engineBottomBtn--reservation > span {
     color: transparent !important;
     text-shadow: none !important;
   }
 
-  .sf-engineBottomBtn--call span::before {
-    content: "\260E";
+  .sf-engineBottomBtn--call,
+  .sf-engineBottomBtn--reservation {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    align-items: center;
+    padding: 0 6px;
   }
 
-  .sf-engineBottomBtn--reservation span::before {
+  .sf-engineBottomBtn--call > span,
+  .sf-engineBottomBtn--reservation > span {
+    display: grid;
+    width: 100%;
+    height: 100%;
+    place-items: center;
+  }
+
+  .sf-engineBottomBtn--call > span::before {
+    content: "\260E";
+    font-size: 1.18rem;
+  }
+
+  .sf-engineBottomBtn--reservation > span::before {
     content: "\1F4C5";
+    font-size: 1.14rem;
   }
 
   .sf-engineBottomBtn--pay span,
@@ -10172,7 +10534,92 @@
   }
 
   .sf-engineBottomBtn--pay small {
-    display: none;
+    display: block !important;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    color: var(--brand-2);
+    font-size: 1.05rem;
+    transform: translate(-50%, -50%) !important;
+    animation: sfMobilePayAmountCycle 3.4s ease-in-out infinite;
+  }
+
+  @keyframes sfMobilePayLabelCycle {
+    0%,
+    42% {
+      opacity: 0;
+      transform: translate(-50%, 88%) rotate(-1deg);
+    }
+    48%,
+    78% {
+      opacity: 1;
+      transform: translate(-50%, -50%) rotate(-1deg);
+    }
+    84%,
+    100% {
+      opacity: 0;
+      transform: translate(-50%, -188%) rotate(-1deg);
+    }
+  }
+
+  @keyframes sfMobilePayAmountCycle {
+    0%,
+    48% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    54%,
+    76% {
+      opacity: 0;
+      transform: translate(-50%, -182%) scale(0.96);
+    }
+    82%,
+    100% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+  }
+
+  @keyframes sfFooterTextCycleA {
+    0%,
+    56% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    64%,
+    100% {
+      opacity: 0;
+      transform: translateY(-115%);
+    }
+  }
+
+  @keyframes sfFooterTextCycleB {
+    0%,
+    48% {
+      opacity: 0;
+      transform: translateY(115%);
+    }
+    56%,
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes sfFooterVerticalTicker {
+    0%,
+    24%,
+    100% {
+      transform: translateY(0);
+    }
+    34%,
+    58% {
+      transform: translateY(-1.1rem);
+    }
+    68%,
+    92% {
+      transform: translateY(-2.2rem);
+    }
   }
 
   .sf-modalOverlay {

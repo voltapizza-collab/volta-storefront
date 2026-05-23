@@ -1559,6 +1559,7 @@ export default function StorePage() {
   const tabsScrollerRef = useRef(null);
   const tabsAutoPauseUntilRef = useRef(0);
   const tabsScrollRafRef = useRef(0);
+  const tabsScrollSettleTimeoutRef = useRef(0);
   const tabsScrollOriginRef = useRef("");
   const ignoreTabsScrollUntilRef = useRef(0);
   const gridSwipeRef = useRef(null);
@@ -2094,12 +2095,61 @@ export default function StorePage() {
     tabsAutoPauseUntilRef.current = performance.now() + durationMs;
   }, []);
 
+  const getCategoryZeroOffset = useCallback((scroller) => {
+    if (!scroller) return 0;
+
+    const categoryGroup = scroller.querySelector(".lsf-categoryTabs");
+    if (categoryGroup) {
+      const categoryStyles = window.getComputedStyle(categoryGroup);
+      const categoryPaddingLeft =
+        Number.parseFloat(categoryStyles.paddingLeft || "0") || 0;
+      return categoryGroup.offsetLeft + categoryPaddingLeft;
+    }
+
+    const segment = scroller.querySelector(".lsf-segmentTabs");
+    if (!segment) return 0;
+
+    const styles = window.getComputedStyle(scroller);
+    const gap = Number.parseFloat(styles.columnGap || styles.gap || "0") || 0;
+    return segment.offsetWidth + gap;
+  }, []);
+
+  const alignCategoryTabToZero = useCallback(
+    (tabId, behavior = "smooth") => {
+      const scroller = tabsScrollerRef.current;
+      if (!scroller || !tabId) return false;
+
+      const escapedTabId =
+        window.CSS?.escape?.(tabId) || String(tabId).replace(/"/g, '\\"');
+      const activeButton = scroller.querySelector(`[data-tab-id="${escapedTabId}"]`);
+      if (!activeButton?.classList?.contains("lsf-tab--category")) return false;
+
+      const scrollerRect = scroller.getBoundingClientRect();
+      const buttonRect = activeButton.getBoundingClientRect();
+      const buttonLeft =
+        buttonRect.left - scrollerRect.left + scroller.scrollLeft;
+      const nextLeft = Math.max(0, buttonLeft - getCategoryZeroOffset(scroller));
+      scroller.scrollLeft = nextLeft;
+      if (behavior !== "auto") {
+        scroller.scrollTo({
+          left: nextLeft,
+          behavior,
+        });
+      }
+      return true;
+    },
+    [getCategoryZeroOffset]
+  );
+
   const selectStorefrontTab = useCallback(
     (tabId, pauseDurationMs = 5200) => {
       pauseTabsTicker(pauseDurationMs);
+      tabsScrollOriginRef.current = "";
+      ignoreTabsScrollUntilRef.current = performance.now() + 520;
+      alignCategoryTabToZero(tabId);
       setActiveTab(tabId);
     },
-    [pauseTabsTicker]
+    [alignCategoryTabToZero, pauseTabsTicker]
   );
 
   const moveStorefrontTab = useCallback(
@@ -2116,47 +2166,49 @@ export default function StorePage() {
     [activeTab, isProductSearchActive, selectStorefrontTab, tabs]
   );
 
-  const syncActiveTabFromTabsScroll = useCallback(() => {
+  const syncActiveTabFromTabsScroll = useCallback((options = {}) => {
     const scroller = tabsScrollerRef.current;
     if (!scroller || isProductSearchActive || !categoryTabs.length) return;
+    const shouldAlign = options.align === true;
 
     const categoryButtons = Array.from(
       scroller.querySelectorAll(".lsf-categoryTabs .lsf-tab--category")
     );
     if (!categoryButtons.length) return;
 
-    const segment = scroller.querySelector(".lsf-segmentTabs");
-    const segmentRect = segment?.getBoundingClientRect();
     const scrollerRect = scroller.getBoundingClientRect();
-    const markerX = Math.min(
-      scrollerRect.right - 24,
-      Math.max(scrollerRect.left, segmentRect ? segmentRect.right + 8 : scrollerRect.left + 8)
-    );
-
-    let closestButton = categoryButtons[0];
-    let closestDistance = Number.POSITIVE_INFINITY;
-
-    categoryButtons.forEach((button) => {
+    const markerX = scrollerRect.left + getCategoryZeroOffset(scroller);
+    const visibleButtons = categoryButtons.filter((button) => {
       const rect = button.getBoundingClientRect();
-      if (rect.right < scrollerRect.left || rect.left > scrollerRect.right) return;
-
-      const distance =
-        rect.left <= markerX && rect.right >= markerX
-          ? 0
-          : Math.abs(rect.left - markerX);
-
-      if (distance < closestDistance) {
-        closestDistance = distance;
-        closestButton = button;
-      }
+      return rect.right > markerX && rect.left < scrollerRect.right;
     });
 
-    const nextTabId = closestButton?.dataset?.tabId;
+    if (!visibleButtons.length) return;
+
+    const markerTolerance = 4;
+    const nextButton =
+      visibleButtons.find(
+        (button) => button.getBoundingClientRect().left >= markerX - markerTolerance
+      ) || visibleButtons[visibleButtons.length - 1];
+
+    const nextTabId = nextButton?.dataset?.tabId;
     if (!nextTabId) return;
 
-    tabsScrollOriginRef.current = "scroll";
+    tabsScrollOriginRef.current = nextTabId;
     setActiveTab((current) => (current === nextTabId ? current : nextTabId));
-  }, [categoryTabs.length, isProductSearchActive]);
+
+    if (shouldAlign) {
+      ignoreTabsScrollUntilRef.current = performance.now() + 520;
+      window.requestAnimationFrame(() => {
+        alignCategoryTabToZero(nextTabId, "auto");
+      });
+    }
+  }, [
+    alignCategoryTabToZero,
+    categoryTabs.length,
+    getCategoryZeroOffset,
+    isProductSearchActive,
+  ]);
 
   const handleTabsScroll = useCallback(() => {
     pauseTabsTicker(6200);
@@ -2170,6 +2222,11 @@ export default function StorePage() {
       tabsScrollRafRef.current = 0;
       syncActiveTabFromTabsScroll();
     });
+
+    window.clearTimeout(tabsScrollSettleTimeoutRef.current);
+    tabsScrollSettleTimeoutRef.current = window.setTimeout(() => {
+      syncActiveTabFromTabsScroll({ align: true });
+    }, 160);
   }, [pauseTabsTicker, syncActiveTabFromTabsScroll]);
 
   const handleGridPointerDown = useCallback((event) => {
@@ -2322,21 +2379,22 @@ export default function StorePage() {
     const scroller = tabsScrollerRef.current;
     if (!scroller || !activeTab) return;
 
-    if (tabsScrollOriginRef.current === "scroll") {
-      tabsScrollOriginRef.current = "";
+    tabsScrollOriginRef.current = "";
+
+    ignoreTabsScrollUntilRef.current = performance.now() + 520;
+    if (alignCategoryTabToZero(activeTab)) {
       return;
     }
 
     const escapedActiveTab =
       window.CSS?.escape?.(activeTab) || String(activeTab).replace(/"/g, '\\"');
     const activeButton = scroller.querySelector(`[data-tab-id="${escapedActiveTab}"]`);
-    ignoreTabsScrollUntilRef.current = performance.now() + 520;
     activeButton?.scrollIntoView?.({
       behavior: "smooth",
       block: "nearest",
       inline: "center",
     });
-  }, [activeTab]);
+  }, [activeTab, alignCategoryTabToZero]);
 
   const reservationEnabled = Boolean(store?.acceptsReservations);
   const storePhone = String(store?.tlf || "").trim();
@@ -3524,6 +3582,13 @@ export default function StorePage() {
     () => cart.filter(isCouponCartLine).reduce((sum, item) => sum + Math.abs(num(item.subtotal)), 0),
     [cart]
   );
+  const couponFooterPercent = useMemo(() => {
+    if (couponDiscountTotal <= 0 || couponEligibleSubtotal <= 0) return 0;
+    return Math.max(
+      1,
+      Math.min(99, Math.round((couponDiscountTotal / couponEligibleSubtotal) * 100))
+    );
+  }, [couponDiscountTotal, couponEligibleSubtotal]);
   const removeCouponFromCart = useCallback(() => {
     setCart((current) => current.filter((line) => !isCouponCartLine(line)));
     setCouponCode("");
@@ -3628,6 +3693,7 @@ export default function StorePage() {
 
   const validateCouponCode = async (event) => {
     event.preventDefault();
+    event.currentTarget?.querySelector("input")?.blur?.();
     await applyCouponCode(couponCode, { openInfo: true, openCartOnValid: true });
   };
 
@@ -4500,7 +4566,7 @@ export default function StorePage() {
         onClick={() => setScheduleOpen(true)}
         title={scheduledOrderLabel || "Programar pedido"}
       >
-        <span className="lsf-schedulebtn__icon" aria-hidden="true">{"\u23F1\uFE0F"}</span>
+        <span className="lsf-schedulebtn__icon" aria-hidden="true">{"\u23F1"}</span>
         <span className="lsf-schedulebtn__text">{scheduledOrderLabel || "Programar"}</span>
       </button>
     ) : null;
@@ -4706,7 +4772,8 @@ export default function StorePage() {
                       strokeLinecap="round"
                     />
                   </svg>
-                  <span>Repetir pedido</span>
+                  <span className="sf-repeatOrderBtn__mark" aria-hidden="true">R</span>
+                  <span className="sf-repeatOrderBtn__label">Repetir pedido</span>
                 </button>
               )}
             </div>
@@ -5229,6 +5296,10 @@ export default function StorePage() {
               disabled={!phoneHref}
             >
               <span>Llamar</span>
+              <small className="sf-footerMiniTicker" aria-hidden="true">
+                <span>Llamar</span>
+                <span>Ahora</span>
+              </small>
             </button>
           )}
 
@@ -5240,6 +5311,10 @@ export default function StorePage() {
               disabled={!reservationEnabled}
             >
               <span>Reservas</span>
+              <small className="sf-footerMiniTicker" aria-hidden="true">
+                <span>Reserva</span>
+                <span>Mesa</span>
+              </small>
             </button>
           )}
 
@@ -5270,6 +5345,22 @@ export default function StorePage() {
               <button type="submit" disabled={couponLoading || couponCode.trim().length === 0}>
                 {couponLoading ? "..." : "Validar"}
               </button>
+              <span className="sf-couponDockTicker" aria-live="polite">
+                <span>
+                  {couponFooterPercent > 0
+                    ? `${couponFooterPercent}% OFF`
+                    : couponCode.trim()
+                      ? "Validar"
+                      : "Cupones"}
+                </span>
+                <span>
+                  {couponFooterPercent > 0
+                    ? "Aplicado"
+                    : couponCode.trim()
+                      ? "Toca aqui"
+                      : "Codigo off"}
+                </span>
+              </span>
               {couponStatus && <small>{couponStatus}</small>}
             </form>
           )}
@@ -5291,6 +5382,10 @@ export default function StorePage() {
                   <span>Subir cola</span>
                   <span>Prioridad</span>
                 </span>
+              </span>
+              <span className="sf-bootsMobileTicker" aria-hidden="true">
+                <span>POS {bootsPositionLabel}</span>
+                <span>BOOST UP</span>
               </span>
             </button>
           )}

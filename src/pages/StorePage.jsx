@@ -27,6 +27,8 @@ const DEFAULT_BOOST_SETTINGS = {
   voltaSharePercent: 25,
   partnerSharePercent: 75,
 };
+const DEFAULT_TRENDING_PRICE_BAND = 0.5;
+const TRENDING_PRICE_REFRESH_MS = 5000;
 
 const normalizeCheckoutPhoneInput = (value) => {
   const digits = String(value || "").replace(/\D/g, "");
@@ -383,13 +385,6 @@ const formatRepeatDate = (value) => {
     hour: "2-digit",
     minute: "2-digit",
   }).format(date);
-};
-
-const formatTrendPercent = (value) => {
-  const parsed = Number(value || 0);
-  if (parsed > 0) return `+${parsed}%`;
-  if (parsed < 0) return `${parsed}%`;
-  return "0%";
 };
 
 const priceForSize = (priceBySize = {}, size = "M") => {
@@ -783,6 +778,32 @@ const renderStorefrontPrice = (item, size = "M") => {
   return renderDiscountPrice({ price, originalPrice, discountPercent });
 };
 
+const renderTrendingPrice = (item, size = "M", isTicking = false) => {
+  const price = priceForSize(item?.priceBySize, size);
+  const basePrice = priceForSize(getTrendingBasePriceBySize(item), size);
+  const adjustment = roundMoney(price - basePrice);
+  const trendTone =
+    adjustment > 0 ? "is-up" : adjustment < 0 ? "is-down" : "is-flat";
+  const adjustmentLabel =
+    adjustment > 0
+      ? `+EUR ${Math.abs(adjustment).toFixed(2)}`
+      : adjustment < 0
+      ? `-EUR ${Math.abs(adjustment).toFixed(2)}`
+      : "+/- EUR 0.00";
+
+  return (
+    <span
+      className={`lsf-topDealPrice lsf-trendingPriceStack ${trendTone} ${isTicking ? "is-ticking" : ""}`}
+    >
+      <span className="lsf-card__priceOld">BASE EUR {basePrice.toFixed(2)}</span>
+      <span className="lsf-card__priceRow">
+        <strong className="lsf-card__priceCurrent">EUR {price.toFixed(2)}</strong>
+        <em>{adjustmentLabel}</em>
+      </span>
+    </span>
+  );
+};
+
 const renderTopDealPrice = (item, size = "M", isTicking = false) => {
   const price = priceForSize(item?.priceBySize, size);
   const originalPrice = getOriginalPriceForSize(item, size);
@@ -830,6 +851,150 @@ const getTopDealStickerLabel = (item, size = "M") => {
 };
 
 const roundMoney = (value) => Math.round(Number(value || 0) * 100) / 100;
+
+const getTrendingPriceBand = (item) => {
+  const band = Number(item?.trendingPricing?.band);
+  return Number.isFinite(band) && band > 0 ? band : DEFAULT_TRENDING_PRICE_BAND;
+};
+
+const getTrendingBasePriceBySize = (item) => {
+  const pricing = item?.trendingPricing;
+  if (pricing?.basePriceBySize && typeof pricing.basePriceBySize === "object") {
+    return pricing.basePriceBySize;
+  }
+
+  return item?.priceBySize || {};
+};
+
+const withFloatingTrendingPrice = (item) => {
+  if (!item?.trendingPricing) return item;
+
+  const band = getTrendingPriceBand(item);
+  const basePriceBySize = getTrendingBasePriceBySize(item);
+  const priceBySize = {};
+  const currentAdjustmentBySize = {};
+
+  Object.entries(basePriceBySize || {}).forEach(([size, price]) => {
+    const basePrice = num(price);
+    if (basePrice <= 0) return;
+
+    const adjustment = roundMoney((Math.random() * band * 2) - band);
+    currentAdjustmentBySize[size] = adjustment;
+    priceBySize[size] = roundMoney(Math.max(0, basePrice + adjustment));
+  });
+
+  if (!Object.keys(priceBySize).length) return item;
+
+  return {
+    ...item,
+    priceBySize,
+    trendingPricing: {
+      ...item.trendingPricing,
+      band,
+      basePriceBySize,
+      currentAdjustmentBySize,
+      currentPriceBySize: priceBySize,
+      updatedAt: new Date().toISOString(),
+    },
+  };
+};
+
+const withFloatingTrendingPrices = (items = []) =>
+  items.map((item) => withFloatingTrendingPrice(item));
+
+const mergeTrendingIntoMenu = (menuItems = [], trendingItems = []) => {
+  const trendingByPizzaId = new Map(
+    trendingItems
+      .map((item) => [Number(item?.pizzaId), item])
+      .filter(([pizzaId]) => Number.isInteger(pizzaId) && pizzaId > 0)
+  );
+
+  return menuItems.map((item) => {
+    const trendingItem = trendingByPizzaId.get(Number(item?.pizzaId));
+    if (!trendingItem) return item;
+
+    return {
+      ...item,
+      ...trendingItem,
+      categoryId: item.categoryId,
+      category: item.category,
+      categoryPosition: item.categoryPosition,
+      categoryCustomizable: item.categoryCustomizable,
+      categoryHalfAndHalf: item.categoryHalfAndHalf,
+    };
+  });
+};
+
+const hasTrendingPolicy = (item) =>
+  Boolean(item?.trendingPricing && item?.trend);
+
+const sortTrendingFirst = (items = []) =>
+  items
+    .map((item, index) => ({ item, index }))
+    .sort((left, right) => {
+      const leftTrending = hasTrendingPolicy(left.item);
+      const rightTrending = hasTrendingPolicy(right.item);
+
+      if (leftTrending !== rightTrending) {
+        return leftTrending ? -1 : 1;
+      }
+
+      if (leftTrending && rightTrending) {
+        const leftRank = Number(left.item?.trend?.rank || Number.MAX_SAFE_INTEGER);
+        const rightRank = Number(right.item?.trend?.rank || Number.MAX_SAFE_INTEGER);
+
+        if (leftRank !== rightRank) return leftRank - rightRank;
+      }
+
+      return left.index - right.index;
+    })
+    .map(({ item }) => item);
+
+const getTrendingPricingSnapshot = (item, size) => {
+  if (!item?.trendingPricing) return null;
+
+  const basePriceBySize = getTrendingBasePriceBySize(item);
+  const basePrice = priceForSize(basePriceBySize, size);
+  const chargedPrice = priceForSize(item.priceBySize, size);
+  const band = getTrendingPriceBand(item);
+  const adjustment =
+    item.trendingPricing.currentAdjustmentBySize?.[size] != null
+      ? num(item.trendingPricing.currentAdjustmentBySize[size])
+      : roundMoney(chargedPrice - basePrice);
+
+  return {
+    mode: item.trendingPricing.mode || "FLOATING_BAND",
+    rank: item.trend?.rank || null,
+    sourceCategoryId: item.sourceCategoryId ?? item.categoryId ?? null,
+    sourceCategory: item.sourceCategory || item.category || "",
+    band,
+    size,
+    basePrice,
+    chargedPrice,
+    adjustment: roundMoney(adjustment),
+    floorPrice: roundMoney(Math.max(0, basePrice - band)),
+    ceilingPrice: roundMoney(basePrice + band),
+    label:
+      adjustment > 0
+        ? "ADICIONAL_TRENDING"
+        : adjustment < 0
+        ? "ABONO_TRENDING"
+        : "SIN_AJUSTE_TRENDING",
+    lockedAt: new Date().toISOString(),
+  };
+};
+
+const formatTrendingAdjustmentLabel = (trendingPricing) => {
+  if (!trendingPricing) return "";
+
+  const adjustment = roundMoney(trendingPricing.adjustment);
+  if (adjustment === 0) return "Precio trending sin ajuste";
+
+  const abs = Math.abs(adjustment).toFixed(2);
+  return adjustment > 0
+    ? `Adicional trending +EUR ${abs}`
+    : `Abono trending -EUR ${abs}`;
+};
 
 const formatDurationMs = (value) => {
   const totalSeconds = Math.max(0, Math.floor(Number(value || 0) / 1000));
@@ -1280,6 +1445,10 @@ const normalizeCartLine = (line, index = 0) => {
     promoId: line?.promoId ?? null,
     promoItems: Array.isArray(line?.promoItems) ? line.promoItems : [],
     directDiscount: line?.directDiscount || null,
+    trendingPricing:
+      line?.trendingPricing && typeof line.trendingPricing === "object"
+        ? line.trendingPricing
+        : null,
   };
 };
 
@@ -1466,6 +1635,7 @@ export default function StorePage() {
 
   const [menu, setMenu] = useState([]);
   const [trending, setTrending] = useState([]);
+  const trendingRef = useRef([]);
   const [upcoming, setUpcoming] = useState([]);
   const [promos, setPromos] = useState([]);
   const [store, setStore] = useState(null);
@@ -1676,15 +1846,17 @@ export default function StorePage() {
           api.get(`/partners/${partnerSlug}`),
         ]);
 
-        const nextMenu = Array.isArray(menuData?.menu) ? menuData.menu : [];
+        const rawMenu = Array.isArray(menuData?.menu) ? menuData.menu : [];
         const nextTrending = Array.isArray(menuData?.trending)
-          ? menuData.trending
+          ? withFloatingTrendingPrices(menuData.trending)
           : [];
+        const nextMenu = mergeTrendingIntoMenu(rawMenu, nextTrending);
         const nextUpcoming = Array.isArray(menuData?.upcoming)
           ? menuData.upcoming
           : [];
         const nextPromos = Array.isArray(menuData?.promos) ? menuData.promos : [];
 
+        trendingRef.current = nextTrending;
         setMenu(nextMenu);
         setTrending(nextTrending);
         setUpcoming(nextUpcoming);
@@ -1722,7 +1894,7 @@ export default function StorePage() {
   useEffect(() => {
     const intervalId = window.setInterval(() => {
       setIncentiveNowMs(Date.now());
-    }, 1000);
+    }, 5000);
 
     return () => {
       window.clearInterval(intervalId);
@@ -1788,8 +1960,15 @@ export default function StorePage() {
   useEffect(() => {
     const intervalId = window.setInterval(() => {
       setTick(true);
+      const currentTrending = trendingRef.current;
+      const nextTrending = currentTrending.some((item) => item?.trendingPricing)
+        ? withFloatingTrendingPrices(currentTrending)
+        : currentTrending;
+      trendingRef.current = nextTrending;
+      setTrending(nextTrending);
+      setMenu((currentMenu) => mergeTrendingIntoMenu(currentMenu, nextTrending));
       window.setTimeout(() => setTick(false), 600);
-    }, 5000);
+    }, TRENDING_PRICE_REFRESH_MS);
 
     return () => {
       window.clearInterval(intervalId);
@@ -2041,6 +2220,17 @@ export default function StorePage() {
     [menu]
   );
 
+  const menuCatalog = useMemo(() => {
+    const byId = new Map();
+
+    [...menu, ...trending].forEach((item) => {
+      if (!item?.pizzaId) return;
+      byId.set(Number(item.pizzaId), item);
+    });
+
+    return [...byId.values()];
+  }, [menu, trending]);
+
   const commercialTabs = useMemo(
     () => [
       { id: TRENDING_TAB, label: "Trending" },
@@ -2066,16 +2256,18 @@ export default function StorePage() {
   );
 
   useEffect(() => {
-    if (!categories.length) {
+    if (!tabs.length) {
       setActiveTab("");
       return;
     }
 
-    const validCategoryIds = new Set(categories.map((category) => category.id));
+    const validTabIds = new Set(tabs.map((tab) => tab.id));
+    const defaultTabId = categories[0]?.id || tabs[0].id;
+
     setActiveTab((current) =>
-      validCategoryIds.has(current) ? current : categories[0].id
+      validTabIds.has(current) ? current : defaultTabId
     );
-  }, [categories]);
+  }, [categories, tabs]);
 
   const baseFilteredMenu = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -2092,8 +2284,8 @@ export default function StorePage() {
     const query = search.trim().toLowerCase();
     return filterPromos(promos, query)
       .slice()
-      .sort((left, right) => getPromoDiscountPercent(right, menu) - getPromoDiscountPercent(left, menu));
-  }, [menu, promos, search]);
+      .sort((left, right) => getPromoDiscountPercent(right, menuCatalog) - getPromoDiscountPercent(left, menuCatalog));
+  }, [menuCatalog, promos, search]);
 
   const filteredTopDeals = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -2131,8 +2323,8 @@ export default function StorePage() {
       return [];
     }
 
-    return baseFilteredMenu.filter(
-      (item) => getCustomCategoryKey(item) === activeTab
+    return sortTrendingFirst(
+      baseFilteredMenu.filter((item) => getCustomCategoryKey(item) === activeTab)
     );
   }, [activeTab, baseFilteredMenu]);
 
@@ -3358,6 +3550,11 @@ export default function StorePage() {
   const addProductLine = () => {
     if (!selectedProduct || !productSelection.size) return;
 
+    const trendingPricing = getTrendingPricingSnapshot(
+      selectedProduct,
+      productSelection.size
+    );
+
     const line = {
       cartLineId: `${selectedProduct.pizzaId}-${Date.now()}`,
       pizzaId: selectedProduct.pizzaId,
@@ -3371,6 +3568,15 @@ export default function StorePage() {
       subtotal: selectedLineTotal,
       image: selectedProduct.image || "",
       directDiscount: selectedProduct.directDiscount || null,
+      source: trendingPricing ? "trending" : undefined,
+      trendingPricing: trendingPricing
+        ? {
+            ...trendingPricing,
+            adjustmentTotal: roundMoney(
+              trendingPricing.adjustment * Number(productSelection.qty || 1)
+            ),
+          }
+        : null,
     };
 
     setCart((current) => [...current, line]);
@@ -4411,28 +4617,74 @@ export default function StorePage() {
     setBootsOpen(false);
   };
 
-  const renderProductOfferOverlay = (item, baseSize, countdownOverride = null) => {
-    const countdownLabel =
-      countdownOverride?.label ||
-      (item?.directDiscount ? formatOfferCountdown(item.directDiscount, incentiveNowMs) : "");
-    const countdownPrefix =
-      countdownOverride?.prefix || (countdownLabel ? "Termina en:" : "");
+  const renderTrendingBadge = (item) => {
+    if (!hasTrendingPolicy(item)) return null;
+
+    const rank = Number(item.trend?.rank || 0) || 1;
 
     return (
-      <div className={`lsf-card__overlay ${countdownLabel ? "lsf-card__overlay--withCountdown" : ""}`}>
+      <div className="lsf-trendingRank">
+        <span>#{rank}</span>
+        <strong>Trending</strong>
+      </div>
+    );
+  };
+
+  const renderTrendingKpis = (item) => {
+    if (!hasTrendingPolicy(item)) return null;
+
+    const trend = item.trend || {};
+    const soldWeek = Number(trend.soldLast7Days || 0);
+
+    return (
+      <div className="lsf-trendingRibbon" aria-label="Demanda trending">
+        <span className="lsf-trendingDemand">
+          <strong>{soldWeek}</strong>
+          <span>ultimos 7d</span>
+        </span>
+      </div>
+    );
+  };
+
+  const renderOfferRibbon = (label, prefix = "Termina en:", variant = "deal") => {
+    if (!label) return null;
+
+    return (
+      <div className={`lsf-offerRibbon lsf-offerRibbon--${variant}`}>
+        <span>{prefix}</span>
+        <strong>{label}</strong>
+      </div>
+    );
+  };
+
+  const renderCategoryDealCountdown = (item) => {
+    const label = item?.directDiscount
+      ? formatOfferCountdown(item.directDiscount, incentiveNowMs)
+      : "";
+
+    if (!label) return null;
+
+    return (
+      <div className="lsf-categoryDealCountdown">
+        <span>Termina en:</span>
+        <strong>{label}</strong>
+      </div>
+    );
+  };
+
+  const renderProductOfferOverlay = (item, baseSize) => {
+    return (
+      <div className="lsf-card__overlay">
         <div className="lsf-card__ticker">
           <div className={`lsf-card__name ${tick ? "is-ticking" : ""}`}>
             {item.name}
           </div>
         </div>
         <div className={`lsf-card__price ${tick ? "is-ticking" : ""}`}>
-          {renderStorefrontPrice(item, baseSize)}
+          {hasTrendingPolicy(item)
+            ? renderTrendingPrice(item, baseSize, tick)
+            : renderStorefrontPrice(item, baseSize)}
         </div>
-        {countdownLabel && (
-          <span className="lsf-offerCountdownInline">
-            {countdownPrefix} {countdownLabel}
-          </span>
-        )}
       </div>
     );
   };
@@ -4449,7 +4701,7 @@ export default function StorePage() {
     return (
       <div
         key={item.pizzaId}
-        className={`lsf-card lsf-flip ${flipped ? "is-flipped" : ""}`}
+        className={`lsf-card ${item?.directDiscount ? "lsf-card--topDeal" : ""} ${hasTrendingPolicy(item) ? "lsf-card--trending has-trending-metrics" : ""} lsf-flip ${flipped ? "is-flipped" : ""}`}
         onClick={() =>
           setFlippedId((current) =>
             current === item.pizzaId ? null : item.pizzaId
@@ -4459,7 +4711,7 @@ export default function StorePage() {
       >
         <div className="lsf-flip__inner">
           <div className="lsf-flip__front">
-            <div className="lsf-card__image">
+            <div className={`lsf-card__image ${item?.directDiscount ? "lsf-topDealImage" : ""}`}>
               {image ? (
                 <img src={image} alt={item.name} />
               ) : (
@@ -4469,6 +4721,8 @@ export default function StorePage() {
               )}
             </div>
             {renderDirectDiscountBadge(item, incentiveNowMs)}
+            {renderTrendingBadge(item)}
+            {renderTrendingKpis(item) || renderCategoryDealCountdown(item)}
 
             <button
               type="button"
@@ -4508,7 +4762,7 @@ export default function StorePage() {
     return (
       <div key={item.pizzaId} className="lsf-topDealItem" role="listitem">
         <div
-          className={`lsf-card lsf-card--topDeal lsf-flip ${flipped ? "is-flipped" : ""}`}
+          className={`lsf-card lsf-card--topDeal ${hasTrendingPolicy(item) ? "lsf-card--trending has-trending-metrics" : ""} lsf-flip ${flipped ? "is-flipped" : ""}`}
           onClick={() =>
             setFlippedId((current) =>
               current === `top-deal-${item.pizzaId}` ? null : `top-deal-${item.pizzaId}`
@@ -4528,6 +4782,8 @@ export default function StorePage() {
               </div>
 
               <span className="lsf-topDealBadge">Top Deal</span>
+              {renderTrendingBadge(item)}
+              {renderTrendingKpis(item) || renderOfferRibbon(countdownLabel, "Termina en:", "deal")}
               {discountSticker && (
                 <span className="lsf-topDealDiscountSticker">
                   <strong>{discountSticker}</strong>
@@ -4547,16 +4803,13 @@ export default function StorePage() {
                 <CartPlusIcon />
               </button>
 
-              <div className="lsf-card__overlay lsf-card__overlay--deal lsf-card__overlay--withCountdown">
+              <div className="lsf-card__overlay lsf-card__overlay--deal">
                 <div className="lsf-card__ticker">
                   <div className={`lsf-card__name ${tick ? "is-ticking" : ""}`}>
                     {item.name}
                   </div>
                 </div>
                 {renderTopDealPrice(item, baseSize, tick)}
-                <span className="lsf-offerCountdownInline">
-                  Termina en: {countdownLabel}
-                </span>
               </div>
             </div>
 
@@ -4722,24 +4975,8 @@ export default function StorePage() {
               <span className="lsf-cartbtn__count">{cartCount}</span>
               <span className="lsf-cartbtn__total">€{cartTotal.toFixed(2)}</span>
             </button>
-            {renderScheduleButtonSafe()}
-            {renderCartButtonSafe()}
           </div>
         </section>
-
-        <section className="sf-storeHeader sf-storeHeader--mobile">
-          {renderStoreInfoTicker()}
-          <div className="lsf-top__actions">
-            {renderScheduleButtonSafe()}
-            {renderCartButtonSafe()}
-          </div>
-        </section>
-
-        {isStorefrontButtonVisible("selectProducts") && (
-          <div className="sf-storeHeaderTitle sf-storeHeaderTitle--mobileSeparator">
-            Selecciona productos
-          </div>
-        )}
 
         <section
           ref={lsfSurfaceRef}
@@ -4752,11 +4989,27 @@ export default function StorePage() {
           }`}
         >
           <div className="sf-lsfNavCeiling">
+            <div className="sf-lsfMobileHeader">
+              <div className="sf-lsfMobileInfo">
+                {isStorefrontButtonVisible("selectProducts") && (
+                  <div className="sf-storeHeaderTitle sf-storeHeaderTitle--inSurface">
+                    Selecciona productos
+                  </div>
+                )}
+                {renderStoreInfoTicker()}
+              </div>
+
+              <div className="sf-lsfMobileHeaderActions">
+                {renderScheduleButtonSafe()}
+                {renderCartButtonSafe()}
+              </div>
+            </div>
+
             <div className="sf-lsfActionSearchLine">
               {isStorefrontButtonVisible("coupons") && (
                 <button
                   type="button"
-                  className={`sf-offersBtn sf-lsfOfferBtn ${offerVariant.className}`}
+                  className={`sf-offersBtn sf-lsfOfferBtn sf-lsfOfferBtn--mobilePunch ${offerVariant.className}`}
                   onClick={() =>
                     navigate(`/${partnerSlug}/coupons`, {
                       state: { returnToStorePath: `/${partnerSlug}/${storeSlug}` },
@@ -5051,7 +5304,7 @@ export default function StorePage() {
                       const promoFlipId = `promo-${promo.id}`;
                       const flipped = flippedId === promoFlipId;
                       const promoItems = Array.isArray(promo.items) ? promo.items : [];
-                      const promoDiscountPercent = getPromoDiscountPercent(promo, menu);
+                      const promoDiscountPercent = getPromoDiscountPercent(promo, menuCatalog);
                       const promoCountdown = formatOfferCountdown(promo, incentiveNowMs);
 
                       return (
@@ -5084,6 +5337,7 @@ export default function StorePage() {
                                   <small>off</small>
                                 </span>
                               )}
+                              {renderOfferRibbon(promoCountdown, "Termina en:", "promo")}
 
                               <button
                                 type="button"
@@ -5097,16 +5351,13 @@ export default function StorePage() {
                                 <CartPlusIcon />
                               </button>
 
-                              <div className="lsf-card__overlay lsf-card__overlay--withCountdown">
+                              <div className="lsf-card__overlay">
                                 <div className="lsf-card__ticker">
                                   <div className={`lsf-card__name ${tick ? "is-ticking" : ""}`}>
                                     {promo.title}
                                   </div>
                                 </div>
-                                {renderPromoPrice(promo, menu, tick)}
-                                <span className="lsf-offerCountdownInline">
-                                  Termina en: {promoCountdown}
-                                </span>
+                                {renderPromoPrice(promo, menuCatalog, tick)}
                               </div>
                             </div>
 
@@ -5148,102 +5399,7 @@ export default function StorePage() {
               ) : (
                 <div className="lsf-grid-wrap">
                   <div className="lsf-grid lsf-grid--trending" role="list">
-                    {filteredTrending.map((item) => {
-                      const flipped = flippedId === item.pizzaId;
-                      const image = item.image || "";
-                      const sizes = Object.keys(item.priceBySize || {}).filter(
-                        (size) => item.priceBySize?.[size] !== "" && item.priceBySize?.[size] != null
-                      );
-                      const baseSize = sizes[0] || "M";
-                      const { line, closer } = buildPizzaLine(item);
-                      const trend = item.trend || {};
-                      const soldWeek = Number(trend.soldLast7Days || 0);
-                      const soldAllTime = Number(trend.soldAllTime || 0);
-                      const rank = Number(trend.rank || 0) || 1;
-                      const trendPercent = Number(trend.trendPercent || 0);
-                      const trendBasisLabel =
-                        trend.rankingBasis === "last7Days"
-                          ? "Ultimos 7 dias"
-                          : trend.rankingBasis === "historicalFallback"
-                          ? "Historico tienda"
-                          : "Esperando ventas";
-
-                      return (
-                        <div
-                          key={item.pizzaId}
-                          className="lsf-trendingItem"
-                          role="listitem"
-                        >
-                          <div
-                            className={`lsf-card lsf-card--trending lsf-flip ${flipped ? "is-flipped" : ""}`}
-                            onClick={() =>
-                              setFlippedId((current) =>
-                                current === item.pizzaId ? null : item.pizzaId
-                              )
-                            }
-                          >
-                            <div className="lsf-flip__inner">
-                              <div className="lsf-flip__front">
-                                <div className="lsf-card__image">
-                                  {image ? (
-                                    <img src={image} alt={item.name} />
-                                  ) : (
-                                    <div className="lsf-card__img is-placeholder">
-                                      <span>Pizza</span>
-                                    </div>
-                                  )}
-                                </div>
-
-                                {renderDirectDiscountBadge(item, incentiveNowMs)}
-
-                                <div className="lsf-trendingRank">
-                                  <span>#{rank}</span>
-                                  <strong>Trending</strong>
-                                </div>
-
-                                <button
-                                  type="button"
-                                  className="lsf-card__addbtn"
-                                  onClick={(event) => {
-                                    event.stopPropagation();
-                                    openProductModal(item);
-                                  }}
-                                  aria-label={`Comprar ${item.name}`}
-                                >
-                                  <CartPlusIcon />
-                                </button>
-
-                                {renderProductOfferOverlay(item, baseSize)}
-                              </div>
-
-                              <div className="lsf-flip__back">
-                                <div className="lsf-flip-desc">
-                                  <div className="lsf-flip-title">Tu crush sin filtro</div>
-                                  <div className="lsf-flip-line">{line}</div>
-                                  <div className="lsf-flip-closer">{closer}</div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="lsf-trendingPanel">
-                            <div className="lsf-trendingMainKpi">
-                              <span>{trendBasisLabel}</span>
-                              <strong>{soldWeek}</strong>
-                              <small>vendidas esta semana</small>
-                            </div>
-
-                            <div className="lsf-trendingKpiRow">
-                              <span className={trendPercent >= 0 ? "is-up" : "is-down"}>
-                                {formatTrendPercent(trendPercent)} vs semana ant.
-                              </span>
-                              <span>{soldAllTime} historicas</span>
-                              <span>{trend.lastOrderedLabel || "Sin pedidos recientes"}</span>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
+                    {filteredTrending.map((item) => renderProductCard(item))}
                   </div>
                 </div>
               )
@@ -5293,6 +5449,11 @@ export default function StorePage() {
 
                               <span className="lsf-upcomingBadge">Proximo</span>
                               {renderDirectDiscountBadge(item, incentiveNowMs)}
+                              {renderOfferRibbon(
+                                formatLaunchCountdown(item.launchAt, now),
+                                "Comienza en:",
+                                "upcoming"
+                              )}
 
                               <button
                                 type="button"
@@ -5304,10 +5465,7 @@ export default function StorePage() {
                                 <CartPlusIcon />
                               </button>
 
-                              {renderProductOfferOverlay(item, baseSize, {
-                                prefix: "Comienza en:",
-                                label: formatLaunchCountdown(item.launchAt, now),
-                              })}
+                              {renderProductOfferOverlay(item, baseSize)}
                             </div>
 
                             <div className="lsf-flip__back">
@@ -5346,7 +5504,7 @@ export default function StorePage() {
                     return (
                       <div
                         key={item.pizzaId}
-                        className={`lsf-card lsf-flip ${flipped ? "is-flipped" : ""}`}
+                        className={`lsf-card ${hasTrendingPolicy(item) ? "lsf-card--trending has-trending-metrics" : ""} lsf-flip ${flipped ? "is-flipped" : ""}`}
                         onClick={() =>
                           setFlippedId((current) =>
                             current === item.pizzaId ? null : item.pizzaId
@@ -5366,6 +5524,13 @@ export default function StorePage() {
                               )}
                             </div>
                             {renderDirectDiscountBadge(item, incentiveNowMs)}
+                            {renderTrendingBadge(item)}
+                            {renderTrendingKpis(item) ||
+                              renderOfferRibbon(
+                                item?.directDiscount ? formatOfferCountdown(item.directDiscount, incentiveNowMs) : "",
+                                "Termina en:",
+                                "deal"
+                              )}
 
                             <button
                               type="button"
@@ -5807,6 +5972,9 @@ export default function StorePage() {
                               extra.side ? `${extra.name} (${extra.side})` : extra.name
                             ).join(", ")}
                           </small>
+                        )}
+                        {line.trendingPricing && (
+                          <small>{formatTrendingAdjustmentLabel(line.trendingPricing)}</small>
                         )}
                         {line.ingredients?.length > 0 && (
                           <small>

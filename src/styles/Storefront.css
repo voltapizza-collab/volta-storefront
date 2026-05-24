@@ -7838,12 +7838,8 @@
 }
 
 .lsf-topDealImage::after {
-  content: "";
-  position: absolute;
-  inset: auto 0 0;
-  height: 44%;
-  background: linear-gradient(180deg, transparent, rgba(17, 17, 17, 0.18));
-  pointer-events: none;
+  display: none;
+  content: none;
 }
 
 .lsf-topDealBadge {
@@ -10891,5 +10887,981 @@
 
   .lsf-flip__inner {
     height: 252px;
+  }
+}
+
+/* Mobile-only storefront header: desktop stays on the existing sf-storeHeader--desktop. */
+.sf-lsfMobileHeader {
+  display: none;
+}
+
+@media (max-width: 560px) {
+  .sf-storeHeader--mobile,
+  .sf-storeHeaderTitle--mobileSeparator {
+    display: none !important;
+  }
+
+  .sf-lsfSurface .sf-lsfMobileHeader {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 82px;
+    grid-template-areas: "info actions";
+    gap: 7px;
+    align-items: stretch;
+    margin: 0 0 8px;
+  }
+
+  .sf-lsfMobileInfo {
+    grid-area: info;
+    min-width: 0;
+    display: grid;
+    grid-template-rows: auto 30px;
+    gap: 4px;
+    align-content: start;
+  }
+
+  .sf-lsfMobileHeader .sf-storeHeaderTitle--inSurface {
+    grid-area: auto;
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    padding: 0 4px;
+    color: #4285f4;
+    font-size: clamp(0.95rem, 4.6vw, 1.16rem);
+    line-height: 1;
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  .sf-lsfMobileHeader .sf-lsfStoreTicker {
+    grid-area: auto;
+    width: 100%;
+    min-width: 0;
+    min-height: 30px;
+    height: 30px;
+    justify-content: flex-start;
+    padding: 0 10px;
+    border-radius: 999px;
+    font-size: 0.64rem;
+    line-height: 1.14;
+    text-align: left;
+  }
+
+  .sf-lsfMobileHeader .sf-lsfStoreTicker .sf-engineUtilityPillTicker {
+    width: 100%;
+    height: 1.14rem;
+  }
+
+  .sf-lsfMobileHeader .sf-lsfStoreTicker .sf-engineUtilityPillTrack {
+    justify-items: start;
+    line-height: 1.14rem;
+  }
+
+  .sf-lsfMobileHeader .sf-lsfStoreTicker .sf-engineUtilityPillLine {
+    width: 100%;
+    font-size: 0.64rem;
+    line-height: 1.14rem;
+    text-align: left;
+  }
+
+  .sf-lsfMobileHeaderActions {
+    grid-area: actions;
+    display: grid;
+    grid-template-rows: 34px 34px;
+    gap: 5px;
+    align-content: start;
+  }
+
+  .sf-lsfMobileHeaderActions .lsf-schedulebtn,
+  .sf-lsfMobileHeaderActions .lsf-cartbtn {
+    grid-area: auto;
+    width: 100%;
+    min-width: 0;
+    min-height: 34px;
+    height: 34px;
+    border-radius: 14px;
+  }
+
+  .sf-lsfMobileHeaderActions .lsf-schedulebtn {
+    grid-template-columns: 22px minmax(0, 1fr);
+    gap: 3px;
+    padding: 0 5px;
+  }
+
+  .sf-lsfMobileHeaderActions .lsf-cartbtn {
+    position: relative;
+    top: auto;
+    right: auto;
+    grid-template-columns: 22px 20px minmax(0, 1fr);
+    gap: 3px;
+    padding: 5px;
+    transform: none;
+  }
+
+  .sf-lsfMobileHeaderActions .lsf-schedulebtn__icon,
+  .sf-lsfMobileHeaderActions .lsf-cartbtn__icon,
+  .sf-lsfMobileHeaderActions .lsf-cartbtn__count {
+    width: 22px;
+    height: 22px;
+  }
+
+  .sf-lsfMobileHeaderActions .lsf-schedulebtn__text,
+  .sf-lsfMobileHeaderActions .lsf-cartbtn__total {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+/* Special-condition card ribbons and trending pricing. */
+.lsf-card.has-trending-metrics .lsf-flip__inner {
+  height: 240px;
+}
+
+.lsf-card.has-trending-metrics .lsf-flip__front {
+  grid-template-rows: minmax(0, 132px) 18px auto;
+  gap: 7px;
+}
+
+.lsf-card.has-trending-metrics .lsf-card__image {
+  height: 132px;
+}
+
+.lsf-card--topDeal.has-trending-metrics .lsf-trendingRank {
+  top: 58px;
+  left: 10px;
+}
+
+.lsf-trendingRibbon {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  justify-self: stretch;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 18px;
+  padding: 0 7px;
+  border: 1px solid rgba(17, 17, 17, 0.14);
+  border-radius: 7px;
+  background: linear-gradient(90deg, #dfff00 0%, #fff200 58%, #ffb21a 100%);
+  color: #111111;
+  box-shadow: none;
+}
+
+.lsf-trendingDemand {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.lsf-trendingDemand strong {
+  flex: 0 0 auto;
+  font-size: 0.84rem;
+  font-weight: 1000;
+}
+
+.lsf-trendingDemand span {
+  min-width: 0;
+  overflow: hidden;
+  font-size: 0.54rem;
+  font-weight: 1000;
+  text-overflow: ellipsis;
+}
+
+.lsf-offerRibbon {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  justify-self: stretch;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 5px;
+  min-height: 24px;
+  padding: 0 9px;
+  border-radius: 9px;
+  background: #111111;
+  color: #ffffff;
+  font-size: 0.6rem;
+  font-weight: 1000;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-shadow: none;
+}
+
+.lsf-offerRibbon span,
+.lsf-offerRibbon strong {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lsf-offerRibbon--promo,
+.lsf-offerRibbon--upcoming {
+  background: #111111;
+}
+
+.lsf-trendingPriceStack .lsf-card__priceOld {
+  text-decoration: none;
+}
+
+.lsf-trendingPriceStack .lsf-card__priceRow {
+  gap: 5px;
+}
+
+.lsf-trendingPriceStack.is-up .lsf-card__priceCurrent,
+.lsf-trendingPriceStack.is-up em {
+  color: #118500;
+}
+
+.lsf-trendingPriceStack.is-down .lsf-card__priceCurrent,
+.lsf-trendingPriceStack.is-down em {
+  color: #f40046;
+}
+
+.lsf-trendingPriceStack.is-flat .lsf-card__priceCurrent,
+.lsf-trendingPriceStack.is-flat em {
+  color: #24142c;
+}
+
+.lsf-trendingPriceStack.is-ticking.is-up {
+  animation: lsf-trending-price-up 0.78s ease-in-out;
+}
+
+.lsf-trendingPriceStack.is-ticking.is-down {
+  animation: lsf-trending-price-down 0.78s ease-in-out;
+}
+
+.lsf-trendingPriceStack.is-ticking.is-up .lsf-card__priceCurrent,
+.lsf-trendingPriceStack.is-ticking.is-up em {
+  animation: lsf-trending-price-up-color 0.78s ease-in-out;
+}
+
+.lsf-trendingPriceStack.is-ticking.is-down .lsf-card__priceCurrent,
+.lsf-trendingPriceStack.is-ticking.is-down em {
+  animation: lsf-trending-price-down-color 0.78s ease-in-out;
+}
+
+@keyframes lsf-trending-price-up {
+  0%, 100% { transform: translateY(0) scale(1); filter: none; }
+  34% { transform: translateY(-2px) scale(1.08); filter: drop-shadow(0 0 11px rgba(22, 198, 12, 0.42)); }
+}
+
+@keyframes lsf-trending-price-down {
+  0%, 100% { transform: translateY(0) scale(1); filter: none; }
+  34% { transform: translateY(2px) scale(1.08); filter: drop-shadow(0 0 11px rgba(244, 0, 70, 0.42)); }
+}
+
+@keyframes lsf-trending-price-up-color {
+  0%, 100% { color: #118500; text-shadow: none; }
+  34% { color: #16c60c; text-shadow: 0 0 12px rgba(22, 198, 12, 0.5); }
+}
+
+@keyframes lsf-trending-price-down-color {
+  0%, 100% { color: #f40046; text-shadow: none; }
+  34% { color: #ff005c; text-shadow: 0 0 12px rgba(244, 0, 70, 0.5); }
+}
+
+@media (max-width: 560px) {
+  .lsf-grid,
+  .lsf-grid--trending,
+  .lsf-grid--promos,
+  .lsf-grid--topDeals {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .lsf-flip__inner {
+    height: 174px;
+  }
+
+  .lsf-card.has-trending-metrics .lsf-flip__inner,
+  .lsf-card--topDeal .lsf-flip__inner,
+  .lsf-card--promo .lsf-flip__inner,
+  .lsf-card--upcoming .lsf-flip__inner {
+    height: 192px;
+  }
+
+  .lsf-card.has-trending-metrics .lsf-flip__front,
+  .lsf-card--topDeal .lsf-flip__front,
+  .lsf-card--promo .lsf-flip__front,
+  .lsf-card--upcoming .lsf-flip__front {
+    grid-template-rows: minmax(0, 92px) 18px auto;
+    gap: 6px;
+  }
+
+  .lsf-card.has-trending-metrics .lsf-card__image,
+  .lsf-card--topDeal .lsf-card__image,
+  .lsf-card--promo .lsf-card__image,
+  .lsf-card--upcoming .lsf-card__image {
+    height: 92px;
+  }
+
+  .lsf-trendingRibbon,
+  .lsf-offerRibbon {
+    width: 100%;
+    max-width: 100%;
+    justify-self: stretch;
+    justify-content: flex-start;
+    min-height: 18px;
+    padding: 0 6px;
+    border-radius: 7px;
+    font-size: 0.52rem;
+    text-align: left;
+  }
+
+  .lsf-offerRibbon--promo {
+    background: linear-gradient(135deg, #3b008b 0%, #7a2cff 48%, #f92672 100%);
+  }
+
+  .lsf-offerRibbon--upcoming {
+    background: linear-gradient(135deg, #111111 0%, #4c20c9 100%);
+  }
+
+  .lsf-topDealBadge {
+    left: 7px;
+    top: 71px;
+    bottom: auto;
+    min-height: 18px;
+    padding: 0 6px;
+    font-size: 0.54rem;
+  }
+
+  .lsf-topDealDiscountSticker {
+    top: 7px;
+    left: 7px;
+    min-width: 38px;
+    min-height: 34px;
+    font-size: 0.62rem;
+  }
+
+  .lsf-promoDiscountSticker {
+    top: 51px;
+    right: 7px;
+    left: auto;
+    min-width: 36px;
+    min-height: 31px;
+    font-size: 0.58rem;
+  }
+}
+
+/* Header action correction: keep cart/schedule visible and let ticker yield space. */
+.sf-storeHeader--desktop .lsf-top__actions > button:nth-of-type(-n + 2) {
+  display: grid;
+}
+
+.sf-storeHeader--desktop .lsf-top__actions {
+  grid-template-columns: minmax(108px, 1fr) minmax(148px, 170px) minmax(148px, 170px);
+  width: min(560px, 100%);
+}
+
+.sf-storeHeader--desktop .sf-lsfStoreTicker {
+  background: transparent;
+  box-shadow: none;
+  border: 0;
+  border-radius: 0;
+  padding: 0 8px;
+}
+
+.sf-storeHeader--desktop .sf-lsfStoreTicker .sf-engineUtilityPillTrack,
+.sf-storeHeader--desktop .sf-lsfStoreTicker .sf-engineUtilityPillLine {
+  justify-items: end;
+  text-align: right;
+}
+
+.sf-storeHeader--desktop .lsf-schedulebtn,
+.sf-storeHeader--desktop .lsf-cartbtn {
+  width: 100%;
+  min-width: 0;
+}
+
+.sf-storeHeader--desktop .lsf-cartbtn {
+  grid-template-columns: 30px 28px minmax(58px, 1fr);
+}
+
+@media (max-width: 560px) {
+  .sf-lsfSurface .sf-lsfMobileHeader {
+    grid-template-columns: minmax(0, 1fr) clamp(108px, 30vw, 124px);
+    align-items: start;
+  }
+
+  .sf-lsfMobileInfo {
+    grid-template-rows: auto 30px;
+    align-content: start;
+  }
+
+  .sf-lsfMobileHeader .sf-lsfStoreTicker {
+    background: transparent !important;
+    box-shadow: none !important;
+    border: 0 !important;
+    border-radius: 0;
+    padding: 0 4px;
+    min-height: 28px;
+    height: 28px;
+    align-self: end;
+  }
+
+  .sf-lsfMobileHeaderActions {
+    grid-template-rows: 34px 34px;
+    gap: 5px;
+  }
+
+  .sf-lsfMobileHeaderActions .lsf-schedulebtn,
+  .sf-lsfMobileHeaderActions .lsf-cartbtn {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .sf-lsfMobileHeaderActions .lsf-cartbtn {
+    grid-template-columns: 22px 22px minmax(42px, 1fr);
+    gap: 4px;
+  }
+
+  .sf-lsfMobileHeaderActions .lsf-cartbtn__total {
+    justify-self: end;
+    font-size: 0.66rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .sf-lsfSurface .sf-lsfMobileHeader {
+    grid-template-columns: minmax(0, 1fr) clamp(112px, 31vw, 128px);
+    align-items: stretch;
+  }
+
+  .sf-lsfMobileInfo {
+    min-height: 73px;
+    grid-template-rows: minmax(0, 1fr) 22px;
+    gap: 2px;
+    align-content: stretch;
+  }
+
+  .sf-lsfMobileHeader .sf-storeHeaderTitle--inSurface {
+    display: flex;
+    align-items: center;
+    min-height: 0;
+    padding: 0 4px;
+    font-size: clamp(1.08rem, 5.4vw, 1.34rem);
+    line-height: 0.96;
+    text-shadow:
+      1px 1px 0 #ffffff,
+      2px 2px 0 color-mix(in srgb, #4285f4 36%, #ffffff),
+      0 7px 12px rgba(66, 133, 244, 0.24);
+  }
+
+  .sf-lsfMobileHeader .sf-lsfStoreTicker {
+    align-self: end;
+    min-height: 22px;
+    height: 22px;
+    padding: 0 4px;
+    line-height: 1;
+  }
+
+  .sf-lsfMobileHeader .sf-lsfStoreTicker .sf-engineUtilityPillTicker {
+    height: 1rem;
+  }
+
+  .sf-lsfMobileHeader .sf-lsfStoreTicker .sf-engineUtilityPillTrack,
+  .sf-lsfMobileHeader .sf-lsfStoreTicker .sf-engineUtilityPillLine {
+    line-height: 1rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .sf-lsfMobileInfo {
+    min-height: 76px;
+    grid-template-rows: minmax(0, 1fr) 26px;
+    gap: 0;
+  }
+
+  .sf-lsfMobileHeader .sf-storeHeaderTitle--inSurface {
+    align-items: center;
+    max-width: 100%;
+    overflow: hidden;
+    padding: 2px 4px 0;
+    font-size: clamp(1.16rem, 5.9vw, 1.42rem);
+    line-height: 1.02;
+    text-overflow: ellipsis;
+    transform: translateY(1px);
+  }
+
+  .sf-lsfMobileHeaderActions {
+    position: relative;
+    z-index: 2;
+  }
+
+  .sf-lsfMobileHeader .sf-lsfStoreTicker {
+    min-height: 26px;
+    height: 26px;
+    padding: 0 4px;
+    overflow: visible;
+  }
+
+  .sf-lsfMobileHeader .sf-lsfStoreTicker .sf-engineUtilityPillTicker {
+    height: 1.34rem;
+    overflow: hidden;
+  }
+
+  .sf-lsfMobileHeader .sf-lsfStoreTicker .sf-engineUtilityPillTrack {
+    gap: 0.26rem;
+    line-height: 1.34rem;
+  }
+
+  .sf-lsfMobileHeader .sf-lsfStoreTicker .sf-engineUtilityPillLine {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    min-height: 1.34rem;
+    font-size: 0.7rem;
+    line-height: 1.34rem;
+    overflow: visible;
+  }
+}
+
+@media (max-width: 560px) {
+  .sf-lsfActionSearchLine .sf-lsfOfferBtn.is-sunset {
+    background:
+      linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 241, 248, 0.96) 48%, rgba(255, 251, 222, 0.92) 100%) !important;
+    border: 2px solid #f92672 !important;
+    color: #f92672 !important;
+    box-shadow:
+      0 0 0 1px rgba(207, 255, 0, 0.82),
+      inset 0 1px 0 rgba(255, 255, 255, 0.86),
+      0 8px 16px rgba(249, 38, 114, 0.16) !important;
+  }
+
+  .sf-lsfActionSearchLine .sf-lsfOfferBtn.is-sunset::before {
+    display: block;
+    content: "";
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      135deg,
+      rgba(249, 38, 114, 0.08) 0px,
+      rgba(249, 38, 114, 0.08) 4px,
+      transparent 4px,
+      transparent 12px
+    ) !important;
+    background-size: 200px 200px;
+  }
+
+  .sf-lsfActionSearchLine .sf-lsfOfferBtn.is-sunset .sf-offersBtnLabel {
+    color: transparent !important;
+    background: linear-gradient(
+      90deg,
+      #f92672 0%,
+      #ff4f87 44%,
+      #ffd84d 52%,
+      #f92672 100%
+    ) !important;
+    background-size: 200% 100% !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.92) !important;
+  }
+}
+
+@media (max-width: 560px) {
+  .sf-lsfNavCeiling {
+    padding-top: 2px;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.94) 0%, rgba(255, 255, 255, 0.72) 100%);
+  }
+
+  .sf-lsfSurface .sf-lsfMobileHeader {
+    grid-template-columns: minmax(0, 1fr) clamp(124px, 33vw, 136px);
+    gap: 5px;
+    margin-bottom: 6px;
+  }
+
+  .sf-lsfMobileInfo {
+    min-height: 70px;
+    grid-template-rows: minmax(0, 1fr) 22px;
+    gap: 0;
+  }
+
+  .sf-lsfMobileHeader .sf-storeHeaderTitle--inSurface {
+    padding: 1px 3px 0;
+    font-size: clamp(1.02rem, 5.15vw, 1.28rem);
+    line-height: 0.98;
+  }
+
+  .sf-lsfMobileHeader .sf-lsfStoreTicker {
+    min-height: 22px;
+    height: 22px;
+    padding: 0 3px;
+  }
+
+  .sf-lsfMobileHeader .sf-lsfStoreTicker .sf-engineUtilityPillTicker {
+    height: 1.22rem;
+  }
+
+  .sf-lsfMobileHeader .sf-lsfStoreTicker .sf-engineUtilityPillTrack,
+  .sf-lsfMobileHeader .sf-lsfStoreTicker .sf-engineUtilityPillLine {
+    line-height: 1.22rem;
+  }
+
+  .sf-lsfMobileHeader .sf-lsfStoreTicker .sf-engineUtilityPillLine {
+    font-size: 0.68rem;
+  }
+
+  .sf-lsfMobileHeaderActions {
+    gap: 4px;
+  }
+
+  .sf-lsfMobileHeaderActions .lsf-schedulebtn,
+  .sf-lsfMobileHeaderActions .lsf-cartbtn {
+    min-height: 34px;
+    height: 34px;
+  }
+}
+
+@media (max-width: 560px) {
+  .sf-lsfActionSearchLine .sf-lsfOfferBtn {
+    isolation: isolate;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 86% 18%, rgba(0, 229, 255, 0.62), transparent 28%),
+      radial-gradient(circle at 18% 88%, rgba(255, 243, 92, 0.58), transparent 32%),
+      repeating-linear-gradient(-35deg, rgba(255, 255, 255, 0.2) 0 3px, transparent 3px 9px),
+      linear-gradient(135deg, #ff006e 0%, #ff2fa7 46%, #00e5ff 100%) !important;
+    border: 2px solid #cfff00 !important;
+    color: #ffffff !important;
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.74) inset,
+      0 7px 14px rgba(255, 47, 167, 0.24),
+      0 0 16px rgba(0, 229, 255, 0.22) !important;
+  }
+
+  .sf-lsfActionSearchLine .sf-lsfOfferBtn::before {
+    display: none !important;
+  }
+
+  .sf-lsfActionSearchLine .sf-lsfOfferBtn .sf-offersBtnLabel {
+    color: #ffffff !important;
+    background: none !important;
+    -webkit-background-clip: initial !important;
+    background-clip: initial !important;
+    -webkit-text-fill-color: #ffffff !important;
+    text-shadow:
+      0 1px 0 #120019,
+      2px 2px 0 #ff2fa7,
+      -1.5px -1.5px 0 #00e5ff,
+      0 0 10px rgba(255, 243, 92, 0.52) !important;
+  }
+
+  .sf-lsfMobileInfo {
+    min-height: 66px;
+    grid-template-rows: minmax(0, 1fr) 24px;
+  }
+
+  .sf-lsfMobileHeader .sf-storeHeaderTitle--inSurface {
+    padding-bottom: 0;
+    line-height: 0.96;
+  }
+
+  .sf-lsfMobileHeader .sf-lsfStoreTicker {
+    min-height: 24px;
+    height: 24px;
+    transform: translateY(-4px);
+  }
+
+  .sf-lsfMobileHeader .sf-lsfStoreTicker .sf-engineUtilityPillTicker {
+    height: 1.38rem;
+  }
+
+  .sf-lsfMobileHeader .sf-lsfStoreTicker .sf-engineUtilityPillTrack,
+  .sf-lsfMobileHeader .sf-lsfStoreTicker .sf-engineUtilityPillLine {
+    line-height: 1.38rem;
+  }
+
+  .sf-lsfMobileHeader .sf-lsfStoreTicker .sf-engineUtilityPillLine {
+    min-height: 1.38rem;
+    overflow: visible;
+  }
+}
+
+@media (max-width: 720px) {
+  .sf-lsfActionSearchLine .sf-offersBtn.sf-lsfOfferBtn.sf-lsfOfferBtn--mobilePunch {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background-color: #ff006e !important;
+    background-image:
+      radial-gradient(circle at 86% 16%, rgba(0, 229, 255, 0.7), transparent 27%),
+      radial-gradient(circle at 18% 86%, rgba(255, 243, 92, 0.62), transparent 31%),
+      repeating-linear-gradient(-35deg, rgba(255, 255, 255, 0.24) 0 3px, rgba(255, 255, 255, 0) 3px 9px),
+      linear-gradient(135deg, #ff006e 0%, #ff2fa7 48%, #00e5ff 100%) !important;
+    background-size: 100% 100%, 100% 100%, 64px 64px, 100% 100% !important;
+    border-color: #cfff00 !important;
+    border-width: 2px !important;
+    color: #ffffff !important;
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.72),
+      0 7px 14px rgba(255, 47, 167, 0.24),
+      0 0 14px rgba(0, 229, 255, 0.24) !important;
+    animation: sfCouponsDiagonalDrift 1.9s linear infinite;
+  }
+
+  .sf-lsfActionSearchLine .sf-offersBtn.sf-lsfOfferBtn.sf-lsfOfferBtn--mobilePunch::before,
+  .sf-lsfActionSearchLine .sf-offersBtn.sf-lsfOfferBtn.sf-lsfOfferBtn--mobilePunch::after {
+    display: none !important;
+    content: none !important;
+  }
+
+  .sf-lsfActionSearchLine .sf-offersBtn.sf-lsfOfferBtn.sf-lsfOfferBtn--mobilePunch .sf-offersBtnLabel {
+    color: #ffffff !important;
+    background: none !important;
+    -webkit-background-clip: initial !important;
+    background-clip: initial !important;
+    -webkit-text-fill-color: #ffffff !important;
+    text-shadow:
+      0 1px 0 #120019,
+      2px 2px 0 #ff2fa7,
+      -1.5px -1.5px 0 #00e5ff,
+      0 0 10px rgba(255, 243, 92, 0.52) !important;
+  }
+}
+
+@keyframes sfCouponsDiagonalDrift {
+  0% {
+    background-position: 0 0, 0 0, 0 0, 0 0;
+  }
+  100% {
+    background-position: 0 0, 0 0, 64px 64px, 0 0;
+  }
+}
+
+@media (max-width: 560px) {
+  .sf-lsfMobileInfo {
+    min-height: 62px;
+    grid-template-rows: minmax(0, 32px) 30px;
+    align-content: start;
+  }
+
+  .sf-lsfMobileHeader .sf-lsfStoreTicker {
+    min-height: 30px;
+    height: 30px;
+    transform: translateY(-9px);
+  }
+
+  .sf-lsfMobileHeader .sf-lsfStoreTicker .sf-engineUtilityPillTicker {
+    height: 1.7rem;
+  }
+
+  .sf-lsfMobileHeader .sf-lsfStoreTicker .sf-engineUtilityPillTrack,
+  .sf-lsfMobileHeader .sf-lsfStoreTicker .sf-engineUtilityPillLine {
+    line-height: 1.7rem;
+  }
+}
+
+@keyframes sfLsfHeaderTickerMobile {
+  0%,
+  32%,
+  100% {
+    transform: translateY(0);
+  }
+  33%,
+  65% {
+    transform: translateY(-24px);
+  }
+  66%,
+  98% {
+    transform: translateY(-48px);
+  }
+}
+
+@media (max-width: 560px) {
+  .sf-lsfMobileHeader .sf-lsfStoreTicker {
+    min-height: 26px;
+    height: 26px;
+    overflow: hidden;
+  }
+
+  .sf-lsfMobileHeader .sf-lsfStoreTicker .sf-engineUtilityPillTicker {
+    height: 24px;
+    overflow: hidden;
+  }
+
+  .sf-lsfMobileHeader .sf-lsfStoreTicker .sf-engineUtilityPillTrack {
+    gap: 0;
+    line-height: 24px;
+    animation: sfLsfHeaderTickerMobile 7.2s steps(1, end) infinite;
+  }
+
+  .sf-lsfMobileHeader .sf-lsfStoreTicker .sf-engineUtilityPillLine {
+    display: block;
+    min-height: 24px;
+    height: 24px;
+    overflow: hidden;
+    line-height: 24px;
+  }
+}
+
+/* Card layer correction for special cards with notification ribbons. */
+.lsf-card--topDeal .lsf-card__image,
+.lsf-card--promo .lsf-card__image,
+.lsf-card--upcoming .lsf-card__image,
+.lsf-card.has-trending-metrics .lsf-card__image {
+  z-index: 1;
+}
+
+.lsf-card--topDeal .lsf-offerRibbon,
+.lsf-card--promo .lsf-offerRibbon,
+.lsf-card--upcoming .lsf-offerRibbon,
+.lsf-card.has-trending-metrics .lsf-trendingRibbon {
+  position: relative;
+  z-index: 12;
+}
+
+.lsf-card--topDeal .lsf-card__overlay,
+.lsf-card--promo .lsf-card__overlay,
+.lsf-card--upcoming .lsf-card__overlay,
+.lsf-card.has-trending-metrics .lsf-card__overlay {
+  position: relative;
+  z-index: 13;
+}
+
+@media (min-width: 561px) {
+  .lsf-card--topDeal .lsf-offerRibbon {
+    position: absolute;
+    top: 154px;
+    right: 12px;
+    z-index: 40;
+    width: auto;
+    min-width: 142px;
+    max-width: calc(100% - 90px);
+    display: inline-flex;
+    justify-content: center;
+    min-height: 23px;
+    height: 23px;
+    padding: 0 10px;
+    border-radius: 999px;
+    color: #ffffff;
+    overflow: hidden;
+    transform: none;
+  }
+
+  .lsf-card--topDeal .lsf-offerRibbon span,
+  .lsf-card--topDeal .lsf-offerRibbon strong {
+    display: inline-block;
+    color: #ffffff;
+    font-size: 0.58rem;
+    line-height: 1;
+  }
+
+  .lsf-card--topDeal .lsf-card__overlay {
+    grid-row: 3;
+    grid-column: 1;
+  }
+
+  .lsf-card--topDeal .lsf-topDealImage::after {
+    display: none;
+  }
+
+  .lsf-card--promo .lsf-offerRibbon,
+  .lsf-card--upcoming .lsf-offerRibbon {
+    width: auto;
+    min-width: 154px;
+    justify-self: end;
+    align-self: end;
+    transform: translateY(3px);
+  }
+
+  .lsf-card.has-trending-metrics .lsf-trendingRibbon {
+    width: auto;
+    min-width: 154px;
+    justify-self: end;
+    align-self: end;
+    transform: translateY(3px);
+  }
+
+  .lsf-card--topDeal .lsf-flip__inner,
+  .lsf-card--promo .lsf-flip__inner,
+  .lsf-card--upcoming .lsf-flip__inner {
+    height: 254px;
+  }
+
+  .lsf-card--topDeal .lsf-flip__front,
+  .lsf-card--promo .lsf-flip__front,
+  .lsf-card--upcoming .lsf-flip__front {
+    grid-template-rows: minmax(0, 140px) 24px minmax(0, auto);
+    gap: 6px;
+    padding: 10px 10px 12px;
+  }
+
+  .lsf-card--topDeal .lsf-card__image,
+  .lsf-card--promo .lsf-card__image,
+  .lsf-card--upcoming .lsf-card__image {
+    height: 140px;
+  }
+
+  .lsf-card--topDeal .lsf-card__overlay,
+  .lsf-card--promo .lsf-card__overlay,
+  .lsf-card--upcoming .lsf-card__overlay {
+    min-height: 44px;
+    padding: 5px 4px 4px;
+  }
+}
+
+@media (max-width: 560px) {
+  .lsf-card__image {
+    z-index: 1;
+  }
+
+  .lsf-trendingRibbon,
+  .lsf-offerRibbon {
+    position: relative;
+    z-index: 18;
+  }
+
+  .lsf-card__overlay {
+    position: relative;
+    z-index: 19;
+    margin-top: -6px;
+    min-height: 42px;
+    padding: 6px 7px;
+    border-radius: 9px;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.88));
+    box-shadow:
+      0 -8px 16px rgba(255, 255, 255, 0.84),
+      0 6px 14px rgba(17, 17, 17, 0.06);
+  }
+
+  .lsf-card__ticker {
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .lsf-card__name {
+    color: #111111;
+    text-shadow: 0 1px 0 #ffffff;
+  }
+
+  .lsf-card__price,
+  .lsf-topDealPrice {
+    justify-self: end;
+  }
+
+  .lsf-card--topDeal .lsf-card__overlay,
+  .lsf-card--promo .lsf-card__overlay,
+  .lsf-card--upcoming .lsf-card__overlay {
+    margin-top: -4px;
   }
 }

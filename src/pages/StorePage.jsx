@@ -1774,6 +1774,7 @@ export default function StorePage() {
   const [flippedId, setFlippedId] = useState(null);
   const [tick, setTick] = useState(false);
   const [lsfSurfaceDocked, setLsfSurfaceDocked] = useState(false);
+  const [gridFocusMode, setGridFocusMode] = useState(false);
   const lsfSurfaceRef = useRef(null);
   const tabsScrollerRef = useRef(null);
   const tabsAutoPauseUntilRef = useRef(0);
@@ -1813,7 +1814,10 @@ export default function StorePage() {
         return;
       }
 
-      setLsfSurfaceDocked(window.scrollY > 16);
+      const isScrolled = window.scrollY > 16;
+      setLsfSurfaceDocked(isScrolled);
+      if (!isScrolled) setGridFocusMode(false);
+      if (window.scrollY > 120) setGridFocusMode(true);
     };
 
     const requestUpdate = () => {
@@ -1830,6 +1834,12 @@ export default function StorePage() {
       window.removeEventListener("scroll", requestUpdate);
       window.removeEventListener("resize", requestUpdate);
     };
+  }, [lsfSurfaceStickySuspended]);
+
+  useEffect(() => {
+    if (lsfSurfaceStickySuspended) {
+      setGridFocusMode(false);
+    }
   }, [lsfSurfaceStickySuspended]);
 
   useEffect(() => {
@@ -2390,6 +2400,7 @@ export default function StorePage() {
         eyebrow: "Busqueda",
         label: cleanSearch,
         count: baseFilteredMenu.length,
+        tone: "search",
       };
     }
 
@@ -2398,6 +2409,7 @@ export default function StorePage() {
         eyebrow: "Oferta",
         label: "Top Deal",
         count: filteredTopDeals.length,
+        tone: "deal",
       };
     }
 
@@ -2406,6 +2418,7 @@ export default function StorePage() {
         eyebrow: "Oferta",
         label: "Promos",
         count: filteredPromos.length,
+        tone: "promo",
       };
     }
 
@@ -2414,6 +2427,7 @@ export default function StorePage() {
         eyebrow: "Oferta",
         label: "Trending",
         count: filteredTrending.length,
+        tone: "trending",
       };
     }
 
@@ -2422,6 +2436,7 @@ export default function StorePage() {
         eyebrow: "Oferta",
         label: "Proximos",
         count: filteredUpcoming.length,
+        tone: "upcoming",
       };
     }
 
@@ -2429,6 +2444,7 @@ export default function StorePage() {
       eyebrow: "Categoria",
       label: activeTabLabel,
       count: visibleMenu.length,
+      tone: "category",
     };
   }, [
     activeTab,
@@ -2584,6 +2600,16 @@ export default function StorePage() {
     if (event.pointerType === "mouse" && event.button !== 0) return;
     if (event.target?.closest?.("button, a, input, textarea, select")) return;
 
+    if (
+      typeof window !== "undefined" &&
+      window.innerWidth <= 760 &&
+      (event.target === event.currentTarget ||
+        !event.target?.closest?.(".lsf-card, .sf-engineEmptyState, .lsf-gridContext"))
+    ) {
+      setGridFocusMode(true);
+      setLsfSurfaceDocked(true);
+    }
+
     gridSwipeRef.current = {
       pointerId: event.pointerId,
       startX: event.clientX,
@@ -2598,6 +2624,11 @@ export default function StorePage() {
     (event) => {
       const gesture = gridSwipeRef.current;
       if (!gesture || gesture.pointerId !== event.pointerId) return;
+
+      if (typeof window !== "undefined" && window.innerWidth <= 760) {
+        setGridFocusMode(true);
+        setLsfSurfaceDocked(true);
+      }
 
       gesture.lastX = event.clientX;
       const deltaX = event.clientX - gesture.startX;
@@ -2637,6 +2668,17 @@ export default function StorePage() {
     if (performance.now() < suppressGridClickUntilRef.current) {
       event.preventDefault();
       event.stopPropagation();
+      return;
+    }
+
+    if (
+      typeof window !== "undefined" &&
+      window.innerWidth <= 760 &&
+      (event.target === event.currentTarget ||
+        !event.target?.closest?.(".lsf-card, button, a, input, textarea, select"))
+    ) {
+      setGridFocusMode(true);
+      setLsfSurfaceDocked(true);
     }
   }, []);
 
@@ -2660,6 +2702,11 @@ export default function StorePage() {
       const gesture = gridSwipeRef.current;
       const touch = event.touches?.[0];
       if (!gesture || gesture.pointerId !== "touch" || !touch) return;
+
+      if (typeof window !== "undefined" && window.innerWidth <= 760) {
+        setGridFocusMode(true);
+        setLsfSurfaceDocked(true);
+      }
 
       gesture.lastX = touch.clientX;
       const deltaX = touch.clientX - gesture.startX;
@@ -2695,6 +2742,13 @@ export default function StorePage() {
     },
     [moveStorefrontTab]
   );
+
+  const handleGridScroll = useCallback(() => {
+    if (typeof window !== "undefined" && window.innerWidth <= 760) {
+      setGridFocusMode(true);
+      setLsfSurfaceDocked(true);
+    }
+  }, []);
 
   useEffect(() => {
     const scroller = tabsScrollerRef.current;
@@ -5085,7 +5139,10 @@ export default function StorePage() {
     ) : null;
 
   return (
-    <div className={`sf-shell sf-shell--mode-${storefrontMode}`} style={themeStyle}>
+    <div
+      className={`sf-shell sf-shell--mode-${storefrontMode} ${gridFocusMode ? "is-grid-focused" : ""}`}
+      style={themeStyle}
+    >
       <div className="sf-wrap sf-menu">
         <section className="sf-storeHeader sf-storeHeader--desktop">
 
@@ -5410,8 +5467,12 @@ export default function StorePage() {
             onTouchEnd={handleGridTouchEnd}
             onTouchCancel={handleGridTouchEnd}
             onClickCapture={handleGridClickCapture}
+            onScroll={handleGridScroll}
           >
-            <div className="lsf-gridContext" aria-live="polite">
+            <div
+              className={`lsf-gridContext lsf-gridContext--${gridContext.tone}`}
+              aria-live="polite"
+            >
               <span>{gridContext.eyebrow}</span>
               <strong>{gridContext.label}</strong>
               <em>
@@ -5419,6 +5480,21 @@ export default function StorePage() {
                   ? "1 producto"
                   : `${gridContext.count} productos`}
               </em>
+              {gridFocusMode && (
+                <button
+                  type="button"
+                  className="lsf-gridContext__exit"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    setGridFocusMode(false);
+                    setLsfSurfaceDocked(window.scrollY > 16);
+                  }}
+                  aria-label="Volver a la vista completa"
+                  title="Vista completa"
+                >
+                  Ver todo
+                </button>
+              )}
             </div>
 
             {isProductSearchActive ? (

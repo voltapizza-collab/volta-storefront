@@ -16091,3 +16091,125 @@
     0 1px 0 rgba(255, 255, 255, 0.82),
     0 0 10px rgba(106, 61, 240, 0.28);
 }
+
+/* Product grid focus mode and solid context strip. */
+.sf-shell--mode-commercial-light .lsf-gridContext {
+  isolation: isolate;
+  min-height: 24px;
+  margin: 0 0 7px;
+  padding: 4px 8px;
+  border: 1px solid rgba(59, 0, 139, 0.18);
+  border-radius: 9px;
+  background: #ffb61c;
+  box-shadow:
+    0 -12px 0 #ffffff,
+    0 9px 0 #ffffff,
+    0 10px 14px rgba(29, 23, 48, 0.08);
+}
+
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext {
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+}
+
+.sf-shell--mode-commercial-light .lsf-gridContext::before {
+  content: "";
+  position: absolute;
+  left: -10px;
+  right: -10px;
+  top: -12px;
+  bottom: -9px;
+  z-index: -1;
+  background: #ffffff;
+  pointer-events: none;
+}
+
+.sf-shell--mode-commercial-light .lsf-gridContext::after {
+  content: none;
+}
+
+.sf-shell--mode-commercial-light .lsf-gridContext span,
+.sf-shell--mode-commercial-light .lsf-gridContext em {
+  color: color-mix(in srgb, var(--grid-context-tone, #3b008b) 78%, #17142a);
+  font-size: 0.52rem;
+}
+
+.sf-shell--mode-commercial-light .lsf-gridContext strong {
+  color: var(--grid-context-tone, #3b008b);
+  font-size: 0.68rem;
+}
+
+.sf-shell--mode-commercial-light .lsf-gridContext--trending {
+  --grid-context-tone: #ff1744;
+}
+
+.sf-shell--mode-commercial-light .lsf-gridContext--deal {
+  --grid-context-tone: #ff6d00;
+}
+
+.sf-shell--mode-commercial-light .lsf-gridContext--promo {
+  --grid-context-tone: #ff6d00;
+}
+
+.sf-shell--mode-commercial-light .lsf-gridContext--upcoming {
+  --grid-context-tone: #00b8ff;
+}
+
+.sf-shell--mode-commercial-light .lsf-gridContext--category,
+.sf-shell--mode-commercial-light .lsf-gridContext--search {
+  --grid-context-tone: #3b008b;
+}
+
+.sf-shell--mode-commercial-light .lsf-gridContext__exit {
+  position: relative;
+  z-index: 2;
+  min-height: 20px;
+  padding: 0 7px;
+  border: 0;
+  border-radius: 999px;
+  background: #3b008b;
+  color: #ffffff;
+  font-size: 0.55rem;
+  font-weight: 1000;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+  .sf-shell--mode-commercial-light.is-grid-focused {
+    padding-top: 0;
+  }
+
+  .sf-shell--mode-commercial-light.is-grid-focused .sf-lsfSurface {
+    display: none;
+  }
+
+  .sf-shell--mode-commercial-light.is-grid-focused .sf-engineCard--lsf {
+    position: fixed;
+    top: env(safe-area-inset-top, 0px);
+    right: 0;
+    bottom: calc(78px + env(safe-area-inset-bottom, 0px));
+    left: 0;
+    z-index: 58;
+    width: min(100vw, 430px);
+    margin: 0 auto;
+    padding: 6px;
+    background: #f7f7fb;
+  }
+
+  .sf-shell--mode-commercial-light.is-grid-focused .sf-engineGridStage--lsf {
+    width: 100%;
+    height: 100%;
+    max-height: none;
+    min-height: 0;
+    padding: 8px 8px 14px;
+    border-radius: 16px 16px 0 0;
+    overflow: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .sf-shell--mode-commercial-light.is-grid-focused .sf-stickyFooterShell {
+    z-index: 80;
+  }
+}

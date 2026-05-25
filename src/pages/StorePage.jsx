@@ -1808,7 +1808,7 @@ export default function StorePage() {
     const updateDockedState = () => {
       rafId = 0;
       const surface = lsfSurfaceRef.current;
-      if (!surface || window.innerWidth > 560 || lsfSurfaceStickySuspended) {
+      if (!surface || window.innerWidth > 760 || lsfSurfaceStickySuspended) {
         setLsfSurfaceDocked(false);
         return;
       }

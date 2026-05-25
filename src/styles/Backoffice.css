@@ -1508,6 +1508,40 @@
   background: #f92672;
 }
 
+.bo-modePreview--commercial-light {
+  background: #ffffff;
+}
+
+.bo-modePreview--commercial-light span {
+  background: #fff1f2;
+  border: 1px solid rgba(244, 63, 94, 0.24);
+}
+
+.bo-modePreview--commercial-light i {
+  background: #f5f2ff;
+  border: 1px solid rgba(91, 50, 214, 0.18);
+}
+
+.bo-modePreview--commercial-light strong {
+  background: #17151f;
+}
+
+.bo-modePreview--commercial-dark {
+  background: #15131a;
+}
+
+.bo-modePreview--commercial-dark span {
+  background: #2a2632;
+}
+
+.bo-modePreview--commercial-dark i {
+  background: #6a3df0;
+}
+
+.bo-modePreview--commercial-dark strong {
+  background: #f4a62a;
+}
+
 .bo-modePreview--dark {
   background: #16121e;
 }

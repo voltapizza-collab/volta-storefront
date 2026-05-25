@@ -75,22 +75,32 @@ export const DEFAULT_STOREFRONT_BUTTON_CONFIG = STOREFRONT_BUTTON_ITEMS.reduce(
   {}
 );
 
+export const DEFAULT_STOREFRONT_MODE = "commercial-light";
+
 export const STOREFRONT_MODE_ITEMS = [
+  {
+    id: "commercial-light",
+    name: "Modo claro comercial",
+    status: "available",
+    label: "Principal",
+    description:
+      "Superficie blanca, menos ruido visual y foco comercial en cupones, repetir pedido y Top Deal.",
+  },
   {
     id: "volta",
     name: "Modo Volta",
-    status: "locked",
-    label: "Actual",
+    status: "available",
+    label: "Volta",
     description:
-      "Look oficial Volta con estructura tipo marketplace, botones intensos y paleta fija del motor.",
+      "Look oficial Volta preservado: arcade, botones intensos y paleta fija del motor.",
   },
   {
-    id: "dark",
-    name: "Modo oscuro",
+    id: "commercial-dark",
+    name: "Modo oscuro comercial",
     status: "coming",
     label: "Proximamente",
     description:
-      "Misma estructura del storefront con contraste oscuro y lectura nocturna.",
+      "Version de contraste oscuro para la misma estructura comercial.",
   },
   {
     id: "sepia",
@@ -109,6 +119,13 @@ export const STOREFRONT_MODE_ITEMS = [
       "Misma estructura del storefront con menos ruido visual y colores mas neutros.",
   },
 ];
+
+export const normalizeStorefrontMode = (mode) => {
+  const normalized = String(mode || "").trim();
+  return STOREFRONT_MODE_ITEMS.some((item) => item.id === normalized)
+    ? normalized
+    : DEFAULT_STOREFRONT_MODE;
+};
 
 export const normalizeStorefrontButtonConfig = (rawConfig) => {
   return STOREFRONT_BUTTON_ITEMS.reduce(

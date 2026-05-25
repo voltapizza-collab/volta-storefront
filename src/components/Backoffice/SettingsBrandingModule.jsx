@@ -9,6 +9,8 @@ import {
   STOREFRONT_BUTTON_ITEMS,
   STOREFRONT_MODE_ITEMS,
   DEFAULT_STOREFRONT_BUTTON_CONFIG,
+  DEFAULT_STOREFRONT_MODE,
+  normalizeStorefrontMode,
 } from "../../constants/storefrontButtons";
 
 export default function SettingsBrandingModule({ partner }) {
@@ -20,6 +22,7 @@ export default function SettingsBrandingModule({ partner }) {
   const [offerStyle, setOfferStyle] = useState(
     BRANDING_DEFAULTS.brandOfferButtonStyle
   );
+  const [storefrontMode, setStorefrontMode] = useState(DEFAULT_STOREFRONT_MODE);
   const [offerModalOpen, setOfferModalOpen] = useState(false);
 
   useEffect(() => {
@@ -40,6 +43,7 @@ export default function SettingsBrandingModule({ partner }) {
           currentPartner.brandOfferButtonStyle ||
             BRANDING_DEFAULTS.brandOfferButtonStyle
         );
+        setStorefrontMode(normalizeStorefrontMode(currentPartner.storefrontMode));
         setError("");
       } catch (loadError) {
         console.error("Error loading button personalization", loadError);
@@ -88,6 +92,7 @@ export default function SettingsBrandingModule({ partner }) {
           brandFontFamily:
             partnerData?.brandFontFamily || BRANDING_DEFAULTS.brandFontFamily,
           brandOfferButtonStyle: offerStyle,
+          storefrontMode,
         }),
       ]);
 
@@ -196,16 +201,19 @@ export default function SettingsBrandingModule({ partner }) {
                 <div className="bo-settingsEyebrow">Modos</div>
                 <h3 className="bo-settingsSectionTitle">Aspecto general controlado</h3>
               </div>
-              <span>Modo Volta bloqueado</span>
+              <span>{STOREFRONT_MODE_ITEMS.filter((mode) => mode.status === "available").length} disponibles</span>
             </div>
 
             <div className="bo-modeGallery">
               {STOREFRONT_MODE_ITEMS.map((mode) => {
-                const isVolta = mode.id === "volta";
+                const isAvailable = mode.status === "available";
+                const isActive = storefrontMode === mode.id;
                 return (
                   <article
                     key={mode.id}
-                    className={`bo-modeCard ${isVolta ? "is-active" : "is-coming"}`}
+                    className={`bo-modeCard ${isActive ? "is-active" : ""} ${
+                      isAvailable ? "is-available" : "is-coming"
+                    }`}
                   >
                     <div className={`bo-modePreview bo-modePreview--${mode.id}`}>
                       <span />
@@ -217,8 +225,16 @@ export default function SettingsBrandingModule({ partner }) {
                       <strong>{mode.name}</strong>
                       <p>{mode.description}</p>
                     </div>
-                    <button type="button" disabled>
-                      {isVolta ? "Activo" : "En desarrollo"}
+                    <button
+                      type="button"
+                      disabled={!isAvailable}
+                      onClick={() => {
+                        if (!isAvailable) return;
+                        setStorefrontMode(mode.id);
+                        setSuccess("");
+                      }}
+                    >
+                      {isActive ? "Activo" : isAvailable ? "Usar modo" : "En desarrollo"}
                     </button>
                   </article>
                 );

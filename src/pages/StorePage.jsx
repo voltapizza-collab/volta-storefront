@@ -10,7 +10,10 @@ import {
   buildBrandThemeVars,
   getOfferButtonVariant,
 } from "../constants/branding";
-import { normalizeStorefrontButtonConfig } from "../constants/storefrontButtons";
+import {
+  normalizeStorefrontButtonConfig,
+  normalizeStorefrontMode,
+} from "../constants/storefrontButtons";
 
 const TRENDING_TAB = "__TRENDING__";
 const TOP_DEAL_TAB = "__TOP_DEAL__";
@@ -524,6 +527,50 @@ const CartPlusIcon = () => (
       strokeWidth="3"
       strokeLinecap="round"
     />
+  </svg>
+);
+
+const FooterClockIcon = () => (
+  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <path
+      d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.2"
+    />
+    <path
+      d="M12 7.25v5.1l3.25 2"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+const FooterCalendarIcon = () => (
+  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <path
+      d="M7 3v4M17 3v4M4 9h16M5.5 5h13A2.5 2.5 0 0 1 21 7.5v11A2.5 2.5 0 0 1 18.5 21h-13A2.5 2.5 0 0 1 3 18.5v-11A2.5 2.5 0 0 1 5.5 5Z"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.1"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+const FooterPercentIcon = () => (
+  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm4.03-12.53a.75.75 0 0 1 0 1.06l-6.5 6.5a.75.75 0 1 1-1.06-1.06l6.5-6.5a.75.75 0 0 1 1.06 0ZM8.75 9.5a1.25 1.25 0 1 1 2.5 0 1.25 1.25 0 0 1-2.5 0Zm4 5a1.25 1.25 0 1 1 2.5 0 1.25 1.25 0 0 1-2.5 0Z" />
+  </svg>
+);
+
+const FooterRocketIcon = () => (
+  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <path d="M13.2 4.68c2.58-1.6 5.07-1.82 6.8-1.61.2 1.73-.02 4.22-1.62 6.8-1.1 1.78-2.79 3.48-5.3 4.87l-3.82-3.82c1.4-2.51 3.09-4.2 4.87-5.3l-.93-.94Zm1.46 4.66a1.5 1.5 0 1 0 2.12-2.12 1.5 1.5 0 0 0-2.12 2.12ZM8.32 12.1l3.58 3.58-.54 2.7a1.5 1.5 0 0 1-.97 1.12l-3.35 1.18a.75.75 0 0 1-.96-.96l1.18-3.35c.15-.43.5-.8.96-.97l.1-.03-3.01-3.01.03-.1c.17-.45.54-.8.97-.96l3.35-1.18a.75.75 0 0 1 .96.96L8.32 12.1Z" />
   </svg>
 );
 
@@ -2178,6 +2225,11 @@ export default function StorePage() {
     [partner?.brandOfferButtonStyle]
   );
 
+  const storefrontMode = useMemo(
+    () => normalizeStorefrontMode(partner?.storefrontMode),
+    [partner?.storefrontMode]
+  );
+
   const storefrontButtons = useMemo(
     () => normalizeStorefrontButtonConfig(partner?.storefrontButtonConfig),
     [partner?.storefrontButtonConfig]
@@ -2233,10 +2285,10 @@ export default function StorePage() {
 
   const commercialTabs = useMemo(
     () => [
-      { id: TRENDING_TAB, label: "Trending" },
-      ...(topDeals.length ? [{ id: TOP_DEAL_TAB, label: "Top Deal" }] : []),
-      { id: PROMOS_TAB, label: "Promos" },
-      ...(upcoming.length ? [{ id: UPCOMING_TAB, label: "Proximos" }] : []),
+      { id: TRENDING_TAB, label: "Trending", tone: "trending" },
+      ...(topDeals.length ? [{ id: TOP_DEAL_TAB, label: "Top Deal", tone: "deal" }] : []),
+      { id: PROMOS_TAB, label: "Promos", tone: "promo" },
+      ...(upcoming.length ? [{ id: UPCOMING_TAB, label: "Proximos", tone: "upcoming" }] : []),
     ],
     [topDeals.length, upcoming.length]
   );
@@ -2330,6 +2382,66 @@ export default function StorePage() {
 
   const activeTabLabel =
     tabs.find((tab) => tab.id === activeTab)?.label || "Trending";
+
+  const gridContext = useMemo(() => {
+    const cleanSearch = search.trim();
+
+    if (cleanSearch) {
+      return {
+        eyebrow: "Busqueda",
+        label: cleanSearch,
+        count: baseFilteredMenu.length,
+      };
+    }
+
+    if (activeTab === TOP_DEAL_TAB) {
+      return {
+        eyebrow: "Oferta",
+        label: "Top Deal",
+        count: filteredTopDeals.length,
+      };
+    }
+
+    if (activeTab === PROMOS_TAB) {
+      return {
+        eyebrow: "Oferta",
+        label: "Promos",
+        count: filteredPromos.length,
+      };
+    }
+
+    if (activeTab === TRENDING_TAB) {
+      return {
+        eyebrow: "Oferta",
+        label: "Trending",
+        count: filteredTrending.length,
+      };
+    }
+
+    if (activeTab === UPCOMING_TAB) {
+      return {
+        eyebrow: "Oferta",
+        label: "Proximos",
+        count: filteredUpcoming.length,
+      };
+    }
+
+    return {
+      eyebrow: "Categoria",
+      label: activeTabLabel,
+      count: visibleMenu.length,
+    };
+  }, [
+    activeTab,
+    activeTabLabel,
+    baseFilteredMenu.length,
+    filteredPromos.length,
+    filteredTopDeals.length,
+    filteredTrending.length,
+    filteredUpcoming.length,
+    search,
+    visibleMenu.length,
+  ]);
 
   const pauseTabsTicker = useCallback((durationMs = 5200) => {
     tabsAutoPauseUntilRef.current = performance.now() + durationMs;
@@ -4640,7 +4752,7 @@ export default function StorePage() {
       <div className="lsf-trendingRibbon" aria-label="Demanda trending">
         <span className="lsf-trendingDemand">
           <strong>{soldWeek}</strong>
-          <span>ultimos 7d</span>
+          <span>ultimos 7 dias</span>
         </span>
       </div>
     );
@@ -4846,30 +4958,48 @@ export default function StorePage() {
     );
   }
 
-  const renderStoreInfoTicker = () => (
-    <span
-      className="sf-engineUtilityPill sf-lsfStoreTicker"
-      aria-label={`${partner?.name || store.storeName}, ${store?.city || "Ciudad"}, ${store.storeName}`}
-      data-mobile-label={`${store?.city || "Ciudad"} - ${store.storeName}`}
-    >
-      <span className="sf-engineUtilityPillTicker">
-        <span className="sf-engineUtilityPillTrack">
-          <span className="sf-engineUtilityPillLine">
-            {partner?.name || store.storeName}
-          </span>
-          <span className="sf-engineUtilityPillLine">
-            {store?.city || "Ciudad"}
-          </span>
-          <span className="sf-engineUtilityPillLine">
-            <span className="sf-engineUtilityPillInline">
-              <CountryFlag countryCode={partner?.country} />
-              <span>{store.storeName}</span>
+  const renderStoreInfoTicker = () => {
+    const showSelectProductsPrompt = isStorefrontButtonVisible("selectProducts");
+    const tickerLabel = [
+      `Bienvenidos a ${partner?.name || store.storeName}`,
+      store?.city || "Ciudad",
+      store.storeName,
+      showSelectProductsPrompt ? "Selecciona productos" : "",
+    ].filter(Boolean).join(", ");
+
+    return (
+      <span
+        className="sf-engineUtilityPill sf-lsfStoreTicker"
+        aria-label={tickerLabel}
+        data-mobile-label={`${store?.city || "Ciudad"} - ${store.storeName}`}
+      >
+        <span className="sf-engineUtilityPillTicker">
+          <span className="sf-engineUtilityPillTrack">
+            <span className="sf-engineUtilityPillLine">
+              Bienvenidos a
             </span>
+            <span className="sf-engineUtilityPillLine">
+              {partner?.name || store.storeName}
+            </span>
+            <span className="sf-engineUtilityPillLine">
+              {store?.city || "Ciudad"}
+            </span>
+            <span className="sf-engineUtilityPillLine">
+              <span className="sf-engineUtilityPillInline">
+                <CountryFlag countryCode={partner?.country} />
+                <span>{store.storeName}</span>
+              </span>
+            </span>
+            {showSelectProductsPrompt && (
+              <span className="sf-engineUtilityPillLine sf-engineUtilityPillLine--select">
+                Selecciona productos
+              </span>
+            )}
           </span>
         </span>
       </span>
-    </span>
-  );
+    );
+  };
 
   // eslint-disable-next-line no-unused-vars
   const renderScheduleButton = () =>
@@ -4935,16 +5065,30 @@ export default function StorePage() {
     </button>
   );
 
+  const renderCallButtonSafe = () =>
+    isStorefrontButtonVisible("call") ? (
+      <button
+        type="button"
+        className="lsf-callbtn"
+        onClick={() => {
+          if (phoneHref) window.location.href = phoneHref;
+        }}
+        disabled={!phoneHref}
+        aria-label="Llamar a la pizzeria"
+        title={phoneHref ? "Llamar a la pizzeria" : "Telefono no disponible"}
+      >
+        <span className="lsf-callbtn__icon" aria-hidden="true">
+          <svg viewBox="0 0 64 64" focusable="false">
+            <path d="M22.3 8.5c2.1-1.1 4.7-.4 6 1.6l5.2 8.1c1.2 1.8 1 4.2-.4 5.8l-3.4 3.8c2.6 5.1 6.8 9.3 11.9 11.9l3.8-3.4c1.6-1.4 4-1.6 5.8-.4l8.1 5.2c2 1.3 2.7 3.9 1.6 6l-3 5.7c-1.1 2.1-3.4 3.4-5.8 3.1C28.5 53.2 10.8 35.5 8.1 11.9c-.3-2.4 1-4.7 3.1-5.8l5.7-3Z" />
+          </svg>
+        </span>
+      </button>
+    ) : null;
+
   return (
-    <div className="sf-shell" style={themeStyle}>
+    <div className={`sf-shell sf-shell--mode-${storefrontMode}`} style={themeStyle}>
       <div className="sf-wrap sf-menu">
         <section className="sf-storeHeader sf-storeHeader--desktop">
-
-          {isStorefrontButtonVisible("selectProducts") && (
-            <div className="sf-storeHeaderTitle sf-storeHeaderTitle--desktop">
-              Selecciona productos
-            </div>
-          )}
 
           <div className="lsf-top__actions">
             {renderStoreInfoTicker()}
@@ -4975,6 +5119,7 @@ export default function StorePage() {
               <span className="lsf-cartbtn__count">{cartCount}</span>
               <span className="lsf-cartbtn__total">€{cartTotal.toFixed(2)}</span>
             </button>
+            {renderCallButtonSafe()}
           </div>
         </section>
 
@@ -4991,17 +5136,13 @@ export default function StorePage() {
           <div className="sf-lsfNavCeiling">
             <div className="sf-lsfMobileHeader">
               <div className="sf-lsfMobileInfo">
-                {isStorefrontButtonVisible("selectProducts") && (
-                  <div className="sf-storeHeaderTitle sf-storeHeaderTitle--inSurface">
-                    Selecciona productos
-                  </div>
-                )}
                 {renderStoreInfoTicker()}
               </div>
 
               <div className="sf-lsfMobileHeaderActions">
                 {renderScheduleButtonSafe()}
                 {renderCartButtonSafe()}
+                {renderCallButtonSafe()}
               </div>
             </div>
 
@@ -5009,14 +5150,26 @@ export default function StorePage() {
               {isStorefrontButtonVisible("coupons") && (
                 <button
                   type="button"
-                  className={`sf-offersBtn sf-lsfOfferBtn sf-lsfOfferBtn--mobilePunch ${offerVariant.className}`}
+                  className={
+                    storefrontMode === "commercial-light"
+                      ? "sf-couponEntryBtn"
+                      : `sf-offersBtn sf-lsfOfferBtn sf-lsfOfferBtn--mobilePunch ${offerVariant.className}`
+                  }
                   onClick={() =>
                     navigate(`/${partnerSlug}/coupons`, {
                       state: { returnToStorePath: `/${partnerSlug}/${storeSlug}` },
                     })
                   }
                 >
-                  <span className="sf-offersBtnLabel">{offerVariant.label}</span>
+                  <span
+                    className={
+                      storefrontMode === "commercial-light"
+                        ? "sf-couponEntryBtn__label"
+                        : "sf-offersBtnLabel"
+                    }
+                  >
+                    {offerVariant.label}
+                  </span>
                 </button>
               )}
 
@@ -5219,7 +5372,7 @@ export default function StorePage() {
                     key={tab.id}
                     type="button"
                     data-tab-id={tab.id}
-                    className={`lsf-tab lsf-tab--segment ${activeTab === tab.id ? "is-active" : ""}`}
+                    className={`lsf-tab lsf-tab--segment lsf-tab--offer-${tab.tone} ${activeTab === tab.id ? "is-active" : ""}`}
                     onClick={() => selectStorefrontTab(tab.id)}
                   >
                     {tab.label}
@@ -5259,6 +5412,16 @@ export default function StorePage() {
             onTouchCancel={handleGridTouchEnd}
             onClickCapture={handleGridClickCapture}
           >
+            <div className="lsf-gridContext" aria-live="polite">
+              <span>{gridContext.eyebrow}</span>
+              <strong>{gridContext.label}</strong>
+              <em>
+                {gridContext.count === 1
+                  ? "1 producto"
+                  : `${gridContext.count} productos`}
+              </em>
+            </div>
+
             {isProductSearchActive ? (
               baseFilteredMenu.length === 0 ? (
                 <div className="sf-engineEmptyState">
@@ -5567,19 +5730,156 @@ export default function StorePage() {
 
       <div className="sf-stickyFooterShell" style={themeStyle}>
         <div className="sf-stickyFooter">
-          {isStorefrontButtonVisible("call") && (
+          {storefrontMode === "commercial-light" ? (
+            <>
+              {isStorefrontButtonVisible("payNow") && (
+                <button
+                  type="button"
+                  className="sf-engineBottomBtn sf-engineBottomBtn--pay"
+                  onClick={startStripeCheckout}
+                  disabled={cartCount === 0 || checkoutLoading}
+                >
+                  <span>{checkoutLoading ? "Estas muy cerca" : "Pay now"}</span>
+                  {cartCount > 0 && !checkoutLoading && <small>EUR {cartTotal.toFixed(2)}</small>}
+                </button>
+              )}
+
+              {isStorefrontButtonVisible("scheduleOrder") && (
+                <button
+                  type="button"
+                  className={`sf-footerNavItem sf-footerNavItem--schedule ${
+                    scheduledOrderLabel ? "is-active" : ""
+                  }`}
+                  onClick={() => setScheduleOpen(true)}
+                  aria-label={scheduledOrderLabel || "Programar pedido"}
+                  title={scheduledOrderLabel || "Programar pedido"}
+                >
+                  <span className="sf-footerNavIcon" aria-hidden="true"><FooterClockIcon /></span>
+                  <span className="sf-footerNavLabel">Programar</span>
+                </button>
+              )}
+
+              {isStorefrontButtonVisible("reservations") && (
+                <button
+                  type="button"
+                  className="sf-footerNavItem sf-footerNavItem--reservation"
+                  onClick={() => setReservationOpen(true)}
+                  disabled={!reservationEnabled}
+                  aria-label="Reservar mesa"
+                  title={reservationEnabled ? "Reservar mesa" : "Reservas no disponibles"}
+                >
+                  <span className="sf-footerNavIcon" aria-hidden="true"><FooterCalendarIcon /></span>
+                  <span className="sf-footerNavLabel">Reservas</span>
+                </button>
+              )}
+
+              {isStorefrontButtonVisible("couponCode") && (
+                <form
+                  className={`sf-couponDock sf-footerNavItem sf-footerNavItem--coupons ${
+                    couponCode.trim() ? "has-code" : ""
+                  }`}
+                  onSubmit={validateCouponCode}
+                  onClick={(event) => {
+                    if (!couponCode.trim()) return;
+                    if (couponLoading) return;
+                    if (event.target.closest("input")) return;
+                    event.currentTarget.requestSubmit?.();
+                  }}
+                >
+                  <span className="sf-couponDockIcon sf-footerNavIcon" aria-hidden="true">
+                    <FooterPercentIcon />
+                  </span>
+                  <input
+                    type="text"
+                    value={couponCode}
+                    onChange={(event) => {
+                      setCouponCode(event.target.value.toUpperCase());
+                      setCouponStatus("");
+                    }}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") {
+                        event.preventDefault();
+                        event.currentTarget.blur();
+                        event.currentTarget.form?.requestSubmit?.();
+                      }
+                    }}
+                    placeholder="Codigo cupon"
+                    aria-label="Codigo cupon"
+                  />
+                  <button type="submit" disabled={couponLoading || couponCode.trim().length === 0}>
+                    {couponLoading ? "..." : "Validar"}
+                  </button>
+                  <span
+                    className={`sf-couponDockTicker sf-footerNavLabel ${
+                      couponFooterPercent > 0
+                        ? "is-applied"
+                        : couponCode.trim()
+                          ? "is-ready"
+                          : ""
+                    }`}
+                    aria-live="polite"
+                  >
+                    <span>
+                      {couponFooterPercent > 0
+                        ? `${couponFooterPercent}% OFF`
+                        : couponCode.trim()
+                          ? "Validar"
+                          : "Cupones"}
+                    </span>
+                    <span>
+                      {couponFooterPercent > 0
+                        ? "Aplicado"
+                        : couponCode.trim()
+                          ? "Validar"
+                          : "Cupones"}
+                    </span>
+                  </span>
+                  {couponStatus && <small>{couponStatus}</small>}
+                </form>
+              )}
+
+              {isStorefrontButtonVisible("boost") && (
+                <button
+                  type="button"
+                  className="sf-footerStatus sf-footerStatus--boots sf-footerNavItem sf-footerNavItem--boost"
+                  onClick={() => setBootsOpen(true)}
+                  disabled={boostSettings.active === false}
+                >
+                  <span className="sf-footerNavIcon" aria-hidden="true"><FooterRocketIcon /></span>
+                  <span className="sf-bootsCounter" aria-label={`Posicion ${bootsPositionLabel} en espera`}>
+                    <span>POS</span>
+                    <strong>{bootsPositionLabel}</strong>
+                  </span>
+                  <span className="sf-bootsTicker" aria-label="Boots para subir posicion en la cola">
+                    <span className="sf-bootsTickerTrack">
+                      <span>Boost UP</span>
+                      <span>Subir cola</span>
+                      <span>Prioridad</span>
+                    </span>
+                  </span>
+                  <span className="sf-bootsMobileTicker sf-footerNavLabel" aria-hidden="true">
+                    <span>Boost Up</span>
+                    <span>Boost Up</span>
+                  </span>
+                </button>
+              )}
+            </>
+          ) : (
+            <>
+          {isStorefrontButtonVisible("scheduleOrder") && (
             <button
               type="button"
-              className="sf-engineBottomBtn sf-engineBottomBtn--call"
-              onClick={() => {
-                if (phoneHref) window.location.href = phoneHref;
-              }}
-              disabled={!phoneHref}
+              className={`sf-engineBottomBtn sf-engineBottomBtn--scheduleDock ${
+                scheduledOrderLabel ? "has-schedule" : ""
+              }`}
+              onClick={() => setScheduleOpen(true)}
+              aria-label={scheduledOrderLabel || "Programar pedido"}
+              title={scheduledOrderLabel || "Programar pedido"}
             >
-              <span>Llamar</span>
+              <span className="lsf-schedulebtn__icon" aria-hidden="true">{"\u23F1"}</span>
               <small className="sf-footerMiniTicker" aria-hidden="true">
-                <span>Llamar</span>
-                <span>Ahora</span>
+                <span>{scheduledOrderLabel || "Horario"}</span>
+                <span>Pedido</span>
               </small>
             </button>
           )}
@@ -5694,6 +5994,8 @@ export default function StorePage() {
                 <span>BOOST UP</span>
               </span>
             </button>
+          )}
+            </>
           )}
         </div>
       </div>

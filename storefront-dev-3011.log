@@ -484,3 +484,126 @@ Error: ENOSPC: no space left on device, write
 [1m[31mERROR[39m[22m in [1m[eslint] ENOSPC: no space left on device, write[39m[22m
 
 webpack compiled with [1m[31m2 errors[39m[22m
+Compiling...
+Failed to compile.
+
+Syntax error: C:\Users\Luigi\Desktop\volta-core\volta-storefront\src\styles\Storefront.css Unclosed block (2327:3)
+ [90m 2325 | [39m  [33m.sf-lsfActionSearchLine[39m [33m.sf-lsfOfferBtn,[39m [33m.sf-lsfActionSearchLine[39m [33m.lsf-buildmode[39m [33m{[39m width[33m:[39m 100%[33m;[39m min-width[33m:[39m 0px[33m;[39m padding[33m:[39m 0px 8px[33m;[39m font-size[33m:[39m 0.72rem[33m;[39m line-height[33m:[39m 1.05[33m;[39m [33m}[39m
+ [90m 2326 | [39m  [33m.sf-lsfActionSearchLine[39m [33m.sf-lsfOfferBtn[39m [33m{[39m border[33m:[39m 2px solid [36mrgb[39m[36m(207, 255, 0)[39m[33m;[39m color[33m:[39m [36mrgb[39m[36m(255, 255, 255)[39m !important[33m;[39m [33m}[39m
+[1m[31m>[39m[22m[90m 2327 | [39m
+ [90m      | [39m  [1m[31m^[39m[22m
+ [90m 2328 | [39m
+ [90m 2329 | [39m[36m@media[39m[36m [39m[36m(max-width: 560px)[39m [33m{[39m
+[1m[31mERROR[39m[22m in [1m./src/styles/Storefront.css[39m[22m (./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[1].oneOf[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[1].oneOf[5].use[2]!./node_modules/source-map-loader/dist/cjs.js!./src/styles/Storefront.css)
+Module build failed (from ./node_modules/postcss-loader/dist/cjs.js):
+SyntaxError
+
+(2327:3) C:\Users\Luigi\Desktop\volta-core\volta-storefront\src\styles\Storefront.css Unclosed block
+
+ [90m 2325 | [39m  [33m.sf-lsfActionSearchLine[39m [33m.sf-lsfOfferBtn,[39m [33m.sf-lsfActionSearchLine[39m [33m.lsf-buildmode[39m [33m{[39m width[33m:[39m 100%[33m;[39m min-width[33m:[39m 0px[33m;[39m padding[33m:[39m 0px 8px[33m;[39m font-size[33m:[39m 0.72rem[33m;[39m line-height[33m:[39m 1.05[33m;[39m [33m}[39m
+ [90m 2326 | [39m  [33m.sf-lsfActionSearchLine[39m [33m.sf-lsfOfferBtn[39m [33m{[39m border[33m:[39m 2px solid [36mrgb[39m[36m(207, 255, 0)[39m[33m;[39m color[33m:[39m [36mrgb[39m[36m(255, 255, 255)[39m !important[33m;[39m [33m}[39m
+[1m[31m>[39m[22m[90m 2327 | [39m
+ [90m      | [39m  [1m[31m^[39m[22m
+ [90m 2328 | [39m
+ [90m 2329 | [39m[36m@media[39m[36m [39m[36m(max-width: 560px)[39m [33m{[39m
+
+webpack compiled with [1m[31m1 error[39m[22m
+Compiling...
+Compiled successfully!
+webpack compiled [1m[32msuccessfully[39m[22m
+Compiling...
+Compiled successfully!
+webpack compiled [1m[32msuccessfully[39m[22m
+Compiling...
+Compiled successfully!
+webpack compiled [1m[32msuccessfully[39m[22m
+Compiling...
+Compiled successfully!
+webpack compiled [1m[32msuccessfully[39m[22m
+Compiling...
+Compiled successfully!
+webpack compiled [1m[32msuccessfully[39m[22m
+Compiling...
+Compiled successfully!
+webpack compiled [1m[32msuccessfully[39m[22m
+Compiling...
+Compiled successfully!
+webpack compiled [1m[32msuccessfully[39m[22m
+Compiling...
+Compiled successfully!
+webpack compiled [1m[32msuccessfully[39m[22m
+Compiling...
+Compiled successfully!
+webpack compiled [1m[32msuccessfully[39m[22m
+Compiling...
+Compiled successfully!
+webpack compiled [1m[32msuccessfully[39m[22m
+Compiling...
+Compiled successfully!
+webpack compiled [1m[32msuccessfully[39m[22m
+Compiling...
+Compiled successfully!
+webpack compiled [1m[32msuccessfully[39m[22m
+Compiling...
+Compiled successfully!
+webpack compiled [1m[32msuccessfully[39m[22m
+Compiling...
+Compiled successfully!
+webpack compiled [1m[32msuccessfully[39m[22m
+Compiling...
+Compiled successfully!
+webpack compiled [1m[32msuccessfully[39m[22m
+Compiling...
+Compiled successfully!
+webpack compiled [1m[32msuccessfully[39m[22m
+Compiling...
+Compiled successfully!
+webpack compiled [1m[32msuccessfully[39m[22m
+Compiling...
+Compiled successfully!
+webpack compiled [1m[32msuccessfully[39m[22m
+Compiling...
+Compiled successfully!
+webpack compiled [1m[32msuccessfully[39m[22m
+Compiling...
+Compiled successfully!
+webpack compiled [1m[32msuccessfully[39m[22m
+Compiling...
+Compiled successfully!
+webpack compiled [1m[32msuccessfully[39m[22m
+Compiling...
+Compiled successfully!
+webpack compiled [1m[32msuccessfully[39m[22m
+Compiling...
+Compiled successfully!
+webpack compiled [1m[32msuccessfully[39m[22m
+Compiling...
+Compiled successfully!
+webpack compiled [1m[32msuccessfully[39m[22m
+Compiling...
+Compiled successfully!
+webpack compiled [1m[32msuccessfully[39m[22m
+Compiling...
+Compiled successfully!
+webpack compiled [1m[32msuccessfully[39m[22m
+Compiling...
+Compiled successfully!
+webpack compiled [1m[32msuccessfully[39m[22m
+Compiling...
+Compiled successfully!
+webpack compiled [1m[32msuccessfully[39m[22m
+Compiling...
+Compiled successfully!
+webpack compiled [1m[32msuccessfully[39m[22m
+Compiling...
+Compiled successfully!
+webpack compiled [1m[32msuccessfully[39m[22m
+Compiling...
+Compiled successfully!
+webpack compiled [1m[32msuccessfully[39m[22m
+Compiling...
+Compiled successfully!
+webpack compiled [1m[32msuccessfully[39m[22m
+Compiling...
+Compiled successfully!
+webpack compiled [1m[32msuccessfully[39m[22m

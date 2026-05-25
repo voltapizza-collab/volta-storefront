@@ -7842,6 +7842,281 @@
   content: none;
 }
 
+/* Volta mode vertical repair: ticker owns the product prompt, header keeps cart + emergency call. */
+@keyframes sfStoreTicker5 {
+  0%,
+  16%,
+  100% {
+    transform: translateY(0);
+  }
+  20%,
+  36% {
+    transform: translateY(calc(-1 * var(--sf-lsf-ticker-step, 1.82em)));
+  }
+  40%,
+  56% {
+    transform: translateY(calc(-2 * var(--sf-lsf-ticker-step, 1.82em)));
+  }
+  60%,
+  76% {
+    transform: translateY(calc(-3 * var(--sf-lsf-ticker-step, 1.82em)));
+  }
+  80%,
+  96% {
+    transform: translateY(calc(-4 * var(--sf-lsf-ticker-step, 1.82em)));
+  }
+}
+
+.sf-storeHeader--desktop .lsf-top__actions {
+  grid-template-columns: minmax(148px, 1fr) minmax(128px, 156px) 44px;
+  width: min(430px, 100%);
+}
+
+.sf-storeHeader--desktop .lsf-top__actions > .lsf-schedulebtn,
+.sf-lsfMobileHeaderActions > .lsf-schedulebtn,
+.sf-storeHeaderTitle--inSurface {
+  display: none;
+}
+
+.sf-lsfStoreTicker {
+  --sf-lsf-ticker-step: calc(1.48em + 0.34em);
+}
+
+.sf-lsfStoreTicker .sf-engineUtilityPillTrack {
+  animation-name: sfStoreTicker5;
+  animation-duration: 9.4s;
+  justify-items: center;
+}
+
+.sf-lsfStoreTicker:hover .sf-engineUtilityPillTrack,
+.sf-lsfStoreTicker:focus-within .sf-engineUtilityPillTrack {
+  transform: translateY(calc(-4 * var(--sf-lsf-ticker-step, 1.82em)));
+}
+
+.sf-lsfStoreTicker .sf-engineUtilityPillLine {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #241044;
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-style: normal;
+  font-weight: 1000;
+  letter-spacing: 0.02em;
+  text-align: center;
+  text-shadow:
+    0 1px 0 #ffffff,
+    0 0 8px rgba(255, 255, 255, 0.78),
+    0 0 14px rgba(106, 61, 240, 0.16);
+  text-transform: uppercase;
+}
+
+.sf-lsfStoreTicker .sf-engineUtilityPillInline {
+  justify-content: center;
+}
+
+.sf-lsfStoreTicker .sf-engineUtilityPillLine--select {
+  color: #20bfff;
+  font-family: inherit;
+  font-style: normal;
+  letter-spacing: 0.01em;
+  text-shadow:
+    0 1px 0 #ffffff,
+    0 0 8px rgba(32, 191, 255, 0.6),
+    0 0 18px rgba(32, 191, 255, 0.38);
+}
+
+.sf-engineUtilityPillLine--select {
+  color: #20bfff;
+  font-family: inherit;
+  font-style: italic;
+  font-weight: 1000;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  -webkit-text-stroke: 0;
+  text-shadow:
+    0 1px 0 #ffffff,
+    0 0 8px rgba(32, 191, 255, 0.52),
+    0 0 16px rgba(32, 191, 255, 0.32);
+}
+
+.lsf-top__actions .lsf-callbtn {
+  min-height: var(--sf-top-action-height, 42px);
+  height: var(--sf-top-action-height, 42px);
+}
+
+.lsf-callbtn {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  min-width: 0;
+  border: 1px solid rgba(255, 225, 120, 0.66);
+  border-radius: var(--sf-top-action-radius, 14px);
+  padding: 0;
+  color: #ffffff;
+  cursor: pointer;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 24% 16%, rgba(255, 255, 255, 0.7), transparent 24%),
+    radial-gradient(circle at 80% 82%, rgba(255, 182, 28, 0.34), transparent 30%),
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0 4px, transparent 4px 10px),
+    linear-gradient(135deg, #8a0000 0%, #e20b17 48%, #ff3b30 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.42),
+    inset 0 -5px 0 rgba(80, 0, 0, 0.36),
+    0 5px 0 #5c0000,
+    0 11px 18px rgba(226, 11, 23, 0.25),
+    0 0 0 0 rgba(255, 59, 48, 0.42);
+  animation: sfEmergencyCallPulse 1.65s ease-in-out infinite;
+  transition: transform 0.18s ease, filter 0.18s ease, box-shadow 0.18s ease;
+}
+
+.lsf-callbtn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: saturate(1.12);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.46),
+    inset 0 -5px 0 rgba(80, 0, 0, 0.32),
+    0 6px 0 #5c0000,
+    0 14px 22px rgba(226, 11, 23, 0.32),
+    0 0 17px rgba(255, 59, 48, 0.32);
+}
+
+.lsf-callbtn:disabled {
+  cursor: not-allowed;
+  filter: grayscale(0.35);
+  opacity: 0.56;
+  animation: none;
+}
+
+.lsf-callbtn__icon {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 27px;
+  height: 27px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.34),
+    0 0 0 1px rgba(255, 255, 255, 0.34);
+}
+
+.lsf-callbtn__icon svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+  fill: currentColor;
+}
+
+.sf-engineBottomBtn--scheduleDock {
+  border: 2px solid color-mix(in srgb, var(--brand-2, #ffb61c) 72%, var(--brand-1, #3b008b));
+  background:
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0 4px, transparent 4px 10px),
+    radial-gradient(circle at 22% 12%, rgba(255, 182, 28, 0.58), transparent 25%),
+    radial-gradient(circle at 84% 78%, rgba(255, 255, 255, 0.18), transparent 30%),
+    linear-gradient(135deg, #2b006c 0%, var(--brand-3, #6a3df0) 58%, #8b65ff 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.34),
+    inset 0 -7px 0 rgba(0, 0, 0, 0.2),
+    inset 0 -12px 18px rgba(0, 0, 0, 0.16),
+    0 6px 0 color-mix(in srgb, var(--brand-1, #3b008b) 82%, #000000),
+    0 12px 22px rgba(106, 61, 240, 0.22);
+}
+
+.sf-engineBottomBtn--scheduleDock::after {
+  animation: sfScheduleShine 2.45s ease-in-out infinite;
+}
+
+.sf-engineBottomBtn--scheduleDock .lsf-schedulebtn__icon {
+  z-index: 1;
+  width: 32px;
+  height: 32px;
+  font-size: 1rem;
+}
+
+.sf-engineBottomBtn--scheduleDock .sf-footerMiniTicker {
+  display: none;
+}
+
+.sf-engineBottomBtn--scheduleDock.has-schedule {
+  border-color: var(--brand-1, #3b008b);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.32), transparent 34%),
+    radial-gradient(circle at 18% 10%, rgba(255, 255, 255, 0.36), transparent 28%),
+    var(--brand-2, #ffb61c);
+}
+
+@media (max-width: 560px) {
+  .sf-lsfSurface .sf-lsfMobileHeader {
+    grid-template-columns: minmax(0, 1fr) clamp(148px, 43vw, 166px);
+    align-items: center;
+    gap: 7px;
+  }
+
+  .sf-lsfMobileInfo {
+    min-height: 30px;
+    grid-template-rows: 30px;
+  }
+
+  .sf-lsfMobileHeader .sf-lsfStoreTicker {
+    --sf-lsf-ticker-step: 24px;
+    min-height: 30px;
+    height: 30px;
+    transform: none;
+  }
+
+  .sf-lsfMobileHeader .sf-lsfStoreTicker .sf-engineUtilityPillTicker {
+    height: 24px;
+  }
+
+  .sf-lsfMobileHeader .sf-lsfStoreTicker .sf-engineUtilityPillTrack {
+    gap: 0;
+    line-height: 24px;
+    animation: sfStoreTicker5 9.4s steps(1, end) infinite;
+  }
+
+  .sf-lsfMobileHeader .sf-lsfStoreTicker .sf-engineUtilityPillLine {
+    justify-content: center;
+    height: 24px;
+    min-height: 24px;
+    line-height: 24px;
+    text-align: center;
+  }
+
+  .sf-lsfMobileHeaderActions {
+    grid-template-columns: minmax(98px, 1fr) 42px;
+    grid-template-rows: 40px;
+    gap: 6px;
+    align-content: center;
+  }
+
+  .sf-lsfMobileHeaderActions .lsf-cartbtn,
+  .sf-lsfMobileHeaderActions .lsf-callbtn {
+    min-height: 40px;
+    height: 40px;
+    border-radius: 16px;
+  }
+
+  .sf-lsfMobileHeaderActions .lsf-cartbtn {
+    grid-template-columns: 23px 23px minmax(42px, 1fr);
+    gap: 4px;
+  }
+
+  .sf-lsfMobileHeaderActions .lsf-callbtn__icon {
+    width: 25px;
+    height: 25px;
+  }
+
+  .sf-engineBottomBtn--scheduleDock .lsf-schedulebtn__icon {
+    width: 27px;
+    height: 27px;
+  }
+}
+
 .lsf-topDealBadge {
   position: absolute;
   left: 10px;
@@ -11737,6 +12012,41 @@
   z-index: 13;
 }
 
+.lsf-categoryDealCountdown {
+  position: absolute;
+  z-index: 45;
+  right: 12px;
+  bottom: 70px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 22px;
+  max-width: calc(100% - 86px);
+  padding: 0 10px;
+  border-radius: 999px;
+  background: #111111;
+  color: #ffffff;
+  font-size: 0.58rem;
+  font-weight: 1000;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-shadow: 0 6px 12px rgba(17, 17, 17, 0.18);
+}
+
+.lsf-categoryDealCountdown span,
+.lsf-categoryDealCountdown strong {
+  min-width: 0;
+  overflow: hidden;
+  color: #ffffff;
+  line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 @media (min-width: 561px) {
   .lsf-card--topDeal .lsf-offerRibbon {
     position: absolute;
@@ -11864,4 +12174,3738 @@
   .lsf-card--upcoming .lsf-card__overlay {
     margin-top: -4px;
   }
+}
+
+/* Final Volta header overrides: keep these after all responsive corrections. */
+.sf-storeHeader--desktop .lsf-top__actions {
+  grid-template-columns: minmax(148px, 1fr) minmax(128px, 156px) 44px;
+  width: min(430px, 100%);
+}
+
+.sf-storeHeader--desktop .lsf-top__actions > .lsf-schedulebtn,
+.sf-lsfMobileHeaderActions > .lsf-schedulebtn,
+.sf-storeHeaderTitle--inSurface {
+  display: none;
+}
+
+.sf-lsfStoreTicker {
+  --sf-lsf-ticker-step: calc(1.48em + 0.34em);
+}
+
+.sf-lsfStoreTicker .sf-engineUtilityPillTrack {
+  animation-name: sfStoreTicker5;
+  animation-duration: 9.4s;
+  justify-items: center;
+}
+
+.sf-lsfStoreTicker:hover .sf-engineUtilityPillTrack,
+.sf-lsfStoreTicker:focus-within .sf-engineUtilityPillTrack {
+  transform: translateY(calc(-4 * var(--sf-lsf-ticker-step, 1.82em)));
+}
+
+.sf-lsfStoreTicker .sf-engineUtilityPillLine {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 1000;
+  letter-spacing: 0.02em;
+  text-align: center;
+  text-transform: uppercase;
+  text-shadow:
+    0 1px 0 #ffffff,
+    0 0 8px rgba(255, 255, 255, 0.78),
+    0 0 14px rgba(106, 61, 240, 0.16);
+}
+
+.sf-lsfStoreTicker .sf-engineUtilityPillInline {
+  justify-content: center;
+}
+
+.sf-lsfStoreTicker .sf-engineUtilityPillLine--select {
+  color: #20bfff;
+  font-family: inherit;
+  text-shadow:
+    0 1px 0 #ffffff,
+    0 0 9px rgba(32, 191, 255, 0.66),
+    0 0 18px rgba(32, 191, 255, 0.4);
+}
+
+@media (max-width: 560px) {
+  .sf-lsfSurface .sf-lsfMobileHeader {
+    grid-template-columns: minmax(0, 1fr) clamp(148px, 43vw, 166px);
+    align-items: center;
+    gap: 7px;
+  }
+
+  .sf-lsfMobileInfo {
+    min-height: 30px;
+    grid-template-rows: 30px;
+  }
+
+  .sf-lsfMobileHeader .sf-lsfStoreTicker {
+    --sf-lsf-ticker-step: 24px;
+    min-height: 30px;
+    height: 30px;
+    transform: none;
+  }
+
+  .sf-lsfMobileHeader .sf-lsfStoreTicker .sf-engineUtilityPillTicker {
+    height: 24px;
+  }
+
+  .sf-lsfMobileHeader .sf-lsfStoreTicker .sf-engineUtilityPillTrack {
+    gap: 0;
+    justify-items: center;
+    line-height: 24px;
+    animation: sfStoreTicker5 9.4s steps(1, end) infinite;
+  }
+
+  .sf-lsfMobileHeader .sf-lsfStoreTicker .sf-engineUtilityPillLine {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 24px;
+    min-height: 24px;
+    line-height: 24px;
+    text-align: center;
+  }
+
+  .sf-lsfMobileHeaderActions {
+    grid-template-columns: minmax(98px, 1fr) 42px;
+    grid-template-rows: 40px;
+    gap: 6px;
+    align-content: center;
+  }
+
+  .sf-lsfMobileHeaderActions .lsf-cartbtn,
+  .sf-lsfMobileHeaderActions .lsf-callbtn {
+    min-height: 40px;
+    height: 40px;
+    border-radius: 16px;
+  }
+
+  .sf-lsfMobileHeaderActions .lsf-cartbtn {
+    grid-template-columns: 23px 23px minmax(42px, 1fr);
+    gap: 4px;
+  }
+}
+
+/* Volta mode is intentionally preserved as its own arcade skin while commercial-light evolves. */
+.sf-shell--mode-volta {
+  --sf-lsf-content-width: min(1304px, calc(100vw - 78px));
+  --sf-volta-purple: #3b008b;
+  --sf-volta-yellow: #ffef00;
+  --sf-volta-gold: #ffb61c;
+  --sf-volta-pink: #f92672;
+  --sf-volta-blue: #20bfff;
+  background:
+    radial-gradient(circle at top left, rgba(255, 182, 28, 0.18), transparent 30%),
+    radial-gradient(circle at top right, rgba(249, 38, 114, 0.12), transparent 28%),
+    linear-gradient(180deg, #fffaf1 0%, var(--sf-theme-surface, #fff8ef) 100%);
+  color: var(--sf-theme-on-surface, #171717);
+}
+
+.sf-shell--mode-volta .sf-storeHeader,
+.sf-shell--mode-volta .sf-lsfSurface {
+  background: rgba(255, 255, 255, 0.94);
+  border-color: color-mix(in srgb, var(--sf-volta-purple) 34%, #ffffff);
+  box-shadow:
+    0 18px 44px rgba(59, 0, 139, 0.16),
+    0 0 0 1px rgba(255, 182, 28, 0.22);
+}
+
+.sf-shell--mode-volta .lsf-mobile {
+  background: #ffffff;
+}
+
+.sf-shell--mode-volta .sf-lsfStoreTicker .sf-engineUtilityPillLine--select {
+  color: var(--sf-volta-blue);
+}
+
+.sf-shell--mode-volta .sf-incentiveBanner--lsf {
+  background:
+    radial-gradient(circle at 92% 12%, rgba(255, 255, 255, 0.5), transparent 28%),
+    linear-gradient(180deg, #fbff00 0%, #f0ec00 100%);
+  border-color: color-mix(in srgb, var(--sf-volta-gold) 72%, var(--sf-volta-purple));
+  box-shadow:
+    0 10px 0 rgba(166, 150, 0, 0.55),
+    0 18px 34px rgba(255, 239, 0, 0.28);
+}
+
+.sf-shell--mode-volta .sf-engineGridStage--lsf {
+  border-color: var(--sf-volta-purple);
+  background:
+    linear-gradient(90deg, var(--sf-volta-pink) 0 18px, transparent 18px calc(100% - 18px), var(--sf-volta-pink) calc(100% - 18px)),
+    #ffffff;
+}
+
+.sf-shell--mode-volta .lsf-card,
+.sf-shell--mode-volta .lsf-card--trending,
+.sf-shell--mode-volta .lsf-card--topDeal,
+.sf-shell--mode-volta .lsf-card--promo,
+.sf-shell--mode-volta .lsf-card--upcoming {
+  background: #ffffff;
+  border-color: color-mix(in srgb, var(--sf-volta-purple) 30%, #d8d3e8);
+  box-shadow:
+    0 18px 32px rgba(59, 0, 139, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.sf-shell--mode-volta .lsf-trendingRank,
+.sf-shell--mode-volta .lsf-trendingRibbon {
+  background: var(--sf-volta-yellow);
+  color: #111111;
+  border-color: #111111;
+}
+
+.sf-shell--mode-volta .sf-stickyFooter {
+  border-color: color-mix(in srgb, var(--sf-volta-purple) 36%, #ffffff);
+  background:
+    radial-gradient(circle at 14% -20%, rgba(255, 182, 28, 0.36), transparent 34%),
+    radial-gradient(circle at 92% 120%, rgba(106, 61, 240, 0.28), transparent 36%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 249, 239, 0.94));
+  box-shadow:
+    0 18px 44px rgba(59, 0, 139, 0.2),
+    0 0 0 1px rgba(255, 182, 28, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.92);
+}
+
+.sf-shell--mode-volta .sf-engineBottomBtn--pay {
+  color: #ffffff;
+  text-shadow:
+    0 1px 0 #3b008b,
+    0 0 8px rgba(255, 182, 28, 0.88);
+}
+
+/* Commercial light mode: quieter selling surface, with only key commercial signals elevated. */
+.sf-shell--mode-commercial-light {
+  --sf-commercial-ink: #17151f;
+  --sf-commercial-muted: #6f6877;
+  --sf-commercial-line: #e8e4ee;
+  --sf-commercial-panel: #ffffff;
+  --sf-commercial-soft: #f7f5fa;
+  --sf-commercial-accent: #5b32d6;
+  --sf-commercial-coupon: #f43f5e;
+  --sf-commercial-repeat: #13a6a6;
+  --sf-commercial-deal: #f4a62a;
+  --sf-lsf-content-width: min(1180px, calc(100vw - 52px));
+  background:
+    linear-gradient(180deg, #ffffff 0%, #fbfafc 58%, #f6f3f8 100%);
+  color: var(--sf-commercial-ink);
+}
+
+.sf-shell--mode-commercial-light .sf-storeHeader,
+.sf-shell--mode-commercial-light .sf-lsfSurface {
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 10px 28px rgba(23, 21, 31, 0.06);
+}
+
+.sf-shell--mode-commercial-light .sf-lsfSurface {
+  border: 1px solid var(--sf-commercial-line);
+  border-radius: 20px;
+}
+
+.sf-shell--mode-commercial-light .lsf-mobile {
+  background: var(--sf-commercial-panel);
+  border-radius: 20px;
+  padding: 14px;
+}
+
+.sf-shell--mode-commercial-light .lsf-top__actions {
+  border: 1px solid var(--sf-commercial-line);
+  background: #ffffff;
+  box-shadow: 0 10px 24px rgba(23, 21, 31, 0.07);
+}
+
+.sf-shell--mode-commercial-light .lsf-top__actions::before,
+.sf-shell--mode-commercial-light .sf-lsfStoreTicker::before,
+.sf-shell--mode-commercial-light .sf-engineGridStage--lsf::before,
+.sf-shell--mode-commercial-light .sf-stickyFooter::before,
+.sf-shell--mode-commercial-light .sf-engineBottomBtn::after,
+.sf-shell--mode-commercial-light .lsf-callbtn {
+  animation: none;
+}
+
+.sf-shell--mode-commercial-light .sf-lsfStoreTicker {
+  background: transparent;
+  color: var(--sf-commercial-ink);
+  text-shadow: none;
+}
+
+.sf-shell--mode-commercial-light .sf-lsfStoreTicker .sf-engineUtilityPillLine {
+  color: var(--sf-commercial-ink);
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  text-shadow: none;
+}
+
+.sf-shell--mode-commercial-light .sf-lsfStoreTicker .sf-engineUtilityPillLine--select {
+  color: #0ea5e9;
+  text-shadow:
+    0 0 10px rgba(14, 165, 233, 0.25),
+    0 1px 0 #ffffff;
+}
+
+.sf-shell--mode-commercial-light .lsf-cartbtn,
+.sf-shell--mode-commercial-light .lsf-cartbtn.is-active {
+  background: var(--sf-commercial-soft);
+  box-shadow: inset 0 1px 0 #ffffff, 0 7px 16px rgba(23, 21, 31, 0.06);
+  color: var(--sf-commercial-ink);
+  transform: none;
+}
+
+.sf-shell--mode-commercial-light .lsf-cartbtn__icon {
+  background: #ffffff;
+  color: var(--sf-commercial-ink);
+  box-shadow: inset 0 -2px 0 rgba(23, 21, 31, 0.08), 0 0 0 1px var(--sf-commercial-line);
+}
+
+.sf-shell--mode-commercial-light .lsf-cartbtn__count {
+  background: var(--sf-commercial-accent);
+  box-shadow: none;
+}
+
+.sf-shell--mode-commercial-light .lsf-cartbtn__total {
+  color: var(--sf-commercial-ink);
+  text-shadow: none;
+}
+
+.sf-shell--mode-commercial-light .lsf-callbtn {
+  border: 1px solid #fecaca;
+  background: #ef4444;
+  box-shadow: 0 8px 16px rgba(239, 68, 68, 0.18);
+}
+
+.sf-shell--mode-commercial-light .sf-lsfActionSearchLine .sf-lsfOfferBtn {
+  border: 1px solid color-mix(in srgb, var(--sf-commercial-coupon) 48%, #ffffff);
+  background:
+    linear-gradient(135deg, #fff1f2 0%, #ffffff 45%, #ffe4e6 100%);
+  color: #be123c;
+  box-shadow: 0 8px 18px rgba(244, 63, 94, 0.14);
+}
+
+.sf-shell--mode-commercial-light .sf-lsfActionSearchLine .sf-lsfOfferBtn::before,
+.sf-shell--mode-commercial-light .sf-lsfActionSearchLine .sf-lsfOfferBtn::after {
+  display: none;
+}
+
+.sf-shell--mode-commercial-light .sf-lsfActionSearchLine .sf-lsfOfferBtn .sf-offersBtnLabel {
+  color: #be123c;
+  font-weight: 1000;
+  text-shadow: none;
+}
+
+.sf-shell--mode-commercial-light .lsf-buildmode {
+  border: 1px solid var(--sf-commercial-line);
+  background: #ffffff;
+  color: var(--sf-commercial-accent);
+  box-shadow: 0 5px 14px rgba(23, 21, 31, 0.04);
+}
+
+.sf-shell--mode-commercial-light .lsf-buildmode.is-active {
+  border-color: color-mix(in srgb, var(--sf-commercial-accent) 38%, #ffffff);
+  background: #f5f2ff;
+}
+
+.sf-shell--mode-commercial-light .sf-engineSearchRow--lsf .sf-engineSearchWrap {
+  border: 1px solid var(--sf-commercial-line);
+  background: #ffffff;
+  box-shadow: 0 8px 20px rgba(23, 21, 31, 0.05);
+}
+
+.sf-shell--mode-commercial-light .sf-engineSearchRow--lsf .sf-engineSearch {
+  border: 0;
+  color: var(--sf-commercial-ink);
+}
+
+.sf-shell--mode-commercial-light .sf-engineSearchRow--lsf .sf-engineSearchBtn {
+  background: var(--sf-commercial-ink);
+  color: #ffffff;
+}
+
+.sf-shell--mode-commercial-light .sf-repeatOrderBtn {
+  color: #0f766e;
+  transform: none;
+}
+
+.sf-shell--mode-commercial-light .sf-repeatOrderBtn::before {
+  inset: 0;
+  border: 1px solid color-mix(in srgb, var(--sf-commercial-repeat) 35%, #ffffff);
+  background: linear-gradient(135deg, #ecfeff 0%, #ffffff 46%, #dffcf8 100%);
+  filter: none;
+  box-shadow: 0 8px 18px rgba(19, 166, 166, 0.12);
+}
+
+.sf-shell--mode-commercial-light .sf-repeatOrderBtn span {
+  color: #0f766e;
+  letter-spacing: 0.03em;
+  text-shadow: none;
+  animation: none;
+}
+
+.sf-shell--mode-commercial-light .sf-repeatOrderBtn svg {
+  background: #ffffff;
+  color: #0f766e;
+  box-shadow: 0 0 0 1px rgba(19, 166, 166, 0.26);
+}
+
+.sf-shell--mode-commercial-light .sf-incentiveBanner--lsf {
+  border: 1px solid #d9f99d;
+  background: linear-gradient(135deg, #f7fee7 0%, #ffffff 52%, #f0fdf4 100%);
+  box-shadow: 0 8px 18px rgba(77, 124, 15, 0.08);
+}
+
+.sf-shell--mode-commercial-light .sf-incentiveBanner--lsf::before,
+.sf-shell--mode-commercial-light .sf-incentiveBanner--lsf::after,
+.sf-shell--mode-commercial-light .sf-incentiveProgressStripes,
+.sf-shell--mode-commercial-light .sf-incentiveProgressGlow {
+  display: none;
+}
+
+.sf-shell--mode-commercial-light .sf-incentiveEyebrow,
+.sf-shell--mode-commercial-light .sf-incentiveCopy strong {
+  color: #365314;
+  text-shadow: none;
+}
+
+.sf-shell--mode-commercial-light .sf-incentiveTimer {
+  background: #ffffff;
+  color: #365314;
+  box-shadow: 0 0 0 1px #d9f99d;
+}
+
+.sf-shell--mode-commercial-light .sf-incentiveProgressTrack {
+  background: #e7f8cc;
+  box-shadow: inset 0 0 0 1px #d9f99d;
+}
+
+.sf-shell--mode-commercial-light .sf-incentiveProgressFill {
+  background: #84cc16;
+}
+
+.sf-shell--mode-commercial-light .lsf-tabs {
+  border-bottom: 1px solid var(--sf-commercial-line);
+}
+
+.sf-shell--mode-commercial-light .lsf-tab {
+  border: 1px solid var(--sf-commercial-line);
+  background: #ffffff;
+  color: var(--sf-commercial-muted);
+  box-shadow: 0 4px 12px rgba(23, 21, 31, 0.04);
+}
+
+.sf-shell--mode-commercial-light .lsf-tab--segment:nth-child(2) {
+  border-color: color-mix(in srgb, var(--sf-commercial-deal) 55%, #ffffff);
+  background: #fff7ed;
+  color: #b45309;
+}
+
+.sf-shell--mode-commercial-light .lsf-tab--segment:nth-child(2).is-active,
+.sf-shell--mode-commercial-light .lsf-tab--segment.is-active {
+  background: var(--sf-commercial-ink);
+  border-color: var(--sf-commercial-ink);
+  color: #ffffff;
+}
+
+.sf-shell--mode-commercial-light .lsf-tab--segment:nth-child(2).is-active {
+  background: linear-gradient(135deg, #92400e, var(--sf-commercial-deal));
+  border-color: var(--sf-commercial-deal);
+}
+
+.sf-shell--mode-commercial-light .lsf-tab--category.is-active {
+  border-color: color-mix(in srgb, var(--sf-commercial-accent) 55%, #ffffff);
+  background: #f5f2ff;
+  color: var(--sf-commercial-accent);
+}
+
+.sf-shell--mode-commercial-light .sf-engineGridStage--lsf {
+  border: 1px solid var(--sf-commercial-line);
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 12px 26px rgba(23, 21, 31, 0.06);
+}
+
+.sf-shell--mode-commercial-light .lsf-card,
+.sf-shell--mode-commercial-light .lsf-card--trending,
+.sf-shell--mode-commercial-light .lsf-card--topDeal,
+.sf-shell--mode-commercial-light .lsf-card--promo,
+.sf-shell--mode-commercial-light .lsf-card--upcoming {
+  border: 1px solid var(--sf-commercial-line);
+  background: #ffffff;
+  box-shadow: 0 10px 22px rgba(23, 21, 31, 0.07);
+}
+
+.sf-shell--mode-commercial-light .lsf-card__image {
+  background: #f7f5fa;
+  border-radius: 12px;
+}
+
+.sf-shell--mode-commercial-light .lsf-trendingRank,
+.sf-shell--mode-commercial-light .lsf-trendingRibbon {
+  border-color: #e5d24c;
+  background: #fff8c5;
+  color: #3f3a10;
+  box-shadow: none;
+  animation: none;
+}
+
+.sf-shell--mode-commercial-light .lsf-topDealBadge,
+.sf-shell--mode-commercial-light .lsf-directDiscountBadge {
+  border: 1px solid color-mix(in srgb, var(--sf-commercial-deal) 52%, #ffffff);
+  background: #fff7ed;
+  color: #b45309;
+  box-shadow: 0 6px 14px rgba(180, 83, 9, 0.12);
+  transform: none;
+}
+
+.sf-shell--mode-commercial-light .lsf-card__addbtn {
+  border: 1px solid var(--sf-commercial-line);
+  background: #ffffff;
+  color: var(--sf-commercial-ink);
+  box-shadow: 0 8px 16px rgba(23, 21, 31, 0.08);
+}
+
+.sf-shell--mode-commercial-light .lsf-card__overlay {
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 -6px 14px rgba(255, 255, 255, 0.88);
+}
+
+.sf-shell--mode-commercial-light .lsf-card__name,
+.sf-shell--mode-commercial-light .lsf-card__price {
+  color: var(--sf-commercial-ink);
+  text-shadow: none;
+}
+
+.sf-shell--mode-commercial-light .lsf-card__priceCurrent {
+  color: #15803d;
+}
+
+.sf-shell--mode-commercial-light .lsf-trendingPriceStack.is-down .lsf-card__priceCurrent,
+.sf-shell--mode-commercial-light .lsf-trendingPriceStack.is-down em {
+  color: #dc2626;
+}
+
+.sf-shell--mode-commercial-light .sf-stickyFooterShell {
+  background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.98) 22%);
+}
+
+.sf-shell--mode-commercial-light .sf-stickyFooter {
+  border: 1px solid var(--sf-commercial-line);
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 14px 32px rgba(23, 21, 31, 0.1);
+}
+
+.sf-shell--mode-commercial-light .sf-engineBottomBtn,
+.sf-shell--mode-commercial-light .sf-footerStatus,
+.sf-shell--mode-commercial-light .sf-couponDock {
+  box-shadow: 0 7px 16px rgba(23, 21, 31, 0.08);
+}
+
+.sf-shell--mode-commercial-light .sf-engineBottomBtn--pay {
+  border: 1px solid #17151f;
+  background: #17151f;
+  color: #ffffff;
+}
+
+.sf-shell--mode-commercial-light .sf-engineBottomBtn--pay::before {
+  display: none;
+}
+
+.sf-shell--mode-commercial-light .sf-engineBottomBtn--pay span,
+.sf-shell--mode-commercial-light .sf-engineBottomBtn--pay small,
+.sf-shell--mode-commercial-light .sf-engineBottomBtn--pay:disabled span {
+  color: #ffffff;
+  -webkit-text-stroke: 0;
+  text-shadow: none;
+}
+
+.sf-shell--mode-commercial-light .sf-engineBottomBtn--scheduleDock {
+  border: 1px solid color-mix(in srgb, var(--sf-commercial-accent) 34%, #ffffff);
+  background: #f5f2ff;
+  color: var(--sf-commercial-accent);
+  box-shadow: 0 7px 16px rgba(91, 50, 214, 0.1);
+}
+
+.sf-shell--mode-commercial-light .sf-engineBottomBtn--scheduleDock .lsf-schedulebtn__icon {
+  background: #ffffff;
+  color: var(--sf-commercial-accent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--sf-commercial-accent) 22%, #ffffff);
+}
+
+.sf-shell--mode-commercial-light .sf-couponDock {
+  border: 1px solid color-mix(in srgb, var(--sf-commercial-coupon) 30%, #ffffff);
+  background: #fff7f8;
+  color: #be123c;
+}
+
+.sf-shell--mode-commercial-light .sf-couponDockIcon,
+.sf-shell--mode-commercial-light .sf-couponDockTicker {
+  color: #be123c;
+}
+
+.sf-shell--mode-commercial-light .sf-footerStatus--boots {
+  border: 1px solid var(--sf-commercial-line);
+  background: #ffffff;
+  color: var(--sf-commercial-ink);
+}
+
+@media (max-width: 560px) {
+  .sf-shell--mode-commercial-light {
+    --sf-lsf-content-width: calc(100vw - 16px);
+    padding: 10px 8px 166px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-lsfSurface.lsf-wrapper.lsf-mobile {
+    border-radius: 16px;
+    padding: 12px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-engineGridStage--lsf {
+    border-radius: 16px;
+    padding: 12px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-stickyFooter {
+    border-radius: 20px;
+    padding: 6px;
+    gap: 7px;
+  }
+}
+
+/* Commercial light v2: reduce glow/noise and keep hierarchy close to the reference. */
+.sf-shell--mode-commercial-light {
+  --sf-commercial-bg: #f7f7fb;
+  --sf-commercial-panel: #ffffff;
+  --sf-commercial-ink: #1d1730;
+  --sf-commercial-muted: #746d80;
+  --sf-commercial-line: #ebe8f2;
+  --sf-commercial-soft: #f6f4fa;
+  --sf-commercial-primary: #6d2df6;
+  --sf-commercial-primary-dark: #4f1fd0;
+  --sf-commercial-success: #0f9f5b;
+  --sf-commercial-danger: #e11d48;
+  background: var(--sf-commercial-bg);
+  color: var(--sf-commercial-ink);
+}
+
+.sf-shell--mode-commercial-light .sf-storeHeader,
+.sf-shell--mode-commercial-light .sf-lsfSurface,
+.sf-shell--mode-commercial-light .sf-engineGridStage--lsf,
+.sf-shell--mode-commercial-light .sf-stickyFooter {
+  border: 1px solid var(--sf-commercial-line);
+  background: var(--sf-commercial-panel);
+  box-shadow: 0 10px 28px rgba(29, 23, 48, 0.07);
+}
+
+.sf-shell--mode-commercial-light .sf-engineGridStage--lsf {
+  background: var(--sf-commercial-panel);
+}
+
+.sf-shell--mode-commercial-light .sf-storeHeader,
+.sf-shell--mode-commercial-light .sf-lsfSurface {
+  backdrop-filter: none;
+}
+
+.sf-shell--mode-commercial-light .lsf-mobile {
+  background: transparent;
+}
+
+.sf-shell--mode-commercial-light .lsf-top__actions {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.sf-shell--mode-commercial-light .sf-lsfStoreTicker,
+.sf-shell--mode-commercial-light .sf-lsfStoreTicker .sf-engineUtilityPillLine,
+.sf-shell--mode-commercial-light .lsf-cartbtn__total,
+.sf-shell--mode-commercial-light .lsf-card__name,
+.sf-shell--mode-commercial-light .lsf-card__price {
+  color: var(--sf-commercial-ink);
+  text-shadow: none;
+}
+
+.sf-shell--mode-commercial-light .sf-lsfStoreTicker .sf-engineUtilityPillLine--select {
+  color: var(--sf-commercial-primary);
+  text-shadow: none;
+}
+
+.sf-shell--mode-commercial-light .lsf-cartbtn,
+.sf-shell--mode-commercial-light .lsf-cartbtn.is-active {
+  border: 1px solid var(--sf-commercial-line);
+  background: #ffffff;
+  box-shadow: 0 6px 14px rgba(29, 23, 48, 0.06);
+  transform: none;
+}
+
+.sf-shell--mode-commercial-light .lsf-cartbtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 16px rgba(29, 23, 48, 0.08);
+}
+
+.sf-shell--mode-commercial-light .lsf-cartbtn__icon {
+  background: #f8f7fb;
+  box-shadow: none;
+}
+
+.sf-shell--mode-commercial-light .lsf-cartbtn__count {
+  background: var(--sf-commercial-primary);
+  box-shadow: none;
+}
+
+.sf-shell--mode-commercial-light .lsf-callbtn {
+  border: 0;
+  background: #ef4444;
+  box-shadow: 0 7px 14px rgba(239, 68, 68, 0.18);
+}
+
+.sf-shell--mode-commercial-light .sf-lsfActionSearchLine .sf-lsfOfferBtn,
+.sf-shell--mode-commercial-light .sf-lsfActionSearchLine .sf-offersBtn.sf-lsfOfferBtn.sf-lsfOfferBtn--mobilePunch {
+  border: 0;
+  background: linear-gradient(180deg, var(--sf-commercial-primary), var(--sf-commercial-primary-dark));
+  color: #ffffff;
+  box-shadow: 0 9px 18px rgba(109, 45, 246, 0.18);
+}
+
+.sf-shell--mode-commercial-light .sf-lsfActionSearchLine .sf-lsfOfferBtn .sf-offersBtnLabel,
+.sf-shell--mode-commercial-light .sf-lsfActionSearchLine .sf-offersBtn.sf-lsfOfferBtn.sf-lsfOfferBtn--mobilePunch .sf-offersBtnLabel {
+  color: #ffffff;
+  text-shadow: none;
+  -webkit-text-stroke: 0;
+}
+
+.sf-shell--mode-commercial-light .sf-lsfActionSearchLine .sf-lsfOfferBtn::before,
+.sf-shell--mode-commercial-light .sf-lsfActionSearchLine .sf-lsfOfferBtn::after,
+.sf-shell--mode-commercial-light .sf-lsfActionSearchLine .sf-offersBtn.sf-lsfOfferBtn.sf-lsfOfferBtn--mobilePunch::before,
+.sf-shell--mode-commercial-light .sf-lsfActionSearchLine .sf-offersBtn.sf-lsfOfferBtn.sf-lsfOfferBtn--mobilePunch::after {
+  display: none;
+}
+
+.sf-shell--mode-commercial-light .lsf-buildmode {
+  border: 1px solid var(--sf-commercial-line);
+  background: #ffffff;
+  color: var(--sf-commercial-ink);
+  box-shadow: 0 5px 12px rgba(29, 23, 48, 0.04);
+}
+
+.sf-shell--mode-commercial-light .lsf-buildmode.is-active {
+  border-color: rgba(109, 45, 246, 0.26);
+  background: #f4efff;
+  color: var(--sf-commercial-primary);
+}
+
+.sf-shell--mode-commercial-light .sf-engineSearchRow--lsf .sf-engineSearchWrap {
+  border: 1px solid var(--sf-commercial-line);
+  background: #fbfafc;
+  box-shadow: none;
+}
+
+.sf-shell--mode-commercial-light .sf-engineSearchRow--lsf .sf-engineSearch {
+  border: 0;
+  background: transparent;
+  color: var(--sf-commercial-ink);
+}
+
+.sf-shell--mode-commercial-light .sf-engineSearchTicker {
+  color: #817a8b;
+}
+
+.sf-shell--mode-commercial-light .sf-engineSearchRow--lsf .sf-engineSearchBtn {
+  background: #ffffff;
+  color: var(--sf-commercial-ink);
+  border-left: 1px solid var(--sf-commercial-line);
+}
+
+.sf-shell--mode-commercial-light .sf-repeatOrderBtn {
+  color: var(--sf-commercial-primary);
+  transform: none;
+}
+
+.sf-shell--mode-commercial-light .sf-repeatOrderBtn::before {
+  inset: 0;
+  border: 1px solid rgba(109, 45, 246, 0.18);
+  background: #f4efff;
+  box-shadow: none;
+  filter: none;
+}
+
+.sf-shell--mode-commercial-light .sf-repeatOrderBtn span {
+  color: var(--sf-commercial-primary);
+  text-shadow: none;
+  animation: none;
+}
+
+.sf-shell--mode-commercial-light .sf-repeatOrderBtn svg {
+  background: #ffffff;
+  color: var(--sf-commercial-primary);
+  box-shadow: none;
+}
+
+.sf-shell--mode-commercial-light .sf-incentiveBanner--lsf {
+  border: 1px solid #eee9f8;
+  background: #ffffff;
+  box-shadow: 0 8px 20px rgba(29, 23, 48, 0.06);
+}
+
+.sf-shell--mode-commercial-light .sf-incentiveBanner--lsf::before,
+.sf-shell--mode-commercial-light .sf-incentiveBanner--lsf::after,
+.sf-shell--mode-commercial-light .sf-incentiveProgressStripes,
+.sf-shell--mode-commercial-light .sf-incentiveProgressGlow {
+  display: none;
+}
+
+.sf-shell--mode-commercial-light .sf-incentiveEyebrow,
+.sf-shell--mode-commercial-light .sf-incentiveCopy strong {
+  color: var(--sf-commercial-primary);
+  text-shadow: none;
+}
+
+.sf-shell--mode-commercial-light .sf-incentiveTimer {
+  background: #ffffff;
+  color: var(--sf-commercial-ink);
+  box-shadow: 0 0 0 1px var(--sf-commercial-line);
+}
+
+.sf-shell--mode-commercial-light .sf-incentiveProgressTrack {
+  background: #f0ebfb;
+  box-shadow: none;
+}
+
+.sf-shell--mode-commercial-light .sf-incentiveProgressFill {
+  background:
+    linear-gradient(
+      90deg,
+      #6d2df6 0%,
+      #7c3aed 34%,
+      #22c55e 68%,
+      #facc15 100%
+    );
+}
+
+.sf-shell--mode-commercial-light .lsf-tabs {
+  gap: 8px;
+  border-bottom: 0;
+}
+
+.sf-shell--mode-commercial-light .lsf-tab {
+  border: 1px solid var(--sf-commercial-line);
+  background: #ffffff;
+  color: var(--sf-commercial-ink);
+  box-shadow: 0 5px 12px rgba(29, 23, 48, 0.04);
+}
+
+.sf-shell--mode-commercial-light .lsf-tab--segment.is-active,
+.sf-shell--mode-commercial-light .lsf-tab--category.is-active {
+  border-color: transparent;
+  background: var(--sf-commercial-primary);
+  color: #ffffff;
+}
+
+.sf-shell--mode-commercial-light .lsf-tab--segment:nth-child(2),
+.sf-shell--mode-commercial-light .lsf-tab--segment:nth-child(2).is-active {
+  border-color: transparent;
+  background: #fff4d8;
+  color: #9a6700;
+}
+
+.sf-shell--mode-commercial-light .lsf-card,
+.sf-shell--mode-commercial-light .lsf-card--trending,
+.sf-shell--mode-commercial-light .lsf-card--topDeal,
+.sf-shell--mode-commercial-light .lsf-card--promo,
+.sf-shell--mode-commercial-light .lsf-card--upcoming {
+  border: 1px solid var(--sf-commercial-line);
+  background: #ffffff;
+  box-shadow: 0 8px 20px rgba(29, 23, 48, 0.07);
+}
+
+.sf-shell--mode-commercial-light .lsf-card__image {
+  background: #f7f6fa;
+}
+
+.sf-shell--mode-commercial-light .lsf-trendingRank,
+.sf-shell--mode-commercial-light .lsf-trendingRibbon {
+  border: 1px solid #efe17a;
+  background: #fff7a8;
+  color: #2b2700;
+  box-shadow: none;
+  animation: none;
+}
+
+.sf-shell--mode-commercial-light .lsf-topDealBadge,
+.sf-shell--mode-commercial-light .lsf-directDiscountBadge {
+  border: 1px solid #ffd58a;
+  background: #fff4d8;
+  color: #9a6700;
+  box-shadow: none;
+  transform: none;
+}
+
+.sf-shell--mode-commercial-light .lsf-card__addbtn {
+  border: 1px solid var(--sf-commercial-line);
+  background: #ffffff;
+  color: var(--sf-commercial-ink);
+  box-shadow: 0 5px 12px rgba(29, 23, 48, 0.08);
+}
+
+.sf-shell--mode-commercial-light .lsf-card__overlay {
+  background: #ffffff;
+  box-shadow: none;
+}
+
+.sf-shell--mode-commercial-light .lsf-card__priceCurrent,
+.sf-shell--mode-commercial-light .lsf-trendingPriceStack.is-up .lsf-card__priceCurrent,
+.sf-shell--mode-commercial-light .lsf-trendingPriceStack.is-up em {
+  color: var(--sf-commercial-success);
+}
+
+.sf-shell--mode-commercial-light .lsf-trendingPriceStack.is-down .lsf-card__priceCurrent,
+.sf-shell--mode-commercial-light .lsf-trendingPriceStack.is-down em {
+  color: var(--sf-commercial-danger);
+}
+
+.sf-shell--mode-commercial-light .sf-stickyFooterShell {
+  background: linear-gradient(180deg, transparent, rgba(247, 247, 251, 0.98) 26%);
+}
+
+.sf-shell--mode-commercial-light .sf-stickyFooter {
+  border: 1px solid var(--sf-commercial-line);
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 12px 28px rgba(29, 23, 48, 0.12);
+}
+
+.sf-shell--mode-commercial-light .sf-engineBottomBtn,
+.sf-shell--mode-commercial-light .sf-footerStatus,
+.sf-shell--mode-commercial-light .sf-couponDock {
+  border: 1px solid var(--sf-commercial-line);
+  background: #ffffff;
+  color: var(--sf-commercial-ink);
+  box-shadow: 0 5px 12px rgba(29, 23, 48, 0.07);
+}
+
+.sf-shell--mode-commercial-light .sf-engineBottomBtn--pay {
+  border: 0;
+  background: linear-gradient(180deg, var(--sf-commercial-primary), var(--sf-commercial-primary-dark));
+  color: #ffffff;
+  box-shadow: 0 10px 22px rgba(109, 45, 246, 0.24);
+}
+
+.sf-shell--mode-commercial-light .sf-engineBottomBtn--pay::before,
+.sf-shell--mode-commercial-light .sf-engineBottomBtn--pay::after {
+  display: none;
+}
+
+.sf-shell--mode-commercial-light .sf-engineBottomBtn--pay span,
+.sf-shell--mode-commercial-light .sf-engineBottomBtn--pay small,
+.sf-shell--mode-commercial-light .sf-engineBottomBtn--pay:disabled span {
+  color: #ffffff;
+  -webkit-text-stroke: 0;
+  text-shadow: none;
+}
+
+.sf-shell--mode-commercial-light .sf-engineBottomBtn--scheduleDock {
+  background: #f4efff;
+  color: var(--sf-commercial-primary);
+}
+
+.sf-shell--mode-commercial-light .sf-engineBottomBtn--scheduleDock .lsf-schedulebtn__icon {
+  background: #ffffff;
+  color: var(--sf-commercial-primary);
+  box-shadow: none;
+  animation: none;
+}
+
+.sf-shell--mode-commercial-light .sf-couponDock {
+  border-color: rgba(109, 45, 246, 0.18);
+  background: #f4efff;
+}
+
+.sf-shell--mode-commercial-light .sf-couponDockIcon,
+.sf-shell--mode-commercial-light .sf-couponDockTicker {
+  color: var(--sf-commercial-primary);
+}
+
+.sf-shell--mode-commercial-light .sf-footerStatus--boots {
+  background: #ffffff;
+}
+
+.sf-shell--mode-commercial-light .sf-bootsMobileTicker,
+.sf-shell--mode-commercial-light .sf-bootsTickerTrack span,
+.sf-shell--mode-commercial-light .sf-bootsCounter span,
+.sf-shell--mode-commercial-light .sf-bootsCounter strong {
+  color: var(--sf-commercial-ink);
+  text-shadow: none;
+}
+
+@media (max-width: 560px) {
+  .sf-shell--mode-commercial-light {
+    padding: 10px 8px 156px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-lsfSurface.lsf-wrapper.lsf-mobile {
+    border-radius: 18px;
+    padding: 12px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-engineGridStage--lsf {
+    padding: 12px;
+    border-radius: 18px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-stickyFooter {
+    border-radius: 18px;
+  }
+}
+
+@media (max-width: 720px) {
+  .sf-shell--mode-commercial-light .sf-lsfActionSearchLine .sf-offersBtn.sf-lsfOfferBtn.sf-lsfOfferBtn--mobilePunch {
+    border: 0 !important;
+    background-color: var(--sf-commercial-primary) !important;
+    background-image: linear-gradient(180deg, var(--sf-commercial-primary), var(--sf-commercial-primary-dark)) !important;
+    background-size: auto !important;
+    color: #ffffff !important;
+    box-shadow: 0 9px 18px rgba(109, 45, 246, 0.18) !important;
+    animation: none !important;
+  }
+
+  .sf-shell--mode-commercial-light .sf-lsfActionSearchLine .sf-offersBtn.sf-lsfOfferBtn.sf-lsfOfferBtn--mobilePunch .sf-offersBtnLabel {
+    color: #ffffff !important;
+    background: transparent !important;
+    -webkit-text-fill-color: #ffffff !important;
+    text-shadow: none !important;
+  }
+}
+
+@media (max-width: 560px) {
+  .sf-shell--mode-commercial-light .sf-repeatOrderBtn,
+  .sf-shell--mode-commercial-light .sf-repeatOrderBtn.has-draft {
+    border: 1px solid rgba(109, 45, 246, 0.18);
+    background: #f4efff;
+    box-shadow: 0 5px 12px rgba(29, 23, 48, 0.06);
+    animation: none;
+  }
+
+  .sf-shell--mode-commercial-light .sf-repeatOrderBtn::before {
+    display: none;
+    content: none;
+  }
+
+  .sf-shell--mode-commercial-light .sf-repeatOrderBtn svg {
+    color: var(--sf-commercial-primary);
+  }
+
+  .sf-shell--mode-commercial-light .sf-repeatOrderBtn .sf-repeatOrderBtn__mark {
+    color: var(--sf-commercial-primary);
+    font-family: inherit;
+    margin: 0;
+    font-size: 1rem;
+    text-shadow: none;
+  }
+}
+
+.sf-shell--mode-commercial-light .sf-stickyFooter {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 4px;
+  padding: 5px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.98);
+}
+
+.sf-shell--mode-commercial-light .sf-footerNavItem {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  min-width: 0;
+  min-height: 48px;
+  height: 48px;
+  display: grid;
+  grid-template-rows: 22px auto;
+  align-items: center;
+  justify-items: center;
+  gap: 2px;
+  border: 0;
+  border-radius: 16px;
+  padding: 5px 4px 5px;
+  background: transparent;
+  color: #5d5965;
+  cursor: pointer;
+  box-shadow: none;
+  text-decoration: none;
+  transform: none;
+}
+
+.sf-shell--mode-commercial-light .sf-footerNavItem:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.sf-shell--mode-commercial-light .sf-footerNavItem:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
+.sf-shell--mode-commercial-light .sf-footerNavItem.is-active {
+  background: #ffffff;
+  color: var(--sf-commercial-primary);
+  box-shadow:
+    0 12px 26px rgba(29, 23, 48, 0.1),
+    inset 0 0 0 1px rgba(109, 45, 246, 0.06);
+}
+
+.sf-shell--mode-commercial-light .sf-footerNavItem--schedule {
+  background: #ffffff;
+  color: var(--sf-commercial-primary);
+  box-shadow:
+    0 12px 26px rgba(29, 23, 48, 0.1),
+    inset 0 0 0 1px rgba(109, 45, 246, 0.06);
+}
+
+.sf-shell--mode-commercial-light .sf-footerNavIcon {
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  color: currentColor;
+  background: transparent;
+  box-shadow: none;
+}
+
+.sf-shell--mode-commercial-light .sf-footerNavIcon svg {
+  width: 21px;
+  height: 21px;
+  display: block;
+  fill: currentColor;
+}
+
+.sf-shell--mode-commercial-light .sf-footerNavLabel,
+.sf-shell--mode-commercial-light .sf-bootsMobileTicker.sf-footerNavLabel {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  overflow: hidden;
+  color: currentColor;
+  font-size: 0.5rem;
+  font-weight: 850;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  text-align: center;
+  text-transform: uppercase;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-shadow: none;
+}
+
+.sf-shell--mode-commercial-light .sf-bootsMobileTicker.sf-footerNavLabel span,
+.sf-shell--mode-commercial-light .sf-bootsMobileTicker.sf-footerNavLabel span + span {
+  position: static;
+  grid-area: auto;
+  display: inline;
+  color: inherit;
+  font: inherit;
+  animation: none;
+}
+
+.sf-shell--mode-commercial-light .sf-bootsMobileTicker.sf-footerNavLabel span + span {
+  display: none;
+}
+
+.sf-shell--mode-commercial-light .sf-engineBottomBtn--pay {
+  grid-column: 1 / -1;
+  order: -1;
+  min-height: 42px;
+  height: 42px;
+  margin-bottom: 0;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+}
+
+.sf-shell--mode-commercial-light .sf-engineBottomBtn--pay span,
+.sf-shell--mode-commercial-light .sf-engineBottomBtn--pay small,
+.sf-shell--mode-commercial-light .sf-engineBottomBtn--pay:disabled span {
+  position: static !important;
+  inset: auto !important;
+  left: auto !important;
+  top: auto !important;
+  transform: none !important;
+  animation: none !important;
+  color: #ffffff !important;
+  font-size: 0.88rem !important;
+  letter-spacing: 0.02em !important;
+  line-height: 1 !important;
+  -webkit-text-stroke: 0 !important;
+  text-shadow: none !important;
+}
+
+.sf-shell--mode-commercial-light .sf-engineBottomBtn--pay small {
+  display: none !important;
+}
+
+.sf-shell--mode-commercial-light .sf-engineBottomBtn--pay span::before,
+.sf-shell--mode-commercial-light .sf-engineBottomBtn--pay span::after,
+.sf-shell--mode-commercial-light .sf-engineBottomBtn--pay small::before,
+.sf-shell--mode-commercial-light .sf-engineBottomBtn--pay small::after {
+  display: none !important;
+  content: none !important;
+}
+
+.sf-shell--mode-commercial-light .sf-footerStatus--boots.sf-footerNavItem {
+  grid-template-columns: none;
+  background: transparent;
+  color: #5d5965;
+  box-shadow: none;
+}
+
+.sf-shell--mode-commercial-light .sf-footerStatus--boots.sf-footerNavItem::before,
+.sf-shell--mode-commercial-light .sf-footerStatus--boots.sf-footerNavItem::after,
+.sf-shell--mode-commercial-light .sf-footerStatus--boots.sf-footerNavItem .sf-bootsCounter,
+.sf-shell--mode-commercial-light .sf-footerStatus--boots.sf-footerNavItem .sf-bootsTicker {
+  display: none;
+}
+
+.sf-shell--mode-commercial-light .sf-footerNavItem--coupons .sf-footerNavIcon {
+  color: #6b6870;
+  border-radius: 999px;
+  background: #eceaf0;
+}
+
+.sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons {
+  overflow: hidden;
+}
+
+.sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons input {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  padding: 31px 5px 7px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--sf-commercial-primary);
+  font-size: 0.58rem;
+  font-weight: 900;
+  line-height: 1;
+  text-align: center;
+  text-transform: uppercase;
+  opacity: 0;
+}
+
+.sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons:focus-within {
+  grid-template-rows: 1fr;
+  color: var(--sf-commercial-primary);
+  background: #f4efff;
+  box-shadow:
+    0 12px 26px rgba(29, 23, 48, 0.1),
+    inset 0 0 0 1px rgba(109, 45, 246, 0.08);
+}
+
+.sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons:focus-within .sf-footerNavIcon,
+.sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons.has-code .sf-footerNavIcon {
+  opacity: 0;
+}
+
+.sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons:focus-within input,
+.sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons.has-code input {
+  opacity: 1;
+}
+
+.sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons button {
+  position: absolute;
+  inset: auto 6px 6px;
+  z-index: 4;
+  min-height: 18px;
+  height: 18px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--sf-commercial-primary);
+  color: #ffffff;
+  font-size: 0.5rem;
+  font-weight: 900;
+  line-height: 1;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons.has-code button,
+.sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons:focus-within button {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons.has-code .sf-footerNavLabel,
+.sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons:focus-within .sf-footerNavLabel {
+  opacity: 0;
+}
+
+.sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons small {
+  position: absolute;
+  left: 50%;
+  bottom: -18px;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: 150px;
+  color: var(--sf-commercial-primary);
+  font-size: 0.56rem;
+  white-space: nowrap;
+}
+
+.sf-shell--mode-commercial-light .sf-footerNavItem--boost .sf-footerNavIcon {
+  color: #4d4a52;
+}
+
+@media (max-width: 560px) {
+  .sf-shell--mode-commercial-light .sf-stickyFooterShell {
+    padding: 3px 7px calc(3px + env(safe-area-inset-bottom)) 7px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-stickyFooter {
+    border-radius: 18px;
+    padding: 4px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-footerNavItem {
+    min-height: 44px;
+    height: 44px;
+    border-radius: 15px;
+    padding: 4px 3px 4px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-footerNavIcon {
+    width: 21px;
+    height: 21px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-footerNavIcon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-footerNavLabel,
+  .sf-shell--mode-commercial-light .sf-bootsMobileTicker.sf-footerNavLabel {
+    font-size: 0.5rem;
+    letter-spacing: 0;
+  }
+}
+
+.sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: 22px auto;
+  align-items: center;
+  justify-items: center;
+  gap: 2px;
+  min-height: 48px;
+  height: 48px;
+  padding: 5px 4px 5px;
+  border: 0;
+  border-radius: 16px;
+  background: transparent;
+  color: #5d5965;
+  box-shadow: none;
+  overflow: hidden;
+}
+
+.sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons .sf-footerNavIcon {
+  position: static;
+  inset: auto;
+  z-index: 2;
+  grid-row: 1;
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: #eceaf0;
+  color: #5d5965;
+  opacity: 1;
+  transform: none;
+}
+
+.sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons .sf-footerNavLabel {
+  position: static;
+  inset: auto;
+  z-index: 2;
+  grid-row: 2;
+  display: block;
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  color: currentColor;
+  font-family: inherit;
+  font-size: 0.5rem;
+  font-weight: 850;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  text-align: center;
+  text-transform: uppercase;
+  opacity: 1;
+  transform: none;
+  animation: none;
+}
+
+.sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons .sf-footerNavLabel span,
+.sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons .sf-footerNavLabel span + span {
+  position: static;
+  inset: auto;
+  display: none;
+  color: inherit;
+  font: inherit;
+  animation: none;
+}
+
+.sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons .sf-footerNavLabel span:first-child {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons input {
+  position: absolute;
+  inset: 5px 4px 23px;
+  z-index: 4;
+  width: auto;
+  height: auto;
+  min-width: 0;
+  padding: 0 8px;
+  border: 1px solid rgba(109, 45, 246, 0.18);
+  border-radius: 10px;
+  outline: 0;
+  background: #ffffff;
+  color: var(--sf-commercial-primary);
+  box-shadow: none;
+  font-family: inherit;
+  font-size: 0.48rem;
+  font-weight: 850;
+  line-height: 1;
+  text-align: center;
+  text-transform: uppercase;
+  opacity: 0;
+  pointer-events: auto;
+}
+
+.sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons input::placeholder {
+  color: #8d8799;
+  opacity: 1;
+}
+
+.sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons button {
+  position: absolute;
+  inset: auto 5px 4px;
+  z-index: 5;
+  display: block;
+  min-height: 15px;
+  height: 15px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--sf-commercial-primary);
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 0.5rem;
+  font-weight: 900;
+  line-height: 1;
+  text-align: center;
+  text-transform: uppercase;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons:focus-within,
+.sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons.has-code {
+  background: #f6f2ff;
+  color: var(--sf-commercial-primary);
+  box-shadow:
+    0 12px 26px rgba(29, 23, 48, 0.1),
+    inset 0 0 0 1px rgba(109, 45, 246, 0.08);
+}
+
+.sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons:focus-within .sf-footerNavIcon,
+.sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons.has-code .sf-footerNavIcon,
+.sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons:focus-within .sf-footerNavLabel,
+.sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons.has-code .sf-footerNavLabel {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons:focus-within input,
+.sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons.has-code input,
+.sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons:focus-within button,
+.sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons.has-code button {
+  opacity: 1;
+}
+
+.sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons:focus-within button,
+.sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons.has-code button {
+  pointer-events: auto;
+}
+
+.sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons button:disabled {
+  background: #d8d1ea;
+  color: #ffffff;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons:focus-within button:disabled,
+.sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons.has-code button:disabled {
+  opacity: 1;
+}
+
+.sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons small {
+  display: none;
+}
+
+@media (max-width: 560px) {
+  .sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons {
+    min-height: 44px;
+    height: 44px;
+    border-radius: 15px;
+    padding: 4px 3px 4px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons .sf-footerNavIcon {
+    width: 21px;
+    height: 21px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons .sf-footerNavLabel {
+    font-size: 0.5rem;
+    letter-spacing: 0;
+  }
+
+  .sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons input {
+    inset: 4px 4px 21px;
+    font-size: 0.48rem;
+    padding: 0 4px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons button {
+    inset: auto 4px 3px;
+    font-size: 0.46rem;
+  }
+}
+
+/* Commercial light product cards: one sales structure across normal, trending, deal, promo and upcoming cards. */
+.sf-shell--mode-commercial-light .lsf-grid,
+.sf-shell--mode-commercial-light .lsf-grid--trending,
+.sf-shell--mode-commercial-light .lsf-grid--promos,
+.sf-shell--mode-commercial-light .lsf-grid--topDeals,
+.sf-shell--mode-commercial-light .lsf-grid--upcoming {
+  align-items: stretch;
+}
+
+.sf-shell--mode-commercial-light .lsf-card,
+.sf-shell--mode-commercial-light .lsf-card--trending,
+.sf-shell--mode-commercial-light .lsf-card--topDeal,
+.sf-shell--mode-commercial-light .lsf-card--promo,
+.sf-shell--mode-commercial-light .lsf-card--upcoming {
+  border: 1px solid #e5e2ec;
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow: 0 10px 24px rgba(23, 21, 31, 0.07);
+}
+
+.sf-shell--mode-commercial-light .lsf-flip__inner,
+.sf-shell--mode-commercial-light .lsf-card.has-trending-metrics .lsf-flip__inner,
+.sf-shell--mode-commercial-light .lsf-card--topDeal .lsf-flip__inner,
+.sf-shell--mode-commercial-light .lsf-card--promo .lsf-flip__inner,
+.sf-shell--mode-commercial-light .lsf-card--upcoming .lsf-flip__inner {
+  height: 324px;
+}
+
+.sf-shell--mode-commercial-light .lsf-flip__front,
+.sf-shell--mode-commercial-light .lsf-card.has-trending-metrics .lsf-flip__front,
+.sf-shell--mode-commercial-light .lsf-card--topDeal .lsf-flip__front,
+.sf-shell--mode-commercial-light .lsf-card--promo .lsf-flip__front,
+.sf-shell--mode-commercial-light .lsf-card--upcoming .lsf-flip__front {
+  display: grid;
+  grid-template-rows: minmax(0, 162px) 26px minmax(0, 1fr);
+  gap: 8px;
+  padding: 12px;
+}
+
+.sf-shell--mode-commercial-light .lsf-card__image,
+.sf-shell--mode-commercial-light .lsf-card.has-trending-metrics .lsf-card__image,
+.sf-shell--mode-commercial-light .lsf-card--topDeal .lsf-card__image,
+.sf-shell--mode-commercial-light .lsf-card--promo .lsf-card__image,
+.sf-shell--mode-commercial-light .lsf-card--upcoming .lsf-card__image {
+  grid-row: 1;
+  height: 162px;
+  border-radius: 18px;
+  background: #faf9fc;
+  overflow: hidden;
+}
+
+.sf-shell--mode-commercial-light .lsf-card__image img {
+  object-fit: contain;
+  object-position: center;
+  transform: scale(1.08);
+}
+
+.sf-shell--mode-commercial-light .lsf-trendingRibbon,
+.sf-shell--mode-commercial-light .lsf-offerRibbon,
+.sf-shell--mode-commercial-light .lsf-categoryDealCountdown {
+  position: static;
+  z-index: 4;
+  grid-row: 2;
+  align-self: center;
+  justify-self: start;
+  width: auto;
+  max-width: 100%;
+  min-width: 0;
+  min-height: 24px;
+  transform: none;
+  box-shadow: none;
+}
+
+.sf-shell--mode-commercial-light .lsf-trendingRibbon {
+  padding: 0 12px;
+  border: 0;
+  border-radius: 999px;
+  background: #ece4ff;
+  color: var(--sf-commercial-primary);
+}
+
+.sf-shell--mode-commercial-light .lsf-trendingDemand {
+  gap: 7px;
+}
+
+.sf-shell--mode-commercial-light .lsf-trendingDemand strong {
+  font-size: 0.78rem;
+}
+
+.sf-shell--mode-commercial-light .lsf-trendingDemand span {
+  font-size: 0.6rem;
+  letter-spacing: 0;
+}
+
+.sf-shell--mode-commercial-light .lsf-offerRibbon,
+.sf-shell--mode-commercial-light .lsf-categoryDealCountdown {
+  padding: 0 10px;
+  border-radius: 999px;
+  background: #f4efff;
+  color: var(--sf-commercial-primary);
+  font-size: 0.58rem;
+}
+
+.sf-shell--mode-commercial-light .lsf-categoryDealCountdown span,
+.sf-shell--mode-commercial-light .lsf-categoryDealCountdown strong {
+  color: inherit;
+}
+
+.sf-shell--mode-commercial-light .lsf-card__overlay,
+.sf-shell--mode-commercial-light .lsf-card--topDeal .lsf-card__overlay,
+.sf-shell--mode-commercial-light .lsf-card--promo .lsf-card__overlay,
+.sf-shell--mode-commercial-light .lsf-card--upcoming .lsf-card__overlay {
+  grid-row: 3;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  align-items: start;
+  justify-items: start;
+  gap: 6px;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.sf-shell--mode-commercial-light .lsf-card__ticker {
+  width: 100%;
+  min-height: 38px;
+  display: block;
+  overflow: hidden;
+}
+
+.sf-shell--mode-commercial-light .lsf-card__name,
+.sf-shell--mode-commercial-light .lsf-card--trending .lsf-card__name {
+  color: #17142a;
+  font-size: 1rem;
+  font-weight: 900;
+  line-height: 1.12;
+  letter-spacing: 0;
+  text-transform: none;
+  text-shadow: none;
+  -webkit-line-clamp: 2;
+}
+
+.sf-shell--mode-commercial-light .lsf-card__price,
+.sf-shell--mode-commercial-light .lsf-topDealPrice,
+.sf-shell--mode-commercial-light .lsf-card__priceStack {
+  display: grid;
+  justify-content: start;
+  justify-items: start;
+  gap: 3px;
+  color: var(--sf-commercial-primary);
+  white-space: normal;
+}
+
+.sf-shell--mode-commercial-light .lsf-card__priceRow,
+.sf-shell--mode-commercial-light .lsf-trendingPriceStack .lsf-card__priceRow {
+  display: grid;
+  justify-content: start;
+  justify-items: start;
+  gap: 2px;
+}
+
+.sf-shell--mode-commercial-light .lsf-card__priceOld,
+.sf-shell--mode-commercial-light .lsf-topDealPrice .lsf-card__priceOld,
+.sf-shell--mode-commercial-light .lsf-trendingPriceStack .lsf-card__priceOld {
+  color: #6f6b78;
+  font-size: 0.74rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.sf-shell--mode-commercial-light .lsf-card__priceCurrent,
+.sf-shell--mode-commercial-light .lsf-topDealPrice .lsf-card__priceCurrent,
+.sf-shell--mode-commercial-light .lsf-topDealPrice.has-discount .lsf-card__priceCurrent,
+.sf-shell--mode-commercial-light .lsf-topDealPrice.has-discount .lsf-card__priceRow .lsf-card__priceCurrent,
+.sf-shell--mode-commercial-light .lsf-trendingPriceStack.is-up .lsf-card__priceCurrent,
+.sf-shell--mode-commercial-light .lsf-trendingPriceStack.is-down .lsf-card__priceCurrent,
+.sf-shell--mode-commercial-light .lsf-trendingPriceStack.is-flat .lsf-card__priceCurrent {
+  color: var(--sf-commercial-primary);
+  font-size: 1.32rem;
+  font-weight: 950;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.sf-shell--mode-commercial-light .lsf-card__priceStack em,
+.sf-shell--mode-commercial-light .lsf-topDealPrice em,
+.sf-shell--mode-commercial-light .lsf-trendingPriceStack em {
+  margin: 0;
+  color: #15803d;
+  font-size: 0.72rem;
+  font-weight: 850;
+  line-height: 1;
+}
+
+.sf-shell--mode-commercial-light .lsf-trendingPriceStack.is-down em {
+  color: #dc2626;
+}
+
+.sf-shell--mode-commercial-light .lsf-trendingPriceStack.is-flat em {
+  color: #6f6b78;
+}
+
+.sf-shell--mode-commercial-light .lsf-card__addbtn {
+  top: 12px;
+  right: 12px;
+  width: 42px;
+  height: 42px;
+  border: 1px solid #e5e2ec;
+  background: rgba(255, 255, 255, 0.96);
+  color: #17142a;
+  box-shadow: 0 8px 18px rgba(23, 21, 31, 0.1);
+}
+
+.sf-shell--mode-commercial-light .lsf-trendingRank,
+.sf-shell--mode-commercial-light .lsf-topDealBadge,
+.sf-shell--mode-commercial-light .lsf-promoBadge,
+.sf-shell--mode-commercial-light .lsf-upcomingBadge {
+  top: 12px;
+  left: 12px;
+  z-index: 7;
+  min-height: 34px;
+  max-width: calc(100% - 72px);
+  padding: 0 13px;
+  border: 0;
+  border-radius: 999px;
+  background: #ffc928;
+  color: #17142a;
+  box-shadow: 0 7px 14px rgba(23, 21, 31, 0.12);
+  transform: none;
+  animation: none;
+}
+
+.sf-shell--mode-commercial-light .lsf-topDealBadge {
+  bottom: auto;
+  background: #fff1d6;
+  color: #b45309;
+}
+
+.sf-shell--mode-commercial-light .lsf-promoBadge {
+  background: var(--sf-commercial-primary);
+  color: #ffffff;
+}
+
+.sf-shell--mode-commercial-light .lsf-upcomingBadge {
+  background: #edf2ff;
+  color: #3157b7;
+}
+
+.sf-shell--mode-commercial-light .lsf-trendingRank span,
+.sf-shell--mode-commercial-light .lsf-trendingRank strong {
+  font-size: 0.82rem;
+  font-weight: 900;
+  letter-spacing: 0;
+}
+
+.sf-shell--mode-commercial-light .lsf-directDiscountBadge,
+.sf-shell--mode-commercial-light .lsf-topDealDiscountSticker,
+.sf-shell--mode-commercial-light .lsf-promoDiscountSticker {
+  top: 52px;
+  left: 12px;
+  right: auto;
+  bottom: auto;
+  min-width: 0;
+  min-height: 22px;
+  padding: 0 9px;
+  border: 0;
+  border-radius: 999px;
+  background: #fff7ed;
+  color: #b45309;
+  box-shadow: 0 6px 12px rgba(180, 83, 9, 0.12);
+  transform: none;
+}
+
+.sf-shell--mode-commercial-light .lsf-directDiscountBadge,
+.sf-shell--mode-commercial-light .lsf-directDiscountBadge strong,
+.sf-shell--mode-commercial-light .lsf-topDealDiscountSticker strong,
+.sf-shell--mode-commercial-light .lsf-topDealDiscountSticker small {
+  font-size: 0.58rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.sf-shell--mode-commercial-light .lsf-promoDiscountSticker small,
+.sf-shell--mode-commercial-light .lsf-topDealDiscountSticker small {
+  display: none;
+}
+
+@media (max-width: 560px) {
+  .sf-shell--mode-commercial-light .lsf-grid,
+  .sf-shell--mode-commercial-light .lsf-grid--trending,
+  .sf-shell--mode-commercial-light .lsf-grid--promos,
+  .sf-shell--mode-commercial-light .lsf-grid--topDeals,
+  .sf-shell--mode-commercial-light .lsf-grid--upcoming {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-flip__inner,
+  .sf-shell--mode-commercial-light .lsf-card.has-trending-metrics .lsf-flip__inner,
+  .sf-shell--mode-commercial-light .lsf-card--topDeal .lsf-flip__inner,
+  .sf-shell--mode-commercial-light .lsf-card--promo .lsf-flip__inner,
+  .sf-shell--mode-commercial-light .lsf-card--upcoming .lsf-flip__inner {
+    height: 286px;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-flip__front,
+  .sf-shell--mode-commercial-light .lsf-card.has-trending-metrics .lsf-flip__front,
+  .sf-shell--mode-commercial-light .lsf-card--topDeal .lsf-flip__front,
+  .sf-shell--mode-commercial-light .lsf-card--promo .lsf-flip__front,
+  .sf-shell--mode-commercial-light .lsf-card--upcoming .lsf-flip__front {
+    grid-template-rows: minmax(0, 128px) 24px minmax(0, 1fr);
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-card__image,
+  .sf-shell--mode-commercial-light .lsf-card.has-trending-metrics .lsf-card__image,
+  .sf-shell--mode-commercial-light .lsf-card--topDeal .lsf-card__image,
+  .sf-shell--mode-commercial-light .lsf-card--promo .lsf-card__image,
+  .sf-shell--mode-commercial-light .lsf-card--upcoming .lsf-card__image {
+    height: 128px;
+    border-radius: 16px;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-card__image img {
+    transform: scale(1.12);
+  }
+
+  .sf-shell--mode-commercial-light .lsf-card__name,
+  .sf-shell--mode-commercial-light .lsf-card--trending .lsf-card__name {
+    font-size: 0.88rem;
+    line-height: 1.12;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-card__ticker {
+    min-height: 32px;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-card__priceOld,
+  .sf-shell--mode-commercial-light .lsf-topDealPrice .lsf-card__priceOld,
+  .sf-shell--mode-commercial-light .lsf-trendingPriceStack .lsf-card__priceOld {
+    font-size: 0.66rem;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-card__priceCurrent,
+  .sf-shell--mode-commercial-light .lsf-topDealPrice .lsf-card__priceCurrent,
+  .sf-shell--mode-commercial-light .lsf-topDealPrice.has-discount .lsf-card__priceCurrent,
+  .sf-shell--mode-commercial-light .lsf-topDealPrice.has-discount .lsf-card__priceRow .lsf-card__priceCurrent,
+  .sf-shell--mode-commercial-light .lsf-trendingPriceStack.is-up .lsf-card__priceCurrent,
+  .sf-shell--mode-commercial-light .lsf-trendingPriceStack.is-down .lsf-card__priceCurrent,
+  .sf-shell--mode-commercial-light .lsf-trendingPriceStack.is-flat .lsf-card__priceCurrent {
+    font-size: 1.12rem;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-card__priceStack em,
+  .sf-shell--mode-commercial-light .lsf-topDealPrice em,
+  .sf-shell--mode-commercial-light .lsf-trendingPriceStack em {
+    font-size: 0.66rem;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-trendingRank,
+  .sf-shell--mode-commercial-light .lsf-topDealBadge,
+  .sf-shell--mode-commercial-light .lsf-promoBadge,
+  .sf-shell--mode-commercial-light .lsf-upcomingBadge {
+    top: 10px;
+    left: 10px;
+    min-height: 30px;
+    max-width: calc(100% - 62px);
+    padding: 0 10px;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-trendingRank span,
+  .sf-shell--mode-commercial-light .lsf-trendingRank strong {
+    font-size: 0.72rem;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-card__addbtn {
+    top: 10px;
+    right: 10px;
+    width: 38px;
+    height: 38px;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-card__cartIcon {
+    width: 22px;
+    height: 22px;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-trendingRibbon,
+  .sf-shell--mode-commercial-light .lsf-offerRibbon,
+  .sf-shell--mode-commercial-light .lsf-categoryDealCountdown {
+    min-height: 22px;
+    padding: 0 8px;
+    font-size: 0.5rem;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-trendingDemand strong {
+    font-size: 0.72rem;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-trendingDemand span {
+    font-size: 0.5rem;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-directDiscountBadge,
+  .sf-shell--mode-commercial-light .lsf-topDealDiscountSticker,
+  .sf-shell--mode-commercial-light .lsf-promoDiscountSticker {
+    top: 46px;
+    left: 10px;
+    min-height: 20px;
+    padding: 0 7px;
+  }
+}
+
+.sf-shell--mode-commercial-light .lsf-card__overlay,
+.sf-shell--mode-commercial-light .lsf-card--topDeal .lsf-card__overlay,
+.sf-shell--mode-commercial-light .lsf-card--promo .lsf-card__overlay,
+.sf-shell--mode-commercial-light .lsf-card--upcoming .lsf-card__overlay {
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: stretch;
+}
+
+.sf-shell--mode-commercial-light .lsf-card__ticker,
+.sf-shell--mode-commercial-light .lsf-card__price,
+.sf-shell--mode-commercial-light .lsf-topDealPrice,
+.sf-shell--mode-commercial-light .lsf-card__priceStack,
+.sf-shell--mode-commercial-light .lsf-card__priceRow {
+  width: 100%;
+  max-width: 100%;
+  justify-self: stretch;
+  justify-content: start;
+  justify-items: start;
+  text-align: left;
+}
+
+.sf-shell--mode-commercial-light .lsf-card__priceCurrent,
+.sf-shell--mode-commercial-light .lsf-topDealPrice .lsf-card__priceCurrent,
+.sf-shell--mode-commercial-light .lsf-card__priceOld,
+.sf-shell--mode-commercial-light .lsf-topDealPrice .lsf-card__priceOld,
+.sf-shell--mode-commercial-light .lsf-card__priceStack em,
+.sf-shell--mode-commercial-light .lsf-topDealPrice em {
+  display: block;
+  width: 100%;
+  text-align: left;
+}
+
+.sf-shell--mode-commercial-light .lsf-card__overlay,
+.sf-shell--mode-commercial-light .lsf-card--topDeal .lsf-card__overlay,
+.sf-shell--mode-commercial-light .lsf-card--promo .lsf-card__overlay,
+.sf-shell--mode-commercial-light .lsf-card--upcoming .lsf-card__overlay {
+  gap: 3px;
+}
+
+.sf-shell--mode-commercial-light .lsf-card__ticker {
+  min-height: 21px;
+}
+
+.sf-shell--mode-commercial-light .lsf-card__price,
+.sf-shell--mode-commercial-light .lsf-topDealPrice,
+.sf-shell--mode-commercial-light .lsf-card__priceStack {
+  gap: 1px;
+}
+
+.sf-shell--mode-commercial-light .lsf-card__priceRow,
+.sf-shell--mode-commercial-light .lsf-trendingPriceStack .lsf-card__priceRow {
+  gap: 0;
+}
+
+@media (max-width: 560px) {
+  .sf-shell--mode-commercial-light .lsf-flip__inner,
+  .sf-shell--mode-commercial-light .lsf-card.has-trending-metrics .lsf-flip__inner,
+  .sf-shell--mode-commercial-light .lsf-card--topDeal .lsf-flip__inner,
+  .sf-shell--mode-commercial-light .lsf-card--promo .lsf-flip__inner,
+  .sf-shell--mode-commercial-light .lsf-card--upcoming .lsf-flip__inner {
+    height: 258px;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-flip__front,
+  .sf-shell--mode-commercial-light .lsf-card.has-trending-metrics .lsf-flip__front,
+  .sf-shell--mode-commercial-light .lsf-card--topDeal .lsf-flip__front,
+  .sf-shell--mode-commercial-light .lsf-card--promo .lsf-flip__front,
+  .sf-shell--mode-commercial-light .lsf-card--upcoming .lsf-flip__front {
+    grid-template-rows: minmax(0, 116px) 22px minmax(0, 1fr);
+    gap: 6px;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-card__image,
+  .sf-shell--mode-commercial-light .lsf-card.has-trending-metrics .lsf-card__image,
+  .sf-shell--mode-commercial-light .lsf-card--topDeal .lsf-card__image,
+  .sf-shell--mode-commercial-light .lsf-card--promo .lsf-card__image,
+  .sf-shell--mode-commercial-light .lsf-card--upcoming .lsf-card__image {
+    height: 116px;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-card__overlay,
+  .sf-shell--mode-commercial-light .lsf-card--topDeal .lsf-card__overlay,
+  .sf-shell--mode-commercial-light .lsf-card--promo .lsf-card__overlay,
+  .sf-shell--mode-commercial-light .lsf-card--upcoming .lsf-card__overlay {
+    gap: 2px;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-card__ticker {
+    min-height: 18px;
+  }
+}
+
+/* Mobile commercial density pass: prioritize the product gallery over controls. */
+@media (max-width: 560px) {
+  .sf-shell--mode-commercial-light {
+    padding: 7px 6px 124px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-lsfSurface.lsf-wrapper.lsf-mobile {
+    padding: 8px;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(29, 23, 48, 0.06);
+  }
+
+  .sf-shell--mode-commercial-light .sf-lsfSurface .sf-lsfMobileHeader {
+    grid-template-columns: minmax(0, 1fr) 160px;
+    gap: 5px;
+    margin: 0 0 6px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-lsfMobileInfo {
+    min-height: 28px;
+    grid-template-rows: 28px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-lsfMobileHeader .sf-lsfStoreTicker {
+    --sf-lsf-ticker-step: 22px;
+    min-height: 28px;
+    height: 28px;
+    padding: 0 8px;
+    font-size: 0.58rem;
+  }
+
+  .sf-shell--mode-commercial-light .sf-lsfMobileHeader .sf-lsfStoreTicker .sf-engineUtilityPillTicker {
+    height: 22px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-lsfMobileHeader .sf-lsfStoreTicker .sf-engineUtilityPillTrack,
+  .sf-shell--mode-commercial-light .sf-lsfMobileHeader .sf-lsfStoreTicker .sf-engineUtilityPillLine {
+    height: 22px;
+    min-height: 22px;
+    line-height: 22px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-lsfMobileHeaderActions {
+    grid-template-columns: minmax(92px, 1fr) 38px;
+    grid-template-rows: 36px;
+    gap: 5px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-lsfMobileHeaderActions .lsf-cartbtn,
+  .sf-shell--mode-commercial-light .sf-lsfMobileHeaderActions .lsf-callbtn {
+    min-height: 36px;
+    height: 36px;
+    border-radius: 14px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-lsfMobileHeaderActions .lsf-cartbtn {
+    grid-template-columns: 20px 20px minmax(38px, 1fr);
+    gap: 3px;
+    padding: 4px 5px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-lsfMobileHeaderActions .lsf-cartbtn__icon,
+  .sf-shell--mode-commercial-light .sf-lsfMobileHeaderActions .lsf-cartbtn__count,
+  .sf-shell--mode-commercial-light .sf-lsfMobileHeaderActions .lsf-callbtn__icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-lsfMobileHeaderActions .lsf-cartbtn__total {
+    font-size: 0.62rem;
+  }
+
+  .sf-shell--mode-commercial-light .sf-lsfActionSearchLine {
+    --sf-lsf-action-height: 36px;
+    gap: 5px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-lsfActionSearchLine .sf-lsfOfferBtn,
+  .sf-shell--mode-commercial-light .sf-lsfActionSearchLine .lsf-buildmode {
+    min-height: 36px;
+    height: 36px;
+    border-radius: 13px;
+    padding: 0 5px;
+    font-size: 0.62rem;
+    line-height: 1;
+  }
+
+  .sf-shell--mode-commercial-light .sf-lsfActionSearchLine .sf-lsfOfferBtn .sf-offersBtnLabel {
+    font-size: 0.78rem !important;
+    letter-spacing: 0;
+  }
+
+  .sf-shell--mode-commercial-light .sf-lsfSearchCluster {
+    grid-template-columns: minmax(0, 1fr) 36px;
+    gap: 5px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-engineSearchRow--lsf .sf-engineSearchWrap {
+    grid-template-columns: minmax(0, 1fr) 36px;
+    border: 1px solid #ded9e8;
+    border-radius: 999px;
+    background: #ffffff;
+    overflow: hidden;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92);
+  }
+
+  .sf-shell--mode-commercial-light .sf-engineSearchRow--lsf .sf-engineSearch,
+  .sf-shell--mode-commercial-light .sf-engineSearchRow--lsf .sf-imageSearchBtn,
+  .sf-shell--mode-commercial-light .sf-engineSearchRow--lsf .sf-engineSearchBtn,
+  .sf-shell--mode-commercial-light .sf-engineSearchRow--lsf .sf-engineSearchWrap,
+  .sf-shell--mode-commercial-light .sf-repeatOrderBtn {
+    min-height: 36px;
+    height: 36px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-engineSearchRow--lsf .sf-engineSearch {
+    padding: 0 8px;
+    border-radius: 999px 0 0 999px;
+    font-size: 0.72rem;
+  }
+
+  .sf-shell--mode-commercial-light .sf-engineSearchTicker {
+    left: 10px;
+    right: 42px;
+    font-size: 0.66rem;
+  }
+
+  .sf-shell--mode-commercial-light .sf-engineSearchRow--lsf .sf-engineSearchBtn {
+    width: 36px;
+    padding: 0;
+    border-left: 1px solid #ded9e8;
+    border-radius: 0 999px 999px 0;
+    background: #ffffff;
+    color: #17142a;
+  }
+
+  .sf-shell--mode-commercial-light .sf-engineSearchRow--lsf .sf-engineSearchBtn svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-repeatOrderBtn {
+    width: 36px;
+    border-radius: 14px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-repeatOrderBtn svg {
+    inset: 3px 4px auto auto;
+    width: 10px;
+    height: 10px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-repeatOrderBtn .sf-repeatOrderBtn__mark {
+    margin-top: 4px;
+    font-size: 1.05rem;
+  }
+
+  .sf-shell--mode-commercial-light .sf-incentiveBanner--lsf {
+    margin: 4px 0 3px;
+    padding: 7px 8px 8px;
+    border-radius: 14px;
+    gap: 5px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-incentiveHead {
+    column-gap: 6px;
+    row-gap: 4px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-incentiveEyebrow {
+    font-size: 0.58rem;
+  }
+
+  .sf-shell--mode-commercial-light .sf-incentiveMessageTicker {
+    gap: 22px;
+    margin-top: 0;
+    font-size: 0.66rem;
+    line-height: 1.05;
+  }
+
+  .sf-shell--mode-commercial-light .sf-incentiveTimer {
+    padding: 4px 7px;
+    font-size: 0.54rem;
+  }
+
+  .sf-shell--mode-commercial-light .sf-incentiveProgressTrack {
+    height: 14px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-incentiveProgressMarker {
+    min-width: 30px;
+    padding: 2px 5px;
+    font-size: 0.56rem;
+  }
+
+  .sf-shell--mode-commercial-light .sf-incentiveBanner--lsf.is-complete {
+    min-height: 58px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-incentiveBanner--lsf.is-complete .sf-incentiveRewardStage {
+    min-height: 38px;
+    padding: 6px 8px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-incentiveBanner--lsf.is-complete .sf-incentiveRewardStage strong {
+    font-size: 0.76rem;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-tabs {
+    gap: 6px;
+    margin-top: 3px;
+    padding: 3px 0 2px;
+    mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 18px), transparent 100%);
+  }
+
+  .sf-shell--mode-commercial-light .lsf-segmentTabs {
+    width: auto;
+    height: 34px;
+    min-width: 104px;
+    flex: 0 0 auto;
+    display: inline-flex;
+    gap: 5px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    overflow: visible;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-tab,
+  .sf-shell--mode-commercial-light .lsf-tab--segment,
+  .sf-shell--mode-commercial-light .lsf-tab--category {
+    min-height: 34px;
+    height: 34px;
+    padding: 0 10px;
+    border-radius: 999px;
+    font-size: 0.68rem;
+    line-height: 1;
+    animation: none;
+    transform: none;
+    -webkit-text-stroke: 0;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-tab--segment {
+    width: auto;
+    color: var(--sf-commercial-ink);
+    background: #ffffff;
+    border: 1px solid var(--sf-commercial-line);
+    text-shadow: none;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-tab--segment.is-active,
+  .sf-shell--mode-commercial-light .lsf-tab--category.is-active {
+    background: var(--sf-commercial-primary);
+    color: #ffffff;
+    box-shadow: none;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-categoryTabs {
+    padding-left: 0;
+    gap: 6px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-engineGridStage--lsf {
+    max-height: max(390px, calc(100dvh - 248px - env(safe-area-inset-bottom, 0px)));
+    min-height: 0;
+    height: auto;
+    padding: 8px 8px 14px;
+    border-radius: 16px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-stickyFooterShell {
+    padding: 3px 7px calc(3px + env(safe-area-inset-bottom)) 7px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-stickyFooter {
+    gap: 4px;
+    padding: 5px;
+    border-radius: 19px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-engineBottomBtn--pay {
+    min-height: 40px;
+    height: 40px;
+    margin-bottom: 0;
+    border-radius: 12px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-engineBottomBtn--pay span,
+  .sf-shell--mode-commercial-light .sf-engineBottomBtn--pay:disabled span {
+    font-size: 0.86rem !important;
+  }
+
+  .sf-shell--mode-commercial-light .sf-footerNavItem,
+  .sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons {
+    min-height: 44px;
+    height: 44px;
+    grid-template-rows: 21px auto;
+    gap: 2px;
+    border-radius: 15px;
+    padding: 4px 3px 4px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-footerNavIcon,
+  .sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons .sf-footerNavIcon {
+    width: 21px;
+    height: 21px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-footerNavIcon svg,
+  .sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons .sf-footerNavIcon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-footerNavLabel,
+  .sf-shell--mode-commercial-light .sf-bootsMobileTicker.sf-footerNavLabel,
+  .sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons .sf-footerNavLabel {
+    font-size: 0.5rem;
+    line-height: 1;
+  }
+
+  .sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons input {
+    inset: 4px 4px 21px;
+    border-radius: 9px;
+    font-size: 0.48rem;
+  }
+
+  .sf-shell--mode-commercial-light .sf-couponDock.sf-footerNavItem--coupons button {
+    inset: auto 4px 4px;
+    min-height: 14px;
+    height: 14px;
+    font-size: 0.4rem;
+  }
+}
+
+/* Compact commercial cards: remove the extra badge row and keep the sale data tighter. */
+@media (max-width: 560px) {
+  .sf-shell--mode-commercial-light .lsf-grid,
+  .sf-shell--mode-commercial-light .lsf-grid--trending,
+  .sf-shell--mode-commercial-light .lsf-grid--promos,
+  .sf-shell--mode-commercial-light .lsf-grid--topDeals,
+  .sf-shell--mode-commercial-light .lsf-grid--upcoming {
+    gap: 9px;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-card,
+  .sf-shell--mode-commercial-light .lsf-card--trending,
+  .sf-shell--mode-commercial-light .lsf-card--topDeal,
+  .sf-shell--mode-commercial-light .lsf-card--promo,
+  .sf-shell--mode-commercial-light .lsf-card--upcoming {
+    border-radius: 16px;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-flip__inner,
+  .sf-shell--mode-commercial-light .lsf-card.has-trending-metrics .lsf-flip__inner,
+  .sf-shell--mode-commercial-light .lsf-card--topDeal .lsf-flip__inner,
+  .sf-shell--mode-commercial-light .lsf-card--promo .lsf-flip__inner,
+  .sf-shell--mode-commercial-light .lsf-card--upcoming .lsf-flip__inner {
+    height: auto;
+    min-height: 0;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-flip__front,
+  .sf-shell--mode-commercial-light .lsf-card.has-trending-metrics .lsf-flip__front,
+  .sf-shell--mode-commercial-light .lsf-card--topDeal .lsf-flip__front,
+  .sf-shell--mode-commercial-light .lsf-card--promo .lsf-flip__front,
+  .sf-shell--mode-commercial-light .lsf-card--upcoming .lsf-flip__front {
+    position: relative;
+    inset: auto;
+    min-height: 0;
+    grid-template-rows: minmax(0, 104px) minmax(0, 1fr);
+    gap: 7px;
+    padding: 8px;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-flip__back {
+    position: absolute;
+    inset: 0;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-card__image,
+  .sf-shell--mode-commercial-light .lsf-card.has-trending-metrics .lsf-card__image,
+  .sf-shell--mode-commercial-light .lsf-card--topDeal .lsf-card__image,
+  .sf-shell--mode-commercial-light .lsf-card--promo .lsf-card__image,
+  .sf-shell--mode-commercial-light .lsf-card--upcoming .lsf-card__image {
+    grid-row: 1;
+    height: 104px;
+    border-radius: 14px;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-card__image img {
+    transform: scale(1.18);
+  }
+
+  .sf-shell--mode-commercial-light .lsf-trendingRibbon,
+  .sf-shell--mode-commercial-light .lsf-offerRibbon,
+  .sf-shell--mode-commercial-light .lsf-categoryDealCountdown {
+    position: absolute;
+    top: 92px;
+    left: 12px;
+    right: auto;
+    grid-row: auto;
+    min-height: 18px;
+    max-width: calc(100% - 24px);
+    padding: 0 7px;
+    border-radius: 999px;
+    font-size: 0.46rem;
+    line-height: 1;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-trendingDemand {
+    gap: 4px;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-trendingDemand strong {
+    font-size: 0.62rem;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-trendingDemand span {
+    font-size: 0.44rem;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-card__overlay,
+  .sf-shell--mode-commercial-light .lsf-card--topDeal .lsf-card__overlay,
+  .sf-shell--mode-commercial-light .lsf-card--promo .lsf-card__overlay,
+  .sf-shell--mode-commercial-light .lsf-card--upcoming .lsf-card__overlay {
+    grid-row: 2;
+    overflow: hidden;
+    gap: 2px;
+    padding-top: 4px;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-card__ticker {
+    min-height: 15px;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-card__name,
+  .sf-shell--mode-commercial-light .lsf-card--trending .lsf-card__name {
+    font-size: 0.82rem;
+    line-height: 1.04;
+    -webkit-line-clamp: 1;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-card__price,
+  .sf-shell--mode-commercial-light .lsf-topDealPrice,
+  .sf-shell--mode-commercial-light .lsf-card__priceStack {
+    gap: 0;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-card__priceOld,
+  .sf-shell--mode-commercial-light .lsf-topDealPrice .lsf-card__priceOld,
+  .sf-shell--mode-commercial-light .lsf-trendingPriceStack .lsf-card__priceOld {
+    font-size: 0.62rem;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-card__priceCurrent,
+  .sf-shell--mode-commercial-light .lsf-topDealPrice .lsf-card__priceCurrent,
+  .sf-shell--mode-commercial-light .lsf-topDealPrice.has-discount .lsf-card__priceCurrent,
+  .sf-shell--mode-commercial-light .lsf-topDealPrice.has-discount .lsf-card__priceRow .lsf-card__priceCurrent,
+  .sf-shell--mode-commercial-light .lsf-trendingPriceStack.is-up .lsf-card__priceCurrent,
+  .sf-shell--mode-commercial-light .lsf-trendingPriceStack.is-down .lsf-card__priceCurrent,
+  .sf-shell--mode-commercial-light .lsf-trendingPriceStack.is-flat .lsf-card__priceCurrent {
+    font-size: 1.02rem;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-card__priceStack em,
+  .sf-shell--mode-commercial-light .lsf-topDealPrice em,
+  .sf-shell--mode-commercial-light .lsf-trendingPriceStack em {
+    font-size: 0.6rem;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-card__addbtn {
+    top: 8px;
+    right: 8px;
+    width: 34px;
+    height: 34px;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-card__cartIcon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-trendingRank,
+  .sf-shell--mode-commercial-light .lsf-topDealBadge,
+  .sf-shell--mode-commercial-light .lsf-promoBadge,
+  .sf-shell--mode-commercial-light .lsf-upcomingBadge {
+    top: 8px;
+    left: 8px;
+    min-height: 24px;
+    max-width: calc(100% - 54px);
+    padding: 0 8px;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-trendingRank span,
+  .sf-shell--mode-commercial-light .lsf-trendingRank strong {
+    font-size: 0.6rem;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-directDiscountBadge,
+  .sf-shell--mode-commercial-light .lsf-topDealDiscountSticker,
+  .sf-shell--mode-commercial-light .lsf-promoDiscountSticker {
+    top: 38px;
+    left: 8px;
+    min-height: 18px;
+    padding: 0 6px;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-directDiscountBadge,
+  .sf-shell--mode-commercial-light .lsf-directDiscountBadge strong,
+  .sf-shell--mode-commercial-light .lsf-topDealDiscountSticker strong,
+  .sf-shell--mode-commercial-light .lsf-topDealDiscountSticker small {
+    font-size: 0.5rem;
+  }
+}
+
+/* Commercial light signal pass: clearer ticker, special actions, and one offer capsule. */
+.sf-shell--mode-commercial-light .sf-lsfStoreTicker .sf-engineUtilityPillLine,
+.sf-shell--mode-commercial-light .sf-lsfStoreTicker .sf-engineUtilityPillLine--select {
+  color: var(--sf-commercial-ink);
+  font-family: var(--sf-font-family, "Avenir Next", "Segoe UI", sans-serif);
+  font-size: 0.78rem;
+  font-weight: 1000;
+  letter-spacing: 0.02em;
+  text-shadow: none;
+}
+
+.sf-shell--mode-commercial-light .sf-lsfStoreTicker .sf-engineUtilityPillLine--select {
+  color: var(--sf-commercial-ink);
+}
+
+.sf-shell--mode-commercial-light .sf-lsfActionSearchLine .sf-offersBtn.sf-lsfOfferBtn {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid rgba(244, 63, 94, 0.32);
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255, 255, 255, 0.8), transparent 28%),
+    linear-gradient(135deg, #fff1f2 0%, #ffffff 42%, #ffe4e6 100%);
+  color: #be123c;
+  box-shadow:
+    0 8px 18px rgba(244, 63, 94, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+.sf-shell--mode-commercial-light .sf-lsfActionSearchLine .sf-offersBtn.sf-lsfOfferBtn::before {
+  content: "";
+  position: absolute;
+  inset: -36% auto -36% -54%;
+  z-index: 0;
+  width: 42%;
+  display: block;
+  transform: rotate(18deg);
+  background: linear-gradient(90deg, transparent, rgba(244, 63, 94, 0.24), rgba(255, 255, 255, 0.92), transparent);
+  animation: sfCouponSoftSweep 3.2s ease-in-out infinite;
+}
+
+.sf-shell--mode-commercial-light .sf-lsfActionSearchLine .sf-offersBtn.sf-lsfOfferBtn::after {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  z-index: 0;
+  display: block;
+  border-radius: inherit;
+  border: 1px dashed rgba(244, 63, 94, 0.22);
+  pointer-events: none;
+}
+
+.sf-shell--mode-commercial-light .sf-lsfActionSearchLine .sf-offersBtn.sf-lsfOfferBtn .sf-offersBtnLabel {
+  position: relative;
+  z-index: 1;
+  color: #be123c;
+  font-size: 0.86rem;
+  font-weight: 1000;
+  letter-spacing: 0.02em;
+  text-shadow: none;
+}
+
+.sf-shell--mode-commercial-light .sf-repeatOrderBtn {
+  overflow: hidden;
+  color: #0f766e;
+}
+
+.sf-shell--mode-commercial-light .sf-repeatOrderBtn::before {
+  background:
+    radial-gradient(circle at 76% 20%, rgba(45, 212, 191, 0.36), transparent 28%),
+    linear-gradient(135deg, #ecfeff 0%, #ffffff 48%, #dffcf8 100%);
+  box-shadow:
+    0 8px 18px rgba(19, 166, 166, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+.sf-shell--mode-commercial-light .sf-repeatOrderBtn::after {
+  content: "";
+  position: absolute;
+  inset: auto 8px 7px 8px;
+  z-index: 1;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, #14b8a6, transparent);
+  opacity: 0.85;
+  animation: sfRepeatSignal 2.4s ease-in-out infinite;
+}
+
+.sf-shell--mode-commercial-light .sf-repeatOrderBtn .sf-repeatOrderBtn__mark {
+  color: #0f766e;
+  animation: sfRepeatMarkPulse 2.1s ease-in-out infinite;
+}
+
+.sf-shell--mode-commercial-light .lsf-tabs {
+  gap: 8px;
+  border-bottom: 0;
+}
+
+.sf-shell--mode-commercial-light .lsf-segmentTabs {
+  position: relative;
+  isolation: isolate;
+  height: 36px;
+  min-width: max-content;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 3px;
+  border: 1px solid #ded9e8;
+  border-radius: 999px;
+  background: #ffffff;
+  box-shadow:
+    0 8px 18px rgba(29, 23, 48, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  overflow: hidden;
+}
+
+.sf-shell--mode-commercial-light .lsf-tab--segment {
+  --offer-tone: var(--sf-commercial-primary);
+  position: relative;
+  isolation: isolate;
+  min-height: 28px;
+  height: 28px;
+  padding: 0 11px;
+  border: 1px solid color-mix(in srgb, var(--offer-tone) 30%, #ffffff);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--offer-tone) 8%, #ffffff);
+  color: var(--offer-tone);
+  box-shadow: none;
+  font-size: 0.64rem;
+  font-weight: 1000;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  overflow: hidden;
+}
+
+.sf-shell--mode-commercial-light .lsf-tab--offer-trending {
+  --offer-tone: #ff1744;
+  --offer-glow: rgba(255, 23, 68, 0.78);
+}
+
+.sf-shell--mode-commercial-light .lsf-tab--offer-deal {
+  --offer-tone: #ffb000;
+  --offer-glow: rgba(255, 176, 0, 0.78);
+}
+
+.sf-shell--mode-commercial-light .lsf-tab--offer-promo {
+  --offer-tone: #ff6d00;
+  --offer-glow: rgba(255, 109, 0, 0.78);
+}
+
+.sf-shell--mode-commercial-light .lsf-tab--offer-upcoming {
+  --offer-tone: #00b8ff;
+  --offer-glow: rgba(0, 184, 255, 0.78);
+}
+
+.sf-shell--mode-commercial-light .lsf-tab--segment::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--offer-tone) 18%, transparent), transparent);
+  opacity: 0;
+  transform: translateX(-70%);
+}
+
+.sf-shell--mode-commercial-light .lsf-tab--segment:hover::before,
+.sf-shell--mode-commercial-light .lsf-tab--segment:focus-visible::before {
+  opacity: 1;
+  animation: sfOfferTabSweep 0.9s ease-out;
+}
+
+.sf-shell--mode-commercial-light .lsf-tab--segment.is-active,
+.sf-shell--mode-commercial-light .lsf-tab--segment:nth-child(2).is-active {
+  border-color: color-mix(in srgb, var(--offer-tone) 48%, #fff4a8);
+  background: linear-gradient(180deg, #fff8b8 0%, #ffe66b 100%);
+  color: #17142a;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.82),
+    0 6px 14px color-mix(in srgb, var(--offer-tone) 16%, transparent);
+}
+
+@media (max-width: 560px) {
+  .sf-shell--mode-commercial-light .sf-lsfStoreTicker .sf-engineUtilityPillLine,
+  .sf-shell--mode-commercial-light .sf-lsfStoreTicker .sf-engineUtilityPillLine--select {
+    font-size: 0.66rem;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-segmentTabs {
+    height: 34px;
+    gap: 2px;
+    padding: 3px;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-tab--segment {
+    min-height: 28px;
+    height: 28px;
+    padding: 0 9px;
+    font-size: 0.56rem;
+  }
+}
+
+@keyframes sfCouponSoftSweep {
+  0%,
+  58% {
+    left: -54%;
+    opacity: 0;
+  }
+  70% {
+    opacity: 0.9;
+  }
+  100% {
+    left: 120%;
+    opacity: 0;
+  }
+}
+
+@keyframes sfRepeatSignal {
+  0%,
+  100% {
+    transform: scaleX(0.18);
+    opacity: 0.34;
+  }
+  46% {
+    transform: scaleX(0.94);
+    opacity: 0.9;
+  }
+}
+
+@keyframes sfRepeatMarkPulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  44% {
+    transform: scale(1.08);
+  }
+}
+
+@keyframes sfOfferTabSweep {
+  from {
+    transform: translateX(-70%);
+  }
+  to {
+    transform: translateX(70%);
+  }
+}
+
+/* Final commercial signal tuning: one vertical offer control and stronger entry points. */
+.sf-shell--mode-commercial-light .sf-lsfStoreTicker {
+  min-height: 34px;
+}
+
+.sf-shell--mode-commercial-light .sf-lsfStoreTicker .sf-engineUtilityPillTicker {
+  height: 28px;
+}
+
+.sf-shell--mode-commercial-light .sf-lsfStoreTicker .sf-engineUtilityPillTrack,
+.sf-shell--mode-commercial-light .sf-lsfStoreTicker .sf-engineUtilityPillLine,
+.sf-shell--mode-commercial-light .sf-lsfStoreTicker .sf-engineUtilityPillLine--select {
+  min-height: 28px;
+  height: 28px;
+  line-height: 28px;
+}
+
+.sf-shell--mode-commercial-light .sf-lsfStoreTicker .sf-engineUtilityPillLine,
+.sf-shell--mode-commercial-light .sf-lsfStoreTicker .sf-engineUtilityPillLine--select {
+  color: #17142a;
+  font-size: 0.9rem;
+  font-weight: 1000;
+  letter-spacing: 0.01em;
+}
+
+.sf-shell--mode-commercial-light .sf-lsfActionSearchLine .sf-offersBtn.sf-lsfOfferBtn {
+  border: 1px solid rgba(225, 29, 72, 0.48);
+  background:
+    radial-gradient(circle at 16% 20%, rgba(255, 255, 255, 0.88), transparent 27%),
+    repeating-linear-gradient(-35deg, rgba(255, 255, 255, 0.16) 0 5px, transparent 5px 12px),
+    linear-gradient(135deg, #fb2d6f 0%, #ff7a1a 54%, #ffd43b 100%);
+  color: #ffffff;
+  box-shadow:
+    0 9px 20px rgba(225, 29, 72, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.62),
+    inset 0 -9px 0 rgba(112, 26, 117, 0.16);
+  transform: translateY(0);
+}
+
+.sf-shell--mode-commercial-light .sf-lsfActionSearchLine .sf-offersBtn.sf-lsfOfferBtn::before {
+  width: 52%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.98), transparent);
+  animation-duration: 2.65s;
+}
+
+.sf-shell--mode-commercial-light .sf-lsfActionSearchLine .sf-offersBtn.sf-lsfOfferBtn::after {
+  inset: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  box-shadow: inset 0 0 0 1px rgba(225, 29, 72, 0.2);
+}
+
+.sf-shell--mode-commercial-light .sf-lsfActionSearchLine .sf-offersBtn.sf-lsfOfferBtn .sf-offersBtnLabel {
+  color: #ffffff;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  text-shadow:
+    0 1px 0 rgba(112, 26, 117, 0.72),
+    0 0 10px rgba(255, 255, 255, 0.35);
+}
+
+.sf-shell--mode-commercial-light .sf-lsfActionSearchLine .sf-offersBtn.sf-lsfOfferBtn:hover,
+.sf-shell--mode-commercial-light .sf-lsfActionSearchLine .sf-offersBtn.sf-lsfOfferBtn:focus-visible {
+  filter: saturate(1.12) brightness(1.04);
+  transform: translateY(-1px);
+}
+
+.sf-shell--mode-commercial-light .sf-repeatOrderBtn::before {
+  border-color: rgba(13, 148, 136, 0.34);
+  background:
+    radial-gradient(circle at 72% 18%, rgba(45, 212, 191, 0.52), transparent 30%),
+    radial-gradient(circle at 18% 80%, rgba(139, 92, 246, 0.24), transparent 30%),
+    linear-gradient(135deg, #ecfeff 0%, #ffffff 45%, #ccfbf1 100%);
+  box-shadow:
+    0 9px 20px rgba(13, 148, 136, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+.sf-shell--mode-commercial-light .sf-repeatOrderBtn svg {
+  color: #0f766e;
+  box-shadow:
+    0 0 0 1px rgba(13, 148, 136, 0.24),
+    0 0 14px rgba(20, 184, 166, 0.22);
+}
+
+.sf-shell--mode-commercial-light .sf-repeatOrderBtn .sf-repeatOrderBtn__mark {
+  color: #0f766e;
+  font-weight: 1000;
+  text-shadow: 0 0 12px rgba(20, 184, 166, 0.28);
+  animation: sfRepeatMarkPulse 1.7s ease-in-out infinite;
+}
+
+.sf-shell--mode-commercial-light .sf-repeatOrderBtn:hover,
+.sf-shell--mode-commercial-light .sf-repeatOrderBtn:focus-visible {
+  filter: saturate(1.1) brightness(1.03);
+}
+
+.sf-shell--mode-commercial-light .lsf-segmentTabs {
+  position: sticky;
+  left: 0;
+  z-index: 6;
+  width: 122px;
+  min-width: 122px;
+  flex: 0 0 122px;
+  height: 34px;
+  display: grid;
+  grid-auto-flow: row;
+  grid-auto-rows: 34px;
+  align-items: stretch;
+  gap: 0;
+  padding: 0;
+  border: 1px solid #ded9e8;
+  border-radius: 999px;
+  background: #ffffff;
+  box-shadow:
+    10px 0 16px rgba(247, 247, 251, 0.96),
+    0 8px 18px rgba(29, 23, 48, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  overflow: hidden;
+}
+
+.sf-shell--mode-commercial-light .lsf-tab--segment {
+  --offer-glow: rgba(255, 255, 255, 0.62);
+  min-height: 34px;
+  height: 34px;
+  width: 100%;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 0;
+  background:
+    radial-gradient(circle at 14% 20%, rgba(255, 255, 255, 0.32), transparent 28%),
+    linear-gradient(135deg, var(--offer-tone), color-mix(in srgb, var(--offer-tone) 62%, #11142a));
+  color: #ffffff;
+  font-size: 0.68rem;
+  font-weight: 1000;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  text-shadow:
+    0 1px 0 rgba(17, 20, 42, 0.52),
+    0 0 8px var(--offer-glow);
+  animation: sfOfferVerticalTicker4 9.2s ease-in-out infinite;
+}
+
+.sf-shell--mode-commercial-light .lsf-tab--offer-promo {
+  text-shadow:
+    0 1px 0 rgba(124, 45, 18, 0.58),
+    0 0 11px rgba(255, 237, 213, 0.58),
+    0 0 16px rgba(255, 109, 0, 0.36);
+}
+
+.sf-shell--mode-commercial-light .lsf-tab--offer-promo:not(.is-active) {
+  animation:
+    sfOfferVerticalTicker4 9.2s ease-in-out infinite,
+    sfPromoTextPop 1.9s ease-in-out infinite;
+}
+
+.sf-shell--mode-commercial-light .lsf-segmentTabs.is-count-2 .lsf-tab--segment {
+  animation-name: sfOfferVerticalTicker2;
+  animation-duration: 5.4s;
+}
+
+.sf-shell--mode-commercial-light .lsf-segmentTabs.is-count-3 .lsf-tab--segment {
+  animation-name: sfOfferVerticalTicker3;
+  animation-duration: 7.2s;
+}
+
+.sf-shell--mode-commercial-light .lsf-segmentTabs:hover .lsf-tab--segment,
+.sf-shell--mode-commercial-light .lsf-segmentTabs:focus-within .lsf-tab--segment {
+  animation-play-state: paused;
+}
+
+.sf-shell--mode-commercial-light .lsf-tab--segment::before {
+  z-index: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.38), transparent);
+  opacity: 0.32;
+  animation: sfOfferInnerSweep 2.2s ease-in-out infinite;
+}
+
+.sf-shell--mode-commercial-light .lsf-tab--segment.is-active,
+.sf-shell--mode-commercial-light .lsf-tab--segment:nth-child(2).is-active {
+  background: linear-gradient(180deg, #fff8b8 0%, #ffe66b 100%);
+  color: #17142a;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  text-shadow: none;
+}
+
+.sf-shell--mode-commercial-light .lsf-tab--category {
+  min-height: 34px;
+  height: 34px;
+}
+
+@media (max-width: 560px) {
+  .sf-shell--mode-commercial-light .sf-lsfStoreTicker {
+    min-height: 32px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-lsfStoreTicker .sf-engineUtilityPillTicker {
+    height: 26px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-lsfStoreTicker .sf-engineUtilityPillTrack,
+  .sf-shell--mode-commercial-light .sf-lsfStoreTicker .sf-engineUtilityPillLine,
+  .sf-shell--mode-commercial-light .sf-lsfStoreTicker .sf-engineUtilityPillLine--select {
+    min-height: 26px;
+    height: 26px;
+    line-height: 26px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-lsfStoreTicker .sf-engineUtilityPillLine,
+  .sf-shell--mode-commercial-light .sf-lsfStoreTicker .sf-engineUtilityPillLine--select {
+    font-size: 0.78rem;
+  }
+
+  .sf-shell--mode-commercial-light .sf-lsfActionSearchLine .sf-offersBtn.sf-lsfOfferBtn .sf-offersBtnLabel {
+    font-size: 0.86rem;
+  }
+}
+
+@keyframes sfOfferVerticalTicker4 {
+  0%, 18%, 100% {
+    transform: translateY(0);
+    filter: brightness(1.06) saturate(1.25);
+    letter-spacing: 0.02em;
+    text-shadow: 0 1px 0 rgba(17, 20, 42, 0.58), 0 0 9px var(--offer-glow);
+  }
+  22%, 43% {
+    transform: translateY(-34px);
+    filter: brightness(1.18) saturate(1.55);
+    letter-spacing: 0.055em;
+    text-shadow: 0 1px 0 rgba(17, 20, 42, 0.62), 0 0 14px var(--offer-glow), 0 0 22px rgba(255, 255, 255, 0.32);
+  }
+  47%, 68% {
+    transform: translateY(-68px);
+    filter: brightness(1.14) saturate(1.45);
+    letter-spacing: 0.04em;
+    text-shadow: 0 1px 0 rgba(17, 20, 42, 0.58), 0 0 12px var(--offer-glow);
+  }
+  72%, 93% {
+    transform: translateY(-102px);
+    filter: brightness(1.16) saturate(1.5);
+    letter-spacing: 0.05em;
+    text-shadow: 0 1px 0 rgba(17, 20, 42, 0.6), 0 0 14px var(--offer-glow), 0 0 20px rgba(255, 255, 255, 0.28);
+  }
+}
+
+@keyframes sfOfferVerticalTicker3 {
+  0%, 23%, 100% {
+    transform: translateY(0);
+    filter: brightness(1.06) saturate(1.25);
+    letter-spacing: 0.02em;
+    text-shadow: 0 1px 0 rgba(17, 20, 42, 0.58), 0 0 9px var(--offer-glow);
+  }
+  31%, 56% {
+    transform: translateY(-34px);
+    filter: brightness(1.18) saturate(1.55);
+    letter-spacing: 0.055em;
+    text-shadow: 0 1px 0 rgba(17, 20, 42, 0.62), 0 0 14px var(--offer-glow), 0 0 22px rgba(255, 255, 255, 0.32);
+  }
+  64%, 89% {
+    transform: translateY(-68px);
+    filter: brightness(1.15) saturate(1.5);
+    letter-spacing: 0.045em;
+    text-shadow: 0 1px 0 rgba(17, 20, 42, 0.6), 0 0 13px var(--offer-glow);
+  }
+}
+
+@keyframes sfOfferVerticalTicker2 {
+  0%, 38%, 100% {
+    transform: translateY(0);
+    filter: brightness(1.06) saturate(1.25);
+    letter-spacing: 0.02em;
+    text-shadow: 0 1px 0 rgba(17, 20, 42, 0.58), 0 0 9px var(--offer-glow);
+  }
+  50%, 88% {
+    transform: translateY(-34px);
+    filter: brightness(1.18) saturate(1.55);
+    letter-spacing: 0.055em;
+    text-shadow: 0 1px 0 rgba(17, 20, 42, 0.62), 0 0 14px var(--offer-glow), 0 0 22px rgba(255, 255, 255, 0.32);
+  }
+}
+
+@keyframes sfOfferInnerSweep {
+  0%, 52% {
+    transform: translateX(-80%);
+    opacity: 0;
+  }
+  62% {
+    opacity: 0.42;
+  }
+  100% {
+    transform: translateX(80%);
+    opacity: 0;
+  }
+}
+
+@keyframes sfPromoTextPop {
+  0%,
+  100% {
+    letter-spacing: 0.02em;
+  }
+  45% {
+    letter-spacing: 0.07em;
+  }
+}
+
+/* Volta-style repeat button brought into commercial light without changing the saved Volta skin. */
+.sf-shell--mode-commercial-light .sf-repeatOrderBtn,
+.sf-shell--mode-commercial-light .sf-repeatOrderBtn.has-draft {
+  position: relative;
+  isolation: isolate;
+  overflow: visible;
+  border: 0;
+  background: transparent;
+  color: #ffffff;
+  box-shadow: none;
+  transform: translateY(-1px);
+  filter: saturate(1.08);
+}
+
+.sf-shell--mode-commercial-light .sf-repeatOrderBtn::before,
+.sf-shell--mode-commercial-light .sf-repeatOrderBtn.has-draft::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  display: block;
+  border: 2px solid rgba(18, 0, 25, 0.78);
+  border-radius: 16px;
+  clip-path: none;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 82% 16%, rgba(0, 229, 255, 0.72), transparent 26%),
+    radial-gradient(circle at 16% 88%, rgba(255, 243, 92, 0.72), transparent 30%),
+    repeating-linear-gradient(-35deg, rgba(255, 255, 255, 0.2) 0 3px, rgba(0, 229, 255, 0.14) 3px 7px, transparent 7px 12px),
+    linear-gradient(135deg, #ff2fa7 0%, #00c8ff 52%, #35ff8f 100%);
+  background-size: 130px 130px, 120px 120px, 86px 86px, 180% 180%;
+  background-position: 84% 18%, 16% 88%, 0 0, 0% 50%;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    inset 0 -4px 0 rgba(18, 0, 25, 0.22),
+    0 6px 10px rgba(0, 229, 255, 0.18),
+    0 0 18px rgba(53, 255, 143, 0.16);
+  animation:
+    sfRepeatVoltaBackground 3.6s linear infinite,
+    sfRepeatVoltaGlow 2.3s ease-in-out infinite;
+}
+
+.sf-shell--mode-commercial-light .sf-repeatOrderBtn::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  z-index: 0;
+  display: block;
+  border-radius: 13px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.56), transparent);
+  pointer-events: none;
+  mix-blend-mode: screen;
+  animation: sfRepeatVoltaSweep 2.8s ease-in-out infinite;
+}
+
+.sf-shell--mode-commercial-light .sf-repeatOrderBtn svg {
+  position: absolute;
+  inset: 3px 4px auto auto;
+  z-index: 2;
+  width: 12px;
+  height: 12px;
+  padding: 1px;
+  margin: 0;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #fff35c, #00e5ff);
+  color: #120019;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.72),
+    0 0 10px rgba(0, 229, 255, 0.42);
+  transform: none;
+}
+
+.sf-shell--mode-commercial-light .sf-repeatOrderBtn .sf-repeatOrderBtn__mark {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: none;
+  overflow: visible;
+  clip: auto;
+  margin: 5px 0 0 -2px;
+  color: #ffffff;
+  font-family: "Arial Black", "Avenir Next", system-ui, sans-serif;
+  font-size: 1.22rem;
+  font-weight: 1000;
+  line-height: 1;
+  letter-spacing: 0;
+  text-align: center;
+  text-shadow:
+    0 1px 0 #120019,
+    2px 2px 0 rgba(255, 47, 167, 0.95),
+    -1.5px -1.5px 0 rgba(0, 229, 255, 0.85),
+    0 0 10px rgba(255, 243, 92, 0.72),
+    0 0 18px rgba(255, 47, 167, 0.42);
+  animation: sfRepeatTextPulse 2.1s ease-in-out infinite;
+}
+
+.sf-shell--mode-commercial-light .sf-repeatOrderBtn .sf-repeatOrderBtn__label {
+  color: #ffffff;
+  text-shadow:
+    0 1px 0 #120019,
+    2px 2px 0 rgba(255, 47, 167, 0.88),
+    -1.5px -1.5px 0 rgba(0, 229, 255, 0.72);
+  animation: sfRepeatTextPulse 2.1s ease-in-out infinite;
+}
+
+.sf-shell--mode-commercial-light .sf-repeatOrderBtn:hover,
+.sf-shell--mode-commercial-light .sf-repeatOrderBtn:focus-visible {
+  transform: translateY(-3px);
+  filter: saturate(1.32) brightness(1.08);
+}
+
+@media (max-width: 560px) {
+  .sf-shell--mode-commercial-light .sf-repeatOrderBtn,
+  .sf-shell--mode-commercial-light .sf-repeatOrderBtn.has-draft {
+    width: 42px;
+    min-height: 40px;
+    height: 40px;
+    padding: 0;
+    display: grid;
+    place-items: center;
+  }
+}
+
+@keyframes sfRepeatVoltaGlow {
+  0%,
+  100% {
+    filter: saturate(1.05) brightness(1);
+  }
+  45% {
+    filter: saturate(1.35) brightness(1.12);
+  }
+}
+
+@keyframes sfRepeatVoltaBackground {
+  0% {
+    background-position: 84% 18%, 16% 88%, 0 0, 0% 50%;
+  }
+  50% {
+    background-position: 70% 28%, 30% 76%, 34px 18px, 100% 50%;
+  }
+  100% {
+    background-position: 84% 18%, 16% 88%, 68px 36px, 0% 50%;
+  }
+}
+
+@keyframes sfRepeatVoltaSweep {
+  0%,
+  58% {
+    transform: translateX(-62%) skewX(-16deg);
+    opacity: 0;
+  }
+  70% {
+    opacity: 0.72;
+  }
+  100% {
+    transform: translateX(62%) skewX(-16deg);
+    opacity: 0;
+  }
+}
+
+/* Stronger coupon entry point for commercial light. */
+.sf-shell--mode-commercial-light .sf-lsfActionSearchLine .sf-offersBtn.sf-lsfOfferBtn {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.78);
+  background:
+    radial-gradient(circle at 12% 18%, rgba(255, 255, 255, 0.92), transparent 21%),
+    radial-gradient(circle at 86% 76%, rgba(255, 243, 92, 0.82), transparent 25%),
+    repeating-linear-gradient(-38deg, rgba(255, 255, 255, 0.24) 0 4px, rgba(255, 255, 255, 0) 4px 11px),
+    linear-gradient(135deg, #ff1744 0%, #ff7a00 43%, #ffe600 72%, #30ff8a 100%);
+  background-size: 120px 120px, 130px 130px, 74px 74px, 190% 190%;
+  background-position: 12% 18%, 86% 76%, 0 0, 0% 50%;
+  color: #ffffff;
+  box-shadow:
+    0 7px 0 rgba(225, 29, 72, 0.55),
+    0 12px 18px rgba(255, 122, 0, 0.2),
+    0 0 18px rgba(255, 230, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.76),
+    inset 0 -7px 0 rgba(124, 45, 18, 0.18);
+  transform: translateY(-1px);
+  animation:
+    sfCouponAliveBackground 3.4s linear infinite,
+    sfCouponAlivePulse 2.25s ease-in-out infinite;
+}
+
+.sf-shell--mode-commercial-light .sf-lsfActionSearchLine .sf-offersBtn.sf-lsfOfferBtn::before {
+  content: "";
+  position: absolute;
+  inset: -42% auto -42% -60%;
+  z-index: 0;
+  width: 48%;
+  display: block;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.98), transparent);
+  transform: rotate(18deg);
+  pointer-events: none;
+  animation: sfCouponAliveSweep 2.15s ease-in-out infinite;
+}
+
+.sf-shell--mode-commercial-light .sf-lsfActionSearchLine .sf-offersBtn.sf-lsfOfferBtn::after {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  z-index: 0;
+  display: block;
+  border: 1px dashed rgba(255, 255, 255, 0.64);
+  border-radius: inherit;
+  background:
+    radial-gradient(circle at 0 50%, rgba(255, 255, 255, 0.86) 0 2px, transparent 3px),
+    radial-gradient(circle at 100% 50%, rgba(255, 255, 255, 0.86) 0 2px, transparent 3px);
+  pointer-events: none;
+  opacity: 0.9;
+}
+
+.sf-shell--mode-commercial-light .sf-lsfActionSearchLine .sf-offersBtn.sf-lsfOfferBtn .sf-offersBtnLabel {
+  position: relative;
+  z-index: 1;
+  color: #ffffff;
+  font-size: 0.96rem;
+  font-weight: 1000;
+  letter-spacing: 0.055em;
+  text-shadow:
+    0 1px 0 rgba(82, 0, 32, 0.84),
+    2px 2px 0 rgba(255, 23, 68, 0.68),
+    -1px -1px 0 rgba(255, 230, 0, 0.74),
+    0 0 12px rgba(255, 255, 255, 0.56);
+  animation: sfCouponLabelKick 1.75s ease-in-out infinite;
+}
+
+.sf-shell--mode-commercial-light .sf-lsfActionSearchLine .sf-offersBtn.sf-lsfOfferBtn:hover,
+.sf-shell--mode-commercial-light .sf-lsfActionSearchLine .sf-offersBtn.sf-lsfOfferBtn:focus-visible {
+  transform: translateY(-3px);
+  filter: saturate(1.24) brightness(1.08);
+}
+
+@media (max-width: 560px) {
+  .sf-shell--mode-commercial-light .sf-lsfActionSearchLine .sf-offersBtn.sf-lsfOfferBtn .sf-offersBtnLabel {
+    font-size: 0.9rem;
+  }
+}
+
+@keyframes sfCouponAliveBackground {
+  0% {
+    background-position: 12% 18%, 86% 76%, 0 0, 0% 50%;
+  }
+  50% {
+    background-position: 24% 30%, 72% 64%, 37px 18px, 100% 50%;
+  }
+  100% {
+    background-position: 12% 18%, 86% 76%, 74px 36px, 0% 50%;
+  }
+}
+
+@keyframes sfCouponAlivePulse {
+  0%,
+  100% {
+    filter: saturate(1.04) brightness(1);
+  }
+  46% {
+    filter: saturate(1.32) brightness(1.08);
+  }
+}
+
+@keyframes sfCouponAliveSweep {
+  0%,
+  54% {
+    left: -60%;
+    opacity: 0;
+  }
+  66% {
+    opacity: 0.86;
+  }
+  100% {
+    left: 118%;
+    opacity: 0;
+  }
+}
+
+@keyframes sfCouponLabelKick {
+  0%,
+  100% {
+    transform: translateY(0) skewX(0deg);
+    letter-spacing: 0.055em;
+  }
+  38% {
+    transform: translateY(-1px) skewX(-4deg);
+    letter-spacing: 0.075em;
+  }
+  48% {
+    transform: translateY(1px) skewX(3deg);
+  }
+  58% {
+    transform: translateY(0) skewX(0deg);
+  }
+}
+
+/* Clean commercial coupon button: no legacy offer classes. */
+.sf-shell--mode-commercial-light .sf-couponEntryBtn {
+  all: unset;
+  box-sizing: border-box;
+  position: relative;
+  isolation: isolate;
+  display: inline-grid;
+  place-items: center;
+  width: 100%;
+  min-width: 0;
+  min-height: var(--sf-lsf-action-height, 48px);
+  height: var(--sf-lsf-action-height, 48px);
+  padding: 0 14px;
+  border-radius: 999px;
+  overflow: hidden;
+  cursor: pointer;
+  color: #ffffff;
+  text-align: center;
+  white-space: nowrap;
+  background:
+    radial-gradient(circle at 13% 20%, rgba(255, 255, 255, 0.95), transparent 18%),
+    radial-gradient(circle at 84% 72%, rgba(255, 245, 0, 0.9), transparent 24%),
+    repeating-linear-gradient(-38deg, rgba(255, 255, 255, 0.24) 0 4px, transparent 4px 11px),
+    linear-gradient(135deg, #ff005d 0%, #ff5a00 42%, #ffe100 72%, #1cff82 100%);
+  background-size: 130px 130px, 140px 140px, 78px 78px, 190% 190%;
+  background-position: 13% 20%, 84% 72%, 0 0, 0% 50%;
+  box-shadow:
+    0 6px 0 rgba(190, 24, 93, 0.68),
+    0 12px 18px rgba(255, 90, 0, 0.22),
+    0 0 18px rgba(255, 225, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.82),
+    inset 0 -8px 0 rgba(124, 45, 18, 0.18);
+  transform: translateY(-1px);
+  animation:
+    sfCouponCleanBackground 3.2s linear infinite,
+    sfCouponCleanPulse 2.2s ease-in-out infinite;
+}
+
+.sf-shell--mode-commercial-light .sf-couponEntryBtn::before {
+  content: "";
+  position: absolute;
+  inset: -44% auto -44% -58%;
+  z-index: 0;
+  width: 46%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.96), transparent);
+  transform: rotate(18deg);
+  pointer-events: none;
+  animation: sfCouponCleanSweep 2.05s ease-in-out infinite;
+}
+
+.sf-shell--mode-commercial-light .sf-couponEntryBtn::after {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  z-index: 0;
+  border: 1px dashed rgba(255, 255, 255, 0.72);
+  border-radius: inherit;
+  background:
+    radial-gradient(circle at 0 50%, rgba(255, 255, 255, 0.9) 0 2px, transparent 3px),
+    radial-gradient(circle at 100% 50%, rgba(255, 255, 255, 0.9) 0 2px, transparent 3px);
+  pointer-events: none;
+}
+
+.sf-shell--mode-commercial-light .sf-couponEntryBtn__label {
+  position: relative;
+  z-index: 1;
+  display: block;
+  color: #ffffff;
+  font-family: Impact, Haettenschweiler, "Arial Narrow", "Arial Black", system-ui, sans-serif;
+  font-size: 0.98rem;
+  font-weight: 1000;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-shadow:
+    0 1px 0 rgba(82, 0, 32, 0.9),
+    2px 2px 0 rgba(255, 0, 93, 0.66),
+    -1px -1px 0 rgba(255, 225, 0, 0.74),
+    0 0 12px rgba(255, 255, 255, 0.62);
+  animation: sfCouponCleanLabel 1.7s ease-in-out infinite;
+}
+
+.sf-shell--mode-commercial-light .sf-couponEntryBtn:hover,
+.sf-shell--mode-commercial-light .sf-couponEntryBtn:focus-visible {
+  transform: translateY(-3px);
+  filter: saturate(1.28) brightness(1.08);
+  outline: 2px solid rgba(255, 122, 0, 0.34);
+  outline-offset: 2px;
+}
+
+.sf-shell--mode-commercial-light .sf-couponEntryBtn:active {
+  transform: translateY(1px);
+  box-shadow:
+    0 2px 0 rgba(190, 24, 93, 0.72),
+    0 8px 14px rgba(255, 90, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.72),
+    inset 0 -5px 0 rgba(124, 45, 18, 0.2);
+}
+
+@media (max-width: 560px) {
+  .sf-shell--mode-commercial-light .sf-couponEntryBtn {
+    min-height: var(--sf-lsf-action-height, 42px);
+    height: var(--sf-lsf-action-height, 42px);
+    padding: 0 8px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-couponEntryBtn__label {
+    font-size: 0.9rem;
+  }
+}
+
+@keyframes sfCouponCleanBackground {
+  0% {
+    background-position: 13% 20%, 84% 72%, 0 0, 0% 50%;
+  }
+  50% {
+    background-position: 24% 30%, 72% 64%, 39px 18px, 100% 50%;
+  }
+  100% {
+    background-position: 13% 20%, 84% 72%, 78px 36px, 0% 50%;
+  }
+}
+
+@keyframes sfCouponCleanPulse {
+  0%,
+  100% {
+    filter: saturate(1.04) brightness(1);
+  }
+  46% {
+    filter: saturate(1.34) brightness(1.08);
+  }
+}
+
+@keyframes sfCouponCleanSweep {
+  0%,
+  54% {
+    left: -58%;
+    opacity: 0;
+  }
+  66% {
+    opacity: 0.86;
+  }
+  100% {
+    left: 118%;
+    opacity: 0;
+  }
+}
+
+@keyframes sfCouponCleanLabel {
+  0%,
+  100% {
+    transform: translateY(0) skewX(0deg);
+    letter-spacing: 0.06em;
+  }
+  38% {
+    transform: translateY(-1px) skewX(-4deg);
+    letter-spacing: 0.078em;
+  }
+  49% {
+    transform: translateY(1px) skewX(3deg);
+  }
+  60% {
+    transform: translateY(0) skewX(0deg);
+  }
+}
+
+.sf-shell--mode-commercial-light .lsf-gridContext {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 8px;
+  padding: 7px 9px;
+  border: 1px solid #ebe7f2;
+  border-radius: 12px;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.98), rgba(248, 247, 252, 0.96));
+  box-shadow:
+    0 5px 12px rgba(29, 23, 48, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+.sf-shell--mode-commercial-light .lsf-gridContext span,
+.sf-shell--mode-commercial-light .lsf-gridContext em {
+  min-width: 0;
+  color: #6b6478;
+  font-size: 0.6rem;
+  font-style: normal;
+  font-weight: 900;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.sf-shell--mode-commercial-light .lsf-gridContext strong {
+  min-width: 0;
+  overflow: hidden;
+  color: #17142a;
+  font-size: 0.8rem;
+  font-weight: 1000;
+  line-height: 1;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+@media (max-width: 560px) {
+  .sf-shell--mode-commercial-light .sf-lsfSurface.lsf-wrapper.lsf-mobile.is-docked {
+    padding: 6px 8px 7px;
+    border-radius: 0 0 16px 16px;
+    box-shadow:
+      0 8px 16px rgba(29, 23, 48, 0.1),
+      0 1px 0 rgba(255, 255, 255, 0.9) inset;
+  }
+
+  .sf-shell--mode-commercial-light .sf-lsfSurface.lsf-wrapper.lsf-mobile.is-docked .sf-lsfMobileHeader,
+  .sf-shell--mode-commercial-light .sf-lsfSurface.lsf-wrapper.lsf-mobile.is-docked .sf-lsfActionSearchLine {
+    max-height: 0;
+    margin: 0;
+    opacity: 0;
+    overflow: hidden;
+    pointer-events: none;
+    transform: translateY(-6px);
+  }
+
+  .sf-shell--mode-commercial-light .sf-lsfSurface.lsf-wrapper.lsf-mobile.is-docked .sf-incentiveBanner--lsf {
+    margin: 0 0 3px;
+    padding: 6px 8px;
+    border-radius: 13px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-lsfSurface.lsf-wrapper.lsf-mobile.is-docked .sf-incentiveEyebrow {
+    font-size: 0.55rem;
+  }
+
+  .sf-shell--mode-commercial-light .sf-lsfSurface.lsf-wrapper.lsf-mobile.is-docked .sf-incentiveMessageTicker {
+    font-size: 0.62rem;
+  }
+
+  .sf-shell--mode-commercial-light .sf-lsfSurface.lsf-wrapper.lsf-mobile.is-docked .sf-incentiveProgressTrack {
+    height: 10px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-lsfSurface.lsf-wrapper.lsf-mobile.is-docked .lsf-tabs {
+    margin-top: 2px;
+    padding: 2px 0 1px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-lsfSurface.lsf-wrapper.lsf-mobile.is-docked + .sf-engineCard .sf-engineGridStage--lsf {
+    max-height: max(450px, calc(100dvh - 176px - env(safe-area-inset-bottom, 0px)));
+  }
+
+  .sf-shell--mode-commercial-light .lsf-gridContext {
+    gap: 6px;
+    margin-bottom: 7px;
+    padding: 6px 8px;
+    border-radius: 11px;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-gridContext span,
+  .sf-shell--mode-commercial-light .lsf-gridContext em {
+    font-size: 0.55rem;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-gridContext strong {
+    font-size: 0.72rem;
+  }
+}
+
+/* Tighten coupon/search row so effects do not collide visually. */
+.sf-shell--mode-commercial-light .sf-couponEntryBtn {
+  box-shadow:
+    0 2px 0 rgba(190, 24, 93, 0.48),
+    0 5px 8px rgba(255, 90, 0, 0.12),
+    0 0 10px rgba(255, 225, 0, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.82),
+    inset 0 -6px 0 rgba(124, 45, 18, 0.16);
+  transform: translateY(0);
+}
+
+.sf-shell--mode-commercial-light .sf-couponEntryBtn:hover,
+.sf-shell--mode-commercial-light .sf-couponEntryBtn:focus-visible {
+  transform: translateY(-1px);
+}
+
+.sf-shell--mode-commercial-light .sf-engineSearchRow--lsf .sf-engineSearchWrap {
+  border: 1px solid #ded9e8;
+  border-radius: 999px;
+  background: #ffffff;
+  overflow: hidden;
+  box-shadow:
+    0 1px 2px rgba(29, 23, 48, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+.sf-shell--mode-commercial-light .sf-engineSearchRow--lsf .sf-engineSearch {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  outline: 0;
+}
+
+.sf-shell--mode-commercial-light .sf-engineSearchRow--lsf .sf-engineSearchBtn {
+  position: relative;
+  border: 0;
+  border-left: 0;
+  border-radius: 0 999px 999px 0;
+  background: transparent;
+  color: #17142a;
+  box-shadow: none;
+  outline: 0;
+}
+
+.sf-shell--mode-commercial-light .sf-engineSearchRow--lsf .sf-engineSearchBtn::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 1px;
+  border-radius: 999px;
+  background: #e6e1ee;
+}
+
+.sf-shell--mode-commercial-light .sf-engineSearchRow--lsf .sf-engineSearchBtn svg {
+  position: relative;
+  z-index: 1;
+  display: block;
+}
+
+.sf-shell--mode-commercial-light .sf-engineSearchRow--lsf .sf-engineSearchBtn:hover,
+.sf-shell--mode-commercial-light .sf-engineSearchRow--lsf .sf-engineSearchBtn:focus-visible {
+  background: #f8f7fb;
 }

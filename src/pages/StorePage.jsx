@@ -574,6 +574,84 @@ const FooterRocketIcon = () => (
   </svg>
 );
 
+const IncentiveBanner = ({
+  className = "",
+  active = false,
+  waiting = false,
+  unlocked = false,
+  eyebrow,
+  message,
+  counterLabel,
+  rewardLabel,
+  progress = 0,
+  percent,
+}) => {
+  const progressPercent = Math.min(
+    100,
+    Math.max(0, Math.round(Number.isFinite(progress) ? progress * 100 : 0))
+  );
+  const displayPercent = Math.min(
+    100,
+    Math.max(0, Math.round(Number.isFinite(percent) ? percent : progressPercent))
+  );
+  const markerPercent = Math.min(96, Math.max(4, displayPercent));
+  const stateClass = active ? "is-active" : waiting ? "is-waiting" : "is-idle";
+
+  return (
+    <div
+      className={`sf-incentiveBanner sf-incentiveBanner--lsf ${
+        unlocked ? "is-complete" : ""
+      } ${stateClass} ${className}`.trim()}
+      style={{
+        "--sf-incentive-progress": `${progressPercent}%`,
+        "--sf-incentive-marker": `${markerPercent}%`,
+      }}
+    >
+      <div className="sf-incentiveHead">
+        <div className="sf-incentiveCopy">
+          <span className="sf-incentiveEyebrow">{eyebrow}</span>
+          <strong className="sf-incentiveMessageTicker">
+            <span>{message}</span>
+            <span aria-hidden="true">{message}</span>
+          </strong>
+        </div>
+        {!unlocked && (
+          <div className="sf-incentiveSignal" aria-label="Estado del incentivo">
+            <span className="sf-incentiveTimer">{counterLabel}</span>
+          </div>
+        )}
+      </div>
+
+      {unlocked ? (
+        <div className="sf-incentiveRewardStage" aria-label="Incentivo desbloqueado">
+          <span>Felicidades</span>
+          <strong>
+            {rewardLabel}
+            <span className="sf-incentiveRewardDesktopSuffix"> listo para este pedido</span>
+          </strong>
+          <span>Volta reward</span>
+        </div>
+      ) : active ? (
+        <div
+          className="sf-incentiveProgress"
+          role="progressbar"
+          aria-label="Progreso del incentivo"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-valuenow={displayPercent}
+        >
+          <div className="sf-incentiveProgressTrack">
+            <span className="sf-incentiveProgressFill" />
+            <span className="sf-incentiveProgressStripes" />
+            <span className="sf-incentiveProgressGlow" />
+            <span className="sf-incentiveProgressMarker">{displayPercent}%</span>
+          </div>
+        </div>
+      ) : null}
+    </div>
+  );
+};
+
 function CouponInfoModal({ open, onClose, onRemove, onValidate, validating = false, data }) {
   const [countdown, setCountdown] = useState("");
   const [secondsLeft, setSecondsLeft] = useState(null);
@@ -2391,6 +2469,11 @@ export default function StorePage() {
 
   const activeTabLabel =
     tabs.find((tab) => tab.id === activeTab)?.label || "Trending";
+  const isCommercialTabActive =
+    activeTab === TRENDING_TAB ||
+    activeTab === TOP_DEAL_TAB ||
+    activeTab === PROMOS_TAB ||
+    activeTab === UPCOMING_TAB;
 
   const gridContext = useMemo(() => {
     const cleanSearch = search.trim();
@@ -2536,6 +2619,7 @@ export default function StorePage() {
   const syncActiveTabFromTabsScroll = useCallback((options = {}) => {
     const scroller = tabsScrollerRef.current;
     if (!scroller || isProductSearchActive || !categoryTabs.length) return;
+    if (isCommercialTabActive) return;
     const shouldAlign = options.align === true;
 
     const categoryButtons = Array.from(
@@ -2574,6 +2658,7 @@ export default function StorePage() {
     alignCategoryTabToZero,
     categoryTabs.length,
     getCategoryZeroOffset,
+    isCommercialTabActive,
     isProductSearchActive,
   ]);
 
@@ -4524,6 +4609,7 @@ export default function StorePage() {
     : nextIncentiveStartsInMs == null
     ? "Sin horario"
     : `Disponible en ${formatDurationMs(nextIncentiveStartsInMs)}`;
+  const hasGridIncentiveBanner = Boolean(activeIncentive || nextIncentive);
   useEffect(() => {
     if (!partner?.id) return undefined;
 
@@ -5356,59 +5442,17 @@ export default function StorePage() {
               </div>
             </div>
 
-            <div
-              className={`sf-incentiveBanner sf-incentiveBanner--lsf ${
-                incentiveUnlocked ? "is-complete" : ""
-              } ${activeIncentive ? "is-active" : nextIncentive ? "is-waiting" : "is-idle"}`}
-            >
-              <div className="sf-incentiveHead">
-                <div className="sf-incentiveCopy">
-                  <span className="sf-incentiveEyebrow">
-                    {incentiveEyebrow}
-                  </span>
-                  <strong className="sf-incentiveMessageTicker">
-                    <span>{incentiveMessage}</span>
-                    <span aria-hidden="true">{incentiveMessage}</span>
-                  </strong>
-                </div>
-                {!incentiveUnlocked && (
-                  <div className="sf-incentiveSignal" aria-label="Estado del incentivo">
-                    <span className="sf-incentiveTimer">{incentiveCounterLabel}</span>
-                  </div>
-                )}
-              </div>
-
-              {incentiveUnlocked ? (
-                <div className="sf-incentiveRewardStage" aria-label="Incentivo desbloqueado">
-                  <span>Felicidades</span>
-                  <strong>
-                    {incentiveRewardLabel}
-                    <span className="sf-incentiveRewardDesktopSuffix"> listo para este pedido</span>
-                  </strong>
-                  <span>Volta reward</span>
-                </div>
-              ) : activeIncentive ? (
-                <div className="sf-incentiveProgress" aria-label="Progreso del incentivo">
-                  <div className="sf-incentiveProgressTrack">
-                    <span
-                      className="sf-incentiveProgressFill"
-                      style={{ width: `${Math.round(incentiveProgress * 100)}%` }}
-                    />
-                    <span
-                      className="sf-incentiveProgressStripes"
-                      style={{ width: `${Math.round(incentiveProgress * 100)}%` }}
-                    />
-                    <span className="sf-incentiveProgressGlow" />
-                    <span
-                      className="sf-incentiveProgressMarker"
-                      style={{ left: `${Math.min(96, Math.max(4, incentivePercent))}%` }}
-                    >
-                      {activeIncentive ? `${incentivePercent}%` : "--"}
-                    </span>
-                  </div>
-                </div>
-              ) : null}
-            </div>
+            <IncentiveBanner
+              active={Boolean(activeIncentive)}
+              waiting={!activeIncentive && Boolean(nextIncentive)}
+              unlocked={Boolean(incentiveUnlocked)}
+              eyebrow={incentiveEyebrow}
+              message={incentiveMessage}
+              counterLabel={incentiveCounterLabel}
+              rewardLabel={incentiveRewardLabel}
+              progress={incentiveProgress}
+              percent={incentivePercent}
+            />
 
             <div
               className="lsf-tabs"
@@ -5469,6 +5513,57 @@ export default function StorePage() {
             onClickCapture={handleGridClickCapture}
             onScroll={handleGridScroll}
           >
+            {gridFocusMode && (
+              <div className="lsf-gridFocusSearch">
+                <div className="sf-engineSearchWrap">
+                  {!search && (
+                    <span className="sf-engineSearchTicker" aria-hidden="true">
+                      <span className="sf-engineSearchTickerTrack">
+                        <span>Buscar pizza o ingrediente...</span>
+                      </span>
+                    </span>
+                  )}
+                  <input
+                    className="sf-engineSearch"
+                    type="search"
+                    placeholder=""
+                    value={search}
+                    onChange={(event) => setSearch(event.target.value)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") {
+                        event.currentTarget.blur();
+                      }
+                    }}
+                  />
+                  <button
+                    type="button"
+                    className="sf-engineSearchBtn"
+                    aria-label="Buscar"
+                    onClick={() => {
+                      document.activeElement?.blur?.();
+                    }}
+                  >
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <circle
+                        cx="11"
+                        cy="11"
+                        r="6.5"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.2"
+                      />
+                      <path
+                        d="M16 16l4 4"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.2"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            )}
             <div
               className={`lsf-gridContext lsf-gridContext--${gridContext.tone}`}
               aria-live="polite"
@@ -5480,6 +5575,36 @@ export default function StorePage() {
                   ? "1 producto"
                   : `${gridContext.count} productos`}
               </em>
+              {gridFocusMode && hasGridIncentiveBanner && (
+                <IncentiveBanner
+                  className="lsf-gridContext__incentive"
+                  active={Boolean(activeIncentive)}
+                  waiting={!activeIncentive && Boolean(nextIncentive)}
+                  unlocked={Boolean(incentiveUnlocked)}
+                  eyebrow={incentiveEyebrow}
+                  message={incentiveMessage}
+                  counterLabel={incentiveCounterLabel}
+                  rewardLabel={incentiveRewardLabel}
+                  progress={incentiveProgress}
+                  percent={incentivePercent}
+                />
+              )}
+              {gridFocusMode && (
+                <button
+                  type="button"
+                  className={`lsf-gridContext__cart ${cartCount > 0 ? "is-active" : ""}`}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    setCartOpen(true);
+                  }}
+                  aria-label="Abrir carrito"
+                  title="Abrir carrito"
+                >
+                  <span aria-hidden="true">🛒</span>
+                  <strong>{cartCount}</strong>
+                  <em>{"\u20AC"}{cartTotal.toFixed(2)}</em>
+                </button>
+              )}
               {gridFocusMode && (
                 <button
                   type="button"
@@ -5807,7 +5932,7 @@ export default function StorePage() {
         <div className="sf-stickyFooter">
           {storefrontMode === "commercial-light" ? (
             <>
-              {isStorefrontButtonVisible("payNow") && (
+              {isStorefrontButtonVisible("payNow") && (cartCount > 0 || checkoutLoading) && (
                 <button
                   type="button"
                   className="sf-engineBottomBtn sf-engineBottomBtn--pay"
@@ -5974,7 +6099,7 @@ export default function StorePage() {
             </button>
           )}
 
-          {isStorefrontButtonVisible("payNow") && (
+          {isStorefrontButtonVisible("payNow") && (cartCount > 0 || checkoutLoading) && (
             <button
               type="button"
               className="sf-engineBottomBtn sf-engineBottomBtn--pay"

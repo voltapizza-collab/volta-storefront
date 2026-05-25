@@ -1748,6 +1748,8 @@
 }
 
 .sf-incentiveProgress {
+  --sf-incentive-progress: 0%;
+  --sf-incentive-marker: 4%;
   display: grid;
   gap: 0;
 }
@@ -1769,6 +1771,7 @@
 .sf-incentiveProgressFill {
   position: absolute;
   inset: 0 auto 0 0;
+  width: var(--sf-incentive-progress);
   min-width: 0;
   border-radius: inherit;
   background:
@@ -1789,6 +1792,7 @@
 .sf-incentiveProgressStripes {
   position: absolute;
   inset: 0 auto 0 0;
+  width: var(--sf-incentive-progress);
   border-radius: inherit;
   background:
     repeating-linear-gradient(
@@ -1824,6 +1828,7 @@
 .sf-incentiveProgressMarker {
   position: absolute;
   top: 50%;
+  left: var(--sf-incentive-marker);
   transform: translate(-50%, -50%);
   z-index: 2;
   min-width: 44px;
@@ -16022,6 +16027,16 @@
   box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.18);
 }
 
+/* Modals must sit above sticky storefront controls and grid focus mode. */
+.sf-modalOverlay {
+  z-index: 20000;
+}
+
+.sf-modalCard {
+  position: relative;
+  z-index: 1;
+}
+
 /* Mobile sticky/grid polish. */
 .sf-shell--mode-commercial-light .lsf-gridContext {
   z-index: 30;
@@ -16108,7 +16123,7 @@
 }
 
 .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext {
-  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  grid-template-columns: auto minmax(0, 1fr) auto auto auto auto;
 }
 
 .sf-shell--mode-commercial-light .lsf-gridContext::before {
@@ -16175,6 +16190,78 @@
   white-space: nowrap;
 }
 
+.sf-shell--mode-commercial-light .lsf-gridContext__incentive {
+  position: relative;
+  z-index: 2;
+  min-height: 22px;
+  display: inline-grid;
+  place-items: center;
+  max-width: 118px;
+  padding: 0 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #000000;
+  color: #ffffff;
+  font-size: 0.55rem;
+  font-weight: 1000;
+  line-height: 1;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16);
+}
+
+.sf-shell--mode-commercial-light .lsf-gridContext__incentive.is-ready {
+  background: #16a34a;
+  color: #ffffff;
+}
+
+.sf-shell--mode-commercial-light .lsf-gridContext__incentive.is-waiting {
+  background: #ffffff;
+  color: #3b008b;
+  box-shadow: inset 0 0 0 1px rgba(59, 0, 139, 0.16);
+}
+
+.sf-shell--mode-commercial-light .lsf-gridContext__cart {
+  position: relative;
+  z-index: 2;
+  min-height: 22px;
+  display: inline-grid;
+  grid-template-columns: 14px auto auto;
+  align-items: center;
+  gap: 4px;
+  padding: 0 7px;
+  border: 0;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #3b008b;
+  box-shadow: inset 0 0 0 1px rgba(59, 0, 139, 0.16);
+  font-size: 0.56rem;
+  font-weight: 1000;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.sf-shell--mode-commercial-light .lsf-gridContext__cart span,
+.sf-shell--mode-commercial-light .lsf-gridContext__cart strong,
+.sf-shell--mode-commercial-light .lsf-gridContext__cart em {
+  color: #3b008b;
+  font-size: 0.56rem;
+  font-style: normal;
+  font-weight: 1000;
+  line-height: 1;
+}
+
+.sf-shell--mode-commercial-light .lsf-gridContext__cart.is-active {
+  background: #3b008b;
+}
+
+.sf-shell--mode-commercial-light .lsf-gridContext__cart.is-active span,
+.sf-shell--mode-commercial-light .lsf-gridContext__cart.is-active strong,
+.sf-shell--mode-commercial-light .lsf-gridContext__cart.is-active em {
+  color: #ffffff;
+}
+
 @media (max-width: 760px) {
   .sf-shell--mode-commercial-light.is-grid-focused {
     padding-top: 0;
@@ -16212,4 +16299,810 @@
   .sf-shell--mode-commercial-light.is-grid-focused .sf-stickyFooterShell {
     z-index: 80;
   }
+
+  .sf-shell--mode-commercial-light .lsf-gridContext {
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
+  }
+
+  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext {
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-gridContext__incentive {
+    grid-column: 1 / -1;
+    justify-self: stretch;
+    max-width: none;
+    min-height: 20px;
+    font-size: 0.54rem;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-gridContext__cart,
+  .sf-shell--mode-commercial-light .lsf-gridContext__exit {
+    min-height: 20px;
+  }
+}
+
+/* Warm app background trial for commercial light. */
+.sf-shell--mode-commercial-light {
+  --sf-commercial-bg: color-mix(in srgb, #fedb88 16%, #ffffff);
+  background:
+    radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.62), transparent 30%),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, #fedb88 18%, #ffffff) 0%,
+      color-mix(in srgb, #fedb88 16%, #ffffff) 48%,
+      color-mix(in srgb, #fbb003 14%, #ffffff) 100%
+    );
+}
+
+.sf-shell--mode-commercial-light.is-grid-focused .sf-engineCard--lsf {
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, #fedb88 18%, #ffffff),
+      color-mix(in srgb, #fbb003 15%, #ffffff)
+    );
+}
+
+/* Restore Pay Now amount in the commercial footer. */
+.sf-shell--mode-commercial-light .sf-engineBottomBtn--pay {
+  grid-template-rows: 1fr;
+  place-items: center;
+  overflow: hidden;
+}
+
+.sf-shell--mode-commercial-light .sf-engineBottomBtn--pay small {
+  display: block !important;
+  position: absolute !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  color: #ffffff !important;
+  font-size: 0.88rem !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+  letter-spacing: 0.02em !important;
+  opacity: 1;
+  animation: sfCommercialPayAmountCycle 3.4s ease-in-out infinite !important;
+}
+
+.sf-shell--mode-commercial-light .sf-engineBottomBtn--pay span,
+.sf-shell--mode-commercial-light .sf-engineBottomBtn--pay:disabled span {
+  position: absolute !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  animation: sfCommercialPayLabelCycle 3.4s ease-in-out infinite !important;
+}
+
+@media (max-width: 560px) {
+  .sf-shell--mode-commercial-light .sf-engineBottomBtn--pay span {
+    font-size: 0.86rem !important;
+  }
+
+  .sf-shell--mode-commercial-light .sf-engineBottomBtn--pay small {
+    font-size: 0.86rem !important;
+  }
+}
+
+@keyframes sfCommercialPayLabelCycle {
+  0%,
+  42%,
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) !important;
+  }
+  50%,
+  88% {
+    opacity: 0;
+    transform: translate(-50%, -145%) !important;
+  }
+}
+
+@keyframes sfCommercialPayAmountCycle {
+  0%,
+  42%,
+  100% {
+    opacity: 0;
+    transform: translate(-50%, 145%) !important;
+  }
+  50%,
+  88% {
+    opacity: 1;
+    transform: translate(-50%, -50%) !important;
+  }
+}
+
+/* Focus grid header layout: information first, conversion controls second. */
+.sf-shell--mode-commercial-light .lsf-gridContext {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-auto-rows: minmax(0, auto);
+  gap: 6px;
+  align-items: center;
+}
+
+.sf-shell--mode-commercial-light .lsf-gridContext > span:not(.lsf-gridContext__incentive) {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.sf-shell--mode-commercial-light .lsf-gridContext > strong {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.sf-shell--mode-commercial-light .lsf-gridContext > em {
+  grid-column: 3;
+  grid-row: 1;
+}
+
+.sf-shell--mode-commercial-light .lsf-gridContext__incentive {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  justify-self: stretch;
+  max-width: none;
+  min-height: 22px;
+  border-radius: 999px;
+}
+
+.sf-shell--mode-commercial-light .lsf-gridContext__cart {
+  grid-column: 1;
+  grid-row: 3;
+  min-width: 92px;
+  justify-self: start;
+}
+
+.sf-shell--mode-commercial-light .lsf-gridContext__cart > span {
+  font-size: 0;
+}
+
+.sf-shell--mode-commercial-light .lsf-gridContext__cart > span::before {
+  content: "\1F6D2";
+  font-size: 0.66rem;
+}
+
+.sf-shell--mode-commercial-light .lsf-gridContext__exit {
+  grid-column: 2 / -1;
+  grid-row: 3;
+  width: 100%;
+  justify-self: stretch;
+}
+
+/* Commercial light card back: calmer product details. */
+.sf-shell--mode-commercial-light .lsf-flip__back {
+  padding: 10px;
+  border: 1px solid rgba(59, 0, 139, 0.18);
+  border-radius: inherit;
+  background:
+    radial-gradient(circle at 18% 12%, rgba(255, 182, 28, 0.18), transparent 32%),
+    linear-gradient(180deg, #ffffff 0%, color-mix(in srgb, #fedb88 18%, #ffffff) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.96),
+    0 10px 22px rgba(29, 23, 48, 0.08);
+}
+
+.sf-shell--mode-commercial-light .lsf-flip-desc {
+  gap: 7px;
+  padding: 8px;
+  border: 1px solid rgba(255, 182, 28, 0.42);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.sf-shell--mode-commercial-light .lsf-flip-title {
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #ffb61c;
+  color: #3b008b;
+  font-size: 0.56rem;
+  letter-spacing: 0.08em;
+  line-height: 1;
+}
+
+.sf-shell--mode-commercial-light .lsf-flip-line {
+  max-width: 100%;
+  color: #1d1730;
+  font-size: 0.72rem;
+  font-weight: 900;
+  line-height: 1.22;
+}
+
+.sf-shell--mode-commercial-light .lsf-flip-closer {
+  margin-top: 0;
+  color: #6a3df0;
+  font-size: 0.58rem;
+  letter-spacing: 0.05em;
+  line-height: 1.15;
+}
+
+.sf-shell--mode-commercial-light .lsf-promoFlipDesc,
+.sf-shell--mode-commercial-light .lsf-upcomingFlipDesc {
+  justify-content: center;
+}
+
+/* Focus-mode search plus Volta-style incentive bar. */
+.sf-shell--mode-commercial-light .lsf-gridFocusSearch {
+  position: sticky;
+  top: 0;
+  z-index: 45;
+  margin: 0 0 6px;
+  padding: 5px 0 6px;
+  background: #ffffff;
+  box-shadow: 0 8px 0 #ffffff;
+}
+
+.sf-shell--mode-commercial-light .lsf-gridFocusSearch .sf-engineSearchWrap {
+  min-height: 34px;
+  border: 1px solid rgba(59, 0, 139, 0.18);
+  border-radius: 999px;
+  background: #ffffff;
+  box-shadow: 0 5px 12px rgba(29, 23, 48, 0.06);
+}
+
+.sf-shell--mode-commercial-light .lsf-gridFocusSearch .sf-engineSearch {
+  min-height: 34px;
+  padding-left: 12px;
+}
+
+.sf-shell--mode-commercial-light .lsf-gridFocusSearch .sf-engineSearchBtn {
+  width: 38px;
+  min-height: 34px;
+  border-left: 1px solid rgba(59, 0, 139, 0.14);
+  border-radius: 0 999px 999px 0;
+  background: #ffffff;
+  color: #17142a;
+}
+
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext {
+  top: 45px;
+}
+
+.sf-shell--mode-commercial-light .lsf-gridContext__incentive {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-rows: auto auto auto;
+  gap: 4px;
+  min-height: 58px;
+  padding: 7px 9px 8px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, #ffb61c 78%, #3b008b);
+  border-radius: 12px;
+  background:
+    radial-gradient(circle at 88% 12%, rgba(255, 255, 255, 0.46), transparent 27%),
+    linear-gradient(180deg, #fbff00 0%, #f0ec00 58%, #ffb61c 100%);
+  color: #3b008b;
+  box-shadow:
+    0 4px 0 rgba(166, 150, 0, 0.36),
+    0 10px 18px rgba(255, 239, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.74),
+    inset 0 -1px 0 rgba(59, 0, 139, 0.18);
+  white-space: normal;
+  animation: none;
+}
+
+.sf-shell--mode-commercial-light .lsf-gridContext__incentive::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    repeating-linear-gradient(
+      -35deg,
+      rgba(255, 255, 255, 0.18) 0 8px,
+      rgba(255, 255, 255, 0) 8px 18px
+    );
+  opacity: 0.62;
+  pointer-events: none;
+}
+
+.sf-shell--mode-commercial-light .lsf-gridContext__incentive::after {
+  content: none;
+}
+
+.sf-shell--mode-commercial-light .lsf-gridIncentiveMini__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+}
+
+.sf-shell--mode-commercial-light .lsf-gridContext .lsf-gridIncentiveMini__eyebrow {
+  color: #3b008b;
+  font-size: 0.56rem;
+  font-weight: 1000;
+  letter-spacing: 0.045em;
+  line-height: 1;
+  text-transform: uppercase;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.72);
+}
+
+.sf-shell--mode-commercial-light .lsf-gridContext .lsf-gridIncentiveMini__timer {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+  min-height: 18px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: #171717;
+  color: #ffffff;
+  font-size: 0.52rem;
+  font-weight: 1000;
+  letter-spacing: 0;
+  line-height: 1;
+  text-transform: none;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+
+.sf-shell--mode-commercial-light .lsf-gridContext .lsf-gridIncentiveMini__timer::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #13e883;
+  box-shadow: 0 0 0 3px rgba(19, 232, 131, 0.16);
+}
+
+.sf-shell--mode-commercial-light .lsf-gridIncentiveMini__message {
+  min-width: 0;
+  overflow: hidden;
+  color: #171717;
+  font-size: 0.62rem;
+  font-weight: 950;
+  line-height: 1.05;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sf-shell--mode-commercial-light .lsf-gridIncentiveMini__track {
+  position: relative;
+  height: 13px;
+  overflow: visible;
+  border-radius: 999px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.2)),
+    rgba(23, 23, 23, 0.24);
+  box-shadow:
+    inset 0 0 0 1px rgba(23, 23, 23, 0.16),
+    inset 0 2px 5px rgba(23, 23, 23, 0.18),
+    0 1px 0 rgba(255, 255, 255, 0.46);
+}
+
+.sf-shell--mode-commercial-light .lsf-gridIncentiveMini__fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  min-width: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #ff2f74 0%, #6a3df0 48%, #00df8f 100%);
+  box-shadow:
+    0 0 14px rgba(106, 61, 240, 0.32),
+    inset 0 1px 0 rgba(255, 255, 255, 0.48);
+}
+
+.sf-shell--mode-commercial-light .lsf-gridContext .lsf-gridIncentiveMini__marker {
+  position: absolute;
+  left: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #171717;
+  font-size: 0.5rem;
+  font-weight: 1000;
+  line-height: 1;
+}
+
+.sf-shell--mode-commercial-light .lsf-gridContext__incentive.is-ready {
+  background:
+    radial-gradient(circle at 88% 12%, rgba(255, 255, 255, 0.4), transparent 27%),
+    linear-gradient(180deg, #18e889 0%, #16a34a 56%, #3b008b 100%);
+  color: #ffffff;
+}
+
+.sf-shell--mode-commercial-light .lsf-gridContext__incentive.is-ready .lsf-gridIncentiveMini__eyebrow,
+.sf-shell--mode-commercial-light .lsf-gridContext__incentive.is-ready .lsf-gridIncentiveMini__message {
+  color: #ffffff;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
+}
+
+.sf-shell--mode-commercial-light .lsf-gridContext__incentive.is-waiting {
+  background:
+    radial-gradient(circle at 88% 12%, rgba(255, 255, 255, 0.46), transparent 27%),
+    linear-gradient(180deg, #fffde8 0%, #ffef00 62%, #ffb61c 100%);
+  color: #3b008b;
+}
+
+/* Focus grid final order: search, category/cart, full incentive banner, exit. */
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext {
+  top: 45px;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  gap: 6px;
+  padding: 6px 8px 8px;
+  border-color: rgba(59, 0, 139, 0.14);
+  background: #ffffff;
+  box-shadow:
+    0 -10px 0 #ffffff,
+    0 9px 0 #ffffff,
+    0 12px 16px rgba(29, 23, 48, 0.08);
+}
+
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext > span:not(.lsf-gridContext__incentive) {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext > strong {
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: start;
+}
+
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext > em {
+  grid-column: 3;
+  grid-row: 1;
+  justify-self: end;
+}
+
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__cart {
+  grid-column: 4;
+  grid-row: 1;
+  justify-self: end;
+  min-width: 82px;
+  min-height: 22px;
+  padding: 0 8px;
+  border: 1px solid rgba(59, 0, 139, 0.18);
+  background: #ffffff;
+  color: #3b008b;
+  box-shadow: 0 3px 8px rgba(59, 0, 139, 0.08);
+}
+
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__cart.is-active {
+  border-color: #3b008b;
+  background: #3b008b;
+}
+
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive.sf-incentiveBanner--lsf {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  justify-self: stretch;
+  display: grid;
+  gap: 6px;
+  width: 100%;
+  max-width: none;
+  min-height: 0;
+  margin: 0;
+  padding: 8px 9px 9px;
+  border: 1px solid color-mix(in srgb, #ffb61c 74%, #3b008b);
+  border-radius: 12px;
+  background:
+    radial-gradient(circle at 92% 10%, rgba(255, 255, 255, 0.5), transparent 28%),
+    linear-gradient(180deg, #fbff00 0%, #f0ec00 62%, #ffb61c 100%);
+  color: #171717;
+  box-shadow:
+    0 4px 0 rgba(166, 150, 0, 0.34),
+    0 10px 18px rgba(255, 239, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  text-align: left;
+  text-transform: none;
+  white-space: normal;
+}
+
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive.sf-incentiveBanner--lsf::before {
+  display: block;
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background:
+    repeating-linear-gradient(
+      -35deg,
+      rgba(255, 255, 255, 0.18) 0 8px,
+      transparent 8px 18px
+    );
+  opacity: 0.72;
+  pointer-events: none;
+}
+
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive.sf-incentiveBanner--lsf::after {
+  content: none;
+}
+
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveCopy {
+  min-width: 0;
+  gap: 4px;
+}
+
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveEyebrow {
+  color: #3b008b;
+  font-size: 0.56rem;
+  font-weight: 1000;
+  letter-spacing: 0.045em;
+  line-height: 1;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.76);
+}
+
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveMessageTicker {
+  display: block;
+  height: auto;
+  min-height: 0;
+  overflow: hidden;
+  color: #171717;
+  font-size: 0.63rem;
+  font-weight: 1000;
+  line-height: 1.12;
+  text-shadow: none;
+}
+
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveMessageTicker span {
+  display: block;
+  overflow: hidden;
+  color: #171717;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveMessageTicker span + span {
+  display: none;
+}
+
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveSignal {
+  flex-shrink: 0;
+}
+
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveTimer {
+  min-height: 19px;
+  padding: 0 8px;
+  background: #171717;
+  color: #ffffff;
+  font-size: 0.52rem;
+  font-weight: 1000;
+  line-height: 19px;
+  box-shadow:
+    0 3px 8px rgba(23, 23, 23, 0.16),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveProgressTrack {
+  height: 13px;
+  overflow: visible;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.2)),
+    rgba(23, 23, 23, 0.24);
+}
+
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveProgressFill {
+  background: linear-gradient(90deg, #ff2f74 0%, #6a3df0 48%, #00df8f 100%);
+}
+
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveProgressStripes,
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveProgressGlow {
+  display: block;
+}
+
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveProgressMarker {
+  min-width: 34px;
+  padding: 2px 6px;
+  font-size: 0.5rem;
+}
+
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveRewardStage {
+  min-height: 34px;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 6px;
+  padding: 6px 7px;
+  border-radius: 10px;
+}
+
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveRewardStage span,
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveRewardStage strong {
+  font-size: 0.56rem;
+}
+
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__exit {
+  grid-column: 1 / -1;
+  grid-row: 3;
+  width: 100%;
+  min-height: 24px;
+  justify-self: stretch;
+  background: #3b008b;
+  color: #ffffff;
+}
+
+/* Use the same incentive banner anatomy in focused grid. */
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive.sf-incentiveBanner--lsf {
+  gap: 7px;
+  padding: 8px 9px 9px;
+  border-radius: 14px;
+}
+
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "label timer"
+    "message message";
+  align-items: start;
+  column-gap: 7px;
+  row-gap: 6px;
+}
+
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveCopy {
+  display: contents;
+}
+
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveEyebrow {
+  grid-area: label;
+  align-self: center;
+  display: block;
+  color: #3b008b;
+  font-size: 0.58rem;
+  font-weight: 1000;
+  line-height: 1.05;
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
+}
+
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveSignal {
+  grid-area: timer;
+  justify-self: end;
+  display: block;
+}
+
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveTimer {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  width: fit-content;
+  min-height: 20px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12), transparent),
+    #171717;
+  color: #ffffff;
+  font-size: 0.54rem;
+  font-weight: 1000;
+  line-height: 20px;
+  white-space: nowrap;
+}
+
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveTimer::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #13e883;
+  box-shadow: 0 0 0 3px rgba(19, 232, 131, 0.16);
+}
+
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveMessageTicker {
+  grid-area: message;
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  height: auto;
+  min-height: 0;
+  gap: 24px;
+  margin: 0;
+  overflow: hidden;
+  color: #171717;
+  font-size: 0.66rem;
+  font-weight: 1000;
+  line-height: 1.08;
+  text-shadow: none;
+  white-space: nowrap;
+}
+
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveMessageTicker span {
+  display: inline-block;
+  min-width: max-content;
+  overflow: visible;
+  color: #171717;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  text-overflow: clip;
+  white-space: nowrap;
+  animation: sfIncentiveMessageMarquee 13s linear infinite;
+}
+
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveMessageTicker span[aria-hidden="true"] {
+  display: inline-block;
+}
+
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveProgress {
+  display: block !important;
+  width: 100%;
+  min-height: 16px;
+  margin-top: 1px;
+  position: relative;
+  z-index: 2;
+}
+
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveProgressTrack {
+  height: 14px;
+  border-radius: 999px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.18)),
+    rgba(23, 23, 23, 0.24);
+  box-shadow:
+    inset 0 0 0 1px rgba(23, 23, 23, 0.16),
+    inset 0 2px 7px rgba(23, 23, 23, 0.2),
+    0 1px 0 rgba(255, 255, 255, 0.42);
+}
+
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveProgressFill {
+  background: linear-gradient(90deg, #ff2f74 0%, #6a3df0 48%, #00df8f 100%);
+}
+
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveProgressMarker {
+  min-width: 30px;
+  padding: 2px 5px;
+  background: #ffffff;
+  color: #171717;
+  font-size: 0.56rem;
+  font-weight: 950;
+}
+
+/* Focused grid incentive reuses the exterior progress style, only compacted. */
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveProgressTrack {
+  position: relative;
+  display: block !important;
+  width: 100% !important;
+  height: 16px !important;
+  min-height: 16px !important;
+  overflow: visible !important;
+  border: 0;
+  background: #f0ebfb !important;
+  box-shadow: none !important;
+}
+
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveProgressFill {
+  display: block !important;
+  position: absolute;
+  inset: 0 auto 0 0;
+  min-width: 0;
+  border-radius: inherit;
+  background:
+    linear-gradient(
+      90deg,
+      #6d2df6 0%,
+      #7c3aed 34%,
+      #22c55e 68%,
+      #facc15 100%
+    ) !important;
+  box-shadow: none;
+}
+
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveProgressStripes {
+  display: none !important;
+}
+
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveProgressGlow {
+  display: none !important;
+}
+
+.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveProgressMarker {
+  min-width: 34px !important;
+  padding: 2px 7px !important;
+  border-radius: 999px;
+  background: #ffffff !important;
+  color: #171717 !important;
+  font-size: 0.56rem !important;
+  transform: translate(-50%, -50%) !important;
+  box-shadow:
+    0 1px 4px rgba(23, 23, 23, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.88);
 }

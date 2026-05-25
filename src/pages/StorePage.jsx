@@ -1813,8 +1813,7 @@ export default function StorePage() {
         return;
       }
 
-      const rect = surface.getBoundingClientRect();
-      setLsfSurfaceDocked(rect.top <= 1 && window.scrollY > 12);
+      setLsfSurfaceDocked(window.scrollY > 16);
     };
 
     const requestUpdate = () => {

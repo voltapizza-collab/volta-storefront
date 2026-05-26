@@ -652,6 +652,78 @@ const IncentiveBanner = ({
   );
 };
 
+function IncentiveFocusModal({
+  open,
+  onClose,
+  active,
+  waiting,
+  unlocked,
+  remainingLabel,
+  targetLabel,
+  currentLabel,
+  rewardLabel,
+  message,
+  counterLabel,
+}) {
+  useEffect(() => {
+    if (!open) return undefined;
+
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") onClose();
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [onClose, open]);
+
+  if (!open) return null;
+
+  const title = unlocked
+    ? "Incentivo listo"
+    : active
+    ? "Te falta poco"
+    : waiting
+    ? "Proximo incentivo"
+    : "Incentivo";
+
+  return (
+    <div className="sf-modalOverlay" onClick={onClose}>
+      <div
+        className="sf-modalCard sf-incentiveFocusModal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="sf-incentiveFocusTitle"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <button type="button" className="sf-modalCloseBtn" onClick={onClose} aria-label="Cerrar">
+          x
+        </button>
+        <div className="sf-incentiveFocusModal__badge">
+          <span>{unlocked ? "Premio" : active ? "Faltan" : "Incentivo"}</span>
+          <strong>{unlocked ? rewardLabel : active ? remainingLabel : counterLabel}</strong>
+        </div>
+        <div className="sf-incentiveFocusModal__copy">
+          <span>{counterLabel}</span>
+          <h3 id="sf-incentiveFocusTitle">{title}</h3>
+          <p>{message}</p>
+        </div>
+        {active && !unlocked && (
+          <div className="sf-incentiveFocusModal__stats" aria-label="Detalle del incentivo">
+            <span>
+              <b>{currentLabel}</b>
+              Pedido elegible
+            </span>
+            <span>
+              <b>{targetLabel}</b>
+              Meta
+            </span>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function CouponInfoModal({ open, onClose, onRemove, onValidate, validating = false, data }) {
   const [countdown, setCountdown] = useState("");
   const [secondsLeft, setSecondsLeft] = useState(null);
@@ -1837,7 +1909,6 @@ export default function StorePage() {
   const [customIngredients, setCustomIngredients] = useState({});
   const [customOpenSection, setCustomOpenSection] = useState(null);
   const [customLoading, setCustomLoading] = useState(false);
-  const customCategoryCarouselRef = useRef(null);
   const [bootsOpen, setBootsOpen] = useState(false);
   const [bootsQueuePosition, setBootsQueuePosition] = useState(null);
   const [bootsQueueLoading, setBootsQueueLoading] = useState(false);
@@ -1853,6 +1924,10 @@ export default function StorePage() {
   const [tick, setTick] = useState(false);
   const [lsfSurfaceDocked, setLsfSurfaceDocked] = useState(false);
   const [gridFocusMode, setGridFocusMode] = useState(false);
+  const [gridFocusTransition, setGridFocusTransition] = useState("");
+  const [gridFocusSwipePreview, setGridFocusSwipePreview] = useState(null);
+  const [offerTabsManual, setOfferTabsManual] = useState(false);
+  const [gridIncentiveOpen, setGridIncentiveOpen] = useState(false);
   const lsfSurfaceRef = useRef(null);
   const tabsScrollerRef = useRef(null);
   const tabsAutoPauseUntilRef = useRef(0);
@@ -1860,7 +1935,11 @@ export default function StorePage() {
   const tabsScrollSettleTimeoutRef = useRef(0);
   const tabsScrollOriginRef = useRef("");
   const ignoreTabsScrollUntilRef = useRef(0);
+  const commercialTabClickTimeoutRef = useRef(0);
+  const lastCommercialTabClickRef = useRef({ id: "", at: 0 });
+  const commercialAutoSwitchAtRef = useRef(0);
   const gridSwipeRef = useRef(null);
+  const gridFocusTransitionTimeoutRef = useRef(0);
   const halfSwipeRef = useRef(null);
   const suppressGridClickUntilRef = useRef(0);
   const incentiveZeroRefreshRef = useRef(false);
@@ -1894,8 +1973,6 @@ export default function StorePage() {
 
       const isScrolled = window.scrollY > 16;
       setLsfSurfaceDocked(isScrolled);
-      if (!isScrolled) setGridFocusMode(false);
-      if (window.scrollY > 120) setGridFocusMode(true);
     };
 
     const requestUpdate = () => {
@@ -1915,10 +1992,18 @@ export default function StorePage() {
   }, [lsfSurfaceStickySuspended]);
 
   useEffect(() => {
-    if (lsfSurfaceStickySuspended) {
+    if (portalReady && !termsAccepted) {
       setGridFocusMode(false);
+      setGridFocusTransition("");
     }
-  }, [lsfSurfaceStickySuspended]);
+  }, [portalReady, termsAccepted]);
+
+  useEffect(() => {
+    return () => {
+      window.clearTimeout(gridFocusTransitionTimeoutRef.current);
+      window.clearTimeout(commercialTabClickTimeoutRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     try {
@@ -2545,6 +2630,13 @@ export default function StorePage() {
     tabsAutoPauseUntilRef.current = performance.now() + durationMs;
   }, []);
 
+  const resumeTabsTicker = useCallback(() => {
+    const nextSwitchAt = performance.now() + 3000;
+    tabsAutoPauseUntilRef.current = 0;
+    commercialAutoSwitchAtRef.current = nextSwitchAt;
+    setOfferTabsManual(false);
+  }, []);
+
   const getCategoryZeroOffset = useCallback((scroller) => {
     if (!scroller) return 0;
 
@@ -2602,6 +2694,81 @@ export default function StorePage() {
     [alignCategoryTabToZero, pauseTabsTicker]
   );
 
+  const selectCategoryTab = useCallback(
+    (tabId) => {
+      window.clearTimeout(commercialTabClickTimeoutRef.current);
+      lastCommercialTabClickRef.current = { id: "", at: 0 };
+      commercialAutoSwitchAtRef.current = Number.POSITIVE_INFINITY;
+      setOfferTabsManual(false);
+      selectStorefrontTab(tabId, 30000);
+    },
+    [selectStorefrontTab]
+  );
+
+  const activateCommercialTab = useCallback(
+    (tabId, pauseDurationMs = 30000) => {
+      setOfferTabsManual(true);
+      selectStorefrontTab(tabId, pauseDurationMs);
+    },
+    [selectStorefrontTab]
+  );
+
+  const selectNextCommercialTab = useCallback(() => {
+    if (!commercialTabs.length) return;
+
+    const currentIndex = commercialTabs.findIndex((tab) => tab.id === activeTab);
+    const nextIndex = currentIndex >= 0
+      ? (currentIndex + 1) % commercialTabs.length
+      : 0;
+
+    activateCommercialTab(commercialTabs[nextIndex].id, 30000);
+  }, [activateCommercialTab, activeTab, commercialTabs]);
+
+  const handleCommercialTabClick = useCallback(
+    (tabId) => {
+      const nowMs = performance.now();
+      const lastClick = lastCommercialTabClickRef.current;
+
+      if (lastClick.id === tabId && nowMs - lastClick.at < 320) {
+        window.clearTimeout(commercialTabClickTimeoutRef.current);
+        lastCommercialTabClickRef.current = { id: "", at: 0 };
+        resumeTabsTicker();
+        return;
+      }
+
+      lastCommercialTabClickRef.current = { id: tabId, at: nowMs };
+      window.clearTimeout(commercialTabClickTimeoutRef.current);
+
+      const wasManual = offerTabsManual;
+
+      commercialTabClickTimeoutRef.current = window.setTimeout(() => {
+        if (!wasManual || !isCommercialTabActive) {
+          activateCommercialTab(tabId, 30000);
+          return;
+        }
+
+        selectNextCommercialTab();
+      }, 230);
+    },
+    [
+      activateCommercialTab,
+      isCommercialTabActive,
+      offerTabsManual,
+      resumeTabsTicker,
+      selectNextCommercialTab,
+    ]
+  );
+
+  const handleCommercialTabDoubleClick = useCallback(
+    (event) => {
+      event.preventDefault();
+      window.clearTimeout(commercialTabClickTimeoutRef.current);
+      lastCommercialTabClickRef.current = { id: "", at: 0 };
+      resumeTabsTicker();
+    },
+    [resumeTabsTicker]
+  );
+
   const moveStorefrontTab = useCallback(
     (direction) => {
       if (isProductSearchActive || tabs.length < 2) return;
@@ -2615,6 +2782,44 @@ export default function StorePage() {
     },
     [activeTab, isProductSearchActive, selectStorefrontTab, tabs]
   );
+
+  const openGridFocusMode = useCallback((entry = "tap", direction = 0) => {
+    if (typeof window !== "undefined" && window.innerWidth > 760) return;
+    window.clearTimeout(gridFocusTransitionTimeoutRef.current);
+    setGridFocusSwipePreview(null);
+    const directionClass =
+      entry === "swipe"
+        ? direction < 0
+          ? "from-right"
+          : "from-left"
+        : "from-bottom";
+    setGridFocusTransition(`is-grid-focus-entering ${directionClass}`);
+    setGridFocusMode(true);
+    setLsfSurfaceDocked(true);
+    gridFocusTransitionTimeoutRef.current = window.setTimeout(() => {
+      setGridFocusTransition("");
+    }, 520);
+  }, []);
+
+  const updateGridFocusSwipePreview = useCallback((deltaX) => {
+    const progress = Math.min(1, Math.abs(deltaX) / 132);
+    const clampedX = Math.max(-220, Math.min(220, deltaX * 0.9));
+    setGridFocusSwipePreview({
+      offsetX: `${Math.round(clampedX)}px`,
+      lift: `${Math.round(progress * -10)}px`,
+      scale: (1 - progress * 0.055).toFixed(3),
+      radius: `${Math.round(18 + progress * 14)}px`,
+      shadowY: `${Math.round(progress * 24)}px`,
+      shadowBlur: `${Math.round(progress * 46)}px`,
+      backdropOpacity: (0.42 + progress * 0.48).toFixed(3),
+      progress: Number(progress.toFixed(3)),
+      directionClass: deltaX < 0 ? "from-right" : "from-left",
+    });
+  }, []);
+
+  const clearGridFocusSwipePreview = useCallback(() => {
+    setGridFocusSwipePreview(null);
+  }, []);
 
   const syncActiveTabFromTabsScroll = useCallback((options = {}) => {
     const scroller = tabsScrollerRef.current;
@@ -2685,16 +2890,6 @@ export default function StorePage() {
     if (event.pointerType === "mouse" && event.button !== 0) return;
     if (event.target?.closest?.("button, a, input, textarea, select")) return;
 
-    if (
-      typeof window !== "undefined" &&
-      window.innerWidth <= 760 &&
-      (event.target === event.currentTarget ||
-        !event.target?.closest?.(".lsf-card, .sf-engineEmptyState, .lsf-gridContext"))
-    ) {
-      setGridFocusMode(true);
-      setLsfSurfaceDocked(true);
-    }
-
     gridSwipeRef.current = {
       pointerId: event.pointerId,
       startX: event.clientX,
@@ -2710,11 +2905,6 @@ export default function StorePage() {
       const gesture = gridSwipeRef.current;
       if (!gesture || gesture.pointerId !== event.pointerId) return;
 
-      if (typeof window !== "undefined" && window.innerWidth <= 760) {
-        setGridFocusMode(true);
-        setLsfSurfaceDocked(true);
-      }
-
       gesture.lastX = event.clientX;
       const deltaX = event.clientX - gesture.startX;
       const deltaY = event.clientY - gesture.startY;
@@ -2722,9 +2912,10 @@ export default function StorePage() {
       if (Math.abs(deltaX) > 18 && Math.abs(deltaX) > Math.abs(deltaY) * 1.25) {
         gesture.swiping = true;
         pauseTabsTicker(6200);
+        if (!gridFocusMode) updateGridFocusSwipePreview(deltaX);
       }
     },
-    [pauseTabsTicker]
+    [gridFocusMode, pauseTabsTicker, updateGridFocusSwipePreview]
   );
 
   const handleGridPointerEnd = useCallback(
@@ -2741,12 +2932,22 @@ export default function StorePage() {
         Math.abs(deltaX) > Math.abs(deltaY) * 1.18 &&
         elapsed < 900;
 
-      if (!isHorizontalSwipe) return;
+      clearGridFocusSwipePreview();
+
+      if (!isHorizontalSwipe) {
+        if (gesture.swiping) suppressGridClickUntilRef.current = performance.now() + 180;
+        return;
+      }
 
       suppressGridClickUntilRef.current = performance.now() + 360;
-      moveStorefrontTab(deltaX < 0 ? 1 : -1);
+      if (gridFocusMode) {
+        moveStorefrontTab(deltaX < 0 ? 1 : -1);
+        return;
+      }
+
+      openGridFocusMode("swipe", deltaX);
     },
-    [moveStorefrontTab]
+    [clearGridFocusSwipePreview, gridFocusMode, moveStorefrontTab, openGridFocusMode]
   );
 
   const handleGridClickCapture = useCallback((event) => {
@@ -2759,13 +2960,14 @@ export default function StorePage() {
     if (
       typeof window !== "undefined" &&
       window.innerWidth <= 760 &&
-      (event.target === event.currentTarget ||
-        !event.target?.closest?.(".lsf-card, button, a, input, textarea, select"))
+      !gridFocusMode &&
+      !event.target?.closest?.("button, a, input, textarea, select")
     ) {
-      setGridFocusMode(true);
-      setLsfSurfaceDocked(true);
+      event.preventDefault();
+      event.stopPropagation();
+      openGridFocusMode();
     }
-  }, []);
+  }, [gridFocusMode, openGridFocusMode]);
 
   const handleGridTouchStart = useCallback((event) => {
     if (event.target?.closest?.("button, a, input, textarea, select")) return;
@@ -2788,11 +2990,6 @@ export default function StorePage() {
       const touch = event.touches?.[0];
       if (!gesture || gesture.pointerId !== "touch" || !touch) return;
 
-      if (typeof window !== "undefined" && window.innerWidth <= 760) {
-        setGridFocusMode(true);
-        setLsfSurfaceDocked(true);
-      }
-
       gesture.lastX = touch.clientX;
       const deltaX = touch.clientX - gesture.startX;
       const deltaY = touch.clientY - gesture.startY;
@@ -2800,9 +2997,10 @@ export default function StorePage() {
       if (Math.abs(deltaX) > 18 && Math.abs(deltaX) > Math.abs(deltaY) * 1.25) {
         gesture.swiping = true;
         pauseTabsTicker(6200);
+        if (!gridFocusMode) updateGridFocusSwipePreview(deltaX);
       }
     },
-    [pauseTabsTicker]
+    [gridFocusMode, pauseTabsTicker, updateGridFocusSwipePreview]
   );
 
   const handleGridTouchEnd = useCallback(
@@ -2820,20 +3018,23 @@ export default function StorePage() {
         Math.abs(deltaX) > Math.abs(deltaY) * 1.18 &&
         elapsed < 900;
 
-      if (!isHorizontalSwipe) return;
+      clearGridFocusSwipePreview();
+
+      if (!isHorizontalSwipe) {
+        if (gesture.swiping) suppressGridClickUntilRef.current = performance.now() + 180;
+        return;
+      }
 
       suppressGridClickUntilRef.current = performance.now() + 360;
-      moveStorefrontTab(deltaX < 0 ? 1 : -1);
-    },
-    [moveStorefrontTab]
-  );
+      if (gridFocusMode) {
+        moveStorefrontTab(deltaX < 0 ? 1 : -1);
+        return;
+      }
 
-  const handleGridScroll = useCallback(() => {
-    if (typeof window !== "undefined" && window.innerWidth <= 760) {
-      setGridFocusMode(true);
-      setLsfSurfaceDocked(true);
-    }
-  }, []);
+      openGridFocusMode("swipe", deltaX);
+    },
+    [clearGridFocusSwipePreview, gridFocusMode, moveStorefrontTab, openGridFocusMode]
+  );
 
   useEffect(() => {
     const scroller = tabsScrollerRef.current;
@@ -2864,6 +3065,34 @@ export default function StorePage() {
     frame = window.requestAnimationFrame(tickTabs);
     return () => window.cancelAnimationFrame(frame);
   }, [tabs.length]);
+
+  useEffect(() => {
+    if (gridFocusMode || offerTabsManual || !commercialTabs.length || isProductSearchActive) return undefined;
+
+    let frame = 0;
+
+    const tickCommercialTabs = (timestamp) => {
+      if (
+        document.visibilityState === "visible" &&
+        timestamp >= tabsAutoPauseUntilRef.current &&
+        timestamp >= commercialAutoSwitchAtRef.current
+      ) {
+        const currentIndex = commercialTabs.findIndex((tab) => tab.id === activeTab);
+        const nextIndex = currentIndex >= 0
+          ? (currentIndex + 1) % commercialTabs.length
+          : 0;
+
+        setActiveTab(commercialTabs[nextIndex].id);
+        tabsScrollOriginRef.current = "";
+        commercialAutoSwitchAtRef.current = timestamp + 3000;
+      }
+
+      frame = window.requestAnimationFrame(tickCommercialTabs);
+    };
+
+    frame = window.requestAnimationFrame(tickCommercialTabs);
+    return () => window.cancelAnimationFrame(frame);
+  }, [activeTab, commercialTabs, gridFocusMode, isProductSearchActive, offerTabsManual]);
 
   useEffect(() => {
     const scroller = tabsScrollerRef.current;
@@ -3502,11 +3731,6 @@ export default function StorePage() {
   const customHasBase = Boolean(selectedCustomCategory);
   const customHasSize = Boolean(customSize);
   const customReady = customHasBase && customHasSize && customHasIngredient;
-  const customMissingSteps = [
-    !customHasBase ? "base" : null,
-    !customHasSize ? "tamano" : null,
-    !customHasIngredient ? "al menos un ingrediente" : null,
-  ].filter(Boolean);
   const customIngredientsTotal = useMemo(
     () =>
       Object.values(customIngredients).reduce(
@@ -3517,15 +3741,6 @@ export default function StorePage() {
   );
   const customGrandTotal =
     (customBasePrice + customIngredientsTotal) * Number(customQty || 1);
-  const scrollCustomCategoryCarousel = useCallback((direction) => {
-    const node = customCategoryCarouselRef.current;
-    if (!node) return;
-
-    node.scrollBy({
-      left: direction * Math.max(180, node.clientWidth * 0.7),
-      behavior: "smooth",
-    });
-  }, []);
   const customOrderedCategories = useMemo(() => {
     const existing = Object.keys(customIngredientsByCategory);
     return [
@@ -3533,15 +3748,6 @@ export default function StorePage() {
       ...existing.filter((category) => !CUSTOM_CATEGORY_ORDER.includes(category)).sort(),
     ];
   }, [customIngredientsByCategory]);
-  const getNextCustomSection = useCallback(
-    (categoryName) => {
-      const currentIndex = customOrderedCategories.indexOf(categoryName);
-      if (currentIndex === -1) return null;
-
-      return customOrderedCategories[currentIndex + 1] || null;
-    },
-    [customOrderedCategories]
-  );
   const getCustomIngredientUnitPrice = useCallback(
     (ingredient) => {
       const use = customUseByIngredientId.get(Number(ingredient?.id));
@@ -3751,29 +3957,6 @@ export default function StorePage() {
     customModalOpen,
     customSize,
     getCustomIngredientUnitPrice,
-  ]);
-
-  useEffect(() => {
-    if (
-      !customModalOpen ||
-      !selectedCustomCategory ||
-      !customHasSize ||
-      customUsesLoading ||
-      customOrderedCategories.length === 0
-    ) {
-      return;
-    }
-
-    if (customOpenSection === "BASE") {
-      setCustomOpenSection(customOrderedCategories[0]);
-    }
-  }, [
-    customUsesLoading,
-    customHasSize,
-    customModalOpen,
-    customOpenSection,
-    customOrderedCategories,
-    selectedCustomCategory,
   ]);
 
   useEffect(() => {
@@ -4610,6 +4793,22 @@ export default function StorePage() {
     ? "Sin horario"
     : `Disponible en ${formatDurationMs(nextIncentiveStartsInMs)}`;
   const hasGridIncentiveBanner = Boolean(activeIncentive || nextIncentive);
+  const incentiveCurrency = partner?.currency || "EUR";
+  const gridIncentiveRemainingLabel = formatMoney(incentiveRemaining, incentiveCurrency);
+  const gridIncentiveTargetLabel = formatMoney(incentiveTarget, incentiveCurrency);
+  const gridIncentiveCurrentLabel = formatMoney(cartProductSubtotal, incentiveCurrency);
+  const gridIncentiveButtonLabel = incentiveUnlocked
+    ? "Premio listo"
+    : activeIncentive
+    ? `Faltan ${gridIncentiveRemainingLabel}`
+    : "Proximo incentivo";
+  const gridIncentiveButtonValue = incentiveUnlocked
+    ? incentiveRewardName
+    : activeIncentive
+    ? `para ${incentiveRewardName}`
+    : nextIncentiveStartsInMs == null
+    ? nextIncentive?.name || "Incentivo"
+    : `en ${formatDurationMs(nextIncentiveStartsInMs)}`;
   useEffect(() => {
     if (!partner?.id) return undefined;
 
@@ -4642,6 +4841,10 @@ export default function StorePage() {
     nextIncentiveStartsInMs,
     partner?.id,
   ]);
+
+  useEffect(() => {
+    if (!hasGridIncentiveBanner) setGridIncentiveOpen(false);
+  }, [hasGridIncentiveBanner]);
 
   useEffect(() => {
     const activeId = Number(activeIncentive?.id);
@@ -5224,11 +5427,222 @@ export default function StorePage() {
       </button>
     ) : null;
 
+  const activeCommercialTabIndex = isCommercialTabActive
+    ? Math.max(0, commercialTabs.findIndex((tab) => tab.id === activeTab))
+    : 0;
+  const activeCommercialTab =
+    commercialTabs[activeCommercialTabIndex] || commercialTabs[0] || null;
+
+  const renderGridFocusBackContent = () => {
+    if (isProductSearchActive) {
+      return baseFilteredMenu.length ? (
+        <div className="lsf-searchResultsStage">
+          <div className="lsf-searchResultsHead">
+            <span>Busqueda global</span>
+            <strong>{baseFilteredMenu.length} productos</strong>
+          </div>
+          <div className="lsf-grid-wrap">
+            <div className="lsf-grid lsf-grid--searchResults" role="list">
+              {baseFilteredMenu.map((item) => renderProductCard(item))}
+            </div>
+          </div>
+        </div>
+      ) : null;
+    }
+
+    if (activeTab === TOP_DEAL_TAB) {
+      return filteredTopDeals.length ? (
+        <div className="lsf-grid-wrap">
+          <div className="lsf-grid lsf-grid--topDeals" role="list">
+            {filteredTopDeals.map((item) => renderTopDealCard(item))}
+          </div>
+        </div>
+      ) : null;
+    }
+
+    if (activeTab === PROMOS_TAB) {
+      return filteredPromos.length ? (
+        <div className="lsf-grid-wrap">
+          <div className="lsf-grid lsf-grid--promos" role="list">
+            {filteredPromos.map((promo) => {
+              const promoItems = Array.isArray(promo.items) ? promo.items : [];
+              const promoDiscountPercent = getPromoDiscountPercent(promo, menuCatalog);
+              const promoCountdown = formatOfferCountdown(promo, incentiveNowMs);
+
+              return (
+                <div
+                  key={`grid-focus-back-promo-${promo.id}`}
+                  className="lsf-card lsf-card--promo lsf-flip"
+                  role="listitem"
+                >
+                  <div className="lsf-flip__inner">
+                    <div className="lsf-flip__front">
+                      <div className={`lsf-card__image lsf-promoImage ${promo.image ? "has-image" : ""}`}>
+                        {promo.image ? (
+                          <img src={promo.image} alt={promo.title} />
+                        ) : (
+                          <div className="lsf-card__img is-placeholder">
+                            <span>Promo</span>
+                          </div>
+                        )}
+                      </div>
+                      <span className="lsf-promoBadge">Promo</span>
+                      {promoDiscountPercent > 0 && (
+                        <span className="lsf-topDealDiscountSticker lsf-promoDiscountSticker">
+                          <strong>-{promoDiscountPercent}%</strong>
+                          <small>off</small>
+                        </span>
+                      )}
+                      {renderOfferRibbon(promoCountdown, "Termina en:", "promo")}
+                      <div className="lsf-card__overlay">
+                        <div className="lsf-card__ticker">
+                          <div className={`lsf-card__name ${tick ? "is-ticking" : ""}`}>
+                            {promo.title}
+                          </div>
+                        </div>
+                        {renderPromoPrice(promo, menuCatalog, tick)}
+                      </div>
+                    </div>
+                    <div className="lsf-flip__back">
+                      <div className="lsf-flip-desc lsf-promoFlipDesc">
+                        <div className="lsf-flip-title">Contenido</div>
+                        <div className="lsf-promoFlipList">
+                          {promoItems.length ? (
+                            promoItems.map((item, index) => (
+                              <span key={`grid-focus-back-promo-item-${promo.id}-${item.pizzaId || item.name || index}`}>
+                                {item.quantity || 1}x {item.name}
+                                {item.size ? ` ${item.size}` : ""}
+                              </span>
+                            ))
+                          ) : (
+                            <span>Promo activa</span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      ) : null;
+    }
+
+    if (activeTab === TRENDING_TAB) {
+      return filteredTrending.length ? (
+        <div className="lsf-grid-wrap">
+          <div className="lsf-grid lsf-grid--trending" role="list">
+            {filteredTrending.map((item) => renderProductCard(item))}
+          </div>
+        </div>
+      ) : null;
+    }
+
+    if (activeTab === UPCOMING_TAB) {
+      return filteredUpcoming.length ? (
+        <div className="lsf-grid-wrap">
+          <div className="lsf-grid lsf-grid--upcoming" role="list">
+            {filteredUpcoming.map((item) => renderProductCard(item))}
+          </div>
+        </div>
+      ) : null;
+    }
+
+    return visibleMenu.length ? (
+      <div className="lsf-grid-wrap">
+        <div className="lsf-grid" role="list">
+          {visibleMenu.map((item) => renderProductCard(item))}
+        </div>
+      </div>
+    ) : null;
+  };
+
   return (
     <div
-      className={`sf-shell sf-shell--mode-${storefrontMode} ${gridFocusMode ? "is-grid-focused" : ""}`}
-      style={themeStyle}
+      className={`sf-shell sf-shell--mode-${storefrontMode} ${gridFocusMode ? "is-grid-focused" : ""} ${gridFocusTransition} ${
+        gridFocusSwipePreview
+          ? `is-grid-focus-swiping ${gridFocusSwipePreview.directionClass}`
+          : ""
+        }`}
+      style={{
+        ...themeStyle,
+        ...(gridFocusSwipePreview
+          ? {
+              "--sf-grid-swipe-offset-x": gridFocusSwipePreview.offsetX,
+              "--sf-grid-swipe-lift": gridFocusSwipePreview.lift,
+              "--sf-grid-swipe-scale": gridFocusSwipePreview.scale,
+              "--sf-grid-swipe-radius": gridFocusSwipePreview.radius,
+              "--sf-grid-swipe-shadow-y": gridFocusSwipePreview.shadowY,
+              "--sf-grid-swipe-shadow-blur": gridFocusSwipePreview.shadowBlur,
+              "--sf-grid-swipe-backdrop-opacity": gridFocusSwipePreview.backdropOpacity,
+            }
+          : {}),
+      }}
     >
+      {gridFocusSwipePreview && !gridFocusMode && (
+        <div className="sf-gridFocusBackPage" aria-hidden="true">
+          <div className="lsf-gridFocusSearch">
+            <div className="sf-engineSearchWrap">
+              {!search && (
+                <span className="sf-engineSearchTicker" aria-hidden="true">
+                  <span className="sf-engineSearchTickerTrack">
+                    <span>Buscar pizza o ingrediente...</span>
+                  </span>
+                </span>
+              )}
+              <input
+                className="sf-engineSearch"
+                type="search"
+                placeholder=""
+                value={search}
+                readOnly
+                tabIndex={-1}
+              />
+              <button
+                type="button"
+                className="sf-engineSearchBtn"
+                aria-label="Buscar"
+                tabIndex={-1}
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <circle
+                    cx="11"
+                    cy="11"
+                    r="6.5"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.2"
+                  />
+                  <path
+                    d="M16 16l4 4"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div
+            className={`lsf-gridContext lsf-gridContext--${gridContext.tone} ${
+              hasGridIncentiveBanner ? "has-grid-incentive" : ""
+            }`}
+          >
+            <div className="lsf-gridContext__category">
+              <span>{gridContext.eyebrow}</span>
+              <strong>{gridContext.label}</strong>
+              <em>
+                {gridContext.count === 1
+                  ? "1 producto"
+                  : `${gridContext.count} productos`}
+              </em>
+            </div>
+          </div>
+          {renderGridFocusBackContent()}
+        </div>
+      )}
       <div className="sf-wrap sf-menu">
         <section className="sf-storeHeader sf-storeHeader--desktop">
 
@@ -5337,17 +5751,10 @@ export default function StorePage() {
               <div className="sf-lsfSearchCluster">
                 <div className="sf-engineSearchRow sf-engineSearchRow--lsf">
                   <div className="sf-engineSearchWrap">
-                    {!search && (
-                      <span className="sf-engineSearchTicker" aria-hidden="true">
-                        <span className="sf-engineSearchTickerTrack">
-                          <span>Buscar pizza o ingrediente...</span>
-                        </span>
-                      </span>
-                    )}
                     <input
                       className="sf-engineSearch"
                       type="search"
-                      placeholder=""
+                      placeholder="Buscar pizza o ingrediente..."
                       value={search}
                       onChange={(event) => setSearch(event.target.value)}
                       onKeyDown={(event) => {
@@ -5459,25 +5866,33 @@ export default function StorePage() {
               ref={tabsScrollerRef}
               role="tablist"
               aria-label="Categorias del menu"
-              onPointerDown={() => pauseTabsTicker(6200)}
+              onPointerDown={(event) => {
+                if (event.target?.closest?.(".lsf-tab--segment")) return;
+                pauseTabsTicker(6200);
+              }}
               onWheel={() => pauseTabsTicker(6200)}
               onScroll={handleTabsScroll}
             >
               <div
-                className={`lsf-segmentTabs is-count-${commercialTabs.length}`}
+                className={`lsf-segmentTabs is-count-${commercialTabs.length} ${
+                  offerTabsManual ? "is-manual" : "is-auto"
+                }`}
                 aria-label="Ofertas destacadas"
               >
-                {commercialTabs.map((tab) => (
+                {activeCommercialTab && (
                   <button
-                    key={tab.id}
+                    key={activeCommercialTab.id}
                     type="button"
-                    data-tab-id={tab.id}
-                    className={`lsf-tab lsf-tab--segment lsf-tab--offer-${tab.tone} ${activeTab === tab.id ? "is-active" : ""}`}
-                    onClick={() => selectStorefrontTab(tab.id)}
+                    data-tab-id={activeCommercialTab.id}
+                    className={`lsf-tab lsf-tab--segment lsf-tab--offer-${activeCommercialTab.tone} ${
+                      activeTab === activeCommercialTab.id ? "is-active" : ""
+                    }`}
+                    onClick={() => handleCommercialTabClick(activeCommercialTab.id)}
+                    onDoubleClick={handleCommercialTabDoubleClick}
                   >
-                    {tab.label}
+                    {activeCommercialTab.label}
                   </button>
-                ))}
+                )}
               </div>
 
               <div className="lsf-categoryTabs" aria-label="Categorias">
@@ -5487,7 +5902,7 @@ export default function StorePage() {
                     type="button"
                     data-tab-id={tab.id}
                     className={`lsf-tab lsf-tab--category ${activeTab === tab.id ? "is-active" : ""}`}
-                    onClick={() => selectStorefrontTab(tab.id)}
+                    onClick={() => selectCategoryTab(tab.id)}
                   >
                     {tab.label}
                   </button>
@@ -5511,85 +5926,137 @@ export default function StorePage() {
             onTouchEnd={handleGridTouchEnd}
             onTouchCancel={handleGridTouchEnd}
             onClickCapture={handleGridClickCapture}
-            onScroll={handleGridScroll}
           >
             {gridFocusMode && (
-              <div className="lsf-gridFocusSearch">
-                <div className="sf-engineSearchWrap">
-                  {!search && (
-                    <span className="sf-engineSearchTicker" aria-hidden="true">
-                      <span className="sf-engineSearchTickerTrack">
-                        <span>Buscar pizza o ingrediente...</span>
-                      </span>
-                    </span>
+              <>
+                <div className="lsf-gridFocusActions">
+                  {hasGridIncentiveBanner && (
+                    <button
+                      type="button"
+                      className={`lsf-gridContext__incentiveButton ${
+                        incentiveUnlocked ? "is-ready" : activeIncentive ? "is-active" : "is-waiting"
+                      }`}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        setGridIncentiveOpen(true);
+                      }}
+                      aria-label={incentiveMessage}
+                      title={incentiveMessage}
+                    >
+                      <span>{gridIncentiveButtonLabel}</span>
+                      <strong>{gridIncentiveButtonValue}</strong>
+                    </button>
                   )}
-                  <input
-                    className="sf-engineSearch"
-                    type="search"
-                    placeholder=""
-                    value={search}
-                    onChange={(event) => setSearch(event.target.value)}
-                    onKeyDown={(event) => {
-                      if (event.key === "Enter") {
-                        event.currentTarget.blur();
-                      }
-                    }}
-                  />
                   <button
                     type="button"
-                    className="sf-engineSearchBtn"
-                    aria-label="Buscar"
-                    onClick={() => {
-                      document.activeElement?.blur?.();
+                    className={`lsf-cartbtn lsf-gridFocusCart ${cartCount > 0 ? "is-active" : ""}`}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      setCartOpen(true);
                     }}
+                    aria-label="Abrir carrito"
+                    title="Abrir carrito"
                   >
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <circle
-                        cx="11"
-                        cy="11"
-                        r="6.5"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2.2"
-                      />
-                      <path
-                        d="M16 16l4 4"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2.2"
-                        strokeLinecap="round"
-                      />
-                    </svg>
+                    <span className="lsf-cartbtn__icon" aria-hidden="true">
+                      <svg viewBox="0 0 64 64" focusable="false">
+                        <path d="M8 9h9.2l5.5 28.2c.8 4.1 4.4 7 8.6 7h17.8c3.9 0 7.4-2.5 8.5-6.3l5.4-18.1c.8-2.7-1.2-5.4-4-5.4H22.4l-1.2-6.1C20.8 6.4 19.2 5 17.3 5H8a4 4 0 0 0 0 8Z" />
+                        <path d="M29 58a6 6 0 1 0 0-12 6 6 0 0 0 0 12Zm22 0a6 6 0 1 0 0-12 6 6 0 0 0 0 12Z" />
+                      </svg>
+                    </span>
+                    <span className="lsf-cartbtn__count">{cartCount}</span>
+                    <span className="lsf-cartbtn__total">{"\u20AC"}{cartTotal.toFixed(2)}</span>
+                  </button>
+                  <button
+                    type="button"
+                    className="lsf-gridContext__exit"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      setGridFocusMode(false);
+                      setLsfSurfaceDocked(window.scrollY > 16);
+                    }}
+                    aria-label="Volver a la vista completa"
+                    title="Vista completa"
+                  >
+                    Ver todo
                   </button>
                 </div>
-              </div>
+                <div className="lsf-gridFocusSearch">
+                  <div className="sf-engineSearchWrap">
+                    <input
+                      className="sf-engineSearch"
+                      type="search"
+                      placeholder="Buscar pizza o ingrediente..."
+                      value={search}
+                      onChange={(event) => setSearch(event.target.value)}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter") {
+                          event.currentTarget.blur();
+                        }
+                      }}
+                    />
+                    <button
+                      type="button"
+                      className="sf-engineSearchBtn"
+                      aria-label="Buscar"
+                      onClick={() => {
+                        document.activeElement?.blur?.();
+                      }}
+                    >
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <circle
+                          cx="11"
+                          cy="11"
+                          r="6.5"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.2"
+                        />
+                        <path
+                          d="M16 16l4 4"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.2"
+                          strokeLinecap="round"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </>
             )}
             <div
-              className={`lsf-gridContext lsf-gridContext--${gridContext.tone}`}
+              className={`lsf-gridContext lsf-gridContext--${gridContext.tone} ${
+                gridFocusMode && hasGridIncentiveBanner ? "has-grid-incentive" : ""
+              }`}
               aria-live="polite"
             >
-              <span>{gridContext.eyebrow}</span>
-              <strong>{gridContext.label}</strong>
-              <em>
-                {gridContext.count === 1
-                  ? "1 producto"
-                  : `${gridContext.count} productos`}
-              </em>
-              {gridFocusMode && hasGridIncentiveBanner && (
-                <IncentiveBanner
-                  className="lsf-gridContext__incentive"
-                  active={Boolean(activeIncentive)}
-                  waiting={!activeIncentive && Boolean(nextIncentive)}
-                  unlocked={Boolean(incentiveUnlocked)}
-                  eyebrow={incentiveEyebrow}
-                  message={incentiveMessage}
-                  counterLabel={incentiveCounterLabel}
-                  rewardLabel={incentiveRewardLabel}
-                  progress={incentiveProgress}
-                  percent={incentivePercent}
-                />
+              <div className="lsf-gridContext__category">
+                <span>{gridContext.eyebrow}</span>
+                <strong>{gridContext.label}</strong>
+                <em>
+                  {gridContext.count === 1
+                    ? "1 producto"
+                    : `${gridContext.count} productos`}
+                </em>
+              </div>
+              {false && (
+                <button
+                  type="button"
+                  className={`lsf-gridContext__incentiveButton ${
+                    incentiveUnlocked ? "is-ready" : activeIncentive ? "is-active" : "is-waiting"
+                  }`}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    setGridIncentiveOpen(true);
+                  }}
+                  aria-label={incentiveMessage}
+                  title={incentiveMessage}
+                >
+                  <span>{gridIncentiveButtonLabel}</span>
+                  <strong>{gridIncentiveButtonValue}</strong>
+                </button>
               )}
-              {gridFocusMode && (
+              {false && (
                 <button
                   type="button"
                   className={`lsf-gridContext__cart ${cartCount > 0 ? "is-active" : ""}`}
@@ -5605,7 +6072,7 @@ export default function StorePage() {
                   <em>{"\u20AC"}{cartTotal.toFixed(2)}</em>
                 </button>
               )}
-              {gridFocusMode && (
+              {false && (
                 <button
                   type="button"
                   className="lsf-gridContext__exit"
@@ -6894,28 +7361,15 @@ export default function StorePage() {
               <div className="sf-cartEmpty">Cargando ingredientes...</div>
             ) : (
               <div className="sf-customBuilder">
-                <div className="sf-customHero">
+                {!selectedCustomCategory && (
+                <div className="sf-customStart">
                   {customCategoryOptions.length === 0 ? (
                     <div className="sf-mutedLine">
                       No hay categorias personalizables en esta tienda.
                     </div>
                   ) : (
-                    <div className="sf-customCategoryRail">
-                      <button
-                        type="button"
-                        className="sf-customCategoryNav"
-                        onClick={() => scrollCustomCategoryCarousel(-1)}
-                        aria-label="Ver categorias anteriores"
-                      >
-                        {"<"}
-                      </button>
-                      <div
-                        ref={customCategoryCarouselRef}
-                        className="sf-customCategoryCarousel"
-                        aria-label="Categorias personalizables"
-                      >
+                    <div className="sf-customStartGrid" aria-label="Categorias personalizables">
                       {customCategoryOptions.map((category) => {
-                        const active = customCategoryKey === category.key;
                         const fromPrice = priceForSize(
                           category.priceBySize,
                           category.selectSize[0]
@@ -6925,7 +7379,7 @@ export default function StorePage() {
                           <button
                             key={category.key}
                             type="button"
-                            className={`sf-customCategorySlide ${active ? "is-active" : ""}`}
+                            className="sf-customStartCard"
                             onClick={() => {
                               const sizes = getAvailableSizes(category);
                               setCustomCategoryKey(category.key);
@@ -6947,19 +7401,13 @@ export default function StorePage() {
                           </button>
                         );
                       })}
-                      </div>
-                      <button
-                        type="button"
-                        className="sf-customCategoryNav"
-                        onClick={() => scrollCustomCategoryCarousel(1)}
-                        aria-label="Ver mas categorias"
-                      >
-                        {">"}
-                      </button>
                     </div>
                   )}
                 </div>
+                )}
 
+                {selectedCustomCategory && (
+                <>
                 <div className="sf-customBuilderBody">
                   <section className="sf-customAccordion">
                     <button
@@ -6988,6 +7436,18 @@ export default function StorePage() {
                         <div className="sf-customBaseSummary">
                           <span>{selectedCustomBase.baseName}</span>
                           <small>{selectedCustomBase.products.length} productos de referencia</small>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setCustomCategoryKey("");
+                              setCustomSize("");
+                              setCustomQty(1);
+                              setCustomIngredients({});
+                              setCustomOpenSection("BASE");
+                            }}
+                          >
+                            Cambiar
+                          </button>
                         </div>
 
                         <div className="sf-productPickerRow sf-productPickerRow--stack">
@@ -7007,9 +7467,7 @@ export default function StorePage() {
                                   className={`sf-sizeChip ${active ? "is-active" : ""}`}
                                   onClick={() => {
                                     setCustomSize(size);
-                                    setCustomOpenSection(
-                                      customOrderedCategories[0] || "BASE"
-                                    );
+                                    setCustomOpenSection("BASE");
                                   }}
                                 >
                                   <span>{size}</span>
@@ -7047,6 +7505,22 @@ export default function StorePage() {
                             </button>
                           </div>
                         </div>
+
+                        <button
+                          type="button"
+                          className="sf-customNextBtn"
+                          disabled={!customSize || customOrderedCategories.length === 0}
+                          onClick={() =>
+                            setCustomOpenSection(customOrderedCategories[0] || "BASE")
+                          }
+                        >
+                          <span>
+                            {customSize
+                              ? `${customQty} pizza${Number(customQty || 1) === 1 ? "" : "s"} ${customSize}`
+                              : "Elige tamano"}
+                          </span>
+                          <strong>Elegir ingredientes</strong>
+                        </button>
                       </div>
                     )}
                   </section>
@@ -7110,60 +7584,70 @@ export default function StorePage() {
                                     </span>
                                   </div>
 
-                                  <div className="sf-customPlacement">
-                                    {["FULL", "LEFT", "RIGHT"].map((placement) => (
-                                      <button
-                                        key={placement}
-                                        type="button"
-                                        className={`sf-sizeChip ${
-                                          selected?.placement === placement ? "is-active" : ""
-                                        }`}
-                                        onClick={() =>
-                                          updateCustomIngredient(ingredient, {
-                                            placement,
-                                            quantity: selected?.quantity || "SIMPLE",
-                                          })
-                                        }
-                                      >
-                                        <span>{placement}</span>
-                                      </button>
-                                    ))}
-                                  </div>
-
-                                  {selected?.placement && (
-                                    <div className="sf-customIngredientExpanded">
-                                      <div className="sf-customToggle">
-                                        {["SIMPLE", "DOUBLE"].map((quantity) => (
-                                          <button
-                                            key={quantity}
-                                            type="button"
-                                            className={`sf-sizeChip ${
-                                              selected.quantity === quantity ? "is-active" : ""
-                                            }`}
-                                            onClick={() => {
-                                              updateCustomIngredient(ingredient, { quantity });
-                                              setCustomOpenSection(
-                                                getNextCustomSection(categoryName)
-                                              );
-                                            }}
-                                          >
-                                            <span>{quantity}</span>
-                                          </button>
-                                        ))}
-                                      </div>
-                                      <strong>
-                                        EUR {getCustomIngredientPrice(selected).toFixed(2)}
-                                      </strong>
-                                      <button
-                                        type="button"
-                                        className="sf-modalCloseBtn sf-customRemove"
-                                        onClick={() => removeCustomIngredient(ingredient.id)}
-                                        aria-label={`Quitar ${ingredient.name}`}
-                                      >
-                                        x
-                                      </button>
+                                  <div
+                                    className={`sf-customIngredientControls ${
+                                      selected?.placement ? "has-selection" : ""
+                                    }`}
+                                  >
+                                    <div
+                                      className={`sf-customPlacement ${
+                                        selected?.placement ? "is-selected" : ""
+                                      }`}
+                                    >
+                                      {(selected?.placement
+                                        ? [selected.placement]
+                                        : ["FULL", "LEFT", "RIGHT"]
+                                      ).map((placement) => (
+                                        <button
+                                          key={placement}
+                                          type="button"
+                                          className={`sf-sizeChip ${
+                                            selected?.placement === placement ? "is-active" : ""
+                                          }`}
+                                          onClick={() =>
+                                            updateCustomIngredient(ingredient, {
+                                              placement,
+                                              quantity: selected?.quantity || "SIMPLE",
+                                            })
+                                          }
+                                        >
+                                          <span>{placement}</span>
+                                        </button>
+                                      ))}
                                     </div>
-                                  )}
+
+                                    {selected?.placement && (
+                                      <div className="sf-customIngredientExpanded">
+                                        <div className="sf-customToggle">
+                                          {["SIMPLE", "DOUBLE"].map((quantity) => (
+                                            <button
+                                              key={quantity}
+                                              type="button"
+                                              className={`sf-sizeChip ${
+                                                selected.quantity === quantity ? "is-active" : ""
+                                              }`}
+                                              onClick={() => {
+                                                updateCustomIngredient(ingredient, { quantity });
+                                              }}
+                                            >
+                                              <span>{quantity === "DOUBLE" ? "Doble" : "Simple"}</span>
+                                            </button>
+                                          ))}
+                                        </div>
+                                        <strong>
+                                          EUR {getCustomIngredientPrice(selected).toFixed(2)}
+                                        </strong>
+                                        <button
+                                          type="button"
+                                          className="sf-modalCloseBtn sf-customRemove"
+                                          onClick={() => removeCustomIngredient(ingredient.id)}
+                                          aria-label={`Quitar ${ingredient.name}`}
+                                        >
+                                          x
+                                        </button>
+                                      </div>
+                                    )}
+                                  </div>
                                 </div>
                               );
                             })}
@@ -7172,14 +7656,6 @@ export default function StorePage() {
                       </section>
                     );
                   })}
-
-                  <div className="sf-productPickerNotice">
-                    {customMissingSteps.length > 0
-                      ? `Para avanzar necesitas ${customMissingSteps.join(", ")}.`
-                      : "Puedes anadirlo al carrito o seguir personalizando."}
-                  </div>
-
-                  {renderAllergenNotice(customSelectedAllergens)}
                 </div>
 
                 <div className="sf-productPickerActions sf-builderStickyActions">
@@ -7187,13 +7663,6 @@ export default function StorePage() {
                     <span>Total armado</span>
                     <strong>EUR {customGrandTotal.toFixed(2)}</strong>
                   </div>
-                  <button
-                    type="button"
-                    className="sf-secondaryBtn"
-                    onClick={() => setCustomModalOpen(false)}
-                  >
-                    Continue
-                  </button>
                   <button
                     type="button"
                     className="sf-primaryBtn"
@@ -7205,6 +7674,8 @@ export default function StorePage() {
                       : "Completa la personalizacion"}
                   </button>
                 </div>
+                </>
+                )}
               </div>
             )}
           </div>
@@ -7774,6 +8245,20 @@ export default function StorePage() {
           </div>
         </div>
       )}
+
+      <IncentiveFocusModal
+        open={gridIncentiveOpen}
+        onClose={() => setGridIncentiveOpen(false)}
+        active={Boolean(activeIncentive)}
+        waiting={!activeIncentive && Boolean(nextIncentive)}
+        unlocked={Boolean(incentiveUnlocked)}
+        remainingLabel={gridIncentiveRemainingLabel}
+        targetLabel={gridIncentiveTargetLabel}
+        currentLabel={gridIncentiveCurrentLabel}
+        rewardLabel={incentiveRewardLabel}
+        message={incentiveMessage}
+        counterLabel={incentiveCounterLabel}
+      />
 
       <CouponInfoModal
         open={couponInfoOpen}

@@ -23,3 +23,10 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 *-dev.log
+
+# local browser QA artifacts
+.chrome-cdp*/
+.chrome-footer-*/
+.chrome-profile/
+mockups/
+qa-*.png

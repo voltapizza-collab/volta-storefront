@@ -32,6 +32,8 @@ const DEFAULT_BOOST_SETTINGS = {
 };
 const DEFAULT_TRENDING_PRICE_BAND = 0.5;
 const TRENDING_PRICE_REFRESH_MS = 5000;
+const isGridFocusViewport = () =>
+  typeof window !== "undefined" && window.innerWidth <= 760;
 
 const normalizeCheckoutPhoneInput = (value) => {
   const digits = String(value || "").replace(/\D/g, "");
@@ -565,12 +567,6 @@ const FooterCalendarIcon = () => (
 const FooterPercentIcon = () => (
   <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
     <path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm4.03-12.53a.75.75 0 0 1 0 1.06l-6.5 6.5a.75.75 0 1 1-1.06-1.06l6.5-6.5a.75.75 0 0 1 1.06 0ZM8.75 9.5a1.25 1.25 0 1 1 2.5 0 1.25 1.25 0 0 1-2.5 0Zm4 5a1.25 1.25 0 1 1 2.5 0 1.25 1.25 0 0 1-2.5 0Z" />
-  </svg>
-);
-
-const FooterRocketIcon = () => (
-  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-    <path d="M13.2 4.68c2.58-1.6 5.07-1.82 6.8-1.61.2 1.73-.02 4.22-1.62 6.8-1.1 1.78-2.79 3.48-5.3 4.87l-3.82-3.82c1.4-2.51 3.09-4.2 4.87-5.3l-.93-.94Zm1.46 4.66a1.5 1.5 0 1 0 2.12-2.12 1.5 1.5 0 0 0-2.12 2.12ZM8.32 12.1l3.58 3.58-.54 2.7a1.5 1.5 0 0 1-.97 1.12l-3.35 1.18a.75.75 0 0 1-.96-.96l1.18-3.35c.15-.43.5-.8.96-.97l.1-.03-3.01-3.01.03-.1c.17-.45.54-.8.97-.96l3.35-1.18a.75.75 0 0 1 .96.96L8.32 12.1Z" />
   </svg>
 );
 
@@ -1999,6 +1995,20 @@ export default function StorePage() {
   }, [portalReady, termsAccepted]);
 
   useEffect(() => {
+    const closeDesktopGridFocus = () => {
+      if (isGridFocusViewport()) return;
+      setGridFocusMode(false);
+      setGridFocusTransition("");
+      setGridFocusSwipePreview(null);
+      window.clearTimeout(gridFocusTransitionTimeoutRef.current);
+    };
+
+    closeDesktopGridFocus();
+    window.addEventListener("resize", closeDesktopGridFocus);
+    return () => window.removeEventListener("resize", closeDesktopGridFocus);
+  }, []);
+
+  useEffect(() => {
     return () => {
       window.clearTimeout(gridFocusTransitionTimeoutRef.current);
       window.clearTimeout(commercialTabClickTimeoutRef.current);
@@ -2305,6 +2315,9 @@ export default function StorePage() {
     const orderCode = params.get("order_code") || "";
     const sessionId = params.get("session_id") || "";
     let cancelled = false;
+    const rejectedPaymentStatuses = new Set(["failed", "failure", "rejected", "declined", "error"]);
+    const rejectedPaymentMessage =
+      "Pago rechazado. Tu banco o la pasarela no pudo aprobar el cobro. No hemos pasado el pedido a cocina; revisa la tarjeta, saldo o metodo de pago e intentalo de nuevo.";
 
     if (paymentStatus === "success") {
       setCheckoutTrackingCode(orderCode);
@@ -2338,14 +2351,24 @@ export default function StorePage() {
         } catch (error) {
           console.error("[StorePage] payment confirmation failed", error);
           if (!cancelled) {
+            const errorCode = error?.response?.data?.error || error?.message;
+            setCheckoutTrackingCode("");
             setCheckoutMessage(
-              "Pago recibido en Stripe. Estamos confirmando la entrada en cocina; actualiza el seguimiento en unos segundos."
+              errorCode === "payment_not_paid"
+                ? rejectedPaymentMessage
+                : "No pudimos confirmar el pago con Stripe. Si el banco aprobo el cobro, espera unos segundos y vuelve a intentarlo desde seguimiento."
             );
           }
         }
       };
 
       confirmPayment();
+    }
+
+    if (rejectedPaymentStatuses.has(paymentStatus)) {
+      setCheckoutTrackingCode("");
+      setCheckoutMessage(rejectedPaymentMessage);
+      setCartOpen(true);
     }
 
     if (paymentStatus === "cancel") {
@@ -2784,7 +2807,7 @@ export default function StorePage() {
   );
 
   const openGridFocusMode = useCallback((entry = "tap", direction = 0) => {
-    if (typeof window !== "undefined" && window.innerWidth > 760) return;
+    if (!isGridFocusViewport()) return;
     window.clearTimeout(gridFocusTransitionTimeoutRef.current);
     setGridFocusSwipePreview(null);
     const directionClass =
@@ -2912,7 +2935,7 @@ export default function StorePage() {
       if (Math.abs(deltaX) > 18 && Math.abs(deltaX) > Math.abs(deltaY) * 1.25) {
         gesture.swiping = true;
         pauseTabsTicker(6200);
-        if (!gridFocusMode) updateGridFocusSwipePreview(deltaX);
+        if (!gridFocusMode && isGridFocusViewport()) updateGridFocusSwipePreview(deltaX);
       }
     },
     [gridFocusMode, pauseTabsTicker, updateGridFocusSwipePreview]
@@ -2945,6 +2968,11 @@ export default function StorePage() {
         return;
       }
 
+      if (!isGridFocusViewport()) {
+        moveStorefrontTab(deltaX < 0 ? 1 : -1);
+        return;
+      }
+
       openGridFocusMode("swipe", deltaX);
     },
     [clearGridFocusSwipePreview, gridFocusMode, moveStorefrontTab, openGridFocusMode]
@@ -2958,8 +2986,7 @@ export default function StorePage() {
     }
 
     if (
-      typeof window !== "undefined" &&
-      window.innerWidth <= 760 &&
+      isGridFocusViewport() &&
       !gridFocusMode &&
       !event.target?.closest?.("button, a, input, textarea, select")
     ) {
@@ -2997,7 +3024,7 @@ export default function StorePage() {
       if (Math.abs(deltaX) > 18 && Math.abs(deltaX) > Math.abs(deltaY) * 1.25) {
         gesture.swiping = true;
         pauseTabsTicker(6200);
-        if (!gridFocusMode) updateGridFocusSwipePreview(deltaX);
+        if (!gridFocusMode && isGridFocusViewport()) updateGridFocusSwipePreview(deltaX);
       }
     },
     [gridFocusMode, pauseTabsTicker, updateGridFocusSwipePreview]
@@ -3027,6 +3054,11 @@ export default function StorePage() {
 
       suppressGridClickUntilRef.current = performance.now() + 360;
       if (gridFocusMode) {
+        moveStorefrontTab(deltaX < 0 ? 1 : -1);
+        return;
+      }
+
+      if (!isGridFocusViewport()) {
         moveStorefrontTab(deltaX < 0 ? 1 : -1);
         return;
       }
@@ -5817,7 +5849,7 @@ export default function StorePage() {
                   </div>
                 </div>
 
-                {isStorefrontButtonVisible("repeatOrder") && (
+                {storefrontMode !== "commercial-light" && isStorefrontButtonVisible("repeatOrder") && (
                   <button
                     type="button"
                     className={`sf-repeatOrderBtn ${cartCount > 0 ? "has-draft" : ""}`}
@@ -5879,20 +5911,39 @@ export default function StorePage() {
                 }`}
                 aria-label="Ofertas destacadas"
               >
-                {activeCommercialTab && (
-                  <button
-                    key={activeCommercialTab.id}
-                    type="button"
-                    data-tab-id={activeCommercialTab.id}
-                    className={`lsf-tab lsf-tab--segment lsf-tab--offer-${activeCommercialTab.tone} ${
-                      activeTab === activeCommercialTab.id ? "is-active" : ""
-                    }`}
-                    onClick={() => handleCommercialTabClick(activeCommercialTab.id)}
-                    onDoubleClick={handleCommercialTabDoubleClick}
-                  >
-                    {activeCommercialTab.label}
-                  </button>
-                )}
+                <span className="lsf-segmentTabs__mobile">
+                  {activeCommercialTab && (
+                    <button
+                      key={activeCommercialTab.id}
+                      type="button"
+                      data-tab-id={activeCommercialTab.id}
+                      data-offer-index={activeCommercialTabIndex}
+                      className={`lsf-tab lsf-tab--segment lsf-tab--offer-${activeCommercialTab.tone} ${
+                        activeTab === activeCommercialTab.id ? "is-active" : ""
+                      }`}
+                      onClick={() => handleCommercialTabClick(activeCommercialTab.id)}
+                      onDoubleClick={handleCommercialTabDoubleClick}
+                    >
+                      {activeCommercialTab.label}
+                    </button>
+                  )}
+                </span>
+                <span className="lsf-segmentTabs__desktop">
+                  {commercialTabs.map((tab) => (
+                    <button
+                      key={tab.id}
+                      type="button"
+                      data-tab-id={tab.id}
+                      className={`lsf-tab lsf-tab--segment lsf-tab--offer-${tab.tone} ${
+                        activeTab === tab.id ? "is-active" : ""
+                      }`}
+                      onClick={() => handleCommercialTabClick(tab.id)}
+                      onDoubleClick={handleCommercialTabDoubleClick}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
+                </span>
               </div>
 
               <div className="lsf-categoryTabs" aria-label="Categorias">
@@ -6422,7 +6473,10 @@ export default function StorePage() {
                   title={scheduledOrderLabel || "Programar pedido"}
                 >
                   <span className="sf-footerNavIcon" aria-hidden="true"><FooterClockIcon /></span>
-                  <span className="sf-footerNavLabel">Programar</span>
+                  <span className="sf-footerNavLabel sf-footerNavLabel--ticker">
+                    <span>Programar</span>
+                    <span>Pedido</span>
+                  </span>
                 </button>
               )}
 
@@ -6436,7 +6490,29 @@ export default function StorePage() {
                   title={reservationEnabled ? "Reservar mesa" : "Reservas no disponibles"}
                 >
                   <span className="sf-footerNavIcon" aria-hidden="true"><FooterCalendarIcon /></span>
-                  <span className="sf-footerNavLabel">Reservas</span>
+                  <span className="sf-footerNavLabel sf-footerNavLabel--ticker">
+                    <span>Reservas</span>
+                    <span>Activas</span>
+                  </span>
+                </button>
+              )}
+
+              {isStorefrontButtonVisible("repeatOrder") && (
+                <button
+                  type="button"
+                  className={`sf-footerNavItem sf-footerNavItem--repeat ${cartCount > 0 ? "has-draft" : ""}`}
+                  onClick={() => setRepeatOpen(true)}
+                  aria-label="Repetir pedido anterior"
+                  title="Repetir pedido anterior"
+                >
+                  <span
+                    className={`sf-repeatOrderBtn sf-footerRepeatVisual ${
+                      cartCount > 0 ? "has-draft" : ""
+                    }`}
+                    aria-hidden="true"
+                  >
+                    <span className="sf-repeatOrderBtn__mark" aria-hidden="true">R</span>
+                  </span>
                 </button>
               )}
 
@@ -6498,7 +6574,7 @@ export default function StorePage() {
                         ? "Aplicado"
                         : couponCode.trim()
                           ? "Validar"
-                          : "Cupones"}
+                          : "Aqui"}
                     </span>
                   </span>
                   {couponStatus && <small>{couponStatus}</small>}
@@ -6512,7 +6588,10 @@ export default function StorePage() {
                   onClick={() => setBootsOpen(true)}
                   disabled={boostSettings.active === false}
                 >
-                  <span className="sf-footerNavIcon" aria-hidden="true"><FooterRocketIcon /></span>
+                  <span className="sf-boostQueueMini" aria-hidden="true">
+                    <span>Pos</span>
+                    <strong>{bootsPositionLabel}</strong>
+                  </span>
                   <span className="sf-bootsCounter" aria-label={`Posicion ${bootsPositionLabel} en espera`}>
                     <span>POS</span>
                     <strong>{bootsPositionLabel}</strong>
@@ -6526,7 +6605,7 @@ export default function StorePage() {
                   </span>
                   <span className="sf-bootsMobileTicker sf-footerNavLabel" aria-hidden="true">
                     <span>Boost Up</span>
-                    <span>Boost Up</span>
+                    <span>Get Now</span>
                   </span>
                 </button>
               )}
@@ -6856,7 +6935,11 @@ export default function StorePage() {
 
             {checkoutMessage && (
               <div className={`sf-reservationMessage ${
-                checkoutMessage.includes("Pago recibido") ? "is-success" : ""
+                checkoutMessage.includes("Pago recibido")
+                  ? "is-success"
+                  : checkoutMessage.includes("Pago rechazado")
+                  ? "is-error"
+                  : ""
               }`}>
                 {checkoutMessage}
                 {checkoutTrackingCode && (

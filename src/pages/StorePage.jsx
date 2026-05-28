@@ -19,7 +19,6 @@ const TRENDING_TAB = "__TRENDING__";
 const TOP_DEAL_TAB = "__TOP_DEAL__";
 const PROMOS_TAB = "__PROMOS__";
 const UPCOMING_TAB = "__UPCOMING__";
-const HALF_CATEGORY_ID = 3;
 const CUSTOM_BASE_PRICE_FACTOR = 0.8;
 const STOREFRONT_TERMS_VERSION = "2026-05-full-legal-v3";
 const STOREFRONT_TERMS_KEY = `volta_storefront_terms_${STOREFRONT_TERMS_VERSION}`;
@@ -1059,6 +1058,17 @@ const getTrendingBasePriceBySize = (item) => {
   return item?.priceBySize || {};
 };
 
+const getHalfBasePriceBySize = (item) => {
+  if (item?.trendingPricing) {
+    return getTrendingBasePriceBySize(item);
+  }
+
+  return item?.priceBySize || {};
+};
+
+const priceForHalfSize = (item, size = "M") =>
+  priceForSize(getHalfBasePriceBySize(item), size);
+
 const withFloatingTrendingPrice = (item) => {
   if (!item?.trendingPricing) return item;
 
@@ -1557,7 +1567,7 @@ const isHalfPizzaCandidate = (item) => {
   const sizes = getAvailableSizes(item);
   if (!sizes.length) return false;
 
-  return sizes.some((size) => priceForSize(item.priceBySize, size) > 0);
+  return sizes.some((size) => priceForHalfSize(item, size) > 0);
 };
 
 const normalizeCartLine = (line, index = 0) => {
@@ -1935,6 +1945,7 @@ export default function StorePage() {
   const lastCommercialTabClickRef = useRef({ id: "", at: 0 });
   const commercialAutoSwitchAtRef = useRef(0);
   const gridSwipeRef = useRef(null);
+  const gridStageRef = useRef(null);
   const gridFocusTransitionTimeoutRef = useRef(0);
   const halfSwipeRef = useRef(null);
   const suppressGridClickUntilRef = useRef(0);
@@ -1954,6 +1965,36 @@ export default function StorePage() {
       bootsOpen ||
       couponInfoOpen ||
       (portalReady && !termsAccepted)
+  );
+
+  const resetGridSearchViewport = useCallback((input) => {
+    input?.blur?.();
+
+    const settleViewport = () => {
+      gridStageRef.current?.scrollTo?.({
+        top: 0,
+        left: 0,
+        behavior: "smooth",
+      });
+      window.scrollTo?.({
+        top: window.scrollY,
+        left: 0,
+        behavior: "auto",
+      });
+    };
+
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(settleViewport);
+    });
+    window.setTimeout(settleViewport, 260);
+  }, []);
+
+  const submitGridFocusSearch = useCallback(
+    (event) => {
+      event.preventDefault();
+      resetGridSearchViewport(event.currentTarget.querySelector(".sf-engineSearch"));
+    },
+    [resetGridSearchViewport]
   );
 
   useEffect(() => {
@@ -3505,7 +3546,7 @@ export default function StorePage() {
     return [...pizzaItems].sort((left, right) => {
       const leftSize = getAvailableSizes(left)[0] || "M";
       const rightSize = getAvailableSizes(right)[0] || "M";
-      return priceForSize(right.priceBySize, rightSize) - priceForSize(left.priceBySize, leftSize);
+      return priceForHalfSize(right, rightSize) - priceForHalfSize(left, leftSize);
     });
   }, [menu]);
   const getHalfNavigableItems = useCallback(
@@ -3531,13 +3572,29 @@ export default function StorePage() {
     const sizesB = getAvailableSizes(halfB);
     return sizesA.filter((size) => sizesB.includes(size));
   }, [halfA, halfB]);
-  const halfBasePrice = useMemo(() => {
-    if (!halfSize || !halfA || !halfB) return 0;
-    return Math.max(
-      priceForSize(halfA.priceBySize, halfSize),
-      priceForSize(halfB.priceBySize, halfSize)
-    );
+  const halfPricing = useMemo(() => {
+    if (!halfSize || !halfA || !halfB) {
+      return {
+        basePrice: 0,
+        priceA: 0,
+        priceB: 0,
+        source: null,
+      };
+    }
+
+    const priceA = priceForHalfSize(halfA, halfSize);
+    const priceB = priceForHalfSize(halfB, halfSize);
+    const source = priceA >= priceB ? halfA : halfB;
+
+    return {
+      basePrice: Math.max(priceA, priceB),
+      priceA,
+      priceB,
+      source,
+    };
   }, [halfA, halfB, halfSize]);
+  const halfBasePrice = halfPricing.basePrice;
+  const halfPricingSource = halfPricing.source;
   const sortedHalfExtras = useMemo(
     () => [...halfExtrasAvail].sort((left, right) => num(right.price) - num(left.price)),
     [halfExtrasAvail]
@@ -3844,40 +3901,20 @@ export default function StorePage() {
   }, [productModalOpen, selectedProduct?.categoryId, store?.id]);
 
   useEffect(() => {
-    if (!halfModalOpen) return;
+    if (!halfModalOpen || !halfPricingSource?.categoryId) {
+      setHalfExtrasAvail([]);
+      return;
+    }
 
     const loadHalfExtras = async () => {
       try {
         setHalfExtrasLoading(true);
-        const categoryIds = [
-          halfA?.categoryId,
-          halfB?.categoryId,
-          HALF_CATEGORY_ID,
-        ]
-          .map((id) => Number(id))
-          .filter((id, index, ids) => Number.isInteger(id) && id > 0 && ids.indexOf(id) === index);
-
-        const results = await Promise.all(
-          categoryIds.map(async (categoryId) => {
-            const params = new URLSearchParams({
-              categoryId: String(categoryId),
-              storeId: String(store?.id || ""),
-            });
-            try {
-              const data = await api.get(`/api/ingredient-extras?${params.toString()}`);
-              return Array.isArray(data) ? data : [];
-            } catch {
-              return [];
-            }
-          })
-        );
-        const byIngredient = new Map();
-        results.flat().forEach((extra) => {
-          const key = extra?.ingredientId ?? extra?.id ?? extra?.name;
-          if (!key || byIngredient.has(key)) return;
-          byIngredient.set(key, extra);
+        const params = new URLSearchParams({
+          categoryId: String(halfPricingSource.categoryId),
+          storeId: String(store?.id || ""),
         });
-        setHalfExtrasAvail([...byIngredient.values()]);
+        const data = await api.get(`/api/ingredient-extras?${params.toString()}`);
+        setHalfExtrasAvail(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error(err);
         setHalfExtrasAvail([]);
@@ -3887,7 +3924,35 @@ export default function StorePage() {
     };
 
     loadHalfExtras();
-  }, [halfA?.categoryId, halfB?.categoryId, halfModalOpen, store?.id]);
+  }, [halfModalOpen, halfPricingSource?.categoryId, store?.id]);
+
+  useEffect(() => {
+    if (!halfModalOpen) return;
+
+    const validIds = new Set(
+      halfExtrasAvail
+        .map((extra) => String(extra?.ingredientId ?? ""))
+        .filter(Boolean)
+    );
+
+    setHalfExtras((current) => {
+      let changed = false;
+      const next = { A: {}, B: {} };
+
+      ["A", "B"].forEach((side) => {
+        Object.entries(current[side] || {}).forEach(([ingredientId, selected]) => {
+          if (!selected || !validIds.has(String(ingredientId))) {
+            if (selected) changed = true;
+            return;
+          }
+
+          next[side][ingredientId] = selected;
+        });
+      });
+
+      return changed ? next : current;
+    });
+  }, [halfExtrasAvail, halfModalOpen]);
 
   useEffect(() => {
     if (!halfModalOpen) return;
@@ -4173,9 +4238,9 @@ export default function StorePage() {
   const addHalfLine = () => {
     if (!halfModalReady) return;
 
-    const priceA = priceForSize(halfA.priceBySize, halfSize);
-    const priceB = priceForSize(halfB.priceBySize, halfSize);
-    const main = priceA >= priceB ? halfA : halfB;
+    const priceA = halfPricing.priceA;
+    const priceB = halfPricing.priceB;
+    const main = halfPricingSource || (priceA >= priceB ? halfA : halfB);
     const subtotal = halfGrandTotal;
 
     const line = {
@@ -4198,6 +4263,7 @@ export default function StorePage() {
       subtotal,
       halfMeta: {
         priceRule: "MOST_EXPENSIVE_HALF",
+        priceMode: "BASE_PRICE_NO_TRENDING",
         pricingSourcePizzaId: main.pizzaId,
         pricingSourceName: main.name,
         leftPrice: priceA,
@@ -5967,6 +6033,7 @@ export default function StorePage() {
 
         <section className="sf-engineCard sf-engineCard--lsf">
           <div
+            ref={gridStageRef}
             className="sf-engineGridStage sf-engineGridStage--lsf"
             onPointerDown={handleGridPointerDown}
             onPointerMove={handleGridPointerMove}
@@ -6032,7 +6099,7 @@ export default function StorePage() {
                   </button>
                 </div>
                 <div className="lsf-gridFocusSearch">
-                  <div className="sf-engineSearchWrap">
+                  <form className="sf-engineSearchWrap" onSubmit={submitGridFocusSearch}>
                     <input
                       className="sf-engineSearch"
                       type="search"
@@ -6041,17 +6108,14 @@ export default function StorePage() {
                       onChange={(event) => setSearch(event.target.value)}
                       onKeyDown={(event) => {
                         if (event.key === "Enter") {
-                          event.currentTarget.blur();
+                          resetGridSearchViewport(event.currentTarget);
                         }
                       }}
                     />
                     <button
-                      type="button"
+                      type="submit"
                       className="sf-engineSearchBtn"
                       aria-label="Buscar"
-                      onClick={() => {
-                        document.activeElement?.blur?.();
-                      }}
                     >
                       <svg viewBox="0 0 24 24" aria-hidden="true">
                         <circle
@@ -6071,7 +6135,7 @@ export default function StorePage() {
                         />
                       </svg>
                     </button>
-                  </div>
+                  </form>
                 </div>
               </>
             )}
@@ -7319,8 +7383,8 @@ export default function StorePage() {
                       {halfSizeOptions.map((size) => {
                         const active = halfSize === size;
                         const price = Math.max(
-                          priceForSize(halfA.priceBySize, size),
-                          priceForSize(halfB.priceBySize, size)
+                          priceForHalfSize(halfA, size),
+                          priceForHalfSize(halfB, size)
                         );
 
                         return (
@@ -7392,16 +7456,9 @@ export default function StorePage() {
 
                 <div className="sf-productPickerActions sf-builderStickyActions">
                   <div className="sf-builderTotal">
-                    <span>Total mitad/mitad</span>
+                    <span>Total</span>
                     <strong>EUR {halfGrandTotal.toFixed(2)}</strong>
                   </div>
-                  <button
-                    type="button"
-                    className="sf-secondaryBtn"
-                    onClick={() => setHalfModalOpen(false)}
-                  >
-                    Continue
-                  </button>
                   <button
                     type="button"
                     className="sf-primaryBtn"

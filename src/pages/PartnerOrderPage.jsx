@@ -65,13 +65,17 @@ export default function PartnerOrderPage() {
   const [deliveryModalOpen, setDeliveryModalOpen] = useState(false);
   const [deliveryAddress, setDeliveryAddress] = useState("");
   const [deliveryAddressLine2, setDeliveryAddressLine2] = useState("");
+  const [deliveryCoords, setDeliveryCoords] = useState(null);
+  const [deliveryFormattedAddress, setDeliveryFormattedAddress] = useState("");
   const [selectedStoreSlug, setSelectedStoreSlug] = useState("");
   const [deliveryResolution, setDeliveryResolution] = useState(null);
   const [deliveryError, setDeliveryError] = useState("");
+  const [deliveryLine2Invalid, setDeliveryLine2Invalid] = useState(false);
   const [isResolvingDelivery, setIsResolvingDelivery] = useState(false);
   const [placesReady, setPlacesReady] = useState(false);
   const [placesMessage, setPlacesMessage] = useState("");
   const addressInputRef = useRef(null);
+  const addressLine2InputRef = useRef(null);
   const autocompleteRef = useRef(null);
 
   useEffect(() => {
@@ -105,6 +109,8 @@ export default function PartnerOrderPage() {
   const selectedStore = useMemo(() => {
     return stores.find((store) => store.slug === selectedStoreSlug) || null;
   }, [stores, selectedStoreSlug]);
+
+  const singleActiveStore = stores.length === 1 ? stores[0] : null;
 
   const pickupHistoryKey = useMemo(
     () => `volta-pickup-stores:${partnerSlug || "partner"}`,
@@ -177,6 +183,9 @@ export default function PartnerOrderPage() {
   const resetDelivery = useCallback(() => {
     setDeliveryResolution(null);
     setDeliveryError("");
+    setDeliveryLine2Invalid(false);
+    setDeliveryCoords(null);
+    setDeliveryFormattedAddress("");
     setSelectedStoreSlug("");
   }, []);
 
@@ -249,9 +258,16 @@ export default function PartnerOrderPage() {
             place?.formatted_address ||
             addressInputRef.current?.value ||
             "";
+          const location = place?.geometry?.location;
+          const nextCoords =
+            typeof location?.lat === "function" && typeof location?.lng === "function"
+              ? { lat: location.lat(), lng: location.lng() }
+              : null;
 
           setDeliveryAddress(nextAddress);
           resetDelivery();
+          setDeliveryCoords(nextCoords);
+          setDeliveryFormattedAddress(nextAddress);
         });
 
         setPlacesReady(true);
@@ -280,6 +296,11 @@ export default function PartnerOrderPage() {
 
     if (!deliveryAddressLine2.trim()) {
       setDeliveryError("Indica piso, puerta o casa para completar el envio.");
+      setDeliveryLine2Invalid(false);
+      window.requestAnimationFrame(() => {
+        setDeliveryLine2Invalid(true);
+        addressLine2InputRef.current?.focus();
+      });
       return;
     }
 
@@ -289,7 +310,11 @@ export default function PartnerOrderPage() {
 
       const resolution = await api.post(
         `/partners/${partnerSlug}/delivery/resolve`,
-        { address: trimmedAddress }
+        {
+          address: trimmedAddress,
+          coords: deliveryCoords,
+          formattedAddress: deliveryFormattedAddress || trimmedAddress,
+        }
       );
 
       setDeliveryResolution(resolution);
@@ -310,7 +335,11 @@ export default function PartnerOrderPage() {
         });
       } else {
         setSelectedStoreSlug("");
-        setDeliveryError("Esta direccion esta fuera del area de cobertura.");
+        setDeliveryError(
+          resolution?.coverageDistanceAvailable === false
+            ? "No pudimos confirmar la ruta de reparto para esta direccion."
+            : "Esta direccion esta fuera del area de cobertura."
+        );
       }
     } catch (err) {
       console.error(err);
@@ -377,10 +406,6 @@ export default function PartnerOrderPage() {
             <div className="sf-kicker">Pedido online</div>
             <span className="sf-orderBrand">{partner.name}</span>
             <h1 className="sf-entryTitle">Elige como recibirlo</h1>
-            <p className="sf-entryLead">
-              Resolvemos este paso antes de mostrar el menu para que el pedido
-              llegue con la tienda correcta desde el principio.
-            </p>
           </div>
 
           <div className="sf-serviceSplit">
@@ -392,6 +417,10 @@ export default function PartnerOrderPage() {
               onClick={() => {
                 setServiceMode("pickup");
                 resetDelivery();
+                if (singleActiveStore) {
+                  goToPickupStore(singleActiveStore);
+                  return;
+                }
                 setPickupModalOpen(true);
               }}
             >
@@ -582,7 +611,7 @@ export default function PartnerOrderPage() {
               </button>
             </div>
 
-            <form className="sf-deliveryForm" onSubmit={resolveDeliveryAddress}>
+            <form className="sf-deliveryForm" onSubmit={resolveDeliveryAddress} noValidate>
               <label>
                 <span>Calle y numero</span>
                 <em className={`sf-googlePlaceHint ${placesReady ? "is-ready" : ""}`}>
@@ -602,17 +631,26 @@ export default function PartnerOrderPage() {
                 />
               </label>
 
-              <label>
+              <label className={deliveryLine2Invalid ? "is-requiredMissing" : ""}>
                 <span>Piso, puerta o casa</span>
                 <input
+                  ref={addressLine2InputRef}
                   type="text"
                   value={deliveryAddressLine2}
-                  onChange={(event) => setDeliveryAddressLine2(event.target.value)}
+                  onChange={(event) => {
+                    setDeliveryAddressLine2(event.target.value);
+                    if (event.target.value.trim()) {
+                      setDeliveryLine2Invalid(false);
+                    }
+                  }}
                   placeholder="1B, bajo, casa azul..."
                   autoComplete="address-line2"
-                  required
+                  aria-invalid={deliveryLine2Invalid}
                   disabled={isResolvingDelivery}
                 />
+                {deliveryLine2Invalid && (
+                  <small className="sf-fieldError">Completa este campo</small>
+                )}
               </label>
 
               {deliveryError && (

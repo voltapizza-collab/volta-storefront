@@ -36,11 +36,23 @@
   padding: 10px 18px;
   border-radius: 12px;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .inv-addBtn:hover {
   opacity: 0.92;
   background: var(--brand-3);
+}
+
+.inv-addIcon {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 auto;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.8-3.8'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.8-3.8'/%3E%3C/svg%3E") center / contain no-repeat;
 }
 
 /* MODAL */
@@ -223,7 +235,6 @@ color: var(--black);
 /* CATEGORY HEADER */
 .inv-catTitle {
   all: unset;
-  cursor: pointer;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -239,6 +250,21 @@ color: var(--black);
 
 .inv-catTitle:hover {
   background: #efefef;
+}
+
+.inv-catToggle {
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 800;
+  min-width: 0;
+  padding: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
 }
 
 /* ITEMS CONTAINER */
@@ -274,12 +300,12 @@ color: var(--black);
 }
 
 .inv-itemRow.is-onboarding {
-  background: #ecfdf3;
-  border-color: #b7e4c7;
+  background: color-mix(in srgb, var(--brand-2) 14%, #ffffff);
+  border-color: color-mix(in srgb, var(--brand-2) 38%, #ffffff);
 }
 
 .inv-itemRow.is-onboarding:hover {
-  background: #e2f8eb;
+  background: color-mix(in srgb, var(--brand-2) 20%, #ffffff);
 }
 
 .inv-itemLeft {
@@ -544,6 +570,10 @@ color: var(--black);
   gap: 10px;
 }
 
+.inv-catLeft > .inv-drag {
+  display: none;
+}
+
 .inv-drag {
   font-size: 18px;
   color: #999;
@@ -553,6 +583,7 @@ color: var(--black);
 .inv-catRight {
   display: flex;
   align-items: center;
+  gap: 10px;
 }
 
 .inv-count {
@@ -638,8 +669,8 @@ color: var(--black);
 
 /* ACTIVO */
 .inv-toggle.in {
-  background: #22c55e;
-  color: white;
+  background: var(--brand-2);
+  color: var(--brand-1);
 }
 
 /* INACTIVO */
@@ -771,7 +802,7 @@ color: var(--black);
 }
 
 .inv-count strong {
-  color: #22c55e;
+  color: var(--brand-2);
   font-size: 13px;
   font-weight: 900;
 }
@@ -780,6 +811,30 @@ color: var(--black);
   color: var(--brand-1);
   font-size: 11px;
   font-weight: 900;
+}
+
+.inv-selectAllBtn {
+  min-height: 30px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--brand-2) 50%, #ffffff);
+  background: var(--brand-2);
+  color: var(--brand-1);
+  font-size: 11px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 8px 16px rgba(59, 0, 139, 0.08);
+}
+
+.inv-selectAllBtn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 18px rgba(59, 0, 139, 0.12);
+}
+
+.inv-selectAllBtn:disabled {
+  cursor: default;
+  opacity: 0.48;
+  box-shadow: none;
 }
 
 .inv-createSuggestion {

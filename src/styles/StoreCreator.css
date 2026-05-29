@@ -196,6 +196,12 @@
   text-align: right;
 }
 
+.sc-stockTable th:last-child,
+.sc-stockTable td:last-child {
+  width: 1%;
+  white-space: nowrap;
+}
+
 .table-btn {
   min-height: 38px;
   padding: 8px 14px;
@@ -295,6 +301,12 @@
   background: rgba(34, 197, 94, 0.12);
   border-color: rgba(34, 197, 94, 0.24);
   color: #1c7a3d;
+}
+
+.sc-inlineStatusBadge.is-blocked {
+  background: rgba(255, 191, 45, 0.16);
+  border-color: rgba(255, 191, 45, 0.32);
+  color: #7a4b00;
 }
 
 .sc-inlineStatusBadge.is-inactive {

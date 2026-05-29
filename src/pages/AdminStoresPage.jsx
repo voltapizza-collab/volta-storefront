@@ -184,27 +184,38 @@ function MenuAvailabilityModal({ store, onClose }) {
                     <thead>
                       <tr>
                         <th>Pizza</th>
-                        <th>Estado</th>
+                        <th className="right">Estado</th>
                       </tr>
                     </thead>
                     <tbody>
                       {list.map((row) => (
                         <tr key={row.pizzaId}>
                           <td className="sc-pizzaNameCell">{row.pizza?.name}</td>
-                          <td>
+                          <td className="right">
                             <button
                               className={`sc-inlineStatusBadge sc-inlineStatusBadge--button ${
-                                row.active ? "is-active" : "is-inactive"
+                                row.active && row.available
+                                  ? "is-active"
+                                  : row.active
+                                    ? "is-blocked"
+                                    : "is-inactive"
                               }`}
                               onClick={() => togglePizzaAvailability(row)}
                               type="button"
                               disabled={savingPizzaId === row.pizzaId}
+                              title={
+                                row.active && !row.available && row.blockers?.length
+                                  ? row.blockers.map((blocker) => blocker.label).join(" | ")
+                                  : undefined
+                              }
                             >
                               {savingPizzaId === row.pizzaId
                                 ? "Guardando..."
-                                : row.active
+                                : !row.active
+                                  ? "Oculta"
+                                  : row.available
                                   ? "Disponible"
-                                  : "Oculta"}
+                                  : "Bloqueada"}
                             </button>
                           </td>
                         </tr>

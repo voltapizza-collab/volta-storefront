@@ -494,8 +494,20 @@ const getDealSize = (item) => {
   return sizes[0] || "M";
 };
 
+const getPricedSizeEntries = (priceBySize = {}) =>
+  Object.entries(priceBySize || {})
+    .map(([size, price]) => [size, num(price)])
+    .filter(([, price]) => price > 0);
+
+const getHighestPricedSize = (priceBySize = {}) => {
+  const entries = getPricedSizeEntries(priceBySize);
+  if (!entries.length) return "M";
+
+  return entries.sort((left, right) => right[1] - left[1])[0][0];
+};
+
 const renderDirectDiscountBadge = (item) => {
-  if (!item?.directDiscount) return null;
+  if (!hasTopDealPolicy(item)) return null;
 
   return (
     <span className="lsf-directDiscountBadge">
@@ -1119,6 +1131,8 @@ const mergeTrendingIntoMenu = (menuItems = [], trendingItems = []) => {
     return {
       ...item,
       ...trendingItem,
+      directDiscount: null,
+      originalPriceBySize: null,
       categoryId: item.categoryId,
       category: item.category,
       categoryPosition: item.categoryPosition,
@@ -1131,23 +1145,63 @@ const mergeTrendingIntoMenu = (menuItems = [], trendingItems = []) => {
 const hasTrendingPolicy = (item) =>
   Boolean(item?.trendingPricing && item?.trend);
 
-const sortTrendingFirst = (items = []) =>
+const hasTopDealPolicy = (item) =>
+  Boolean(item?.directDiscount && !hasTrendingPolicy(item));
+
+const getFeedDisplaySize = (item) => {
+  if (hasTrendingPolicy(item)) {
+    return getHighestPricedSize(getTrendingBasePriceBySize(item));
+  }
+
+  return getHighestPricedSize(item?.originalPriceBySize || item?.priceBySize);
+};
+
+const getFeedSortPrice = (item) =>
+  priceForSize(item?.priceBySize, getFeedDisplaySize(item));
+
+const getFeedPriority = (item) => {
+  if (hasTrendingPolicy(item)) return 0;
+  if (hasTopDealPolicy(item)) return 1;
+  return 2;
+};
+
+const sortFeedItems = (items = []) =>
   items
     .map((item, index) => ({ item, index }))
     .sort((left, right) => {
-      const leftTrending = hasTrendingPolicy(left.item);
-      const rightTrending = hasTrendingPolicy(right.item);
+      const leftPriority = getFeedPriority(left.item);
+      const rightPriority = getFeedPriority(right.item);
 
-      if (leftTrending !== rightTrending) {
-        return leftTrending ? -1 : 1;
+      if (leftPriority !== rightPriority) {
+        return leftPriority - rightPriority;
       }
 
-      if (leftTrending && rightTrending) {
+      if (leftPriority === 0) {
         const leftRank = Number(left.item?.trend?.rank || Number.MAX_SAFE_INTEGER);
         const rightRank = Number(right.item?.trend?.rank || Number.MAX_SAFE_INTEGER);
 
         if (leftRank !== rightRank) return leftRank - rightRank;
       }
+
+      if (leftPriority === 1) {
+        const leftSize = getDealSize(left.item);
+        const rightSize = getDealSize(right.item);
+        const byDiscount =
+          getDiscountPercentForSize(right.item, rightSize) -
+          getDiscountPercentForSize(left.item, leftSize);
+
+        if (byDiscount !== 0) return byDiscount;
+      }
+
+      const byPrice = getFeedSortPrice(right.item) - getFeedSortPrice(left.item);
+      if (byPrice !== 0) return byPrice;
+
+      const byName = String(left.item?.name || "").localeCompare(
+        String(right.item?.name || ""),
+        "es",
+        { sensitivity: "base" }
+      );
+      if (byName !== 0) return byName;
 
       return left.index - right.index;
     })
@@ -1913,6 +1967,7 @@ export default function StorePage() {
   const [customSize, setCustomSize] = useState("");
   const [customQty, setCustomQty] = useState(1);
   const [customIngredients, setCustomIngredients] = useState({});
+  const [customPendingIngredients, setCustomPendingIngredients] = useState({});
   const [customOpenSection, setCustomOpenSection] = useState(null);
   const [customLoading, setCustomLoading] = useState(false);
   const [bootsOpen, setBootsOpen] = useState(false);
@@ -1967,15 +2022,17 @@ export default function StorePage() {
       (portalReady && !termsAccepted)
   );
 
-  const resetGridSearchViewport = useCallback((input) => {
+  const resetMobileInputViewport = useCallback((input, { resetGridStage = false } = {}) => {
     input?.blur?.();
 
     const settleViewport = () => {
-      gridStageRef.current?.scrollTo?.({
-        top: 0,
-        left: 0,
-        behavior: "smooth",
-      });
+      if (resetGridStage) {
+        gridStageRef.current?.scrollTo?.({
+          top: 0,
+          left: 0,
+          behavior: "smooth",
+        });
+      }
       window.scrollTo?.({
         top: window.scrollY,
         left: 0,
@@ -1986,15 +2043,19 @@ export default function StorePage() {
     window.requestAnimationFrame(() => {
       window.requestAnimationFrame(settleViewport);
     });
+    window.setTimeout(settleViewport, 80);
     window.setTimeout(settleViewport, 260);
+    window.setTimeout(settleViewport, 520);
   }, []);
 
   const submitGridFocusSearch = useCallback(
     (event) => {
       event.preventDefault();
-      resetGridSearchViewport(event.currentTarget.querySelector(".sf-engineSearch"));
+      resetMobileInputViewport(event.currentTarget.querySelector(".sf-engineSearch"), {
+        resetGridStage: true,
+      });
     },
-    [resetGridSearchViewport]
+    [resetMobileInputViewport]
   );
 
   useEffect(() => {
@@ -2504,7 +2565,7 @@ export default function StorePage() {
   }, [menu]);
 
   const topDeals = useMemo(
-    () => sortTopDealsByDiscount(menu.filter((item) => item?.directDiscount)),
+    () => sortTopDealsByDiscount(menu.filter(hasTopDealPolicy)),
     [menu]
   );
 
@@ -2611,7 +2672,7 @@ export default function StorePage() {
       return [];
     }
 
-    return sortTrendingFirst(
+    return sortFeedItems(
       baseFilteredMenu.filter((item) => getCustomCategoryKey(item) === activeTab)
     );
   }, [activeTab, baseFilteredMenu]);
@@ -4049,6 +4110,23 @@ export default function StorePage() {
 
       return next;
     });
+
+    setCustomPendingIngredients((current) => {
+      const next = {};
+
+      Object.entries(current).forEach(([id, data]) => {
+        const ingredient = customIngredientsCatalog.find(
+          (item) => Number(item.id) === Number(id)
+        );
+
+        next[id] = {
+          ...data,
+          basePrice: getCustomIngredientUnitPrice(ingredient || data),
+        };
+      });
+
+      return next;
+    });
   }, [
     customIngredientsCatalog,
     customModalOpen,
@@ -4062,6 +4140,7 @@ export default function StorePage() {
     setCustomSize("");
     setCustomQty(1);
     setCustomIngredients({});
+    setCustomPendingIngredients({});
     setCustomOpenSection("BASE");
   }, [customModalOpen]);
 
@@ -4097,7 +4176,7 @@ export default function StorePage() {
       allergens: selectedPurchaseAllergens,
       subtotal: selectedLineTotal,
       image: selectedProduct.image || "",
-      directDiscount: selectedProduct.directDiscount || null,
+      directDiscount: trendingPricing ? null : selectedProduct.directDiscount || null,
       source: trendingPricing ? "trending" : undefined,
       trendingPricing: trendingPricing
         ? {
@@ -4276,9 +4355,9 @@ export default function StorePage() {
     setHalfModalOpen(false);
   };
 
-  const updateCustomIngredient = (ingredient, updates) => {
-    setCustomIngredients((current) => {
-      const existing = current[ingredient.id] || {
+  const updateCustomIngredientDraft = (ingredient, updates) => {
+    setCustomPendingIngredients((current) => {
+      const existing = current[ingredient.id] || customIngredients[ingredient.id] || {
         ingredientId: ingredient.id,
         name: ingredient.name,
         basePrice: getCustomIngredientUnitPrice(ingredient),
@@ -4304,8 +4383,41 @@ export default function StorePage() {
     });
   };
 
+  const advanceCustomIngredientCategory = (categoryName) => {
+    const currentIndex = customOrderedCategories.indexOf(categoryName);
+    const nextCategory =
+      currentIndex >= 0
+        ? customOrderedCategories.slice(currentIndex + 1).find(
+            (name) => (customIngredientsByCategory[name] || []).length > 0
+          )
+        : "";
+
+    setCustomOpenSection(nextCategory || null);
+  };
+
+  const confirmCustomIngredient = (ingredient, categoryName) => {
+    const pending = customPendingIngredients[ingredient.id];
+    if (!pending?.placement || !pending?.quantity) return;
+
+    setCustomIngredients((current) => ({
+      ...current,
+      [ingredient.id]: pending,
+    }));
+    setCustomPendingIngredients((current) => {
+      const copy = { ...current };
+      delete copy[ingredient.id];
+      return copy;
+    });
+    advanceCustomIngredientCategory(categoryName);
+  };
+
   const removeCustomIngredient = (ingredientId) => {
     setCustomIngredients((current) => {
+      const copy = { ...current };
+      delete copy[ingredientId];
+      return copy;
+    });
+    setCustomPendingIngredients((current) => {
       const copy = { ...current };
       delete copy[ingredientId];
       return copy;
@@ -4523,7 +4635,7 @@ export default function StorePage() {
 
   const validateCouponCode = async (event) => {
     event.preventDefault();
-    event.currentTarget?.querySelector("input")?.blur?.();
+    resetMobileInputViewport(event.currentTarget?.querySelector("input"));
     await applyCouponCode(couponCode, { openInfo: true, openCartOnValid: true });
   };
 
@@ -5210,7 +5322,7 @@ export default function StorePage() {
   };
 
   const renderCategoryDealCountdown = (item) => {
-    const label = item?.directDiscount
+    const label = hasTopDealPolicy(item)
       ? formatOfferCountdown(item.directDiscount, incentiveNowMs)
       : "";
 
@@ -5244,16 +5356,13 @@ export default function StorePage() {
   const renderProductCard = (item) => {
     const flipped = flippedId === item.pizzaId;
     const image = item.image || "";
-    const sizes = Object.keys(item.priceBySize || {}).filter(
-      (size) => item.priceBySize?.[size] !== "" && item.priceBySize?.[size] != null
-    );
-    const baseSize = sizes[0] || "M";
+    const baseSize = getFeedDisplaySize(item);
     const { line, closer } = buildPizzaLine(item);
 
     return (
       <div
         key={item.pizzaId}
-        className={`lsf-card ${item?.directDiscount ? "lsf-card--topDeal" : ""} ${hasTrendingPolicy(item) ? "lsf-card--trending has-trending-metrics" : ""} lsf-flip ${flipped ? "is-flipped" : ""}`}
+        className={`lsf-card ${hasTopDealPolicy(item) ? "lsf-card--topDeal" : ""} ${hasTrendingPolicy(item) ? "lsf-card--trending has-trending-metrics" : ""} lsf-flip ${flipped ? "is-flipped" : ""}`}
         onClick={() =>
           setFlippedId((current) =>
             current === item.pizzaId ? null : item.pizzaId
@@ -5263,7 +5372,7 @@ export default function StorePage() {
       >
         <div className="lsf-flip__inner">
           <div className="lsf-flip__front">
-            <div className={`lsf-card__image ${item?.directDiscount ? "lsf-topDealImage" : ""}`}>
+            <div className={`lsf-card__image ${hasTopDealPolicy(item) ? "lsf-topDealImage" : ""}`}>
               {image ? (
                 <img src={image} alt={item.name} />
               ) : (
@@ -5857,7 +5966,7 @@ export default function StorePage() {
                       onChange={(event) => setSearch(event.target.value)}
                       onKeyDown={(event) => {
                         if (event.key === "Enter") {
-                          event.currentTarget.blur();
+                          resetMobileInputViewport(event.currentTarget);
                         }
                       }}
                     />
@@ -5891,7 +6000,7 @@ export default function StorePage() {
                       className="sf-engineSearchBtn"
                       aria-label="Buscar"
                       onClick={() => {
-                        document.activeElement?.blur?.();
+                        resetMobileInputViewport(document.activeElement);
                       }}
                     >
                       <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -6108,7 +6217,7 @@ export default function StorePage() {
                       onChange={(event) => setSearch(event.target.value)}
                       onKeyDown={(event) => {
                         if (event.key === "Enter") {
-                          resetGridSearchViewport(event.currentTarget);
+                          resetMobileInputViewport(event.currentTarget, { resetGridStage: true });
                         }
                       }}
                     />
@@ -6361,12 +6470,7 @@ export default function StorePage() {
                       const upcomingFlipId = `upcoming-${item.pizzaId}`;
                       const flipped = flippedId === upcomingFlipId;
                       const image = item.image || "";
-                      const sizes = Object.keys(item.priceBySize || {}).filter(
-                        (size) =>
-                          item.priceBySize?.[size] !== "" &&
-                          item.priceBySize?.[size] != null
-                      );
-                      const baseSize = sizes[0] || "M";
+                      const baseSize = getFeedDisplaySize(item);
                       const { line } = buildPizzaLine(item);
 
                       return (
@@ -6440,10 +6544,7 @@ export default function StorePage() {
                   {visibleMenu.map((item) => {
                     const flipped = flippedId === item.pizzaId;
                     const image = item.image || "";
-                    const sizes = Object.keys(item.priceBySize || {}).filter(
-                      (size) => item.priceBySize?.[size] !== "" && item.priceBySize?.[size] != null
-                    );
-                    const baseSize = sizes[0] || "M";
+                    const baseSize = getFeedDisplaySize(item);
                     const { line, closer } = buildPizzaLine(item);
 
                     return (
@@ -6472,7 +6573,7 @@ export default function StorePage() {
                             {renderTrendingBadge(item)}
                             {renderTrendingKpis(item) ||
                               renderOfferRibbon(
-                                item?.directDiscount ? formatOfferCountdown(item.directDiscount, incentiveNowMs) : "",
+                                hasTopDealPolicy(item) ? formatOfferCountdown(item.directDiscount, incentiveNowMs) : "",
                                 "Termina en:",
                                 "deal"
                               )}
@@ -6606,7 +6707,7 @@ export default function StorePage() {
                     onKeyDown={(event) => {
                       if (event.key === "Enter") {
                         event.preventDefault();
-                        event.currentTarget.blur();
+                        resetMobileInputViewport(event.currentTarget);
                         event.currentTarget.form?.requestSubmit?.();
                       }
                     }}
@@ -6743,7 +6844,7 @@ export default function StorePage() {
                 onKeyDown={(event) => {
                   if (event.key === "Enter") {
                     event.preventDefault();
-                    event.currentTarget.blur();
+                    resetMobileInputViewport(event.currentTarget);
                     event.currentTarget.form?.requestSubmit?.();
                   }
                 }}
@@ -6841,7 +6942,7 @@ export default function StorePage() {
                   )}
                 </div>
 
-                {selectedProduct.directDiscount && (
+                {hasTopDealPolicy(selectedProduct) && (
                   <div className="sf-directDiscountNotice">
                     {getDirectDiscountLabel(selectedProduct.directDiscount)}
                   </div>
@@ -7525,6 +7626,7 @@ export default function StorePage() {
                               setCustomCategoryKey(category.key);
                               setCustomSize(sizes.length === 1 ? sizes[0] : "");
                               setCustomIngredients({});
+                              setCustomPendingIngredients({});
                               setCustomOpenSection("BASE");
                             }}
                           >
@@ -7583,6 +7685,7 @@ export default function StorePage() {
                               setCustomSize("");
                               setCustomQty(1);
                               setCustomIngredients({});
+                              setCustomPendingIngredients({});
                               setCustomOpenSection("BASE");
                             }}
                           >
@@ -7607,6 +7710,7 @@ export default function StorePage() {
                                   className={`sf-sizeChip ${active ? "is-active" : ""}`}
                                   onClick={() => {
                                     setCustomSize(size);
+                                    setCustomPendingIngredients({});
                                     setCustomOpenSection("BASE");
                                   }}
                                 >
@@ -7712,11 +7816,28 @@ export default function StorePage() {
                           <div className="sf-customAccordionBody">
                             {ingredients.map((ingredient) => {
                               const selected = customIngredients[ingredient.id] || null;
+                              const pending = customPendingIngredients[ingredient.id] || null;
+                              const activeSelection = pending || selected;
+                              const confirmReady = Boolean(pending?.placement && pending?.quantity);
+                              const placementName =
+                                activeSelection?.placement === "FULL"
+                                  ? "Full"
+                                  : activeSelection?.placement === "LEFT"
+                                  ? "Left"
+                                  : activeSelection?.placement === "RIGHT"
+                                  ? "Right"
+                                  : "";
 
                               return (
-                                <div key={ingredient.id} className="sf-customIngredient">
+                                <div
+                                  key={ingredient.id}
+                                  className={`sf-customIngredient ${confirmReady ? "is-confirm-ready" : ""}`}
+                                >
                                   <div className="sf-customIngredientHead">
-                                    <strong>{ingredient.name}</strong>
+                                    <strong>
+                                      {ingredient.name}
+                                      {placementName ? ` (${placementName})` : ""}
+                                    </strong>
                                     <span>
                                       {customUsesLoading
                                         ? "..."
@@ -7726,37 +7847,62 @@ export default function StorePage() {
 
                                   <div
                                     className={`sf-customIngredientControls ${
-                                      selected?.placement ? "has-selection" : ""
+                                      activeSelection?.placement ? "has-selection" : ""
                                     }`}
                                   >
                                     <div
                                       className={`sf-customPlacement ${
-                                        selected?.placement ? "is-selected" : ""
-                                      }`}
+                                        activeSelection?.placement ? "is-selected" : ""
+                                      } ${confirmReady ? "is-confirm-ready" : ""}`}
                                     >
-                                      {(selected?.placement
-                                        ? [selected.placement]
-                                        : ["FULL", "LEFT", "RIGHT"]
-                                      ).map((placement) => (
+                                      {activeSelection?.placement ? (
+                                        <div className="sf-customPlacementFlip">
+                                          <button
+                                            type="button"
+                                            className={`sf-sizeChip sf-customPlacementFace sf-customPlacementFace--choice ${
+                                              selected?.placement === activeSelection.placement ? "is-active" : ""
+                                            }`}
+                                            onClick={() =>
+                                              updateCustomIngredientDraft(ingredient, {
+                                                placement: activeSelection.placement,
+                                                quantity: activeSelection.quantity || "SIMPLE",
+                                              })
+                                            }
+                                          >
+                                            <span>{activeSelection.placement}</span>
+                                          </button>
+                                          {confirmReady && (
+                                            <button
+                                              type="button"
+                                              className="sf-customConfirmBtn sf-customPlacementFace sf-customPlacementFace--confirm"
+                                              onClick={() => confirmCustomIngredient(ingredient, categoryName)}
+                                            >
+                                              Agregar
+                                            </button>
+                                          )}
+                                        </div>
+                                      ) : (
+                                        ["FULL", "LEFT", "RIGHT"].map((placement) => (
                                         <button
                                           key={placement}
                                           type="button"
                                           className={`sf-sizeChip ${
-                                            selected?.placement === placement ? "is-active" : ""
+                                            activeSelection?.placement === placement ? "is-active" : ""
                                           }`}
                                           onClick={() =>
-                                            updateCustomIngredient(ingredient, {
+                                            updateCustomIngredientDraft(ingredient, {
                                               placement,
-                                              quantity: selected?.quantity || "SIMPLE",
+                                              quantity: pending?.quantity || selected?.quantity || "SIMPLE",
                                             })
                                           }
                                         >
                                           <span>{placement}</span>
                                         </button>
-                                      ))}
+                                        ))
+                                      )}
                                     </div>
 
-                                    {selected?.placement && (
+                                    {activeSelection?.placement && (
                                       <div className="sf-customIngredientExpanded">
                                         <div className="sf-customToggle">
                                           {["SIMPLE", "DOUBLE"].map((quantity) => (
@@ -7764,10 +7910,10 @@ export default function StorePage() {
                                               key={quantity}
                                               type="button"
                                               className={`sf-sizeChip ${
-                                                selected.quantity === quantity ? "is-active" : ""
+                                                activeSelection.quantity === quantity ? "is-active" : ""
                                               }`}
                                               onClick={() => {
-                                                updateCustomIngredient(ingredient, { quantity });
+                                                updateCustomIngredientDraft(ingredient, { quantity });
                                               }}
                                             >
                                               <span>{quantity === "DOUBLE" ? "Doble" : "Simple"}</span>
@@ -7775,7 +7921,7 @@ export default function StorePage() {
                                           ))}
                                         </div>
                                         <strong>
-                                          EUR {getCustomIngredientPrice(selected).toFixed(2)}
+                                          EUR {getCustomIngredientPrice(activeSelection).toFixed(2)}
                                         </strong>
                                         <button
                                           type="button"

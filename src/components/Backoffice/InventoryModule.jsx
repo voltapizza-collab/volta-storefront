@@ -24,6 +24,7 @@ export default function InventoryModule({ partner }) {
     useState(null);
   const [onboardingPriceDraft, setOnboardingPriceDraft] = useState("");
   const [savingOnboardingId, setSavingOnboardingId] = useState(null);
+  const [savingCategory, setSavingCategory] = useState("");
 
   const storeId = partner?.storeId;
 
@@ -218,6 +219,35 @@ export default function InventoryModule({ partner }) {
   };
 
   const getDisplayName = (name) => (name || "").toUpperCase();
+  const categoryLabels = {
+    ACEITES_GRASAS_VINAGRES: "Aceites, grasas y vinagres",
+    AROMAS_Y_EXTRACTOS: "Aromas y extractos",
+    CARNES: "Carnes",
+    CREMAS_DULCES: "Cremas dulces",
+    EMBUTIDOS: "Embutidos",
+    ENDULZANTES: "Endulzantes",
+    EXTRAS: "Extras",
+    FRUTAS: "Frutas",
+    FRUTOS_SECOS_Y_SEMILLAS: "Frutos secos y semillas",
+    HIERBAS_ESPECIAS: "Hierbas y especias",
+    OTROS: "Otros",
+    PESCADOS_Y_MARISCOS: "Pescados y mariscos",
+    PROTEINA_VEGANA: "Proteina vegana",
+    QUESOS: "Quesos",
+    SALSAS: "Salsas",
+    SETAS: "Setas",
+    TOPPINGS_DULCES: "Toppings dulces",
+    VERDURAS: "Verduras",
+  };
+
+  const getCategoryDisplayName = (category) =>
+    categoryLabels[category] ||
+    String(category || "")
+      .toLowerCase()
+      .split("_")
+      .filter(Boolean)
+      .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+      .join(" ");
 
   const highlightMatch = (text, query) => {
     if (!query) return <span>{text}</span>;
@@ -267,6 +297,26 @@ export default function InventoryModule({ partner }) {
     }
   };
 
+  const handleSelectAllCategory = async (cat, list) => {
+    const targetIds = list
+      .filter((ing) => !(ing.exists && ing.active))
+      .map((ing) => ing.id);
+
+    if (!targetIds.length) return;
+
+    try {
+      setSavingCategory(cat);
+      await api.post(`/stores/${storeId}/ingredients`, {
+        ingredientIds: targetIds,
+      });
+      await fetchIngredients();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setSavingCategory("");
+    }
+  };
+
   return (
     <div className="inv-wrapper">
 
@@ -285,6 +335,7 @@ export default function InventoryModule({ partner }) {
             setModalMode("search");
           }}
         >
+          <span className="inv-addIcon" aria-hidden="true" />
           Ingredient finder
         </button>
       </div>
@@ -387,12 +438,8 @@ export default function InventoryModule({ partner }) {
 
                       return (
                         <>
-                          <button
+                          <div
                             className="inv-catTitle"
-                            type="button"
-                            onClick={() =>
-                              setOpenCat(isOpen ? "" : cat)
-                            }
                           >
                             <div className="inv-catLeft">
                               <span
@@ -400,9 +447,24 @@ export default function InventoryModule({ partner }) {
                                 {...attributes}
                                 {...listeners}
                               >
+                                â‰¡
+                              </span>
+                            <button
+                              className="inv-catToggle"
+                              type="button"
+                              onClick={() =>
+                                setOpenCat(isOpen ? "" : cat)
+                              }
+                            >
+                              <span
+                                className="inv-drag"
+                                {...attributes}
+                                {...listeners}
+                              >
                                 ≡
                               </span>
-                              <span>{cat}</span>
+                              <span>{getCategoryDisplayName(cat)}</span>
+                            </button>
                             </div>
 
                             <div className="inv-catRight">
@@ -411,8 +473,19 @@ export default function InventoryModule({ partner }) {
                                 <span>/</span>
                                 <small>{list.length}</small>
                               </span>
+                              <button
+                                className="inv-selectAllBtn"
+                                type="button"
+                                onClick={() => handleSelectAllCategory(cat, list)}
+                                disabled={
+                                  savingCategory === cat ||
+                                  activeCount === list.length
+                                }
+                              >
+                                {savingCategory === cat ? "Saving..." : "Select all"}
+                              </button>
                             </div>
-                          </button>
+                          </div>
 
                           {isOpen && (
                             <div className="inv-items">
@@ -589,7 +662,7 @@ export default function InventoryModule({ partner }) {
                     <option value="">Select category</option>
                     {categories.map((cat) => (
                       <option key={cat} value={cat}>
-                        {cat}
+                        {getCategoryDisplayName(cat)}
                       </option>
                     ))}
                   </select>

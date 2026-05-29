@@ -4566,6 +4566,8 @@
   border-radius: 999px;
   overflow: hidden;
   gap: 0;
+  min-height: 34px;
+  align-self: stretch;
 }
 
 .sf-customIngredientExpanded {
@@ -4577,6 +4579,70 @@
   padding: 0;
   border-radius: 0;
   background: transparent;
+}
+
+.sf-customPlacementFlip {
+  position: relative;
+  min-height: 34px;
+  align-self: stretch;
+  perspective: 700px;
+}
+
+.sf-customPlacementFace {
+  width: 100%;
+  grid-area: 1 / 1;
+  min-height: 34px;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+  transition: transform 0.34s ease, opacity 0.2s ease;
+}
+
+.sf-customPlacementFace--choice {
+  opacity: 1;
+  transform: rotateX(0deg);
+}
+
+.sf-customPlacementFace--confirm {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: rotateX(180deg);
+}
+
+.sf-customPlacement.is-confirm-ready .sf-customPlacementFace--choice {
+  opacity: 0;
+  transform: rotateX(-180deg);
+  pointer-events: none;
+}
+
+.sf-customPlacement.is-confirm-ready .sf-customPlacementFace--confirm {
+  opacity: 1;
+  transform: rotateX(0deg);
+}
+
+.sf-customConfirmBtn {
+  width: 100%;
+  min-height: 34px;
+  border: 1px solid #3b008b;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #fff36b 0%, #ffbf2d 54%, #ffef00 100%);
+  color: #3b008b;
+  cursor: pointer;
+  font-weight: 1000;
+  line-height: 1;
+  text-transform: uppercase;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    0 4px 0 #3b008b,
+    0 8px 14px rgba(59, 0, 139, 0.2);
+}
+
+.sf-customConfirmBtn:active {
+  transform: translateY(2px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    0 2px 0 #3b008b,
+    0 5px 10px rgba(59, 0, 139, 0.18);
 }
 
 .sf-customIngredientExpanded > strong {
@@ -4870,7 +4936,7 @@
 }
 
 .sf-customBuilder .sf-customToggle .sf-sizeChip {
-  min-height: 26px;
+  min-height: 32px;
   border: 0;
   border-radius: 0;
   padding: 3px 7px;
@@ -9957,6 +10023,16 @@
     grid-template-columns: minmax(0, 1fr) auto 26px;
   }
 
+  .sf-customPlacementFlip,
+  .sf-customPlacementFace {
+    min-height: 30px;
+  }
+
+  .sf-customConfirmBtn {
+    min-height: 30px;
+    font-size: 0.68rem;
+  }
+
   .sf-customAccordionHead {
     align-items: center;
     flex-direction: row;
@@ -14922,7 +14998,7 @@
 
   .sf-shell--mode-commercial-light .sf-engineGridStage--lsf {
     max-height: max(390px, calc(100dvh - 248px - env(safe-area-inset-bottom, 0px)));
-    min-height: 0;
+    min-height: max(390px, calc(100dvh - 398px - env(safe-area-inset-bottom, 0px)));
     height: auto;
     padding: 8px 8px 14px;
     border-radius: 16px;
@@ -16564,6 +16640,213 @@
 .sf-shell--mode-commercial-light .sf-incentiveTimer::before {
   background: #22c55e;
   box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.18);
+}
+
+/* Commercial incentive banner: compact, high-energy progress cue. */
+.sf-shell--mode-commercial-light .sf-incentiveBanner--lsf {
+  isolation: isolate;
+  border: 1px solid rgba(118, 55, 255, 0.28);
+  background:
+    linear-gradient(120deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.52)),
+    linear-gradient(135deg, rgba(255, 210, 0, 0.34), rgba(99, 56, 255, 0.18) 48%, rgba(0, 216, 143, 0.22));
+  background-size: 100% 100%, 220% 220%;
+  box-shadow:
+    0 10px 24px rgba(74, 33, 158, 0.12),
+    0 1px 0 rgba(255, 255, 255, 0.96) inset,
+    0 -1px 0 rgba(255, 186, 0, 0.26) inset;
+  animation: sfCommercialIncentiveBreath 4.6s ease-in-out infinite;
+}
+
+.sf-shell--mode-commercial-light .sf-incentiveBanner--lsf::before {
+  display: block;
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  border-radius: inherit;
+  background:
+    linear-gradient(
+      115deg,
+      transparent 0%,
+      transparent 22%,
+      rgba(255, 255, 255, 0.72) 34%,
+      rgba(255, 210, 0, 0.28) 43%,
+      transparent 56%,
+      transparent 100%
+    );
+  transform: translateX(-78%);
+  animation: sfCommercialIncentiveSweep 3.2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.sf-shell--mode-commercial-light .sf-incentiveBanner--lsf::after {
+  display: block;
+  content: "";
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 6px;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #ffd600, #6b36ff, #00d88f, #ff2f74, #ffd600);
+  background-size: 220% 100%;
+  opacity: 0.72;
+  animation: sfCommercialIncentiveRail 2.8s linear infinite;
+  pointer-events: none;
+}
+
+.sf-shell--mode-commercial-light .sf-incentiveHead,
+.sf-shell--mode-commercial-light .sf-incentiveProgress,
+.sf-shell--mode-commercial-light .sf-incentiveRewardStage {
+  z-index: 1;
+}
+
+.sf-shell--mode-commercial-light .sf-incentiveEyebrow {
+  width: fit-content;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: rgba(255, 214, 0, 0.52);
+  color: #4b11b2;
+  box-shadow: 0 0 0 1px rgba(75, 17, 178, 0.1);
+}
+
+.sf-shell--mode-commercial-light .sf-incentiveMessageTicker {
+  color: #3b008b;
+  font-weight: 950;
+}
+
+.sf-shell--mode-commercial-light .sf-incentiveTimer {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12), transparent),
+    #05020b;
+  box-shadow:
+    0 6px 14px rgba(5, 2, 11, 0.2),
+    0 0 0 1px rgba(255, 255, 255, 0.12) inset;
+  animation: sfCommercialIncentiveTimerPulse 2.4s ease-in-out infinite;
+}
+
+.sf-shell--mode-commercial-light .sf-incentiveTimer::before {
+  animation: sfCommercialIncentiveDot 1.35s ease-in-out infinite;
+}
+
+.sf-shell--mode-commercial-light .sf-incentiveProgressTrack {
+  height: 17px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.84), rgba(255, 255, 255, 0.28)),
+    rgba(75, 17, 178, 0.14);
+  box-shadow:
+    inset 0 0 0 1px rgba(75, 17, 178, 0.12),
+    inset 0 2px 5px rgba(59, 0, 139, 0.14),
+    0 1px 0 rgba(255, 255, 255, 0.76);
+}
+
+.sf-shell--mode-commercial-light .sf-incentiveProgressFill {
+  background:
+    linear-gradient(90deg, #ff2f74 0%, #6a3df0 45%, #00d88f 72%, #ffd600 100%);
+  background-size: 180% 100%;
+  box-shadow:
+    0 0 18px rgba(106, 61, 240, 0.32),
+    0 0 14px rgba(0, 216, 143, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.52);
+  animation: sfCommercialIncentiveFill 2.35s ease-in-out infinite;
+}
+
+.sf-shell--mode-commercial-light .sf-incentiveProgressStripes,
+.sf-shell--mode-commercial-light .sf-incentiveProgressGlow {
+  display: block;
+}
+
+.sf-shell--mode-commercial-light .sf-incentiveProgressMarker {
+  background: #ffffff;
+  color: #3b008b;
+  box-shadow:
+    0 4px 12px rgba(59, 0, 139, 0.18),
+    0 0 0 1px rgba(255, 214, 0, 0.45) inset;
+}
+
+.sf-shell--mode-commercial-light .sf-incentiveBanner--lsf.is-complete {
+  border-color: rgba(0, 216, 143, 0.48);
+  background:
+    linear-gradient(120deg, rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.52)),
+    linear-gradient(135deg, rgba(0, 216, 143, 0.28), rgba(255, 214, 0, 0.34) 50%, rgba(255, 47, 116, 0.22));
+}
+
+@keyframes sfCommercialIncentiveBreath {
+  0%,
+  100% {
+    background-position: 0 0, 0% 50%;
+    filter: saturate(1);
+  }
+  50% {
+    background-position: 0 0, 100% 50%;
+    filter: saturate(1.14);
+  }
+}
+
+@keyframes sfCommercialIncentiveSweep {
+  0%,
+  28% {
+    opacity: 0;
+    transform: translateX(-78%);
+  }
+  45% {
+    opacity: 0.86;
+  }
+  78%,
+  100% {
+    opacity: 0;
+    transform: translateX(78%);
+  }
+}
+
+@keyframes sfCommercialIncentiveRail {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 220% 50%;
+  }
+}
+
+@keyframes sfCommercialIncentiveTimerPulse {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-1px);
+  }
+}
+
+@keyframes sfCommercialIncentiveDot {
+  0%,
+  100% {
+    box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.18), 0 0 0 rgba(34, 197, 94, 0);
+  }
+  50% {
+    box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.18), 0 0 12px rgba(34, 197, 94, 0.92);
+  }
+}
+
+@keyframes sfCommercialIncentiveFill {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sf-shell--mode-commercial-light .sf-incentiveBanner--lsf,
+  .sf-shell--mode-commercial-light .sf-incentiveBanner--lsf::before,
+  .sf-shell--mode-commercial-light .sf-incentiveBanner--lsf::after,
+  .sf-shell--mode-commercial-light .sf-incentiveTimer,
+  .sf-shell--mode-commercial-light .sf-incentiveTimer::before,
+  .sf-shell--mode-commercial-light .sf-incentiveProgressFill {
+    animation: none;
+  }
 }
 
 /* Modals must sit above sticky storefront controls and grid focus mode. */
@@ -18321,12 +18604,12 @@
   }
 
   .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridFocusSearch {
-    position: relative;
-    top: auto;
-    z-index: 46;
+    position: sticky;
+    top: 34px;
+    z-index: 51;
     margin: 0 0 2px;
     padding: 0;
-    background: transparent;
+    background: #ffffff;
     box-shadow: none;
   }
 
@@ -18419,8 +18702,9 @@
   }
 
   .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext {
-    position: relative;
-    top: auto !important;
+    position: sticky;
+    top: 64px !important;
+    z-index: 50;
     display: block;
     min-height: 0;
     margin: 0 0 5px;
@@ -20047,5 +20331,26 @@
   .sf-shell--mode-commercial-light .sf-lsfActionSearchLine .sf-engineSearchRow--lsf {
     grid-column: 4;
     width: 100%;
+  }
+}
+
+/* Prevent iOS Safari from auto-zooming the mobile nav search/coupon inputs. */
+@media (max-width: 760px) {
+  .sf-shell .sf-lsfActionSearchLine input.sf-engineSearch,
+  .sf-shell .lsf-gridFocusSearch input.sf-engineSearch,
+  .sf-shell .sf-couponDock input {
+    font-size: 16px !important;
+    line-height: 1.15;
+  }
+
+  .sf-shell .sf-lsfActionSearchLine input.sf-engineSearch::placeholder,
+  .sf-shell .lsf-gridFocusSearch input.sf-engineSearch::placeholder {
+    font-size: 0.68rem;
+    font-weight: 800;
+  }
+
+  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridFocusSearch input.sf-engineSearch::placeholder {
+    font-size: 0.56rem;
+    font-weight: 800;
   }
 }

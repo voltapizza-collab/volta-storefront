@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import "../../styles/IngredientsModule.css";
 import { Tree } from "react-arborist";
+import api from "../../setupAxios";
 
 
-const INGREDIENTS_BASE = {
+const INGREDIENTS_LEGACY_BASE = {
 
   QUESOS: [
     { name: "Mozzarella", allergens: ["MILK"] },
+    { name: "Arzua", allergens: ["MILK"] },
     { name: "Cheddar", allergens: ["MILK"] },
     { name: "Parmesano", allergens: ["MILK"] },
     { name: "Gorgonzola", allergens: ["MILK"] },
@@ -34,7 +36,7 @@ const INGREDIENTS_BASE = {
     { name: "Pepperoni", allergens: [] },
     { name: "Bacon", allergens: [] },
     { name: "Pollo", allergens: [] },
-    { name: "Carne molida", allergens: [] },
+    { name: "Carne Picada", allergens: [] },
     { name: "Chorizo", allergens: [] },
     { name: "Salchicha italiana", allergens: [] }
   ],
@@ -136,6 +138,1225 @@ ENDULZANTES: [
 
 };
 
+const withAllergens = (names, allergens = []) =>
+  names.map((name) => ({ name, allergens }));
+
+const parseIngredientList = (value) =>
+  value
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((line) => {
+      const [name, allergens = ""] = line.split("|");
+      return {
+        name: name.trim(),
+        allergens: allergens
+          .split(",")
+          .map((item) => item.trim())
+          .filter(Boolean),
+      };
+    });
+
+const normalizeAllergen = (allergen) =>
+  String(allergen || "").trim().toUpperCase() === "LACTOSE"
+    ? "MILK"
+    : String(allergen || "").trim().toUpperCase();
+
+const normalizeBaseIngredient = (item) => ({
+  ...item,
+  allergens: [...new Set((item.allergens || []).map(normalizeAllergen).filter(Boolean))],
+});
+
+const normalizeIngredientKey = (name) =>
+  String(name || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+
+const CATEGORY_ALIASES = {
+  ACEITES: "ACEITES_GRASAS_VINAGRES",
+  ACEITES_GRASAS_VINAGRES: "ACEITES_GRASAS_VINAGRES",
+  ESPECIAS: "HIERBAS_ESPECIAS",
+  HIERBAS_ESPECIAS: "HIERBAS_ESPECIAS",
+  FIAMBRES: "EMBUTIDOS",
+  EMBUTIDOS: "EMBUTIDOS",
+  MARISCOS: "PESCADOS_Y_MARISCOS",
+  PESCADOS: "PESCADOS_Y_MARISCOS",
+  PESCADOS_Y_MARISCOS: "PESCADOS_Y_MARISCOS",
+  SALSAS_CREMAS: "SALSAS",
+  SALSAS: "SALSAS",
+};
+
+const normalizeCategory = (category) =>
+  String(category || "")
+    .trim()
+    .toUpperCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^A-Z0-9]+/g, "_")
+    .replace(/^_+|_+$/g, "");
+
+const getCanonicalCategory = (category) => {
+  const normalized = normalizeCategory(category);
+  return CATEGORY_ALIASES[normalized] || normalized;
+};
+
+const mergeIngredientBases = (...bases) => {
+  const merged = {};
+  const seen = new Set();
+
+  bases.forEach((base) => {
+    Object.entries(base).forEach(([category, items]) => {
+      const canonicalCategory = getCanonicalCategory(category);
+      if (!merged[canonicalCategory]) merged[canonicalCategory] = [];
+
+      items.map(normalizeBaseIngredient).forEach((item) => {
+        const key = normalizeIngredientKey(item.name);
+        if (!key || seen.has(key)) return;
+
+        seen.add(key);
+        merged[canonicalCategory].push(item);
+      });
+    });
+  });
+
+  return merged;
+};
+
+const INGREDIENTS_EXTENDED_BASE = {
+  QUESOS: [
+    ...withAllergens(
+      [
+      "Aaaruul",
+      "Akkawi",
+      "Asiago",
+      "Ayibe",
+      "Beyaz peynir",
+      "Bocconcini",
+      "Brie",
+      "Bryndza",
+      "Caciocavallo",
+      "Camembert",
+      "Casu marzu",
+      "Catupiry",
+      "Cheddar Ahumado",
+      "Cheddar blanco",
+      "Cheddar extra maduro",
+      "Cheddar fundido",
+      "Cheddar maduro",
+      "Cheddar rojo",
+      "Cheddar Vermont",
+      "Cheddar vintage / extra anejo",
+      "Chhurpi",
+      "Comte",
+      "Cottage",
+      "Cuajo de oveja",
+      "Edam",
+      "Fontina",
+      "Gbejna",
+      "Grana Padano",
+      "Graddost",
+      "Graviera",
+      "Halloumi",
+      "Kachkeis",
+      "Kajmak",
+      "Kasar peyniri",
+      "Kasseri",
+      "Kashkaval",
+      "Kefalotyri",
+      "Kesong puti",
+      "Kurut",
+      "Labneh",
+      "Mascarpone",
+      "Mascarpone vainilla",
+      "Montasio",
+      "Monterey Jack",
+      "Mozzarella ahumada",
+      "Mozzarella de bufala",
+      "Mozzarella toonsbridge",
+      "Mozzarella de vaca",
+      "Nabulsi",
+      "Oscypek / Queso ahumado de oveja",
+      "Paneer",
+      "Parmigiano Reggiano",
+      "Pecorino romano",
+      "Piave Vecchio",
+      "Piton Maido",
+      "Pljevlja / queso de oveja de Pljevlja",
+      "Provel",
+      "Provolone ahumado",
+      "Provolone picante",
+      "Provolone Valpadana AOP",
+      "Queijo coalho",
+      "Queso ardsallagh",
+      "Queso cabrales",
+      "Queso cheddar en polvo",
+      "Queso crema",
+      "Queso de cabra curado",
+      "Queso chanco",
+      "Queso chhena",
+      "Queso Chihuahua",
+      "Queso coolea farmhouse",
+      "Queso costeno",
+      "Queso cotija",
+      "Queso de oveja",
+      "Queso deshidratado",
+      "Queso duro",
+      "Queso duro blando",
+      "Queso duro de oveja",
+      "Queso feta",
+      "Queso fontal",
+      "Queso fresco",
+      "Queso gouda",
+      "Queso gouda ahumado",
+      "Queso guayanes",
+      "Queso de hoja",
+      "Queso hungaro anejo",
+      "Queso Jarlsberg",
+      "Queso llanero",
+      "Queso maasdam",
+      "Queso Mar del Plata",
+      "Queso de Oaxaca",
+      "Queso panela",
+      "Queso paria",
+      "Queso provola",
+      "Queso provola silana",
+      "Queso quark",
+      "Queso raclette",
+      "Queso Romano",
+      "Queso Roumi",
+      "Queso Saint-Maure",
+      "Queso sakura",
+      "Queso sardo",
+      "Queso Stilton",
+      "Queso Stracchino",
+      "Queso suizo",
+      "Queso sulguni",
+      "Queso tasty",
+      "Queso toma",
+      "Queso Tvorog",
+      "Queso uzbek",
+      "Queso Vasterbottenost",
+      "Queso de yak",
+      "Queso yuki",
+      "Reblochon",
+      "Red Leicester",
+      "Regato",
+      "Requeijao cremoso",
+      "Ricotta di pecora",
+      "Ricotta salata",
+      "Roquefort",
+      "Rulo de cabra",
+      "Scamorza",
+      "Scamorza ahumada",
+      "Sirene",
+      "Stracciatella di burrata",
+      "Telemea",
+      "Ube ricotta / ricotta de name morado",
+      ],
+      ["MILK"]
+    ),
+    ...parseIngredientList(`
+Catupiry vegetal
+Mozzarella sin lactosa
+Mozzarella vegetal
+Mozzarisella
+Queso ahumado de granja
+Queso de arroz
+Queso estilo parmesano vegetal
+Queso Vegano
+`),
+  ],
+  PESCADOS_Y_MARISCOS: parseIngredientList(`
+Almejas|SHELLFISH
+Almejas venus|SHELLFISH
+Anchoas|FISH
+Anguilas|FISH
+Arenque ahumado|FISH
+Arenque encurtido|FISH
+Arenque rojo|FISH
+Atun|FISH
+Bacalao salado|FISH
+Bagre|FISH
+Barramundi|FISH
+Bogavante|SHELLFISH
+Bottarga|FISH
+Caballa|FISH
+Calamares|SHELLFISH
+Camarones deshidratados|SHELLFISH
+Camarones nordicos|SHELLFISH
+Cangrejo de rio|SHELLFISH
+Caracola|SHELLFISH
+Caviar|EGG,FISH
+Chambo|FISH
+Cigala islandesa|SHELLFISH
+Erizo de mar|SHELLFISH
+Espadin ahumado|FISH
+Hakarl / Tiburon fermentado|FISH
+Hokkaido uni / Erizo de mar de Hokkaido|SHELLFISH
+Huevas / roe|FISH
+Ikra / Huevas de salmon|FISH
+Kanikama / crab stick|SHELLFISH
+Kapenta|FISH
+Keong khas Banyubiru|SHELLFISH
+Kingfish / Pez rey del Golfo|FISH
+Langosta|SHELLFISH
+Listao|FISH
+Mejillones ahumados|SHELLFISH
+Mentaiko / Huevas de abadejo|FISH
+Ndomba de Silure / Bagre africano|FISH
+Ostiones|SHELLFISH
+Ostras|SHELLFISH
+Pota|SHELLFISH
+Roget al|FISH
+Salmon del pacifico|FISH
+Sardinas|FISH
+Sepia|SHELLFISH
+Scungilli / Caracola|SHELLFISH
+Shirasu|FISH
+Trucha|FISH
+Trucha ahumada|FISH
+Unagi|FISH
+Vieiras|SHELLFISH
+Vieiras Hokkaido|SHELLFISH
+`),
+  CARNES: parseIngredientList(`
+Albondigas
+Alce
+Alitas de pollo
+Avestruz
+Biltong|SULFITES
+Buey
+Buey almizclero
+Bufalo
+Caballo
+Cabra
+Camello
+Canguro
+Caracoles malteses
+Carne de res enlatada
+Carne de cerdo
+Carne de res
+Carne de vacuno
+Cebu
+Cecina
+Cerdo
+Cerdo desmenuzado
+Chicharron de cerdo
+Cocodrilo / caiman
+Codillo de cerdo
+Cordero
+Costillas de cerdo mangalica
+Emu
+Escargots de Bourgogne
+Foca
+Foie gras
+Iguana
+Intestinos de cerdo
+Jabali
+Kudu
+Lardons
+Lengua de res
+Lomo iberico
+Oryx
+Paleta de cerdo cocida
+Pato
+Pato marinado
+Pavo asado
+Pechuga de pollo
+Pernil
+Pollo ahumado
+Pollo a la brasa
+Pollo asado marinado
+Pollo desmenuzado
+Pollo doner kebab
+Pollo en tira
+Pollo frito
+Pork floss / Cerdo deshebrado seco
+Rabo de buey
+Rana toro
+Reno
+Reno ahumado
+Res
+Res ahumada
+Serpiente
+Springbok
+Spam
+Ternera
+Ternera asada
+Ternera blanca
+Udene maso
+Vacuno
+Vacuno desmenuzado
+Venado
+`),
+  EMBUTIDOS: parseIngredientList(`
+Bacon ahumado
+Bacon curado con jarabe de arce
+Boczek / Bacon polaco ahumado
+Boerewors
+Botillo
+Bresaola
+Butifarra
+Cabanossi
+Carnaciori
+Chourico
+Chorizo ahumado
+Chorizo cocido
+Chorizo dulce
+Chorizo espanol
+Chorizo guatemalteco
+Chorizo gubbeen
+Chorizo iberico
+Chorizo mexicano
+Chorizo picante
+Chorizo picante Calabrese
+Chorizo superior
+Chorizo de venado
+Coppa / Capocollo|SULFITES
+Gamonal
+Guanciale|SULFITES
+Jamon ahumado
+Jamon cocido (York)
+Jamon cocido Ahumado (York Ahumado)
+Jamon de Jinhua
+Jamon de pavo
+Jamon Rostello
+Jamon serrano
+Kabanos
+Kazy / Salchicha de caballo
+Kielbasa
+Kolbasz
+Kranjska klobasa
+Kulen
+Lardo|SULFITES
+Linguica
+Linguica calabresa
+Lomo canadiense
+Longganisa / Salchicha dulce filipina
+Longaniza
+Longaniza dominicana
+Lukanka
+Macon
+Merguez
+Mettwurst
+Morcilla
+Mortadela|NUTS
+Nduja
+Njeguski prsut / Jamon ahumado de Njegus
+Pancetta
+Pancetta de cerdo iberico
+Pastirma
+Peameal bacon
+Pepperoni ahumado
+Pepperoni ahumado con jalapenos
+Pepperoni desmenuzado
+Pepperoni dulce
+Pepperoni sin curar
+Pepperoni de venado
+Prosciutto ahumado
+Prosciutto cotto
+Prosciutto di Parma
+Prosciutto di San Daniele
+Red hotdog
+Salami calabrese
+Salami dulce
+Salami duro
+Salami napolitano
+Salami picante
+Salami suave
+Salchicha ahumada
+Salchicha ahumada calabresa
+Salchicha de Frankfurt
+Salchicha italiana con hinojo
+Salchicha de pollo
+Salo
+Sarcive
+Saucisson
+Saucisson piquant
+Speck
+Spianata piccante
+Sobrasada
+Soppressata: salami sin curar|SULFITES
+Soppressata: salchicha curada|SULFITES
+Sucuk / Sujuk|CELERY,MUSTARD,SULFITES
+Ventricina
+Ventricina ahumado
+Wurstel
+`),
+  SETAS: parseIngredientList(`
+Boletus
+Champinones al ajillo
+Champinones blancos
+Champinones cocidos pasteurizados
+Champinones de Paris
+Champinones grillados
+Champinones marinados
+Champinones portobello sazonados
+Champinones salteados
+Champinones shiitake y pleurotus
+Champinones castanos
+Champinones crimini
+Chanterelles
+Cordyceps
+Enoki
+Enoki salteado
+Eryngii
+Eryngii asado
+Hongo de Marayhuaca / Suillus luteus
+Hongos negros
+Huitlacoche
+Hedgehog
+Maitake
+Maitake asado
+Maitake salteado
+Matsutake
+Melena de leon
+Morel
+Morel salteado
+Nameko
+Oreja de madera
+Pholiota cultivada
+Pioppino / Seta de alamo
+Porcini
+Portabellini
+Portabellini asado
+Portobello
+Seta coliflor
+Seta ostra
+Setas salteadas
+Shiitake
+Shimeji
+Shimeji salteado
+Tartufi istriani / trufa de istriani
+Trompeta negra
+Trufa blanca
+Trufa negra
+`),
+  FRUTAS: parseIngredientList(`
+Acerola
+Ackee
+Albaricoque
+Albaricoque seco
+Arandanos
+Arandanos rojos
+Bananas
+Bananas caramelizadas
+Bayas Saskatoon
+Carambola
+Cerezas
+Ciruelas
+Coco
+Datiles
+Datiles en polvo
+Durian
+Durian musangking
+Frambuesas
+Fresas
+Granada
+Granos de granada
+Grosella negra
+Grosella roja
+Guayaba
+Kiwi
+Lychee
+Mandarina
+Mango
+Mango chutney
+Manzana Bramley
+Manzana cocida
+Maracuya
+Melocoton
+Melon
+Moras
+Mosto de uva
+Naranja
+Nectarina
+Papaya
+Pera coreana
+Pina caramelizada
+Pina encurtida
+Pina Maui gold
+Ruibarbo
+Tomate datterino
+Tomate pera
+Uvas
+Uvas pasas|SULFITES
+`),
+  VERDURAS: parseIngredientList(`
+Aceitunas con hueso
+Aceitunas kalamata
+Aceitunas negras a la griega
+Aceitunas negras con hueso
+Aceitunas negras confitadas
+Aceitunas sazonadas
+Aceitunas taggiasche
+Aceitunas verdes a la griega
+Acelga
+Aguacate
+Ajo tierno
+Alcaparras
+Apio|CELERY
+Batata
+Berenjena asada
+Bolas de taro
+Brocoli
+Brotes de bambu
+Calabacin grillado
+Calabaza asada
+Calabaza moscada
+Capsicum
+Cebolla amarilla
+Cebolla asada
+Cebolla caramelizada
+Cebolla crujiente
+Cebolla encurtida
+Cebolla de verdeo
+Cebolla deshidratada
+Cebolla frita
+Cebolla grillada
+Cebolla morada de Tropea
+Cebolla rehogada
+Cebolla roja
+Cebolla roja asada
+Cebolla roja balsamica
+Cebolla roja de Tropea
+Cebolla roja encurtida
+Cebolla sofrita
+Cebolleta
+Cebollino
+Cebollin frito
+Chalote
+Chile habanero
+Chile peri-peri
+Chile rojo
+Chile serrano
+Chirivia
+Choclo
+Chucrut
+Col blanca
+Col de Saboya
+Coles de Bruselas
+Coliflor
+Edamame|SOY
+Esparrago triguero
+Esparrago verde
+Espinaca sazonada
+Fefferoni
+Friarielli marinado
+Friarielli salteado
+Fruta del pan
+Germinado de lino integral
+Germinado de soja|SOY
+Germinado de trigo
+Germinado de trigo integral
+Guisantes
+Guisantes dulces
+Hojas de taro
+Hojas de te fermentadas
+Hren
+Jalapeno
+Jalapeno deshidratado
+Jalapenos marinados
+Kale / col rizada
+Kale / col rizada en polvo
+Konjac
+Kumara / batata maori
+Lechuga
+Loroco
+Maiz tostado
+Nabo
+Nabo encurtido
+Nabo sueco
+Nopales
+Okra
+Palmito
+Patatas
+Patatas asadas
+Patatas fritas
+Patatas paja
+Peperoncino
+Peperoncino marinado
+Peperoni en vinagre
+Peperoni encurtidos
+Pepinillos
+Pepino
+Pimiento amarillo asado
+Pimiento amarillo grillado
+Pimiento peppadew
+Pimiento poblano
+Pimiento rojo asado
+Pimiento rojo marinado
+Pimiento rojo seco
+Pimiento shishito
+Pimiento verde asado
+Pimientos al vinagre
+Pimientos amarillos marinados
+Pimientos flameados
+Pimientos picantes marinados
+Pimientos del piquillo
+Pimientos verdes dulces marinados
+Pimientos verdes secos
+Puerro
+Rabano
+Raiz de bardana
+Remolacha
+Remolacha encurtida
+Remolacha frita
+Renkon
+Renkon encurtido
+Renkon salteado
+Rocket maldivo
+Roquito
+Rucula
+Scotch bonnet
+Shiso / Perilla
+Taro
+Tomates asados
+Tomates cherry
+Tomates cherry amarillos semisecos
+Tomates cherry del Piennolo del Vesuvio
+Tomates cherry semisecos
+Tomates deshidratados marinados
+Tomates fresco
+Tomates San Marzano
+Tomates secos
+Topinambur
+Yaca verde
+Zanahoria
+`),
+  HIERBAS_ESPECIAS: parseIngredientList(`
+Achiote
+Ajedrea
+Ajo deshidratado
+Ajo en polvo
+Ajo granulado
+Ajo negro
+Albahaca fresca
+Albahaca tailandesa
+Albahaca seca
+Alcaravea
+Anis
+Anis estrellado
+Apio de monte (levistico)|CELERY
+Apio en polvo|CELERY
+Azafran
+Azahar
+Baharat
+Bayas rosas
+Berbere
+Canela
+Cardamomo
+Cayena
+Cebolla en polvo
+Cebolla tostada en polvo
+Chaat masala
+Chile
+Chile en hojuelas
+Chile en polvo
+Chile pimiento
+Chipotle en polvo
+Cilantro
+Cilantro picado
+Clavo de olor
+Comino
+Coriandro
+Curcuma
+Curry
+Dukkah|NUTS
+Enebro
+Eneldo
+Estragon frances
+Estragon ruso
+Fenogreco
+Furikake|FISH,SESAME,SOY
+Garam masala
+Gochugaru
+Hawaij
+Hierba luisa / Lemongrass
+Hierbas provenzales
+Hinojo
+Hojas de curry
+Jalapeno en polvo
+Jengibre
+Laurel
+Lemon myrtle
+Macis
+Mejorana
+Menta
+Menta dulce
+Merken
+Mostaza en polvo|MUSTARD
+Mostaza negra|MUSTARD
+Nuez moscada
+Oregano seco
+Papalo
+Peperoncino en polvo
+Perejil
+Perejil seco
+Pimenton
+Pimenton ahumado
+Pimenton picante / Paprika
+Pimenton picante / Paprika Ahumado
+Pimienta blanca
+Pimienta cayena
+Pimienta de Jamaica
+Pimienta negra
+Pimienta de Sichuan
+Puerro en polvo
+Ras el hanout
+Romero
+Romero seco
+Sal ahumada
+Sal de ajo
+Sal de cebolla
+Salvia
+Semillas de cilantro
+Serpol
+Shichimi togarashi|SESAME
+Sumac
+Tamarindo en polvo
+Tomate Bush
+Tomillo
+Tomillo seco
+Za'atar|SESAME
+Zumo de lima concentrado
+Zumo de limon concentrado
+`),
+  PROTEINA_VEGANA: parseIngredientList(`
+Atun vegano|SOY
+Chorizo vegetal
+Falafel|GLUTEN
+Jackfruit BBQ
+Jackfruit estilo pulled pork
+Jackfruit pepperoni
+Jamon vegano
+Natto|SOY
+Pepperoni de zanahoria
+Pepperoni vegetal
+Pepperoni vegetal de guisantes|SOY
+Proteina de garbanzo
+Proteina de guisante
+Salami vegano
+Salchicha italiana vegetal
+Seitan|GLUTEN
+Seitan ahumado|GLUTEN
+Seitan estilo shawarma|GLUTEN
+Soja texturizada|SOY
+Tempeh|SOY
+Tempeh ahumado|SOY
+Tofu|SOY
+Tofu ahumado|SOY
+Tofu apestoso|SOY
+Tofu de garbanzo birmano
+`),
+  AROMAS_Y_EXTRACTOS: parseIngredientList(`
+Agua de azahar
+Agua de rosas
+Aroma de setas
+Extracto de ajo
+Extracto de cebolla
+Extracto de chile
+Extracto de jengibre
+Extracto de levistico
+Extracto de malta de cebada|GLUTEN
+Extracto de oregano
+Extracto de paprika
+Extracto de pimenton
+Extracto de pimienta blanca
+Extracto de romero
+Extracto de tomillo
+Extracto de vainilla
+Humo de madera de haya
+Humo natural
+`),
+  FRUTOS_SECOS_Y_SEMILLAS: parseIngredientList(`
+Almendra|NUTS
+Altramuz|LUPIN
+Anacardos|NUTS
+Avellana|NUTS
+Avellanas tostadas|NUTS
+Cacahuete / mani|PEANUT
+Nuez|NUTS
+Nuez de macadamia|NUTS
+Pecana|NUTS
+Pinones|NUTS
+Pistacho de Antep|NUTS
+Semillas de acacias tostadas / Wattleseed
+Semillas de calabaza
+Semillas de quinoa roja
+Semillas de alcaravea
+Semillas de comino
+Semillas de hinojo
+Semillas de mostaza|MUSTARD
+Semillas de sesamo|SESAME
+Semilla de mijo
+Semillas de amapola
+Semillas de chia
+Semillas de girasol
+Semillas de lino
+Semillas de lino integral
+Sesamo tostado|SESAME
+`),
+  ENDULZANTES: parseIngredientList(`
+Azucar caramelizado
+Azucar de cana
+Azucar de remolacha
+Azucar demerara
+Azucar glas
+Azucar mascabado
+Azucar moreno
+Creme de marrons / Crema de castanas
+Dextrosa
+Golden syrup
+Melaza
+Miel de acacia
+Sirope de arce
+Sirope de arroz en polvo
+Sirope de azucar invertido
+Sirope de caramelo
+Sirope de datil
+Sirope de glucosa
+Sirope de glucosa polvo
+Sirope de maiz
+Stroop
+`),
+  SALSAS_CREMAS: parseIngredientList(`
+Aderezo de crema agria|MILK
+Adjika
+Ajvar
+Alfredo|MILK
+Alioli|EGG
+Bagoong|SHELLFISH
+Bechamel|MILK,GLUTEN
+Bigilla / Pasta de habas maltesa
+Chikanda
+Chimichurri
+Chipotle
+Chutney
+Crema de arroz basmati al curry
+Crema de aji amarillo
+Crema de calabacin
+Crema fresca|MILK
+Crema de huancaina|MILK
+Crema de leche|MILK
+Crema de miso
+Crema de rocoto|MILK
+Crema de trufa
+Crema dulce de miso|SOY,MILK,WHEAT
+Creme Fraiche|MILK
+Coulis de tomate
+Curry massaman
+Curry verde
+Doenjang mayo|EGG,SOY
+Epityrum
+Ezme
+Garum|FISH
+Guacamole
+Guasacaca
+Glaseado balsamico
+Harissa
+Hogao
+Ketchup
+Kumis|MILK
+Lyutenitsa
+Mango habanero BBQ
+Mayonesa|EGG
+Mayonesa japonesa|EGG
+Miel-mostaza|MUSTARD
+Miel picante
+Miso dulce gratinado
+Miso de garbanzo
+Nga pi / Pasta de pescado fermentado|FISH
+Molokhia
+Mostaza
+Mostaza a la antigua|MUSTARD
+Mostaza Dijon|MUSTARD
+Mostaza inglesa|MUSTARD
+Muhammara|NUTS
+Pebre
+Pesto de albahaca|NUTS
+Pesto de pistacho|NUTS
+Pesto rojo|NUTS
+Picante
+Pico de gallo
+Pure de calabaza
+Pure de chile
+Pure de chile rojo
+Pure de ciruela picante
+Pure de kawakawa
+Pure de pimiento picante
+Ranch|MILK,EGG
+Reduccion de uva
+Relish de jalapeno encurtido
+Rihaakuru|FISH
+Rougaille
+Sahawiq
+Salsa de abulon|SHELLFISH
+Salsa Alabama blanca
+Salsa de alcaparras
+Salsa arrabiata|MILK
+Salsa de batata
+Salsa de bearnesa|MILK,EGG
+Salsa brava|MILK
+Salsa buffalo|MILK
+Salsa de cacahuate|PEANUT
+Salsa de ciruela
+Salsa de champinones|MILK
+Salsa cheddar|MILK
+Salsa de chile guaque
+Salsa de chipotle|MILK
+Salsa cremosa de ajo asado|MILK
+Salsa curry|GLUTEN,MUSTARD
+Salsa datil
+Salsa donair
+Salsa gravy
+Salsa griot
+Salsa gochujang|SESAME,SOY,WHEAT
+Salsa golf|EGG
+Salsa hoisin|SESAME,SOY,WHEAT
+Salsa holandesa|EGG,MILK
+Salsa de hueso
+Salsa K-Ssamjang|SOY
+Salsa laksa|FISH,GLUTEN
+Salsa jerk
+Salsa de miel BBQ|MILK
+Salsa nai miris
+Salsa de paprika
+Salsa peri-peri
+Salsa de pimiento
+Salsa de pescado caramelizada|FISH
+Salsa putanesca
+Salsa de queso|MILK
+Salsa de rabano
+Salsa de ricotta|MILK
+Salsa romesco
+Salsa de soja|SOY
+Salsa macha
+Salsa makhani|MILK
+Salsa mantequilla|MILK
+Salsa marinera
+Salsa mascarpone|MILK
+Salsa de menta
+Salsa de ostras|SHELLFISH
+Salsa picante de pina
+Salsa piri piri
+Salsa de rabo de buey
+Salsa rendang|COCONUT
+Salsa roja mexicana
+Salsa roquefort|MILK
+Salsa de te tailandes|MILK
+Salsa satay
+Salsa sichuan|MILK
+Salsa shito
+Salsa de tamarindo
+Salsa tikka masala|MILK
+Salsa de tomatillo / verde mexicana
+Salsa Tum
+Salsa vindaloo
+Salsa vodka
+Salsa de yogurt|MILK
+Sambal oelek
+Sambal udang|SHELLFISH
+Shubat|MILK
+Smetana / Crema agria|MILK
+Sriracha
+Suya|PEANUT
+Tahini|SESAME
+Tamari|SOY
+Tapenade
+Tapenade de champinones
+Tapenade de trufa
+Teriyaki|SOY,SESAME,WHEAT
+Tinta de calamar|SHELLFISH
+Tkemali
+Tom yum|FISH
+Toum|EGG
+Tzatziki|MILK
+Vinaza roja
+Wasabi
+`),
+  ACEITES_GRASAS_VINAGRES: parseIngredientList(`
+Aceite de albahaca
+Aceite de arroz
+Aceite de ajo
+Aceite de canola
+Aceite de canola alto oleico
+Aceite de canola y oliva
+Aceite de cartamo
+Aceite de cebolleta
+Aceite de chile
+Aceite de coco
+Aceite de colza
+Aceite de colza hidrogenado
+Aceite de girasol
+Aceite de girasol alto oleico
+Aceite de hierbas provenzales
+Aceite de maiz
+Aceite de naranja
+Aceite de oliva virgen
+Aceite de oliva virgen extra
+Aceite de orujo de oliva
+Aceite de palma
+Aceite de perejil y colza
+Aceite de salvado de arroz
+Aceite de semilla de algodon
+Aceite de sesamo|SESAME
+Aceite de soja|SOY
+Aceite de trufa
+Aceite vegetal
+Ghee|MILK
+Grasa de cerdo
+Grasa de karite
+Grasa de pollo
+Grasa de vacuno
+Mantequilla|MILK
+Mantequilla de ajo|MILK
+Vinagre
+Vinagre balsamico
+Vinagre balsamico blanco|SULFITES
+Vinagre balsamico de Modena|SULFITES
+Vinagre de alcohol
+Vinagre de arroz
+Vinagre de brandy
+Vinagre de coco
+Vinagre de frutas
+Vinagre de jerez
+Vinagre de malta|GLUTEN
+Vinagre de manzana
+Vinagre de vino blanco|SULFITES
+Vinagre de vino tinto|SULFITES
+Vinagre destilado
+Vinagre en polvo
+Vinagreta brasilena
+`),
+  TOPPINGS_DULCES: parseIngredientList(`
+Bocadillo de guayaba
+Chebakia|SESAME,GLUTEN
+Chocolate negro
+Cajeta / dulce de leche de cabra|MILK
+Crema de avellanas|NUTS
+Crema de cacahuete|PEANUT
+Crema Speculoos / Biscoff
+Crema de gianduja|MILK,NUTS
+Crema de mascarpone|MILK
+Crema de pistacho|MILK,NUTS
+Dulce de Leche|MILK
+Halva
+Manteca de cacao
+Mantequilla de manzana
+Marshmallow|GELATIN
+Mermelada de fresa
+Mermelada de frutos rojos
+Mermelada de mora
+Mermelada / compota de grosella
+Mermelada de tocino
+Melaza de granada
+Mochi
+Mousse de batata
+Omani halwa
+Ricotta dulce|MILK
+Te matcha
+`),
+  OTROS: parseIngredientList(`
+Algas nori
+Algas wakame
+Alubias blancas
+Alubias cannellini
+Alubias rojas
+Arroz
+Arroz integral germinado
+Atun carpaccio
+Avena|GLUTEN
+Cacao sin azucar
+Camaron sakura|SHELLFISH
+Casabe
+Chapulines / grillos tostados
+Chile crispy|SESAME,SOY
+Cigarras
+Clara de huevo|EGG
+Clara de huevo deshidratada|EGG
+Coco rallado
+Coco rallado tostado
+Concentrado de champinones
+Concentrado de remolacha
+Concentrado de tomate
+Copos de coco
+Copos de patata
+Copos de soja|SOY
+Couscous|GLUTEN
+Ensalada de col
+Faina / Tortilla de garbanzos
+Fecula de maiz
+Fecula de mandioca
+Fibra de achicoria
+Fibra de bambu
+Fibra de lino
+Fibra de trigo|GLUTEN
+Fideos de arroz
+Frijoles negros fermentados
+Garbanzo
+Gelatina
+Gelatina de cerdo
+Guisantes de ojo negro
+Gusanos mopani
+Huevo de codorniz|EGG
+Huevo frito|EGG
+Huevo milenario|EGG
+Huevo en polvo|EGG
+Huevo entero deshidratado|EGG
+Injera
+Jengibre encurtido
+Judias rojas
+Jugo de pasas
+Leche de coco
+Leche de patata
+Leche desnatada en polvo|MILK
+Leche entera en polvo|MILK
+Linaza
+Linaza dorada
+Linaza molida
+Marsala
+Nachos
+Nata doble|MILK
+Oporto rojo|SULFITES
+Pan de pita|GLUTEN
+Pan rallado|GLUTEN
+Panko|GLUTEN
+Papadum triturado|GLUTEN
+Pasta de anchoas
+Pescado blanco en polvo|FISH
+Piel de naranja confitada
+Popcorn / Palomitas de maiz
+Psyllium
+Pure de cebolla
+Pure de ciruela dulce
+Pure de coliflor
+Pure de jengibre
+Pure de lima
+Pure de patata
+Queso crema de ajo|MILK
+Ralladura de limon
+Rusk|GLUTEN
+Sal de camargue
+Sal de guerande
+Salted egg / Huevo de pato salado
+Shiratama
+Suero de leche en polvo|MILK
+Tempura|EGG,GLUTEN
+Tteok
+Vegemite
+Yema de huevo|EGG
+Yema de huevo en polvo|EGG
+`),
+};
+
+const INGREDIENTS_BASE = mergeIngredientBases(
+  INGREDIENTS_LEGACY_BASE,
+  INGREDIENTS_EXTENDED_BASE
+);
+
 export default function IngredientsModule() {
   const [ingredients, setIngredients] = useState([]);
   const [category, setCategory] = useState("");
@@ -146,14 +1367,13 @@ export default function IngredientsModule() {
 
 const getDisplayName = (name) => (name || "").toUpperCase();
 const normalizeIngredientName = (name) =>
-  (name || "").trim().toLowerCase();
+  normalizeIngredientKey(name);
 
 const loadIngredients = async () => {
     try {
       setLoading(true);
-      const res = await fetch("http://localhost:8080/ingredients");
-      const data = await res.json();
-      setIngredients(data);
+      const res = await api.get("/ingredients");
+      setIngredients(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
       console.error(err);
     } finally {
@@ -163,9 +1383,8 @@ const loadIngredients = async () => {
 const loadSuggestions = async () => {
   try {
     setLoadingSuggestions(true);
-    const res = await fetch("http://localhost:8080/ingredients/suggestions?status=PENDING");
-    const data = await res.json();
-    setSuggestions(Array.isArray(data) ? data : []);
+    const res = await api.get("/ingredients/suggestions?status=PENDING");
+    setSuggestions(Array.isArray(res.data) ? res.data : []);
   } catch (err) {
     console.error(err);
   } finally {
@@ -188,16 +1407,10 @@ const handleCreate = async () => {
     if (!selected) return;
 
     try {
-      await fetch("http://localhost:8080/ingredients", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+      await api.post("/ingredients", {
           name: selected.name,
-          category,
+          category: getCanonicalCategory(category),
           allergens: selected.allergens,
-        }),
       });
 
       setSelectedName("");
@@ -208,10 +1421,7 @@ const handleCreate = async () => {
 };
 const handleApprove = async (id) => {
   try {
-    await fetch(
-      "http://localhost:8080/ingredients/suggestions/" + id + "/approve",
-      { method: "PATCH" }
-    );
+    await api.patch(`/ingredients/suggestions/${id}/approve`);
 
     loadSuggestions();
   } catch (err) {
@@ -220,10 +1430,7 @@ const handleApprove = async (id) => {
 };
 const handleReject = async (id) => {
   try {
-    await fetch(
-      "http://localhost:8080/ingredients/suggestions/" + id + "/reject",
-      { method: "PATCH" }
-    );
+    await api.patch(`/ingredients/suggestions/${id}/reject`);
 
     loadSuggestions();
   } catch (err) {
@@ -239,9 +1446,7 @@ const handleDeleteIngredient = async (id, name) => {
   if (!confirmed) return;
 
   try {
-    await fetch(`http://localhost:8080/ingredients/${id}`, {
-      method: "DELETE",
-    });
+    await api.delete(`/ingredients/${id}`);
 
     loadIngredients();
   } catch (err) {
@@ -266,13 +1471,18 @@ const availableBaseIngredients = category
     )
   : [];
 
-const treeData = Object.entries(
-  ingredients.reduce((acc, ing) => {
-    if (!acc[ing.category]) acc[ing.category] = [];
-    acc[ing.category].push(ing);
-    return acc;
-  }, {})
-)
+const treeCategories = Object.keys(INGREDIENTS_BASE).reduce((acc, baseCategory) => {
+  acc[baseCategory] = [];
+  return acc;
+}, {});
+
+ingredients.forEach((ing) => {
+  const canonicalCategory = getCanonicalCategory(ing.category);
+  if (!treeCategories[canonicalCategory]) treeCategories[canonicalCategory] = [];
+  treeCategories[canonicalCategory].push(ing);
+});
+
+const treeData = Object.entries(treeCategories)
   .sort(([a], [b]) =>
     a.localeCompare(b, "es", { sensitivity: "base" })
   ).map(([category, items]) => ({
@@ -394,16 +1604,20 @@ const treeData = Object.entries(
             width="100%"
             height={400}
           >
-            {({ node, style }) => (
+            {({ node, style }) => {
+              const isCategoryNode = Array.isArray(node.data.children);
+              const isIngredientNode = node.isLeaf && !isCategoryNode;
+
+              return (
               <div
                 style={style}
-                className={`gm-node ${node.isLeaf ? "leaf" : "parent"}`}
+                className={`gm-node ${isIngredientNode ? "leaf" : "parent"}`}
                 onClick={() => {
-                  if (!node.isLeaf) node.toggle();
+                  if (isCategoryNode || !node.isLeaf) node.toggle();
                 }}
               >
                 <div className="gm-node-left">
-                  {!node.isLeaf && (
+                  {(isCategoryNode || !node.isLeaf) && (
                     <span className="gm-arrow">
                       {node.isOpen ? "▼" : "▶"}
                     </span>
@@ -412,13 +1626,13 @@ const treeData = Object.entries(
                   {node.isLeaf && <span className="gm-dot">•</span>}
 
                   <span className="gm-name">
-                    {node.isLeaf
+                    {isIngredientNode
                       ? getDisplayName(node.data.name)
                       : node.data.name}
                   </span>
                 </div>
 
-                {node.isLeaf && (
+                {isIngredientNode && (
                   <div className="gm-node-right">
                     {node.data.allergens.length > 0 && (
                       <div className="gm-allergens">
@@ -442,7 +1656,8 @@ const treeData = Object.entries(
                   </div>
                 )}
               </div>
-            )}
+              );
+            }}
           </Tree>
         </div>
         </div>

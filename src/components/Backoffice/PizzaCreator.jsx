@@ -138,7 +138,6 @@ export default function PizzaCreator({ partner }) {
   const [inventoryLoadError, setInventoryLoadError] = useState("");
   const [savingProduct, setSavingProduct] = useState(false);
   const [originalIngredientIds, setOriginalIngredientIds] = useState([]);
-  const [ingredientSearchByRow, setIngredientSearchByRow] = useState({});
 
   const loadCategories = useCallback(async () => {
     if (!partnerId) return;
@@ -175,18 +174,27 @@ export default function PizzaCreator({ partner }) {
   useEffect(() => {
     let alive = true;
 
+    if (!storeId) {
+      setInventory([]);
+      setInventoryLoadError(
+        "No hay tienda activa en esta sesion. Vuelve a entrar al Backoffice para cargar el inventario de tienda."
+      );
+      setLoadingInventory(false);
+      return () => {
+        alive = false;
+      };
+    }
+
     setLoadingInventory(true);
     setInventoryLoadError("");
 
     api
-      .get(storeId ? `/stores/${storeId}/ingredients` : "/ingredients")
+      .get(`/stores/${storeId}/ingredients`)
       .then((r) => {
         if (!alive) return;
         const source = Array.isArray(r.data) ? r.data : [];
         setInventory(
-          storeId
-            ? source.filter((item) => item.exists && item.active)
-            : source
+          source.filter((item) => item.exists && item.active)
         );
       })
       .catch((err) => {
@@ -279,7 +287,6 @@ export default function PizzaCreator({ partner }) {
     });
 
     setOpenCat(null);
-    setIngredientSearchByRow({});
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -304,6 +311,20 @@ export default function PizzaCreator({ partner }) {
 
     return map;
   }, [categories, pizzas]);
+
+  const categoryById = useMemo(
+    () => new Map(categories.map((category) => [category.id, category])),
+    [categories]
+  );
+
+  const productCategoryOrder = useMemo(
+    () =>
+      categoryOrder.filter((id) => {
+        const category = categoryById.get(id);
+        return category && (pizzasByCategory[category.name] || []).length > 0;
+      }),
+    [categoryById, categoryOrder, pizzasByCategory]
+  );
 
   useEffect(() => {
     if (!openCat) return;
@@ -398,22 +419,6 @@ export default function PizzaCreator({ partner }) {
       ...p,
       ingredients: p.ingredients.filter((_, idx) => idx !== i),
     }));
-    setIngredientSearchByRow((current) => {
-      const next = {};
-      Object.entries(current).forEach(([key, value]) => {
-        const index = Number(key);
-        if (!Number.isInteger(index) || index === i) return;
-        next[index > i ? index - 1 : index] = value;
-      });
-      return next;
-    });
-  };
-
-  const onIngredientSearchChange = (i, value) => {
-    setIngredientSearchByRow((current) => ({
-      ...current,
-      [i]: value,
-    }));
   };
 
   const onIngredientSelect = (i, id) => {
@@ -426,7 +431,17 @@ export default function PizzaCreator({ partner }) {
       return;
     }
 
-    const row = inventory.find((r) => r.id === Number(id));
+    const nextIngredientId = Number(id);
+    const alreadySelected = form.ingredients.some(
+      (row, idx) => idx !== i && Number(row.id) === nextIngredientId
+    );
+
+    if (alreadySelected) {
+      alert("Este ingrediente ya esta en la receta.");
+      return;
+    }
+
+    const row = inventory.find((r) => r.id === nextIngredientId);
     if (!row) return;
 
     setForm((p) => {
@@ -434,7 +449,6 @@ export default function PizzaCreator({ partner }) {
       ing[i] = { ...ing[i], id: row.id, name: row.name };
       return { ...p, ingredients: ing };
     });
-    setIngredientSearchByRow((current) => ({ ...current, [i]: "" }));
   };
 
   const onQtyChange = (i, sz, val) =>
@@ -455,6 +469,11 @@ export default function PizzaCreator({ partner }) {
 
     if (!partnerId) {
       alert("Missing partner context.");
+      return;
+    }
+
+    if (!storeId) {
+      alert("No hay tienda activa. Recarga el Backoffice antes de guardar productos.");
       return;
     }
 
@@ -523,7 +542,6 @@ export default function PizzaCreator({ partner }) {
       setExistingImage(null);
       setOriginalIngredientIds([]);
       setForm(createInitialForm());
-      setIngredientSearchByRow({});
       fetchPizzas();
     } catch (err) {
       console.error(err);
@@ -608,12 +626,15 @@ export default function PizzaCreator({ partner }) {
     );
   }, [form.ingredients, inventoryById, sortedInventory]);
 
-  const normalizeOptionText = (value = "") =>
-    String(value)
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .trim();
+  const selectedIngredientIds = useMemo(
+    () =>
+      new Set(
+        form.ingredients
+          .map((row) => Number(row.id))
+          .filter((id) => Number.isInteger(id) && id > 0)
+      ),
+    [form.ingredients]
+  );
 
   return (
     <>
@@ -718,23 +739,19 @@ export default function PizzaCreator({ partner }) {
 
               <fieldset className="ingredients-fieldset">
                 {form.ingredients.map((row, i) => {
-                  const ingredientMeta = inventoryById.get(row.id);
+                  const currentIngredientId = Number(row.id);
+                  const ingredientMeta = inventoryById.get(currentIngredientId);
                   const allergenSummary = getAllergenSummary(
                     ingredientMeta?.allergens
                   );
                   const hasAllergens =
                     Array.isArray(ingredientMeta?.allergens) &&
                     ingredientMeta.allergens.length > 0;
-                  const ingredientSearch = ingredientSearchByRow[i] || "";
-                  const normalizedIngredientSearch =
-                    normalizeOptionText(ingredientSearch);
-                  const rowIngredientOptions = normalizedIngredientSearch
-                    ? ingredientOptions.filter((item) =>
-                        normalizeOptionText(item.name).includes(
-                          normalizedIngredientSearch
-                        )
-                      )
-                    : ingredientOptions;
+                  const rowIngredientOptions = ingredientOptions.filter(
+                    (item) =>
+                      item.id === currentIngredientId ||
+                      !selectedIngredientIds.has(item.id)
+                  );
 
                   return (
                   <div key={i} className="ing-row">
@@ -750,24 +767,8 @@ export default function PizzaCreator({ partner }) {
                               {item.name}
                             </option>
                             ))}
-                          {ingredientSearch && rowIngredientOptions.length === 0 && (
-                            <option value="" disabled>
-                              Sin resultados
-                            </option>
-                          )}
                         </select>
 
-                        <label className="pc-ingredientSearch">
-                          <span aria-hidden="true">⌕</span>
-                          <input
-                            type="text"
-                            value={ingredientSearch}
-                            placeholder="Buscar"
-                            onChange={(e) =>
-                              onIngredientSearchChange(i, e.target.value)
-                            }
-                          />
-                        </label>
                       </div>
                     </div>
 
@@ -865,7 +866,6 @@ export default function PizzaCreator({ partner }) {
                   setExistingImage(null);
                   setOriginalIngredientIds([]);
                   setForm(createInitialForm());
-                  setIngredientSearchByRow({});
                 }}
               >
                 Cancelar edicion
@@ -875,10 +875,10 @@ export default function PizzaCreator({ partner }) {
         </form>
 
         <aside className="pc-right">
-          <div className="pc-right__title">Categorias</div>
+          <div className="pc-right__title">Categorias con productos</div>
           <div className="pc-right__hint">
-            Orden del feed del negocio. Este orden lo define cada partner desde
-            su Backoffice.
+            Orden del feed del negocio. Las categorias vacias siguen disponibles
+            al crear productos.
           </div>
 
           <DndContext
@@ -886,12 +886,12 @@ export default function PizzaCreator({ partner }) {
             onDragEnd={onCategoryDragEnd}
           >
             <SortableContext
-              items={categoryOrder}
+              items={productCategoryOrder}
               strategy={verticalListSortingStrategy}
             >
               <div className="pc-catsGrid">
-                {categoryOrder.map((id) => {
-                  const c = categories.find((x) => x.id === id);
+                {productCategoryOrder.map((id) => {
+                  const c = categoryById.get(id);
                   if (!c) return null;
 
                   const name = c.name;
@@ -918,6 +918,14 @@ export default function PizzaCreator({ partner }) {
                     </SortableCategory>
                   );
                 })}
+
+                {!loadingCategories &&
+                  !loadingPizzas &&
+                  productCategoryOrder.length === 0 && (
+                    <div className="pc-emptyState">
+                      Aun no hay productos creados.
+                    </div>
+                  )}
               </div>
             </SortableContext>
           </DndContext>

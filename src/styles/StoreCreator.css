@@ -4,6 +4,12 @@
   color: #201233;
 }
 
+.sc-page--locations {
+  min-height: calc(100vh - 32px);
+  display: flex;
+  flex-direction: column;
+}
+
 .sc-header,
 .sc-cardHead,
 .sc-hoursDayHead,
@@ -319,9 +325,23 @@
   overflow: hidden;
 }
 
+.sc-page--locations .sc-mapCard {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 18px;
+  margin-bottom: 0;
+}
+
+.sc-page--locations .sc-cardHead {
+  flex: 0 0 auto;
+}
+
 .sc-mapPanel {
   display: grid;
   gap: 16px;
+  flex: 1;
+  min-height: 0;
 }
 
 .sc-mapActions {
@@ -330,11 +350,65 @@
   gap: 12px;
 }
 
+.sc-mapControls {
+  display: grid;
+  gap: 10px;
+  margin: 8px 0 14px;
+}
+
+.sc-territoryModes,
 .sc-mapLegend {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  margin: 8px 0 14px;
+}
+
+.sc-territoryModeBtn {
+  min-height: 38px;
+  padding: 8px 13px;
+  border-radius: 999px;
+  border: 1px solid rgba(59, 0, 139, 0.1);
+  background: rgba(255, 255, 255, 0.88);
+  color: #241639;
+  font-size: 13px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.sc-territoryModeBtn.is-segment {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sc-territoryModeBtn:hover {
+  transform: translateY(-1px);
+}
+
+.sc-territoryModeBtn.is-active {
+  color: #ffffff;
+  box-shadow: 0 12px 20px rgba(36, 22, 59, 0.13);
+}
+
+.sc-territoryModeBtn.is-segment.is-active {
+  background: var(--sc-segment-color, var(--brand-1));
+  border-color: var(--sc-segment-color, var(--brand-1));
+}
+
+.sc-segmentSwatch {
+  width: 11px;
+  height: 11px;
+  flex: 0 0 11px;
+  border-radius: 50%;
+  background: var(--sc-segment-color, var(--brand-1));
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 0 1px rgba(36, 22, 59, 0.14);
+}
+
+.sc-territoryModeBtn.is-active .sc-segmentSwatch {
+  background: #ffffff;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.32);
 }
 
 .sc-legendItem {
@@ -372,7 +446,13 @@
 }
 
 .sc-legendDot.is-cold {
-  background: #1e88e5;
+  background:
+    repeating-linear-gradient(
+      135deg,
+      #1e88e5 0 3px,
+      #ffffff 3px 5px
+    );
+  border: 1px solid #1e88e5;
 }
 
 .sc-mapEmbedShell {
@@ -385,6 +465,10 @@
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 
+.sc-page--locations .sc-mapEmbedShell {
+  min-height: min(820px, calc(100vh - 250px));
+}
+
 .sc-mapEmbed {
   width: 100%;
   height: 320px;
@@ -395,6 +479,27 @@
 .sc-mapCanvas {
   width: 100%;
   height: 320px;
+}
+
+.sc-page--locations .sc-mapEmbed,
+.sc-page--locations .sc-mapCanvas {
+  height: min(820px, calc(100vh - 250px));
+  min-height: 560px;
+}
+
+.sc-mapEmptyOverlay {
+  position: absolute;
+  left: 14px;
+  bottom: 14px;
+  z-index: 4;
+  max-width: min(360px, calc(100% - 28px));
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px dashed rgba(59, 0, 139, 0.18);
+  color: rgba(32, 18, 51, 0.72);
+  font-weight: 800;
+  box-shadow: 0 14px 28px rgba(36, 22, 59, 0.1);
 }
 
 .sc-reportWrap {
@@ -609,6 +714,106 @@
 
 .sc-tempDot.is-cold {
   background: #1e88e5;
+}
+
+.sc-customerProfileModal {
+  width: min(720px, 100%);
+}
+
+.sc-customerProfileSub {
+  margin: 6px 0 0;
+  color: rgba(36, 22, 59, 0.66);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.sc-customerProfileStatus {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.sc-customerProfileStatus span {
+  min-height: 30px;
+  padding: 0 11px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  background: rgba(59, 0, 139, 0.08);
+  color: var(--brand-1);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.sc-customerProfileBadge.is-active {
+  background: rgba(34, 197, 94, 0.14);
+  color: #15803d;
+}
+
+.sc-customerProfileBadge.is-prospect {
+  background: rgba(17, 24, 39, 0.14);
+  color: #111827;
+}
+
+.sc-customerProfileBadge.is-risk {
+  background: rgba(245, 158, 11, 0.16);
+  color: #92400e;
+}
+
+.sc-customerProfileGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.sc-customerProfileMetric {
+  display: grid;
+  gap: 6px;
+  padding: 13px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(59, 0, 139, 0.1);
+}
+
+.sc-customerProfileMetric span,
+.sc-customerProfileInfo span {
+  color: rgba(36, 22, 59, 0.58);
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.sc-customerProfileMetric strong {
+  color: #241639;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.sc-customerProfileMetric small {
+  color: rgba(36, 22, 59, 0.68);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.sc-customerProfileInfo {
+  display: grid;
+  gap: 10px;
+}
+
+.sc-customerProfileInfo div {
+  display: grid;
+  gap: 5px;
+  padding: 12px 13px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(59, 0, 139, 0.08);
+}
+
+.sc-customerProfileInfo strong {
+  color: #241639;
+  font-size: 13px;
+  line-height: 1.35;
 }
 
 .sc-modalBack {
@@ -983,9 +1188,26 @@
     overflow-x: auto;
   }
 
-  .sc-mapActions {
+  .sc-mapActions,
+  .sc-territoryModes,
+  .sc-mapLegend {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .sc-page--locations .sc-mapCard {
+    padding: 12px;
+  }
+
+  .sc-page--locations .sc-mapEmbed,
+  .sc-page--locations .sc-mapCanvas,
+  .sc-page--locations .sc-mapEmbedShell {
+    height: calc(100vh - 330px);
+    min-height: 520px;
+  }
+
+  .sc-customerProfileGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .sc-reportGrid,

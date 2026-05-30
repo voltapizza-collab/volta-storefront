@@ -113,10 +113,6 @@
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
 }
 
-.cu-statsGrid-temperature {
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-}
-
 .cu-statCard {
   padding: 16px 18px;
   border-radius: 20px;
@@ -147,30 +143,21 @@
   background: rgba(255, 105, 51, 0.08);
 }
 
+.cu-statCard-static {
+  cursor: default;
+}
+
+.cu-statCard-static:hover {
+  transform: none;
+  box-shadow: none;
+}
+
 .cu-statCard-segment {
   background: linear-gradient(180deg, #ffffff 0%, rgba(247, 241, 255, 0.88) 100%);
 }
 
 .cu-statCard-total {
   background: linear-gradient(135deg, rgba(255, 182, 28, 0.18), rgba(106, 61, 240, 0.08));
-}
-
-.cu-statCard-temperature {
-  color: #fff;
-}
-
-.cu-statCard-temperature span,
-.cu-statCard-temperature strong,
-.cu-statCard-temperature small {
-  color: inherit;
-}
-
-.cu-statCard-temperature-hot {
-  background: linear-gradient(135deg, #ff2d6f, #ff7b54);
-}
-
-.cu-statCard-temperature-cold {
-  background: linear-gradient(135deg, #1d9bf0, #4bc0c0);
 }
 
 .cu-toolbar {
@@ -241,18 +228,6 @@
   background: rgba(255, 105, 51, 0.1);
 }
 
-.cu-filterChip-hot {
-  background: rgba(255, 45, 111, 0.08);
-  border-color: rgba(255, 45, 111, 0.16);
-  color: #b0134d;
-}
-
-.cu-filterChip-cold {
-  background: rgba(29, 155, 240, 0.1);
-  border-color: rgba(29, 155, 240, 0.18);
-  color: #0b5f9f;
-}
-
 .cu-filterReset {
   background: rgba(59, 0, 139, 0.06);
 }
@@ -300,6 +275,14 @@
   background: rgba(59, 0, 139, 0.03);
 }
 
+.cu-clickableRow {
+  cursor: pointer;
+}
+
+.cu-clickableRow:hover {
+  background: rgba(59, 0, 139, 0.035);
+}
+
 .cu-table .actions {
   text-align: right;
 }
@@ -323,6 +306,23 @@
   background: rgba(59, 0, 139, 0.04);
   color: var(--brand-1);
   padding: 8px 12px;
+}
+
+.cu-moneyCell {
+  display: grid;
+  gap: 3px;
+  min-width: 104px;
+}
+
+.cu-moneyCell strong {
+  color: var(--brand-1);
+  font-size: 13px;
+}
+
+.cu-moneyCell span {
+  color: rgba(59, 0, 139, 0.62);
+  font-size: 12px;
+  font-weight: 700;
 }
 
 .cu-trend {
@@ -417,6 +417,75 @@
   border-radius: 28px;
   background: #fff;
   box-shadow: 0 28px 60px rgba(29, 9, 74, 0.28);
+}
+
+.cu-profileCard {
+  width: min(780px, 100%);
+}
+
+.cu-profileSub {
+  margin: 6px 0 0;
+  color: rgba(59, 0, 139, 0.66);
+  font-weight: 800;
+}
+
+.cu-profileStatus {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 18px 0 14px;
+}
+
+.cu-profileMetrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.cu-profileMetric {
+  display: grid;
+  gap: 6px;
+  padding: 14px;
+  border-radius: 18px;
+  background: rgba(247, 241, 255, 0.72);
+  border: 1px solid rgba(59, 0, 139, 0.08);
+}
+
+.cu-profileMetric span,
+.cu-profileMetric small,
+.cu-profileInfo span {
+  color: rgba(59, 0, 139, 0.66);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.cu-profileMetric strong {
+  color: var(--brand-1);
+  font-size: 20px;
+  line-height: 1;
+}
+
+.cu-profileInfo {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.cu-profileInfo div {
+  display: grid;
+  gap: 5px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(59, 0, 139, 0.08);
+}
+
+.cu-profileInfo strong {
+  color: var(--brand-1);
+  font-size: 13px;
+  line-height: 1.35;
 }
 
 .cu-iconBtn {
@@ -515,6 +584,10 @@
   background: linear-gradient(135deg, #36a2eb, #4bc0c0);
 }
 
+.cu-pill.prospect {
+  background: linear-gradient(135deg, #111827, #374151);
+}
+
 .cu-pill:hover {
   transform: translateY(-1px);
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
@@ -539,8 +612,8 @@
   }
 
   .cu-statsGrid-segments,
-  .cu-statsGrid-temperature,
-  .cu-formGrid {
+  .cu-formGrid,
+  .cu-profileMetrics {
     grid-template-columns: 1fr;
   }
 

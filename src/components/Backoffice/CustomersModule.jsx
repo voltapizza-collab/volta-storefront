@@ -15,17 +15,12 @@ const emptyCustomer = {
 
 const normalizePhone = (value = "") => value.replace(/[^\d]/g, "");
 
-const temperatureCards = [
-  { key: "HOT", label: "Hot", description: "Ultimos 15 dias", countKey: "hot", tone: "hot" },
-  { key: "COLD", label: "Cold", description: "Mas de 15 dias", countKey: "cold", tone: "cold" },
-];
-
 const segmentCards = [
   { key: "S1", shortLabel: "Potencial", description: "0 compras" },
   { key: "S2", shortLabel: "Nuevo", description: "1 compra" },
-  { key: "S3", shortLabel: "Dormido", description: "30+ dias sin compra" },
-  { key: "S4", shortLabel: "Activo", description: "2+ compras recientes" },
-  { key: "S5", shortLabel: "VIP", description: "10+ compras o ticket alto" },
+  { key: "S3", shortLabel: "Dormido", description: "2+ compras y +30 dias" },
+  { key: "S4", shortLabel: "Activo", description: "2+ compras y compra reciente" },
+  { key: "S5", shortLabel: "VIP", description: "5+ compras y sobre media" },
 ];
 
 const displayESPhone = (phone = "") => {
@@ -36,31 +31,47 @@ const displayESPhone = (phone = "") => {
   return digits.length >= 9 ? digits.slice(-9) : raw;
 };
 
-const buildTrend = (customer) => {
-  const explicitTrend = String(customer?.trend || "").trim();
-  if (explicitTrend) {
-    const normalized = explicitTrend.toLowerCase();
-    if (normalized.includes("alza")) return { label: explicitTrend, tone: "up", hint: "Ultimo ticket por encima de su media" };
-    if (normalized.includes("baj")) return { label: explicitTrend, tone: "down", hint: "Ultimo ticket por debajo de su media" };
-    return { label: explicitTrend, tone: "steady", hint: "Ticket en linea con su historial" };
-  }
+const formatMoney = (value, currency = "EUR") => {
+  const amount = Number(value || 0);
+  return `${currency} ${amount.toFixed(2)}`;
+};
 
+const formatCustomerMoney = (customer, value) =>
+  Number(customer?.orderCount || 0) > 0 ? formatMoney(value) : "-";
+
+const formatDaysOff = (customer) => {
+  if (!Number(customer?.orderCount || 0)) return "Sin compras";
   const daysOff = Number(customer?.daysOff ?? 0);
-  const segment = String(customer?.segment || "");
+  if (!daysOff) return "Hoy";
+  return `${daysOff} dias`;
+};
 
-  if (daysOff <= 7 && (segment === "S4" || segment === "S5")) {
-    return { label: "En alza", tone: "up", hint: "Compra reciente y valor fuerte" };
-  }
+const getTicketComparisonLabel = (customer) => {
+  if (!Number(customer?.orderCount || 0)) return "Sin compras";
+  const storeAverage = Number(customer?.storeAverageTicket || 0);
+  if (!storeAverage) return "Sin media tienda";
+  return customer.isAboveStoreAverage ? "Sobre media tienda" : "Bajo media tienda";
+};
 
-  if (daysOff <= 15) {
-    return { label: "Estable", tone: "steady", hint: "Cliente activo sin senales de caida" };
-  }
+const formatDate = (value) => {
+  if (!value) return "Sin compras";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "Sin compras";
+  return date.toLocaleDateString("es-ES", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+};
 
-  if (segment === "S4" || segment === "S5" || daysOff > 30) {
-    return { label: "Bajando", tone: "down", hint: "Conviene win-back o boost" };
-  }
+const formatLastOrderDate = (customer) => {
+  if (!Number(customer?.orderCount || 0)) return "Sin compras";
+  return customer?.lastOrderAt ? formatDate(customer.lastOrderAt) : "Fecha no disponible";
+};
 
-  return { label: "Frio", tone: "down", hint: "Actividad baja, revisar reenganche" };
+const escapeCsv = (value) => {
+  const text = String(value ?? "");
+  return /[",\n\r]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
 };
 
 function SegmentBadge({ value }) {
@@ -69,6 +80,100 @@ function SegmentBadge({ value }) {
     <span className={`cu-badge cu-badge-${String(segment.key || "s1").toLowerCase()}`}>
       {segment.shortLabel}
     </span>
+  );
+}
+
+function CustomerInsightModal({ customer, onClose, onEdit, onBoost }) {
+  if (!customer) return null;
+
+  const stats = [
+    {
+      label: "Ticket promedio",
+      value: formatCustomerMoney(customer, customer.averageTicket),
+      meta: getTicketComparisonLabel(customer),
+    },
+    {
+      label: "Ultimo ticket",
+      value: formatCustomerMoney(customer, customer.lastTicket),
+      meta: formatLastOrderDate(customer),
+    },
+    {
+      label: "Valor acumulado",
+      value: formatCustomerMoney(customer, customer.lifetimeValue),
+      meta: customer.segment || "S1",
+    },
+    {
+      label: "Dias sin pedir",
+      value: formatDaysOff(customer),
+      meta: formatLastOrderDate(customer),
+    },
+  ];
+
+  return (
+    <div className="cu-modalBack" onMouseDown={onClose}>
+      <div className="cu-modalCard cu-profileCard" onMouseDown={(event) => event.stopPropagation()}>
+        <div className="cu-modalHead">
+          <div>
+            <div className="cu-kicker">Perfil de cliente</div>
+            <h3>{customer.name || "Cliente"}</h3>
+            <p className="cu-profileSub">
+              {customer.phone ? displayESPhone(customer.phone) : "Sin telefono"} - {customer.zipCode || "Sin CP"}
+            </p>
+          </div>
+
+          <button className="cu-iconBtn" onClick={onClose} type="button">
+            x
+          </button>
+        </div>
+
+        <div className="cu-profileStatus">
+          <SegmentBadge value={customer.segment} />
+          <span>{formatDaysOff(customer)}</span>
+          <StatusBadge restricted={customer.isRestricted} />
+        </div>
+
+        <div className="cu-profileMetrics">
+          {stats.map((item) => (
+            <article key={item.label} className="cu-profileMetric">
+              <span>{item.label}</span>
+              <strong>{item.value}</strong>
+              <small>{item.meta}</small>
+            </article>
+          ))}
+        </div>
+
+        <div className="cu-profileInfo">
+          <div>
+            <span>Direccion</span>
+            <strong>{customer.address_1 || "Sin direccion registrada"}</strong>
+          </div>
+          <div>
+            <span>Email</span>
+            <strong>{customer.email || "Sin email"}</strong>
+          </div>
+          {customer.observations && (
+            <div>
+              <span>Observaciones</span>
+              <strong>{customer.observations}</strong>
+            </div>
+          )}
+        </div>
+
+        <div className="cu-modalActions">
+          <button className="cu-btn cu-btn-ghost" onClick={onClose} type="button">
+            Cerrar
+          </button>
+          <div className="cu-actionsRight">
+            <button className="cu-btn cu-btn-ghost" onClick={() => onEdit(customer)} type="button">
+              Editar
+            </button>
+            <button className="cu-btn cu-btn-primary" onClick={() => onBoost(customer)} type="button">
+              Crear boost
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -222,7 +327,6 @@ export default function CustomersModule({ partner }) {
     total: 0,
     counts: { S1: 0, S2: 0, S3: 0, S4: 0, S5: 0 },
     active: { restricted: 0, unrestricted: 0 },
-    temperature: { cold: 0, hot: 0 },
     zipCodes: [],
   });
   const [loading, setLoading] = useState(true);
@@ -230,9 +334,9 @@ export default function CustomersModule({ partner }) {
   const [error, setError] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [editing, setEditing] = useState(null);
+  const [profileCustomer, setProfileCustomer] = useState(null);
   const [boosting, setBoosting] = useState(null);
   const [segmentFilter, setSegmentFilter] = useState(null);
-  const [temperatureFilter, setTemperatureFilter] = useState(null);
 
   const loadStats = useCallback(async () => {
     if (!partnerId) return;
@@ -242,7 +346,6 @@ export default function CustomersModule({ partner }) {
         total: 0,
         counts: { S1: 0, S2: 0, S3: 0, S4: 0, S5: 0 },
         active: { restricted: 0, unrestricted: 0 },
-        temperature: { cold: 0, hot: 0 },
         zipCodes: [],
       }
     );
@@ -283,14 +386,13 @@ export default function CustomersModule({ partner }) {
       if (countryValue) params.set("country", countryValue);
       if (storeValue) params.set("storeId", storeValue);
       if (segmentFilter) params.set("segment", segmentFilter);
-      if (temperatureFilter) params.set("temperature", temperatureFilter);
       if (searchText.trim()) params.set("q", searchText.trim());
       if (zipDigits) params.set("zip", zipDigits);
 
       const response = await api.get(`/api/customers/admin?${params.toString()}`);
       setRows(Array.isArray(response.data?.items) ? response.data.items : []);
     },
-    [partnerId, segmentFilter, temperatureFilter]
+    [partnerId, segmentFilter]
   );
 
   useEffect(() => {
@@ -332,20 +434,18 @@ export default function CustomersModule({ partner }) {
   }, [activeCountry, loadRows, partnerId, query, storeQuery, zipQuery]);
 
   const orderedSegments = useMemo(() => segmentCards, []);
-  const hasActiveFilters = Boolean(segmentFilter || temperatureFilter || countryQuery || storeQuery || query || zipQuery);
+  const hasActiveFilters = Boolean(segmentFilter || countryQuery || storeQuery || query || zipQuery);
   const visibleStats = useMemo(() => {
     if (!hasActiveFilters) return stats;
 
     const counts = { S1: 0, S2: 0, S3: 0, S4: 0, S5: 0 };
     let restricted = 0;
-    let cold = 0;
 
     rows.forEach((customer) => {
       if (customer?.segment && Object.prototype.hasOwnProperty.call(counts, customer.segment)) {
         counts[customer.segment] += 1;
       }
       if (customer?.isRestricted) restricted += 1;
-      if (Number(customer?.daysOff ?? 0) > 15) cold += 1;
     });
 
     const zipCodes = [...new Set(
@@ -360,10 +460,6 @@ export default function CustomersModule({ partner }) {
       active: {
         restricted,
         unrestricted: Math.max(rows.length - restricted, 0),
-      },
-      temperature: {
-        cold,
-        hot: Math.max(rows.length - cold, 0),
       },
       zipCodes,
     };
@@ -457,6 +553,59 @@ export default function CustomersModule({ partner }) {
     }
   };
 
+  const exportRows = () => {
+    const headers = [
+      "code",
+      "name",
+      "phone",
+      "email",
+      "segment",
+      "zipCode",
+      "daysOff",
+      "orderCount",
+      "averageTicket",
+      "lifetimeValue",
+      "storeAverageTicket",
+      "ticketVsStoreAverage",
+      "lastTicket",
+      "lastOrderAt",
+      "address",
+    ];
+    const lines = [
+      headers.join(","),
+      ...rows.map((customer) =>
+        [
+          customer.code,
+          customer.name,
+          displayESPhone(customer.phone || ""),
+          customer.email,
+          customer.segment,
+          customer.zipCode,
+          customer.daysOff,
+          customer.orderCount,
+          Number(customer.orderCount || 0) > 0 ? Number(customer.averageTicket || 0).toFixed(2) : "",
+          Number(customer.orderCount || 0) > 0 ? Number(customer.lifetimeValue || 0).toFixed(2) : "",
+          Number(customer.storeAverageTicket || 0) > 0 ? Number(customer.storeAverageTicket || 0).toFixed(2) : "",
+          getTicketComparisonLabel(customer),
+          Number(customer.orderCount || 0) > 0 ? Number(customer.lastTicket || 0).toFixed(2) : "",
+          formatLastOrderDate(customer),
+          customer.address_1,
+        ]
+          .map(escapeCsv)
+          .join(",")
+      ),
+    ];
+    const blob = new Blob([lines.join("\n")], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `customers-segment-${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <section className="cu-shell">
       <div className="cu-panel">
@@ -470,6 +619,14 @@ export default function CustomersModule({ partner }) {
           <div className="cu-headActions">
             <button className="cu-btn cu-btn-ghost" onClick={resegment} type="button" disabled={saving}>
               Actualizar segmentos
+            </button>
+            <button
+              className="cu-btn cu-btn-ghost"
+              onClick={exportRows}
+              type="button"
+              disabled={!rows.length}
+            >
+              Exportar lista
             </button>
             <button
               className="cu-btn cu-btn-primary"
@@ -491,51 +648,23 @@ export default function CustomersModule({ partner }) {
               {orderedSegments.map((segment) => (
                 <article
                   key={segment.key}
-                  className={`cu-statCard cu-statCard-segment ${
-                    segmentFilter === segment.key ? "active" : ""
-                  }`}
-                  onClick={() => setSegmentFilter((prev) => (prev === segment.key ? null : segment.key))}
+                  className="cu-statCard cu-statCard-segment cu-statCard-static"
                 >
                   <span>{segment.shortLabel}</span>
-                  <strong>{visibleStats.counts?.[segment.key] || 0}</strong>
+                  <strong>{stats.counts?.[segment.key] || 0}</strong>
                   <small>{segment.description}</small>
                 </article>
               ))}
             </div>
           </div>
 
-          <div className="cu-statsBlock">
-            <div className="cu-blockLabel">Temperatura</div>
-            <div className="cu-statsGrid cu-statsGrid-temperature">
-              {temperatureCards.map((item) => (
-                <article
-                  key={item.key}
-                  className={`cu-statCard cu-statCard-temperature cu-statCard-temperature-${item.tone} ${
-                    temperatureFilter === item.key ? "active" : ""
-                  }`}
-                  onClick={() => setTemperatureFilter((prev) => (prev === item.key ? null : item.key))}
-                >
-                  <span>{item.label}</span>
-                  <strong>{visibleStats.temperature?.[item.countKey] || 0}</strong>
-                  <small>{item.description}</small>
-                </article>
-              ))}
-
-              <article
-                className={`cu-statCard cu-statCard-total ${!segmentFilter && !temperatureFilter ? "active" : ""}`}
-                onClick={() => {
-                  setSegmentFilter(null);
-                  setTemperatureFilter(null);
-                }}
-              >
-                <span>Total</span>
-                <strong>{visibleStats.total || 0}</strong>
-                <small>
-                  Active: {visibleStats.active?.unrestricted || 0} · Restricted: {visibleStats.active?.restricted || 0}
-                </small>
-              </article>
-            </div>
-          </div>
+          <article className="cu-statCard cu-statCard-total cu-statCard-static">
+            <span>Total</span>
+            <strong>{stats.total || 0}</strong>
+            <small>
+              Active: {stats.active?.unrestricted || 0} - Restricted: {stats.active?.restricted || 0}
+            </small>
+          </article>
         </div>
 
         <div className="cu-toolbar">
@@ -588,29 +717,11 @@ export default function CustomersModule({ partner }) {
             ))}
           </div>
 
-          <div className="cu-filterGroup">
-            <span className="cu-filterTitle">Temperatura</span>
-            {temperatureCards.map((item) => (
-              <button
-                key={item.key}
-                className={`cu-filterChip cu-filterChip-${item.tone} ${
-                  temperatureFilter === item.key ? "active" : ""
-                }`}
-                onClick={() => setTemperatureFilter((prev) => (prev === item.key ? null : item.key))}
-                type="button"
-              >
-                <span>{item.label}</span>
-                <strong>{visibleStats.temperature?.[item.countKey] || 0}</strong>
-              </button>
-            ))}
-          </div>
-
           {hasActiveFilters && (
             <button
               className="cu-filterReset"
               onClick={() => {
                 setSegmentFilter(null);
-                setTemperatureFilter(null);
                 setCountryQuery("");
                 setStoreQuery("");
                 setQuery("");
@@ -633,8 +744,8 @@ export default function CustomersModule({ partner }) {
                 <th>Name</th>
                 <th>Phone</th>
                 <th>Segment</th>
-                <th>Tendencia</th>
-                <th>Days Off</th>
+                <th>Ticket prom.</th>
+                <th>Ultima compra</th>
                 <th>Status</th>
                 <th className="actions">Actions</th>
               </tr>
@@ -643,10 +754,6 @@ export default function CustomersModule({ partner }) {
             <tbody>
               {rows.map((customer) => (
                 <tr key={customer.id}>
-                  {(() => {
-                    const trend = buildTrend(customer);
-                    return (
-                      <>
                   <td>{customer.code || "-"}</td>
                   <td>
                     <div className="cu-nameCell">
@@ -659,17 +766,16 @@ export default function CustomersModule({ partner }) {
                     <SegmentBadge value={customer.segment} />
                   </td>
                   <td>
-                    <span className={`cu-trend cu-trend-${trend.tone}`} title={trend.hint}>
-                      <span>{trend.label}</span>
-                    </span>
+                    <div className="cu-moneyCell">
+                      <strong>{formatCustomerMoney(customer, customer.averageTicket)}</strong>
+                      <span>{getTicketComparisonLabel(customer)}</span>
+                    </div>
                   </td>
                   <td>
-                    <span
-                      className={`cu-pill ${(customer.daysOff ?? 0) > 15 ? "cold" : "hot"}`}
-                      title={`${customer.daysOff ?? 0} days without orders`}
-                    >
-                      {(customer.daysOff ?? 0) > 15 ? "COLD" : "HOT"}
-                    </span>
+                    <div className="cu-moneyCell">
+                      <strong>{formatDaysOff(customer)}</strong>
+                      <span>{formatLastOrderDate(customer)}</span>
+                    </div>
                   </td>
                   <td>
                     <StatusBadge restricted={customer.isRestricted} />
@@ -678,7 +784,8 @@ export default function CustomersModule({ partner }) {
                     <div className="cu-rowActions">
                       <button
                         className="cu-inlineBtn"
-                        onClick={() => {
+                        onClick={(event) => {
+                          event.stopPropagation();
                           setEditing(customer);
                           setShowModal(true);
                         }}
@@ -688,23 +795,26 @@ export default function CustomersModule({ partner }) {
                       </button>
                       <button
                         className="cu-inlineBtn"
-                        onClick={() => setBoosting(customer)}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          setBoosting(customer);
+                        }}
                         type="button"
                       >
                         Boost
                       </button>
                       <button
                         className="cu-inlineBtn"
-                        onClick={() => toggleRestricted(customer)}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          toggleRestricted(customer);
+                        }}
                         type="button"
                       >
                         {customer.isRestricted ? "Unrest" : "Restrict"}
                       </button>
                     </div>
                   </td>
-                      </>
-                    );
-                  })()}
                 </tr>
               ))}
 
@@ -730,6 +840,22 @@ export default function CustomersModule({ partner }) {
           }}
           onSubmit={saveCustomer}
           onDelete={deleteCustomer}
+        />
+      )}
+
+      {profileCustomer && (
+        <CustomerInsightModal
+          customer={profileCustomer}
+          onClose={() => setProfileCustomer(null)}
+          onEdit={(customer) => {
+            setProfileCustomer(null);
+            setEditing(customer);
+            setShowModal(true);
+          }}
+          onBoost={(customer) => {
+            setProfileCustomer(null);
+            setBoosting(customer);
+          }}
         />
       )}
 

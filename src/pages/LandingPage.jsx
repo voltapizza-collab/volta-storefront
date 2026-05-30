@@ -61,14 +61,17 @@ const socialLinks = [
 
 const getBackofficeHref = () => {
   const envUrl = process.env.REACT_APP_BACKOFFICE_URL?.trim();
-  if (envUrl) return envUrl;
+  if (envUrl) {
+    const separator = envUrl.includes("?") ? "&" : "?";
+    return `${envUrl}${separator}demo=1`;
+  }
 
   if (typeof window !== "undefined") {
     const isLocal = ["localhost", "127.0.0.1"].includes(window.location.hostname);
-    if (isLocal) return `${window.location.origin}/Backoffice`;
+    if (isLocal) return `${window.location.origin}/Backoffice?demo=1`;
   }
 
-  return "https://api.voltapizza.com/Backoffice";
+  return "https://voltapizza.com/Backoffice?demo=1";
 };
 
 function ContactIcon({ icon }) {

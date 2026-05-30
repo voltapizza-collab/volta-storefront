@@ -280,6 +280,123 @@ color: var(--black);
   background: #fff;
 }
 
+.inv-itemsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
+  gap: 9px;
+  max-height: 382px;
+  overflow-y: auto;
+  padding: 12px;
+  background: #fff;
+  scrollbar-gutter: stable;
+}
+
+.inv-itemsGrid--search {
+  max-height: none;
+  overflow: visible;
+  padding: 0;
+  background: transparent;
+}
+
+.inv-ingredientTile {
+  min-height: 112px;
+  padding: 9px 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #111827;
+  display: grid;
+  grid-template-rows: 40px minmax(30px, 1fr) 18px;
+  gap: 6px;
+  align-items: center;
+  justify-items: center;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+}
+
+.inv-ingredientTile:hover {
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--brand-2) 52%, #ffffff);
+  box-shadow: 0 12px 22px rgba(17, 24, 39, 0.09);
+}
+
+.inv-ingredientTile.is-active {
+  background: color-mix(in srgb, var(--brand-2) 12%, #ffffff);
+  border-color: color-mix(in srgb, var(--brand-2) 42%, #ffffff);
+}
+
+.inv-ingredientTile.is-inactive {
+  background: #f8fafc;
+  color: #64748b;
+}
+
+.inv-ingredientTile.is-new {
+  border-style: dashed;
+}
+
+.inv-tileMedia {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #eef2f7;
+  color: var(--brand-1);
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.inv-tileMedia img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.inv-tileName {
+  width: 100%;
+  color: inherit;
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1.2;
+  max-height: 43px;
+  overflow-y: auto;
+  overflow-wrap: anywhere;
+  scrollbar-width: none;
+}
+
+.inv-tileName::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+.inv-tileMeta {
+  width: 100%;
+  min-height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  color: #64748b;
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.inv-tileMeta span,
+.inv-tileMeta strong {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.inv-tileMeta strong {
+  flex: 0 0 auto;
+  color: var(--brand-1);
+}
+
 /* ITEM ROW */
 .inv-itemRow {
   display: flex;
@@ -412,6 +529,205 @@ color: var(--black);
   background: #ffffff;
   border: 1px solid rgba(59, 0, 139, 0.1);
   box-shadow: 0 26px 60px rgba(17, 24, 39, 0.22);
+}
+
+.inv-detailModal {
+  width: min(620px, 100%);
+  padding: 22px;
+  border-radius: 18px;
+  background: #ffffff;
+  border: 1px solid rgba(59, 0, 139, 0.1);
+  box-shadow: 0 26px 60px rgba(17, 24, 39, 0.22);
+}
+
+.inv-detailHero {
+  display: grid;
+  grid-template-columns: 138px minmax(0, 1fr);
+  gap: 16px;
+  align-items: stretch;
+  margin-bottom: 18px;
+}
+
+.inv-detailPhoto {
+  min-height: 138px;
+  border-radius: 16px;
+  background: #eef2f7;
+  border: 1px dashed #cbd5e1;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  position: relative;
+  cursor: pointer;
+  color: var(--brand-1);
+  font-size: 28px;
+  font-weight: 900;
+}
+
+.inv-detailPhoto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  grid-area: 1 / 1;
+}
+
+.inv-detailPhoto input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.inv-detailPhoto strong {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  min-height: 28px;
+  border-radius: 999px;
+  background: rgba(17, 24, 39, 0.78);
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.inv-detailIntro {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.inv-detailIntro h3 {
+  margin: 0;
+  color: var(--brand-1);
+  font-size: 24px;
+  font-weight: 900;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+.inv-detailIntro p {
+  margin: 8px 0 14px;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.inv-detailStatus {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.inv-detailStatus span,
+.inv-detailStatus strong {
+  min-height: 30px;
+  padding: 0 11px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.inv-detailStatus span.is-active {
+  background: #16a34a;
+}
+
+.inv-detailStatus span.is-inactive {
+  background: #475569;
+}
+
+.inv-detailStatus strong {
+  background: var(--brand-1);
+}
+
+.inv-detailSection {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 16px;
+}
+
+.inv-detailSection > span,
+.inv-detailField > span {
+  color: var(--brand-1);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.inv-allergenTags--detail {
+  justify-content: flex-start;
+}
+
+.inv-detailSection small {
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.35;
+  font-weight: 700;
+}
+
+.inv-detailField {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 16px;
+}
+
+.inv-detailField textarea {
+  width: 100%;
+  min-height: 86px;
+  resize: vertical;
+  border: 1px solid #d9e2ec;
+  border-radius: 14px;
+  padding: 12px;
+  color: #111827;
+  font: inherit;
+  font-size: 13px;
+  line-height: 1.35;
+  outline: none;
+}
+
+.inv-detailField textarea:focus,
+.inv-priceModalField input:focus {
+  box-shadow: 0 0 0 3px rgba(255, 191, 45, 0.22);
+}
+
+.inv-priceModalActions .inv-detailDanger {
+  border-color: transparent;
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+@media (max-width: 640px) {
+  .inv-wrapper {
+    padding: 18px;
+  }
+
+  .inv-header {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .inv-itemsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+  }
+
+  .inv-detailHero {
+    grid-template-columns: 1fr;
+  }
+
+  .inv-detailPhoto {
+    min-height: 180px;
+  }
+
+  .inv-priceModalActions {
+    flex-wrap: wrap;
+  }
 }
 
 .inv-priceModal h3 {

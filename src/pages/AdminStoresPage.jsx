@@ -48,7 +48,18 @@ const loadGoogleMaps = (apiKey) =>
     document.head.appendChild(script);
   });
 
-const COLD_CUSTOMER_DAYS = 15;
+const segmentCards = [
+  { key: "S1", shortLabel: "Potencial", color: "#7c3aed" },
+  { key: "S2", shortLabel: "Nuevo", color: "#0ea5e9" },
+  { key: "S3", shortLabel: "Dormido", color: "#f59e0b" },
+  { key: "S4", shortLabel: "Activo", color: "#16a34a" },
+  { key: "S5", shortLabel: "VIP", color: "#db2777" },
+];
+
+const segmentMetaByKey = segmentCards.reduce((acc, segment) => {
+  acc[segment.key] = segment;
+  return acc;
+}, {});
 
 const extractPostalCode = (value) => {
   const match = String(value || "").match(/\b(\d{5})\b/);
@@ -67,9 +78,6 @@ const postalAreaKey = (postalCode) => {
   return digits.length >= 3 ? digits.slice(0, 3) : "";
 };
 
-const getCustomerTemperature = (daysOff) =>
-  Number(daysOff || 0) > COLD_CUSTOMER_DAYS ? "Frio" : "Caliente";
-
 const toCoordinate = (value) => {
   const parsed = Number(value);
   return Number.isFinite(parsed) ? parsed : null;
@@ -78,7 +86,40 @@ const toCoordinate = (value) => {
 const hasUsableCoordinates = (lat, lng) =>
   lat != null && lng != null && !(Number(lat) === 0 && Number(lng) === 0);
 
+const formatMoney = (value, currency = "EUR") => {
+  const amount = Number(value || 0);
+  return `${currency} ${amount.toFixed(2)}`;
+};
+
+const formatCustomerMoney = (customer, value) =>
+  Number(customer?.orderCount || 0) > 0 ? formatMoney(value) : "-";
+
+const getTicketComparisonLabel = (customer) => {
+  if (!Number(customer?.orderCount || 0)) return "Sin compras";
+  const storeAverage = Number(customer?.storeAverageTicket || 0);
+  if (!storeAverage) return "Sin media tienda";
+  return customer.isAboveStoreAverage ? "Sobre media tienda" : "Bajo media tienda";
+};
+
+const formatDateTime = (value) => {
+  if (!value) return "Sin compras";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "Sin compras";
+  return date.toLocaleString("es-ES", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+};
+
 const svgToDataUrl = (svg) => `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+
+const getCustomerSegmentKey = (customer) => {
+  const key = String(customer?.segment || "S1").trim().toUpperCase();
+  return segmentMetaByKey[key] ? key : "S1";
+};
+
+const getCustomerSegmentMeta = (customer) => segmentMetaByKey[getCustomerSegmentKey(customer)];
 
 const createStorePinIcon = (google, active) => ({
   url: svgToDataUrl(`
@@ -93,6 +134,24 @@ const createStorePinIcon = (google, active) => ({
   scaledSize: new google.maps.Size(34, 46),
   anchor: new google.maps.Point(17, 42),
 });
+
+const createCustomerPinIcon = (google, customer, isSelected) => {
+  const segment = getCustomerSegmentMeta(customer);
+  const size = isSelected ? 25 : 19;
+  const strokeWidth = isSelected ? 4 : 3;
+
+  return {
+    url: svgToDataUrl(`
+      <svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 32 32">
+        <circle cx="16" cy="16" r="14.2" fill="white" opacity="0.96"/>
+        <circle cx="16" cy="16" r="11.8" fill="${segment.color}" stroke="white" stroke-width="${strokeWidth}"/>
+        <circle cx="16" cy="16" r="3.6" fill="white"/>
+      </svg>
+    `),
+    scaledSize: new google.maps.Size(size, size),
+    anchor: new google.maps.Point(size / 2, size / 2),
+  };
+};
 
 function MenuAvailabilityModal({ store, onClose }) {
   const [rows, setRows] = useState([]);
@@ -835,17 +894,119 @@ function StoreReportModal({ store, onClose }) {
   );
 }
 
+function CustomerProfileModal({ customer, onClose, onBoostCustomer }) {
+  if (!customer) return null;
+
+  const daysOff = Number(customer.daysOff || 0);
+  const segment = getCustomerSegmentMeta(customer);
+  const daysOffLabel = Number(customer?.orderCount || 0) > 0 ? String(daysOff) : "Sin compras";
+  const profileStats = [
+    {
+      label: "Ticket promedio",
+      value: formatCustomerMoney(customer, customer.averageTicket),
+      meta: getTicketComparisonLabel(customer),
+    },
+    {
+      label: "Ultimo ticket",
+      value: formatCustomerMoney(customer, customer.lastTicket),
+      meta: formatDateTime(customer.lastOrderAt),
+    },
+    {
+      label: "Valor acumulado",
+      value: formatCustomerMoney(customer, customer.lifetimeValue),
+      meta: `${customer.orderCount || 0} pedidos`,
+    },
+    {
+      label: "Dias sin pedir",
+      value: daysOffLabel,
+      meta: formatDateTime(customer.lastOrderAt),
+    },
+  ];
+
+  return (
+    <div className="sc-modalBack" onMouseDown={onClose}>
+      <div
+        className="sc-modalBox sc-customerProfileModal"
+        onMouseDown={(event) => event.stopPropagation()}
+      >
+        <header className="sc-modalHead">
+          <div>
+            <h3 className="sc-modalTitle">{customer.name || "Cliente"}</h3>
+            <p className="sc-customerProfileSub">
+              {customer.phone || "Sin telefono"} - {customer.postalCode || customer.zipCode || "Sin CP"}
+            </p>
+          </div>
+          <button className="sc-iconBtn" onClick={onClose} type="button">
+            x
+          </button>
+        </header>
+
+        <div className="sc-modalBody">
+          <div className="sc-customerProfileStatus">
+            <span
+              className="sc-customerProfileBadge"
+              style={{ background: segment.color, color: "#ffffff" }}
+            >
+              {segment.shortLabel}
+            </span>
+            <span>{customer.segment || "S1"}</span>
+            <span>{getTicketComparisonLabel(customer)}</span>
+          </div>
+
+          <div className="sc-customerProfileGrid">
+            {profileStats.map((item) => (
+              <article key={item.label} className="sc-customerProfileMetric">
+                <span>{item.label}</span>
+                <strong>{item.value}</strong>
+                <small>{item.meta}</small>
+              </article>
+            ))}
+          </div>
+
+          <div className="sc-customerProfileInfo">
+            <div>
+              <span>Direccion</span>
+              <strong>{customer.address_1 || "Sin direccion registrada"}</strong>
+            </div>
+            <div>
+              <span>Email</span>
+              <strong>{customer.email || "Sin email"}</strong>
+            </div>
+            {customer.observations && (
+              <div>
+                <span>Observaciones</span>
+                <strong>{customer.observations}</strong>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <footer className="sc-modalFooter">
+          <button className="sc-btn ghost" onClick={onClose} type="button">
+            Cerrar
+          </button>
+          <button
+            className="sc-btn primary"
+            onClick={() => onBoostCustomer?.(customer)}
+            type="button"
+          >
+            Crear boost
+          </button>
+        </footer>
+      </div>
+    </div>
+  );
+}
+
 function MapPanel({
   stores,
   customers,
   showCustomers,
   customerPostalCode,
-  temperatureFilter,
   selectedStoreId,
   selectedCustomerId,
   onSelectStore,
   onSelectCustomer,
-  onBoostCustomer,
 }) {
   const mapNodeRef = useRef(null);
   const mapRef = useRef(null);
@@ -1058,18 +1219,12 @@ function MapPanel({
         if (showCustomers) {
           customerMarkers.forEach((customer) => {
             const isSelected = String(customer.id) === String(selectedCustomerId);
+            const segment = getCustomerSegmentMeta(customer);
             const marker = new google.maps.Marker({
               map: mapRef.current,
               position: { lat: customer.lat, lng: customer.lng },
-              icon: {
-                path: google.maps.SymbolPath.CIRCLE,
-                scale: isSelected ? 10 : 7,
-                fillColor: customer.temperature === "Frio" ? "#1e88e5" : "#e53935",
-                fillOpacity: 1,
-                strokeColor: "#ffffff",
-                strokeWeight: isSelected ? 3 : 2,
-              },
-              title: `${customer.name || "Cliente"} · ${customer.temperature}`,
+              icon: createCustomerPinIcon(google, customer, isSelected),
+              title: `${customer.name || "Cliente"} - ${segment.shortLabel}`,
               zIndex: isSelected ? 60 : 20,
             });
 
@@ -1171,52 +1326,10 @@ function MapPanel({
             referrerPolicy="no-referrer-when-downgrade"
           />
         )}
-      </div>
-
-      <div className="sc-mapFallbackGrid">
-        {showCustomers &&
-          customerMarkers.map((customer) => (
-          <article
-            key={`cust-${customer.id}`}
-            className={`sc-mapPinCard sc-mapPinCard--customer ${
-              String(customer.id) === String(selectedCustomerId) ? "is-selected" : ""
-            }`}
-          >
-            <button
-              type="button"
-              className="sc-mapPinCardButton"
-              onClick={() => onSelectCustomer?.(customer.id)}
-            >
-              <strong>{customer.name || "Cliente"}</strong>
-              <span className="sc-customerMeta">
-                <span
-                  className={`sc-tempDot ${
-                    customer.temperature === "Frio" ? "is-cold" : "is-hot"
-                  }`}
-                  aria-hidden="true"
-                />
-                <span>{customer.segment || "S1"}</span>
-                <span>{customer.postalCode}</span>
-              </span>
-              <small>{customer.daysOff || 0} dias sin pedir</small>
-            </button>
-
-            <div className="sc-mapPinActions">
-              <button
-                type="button"
-                className="sc-mapMiniBtn"
-                onClick={() => onBoostCustomer?.(customer)}
-              >
-                Boost
-              </button>
-            </div>
-          </article>
-        ))}
 
         {showCustomers && customers.length === 0 && (
-          <div className="sc-emptyState">
+          <div className="sc-mapEmptyOverlay">
             No hay clientes para este filtro
-            {temperatureFilter !== "all" ? ` de ${temperatureFilter === "hot" ? "calientes" : "frios"}` : ""}
             {customerPostalCode !== "all" ? ` en ${customerPostalCode}` : ""}.
           </div>
         )}
@@ -1237,7 +1350,7 @@ export default function AdminStoresPage({
   const [customers, setCustomers] = useState([]);
   const [showCust, setShowCust] = useState(false);
   const [customerPostalCode, setCustomerPostalCode] = useState("all");
-  const [customerTemperatureFilter, setCustomerTemperatureFilter] = useState("all");
+  const [customerSegmentFilter, setCustomerSegmentFilter] = useState("all");
   const [selectedMapStoreId, setSelectedMapStoreId] = useState("all");
   const [selectedCustomerId, setSelectedCustomerId] = useState("");
   const [boostCustomer, setBoostCustomer] = useState(null);
@@ -1346,7 +1459,6 @@ export default function AdminStoresPage({
           customer.territoryZipCode ||
           extractPostalCode(customer.address_1) ||
           "Sin CP",
-        temperature: getCustomerTemperature(customer.daysOff),
       })),
     [customers]
   );
@@ -1386,21 +1498,17 @@ export default function AdminStoresPage({
         .filter((customer) => {
           const matchesPostal =
             customerPostalCode === "all" ? true : customer.postalCode === customerPostalCode;
-          const matchesTemperature =
-            customerTemperatureFilter === "all"
-              ? true
-              : customerTemperatureFilter === "hot"
-                ? customer.temperature === "Caliente"
-                : customer.temperature === "Frio";
+          const matchesSegment =
+            customerSegmentFilter === "all" ? true : customer.segment === customerSegmentFilter;
 
-          return matchesPostal && matchesTemperature;
+          return matchesPostal && matchesSegment;
         })
         .sort((left, right) =>
           String(left.name || "").localeCompare(String(right.name || ""), "es", {
             sensitivity: "base",
           })
         ),
-    [customerPostalCode, customerTemperatureFilter, scopedCustomers]
+    [customerPostalCode, customerSegmentFilter, scopedCustomers]
   );
 
   useEffect(() => {
@@ -1411,7 +1519,7 @@ export default function AdminStoresPage({
 
   useEffect(() => {
     setCustomerPostalCode("all");
-    setCustomerTemperatureFilter("all");
+    setCustomerSegmentFilter("all");
     setSelectedCustomerId("");
   }, [selectedMapStoreId]);
 
@@ -1425,6 +1533,13 @@ export default function AdminStoresPage({
 
     setSelectedCustomerId("");
   }, [selectedCustomerId, visibleCustomers]);
+
+  const selectedCustomer = useMemo(
+    () =>
+      visibleCustomers.find((customer) => String(customer.id) === String(selectedCustomerId)) ||
+      null,
+    [selectedCustomerId, visibleCustomers]
+  );
 
   const submitStore = async (event) => {
     event.preventDefault();
@@ -1498,34 +1613,6 @@ export default function AdminStoresPage({
     setShowAdd(true);
   };
 
-  const center = useMemo(() => {
-    const storesWithCoords = stores.filter(
-      (store) => toCoordinate(store.latitude) != null && toCoordinate(store.longitude) != null
-    );
-
-    if (!storesWithCoords.length) return { lat: 40.4168, lng: -3.7038 };
-
-    if (String(selectedMapStoreId) === "all") {
-      const sum = storesWithCoords.reduce(
-        (acc, store) => ({
-          lat: acc.lat + toCoordinate(store.latitude),
-          lng: acc.lng + toCoordinate(store.longitude),
-        }),
-        { lat: 0, lng: 0 }
-      );
-
-      return {
-        lat: sum.lat / storesWithCoords.length,
-        lng: sum.lng / storesWithCoords.length,
-      };
-    }
-
-    const selectedStore = storesWithCoords.find((store) => String(store.id) === String(selectedMapStoreId));
-    return selectedStore
-      ? { lat: toCoordinate(selectedStore.latitude), lng: toCoordinate(selectedStore.longitude) }
-      : { lat: toCoordinate(storesWithCoords[0].latitude), lng: toCoordinate(storesWithCoords[0].longitude) };
-  }, [selectedMapStoreId, stores]);
-
   if (loading) {
     return (
       <div className="sc-page">
@@ -1539,7 +1626,7 @@ export default function AdminStoresPage({
 
   return (
     <>
-      <div className="sc-page">
+      <div className={`sc-page ${isLocationsView ? "sc-page--locations" : ""}`}>
         <header className="sc-header">
           <div>
             <h2>{isLocationsView ? "Locations" : "Stores"}</h2>
@@ -1684,7 +1771,7 @@ export default function AdminStoresPage({
             <div>
               <h3 className="sc-cardTitle">Store locations</h3>
               <p className="sc-mapMeta">
-                Centro actual: {center.lat}, {center.lng}
+                {visibleCustomers.length} clientes visibles - filtros de segmento y territorio
               </p>
             </div>
 
@@ -1728,30 +1815,33 @@ export default function AdminStoresPage({
           </div>
 
           {showCust && (
-            <div className="sc-mapLegend">
-              <button
-                type="button"
-                className={`sc-legendItem ${customerTemperatureFilter === "all" ? "is-active" : ""}`}
-                onClick={() => setCustomerTemperatureFilter("all")}
-              >
-                Todos
-              </button>
-              <button
-                type="button"
-                className={`sc-legendItem ${customerTemperatureFilter === "hot" ? "is-active" : ""}`}
-                onClick={() => setCustomerTemperatureFilter("hot")}
-              >
-                <span className="sc-legendDot is-hot" />
-                Calientes: hasta {COLD_CUSTOMER_DAYS} dias
-              </button>
-              <button
-                type="button"
-                className={`sc-legendItem ${customerTemperatureFilter === "cold" ? "is-active" : ""}`}
-                onClick={() => setCustomerTemperatureFilter("cold")}
-              >
-                <span className="sc-legendDot is-cold" />
-                Frios: mas de {COLD_CUSTOMER_DAYS} dias
-              </button>
+            <div className="sc-mapControls">
+              <div className="sc-territoryModes" aria-label="Filtros de segmento">
+                <button
+                  type="button"
+                  className={`sc-territoryModeBtn is-segment ${
+                    customerSegmentFilter === "all" ? "is-active" : ""
+                  }`}
+                  onClick={() => setCustomerSegmentFilter("all")}
+                >
+                  Todos
+                </button>
+                {segmentCards.map((segment) => (
+                  <button
+                    key={segment.key}
+                    type="button"
+                    className={`sc-territoryModeBtn is-segment ${
+                      customerSegmentFilter === segment.key ? "is-active" : ""
+                    }`}
+                    style={{ "--sc-segment-color": segment.color }}
+                    onClick={() => setCustomerSegmentFilter(segment.key)}
+                  >
+                    <span className="sc-segmentSwatch" />
+                    {segment.shortLabel}
+                  </button>
+                ))}
+              </div>
+
             </div>
           )}
 
@@ -1760,16 +1850,24 @@ export default function AdminStoresPage({
             customers={visibleCustomers}
             showCustomers={showCust}
             customerPostalCode={customerPostalCode}
-            temperatureFilter={customerTemperatureFilter}
             selectedStoreId={selectedMapStoreId}
             selectedCustomerId={selectedCustomerId}
             onSelectStore={(storeId) => setSelectedMapStoreId(String(storeId))}
             onSelectCustomer={setSelectedCustomerId}
-            onBoostCustomer={setBoostCustomer}
           />
         </section>
         )}
       </div>
+
+      {isLocationsView && selectedCustomer && !boostCustomer && (
+        <CustomerProfileModal
+          customer={selectedCustomer}
+          onClose={() => setSelectedCustomerId("")}
+          onBoostCustomer={(customer) => {
+            setBoostCustomer(customer);
+          }}
+        />
+      )}
 
       {isLocationsView && boostCustomer && (
         <OfferCreatePanelCustomer

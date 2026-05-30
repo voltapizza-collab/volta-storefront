@@ -20,9 +20,13 @@ export default function InventoryModule({ partner }) {
   const [newIngredientName, setNewIngredientName] = useState("");
   const [newIngredientCategory, setNewIngredientCategory] = useState("");
   const [createFeedback, setCreateFeedback] = useState("");
-  const [onboardingPriceIngredient, setOnboardingPriceIngredient] =
-    useState(null);
-  const [onboardingPriceDraft, setOnboardingPriceDraft] = useState("");
+  const [detailIngredient, setDetailIngredient] = useState(null);
+  const [detailDraft, setDetailDraft] = useState({
+    costPrice: "",
+    description: "",
+    imageFile: null,
+    imagePreview: "",
+  });
   const [savingOnboardingId, setSavingOnboardingId] = useState(null);
   const [savingCategory, setSavingCategory] = useState("");
 
@@ -78,26 +82,6 @@ export default function InventoryModule({ partner }) {
     );
   }, [search, ingredients]);
 
-  const toggleIngredient = async (ing) => {
-    try {
-      if (ing.exists && ing.active) {
-        await api.patch(`/stores/${storeId}/ingredients/${ing.id}`, {
-          active: false,
-        });
-        await fetchIngredients();
-        return;
-      }
-
-      setOnboardingPriceIngredient(ing);
-      setOnboardingPriceDraft(
-        ing.costPrice == null ? "" : String(ing.costPrice)
-      );
-      setCreateFeedback("");
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
   const normalizePriceInput = (value) =>
     String(value ?? "")
       .replace(",", ".")
@@ -105,10 +89,42 @@ export default function InventoryModule({ partner }) {
       .replace(/(\..*)\./g, "$1")
       .slice(0, 8);
 
-  const confirmIngredientOnboarding = async () => {
-    if (!onboardingPriceIngredient) return;
+  const openIngredientDetail = (ing) => {
+    setDetailIngredient(ing);
+    setDetailDraft({
+      costPrice: ing.costPrice == null ? "" : String(ing.costPrice),
+      description: ing.description || "",
+      imageFile: null,
+      imagePreview: ing.image || "",
+    });
+    setCreateFeedback("");
+  };
 
-    const normalizedValue = String(onboardingPriceDraft)
+  const closeIngredientDetail = () => {
+    if (savingOnboardingId) return;
+    setDetailIngredient(null);
+    setDetailDraft({
+      costPrice: "",
+      description: "",
+      imageFile: null,
+      imagePreview: "",
+    });
+    setCreateFeedback("");
+  };
+
+  const handleDetailImageSelect = (event) => {
+    const file = event.target.files?.[0] || null;
+    setDetailDraft((current) => ({
+      ...current,
+      imageFile: file,
+      imagePreview: file ? URL.createObjectURL(file) : current.imagePreview,
+    }));
+  };
+
+  const saveIngredientDetail = async () => {
+    if (!detailIngredient) return;
+
+    const normalizedValue = String(detailDraft.costPrice)
       .replace(",", ".")
       .trim();
     const costPrice = Number(normalizedValue);
@@ -119,10 +135,18 @@ export default function InventoryModule({ partner }) {
     }
 
     try {
-      const ing = onboardingPriceIngredient;
+      const ing = detailIngredient;
       setSavingOnboardingId(ing.id);
-      await api.patch(`/ingredients/${ing.id}`, {
-        costPrice,
+
+      const payload = new FormData();
+      payload.append("costPrice", String(costPrice));
+      payload.append("description", detailDraft.description || "");
+      if (detailDraft.imageFile) {
+        payload.append("image", detailDraft.imageFile);
+      }
+
+      await api.patch(`/ingredients/${ing.id}`, payload, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
       if (!ing.exists) {
@@ -135,8 +159,7 @@ export default function InventoryModule({ partner }) {
         });
       }
 
-      setOnboardingPriceIngredient(null);
-      setOnboardingPriceDraft("");
+      closeIngredientDetail();
       setCreateFeedback("");
       await fetchIngredients();
     } catch (err) {
@@ -147,55 +170,28 @@ export default function InventoryModule({ partner }) {
     }
   };
 
+  const deactivateIngredient = async () => {
+    if (!detailIngredient?.id) return;
+
+    try {
+      setSavingOnboardingId(detailIngredient.id);
+      await api.patch(`/stores/${storeId}/ingredients/${detailIngredient.id}`, {
+        active: false,
+      });
+      closeIngredientDetail();
+      await fetchIngredients();
+    } catch (err) {
+      console.error(err);
+      setCreateFeedback("No se pudo desactivar el ingrediente.");
+    } finally {
+      setSavingOnboardingId(null);
+    }
+  };
+
   const formatIngredientPrice = (value) => {
     const price = Number(value);
     if (!Number.isFinite(price) || price <= 0) return "";
     return `EUR ${price.toFixed(2)}`;
-  };
-
-  const renderOnboardingAction = (ing) => {
-    const isSaving = savingOnboardingId === ing.id;
-    const activePrice = ing.exists && ing.active
-      ? formatIngredientPrice(ing.costPrice)
-      : "";
-
-    return (
-      <div className="inv-onboardingAction">
-        <button
-          className={`inv-toggle ${
-            !ing.exists
-              ? "not-added"
-              : ing.active
-              ? "in"
-              : "out"
-          }`}
-          type="button"
-          onClick={() => toggleIngredient(ing)}
-          disabled={isSaving}
-        >
-          {!ing.exists
-            ? "AGREGAR"
-            : ing.active
-            ? "ONBOARDING"
-            : "AGREGAR"}
-        </button>
-
-        {activePrice && (
-          <button
-            type="button"
-            className="inv-priceBubble"
-            onClick={() => {
-              setOnboardingPriceIngredient(ing);
-              setOnboardingPriceDraft(String(ing.costPrice ?? ""));
-              setCreateFeedback("");
-            }}
-            disabled={isSaving}
-          >
-            {activePrice}
-          </button>
-        )}
-      </div>
-    );
   };
 
   const handleDragEnd = (event) => {
@@ -238,6 +234,45 @@ export default function InventoryModule({ partner }) {
     SETAS: "Setas",
     TOPPINGS_DULCES: "Toppings dulces",
     VERDURAS: "Verduras",
+  };
+
+  const getIngredientInitials = (name) =>
+    String(name || "IN")
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((part) => part.charAt(0).toUpperCase())
+      .join("") || "IN";
+
+  const renderIngredientTile = (ing) => {
+    const allergens = getAllergenTags(ing);
+    const activePrice = formatIngredientPrice(ing.costPrice);
+    const isActive = ing.exists && ing.active;
+    const isInactive = ing.exists && !ing.active;
+
+    return (
+      <button
+        key={ing.id}
+        type="button"
+        className={`inv-ingredientTile ${
+          isActive ? "is-active" : isInactive ? "is-inactive" : "is-new"
+        }`}
+        onClick={() => openIngredientDetail(ing)}
+      >
+        <span className="inv-tileMedia">
+          {ing.image ? (
+            <img src={ing.image} alt="" />
+          ) : (
+            <span>{getIngredientInitials(ing.name)}</span>
+          )}
+        </span>
+        <span className="inv-tileName">{getDisplayName(ing.name)}</span>
+        <span className="inv-tileMeta">
+          <span>{allergens[0]}</span>
+          {activePrice ? <strong>{activePrice.replace("EUR ", "")}</strong> : null}
+        </span>
+      </button>
+    );
   };
 
   const getCategoryDisplayName = (category) =>
@@ -340,27 +375,83 @@ export default function InventoryModule({ partner }) {
         </button>
       </div>
 
-      {onboardingPriceIngredient && (
+      {detailIngredient && (
         <div
           className="inv-priceModalOverlay"
           onMouseDown={(e) => {
-            if (e.target === e.currentTarget && !savingOnboardingId) {
-              setOnboardingPriceIngredient(null);
-              setOnboardingPriceDraft("");
-              setCreateFeedback("");
-            }
+            if (e.target === e.currentTarget) closeIngredientDetail();
           }}
         >
           <div
-            className="inv-priceModal"
+            className="inv-detailModal"
             onMouseDown={(e) => e.stopPropagation()}
           >
-            <h3>Precio del ingrediente</h3>
-            <p>{getDisplayName(onboardingPriceIngredient.name)}</p>
+            <div className="inv-detailHero">
+              <label className="inv-detailPhoto">
+                {detailDraft.imagePreview ? (
+                  <img src={detailDraft.imagePreview} alt="" />
+                ) : (
+                  <span>{getIngredientInitials(detailIngredient.name)}</span>
+                )}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleDetailImageSelect}
+                  disabled={Boolean(savingOnboardingId)}
+                />
+                <strong>{detailDraft.imagePreview ? "Cambiar foto" : "Subir foto"}</strong>
+              </label>
+
+              <div className="inv-detailIntro">
+                <h3>{getDisplayName(detailIngredient.name)}</h3>
+                <p>{getCategoryDisplayName(detailIngredient.category)}</p>
+                <div className="inv-detailStatus">
+                  <span className={detailIngredient.exists && detailIngredient.active ? "is-active" : "is-inactive"}>
+                    {detailIngredient.exists && detailIngredient.active ? "Activo en tienda" : "Pendiente de activar"}
+                  </span>
+                  {formatIngredientPrice(detailIngredient.costPrice) && (
+                    <strong>{formatIngredientPrice(detailIngredient.costPrice)}</strong>
+                  )}
+                </div>
+              </div>
+            </div>
 
             {createFeedback && (
               <div className="inv-priceModalError">{createFeedback}</div>
             )}
+
+            <div className="inv-detailSection">
+              <span>Alérgenos</span>
+              <div className="inv-allergenTags inv-allergenTags--detail">
+                {getAllergenTags(detailIngredient).map((tag) => (
+                  <span
+                    key={`${detailIngredient.id}-${tag}`}
+                    className="inv-allergenTag"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+              <small>
+                Esta información aparece como referencia operativa para el producto
+                y ayuda a decidir si el ingrediente puede usarse en una receta.
+              </small>
+            </div>
+
+            <label className="inv-detailField">
+              <span>Descripción breve</span>
+              <textarea
+                value={detailDraft.description}
+                placeholder="Ej. Aceite aromatizado para terminar pizzas al salir del horno."
+                onChange={(e) =>
+                  setDetailDraft((current) => ({
+                    ...current,
+                    description: e.target.value.slice(0, 420),
+                  }))
+                }
+                disabled={Boolean(savingOnboardingId)}
+              />
+            </label>
 
             <label className="inv-priceModalField">
               <span>Ingresa precio</span>
@@ -369,21 +460,21 @@ export default function InventoryModule({ partner }) {
                 <input
                   type="text"
                   inputMode="decimal"
-                  value={onboardingPriceDraft}
+                  value={detailDraft.costPrice}
                   placeholder="0.99"
                   onChange={(e) =>
-                    setOnboardingPriceDraft(
-                      normalizePriceInput(e.target.value)
-                    )
+                    setDetailDraft((current) => ({
+                      ...current,
+                      costPrice: normalizePriceInput(e.target.value),
+                    }))
                   }
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
                       e.preventDefault();
-                      confirmIngredientOnboarding();
+                      saveIngredientDetail();
                     }
                   }}
                   disabled={Boolean(savingOnboardingId)}
-                  autoFocus
                 />
               </div>
             </label>
@@ -391,21 +482,31 @@ export default function InventoryModule({ partner }) {
             <div className="inv-priceModalActions">
               <button
                 type="button"
-                onClick={() => {
-                  setOnboardingPriceIngredient(null);
-                  setOnboardingPriceDraft("");
-                  setCreateFeedback("");
-                }}
+                onClick={closeIngredientDetail}
                 disabled={Boolean(savingOnboardingId)}
               >
                 Cancelar
               </button>
+              {detailIngredient.exists && detailIngredient.active && (
+                <button
+                  type="button"
+                  className="inv-detailDanger"
+                  onClick={deactivateIngredient}
+                  disabled={Boolean(savingOnboardingId)}
+                >
+                  Desactivar
+                </button>
+              )}
               <button
                 type="button"
-                onClick={confirmIngredientOnboarding}
+                onClick={saveIngredientDetail}
                 disabled={Boolean(savingOnboardingId)}
               >
-                {savingOnboardingId ? "Guardando..." : "Guardar"}
+                {savingOnboardingId
+                  ? "Guardando..."
+                  : detailIngredient.exists && detailIngredient.active
+                  ? "Guardar cambios"
+                  : "Guardar y activar"}
               </button>
             </div>
           </div>
@@ -488,37 +589,8 @@ export default function InventoryModule({ partner }) {
                           </div>
 
                           {isOpen && (
-                            <div className="inv-items">
-                              {list.map((ing) => (
-                                <div
-                                  key={ing.id}
-                                  className={`inv-itemRow ${
-                                    ing.exists && ing.active
-                                      ? "is-onboarding"
-                                      : ""
-                                  }`}
-                                >
-                                  <div className="inv-itemLeft">
-                                    <div className="inv-itemName">
-                                      {getDisplayName(ing.name)}
-                                    </div>
-                                  </div>
-
-                                  <div className="inv-itemRight">
-                                    <div className="inv-allergenTags">
-                                      {getAllergenTags(ing).map((tag) => (
-                                        <span
-                                          key={`${ing.id}-${tag}`}
-                                          className="inv-allergenTag"
-                                        >
-                                          {tag}
-                                        </span>
-                                      ))}
-                                    </div>
-                                    {renderOnboardingAction(ing)}
-                                  </div>
-                                </div>
-                              ))}
+                            <div className="inv-itemsGrid">
+                              {list.map(renderIngredientTile)}
                             </div>
                           )}
                         </>
@@ -606,41 +678,39 @@ export default function InventoryModule({ partner }) {
                     </div>
                   )}
 
-                  {filteredIngredients.map((ing) => (
-                    <div
-                      key={`${ing.id}-${search}`}
-                      className="inv-itemRow"
-                    >
-
-                      <div className="inv-itemLeft">
-                        <div className="inv-itemName">
+                  <div className="inv-itemsGrid inv-itemsGrid--search">
+                    {filteredIngredients.map((ing) => (
+                      <button
+                        key={`${ing.id}-${search}`}
+                        type="button"
+                        className={`inv-ingredientTile ${
+                          ing.exists && ing.active
+                            ? "is-active"
+                            : ing.exists
+                            ? "is-inactive"
+                            : "is-new"
+                        }`}
+                        onClick={() => openIngredientDetail(ing)}
+                      >
+                        <span className="inv-tileMedia">
+                          {ing.image ? (
+                            <img src={ing.image} alt="" />
+                          ) : (
+                            <span>{getIngredientInitials(ing.name)}</span>
+                          )}
+                        </span>
+                        <span className="inv-tileName">
                           {highlightMatch(getDisplayName(ing.name), search)}
-                        </div>
-                      </div>
-
-                      <div className="inv-itemRight">
-                        <div className="inv-allergenTags">
-                          {getAllergenTags(ing).map((tag) => (
-                            <span
-                              key={`${ing.id}-${tag}`}
-                              className="inv-allergenTag"
-                            >
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-
-                        {ing.exists && !ing.active && (
-                          <span className="inv-tag off">
-                            inactive
-                          </span>
-                        )}
-
-                        {renderOnboardingAction(ing)}
-
-                      </div>
-                    </div>
-                  ))}
+                        </span>
+                        <span className="inv-tileMeta">
+                          <span>{getAllergenTags(ing)[0]}</span>
+                          <strong>
+                            {ing.exists && ing.active ? "Activo" : "Agregar"}
+                          </strong>
+                        </span>
+                      </button>
+                    ))}
+                  </div>
 
                 </div>
               </>

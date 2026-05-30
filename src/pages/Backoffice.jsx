@@ -10,6 +10,7 @@ import SettingsModule from "../components/Backoffice/SettingsModule";
 import SettingsDeliveryModule from "../components/Backoffice/SettingsDeliveryModule";
 import SettingsBrandingModule from "../components/Backoffice/SettingsBrandingModule";
 import SettingsPoliciesModule from "../components/Backoffice/SettingsPoliciesModule";
+import SettingsTrackingModule from "../components/Backoffice/SettingsTrackingModule";
 import CustomersModule from "../components/Backoffice/CustomersModule";
 import CommunicationsPanel from "../components/Backoffice/CommunicationsPanel";
 import CouponsModule from "../components/Backoffice/Coupons/CouponsModule";
@@ -19,6 +20,45 @@ import EngineBackground from "../components/Backoffice/EngineBackground";
 import AppFooter from "../components/Layout/AppFooter";
 import AdminStoresPage from "./AdminStoresPage";
 import api from "../setupAxios";
+
+const readSavedBackofficeAuth = () => {
+  try {
+    const saved = localStorage.getItem("volta_backoffice_auth");
+    const parsed = saved ? JSON.parse(saved) : null;
+    return parsed?.partnerId ? parsed : null;
+  } catch {
+    localStorage.removeItem("volta_backoffice_auth");
+    return null;
+  }
+};
+
+const normalizeLoginValue = (value) =>
+  String(value || "")
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, "");
+
+const isDemoLoginCredential = (username, password) =>
+  username === "prueba1" && password === "prueba1";
+
+const isDemoLinkRequest = () => {
+  if (typeof window === "undefined") return false;
+  const params = new URLSearchParams(window.location.search);
+  return ["1", "true", "si", "yes"].includes(
+    String(params.get("demo") || "").trim().toLowerCase()
+  );
+};
+
+const createDemoSession = async () => {
+  const res = await api.post("/partners/backoffice-demo-session", {
+    username: "prueba1",
+    password: "prueba1",
+  });
+  return {
+    ...res.data,
+    isDemo: true,
+  };
+};
 
 export default function Backoffice() {
   const initialSmsPaymentStatus = new URLSearchParams(window.location.search).get("sms_payment");
@@ -33,13 +73,7 @@ export default function Backoffice() {
     stores: false,
     settings: false,
   });
-  const [partners, setPartners] = useState([]);
-  const [loadingPartners, setLoadingPartners] = useState(true);
-
-  const [auth, setAuth] = useState(() => {
-    const saved = localStorage.getItem("volta_backoffice_auth");
-    return saved ? JSON.parse(saved) : null;
-  });
+  const [auth, setAuth] = useState(readSavedBackofficeAuth);
 
   const [loginForm, setLoginForm] = useState({
     username: "",
@@ -47,22 +81,43 @@ export default function Backoffice() {
   });
 
   const [loginError, setLoginError] = useState("");
+  const [loginLoading, setLoginLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
-    const loadPartners = async () => {
+    if (!isDemoLinkRequest() || auth?.isDemo) return undefined;
+
+    let isActive = true;
+
+    const startDemo = async () => {
       try {
-        const res = await api.get("/partners");
-        setPartners(Array.isArray(res.data) ? res.data : []);
+        setLoginLoading(true);
+        const session = await createDemoSession();
+
+        if (!isActive) return;
+
+        setAuth(session);
+        localStorage.setItem(
+          "volta_backoffice_auth",
+          JSON.stringify(session)
+        );
+        setLoginForm({ username: "", password: "" });
+        setLoginError("");
       } catch (err) {
-        console.error("Error loading partners", err);
+        if (!isActive) return;
+        console.error("Error starting demo session", err);
+        setLoginError("No se pudo preparar la sesion demo.");
       } finally {
-        setLoadingPartners(false);
+        if (isActive) setLoginLoading(false);
       }
     };
 
-    loadPartners();
-  }, []);
+    startDemo();
+
+    return () => {
+      isActive = false;
+    };
+  }, [auth?.isDemo]);
 
   useEffect(() => {
     const hydrateStore = async () => {
@@ -106,33 +161,46 @@ export default function Backoffice() {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    const username = loginForm.username.trim().toLowerCase();
-    const password = loginForm.password.trim().toLowerCase();
+    const username = normalizeLoginValue(loginForm.username);
+    const password = normalizeLoginValue(loginForm.password);
 
     if (!username || !password) {
       setLoginError("Debes introducir usuario y contrasena.");
       return;
     }
 
-    const partner = partners.find((p) => {
-      const slug = (p.slug || "").trim().toLowerCase();
-      return slug === username && slug === password;
-    });
-
-    if (!partner) {
-      setLoginError("Credenciales invalidas.");
-      return;
-    }
-
     try {
-      const res = await api.get(`/stores?partnerId=${partner.id}`);
-      const store = Array.isArray(res.data) ? res.data[0] : null;
+      setLoginLoading(true);
 
+      if (isDemoLoginCredential(username, password)) {
+        const session = await createDemoSession();
+
+        setAuth(session);
+        localStorage.setItem(
+          "volta_backoffice_auth",
+          JSON.stringify(session)
+        );
+
+        setLoginForm({ username: "", password: "" });
+        setLoginError("");
+        return;
+      }
+
+      if (username !== password) {
+        setLoginError("Credenciales invalidas.");
+        return;
+      }
+
+      const partnerResponse = await api.get(`/partners/${username}`);
+      const partner = partnerResponse.data;
+      const stores = Array.isArray(partner?.stores) ? partner.stores : [];
+      const store = stores[0] || null;
       const session = {
         partnerId: partner.id,
         storeId: store?.id,
         partnerName: partner.name,
         partnerSlug: partner.slug,
+        isDemo: false,
       };
 
       console.log("SESSION:", session);
@@ -146,8 +214,13 @@ export default function Backoffice() {
       setLoginForm({ username: "", password: "" });
       setLoginError("");
     } catch (err) {
-      console.error("Error fetching store", err);
-      setLoginError("Error obteniendo store.");
+      console.error("Error starting demo session", err);
+      const message = isDemoLoginCredential(username, password) && err.response?.status >= 500
+        ? "No se pudo preparar la sesion demo."
+        : "Credenciales invalidas.";
+      setLoginError(message);
+    } finally {
+      setLoginLoading(false);
     }
   };
 
@@ -189,12 +262,14 @@ export default function Backoffice() {
   const isSettingsPoliciesActive = activeModule === "settingsPolicies";
   const isSettingsDeliveryActive = activeModule === "settingsDelivery";
   const isSettingsBrandingActive = activeModule === "settingsBranding";
+  const isSettingsTrackingActive = activeModule === "settingsTracking";
   const isSettingsGroupActive =
     activeModuleGroup === "settings" ||
     isSettingsOverviewActive ||
     isSettingsPoliciesActive ||
     isSettingsDeliveryActive ||
-    isSettingsBrandingActive;
+    isSettingsBrandingActive ||
+    isSettingsTrackingActive;
   const isCustomersOverviewActive = activeModule === "customers";
   const isCustomersCommunicationsActive = activeModule === "customersCommunications";
   const isCustomersGroupActive =
@@ -232,21 +307,6 @@ export default function Backoffice() {
     isStoresListActive ||
     isStoresLocationsActive;
 
-  if (loadingPartners) {
-    return (
-      <div className="bo-container">
-        <div className="bo-main">
-          <div className="bo-workspace">
-            <div className="bo-loginCard">
-              <h2 className="bo-loginTitle">Cargando acceso...</h2>
-            </div>
-          </div>
-          <AppFooter />
-        </div>
-      </div>
-    );
-  }
-
   if (!auth) {
     return (
       <div className="bo-loginScreen">
@@ -265,7 +325,7 @@ export default function Backoffice() {
           <h1 className="bo-loginTitlePro">Backoffice</h1>
 
           <p className="bo-loginSubtitle">
-            Accede con tu partner slug
+            Accede con tu partner o con credenciales demo
           </p>
 
           <form onSubmit={handleLogin} className="bo-loginForm">
@@ -304,8 +364,8 @@ export default function Backoffice() {
               </div>
             )}
 
-            <button type="submit" className="bo-loginBtnPro">
-              Entrar
+            <button type="submit" className="bo-loginBtnPro" disabled={loginLoading}>
+              {loginLoading ? "Iniciando..." : "Entrar"}
             </button>
           </form>
         </div>
@@ -324,6 +384,7 @@ export default function Backoffice() {
           <div className="bo-partnerBox">
             <div className="bo-partnerLabel">Empresa</div>
             <div className="bo-partnerName">{auth.partnerName}</div>
+            {auth.isDemo && <div className="bo-demoBadge">Modo demo</div>}
           </div>
 
           <div className="bo-modulesBox">
@@ -674,6 +735,19 @@ export default function Backoffice() {
                   >
                     Personalizacion
                   </button>
+
+                  <button
+                    className={`bo-subbtn ${
+                      isSettingsTrackingActive ? "active" : ""
+                    }`}
+                    onClick={() => {
+                      setActiveModule("settingsTracking");
+                      setActiveModuleGroup("settings");
+                    }}
+                    type="button"
+                  >
+                    Seguimiento
+                  </button>
                 </div>
               )}
             </div>
@@ -768,6 +842,14 @@ export default function Backoffice() {
                 setActiveModule("settingsPolicies");
                 setActiveModuleGroup("settings");
               }}
+              onOpenTracking={() => {
+                setExpandedModules((prev) => ({
+                  ...prev,
+                  settings: true,
+                }));
+                setActiveModule("settingsTracking");
+                setActiveModuleGroup("settings");
+              }}
             />
           )}
 
@@ -781,6 +863,10 @@ export default function Backoffice() {
 
           {activeModule === "settingsBranding" && auth.partnerId && (
             <SettingsBrandingModule partner={auth} />
+          )}
+
+          {activeModule === "settingsTracking" && auth.partnerId && (
+            <SettingsTrackingModule partner={auth} />
           )}
 
           {activeModule === "offers" && auth.partnerId && (

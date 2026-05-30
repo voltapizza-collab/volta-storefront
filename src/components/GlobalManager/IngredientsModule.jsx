@@ -1319,7 +1319,7 @@ Linaza dorada
 Linaza molida
 Marsala
 Nachos
-Nata doble|MILK
+Nata doble|MILKº
 Oporto rojo|SULFITES
 Pan de pita|GLUTEN
 Pan rallado|GLUTEN

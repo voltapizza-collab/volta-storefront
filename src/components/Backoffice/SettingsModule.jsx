@@ -17,7 +17,29 @@ const formatCurrency = (value) => {
   }).format(Number.isFinite(numeric) ? numeric : 0);
 };
 
-export default function SettingsModule({ partner, onOpenDelivery, onOpenBranding, onOpenPolicies }) {
+const parseMaybeJson = (value, fallback) => {
+  if (value == null) return fallback;
+  if (typeof value !== "string") return value;
+
+  try {
+    return JSON.parse(value);
+  } catch {
+    return fallback;
+  }
+};
+
+const readTrackingSettings = (value) => {
+  const parsed = parseMaybeJson(parseMaybeJson(value, {}), {});
+  return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
+};
+
+export default function SettingsModule({
+  partner,
+  onOpenDelivery,
+  onOpenBranding,
+  onOpenPolicies,
+  onOpenTracking,
+}) {
   const [loading, setLoading] = useState(true);
   const [partnerData, setPartnerData] = useState(null);
 
@@ -66,6 +88,12 @@ export default function SettingsModule({ partner, onOpenDelivery, onOpenBranding
     [partnerData?.storefrontButtonConfig]
   );
   const visibleButtonCount = Object.values(buttonConfig).filter(Boolean).length;
+  const trackingSettings = useMemo(
+    () => readTrackingSettings(partnerData?.trackingNotificationSettings),
+    [partnerData?.trackingNotificationSettings]
+  );
+  const trackingServices = trackingSettings?.services || {};
+  const activeTrackingCount = Object.values(trackingServices).filter(Boolean).length;
 
   return (
     <section className="bo-settingsShell">
@@ -180,6 +208,41 @@ export default function SettingsModule({ partner, onOpenDelivery, onOpenBranding
               Activa u oculta llamadas, reservas, programar, Pay Now, cupones,
               Boost y el resto de botones. Los modos cambian el aspecto general
               desde opciones cerradas de Volta.
+            </p>
+          </article>
+
+          <article className="bo-settingsSummaryCard">
+            <div className="bo-settingsSummaryTop">
+              <div>
+                <div className="bo-settingsEyebrow">Seguimiento</div>
+                <h3 className="bo-settingsSectionTitle">Avisos del partner</h3>
+              </div>
+              <button
+                type="button"
+                className="bo-settingsMiniCta"
+                onClick={onOpenTracking}
+              >
+                Abrir
+              </button>
+            </div>
+
+            <div className="bo-settingsMetricRow">
+              <span>Estado</span>
+              <strong>{trackingSettings.enabled ? "Activo" : "Pausado"}</strong>
+            </div>
+            <div className="bo-settingsMetricRow">
+              <span>Avisos activos</span>
+              <strong>{trackingSettings.enabled ? activeTrackingCount : 0}</strong>
+            </div>
+            <div className="bo-settingsMetricRow">
+              <span>Canal</span>
+              <strong>SMS</strong>
+            </div>
+
+            <p className="bo-settingsCardHint">
+              Activa notificaciones para pedidos pendientes, pedidos retrasados
+              eventos de cupones, clientes, ventas e incidencias. Cada aviso
+              enviado consume un credito SMS.
             </p>
           </article>
         </div>

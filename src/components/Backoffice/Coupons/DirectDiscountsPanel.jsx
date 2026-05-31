@@ -75,6 +75,7 @@ export default function DirectDiscountsPanel({ partnerId }) {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
+  const [storesTouched, setStoresTouched] = useState(false);
 
   const loadAll = useCallback(async () => {
     if (!partnerId) return;
@@ -163,25 +164,49 @@ export default function DirectDiscountsPanel({ partnerId }) {
   const allStoreIds = useMemo(() => stores.map((store) => store.id), [stores]);
   const allStoresSelected =
     allStoreIds.length > 0 &&
-    form.storeIds.length === allStoreIds.length &&
-    allStoreIds.every((storeId) => form.storeIds.includes(storeId));
+    allStoreIds.every((storeId) => form.storeIds.some((item) => String(item) === String(storeId)));
 
-  const selectAllStores = () => {
-    updateForm("storeIds", allStoreIds);
+  const toggleStore = (storeId) => {
+    setStoresTouched(true);
+    setForm((current) => {
+      const isSelected = current.storeIds.some((item) => String(item) === String(storeId));
+
+      return {
+        ...current,
+        storeIds: isSelected
+          ? current.storeIds.filter((item) => String(item) !== String(storeId))
+          : [...current.storeIds, storeId],
+      };
+    });
+  };
+
+  const toggleAllStores = () => {
+    setStoresTouched(true);
+    setForm((current) => {
+      const selectedIds = current.storeIds.map((item) => String(item));
+      const hasEveryStore =
+        allStoreIds.length > 0 && allStoreIds.every((storeId) => selectedIds.includes(String(storeId)));
+
+      return {
+        ...current,
+        storeIds: hasEveryStore ? [] : allStoreIds,
+      };
+    });
   };
 
   useEffect(() => {
-    if (!allStoreIds.length || editingId || form.storeIds.length) return;
+    if (!allStoreIds.length || editingId || storesTouched) return;
 
     setForm((current) => ({
       ...current,
       storeIds: current.storeIds.length ? current.storeIds : allStoreIds,
     }));
-  }, [allStoreIds, editingId, form.storeIds.length]);
+  }, [allStoreIds, editingId, storesTouched]);
 
   const resetForm = () => {
     setForm(initialForm);
     setEditingId(null);
+    setStoresTouched(false);
   };
 
   const editDiscount = (discount) => {
@@ -194,6 +219,7 @@ export default function DirectDiscountsPanel({ partnerId }) {
     const windowEnd = minutesToTime(discount.windowEnd);
 
     setEditingId(discount.id);
+    setStoresTouched(true);
     setForm({
       title: discount.title || "",
       discountType: discount.discountType || "PERCENT",
@@ -235,7 +261,13 @@ export default function DirectDiscountsPanel({ partnerId }) {
     setMessage("");
 
     const hasCategoryTargets = form.categoryIds.length > 0 || form.categoryNames.length > 0;
-    const selectedStoreIds = form.storeIds.length ? form.storeIds : allStoreIds;
+    const selectedStoreIds = form.storeIds;
+
+    if (allStoreIds.length && !selectedStoreIds.length) {
+      setMessage("Selecciona al menos una tienda para este Top Deal.");
+      setSaving(false);
+      return;
+    }
 
     const payload = {
       partnerId,
@@ -322,16 +354,18 @@ export default function DirectDiscountsPanel({ partnerId }) {
             <button
               type="button"
               className={`cp-pill ${allStoresSelected ? "is-active" : ""}`}
-              onClick={selectAllStores}
+              onClick={toggleAllStores}
             >
-              Todas
+              {allStoresSelected ? "Deseleccionar todo" : "Seleccionar todo"}
             </button>
             {stores.map((store) => (
               <button
                 key={store.id}
                 type="button"
-                className={`cp-pill ${form.storeIds.includes(store.id) ? "is-active" : ""}`}
-                onClick={() => toggleValue("storeIds", store.id)}
+                className={`cp-pill ${
+                  form.storeIds.some((item) => String(item) === String(store.id)) ? "is-active" : ""
+                }`}
+                onClick={() => toggleStore(store.id)}
               >
                 {store.storeName}
               </button>

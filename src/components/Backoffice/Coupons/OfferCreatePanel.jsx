@@ -86,7 +86,9 @@ export default function OfferCreatePanel({ partnerId }) {
   const isSurpriseAmount = useMemo(() => type === "SURPRISE_AMOUNT", [type]);
   const linkedZipCodes = useMemo(
     () => {
-      const selectedStores = territory.stores.filter((store) => form.storeIds.includes(store.id));
+      const selectedStores = territory.stores.filter((store) =>
+        form.storeIds.some((storeId) => String(storeId) === String(store.id))
+      );
       if (!selectedStores.length) return new Set();
 
       const linkedZips = new Set();
@@ -129,6 +131,13 @@ export default function OfferCreatePanel({ partnerId }) {
     if (!form.storeIds.length) return territory.zipCodes;
     return territory.zipCodes.filter((zipCode) => linkedZipCodes.has(zipCode));
   }, [form.storeIds.length, linkedZipCodes, territory.zipCodes]);
+  const allStoreIds = useMemo(() => territory.stores.map((store) => store.id), [territory.stores]);
+  const allStoresSelected = useMemo(
+    () =>
+      allStoreIds.length > 0 &&
+      allStoreIds.every((storeId) => form.storeIds.some((item) => String(item) === String(storeId))),
+    [allStoreIds, form.storeIds]
+  );
 
   useEffect(() => {
     if (!partnerId) return;
@@ -210,22 +219,29 @@ export default function OfferCreatePanel({ partnerId }) {
   };
 
   const toggleStore = (storeId) => {
-    setForm((prev) => ({
-      ...prev,
-      storeIds: prev.storeIds.includes(storeId)
-        ? prev.storeIds.filter((item) => item !== storeId)
-        : [...prev.storeIds, storeId],
-    }));
+    setForm((prev) => {
+      const isSelected = prev.storeIds.some((item) => String(item) === String(storeId));
+
+      return {
+        ...prev,
+        storeIds: isSelected
+          ? prev.storeIds.filter((item) => String(item) !== String(storeId))
+          : [...prev.storeIds, storeId],
+      };
+    });
   };
 
   const toggleAllStores = () => {
-    setForm((prev) => ({
-      ...prev,
-      storeIds:
-        prev.storeIds.length === territory.stores.length
-          ? []
-          : territory.stores.map((store) => store.id),
-    }));
+    setForm((prev) => {
+      const selectedIds = prev.storeIds.map((storeId) => String(storeId));
+      const allSelected =
+        allStoreIds.length > 0 && allStoreIds.every((storeId) => selectedIds.includes(String(storeId)));
+
+      return {
+        ...prev,
+        storeIds: allSelected ? [] : allStoreIds,
+      };
+    });
   };
 
   const toggleZipCode = (zipCode) => {
@@ -579,17 +595,19 @@ export default function OfferCreatePanel({ partnerId }) {
           <div className="cp-pillRow">
             {!!territory.stores.length && (
               <button
-                className={`cp-pill ${form.storeIds.length === territory.stores.length ? "is-active" : ""}`}
+                className={`cp-pill ${allStoresSelected ? "is-active" : ""}`}
                 onClick={toggleAllStores}
                 type="button"
               >
-                Seleccionar todo
+                {allStoresSelected ? "Deseleccionar todo" : "Seleccionar todo"}
               </button>
             )}
             {territory.stores.map((store) => (
               <button
                 key={store.id}
-                className={`cp-pill ${form.storeIds.includes(store.id) ? "is-active" : ""}`}
+                className={`cp-pill ${
+                  form.storeIds.some((item) => String(item) === String(store.id)) ? "is-active" : ""
+                }`}
                 onClick={() => toggleStore(store.id)}
                 type="button"
               >

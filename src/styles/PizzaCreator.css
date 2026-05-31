@@ -323,11 +323,22 @@
   padding: 14px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 0;
   max-height: 220px;
+  overflow: hidden;
+  background: linear-gradient(180deg, #ffffff, #fffaf5);
+}
+
+.pc-ingredientsList {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
-  background: linear-gradient(180deg, #ffffff, #fffaf5);
+  padding-right: 4px;
+  scroll-padding-bottom: 12px;
 }
 
 .ing-row {
@@ -505,7 +516,16 @@
   font-weight: 900;
 }
 
-.ingredients-fieldset > button[type="button"] {
+.pc-addIngredientBar {
+  position: sticky;
+  bottom: 0;
+  z-index: 4;
+  padding-top: 12px;
+  background: linear-gradient(180deg, rgba(255, 250, 245, 0), #fffaf5 32%);
+}
+
+.pc-addIngredientBar > button[type="button"] {
+  width: 100%;
   border: 1px solid rgba(59, 0, 139, 0.08);
   background: linear-gradient(180deg, rgba(106, 61, 240, 0.06), rgba(255, 182, 28, 0.08));
   color: var(--brand-1);

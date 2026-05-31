@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import api from "../../setupAxios";
 import "../../styles/PizzaCreator.css";
@@ -138,6 +138,8 @@ export default function PizzaCreator({ partner }) {
   const [inventoryLoadError, setInventoryLoadError] = useState("");
   const [savingProduct, setSavingProduct] = useState(false);
   const [originalIngredientIds, setOriginalIngredientIds] = useState([]);
+  const ingredientsListRef = useRef(null);
+  const shouldFocusNewIngredientRef = useRef(false);
 
   const loadCategories = useCallback(async () => {
     if (!partnerId) return;
@@ -170,6 +172,23 @@ export default function PizzaCreator({ partner }) {
   useEffect(() => {
     loadCategories();
   }, [loadCategories]);
+
+  useEffect(() => {
+    if (!shouldFocusNewIngredientRef.current) return;
+
+    shouldFocusNewIngredientRef.current = false;
+
+    requestAnimationFrame(() => {
+      const list = ingredientsListRef.current;
+      if (!list) return;
+
+      list.scrollTop = list.scrollHeight;
+
+      const selects = list.querySelectorAll("select");
+      const lastSelect = selects[selects.length - 1];
+      lastSelect?.focus();
+    });
+  }, [form.ingredients.length]);
 
   useEffect(() => {
     let alive = true;
@@ -407,6 +426,8 @@ export default function PizzaCreator({ partner }) {
     sizeList.forEach((s) => {
       qty[s] = 0;
     });
+
+    shouldFocusNewIngredientRef.current = true;
 
     setForm((p) => ({
       ...p,
@@ -738,85 +759,89 @@ export default function PizzaCreator({ partner }) {
               )}
 
               <fieldset className="ingredients-fieldset">
-                {form.ingredients.map((row, i) => {
-                  const currentIngredientId = Number(row.id);
-                  const ingredientMeta = inventoryById.get(currentIngredientId);
-                  const allergenSummary = getAllergenSummary(
-                    ingredientMeta?.allergens
-                  );
-                  const hasAllergens =
-                    Array.isArray(ingredientMeta?.allergens) &&
-                    ingredientMeta.allergens.length > 0;
-                  const rowIngredientOptions = ingredientOptions.filter(
-                    (item) =>
-                      item.id === currentIngredientId ||
-                      !selectedIngredientIds.has(item.id)
-                  );
+                <div className="pc-ingredientsList" ref={ingredientsListRef}>
+                  {form.ingredients.map((row, i) => {
+                    const currentIngredientId = Number(row.id);
+                    const ingredientMeta = inventoryById.get(currentIngredientId);
+                    const allergenSummary = getAllergenSummary(
+                      ingredientMeta?.allergens
+                    );
+                    const hasAllergens =
+                      Array.isArray(ingredientMeta?.allergens) &&
+                      ingredientMeta.allergens.length > 0;
+                    const rowIngredientOptions = ingredientOptions.filter(
+                      (item) =>
+                        item.id === currentIngredientId ||
+                        !selectedIngredientIds.has(item.id)
+                    );
 
-                  return (
-                  <div key={i} className="ing-row">
-                    <div className="pc-ingredientCell">
-                      <div className="pc-ingredientPicker">
-                        <select
-                          value={row.id}
-                          onChange={(e) => onIngredientSelect(i, e.target.value)}
-                        >
-                          <option value="">- ingrediente -</option>
-                          {rowIngredientOptions.map((item) => (
-                            <option key={item.id} value={item.id}>
-                              {item.name}
-                            </option>
-                            ))}
-                        </select>
+                    return (
+                    <div key={i} className="ing-row">
+                      <div className="pc-ingredientCell">
+                        <div className="pc-ingredientPicker">
+                          <select
+                            value={row.id}
+                            onChange={(e) => onIngredientSelect(i, e.target.value)}
+                          >
+                            <option value="">- ingrediente -</option>
+                            {rowIngredientOptions.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item.name}
+                              </option>
+                              ))}
+                          </select>
 
-                      </div>
-                    </div>
-
-                    <div className="pc-sizeQtyScroller">
-                    <div className="pc-sizeQtyGrid pc-sizeQtyGrid--compact">
-                      {selectedSizes.map((sz) => (
-                        <div key={`${i}-${sz}`} className="pc-sizeQtyItem">
-                          <span className="pc-sizeQtyLabel">{sz}</span>
-                          <input
-                            type="text"
-                            className="pc-sizeQtyInput"
-                            inputMode="numeric"
-                            maxLength={3}
-                            value={(row.qtyBySize || {})[sz] ?? 0}
-                            onChange={(e) => onQtyChange(i, sz, e.target.value)}
-                          />
                         </div>
-                      ))}
-                    </div>
-                    </div>
-
-                    <div className="pc-rowAside">
-                      <div
-                        className={`pc-allergenBadge ${
-                          hasAllergens ? "" : "no-data"
-                        }`}
-                        title={
-                          hasAllergens
-                            ? ingredientMeta.allergens.join(", ")
-                            : "Sin alergeno declarado"
-                        }
-                      >
-                        <span className="pc-allergenBadgeLabel">ALG</span>
-                        <span className="pc-allergenBadgeValue">
-                          {allergenSummary}
-                        </span>
                       </div>
 
-                      <button type="button" onClick={() => removeIngredient(i)}>
-                        x
-                      </button>
-                    </div>
-                  </div>
-                )})}
+                      <div className="pc-sizeQtyScroller">
+                      <div className="pc-sizeQtyGrid pc-sizeQtyGrid--compact">
+                        {selectedSizes.map((sz) => (
+                          <div key={`${i}-${sz}`} className="pc-sizeQtyItem">
+                            <span className="pc-sizeQtyLabel">{sz}</span>
+                            <input
+                              type="text"
+                              className="pc-sizeQtyInput"
+                              inputMode="numeric"
+                              maxLength={3}
+                              value={(row.qtyBySize || {})[sz] ?? 0}
+                              onChange={(e) => onQtyChange(i, sz, e.target.value)}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                      </div>
 
-                <button type="button" onClick={addIngredient}>
-                  + Anadir ingrediente
-                </button>
+                      <div className="pc-rowAside">
+                        <div
+                          className={`pc-allergenBadge ${
+                            hasAllergens ? "" : "no-data"
+                          }`}
+                          title={
+                            hasAllergens
+                              ? ingredientMeta.allergens.join(", ")
+                              : "Sin alergeno declarado"
+                          }
+                        >
+                          <span className="pc-allergenBadgeLabel">ALG</span>
+                          <span className="pc-allergenBadgeValue">
+                            {allergenSummary}
+                          </span>
+                        </div>
+
+                        <button type="button" onClick={() => removeIngredient(i)}>
+                          x
+                        </button>
+                      </div>
+                    </div>
+                  )})}
+                </div>
+
+                <div className="pc-addIngredientBar">
+                  <button type="button" onClick={addIngredient}>
+                    + Anadir ingrediente
+                  </button>
+                </div>
               </fieldset>
             </section>
 

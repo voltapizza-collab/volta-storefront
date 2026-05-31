@@ -352,6 +352,10 @@ function filterPromos(items, query) {
   });
 }
 
+function promoHasProducts(promo) {
+  return Array.isArray(promo?.items) && promo.items.some((item) => item?.pizzaId || item?.name);
+}
+
 function filterTrendingItems(items, query) {
   return filterMenuItems(items, query).slice(0, 3);
 }
@@ -2580,14 +2584,19 @@ export default function StorePage() {
     return [...byId.values()];
   }, [menu, trending]);
 
+  const visiblePromos = useMemo(
+    () => promos.filter(promoHasProducts),
+    [promos]
+  );
+
   const commercialTabs = useMemo(
     () => [
       { id: TRENDING_TAB, label: "Trending", tone: "trending" },
       ...(topDeals.length ? [{ id: TOP_DEAL_TAB, label: "Top Deal", tone: "deal" }] : []),
-      { id: PROMOS_TAB, label: "Promos", tone: "promo" },
+      ...(visiblePromos.length ? [{ id: PROMOS_TAB, label: "Promos", tone: "promo" }] : []),
       ...(upcoming.length ? [{ id: UPCOMING_TAB, label: "Proximos", tone: "upcoming" }] : []),
     ],
-    [topDeals.length, upcoming.length]
+    [topDeals.length, upcoming.length, visiblePromos.length]
   );
 
   const categoryTabs = useMemo(
@@ -2631,10 +2640,10 @@ export default function StorePage() {
 
   const filteredPromos = useMemo(() => {
     const query = search.trim().toLowerCase();
-    return filterPromos(promos, query)
+    return filterPromos(visiblePromos, query)
       .slice()
       .sort((left, right) => getPromoDiscountPercent(right, menuCatalog) - getPromoDiscountPercent(left, menuCatalog));
-  }, [menuCatalog, promos, search]);
+  }, [menuCatalog, search, visiblePromos]);
 
   const filteredTopDeals = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -2809,8 +2818,14 @@ export default function StorePage() {
   );
 
   const selectStorefrontTab = useCallback(
-    (tabId, pauseDurationMs = 5200) => {
-      pauseTabsTicker(pauseDurationMs);
+    (tabId, pauseDurationMs = 5200, options = {}) => {
+      if (options.manual) {
+        tabsAutoPauseUntilRef.current = Number.POSITIVE_INFINITY;
+        commercialAutoSwitchAtRef.current = Number.POSITIVE_INFINITY;
+        setOfferTabsManual(true);
+      } else {
+        pauseTabsTicker(pauseDurationMs);
+      }
       tabsScrollOriginRef.current = "";
       ignoreTabsScrollUntilRef.current = performance.now() + 520;
       alignCategoryTabToZero(tabId);
@@ -2823,17 +2838,14 @@ export default function StorePage() {
     (tabId) => {
       window.clearTimeout(commercialTabClickTimeoutRef.current);
       lastCommercialTabClickRef.current = { id: "", at: 0 };
-      commercialAutoSwitchAtRef.current = Number.POSITIVE_INFINITY;
-      setOfferTabsManual(false);
-      selectStorefrontTab(tabId, 30000);
+      selectStorefrontTab(tabId, 30000, { manual: true });
     },
     [selectStorefrontTab]
   );
 
   const activateCommercialTab = useCallback(
     (tabId, pauseDurationMs = 30000) => {
-      setOfferTabsManual(true);
-      selectStorefrontTab(tabId, pauseDurationMs);
+      selectStorefrontTab(tabId, pauseDurationMs, { manual: true });
     },
     [selectStorefrontTab]
   );

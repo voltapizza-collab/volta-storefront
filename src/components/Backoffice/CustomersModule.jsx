@@ -36,6 +36,8 @@ const formatMoney = (value, currency = "EUR") => {
   return `${currency} ${amount.toFixed(2)}`;
 };
 
+const formatPercent = (value) => `${Math.round(Number(value || 0))}%`;
+
 const formatCustomerMoney = (customer, value) =>
   Number(customer?.orderCount || 0) > 0 ? formatMoney(value) : "-";
 
@@ -53,6 +55,16 @@ const getTicketComparisonLabel = (customer) => {
   return customer.isAboveStoreAverage ? "Sobre media tienda" : "Bajo media tienda";
 };
 
+const getTicketComparisonIcon = (customer) => {
+  if (!Number(customer?.orderCount || 0) || !Number(customer?.storeAverageTicket || 0)) return "";
+  return customer.isAboveStoreAverage ? "▲" : "▼";
+};
+
+const getTicketComparisonTone = (customer) => {
+  if (!getTicketComparisonIcon(customer)) return "";
+  return customer.isAboveStoreAverage ? "is-up" : "is-down";
+};
+
 const formatDate = (value) => {
   if (!value) return "Sin compras";
   const date = new Date(value);
@@ -65,9 +77,32 @@ const formatDate = (value) => {
 };
 
 const formatLastOrderDate = (customer) => {
-  if (!Number(customer?.orderCount || 0)) return "Sin compras";
-  return customer?.lastOrderAt ? formatDate(customer.lastOrderAt) : "Fecha no disponible";
+  if (!Number(customer?.orderCount || 0)) return "-";
+  return customer?.lastOrderAt ? formatDate(customer.lastOrderAt) : "-";
 };
+
+const formatCustomerAge = (customer) => {
+  if (!customer?.createdAt) return "-";
+  const createdDate = new Date(customer.createdAt);
+  if (Number.isNaN(createdDate.getTime())) return "-";
+
+  const days = Math.max(0, Math.floor((Date.now() - createdDate.getTime()) / 86400000));
+  if (!days) return "Hoy";
+  if (days === 1) return "1 dia";
+  return `${days} dias`;
+};
+
+const formatCustomerCreatedAt = (customer) => (customer?.createdAt ? formatDate(customer.createdAt) : "-");
+
+const formatFavoriteProductTitle = (product) => {
+  if (!product) return "Sin ventas";
+  return `${product.units || 0} uds.`;
+};
+
+const getFavoriteProduct = (customer) =>
+  customer?.favoriteProduct ||
+  (Array.isArray(customer?.topProducts) ? customer.topProducts[0] : null) ||
+  null;
 
 const escapeCsv = (value) => {
   const text = String(value ?? "");
@@ -187,6 +222,30 @@ function StatusBadge({ restricted }) {
 
 function CustomerModal({ initial, loading, onClose, onSubmit, onDelete }) {
   const [form, setForm] = useState(emptyCustomer);
+  const favoriteProduct = getFavoriteProduct(initial);
+  const insightRows = [
+    {
+      label: "Ticket prom.",
+      value: formatCustomerMoney(initial, initial?.averageTicket),
+      meta: getTicketComparisonIcon(initial),
+      tone: getTicketComparisonTone(initial),
+    },
+    {
+      label: "Ultima compra",
+      value: formatLastOrderDate(initial),
+      meta: formatDaysOff(initial),
+    },
+    {
+      label: "Pizza mas comprada",
+      value: favoriteProduct?.name || "-",
+      meta: formatFavoriteProductTitle(favoriteProduct),
+    },
+    {
+      label: "Antiguedad",
+      value: formatCustomerAge(initial),
+      meta: formatCustomerCreatedAt(initial),
+    },
+  ];
 
   useEffect(() => {
     setForm({
@@ -221,6 +280,21 @@ function CustomerModal({ initial, loading, onClose, onSubmit, onDelete }) {
             onSubmit(form);
           }}
         >
+          {initial?.id && (
+            <div className="cu-editInsights cu-field-wide">
+              {insightRows.map((item) => (
+                <article key={item.label} className="cu-editInsight">
+                  <span>{item.label}</span>
+                  <strong>
+                    {item.value}
+                    {item.tone && <em className={`cu-ticketArrow ${item.tone}`}>{item.meta}</em>}
+                  </strong>
+                  {!item.tone && <small>{item.meta}</small>}
+                </article>
+              ))}
+            </div>
+          )}
+
           <label className="cu-field">
             <span>Name</span>
             <input
@@ -380,7 +454,7 @@ export default function CustomersModule({ partner }) {
 
       const params = new URLSearchParams({
         partnerId: String(partnerId),
-        take: "50",
+        take: "all",
       });
 
       if (countryValue) params.set("country", countryValue);
@@ -464,6 +538,12 @@ export default function CustomersModule({ partner }) {
       zipCodes,
     };
   }, [hasActiveFilters, rows, stats]);
+
+  const getSegmentPercent = (segmentKey) => {
+    const total = Number(stats.total || 0);
+    if (!total) return 0;
+    return (Number(stats.counts?.[segmentKey] || 0) / total) * 100;
+  };
 
   useEffect(() => {
     if (!zipQuery) return;
@@ -651,20 +731,27 @@ export default function CustomersModule({ partner }) {
                   className="cu-statCard cu-statCard-segment cu-statCard-static"
                 >
                   <span>{segment.shortLabel}</span>
-                  <strong>{stats.counts?.[segment.key] || 0}</strong>
+                  <div className="cu-statValue">
+                    <strong>{stats.counts?.[segment.key] || 0}</strong>
+                    <em>{formatPercent(getSegmentPercent(segment.key))}</em>
+                  </div>
                   <small>{segment.description}</small>
                 </article>
               ))}
+
+              <article className="cu-statCard cu-statCard-total cu-statCard-static">
+                <span>Total</span>
+                <div className="cu-statValue">
+                  <strong>{stats.total || 0}</strong>
+                  <em>{stats.total ? "100%" : "0%"}</em>
+                </div>
+                <small>
+                  Active: {stats.active?.unrestricted || 0} - Restricted:{" "}
+                  {stats.active?.restricted || 0}
+                </small>
+              </article>
             </div>
           </div>
-
-          <article className="cu-statCard cu-statCard-total cu-statCard-static">
-            <span>Total</span>
-            <strong>{stats.total || 0}</strong>
-            <small>
-              Active: {stats.active?.unrestricted || 0} - Restricted: {stats.active?.restricted || 0}
-            </small>
-          </article>
         </div>
 
         <div className="cu-toolbar">
@@ -746,42 +833,51 @@ export default function CustomersModule({ partner }) {
                 <th>Segment</th>
                 <th>Ticket prom.</th>
                 <th>Ultima compra</th>
-                <th>Status</th>
+                <th>Pizza mas comprada</th>
                 <th className="actions">Actions</th>
               </tr>
             </thead>
 
             <tbody>
-              {rows.map((customer) => (
-                <tr key={customer.id}>
-                  <td>{customer.code || "-"}</td>
-                  <td>
-                    <div className="cu-nameCell">
-                      <strong>{customer.name || "-"}</strong>
-                      <span>{customer.address_1 || "Sin direccion"}</span>
-                    </div>
-                  </td>
-                  <td>{customer.phone ? displayESPhone(customer.phone) : "-"}</td>
-                  <td>
-                    <SegmentBadge value={customer.segment} />
-                  </td>
-                  <td>
-                    <div className="cu-moneyCell">
-                      <strong>{formatCustomerMoney(customer, customer.averageTicket)}</strong>
-                      <span>{getTicketComparisonLabel(customer)}</span>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="cu-moneyCell">
-                      <strong>{formatDaysOff(customer)}</strong>
-                      <span>{formatLastOrderDate(customer)}</span>
-                    </div>
-                  </td>
-                  <td>
-                    <StatusBadge restricted={customer.isRestricted} />
-                  </td>
-                  <td className="actions">
-                    <div className="cu-rowActions">
+              {rows.map((customer) => {
+                const favoriteProduct = getFavoriteProduct(customer);
+
+                return (
+                  <tr key={customer.id}>
+                    <td>{customer.code || "-"}</td>
+                    <td>
+                      <div className="cu-nameCell">
+                        <strong>{customer.name || "-"}</strong>
+                      </div>
+                    </td>
+                    <td>{customer.phone ? displayESPhone(customer.phone) : "-"}</td>
+                    <td>
+                      <SegmentBadge value={customer.segment} />
+                    </td>
+                    <td>
+                      <div className="cu-moneyCell cu-ticketCell">
+                        <strong>{formatCustomerMoney(customer, customer.averageTicket)}</strong>
+                        {getTicketComparisonIcon(customer) && (
+                          <span className={`cu-ticketArrow ${getTicketComparisonTone(customer)}`}>
+                            {getTicketComparisonIcon(customer)}
+                          </span>
+                        )}
+                      </div>
+                    </td>
+                    <td>
+                      <div className="cu-moneyCell">
+                        <strong title={formatDaysOff(customer)}>{formatLastOrderDate(customer)}</strong>
+                      </div>
+                    </td>
+                    <td>
+                      <div className="cu-favoritePizzaCell">
+                        <strong title={formatFavoriteProductTitle(favoriteProduct)}>
+                          {favoriteProduct?.name || "-"}
+                        </strong>
+                      </div>
+                    </td>
+                    <td className="actions">
+                      <div className="cu-rowActions">
                       <button
                         className="cu-inlineBtn"
                         onClick={(event) => {
@@ -813,10 +909,11 @@ export default function CustomersModule({ partner }) {
                       >
                         {customer.isRestricted ? "Unrest" : "Restrict"}
                       </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
 
               {!loading && rows.length === 0 && (
                 <tr>

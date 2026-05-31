@@ -765,6 +765,7 @@ Konjac
 Kumara / batata maori
 Lechuga
 Loroco
+Maiz Dulce
 Maiz tostado
 Nabo
 Nabo encurtido
@@ -1244,6 +1245,7 @@ Crema de mascarpone|MILK
 Crema de pistacho|MILK,NUTS
 Dulce de Leche|MILK
 Halva
+Malvavisco
 Manteca de cacao
 Mantequilla de manzana
 Marshmallow|GELATIN

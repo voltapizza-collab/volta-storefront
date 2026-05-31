@@ -244,11 +244,14 @@ export default function InventoryModule({ partner }) {
       .map((part) => part.charAt(0).toUpperCase())
       .join("") || "IN";
 
+  const isIngredientActiveInStore = (ingredient) => ingredient?.active !== false;
+  const isIngredientInactiveInStore = (ingredient) => ingredient?.active === false;
+
   const renderIngredientTile = (ing) => {
     const allergens = getAllergenTags(ing);
     const activePrice = formatIngredientPrice(ing.costPrice);
-    const isActive = ing.exists && ing.active;
-    const isInactive = ing.exists && !ing.active;
+    const isActive = isIngredientActiveInStore(ing);
+    const isInactive = isIngredientInactiveInStore(ing);
 
     return (
       <button
@@ -334,7 +337,7 @@ export default function InventoryModule({ partner }) {
 
   const handleSelectAllCategory = async (cat, list) => {
     const targetIds = list
-      .filter((ing) => !(ing.exists && ing.active))
+      .filter((ing) => !isIngredientActiveInStore(ing))
       .map((ing) => ing.id);
 
     if (!targetIds.length) return;
@@ -406,8 +409,8 @@ export default function InventoryModule({ partner }) {
                 <h3>{getDisplayName(detailIngredient.name)}</h3>
                 <p>{getCategoryDisplayName(detailIngredient.category)}</p>
                 <div className="inv-detailStatus">
-                  <span className={detailIngredient.exists && detailIngredient.active ? "is-active" : "is-inactive"}>
-                    {detailIngredient.exists && detailIngredient.active ? "Activo en tienda" : "Pendiente de activar"}
+                  <span className={isIngredientActiveInStore(detailIngredient) ? "is-active" : "is-inactive"}>
+                    {isIngredientActiveInStore(detailIngredient) ? "Activo en tienda" : "Pendiente de activar"}
                   </span>
                   {formatIngredientPrice(detailIngredient.costPrice) && (
                     <strong>{formatIngredientPrice(detailIngredient.costPrice)}</strong>
@@ -487,7 +490,7 @@ export default function InventoryModule({ partner }) {
               >
                 Cancelar
               </button>
-              {detailIngredient.exists && detailIngredient.active && (
+              {isIngredientActiveInStore(detailIngredient) && (
                 <button
                   type="button"
                   className="inv-detailDanger"
@@ -504,7 +507,7 @@ export default function InventoryModule({ partner }) {
               >
                 {savingOnboardingId
                   ? "Guardando..."
-                  : detailIngredient.exists && detailIngredient.active
+                  : isIngredientActiveInStore(detailIngredient)
                   ? "Guardar cambios"
                   : "Guardar y activar"}
               </button>
@@ -529,7 +532,7 @@ export default function InventoryModule({ partner }) {
                 const list = grouped[cat] || [];
                 if (list.length === 0) return null;
                 const activeCount = list.filter(
-                  (ing) => ing.exists && ing.active
+                  (ing) => isIngredientActiveInStore(ing)
                 ).length;
 
                 return (
@@ -684,9 +687,9 @@ export default function InventoryModule({ partner }) {
                         key={`${ing.id}-${search}`}
                         type="button"
                         className={`inv-ingredientTile ${
-                          ing.exists && ing.active
+                          isIngredientActiveInStore(ing)
                             ? "is-active"
-                            : ing.exists
+                            : isIngredientInactiveInStore(ing)
                             ? "is-inactive"
                             : "is-new"
                         }`}
@@ -705,7 +708,7 @@ export default function InventoryModule({ partner }) {
                         <span className="inv-tileMeta">
                           <span>{getAllergenTags(ing)[0]}</span>
                           <strong>
-                            {ing.exists && ing.active ? "Activo" : "Agregar"}
+                            {isIngredientActiveInStore(ing) ? "Activo" : "Agregar"}
                           </strong>
                         </span>
                       </button>

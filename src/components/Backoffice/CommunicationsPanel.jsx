@@ -4,6 +4,10 @@ import { COUPON_SEGMENTS } from "../../constants/coupons";
 import SmsCreditsPanel from "./Coupons/SmsCreditsPanel";
 import "../../styles/CouponsModule.css";
 
+const COMMUNICATION_SEGMENTS = COUPON_SEGMENTS.filter((segment) => /^S\d$/i.test(segment.key));
+
+const formatPercent = (value) => `${Math.round(Number(value || 0))}%`;
+
 const normalizeComparableText = (value = "") =>
   String(value || "")
     .trim()
@@ -22,7 +26,6 @@ const selectedCustomerLabel = (customer) => {
     customer.name || `Cliente #${customer.id}`,
     customer.phone,
     customer.segment,
-    customer.activity,
     customer.zipCode,
   ]
     .filter(Boolean)
@@ -47,6 +50,10 @@ export default function CommunicationsPanel({ partnerId }) {
     stores: [],
     zipCodes: [],
     customers: [],
+    segmentStats: {
+      total: 0,
+      counts: {},
+    },
   });
   const [form, setForm] = useState({
     audienceMode: "FILTERED",
@@ -75,7 +82,6 @@ export default function CommunicationsPanel({ partnerId }) {
             customer.address_1,
             customer.zipCode,
             customer.segment,
-            customer.activity,
           ]
             .filter(Boolean)
             .join(" ")
@@ -87,7 +93,9 @@ export default function CommunicationsPanel({ partnerId }) {
   }, [customerSearch, territory.customers]);
 
   const linkedZipCodes = useMemo(() => {
-    const selectedStores = territory.stores.filter((store) => form.storeIds.includes(store.id));
+    const selectedStores = territory.stores.filter((store) =>
+      form.storeIds.some((storeId) => String(storeId) === String(store.id))
+    );
     if (!selectedStores.length) return new Set();
 
     const linkedZips = new Set();
@@ -128,6 +136,25 @@ export default function CommunicationsPanel({ partnerId }) {
     return territory.zipCodes.filter((zipCode) => linkedZipCodes.has(zipCode));
   }, [form.storeIds.length, linkedZipCodes, territory.zipCodes]);
 
+  const allStoreIds = useMemo(() => territory.stores.map((store) => store.id), [territory.stores]);
+  const allStoresSelected = useMemo(
+    () =>
+      allStoreIds.length > 0 &&
+      allStoreIds.every((storeId) => form.storeIds.some((item) => String(item) === String(storeId))),
+    [allStoreIds, form.storeIds]
+  );
+
+  const segmentStats = useMemo(() => {
+    const total = Number(territory.segmentStats?.total || 0);
+    const counts = territory.segmentStats?.counts || {};
+
+    return {
+      total,
+      counts,
+      percent: (segmentKey) => (total ? (Number(counts[segmentKey] || 0) / total) * 100 : 0),
+    };
+  }, [territory.segmentStats]);
+
   const payload = useMemo(
     () => ({
       partnerId,
@@ -166,6 +193,10 @@ export default function CommunicationsPanel({ partnerId }) {
           stores: Array.isArray(storesResponse.data) ? storesResponse.data : [],
           zipCodes: Array.isArray(statsResponse.data?.zipCodes) ? statsResponse.data.zipCodes : [],
           customers: Array.isArray(customersResponse.data) ? customersResponse.data : [],
+          segmentStats: {
+            total: Number(statsResponse.data?.total || 0),
+            counts: statsResponse.data?.counts || {},
+          },
         });
       } catch (requestError) {
         console.error("Error loading communication filters", requestError);
@@ -219,7 +250,7 @@ export default function CommunicationsPanel({ partnerId }) {
   };
 
   const toggleAllSegments = () => {
-    const allSegments = COUPON_SEGMENTS.map((segment) => segment.key);
+    const allSegments = COMMUNICATION_SEGMENTS.map((segment) => segment.key);
     setPreview(defaultPreview);
     setForm((prev) => ({
       ...prev,
@@ -229,23 +260,30 @@ export default function CommunicationsPanel({ partnerId }) {
 
   const toggleStore = (storeId) => {
     setPreview(defaultPreview);
-    setForm((prev) => ({
-      ...prev,
-      storeIds: prev.storeIds.includes(storeId)
-        ? prev.storeIds.filter((item) => item !== storeId)
-        : [...prev.storeIds, storeId],
-    }));
+    setForm((prev) => {
+      const isSelected = prev.storeIds.some((item) => String(item) === String(storeId));
+
+      return {
+        ...prev,
+        storeIds: isSelected
+          ? prev.storeIds.filter((item) => String(item) !== String(storeId))
+          : [...prev.storeIds, storeId],
+      };
+    });
   };
 
   const toggleAllStores = () => {
     setPreview(defaultPreview);
-    setForm((prev) => ({
-      ...prev,
-      storeIds:
-        prev.storeIds.length === territory.stores.length
-          ? []
-          : territory.stores.map((store) => store.id),
-    }));
+    setForm((prev) => {
+      const selectedIds = prev.storeIds.map((storeId) => String(storeId));
+      const allSelected =
+        allStoreIds.length > 0 && allStoreIds.every((storeId) => selectedIds.includes(String(storeId)));
+
+      return {
+        ...prev,
+        storeIds: allSelected ? [] : allStoreIds,
+      };
+    });
   };
 
   const toggleZipCode = (zipCode) => {
@@ -415,7 +453,7 @@ export default function CommunicationsPanel({ partnerId }) {
                 >
                   <strong>{customer.name || `Cliente #${customer.id}`}</strong>
                   <span>
-                    {[customer.phone, customer.segment, customer.activity, customer.zipCode]
+                    {[customer.phone, customer.segment, customer.zipCode]
                       .filter(Boolean)
                       .join(" - ")}
                   </span>
@@ -432,24 +470,30 @@ export default function CommunicationsPanel({ partnerId }) {
             <span>Segmentos</span>
             <div className="cp-pillRow">
               <button
-                className={`cp-pill ${form.segments.length === COUPON_SEGMENTS.length ? "is-active" : ""}`}
+                className={`cp-pill cp-pill--segmentMetric ${
+                  form.segments.length === COMMUNICATION_SEGMENTS.length ? "is-active" : ""
+                }`}
                 onClick={toggleAllSegments}
                 type="button"
               >
-                Seleccionar todo
+                <span>Seleccionar todo</span>
+                <strong>{segmentStats.total}</strong>
               </button>
-              {COUPON_SEGMENTS.map((segment) => (
+              {COMMUNICATION_SEGMENTS.map((segment) => (
                 <button
                   key={segment.key}
-                  className={`cp-pill ${form.segments.includes(segment.key) ? "is-active" : ""}`}
+                  className={`cp-pill cp-pill--segmentMetric ${
+                    form.segments.includes(segment.key) ? "is-active" : ""
+                  }`}
                   onClick={() => toggleSegment(segment.key)}
                   type="button"
                 >
-                  {segment.label}
+                  <span>{segment.label}</span>
+                  <strong>{segmentStats.counts?.[segment.key] || 0}</strong>
+                  <small>{formatPercent(segmentStats.percent(segment.key))}</small>
                 </button>
               ))}
             </div>
-            <div className="cp-helper">Puedes mezclar segmentos S1-S5 con estado Hot/Cold.</div>
           </div>
 
           <div className="cp-targetPanel">
@@ -458,17 +502,19 @@ export default function CommunicationsPanel({ partnerId }) {
               <div className="cp-pillRow">
                 {!!territory.stores.length && (
                   <button
-                    className={`cp-pill ${form.storeIds.length === territory.stores.length ? "is-active" : ""}`}
+                    className={`cp-pill ${allStoresSelected ? "is-active" : ""}`}
                     onClick={toggleAllStores}
                     type="button"
                   >
-                    Seleccionar todo
+                    {allStoresSelected ? "Deseleccionar todo" : "Seleccionar todo"}
                   </button>
                 )}
                 {territory.stores.map((store) => (
                   <button
                     key={store.id}
-                    className={`cp-pill ${form.storeIds.includes(store.id) ? "is-active" : ""}`}
+                    className={`cp-pill ${
+                      form.storeIds.some((item) => String(item) === String(store.id)) ? "is-active" : ""
+                    }`}
                     onClick={() => toggleStore(store.id)}
                     type="button"
                   >
@@ -571,7 +617,7 @@ export default function CommunicationsPanel({ partnerId }) {
                 <tr key={customer.id}>
                   <td>{customer.name || `Cliente #${customer.id}`}</td>
                   <td>{customer.phone || "-"}</td>
-                  <td>{[customer.segment, customer.activity].filter(Boolean).join(" / ") || "-"}</td>
+                  <td>{customer.segment || "-"}</td>
                   <td>{customer.zipCode || "-"}</td>
                   <td>{customer.canSend ? "OK" : "Telefono invalido"}</td>
                 </tr>

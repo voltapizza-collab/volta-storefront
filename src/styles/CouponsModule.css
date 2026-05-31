@@ -383,6 +383,42 @@
   gap: 10px;
 }
 
+.cp-pill--segmentMetric {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cp-pill--segmentMetric span {
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+.cp-pill--segmentMetric strong {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: rgba(59, 0, 139, 0.08);
+  color: var(--brand-1);
+  font-size: 12px;
+  line-height: 1;
+}
+
+.cp-pill--segmentMetric small {
+  color: rgba(59, 0, 139, 0.62);
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.cp-pill--segmentMetric.is-active strong {
+  background: rgba(255, 255, 255, 0.28);
+  color: #23163b;
+}
+
 .cp-segmented {
   display: inline-grid;
   grid-template-columns: repeat(2, minmax(120px, 1fr));

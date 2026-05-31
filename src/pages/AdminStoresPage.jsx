@@ -91,6 +91,8 @@ const formatMoney = (value, currency = "EUR") => {
   return `${currency} ${amount.toFixed(2)}`;
 };
 
+const formatPercent = (value) => `${Math.round(Number(value || 0))}%`;
+
 const formatCustomerMoney = (customer, value) =>
   Number(customer?.orderCount || 0) > 0 ? formatMoney(value) : "-";
 
@@ -1492,24 +1494,55 @@ export default function AdminStoresPage({
     [scopedCustomers]
   );
 
+  const customerFilterBase = useMemo(
+    () =>
+      scopedCustomers.filter((customer) =>
+        customerPostalCode === "all" ? true : customer.postalCode === customerPostalCode
+      ),
+    [customerPostalCode, scopedCustomers]
+  );
+
   const visibleCustomers = useMemo(
     () =>
-      scopedCustomers
+      customerFilterBase
         .filter((customer) => {
-          const matchesPostal =
-            customerPostalCode === "all" ? true : customer.postalCode === customerPostalCode;
           const matchesSegment =
-            customerSegmentFilter === "all" ? true : customer.segment === customerSegmentFilter;
+            customerSegmentFilter === "all" ? true : getCustomerSegmentKey(customer) === customerSegmentFilter;
 
-          return matchesPostal && matchesSegment;
+          return matchesSegment;
         })
         .sort((left, right) =>
           String(left.name || "").localeCompare(String(right.name || ""), "es", {
             sensitivity: "base",
           })
         ),
-    [customerPostalCode, customerSegmentFilter, scopedCustomers]
+    [customerFilterBase, customerSegmentFilter]
   );
+
+  const customerSegmentStats = useMemo(() => {
+    const total = customerFilterBase.length;
+    const byKey = segmentCards.reduce((acc, segment) => {
+      acc[segment.key] = { count: 0, percent: 0 };
+      return acc;
+    }, {});
+
+    customerFilterBase.forEach((customer) => {
+      const key = getCustomerSegmentKey(customer);
+      byKey[key] = {
+        ...byKey[key],
+        count: (byKey[key]?.count || 0) + 1,
+      };
+    });
+
+    Object.keys(byKey).forEach((key) => {
+      byKey[key].percent = total ? (byKey[key].count / total) * 100 : 0;
+    });
+
+    return {
+      total,
+      byKey,
+    };
+  }, [customerFilterBase]);
 
   useEffect(() => {
     if (customerPostalCode === "all") return;
@@ -1824,22 +1857,36 @@ export default function AdminStoresPage({
                   }`}
                   onClick={() => setCustomerSegmentFilter("all")}
                 >
-                  Todos
+                  <span className="sc-territoryLabel">Visibles</span>
+                  <span className="sc-segmentMetric">
+                    {customerSegmentStats.total}
+                  </span>
                 </button>
-                {segmentCards.map((segment) => (
-                  <button
-                    key={segment.key}
-                    type="button"
-                    className={`sc-territoryModeBtn is-segment ${
-                      customerSegmentFilter === segment.key ? "is-active" : ""
-                    }`}
-                    style={{ "--sc-segment-color": segment.color }}
-                    onClick={() => setCustomerSegmentFilter(segment.key)}
-                  >
-                    <span className="sc-segmentSwatch" />
-                    {segment.shortLabel}
-                  </button>
-                ))}
+                {segmentCards.map((segment) => {
+                  const stats = customerSegmentStats.byKey[segment.key] || {
+                    count: 0,
+                    percent: 0,
+                  };
+
+                  return (
+                    <button
+                      key={segment.key}
+                      type="button"
+                      className={`sc-territoryModeBtn is-segment ${
+                        customerSegmentFilter === segment.key ? "is-active" : ""
+                      }`}
+                      style={{ "--sc-segment-color": segment.color }}
+                      onClick={() => setCustomerSegmentFilter(segment.key)}
+                    >
+                      <span className="sc-segmentSwatch" />
+                      <span className="sc-territoryLabel">{segment.shortLabel}</span>
+                      <span className="sc-segmentMetric">
+                        {stats.count}
+                        <small>{formatPercent(stats.percent)}</small>
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
 
             </div>

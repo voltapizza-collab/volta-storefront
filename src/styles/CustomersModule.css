@@ -110,7 +110,7 @@
 }
 
 .cu-statsGrid-segments {
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  grid-template-columns: repeat(6, minmax(128px, 1fr));
 }
 
 .cu-statCard {
@@ -136,6 +136,27 @@
 .cu-statCard strong {
   font-size: 26px;
   color: var(--brand-1);
+}
+
+.cu-statValue {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.cu-statValue em {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(59, 0, 139, 0.07);
+  color: rgba(59, 0, 139, 0.72);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 900;
+  line-height: 1;
 }
 
 .cu-statCard.active {
@@ -259,7 +280,8 @@
 
 .cu-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
 .cu-table th,
@@ -272,7 +294,11 @@
 
 .cu-table th {
   color: rgba(59, 0, 139, 0.76);
-  background: rgba(59, 0, 139, 0.03);
+  background: #e9e7ec;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  box-shadow: 0 1px 0 rgba(59, 0, 139, 0.08);
 }
 
 .cu-clickableRow {
@@ -290,6 +316,7 @@
 .cu-nameCell {
   display: grid;
   gap: 4px;
+  min-width: 132px;
 }
 
 .cu-nameCell strong {
@@ -319,10 +346,59 @@
   font-size: 13px;
 }
 
+.cu-ticketCell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .cu-moneyCell span {
   color: rgba(59, 0, 139, 0.62);
   font-size: 12px;
   font-weight: 700;
+}
+
+.cu-moneyCell .cu-ticketArrow {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 950;
+  line-height: 1;
+}
+
+.cu-ticketArrow.is-up {
+  color: #08783a;
+}
+
+.cu-ticketArrow.is-down {
+  color: #b21f68;
+}
+
+.cu-favoritePizzaCell {
+  display: grid;
+  gap: 4px;
+  min-width: 132px;
+  max-width: 190px;
+}
+
+.cu-favoritePizzaCell strong {
+  overflow: hidden;
+  color: var(--brand-1);
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cu-favoritePizzaCell span {
+  width: fit-content;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(255, 182, 28, 0.18);
+  color: #6a4800;
+  font-size: 11px;
+  font-weight: 900;
+  line-height: 1;
 }
 
 .cu-trend {
@@ -501,6 +577,42 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px 16px;
   margin-top: 18px;
+}
+
+.cu-editInsights {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.cu-editInsight {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: rgba(247, 241, 255, 0.72);
+  border: 1px solid rgba(59, 0, 139, 0.08);
+}
+
+.cu-editInsight span,
+.cu-editInsight small {
+  color: rgba(59, 0, 139, 0.66);
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.cu-editInsight strong {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--brand-1);
+  font-size: 13px;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .cu-field {

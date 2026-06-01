@@ -528,52 +528,81 @@ export default function PizzaCreator({ partner }) {
       return;
     }
 
-    const payload = new FormData();
-    payload.append("name", form.name.trim());
-    payload.append("partnerId", String(partnerId));
-    payload.append("categoryId", String(Number(form.categoryId)));
-    if (storeId) {
-      payload.append("storeId", String(storeId));
-    }
-    payload.append("sizes", JSON.stringify(form.sizes));
-    payload.append("priceBySize", JSON.stringify(form.priceBySize));
-    payload.append("ingredients", JSON.stringify(ingredientsPayload));
-    payload.append("launchAt", form.launchAt || "");
-    payload.append("cookingMethod", "");
-    if (form.imageFile) {
-      payload.append("image", form.imageFile);
-    }
+    const buildPayload = ({ includeImage = true } = {}) => {
+      const payload = new FormData();
+      payload.append("name", form.name.trim());
+      payload.append("partnerId", String(partnerId));
+      payload.append("categoryId", String(Number(form.categoryId)));
+      if (storeId) {
+        payload.append("storeId", String(storeId));
+      }
+      payload.append("sizes", JSON.stringify(form.sizes));
+      payload.append("priceBySize", JSON.stringify(form.priceBySize));
+      payload.append("ingredients", JSON.stringify(ingredientsPayload));
+      payload.append("launchAt", form.launchAt || "");
+      payload.append("cookingMethod", "");
+      if (includeImage && form.imageFile) {
+        payload.append("image", form.imageFile);
+      }
+      return payload;
+    };
 
-    try {
-      setSavingProduct(true);
-
+    const savePayload = async (payload) => {
       if (editingPizzaId) {
         await api.put(`/api/pizzas/${editingPizzaId}`, payload, {
           headers: { "Content-Type": "multipart/form-data" },
         });
-        alert("Producto actualizado");
-      } else {
-        await api.post("/api/pizzas", payload, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
-        alert("Producto creado");
+        return "Producto actualizado";
       }
 
+      await api.post("/api/pizzas", payload, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      return "Producto creado";
+    };
+
+    const finishSuccessfulSave = (message) => {
+      alert(message);
       setEditingPizzaId(null);
       setExistingImage(null);
       setOriginalIngredientIds([]);
       setForm(createInitialForm());
       fetchPizzas();
+    };
+
+    try {
+      setSavingProduct(true);
+
+      const successMessage = await savePayload(buildPayload());
+      finishSuccessfulSave(successMessage);
     } catch (err) {
       console.error(err);
       const backendError = err.response?.data?.error || "";
-      const backendCode = err.response?.data?.code || "";
+      const backendCode = String(err.response?.data?.code || "").toLowerCase();
       const databaseUnavailable =
         backendCode === "database_unavailable" ||
         backendError.includes("Can't reach database server");
       const imageUploadUnavailable =
         backendCode === "image_upload_not_configured" ||
         backendError === "Cloudinary not configured";
+
+      if (
+        imageUploadUnavailable &&
+        form.imageFile &&
+        window.confirm(
+          "No se pudo subir la imagen porque Cloudinary no esta configurado. Quieres guardar el producto sin imagen?"
+        )
+      ) {
+        try {
+          const retryMessage = await savePayload(buildPayload({ includeImage: false }));
+          finishSuccessfulSave(`${retryMessage} sin imagen`);
+          return;
+        } catch (retryErr) {
+          console.error(retryErr);
+          alert(retryErr.response?.data?.error || "Error al guardar sin imagen");
+          return;
+        }
+      }
 
       alert(
         databaseUnavailable

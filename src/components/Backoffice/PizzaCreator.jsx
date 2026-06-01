@@ -128,6 +128,9 @@ export default function PizzaCreator({ partner }) {
   const [form, setForm] = useState(createInitialForm);
   const [inventory, setInventory] = useState([]);
   const [pizzas, setPizzas] = useState([]);
+  const [stores, setStores] = useState([]);
+  const [loadingStores, setLoadingStores] = useState(false);
+  const [targetStoreIds, setTargetStoreIds] = useState([]);
   const [openCat, setOpenCat] = useState(null);
   const [editingPizzaId, setEditingPizzaId] = useState(null);
   const [existingImage, setExistingImage] = useState(null);
@@ -172,6 +175,41 @@ export default function PizzaCreator({ partner }) {
   useEffect(() => {
     loadCategories();
   }, [loadCategories]);
+
+  useEffect(() => {
+    let alive = true;
+
+    if (!partnerId) {
+      setStores([]);
+      setLoadingStores(false);
+      return () => {
+        alive = false;
+      };
+    }
+
+    setLoadingStores(true);
+    api
+      .get(`/stores?partnerId=${partnerId}`)
+      .then((response) => {
+        if (!alive) return;
+        setStores(Array.isArray(response.data) ? response.data : []);
+      })
+      .catch((err) => {
+        console.error(err);
+        if (alive) setStores([]);
+      })
+      .finally(() => {
+        if (alive) setLoadingStores(false);
+      });
+
+    return () => {
+      alive = false;
+    };
+  }, [partnerId]);
+
+  useEffect(() => {
+    setTargetStoreIds(storeId ? [String(storeId)] : []);
+  }, [storeId]);
 
   useEffect(() => {
     if (!shouldFocusNewIngredientRef.current) return;
@@ -485,6 +523,16 @@ export default function PizzaCreator({ partner }) {
       return { ...p, ingredients: ing };
     });
 
+  const toggleTargetStore = (nextStoreId) => {
+    const normalizedId = String(nextStoreId);
+
+    setTargetStoreIds((current) =>
+      current.includes(normalizedId)
+        ? current.filter((id) => id !== normalizedId)
+        : [...current, normalizedId]
+    );
+  };
+
   const onSubmit = async (e) => {
     e.preventDefault();
 
@@ -536,6 +584,16 @@ export default function PizzaCreator({ partner }) {
       if (storeId) {
         payload.append("storeId", String(storeId));
       }
+      if (!editingPizzaId) {
+        payload.append(
+          "storeIds",
+          JSON.stringify(
+            targetStoreIds
+              .map((id) => Number(id))
+              .filter((id) => Number.isInteger(id) && id > 0)
+          )
+        );
+      }
       payload.append("sizes", JSON.stringify(form.sizes));
       payload.append("priceBySize", JSON.stringify(form.priceBySize));
       payload.append("ingredients", JSON.stringify(ingredientsPayload));
@@ -567,6 +625,7 @@ export default function PizzaCreator({ partner }) {
       setExistingImage(null);
       setOriginalIngredientIds([]);
       setForm(createInitialForm());
+      setTargetStoreIds(storeId ? [String(storeId)] : []);
       fetchPizzas();
     };
 
@@ -691,6 +750,13 @@ export default function PizzaCreator({ partner }) {
       ),
     [form.ingredients]
   );
+  const allStoreIds = useMemo(
+    () => stores.map((store) => String(store.id)),
+    [stores]
+  );
+  const allStoresSelected =
+    allStoreIds.length > 0 &&
+    allStoreIds.every((id) => targetStoreIds.includes(id));
 
   return (
     <>
@@ -739,6 +805,55 @@ export default function PizzaCreator({ partner }) {
               <div className="pc-note">
                 Si eliges una fecha futura, el producto aparecera en Proximos y no se vendera hasta ese momento.
               </div>
+
+              {!editingPizzaId && (
+                <div className="pc-block pc-storeScope">
+                  <div className="pc-sectionTitle">Disponibilidad inicial</div>
+
+                  <div className="pc-storeScopeActions">
+                    <button
+                      type="button"
+                      onClick={() => setTargetStoreIds(allStoreIds)}
+                      disabled={!allStoreIds.length || allStoresSelected}
+                    >
+                      Todas
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setTargetStoreIds([])}
+                      disabled={!targetStoreIds.length}
+                    >
+                      Ninguna
+                    </button>
+                  </div>
+
+                  <div className="pc-storeScopeList">
+                    {loadingStores && (
+                      <div className="pc-hint">Cargando tiendas...</div>
+                    )}
+                    {!loadingStores &&
+                      stores.map((store) => {
+                        const checked = targetStoreIds.includes(String(store.id));
+                        return (
+                          <label
+                            key={store.id}
+                            className={`pc-storeScopeOption ${checked ? "is-active" : ""}`}
+                          >
+                            <input
+                              type="checkbox"
+                              checked={checked}
+                              onChange={() => toggleTargetStore(store.id)}
+                            />
+                            <span>{store.storeName || store.name}</span>
+                          </label>
+                        );
+                      })}
+                    {!loadingStores && !stores.length && (
+                      <div className="pc-hint">No hay tiendas configuradas.</div>
+                    )}
+                  </div>
+                </div>
+              )}
 
               <div className="pc-block">
                 <div className="pc-sectionTitle">Tamanos y precios</div>

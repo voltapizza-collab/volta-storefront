@@ -767,7 +767,9 @@
 
 .pos-trustAlert {
   display: grid;
-  gap: 4px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 6px 12px;
+  align-items: center;
   margin: 0 18px 14px;
   border: 2px solid #dc2626;
   border-radius: 8px;
@@ -777,13 +779,44 @@
 }
 
 .pos-trustAlert strong {
+  display: block;
   font-size: 18px;
 }
 
+.pos-trustAlert span {
+  grid-column: 1;
+  font-weight: 800;
+}
+
+.pos-trustAlert button {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  border: 0;
+  border-radius: 999px;
+  background: #991b1b;
+  color: #fff;
+  padding: 10px 14px;
+  font: inherit;
+  font-weight: 900;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.pos-trustAlert button:disabled {
+  cursor: not-allowed;
+  opacity: 0.62;
+}
+
+.pos-trustAlert--checking,
 .pos-trustAlert--stale {
   border-color: #f59e0b;
   background: #fef3c7;
   color: #92400e;
+}
+
+.pos-trustAlert--checking button,
+.pos-trustAlert--stale button {
+  background: #92400e;
 }
 
 .pos-workspace {

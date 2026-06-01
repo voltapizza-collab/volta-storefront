@@ -2260,20 +2260,20 @@ export default function PosApp() {
         </nav>
       )}
 
-      {trustState === "offline" && (
-        <section className="pos-trustAlert">
-          <strong>POS sin lectura reciente del servidor</strong>
+      {trustState !== "online" && (
+        <section className={`pos-trustAlert pos-trustAlert--${trustState}`}>
+          <strong>Necesita push manual</strong>
           <span>
-            No confies en una pantalla vacia. Ultima revision correcta:{" "}
+            Pulsa SYNC para forzar lectura del servidor. Ultima revision correcta:{" "}
             {syncHealth.lastOkAt ? formatTime(syncHealth.lastOkAt) : "nunca"}.
           </span>
-        </section>
-      )}
-
-      {trustState === "stale" && (
-        <section className="pos-trustAlert pos-trustAlert--stale">
-          <strong>Revision tardando mas de lo normal</strong>
-          <span>El POS sigue intentando confirmar la cola con el servidor.</span>
+          <button
+            type="button"
+            onClick={() => loadOrders({ force: true })}
+            disabled={loadingOrders}
+          >
+            {loadingOrders ? "Sincronizando" : "Push manual"}
+          </button>
         </section>
       )}
 

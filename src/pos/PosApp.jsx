@@ -915,6 +915,7 @@ function PosInventory({ session }) {
       setSavingId(ingredient.id);
       await api.patch(`/stores/${session.storeId}/ingredients/${ingredient.id}`, {
         active: nextActive,
+        source: "pos",
       });
       setIngredients((current) =>
         current.map((item) =>

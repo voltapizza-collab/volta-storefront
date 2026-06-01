@@ -28,7 +28,6 @@ export default function InventoryModule({ partner }) {
     imagePreview: "",
   });
   const [savingOnboardingId, setSavingOnboardingId] = useState(null);
-  const [savingCategory, setSavingCategory] = useState("");
 
   const storeId = partner?.storeId;
 
@@ -244,8 +243,10 @@ export default function InventoryModule({ partner }) {
       .map((part) => part.charAt(0).toUpperCase())
       .join("") || "IN";
 
-  const isIngredientActiveInStore = (ingredient) => ingredient?.active !== false;
-  const isIngredientInactiveInStore = (ingredient) => ingredient?.active === false;
+  const isIngredientActiveInStore = (ingredient) =>
+    Boolean(ingredient?.exists && ingredient?.active);
+  const isIngredientInactiveInStore = (ingredient) =>
+    Boolean(ingredient?.exists && ingredient?.active === false);
 
   const renderIngredientTile = (ing) => {
     const allergens = getAllergenTags(ing);
@@ -332,26 +333,6 @@ export default function InventoryModule({ partner }) {
     } catch (err) {
       console.error("CREATE INGREDIENT ERROR:", err.response?.data || err);
       setCreateFeedback("We couldn't submit the ingredient request.");
-    }
-  };
-
-  const handleSelectAllCategory = async (cat, list) => {
-    const targetIds = list
-      .filter((ing) => !isIngredientActiveInStore(ing))
-      .map((ing) => ing.id);
-
-    if (!targetIds.length) return;
-
-    try {
-      setSavingCategory(cat);
-      await api.post(`/stores/${storeId}/ingredients`, {
-        ingredientIds: targetIds,
-      });
-      await fetchIngredients();
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setSavingCategory("");
     }
   };
 
@@ -577,17 +558,6 @@ export default function InventoryModule({ partner }) {
                                 <span>/</span>
                                 <small>{list.length}</small>
                               </span>
-                              <button
-                                className="inv-selectAllBtn"
-                                type="button"
-                                onClick={() => handleSelectAllCategory(cat, list)}
-                                disabled={
-                                  savingCategory === cat ||
-                                  activeCount === list.length
-                                }
-                              >
-                                {savingCategory === cat ? "Saving..." : "Select all"}
-                              </button>
                             </div>
                           </div>
 

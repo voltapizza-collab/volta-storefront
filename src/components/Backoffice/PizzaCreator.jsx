@@ -567,13 +567,19 @@ export default function PizzaCreator({ partner }) {
     } catch (err) {
       console.error(err);
       const backendError = err.response?.data?.error || "";
+      const backendCode = err.response?.data?.code || "";
       const databaseUnavailable =
-        err.response?.status === 503 ||
+        backendCode === "database_unavailable" ||
         backendError.includes("Can't reach database server");
+      const imageUploadUnavailable =
+        backendCode === "image_upload_not_configured" ||
+        backendError === "Cloudinary not configured";
 
       alert(
         databaseUnavailable
-          ? "No se pudo conectar con la base de datos. Revisa que el servidor de Railway/Postgres este activo e intenta de nuevo."
+          ? "No se pudo conectar con la base de datos. Revisa que el servidor de Railway/MySQL este activo e intenta de nuevo."
+          : imageUploadUnavailable
+          ? "No se pudo subir la imagen. Revisa la configuracion de Cloudinary o guarda el producto sin imagen."
           : backendError || "Error al guardar"
       );
     } finally {

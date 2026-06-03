@@ -5310,13 +5310,13 @@ export default function StorePage() {
     if (!hasTrendingPolicy(item)) return null;
 
     const trend = item.trend || {};
-    const soldWeek = Number(trend.soldLast7Days || 0);
+    const soldTotal = Number(trend.soldAllTime || 0);
 
     return (
       <div className="lsf-trendingRibbon" aria-label="Demanda trending">
         <span className="lsf-trendingDemand">
-          <strong>{soldWeek}</strong>
-          <span>ultimos 7 dias</span>
+          <strong>{soldTotal}</strong>
+          <span>vendidos</span>
         </span>
       </div>
     );

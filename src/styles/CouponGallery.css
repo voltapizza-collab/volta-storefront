@@ -740,7 +740,11 @@
 }
 
 .cg-claimBtn {
+  --cg-cta-height: 42px;
   position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   isolation: isolate;
   overflow: hidden;
   min-width: 128px;
@@ -879,22 +883,35 @@
   display: block;
   position: relative;
   z-index: 1;
-  height: 42px;
+  box-sizing: border-box;
+  width: 100%;
+  height: var(--cg-cta-height);
   overflow: hidden;
+  text-align: center;
 }
 
 .cg-ctaSlider {
   display: grid;
+  box-sizing: border-box;
+  width: 100%;
   animation: cg-cta-rotate 7s infinite ease-in-out;
 }
 
 .cg-ctaWord {
-  display: grid;
-  place-items: center;
-  height: 42px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-width: 0;
+  height: var(--cg-cta-height);
+  padding: 0 14px;
   font-size: 0.84rem;
   font-weight: 1000;
   letter-spacing: 0.1em;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
 }
 
 @keyframes cgChromeSweep {
@@ -920,15 +937,15 @@
   }
   25%,
   43% {
-    transform: translateY(-42px);
+    transform: translateY(calc(var(--cg-cta-height) * -1));
   }
   50%,
   68% {
-    transform: translateY(-84px);
+    transform: translateY(calc(var(--cg-cta-height) * -2));
   }
   75%,
   100% {
-    transform: translateY(-126px);
+    transform: translateY(calc(var(--cg-cta-height) * -3));
   }
 }
 
@@ -1628,15 +1645,17 @@
   }
 
   .cg-claimBtn {
+    --cg-cta-height: 34px;
     min-width: 96px;
   }
 
   .cg-ctaViewport,
   .cg-ctaWord {
-    height: 34px;
+    height: var(--cg-cta-height);
   }
 
   .cg-ctaWord {
+    padding: 0 10px;
     font-size: 0.66rem;
     letter-spacing: 0.06em;
   }

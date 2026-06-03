@@ -1,16 +1,21 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import myCrushLogo from "../assets/logo/mycrushpizza-say-no-more-transparent.png";
 import api from "../services/api";
 import "../styles/Storefront.css";
+
+const MY_CRUSH_SLUG = "mycrushpizza";
 
 export default function PartnerPage() {
   const navigate = useNavigate();
   const { partnerSlug } = useParams();
   const [partner, setPartner] = useState(null);
   const [error, setError] = useState("");
+  const normalizedPartnerSlug = String(partnerSlug || "").toLowerCase();
+  const isMyCrushLanding = normalizedPartnerSlug === MY_CRUSH_SLUG;
 
   useEffect(() => {
-    if (!partnerSlug) return;
+    if (!partnerSlug || isMyCrushLanding) return;
 
     const loadPartner = async () => {
       try {
@@ -23,7 +28,36 @@ export default function PartnerPage() {
     };
 
     loadPartner();
-  }, [partnerSlug]);
+  }, [isMyCrushLanding, partnerSlug]);
+
+  if (isMyCrushLanding) {
+    return (
+      <main className="mcp-landing" aria-label="MyCrushPizza">
+        <section className="mcp-landing__stage">
+          <div className="mcp-logoStage" aria-label="MyCrushPizza Say No More">
+            <img
+              className="mcp-logo mcp-logo--base"
+              src={myCrushLogo}
+              alt="My Crush Pizza - Say No More"
+            />
+          </div>
+
+          <button
+            type="button"
+            className="mcp-orderButton"
+            onClick={() =>
+              navigate(`/${MY_CRUSH_SLUG}/order`, {
+                state: { orderTrail: "landing", partnerName: "MyCrushPizza" },
+              })
+            }
+            aria-label="Pedir en linea - MyCrushPizza"
+          >
+            Pedir en linea
+          </button>
+        </section>
+      </main>
+    );
+  }
 
   if (error) {
     return (

@@ -364,7 +364,7 @@ function CouponCard({ card, partner, onClaim }) {
                 {isSoldOut ? "SOLD OUT" : gameCoupon ? "PLAY" : isSegmented ? "COMPROBAR" : "RECLAMAR"}
               </span>
               <span className="cg-ctaWord">
-                {isSoldOut ? "AGOTADO" : gameCoupon ? "WIN" : isSegmented ? "DESBLOQUEAR" : "CANXEAR"}
+                {isSoldOut ? "AGOTADO" : gameCoupon ? "WIN" : isSegmented ? "DESBLOQUEAR" : "CANJEAR"}
               </span>
               <span className="cg-ctaWord">
                 {isSoldOut ? "SOLD OUT" : gameCoupon ? "JUGAR" : isSegmented ? "VER SI APLICA" : "CLAIM"}

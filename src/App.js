@@ -11,6 +11,7 @@ import GamePage from "./pages/GamePage";
 import LandingPage from "./pages/LandingPage";
 import ReservationCancelPage from "./pages/ReservationCancelPage";
 import OrderTracking from "./pages/OrderTracking";
+import ProductReviewPage from "./pages/ProductReviewPage";
 import AppLayout from "./components/Layout/AppLayout";
 import PosApp from "./pos/PosApp";
 
@@ -24,6 +25,7 @@ function App() {
         <Route path="/admin/stores" element={<AdminStoresPage />} />
         <Route path="/reservation/:id/cancel" element={<ReservationCancelPage />} />
         <Route path="/seguimiento/:code" element={<OrderTracking />} />
+        <Route path="/review/:token" element={<ProductReviewPage />} />
 
         {/* STORE (motor de vents) */}
         <Route path="/:partnerSlug" element={<PartnerPage />} />

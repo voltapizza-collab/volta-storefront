@@ -547,6 +547,55 @@ const CartPlusIcon = () => (
   </svg>
 );
 
+const LikeIcon = () => (
+  <svg className="lsf-card__metaIcon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <path
+      d="M7.2 10.2v9.1M10.1 9.6l3.2-6.1c.4-.7 1.3-.9 2-.5.6.3.8 1 .7 1.6l-.8 4.1h4.3c1.4 0 2.4 1.3 2.1 2.7l-1.3 5.4a3.1 3.1 0 0 1-3 2.4h-7.2a2 2 0 0 1-2-2v-5.1a2.4 2.4 0 0 1 2-2.5Z"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M3.2 10.2h4v9.1h-4z"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+const GiftShareIcon = () => (
+  <svg className="lsf-card__metaIcon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <path
+      d="M4.5 11h15v9h-15zM3.5 7.5h17V11h-17zM12 7.5V20"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M12 7.5c-1.8-3-5.2-3.1-5.2-.8 0 1.8 2.2 2.2 5.2 2.2 3 0 5.2-.4 5.2-2.2 0-2.3-3.4-2.2-5.2.8Z"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M16.2 15.7h3.5m0 0-1.3-1.3m1.3 1.3-1.3 1.3"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
 const FooterClockIcon = () => (
   <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
     <path
@@ -1045,6 +1094,95 @@ const renderPromoPrice = (promo, menu = [], isTicking = false) => {
     })
   );
 };
+
+const getProductApprovalBaseline = (item) => {
+  const seed = String(item?.pizzaId || item?.id || item?.name || "pizza")
+    .split("")
+    .reduce((sum, char) => sum + char.charCodeAt(0), 0);
+
+  return {
+    likes: 8 + (seed % 38),
+    percent: 86 + (seed % 12),
+  };
+};
+
+const getProductApprovalStats = (item) => {
+  const approval = item?.approval || item?.likeStats || item?.rating || {};
+  const realLikes = Math.max(
+    0,
+    Math.trunc(
+      num(
+        approval.likes ??
+          approval.likeCount ??
+          approval.positive ??
+          item?.likes ??
+          item?.likeCount
+      )
+    )
+  );
+  const dislikes = Math.max(
+    0,
+    Math.trunc(num(approval.dislikes ?? approval.dislikeCount ?? approval.negative))
+  );
+  const total = Math.max(
+    realLikes + dislikes,
+    Math.trunc(num(approval.total ?? approval.totalVotes ?? approval.votes))
+  );
+  const explicitPercent = num(
+    approval.percent ?? approval.approvalPercent ?? approval.likePercent
+  );
+  const baseline = getProductApprovalBaseline(item);
+
+  if (realLikes <= 0 && total <= 0) {
+    return baseline;
+  }
+
+  const likes = baseline.likes + realLikes;
+  const visibleTotal = baseline.likes + total;
+  const percent =
+    dislikes <= 0 && realLikes > 0
+      ? 100
+      : explicitPercent > 0 && total <= 0
+      ? Math.min(100, Math.round(explicitPercent))
+      : visibleTotal > 0
+      ? Math.round((likes / visibleTotal) * 100)
+      : 0;
+
+  return { likes, percent };
+};
+
+const renderProductApprovalMeta = (item) => {
+  const { likes, percent } = getProductApprovalStats(item);
+  const likeLabel = likes === 1 ? "1 like" : `${likes} likes`;
+
+  return (
+    <div className="lsf-card__approval" aria-label={`Aprobacion ${percent}% con ${likeLabel}`}>
+      <LikeIcon />
+      <span>Like {percent}%</span>
+      <strong>({likeLabel})</strong>
+    </div>
+  );
+};
+
+const renderProductGiftAction = (item) => {
+  return (
+    <button
+      type="button"
+      className="lsf-card__gift"
+      onClick={(event) => event.stopPropagation()}
+      aria-label={`Haz un regalo con ${item?.name || ""}`.trim()}
+    >
+      <span>Haz un regalo</span>
+      <GiftShareIcon />
+    </button>
+  );
+};
+
+const isBeverageProduct = (item) =>
+  normalizeSearchText(item?.category).includes("bebida");
+
+const shouldShowProductTrustMeta = (item) =>
+  !isBeverageProduct(item) && !hasTrendingPolicy(item) && !hasTopDealPolicy(item);
 
 const getTopDealStickerLabel = (item, size = "M") => {
   const discountPercent = getDiscountPercentForSize(item, size);
@@ -5348,19 +5486,21 @@ export default function StorePage() {
     );
   };
 
-  const renderProductOfferOverlay = (item, baseSize) => {
+  const renderProductOfferOverlay = (item, baseSize, { showTrustMeta = false } = {}) => {
     return (
-      <div className="lsf-card__overlay">
+      <div className={`lsf-card__overlay ${showTrustMeta ? "lsf-card__overlay--trust" : ""}`}>
         <div className="lsf-card__ticker">
           <div className={`lsf-card__name ${tick ? "is-ticking" : ""}`}>
             {item.name}
           </div>
         </div>
+        {showTrustMeta && renderProductApprovalMeta(item)}
         <div className={`lsf-card__price ${tick ? "is-ticking" : ""}`}>
           {hasTrendingPolicy(item)
             ? renderTrendingPrice(item, baseSize, tick)
             : renderStorefrontPrice(item, baseSize)}
         </div>
+        {showTrustMeta && renderProductGiftAction(item)}
       </div>
     );
   };
@@ -5409,7 +5549,9 @@ export default function StorePage() {
               <CartPlusIcon />
             </button>
 
-            {renderProductOfferOverlay(item, baseSize)}
+            {renderProductOfferOverlay(item, baseSize, {
+              showTrustMeta: shouldShowProductTrustMeta(item),
+            })}
           </div>
 
           <div className="lsf-flip__back">
@@ -6602,7 +6744,9 @@ export default function StorePage() {
                               <CartPlusIcon />
                             </button>
 
-                            {renderProductOfferOverlay(item, baseSize)}
+                            {renderProductOfferOverlay(item, baseSize, {
+                              showTrustMeta: shouldShowProductTrustMeta(item),
+                            })}
                           </div>
 
                           <div className="lsf-flip__back">
@@ -7613,7 +7757,11 @@ export default function StorePage() {
             {customLoading ? (
               <div className="sf-cartEmpty">Cargando ingredientes...</div>
             ) : (
-              <div className="sf-customBuilder">
+              <div
+                className={`sf-customBuilder ${
+                  selectedCustomCategory ? "sf-customBuilder--active" : ""
+                }`}
+              >
                 {!selectedCustomCategory && (
                 <div className="sf-customStart">
                   {customCategoryOptions.length === 0 ? (

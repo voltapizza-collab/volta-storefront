@@ -1,0 +1,209 @@
+.pr-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 28px 16px;
+  background:
+    radial-gradient(circle at top left, rgba(255, 182, 28, 0.24), transparent 34%),
+    linear-gradient(135deg, #fff8ec 0%, #ffffff 58%, #f4edff 100%);
+  color: #17142a;
+  font-family: "Avenir Next", "Segoe UI", Arial, sans-serif;
+}
+
+.pr-card {
+  width: min(760px, 100%);
+  display: grid;
+  gap: 18px;
+  padding: clamp(22px, 4vw, 38px);
+  border: 1px solid rgba(59, 0, 139, 0.14);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 24px 60px rgba(29, 23, 48, 0.12);
+}
+
+.pr-head {
+  display: grid;
+  gap: 8px;
+}
+
+.pr-head span,
+.pr-error span {
+  color: #3b008b;
+  font-size: 0.72rem;
+  font-weight: 1000;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.pr-head h1,
+.pr-error h1 {
+  margin: 0;
+  font-size: clamp(2rem, 5vw, 4rem);
+  line-height: 0.94;
+  color: #3b008b;
+}
+
+.pr-head p,
+.pr-error p {
+  margin: 0;
+  color: #5d5965;
+  font-weight: 800;
+}
+
+.pr-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.pr-actions button,
+.pr-voteRow button {
+  min-height: 38px;
+  padding: 0 16px;
+  border: 1px solid rgba(59, 0, 139, 0.18);
+  border-radius: 999px;
+  background: #f3eefb;
+  color: #3b008b;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 1000;
+  cursor: pointer;
+}
+
+.pr-actions button:hover,
+.pr-voteRow button:hover {
+  border-color: rgba(59, 0, 139, 0.38);
+}
+
+.pr-form,
+.pr-list {
+  display: grid;
+  gap: 12px;
+}
+
+.pr-item {
+  display: grid;
+  grid-template-columns: 86px minmax(0, 1fr);
+  gap: 14px;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid rgba(59, 0, 139, 0.12);
+  border-radius: 16px;
+  background: #ffffff;
+}
+
+.pr-itemImage {
+  width: 86px;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 14px;
+  background: #f7f4fb;
+  color: #8f7aac;
+  font-size: 0.72rem;
+  font-weight: 1000;
+  text-transform: uppercase;
+}
+
+.pr-itemImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pr-itemBody {
+  min-width: 0;
+  display: grid;
+  gap: 7px;
+}
+
+.pr-itemBody strong {
+  min-width: 0;
+  overflow: hidden;
+  color: #17142a;
+  font-size: 1.02rem;
+  font-weight: 1000;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pr-itemBody small {
+  color: #77717f;
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+.pr-voteRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pr-voteRow button.is-active {
+  border-color: #00a85a;
+  background: #dcfce7;
+  color: #04703c;
+}
+
+.pr-voteRow button.is-active.is-dislike {
+  border-color: #f15b5b;
+  background: #fff0f0;
+  color: #a82121;
+}
+
+.pr-message {
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: #fff7df;
+  color: #3b008b;
+  font-weight: 900;
+}
+
+.pr-btn,
+.pr-link {
+  min-height: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 999px;
+  background: #3b008b;
+  color: #ffffff;
+  font: inherit;
+  font-weight: 1000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.pr-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.pr-link {
+  justify-self: start;
+  background: transparent;
+  color: #3b008b;
+  box-shadow: inset 0 0 0 1px rgba(59, 0, 139, 0.2);
+}
+
+.pr-error {
+  text-align: left;
+}
+
+@media (max-width: 560px) {
+  .pr-card {
+    border-radius: 18px;
+  }
+
+  .pr-item {
+    grid-template-columns: 72px minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  .pr-itemImage {
+    width: 72px;
+  }
+}

@@ -100,17 +100,39 @@ export default function PartnerOrderPage() {
     loadPartner();
   }, [partnerSlug]);
 
-  const stores = useMemo(() => {
+  const activeStores = useMemo(() => {
     return Array.isArray(partner?.stores)
       ? partner.stores.filter((store) => store?.active !== false)
       : [];
   }, [partner]);
+
+  const stores = useMemo(() => {
+    return activeStores.filter((store) => store?.acceptingOrders !== false);
+  }, [activeStores]);
+
+  const isStorefrontClosed = activeStores.length === 0 || stores.length === 0;
 
   const selectedStore = useMemo(() => {
     return stores.find((store) => store.slug === selectedStoreSlug) || null;
   }, [stores, selectedStoreSlug]);
 
   const singleActiveStore = stores.length === 1 ? stores[0] : null;
+
+  useEffect(() => {
+    if (!isStorefrontClosed) return;
+
+    setPickupModalOpen(false);
+    setDeliveryModalOpen(false);
+    setSelectedStoreSlug("");
+    setServiceMode("");
+  }, [isStorefrontClosed]);
+
+  useEffect(() => {
+    if (!selectedStoreSlug) return;
+    if (stores.some((store) => store.slug === selectedStoreSlug)) return;
+
+    setSelectedStoreSlug("");
+  }, [selectedStoreSlug, stores]);
 
   const pickupHistoryKey = useMemo(
     () => `volta-pickup-stores:${partnerSlug || "partner"}`,
@@ -172,8 +194,27 @@ export default function PartnerOrderPage() {
     });
   }, [pickupCityFilter, stores]);
 
-  const pickupReady = serviceMode === "pickup" && Boolean(selectedStoreSlug);
+  const closedCopy = useMemo(() => {
+    if (activeStores.length === 0) {
+      return {
+        title: "Cerrado",
+        body: "No hay tiendas activas para recibir pedidos ahora.",
+      };
+    }
+
+    const everyStorePaused = activeStores.every((store) => store?.acceptingOrders === false);
+
+    return {
+      title: "Cerrado",
+      body: everyStorePaused
+        ? "Las tiendas no estan aceptando pedidos ahora mismo."
+        : "No hay tiendas disponibles para recibir pedidos ahora.",
+    };
+  }, [activeStores]);
+
+  const pickupReady = !isStorefrontClosed && serviceMode === "pickup" && Boolean(selectedStoreSlug);
   const deliveryReady =
+    !isStorefrontClosed &&
     serviceMode === "delivery" &&
     Boolean(deliveryAddress.trim()) &&
     Boolean(deliveryResolution?.withinRange) &&
@@ -391,7 +432,7 @@ export default function PartnerOrderPage() {
   return (
     <div className="sf-shell">
       <div className="sf-wrap sf-entry">
-        <section className="sf-entryCard sf-entryCard--lean">
+        <section className={`sf-entryCard sf-entryCard--lean ${isStorefrontClosed ? "is-closedOnly" : ""}`}>
           <div className="sf-entryTopbar">
             <button
               type="button"
@@ -405,96 +446,106 @@ export default function PartnerOrderPage() {
           <div className="sf-entryHeader sf-entryHeader--orderStart">
             <div className="sf-kicker">Pedido online</div>
             <span className="sf-orderBrand">{partner.name}</span>
-            <h1 className="sf-entryTitle">Elige como recibirlo</h1>
+            {!isStorefrontClosed && <h1 className="sf-entryTitle">Elige como recibirlo</h1>}
           </div>
 
-          <div className="sf-serviceSplit">
-            <button
-              type="button"
-              className={`sf-serviceCard ${
-                serviceMode === "pickup" ? "is-active" : ""
-              }`}
-              onClick={() => {
-                setServiceMode("pickup");
-                resetDelivery();
-                if (singleActiveStore) {
-                  goToPickupStore(singleActiveStore);
-                  return;
-                }
-                setPickupModalOpen(true);
-              }}
-            >
-              <span className="sf-serviceMark" aria-hidden="true">01</span>
-              <span className="sf-serviceEyebrow">Recoger</span>
-              <strong className="sf-serviceTitle">En tienda</strong>
-              <span className="sf-serviceBody">
-                Elige sucursal y pasa directo al menu.
-              </span>
-            </button>
-
-            <button
-              type="button"
-              className={`sf-serviceCard ${
-                serviceMode === "delivery" ? "is-active" : ""
-              }`}
-              onClick={() => {
-                setServiceMode("delivery");
-                setDeliveryModalOpen(true);
-              }}
-            >
-              <span className="sf-serviceMark" aria-hidden="true">02</span>
-              <span className="sf-serviceEyebrow">Domicilio</span>
-              <strong className="sf-serviceTitle">Enviar a casa</strong>
-              <span className="sf-serviceBody">
-                Busca tu direccion con Google y confirma cobertura.
-              </span>
-            </button>
-          </div>
-
-          {serviceMode === "delivery" && (
-            <div
-              className={`sf-deliveryStatus ${
-                deliveryReady ? "is-ready" : deliveryError ? "is-error" : ""
-              }`}
-            >
-              <div>
-                <span>{deliveryReady ? "Domicilio listo" : "Domicilio"}</span>
-                <strong>
-                  {deliveryReady
-                    ? deliveryResolution?.formattedAddress || deliveryAddress
-                    : deliveryError || "Falta confirmar cobertura"}
-                </strong>
-                {deliveryReady && deliveryAddressLine2.trim() && (
-                  <small>{deliveryAddressLine2.trim()}</small>
-                )}
-              </div>
-              <button
-                type="button"
-                className="sf-secondaryBtn"
-                onClick={() => setDeliveryModalOpen(true)}
-              >
-                {deliveryReady ? "Cambiar" : "Completar"}
-              </button>
+          {isStorefrontClosed ? (
+            <div className="sf-closedNotice" role="status">
+              <span>Cerrado</span>
+              <strong>{closedCopy.title}</strong>
+              <small>{closedCopy.body}</small>
             </div>
-          )}
+          ) : (
+            <>
+              <div className="sf-serviceSplit">
+                <button
+                  type="button"
+                  className={`sf-serviceCard ${
+                    serviceMode === "pickup" ? "is-active" : ""
+                  }`}
+                  onClick={() => {
+                    setServiceMode("pickup");
+                    resetDelivery();
+                    if (singleActiveStore) {
+                      goToPickupStore(singleActiveStore);
+                      return;
+                    }
+                    setPickupModalOpen(true);
+                  }}
+                >
+                  <span className="sf-serviceMark" aria-hidden="true">01</span>
+                  <span className="sf-serviceEyebrow">Recoger</span>
+                  <strong className="sf-serviceTitle">En tienda</strong>
+                  <span className="sf-serviceBody">
+                    Elige sucursal y pasa directo al menu.
+                  </span>
+                </button>
 
-          <div className="sf-entryActions">
-            <button
-              type="button"
-              className="sf-secondaryBtn"
-              onClick={() => navigate(`/${partnerSlug}`)}
-            >
-              Cancelar
-            </button>
-            <button
-              type="button"
-              className="sf-primaryBtn"
-              disabled={!canContinue}
-              onClick={continueToMenu}
-            >
+                <button
+                  type="button"
+                  className={`sf-serviceCard ${
+                    serviceMode === "delivery" ? "is-active" : ""
+                  }`}
+                  onClick={() => {
+                    setServiceMode("delivery");
+                    setDeliveryModalOpen(true);
+                  }}
+                >
+                  <span className="sf-serviceMark" aria-hidden="true">02</span>
+                  <span className="sf-serviceEyebrow">Domicilio</span>
+                  <strong className="sf-serviceTitle">Enviar a casa</strong>
+                  <span className="sf-serviceBody">
+                    Busca tu direccion con Google y confirma cobertura.
+                  </span>
+                </button>
+              </div>
+
+              {serviceMode === "delivery" && (
+                <div
+                  className={`sf-deliveryStatus ${
+                    deliveryReady ? "is-ready" : deliveryError ? "is-error" : ""
+                  }`}
+                >
+                  <div>
+                    <span>{deliveryReady ? "Domicilio listo" : "Domicilio"}</span>
+                    <strong>
+                      {deliveryReady
+                        ? deliveryResolution?.formattedAddress || deliveryAddress
+                        : deliveryError || "Falta confirmar cobertura"}
+                    </strong>
+                    {deliveryReady && deliveryAddressLine2.trim() && (
+                      <small>{deliveryAddressLine2.trim()}</small>
+                    )}
+                  </div>
+                  <button
+                    type="button"
+                    className="sf-secondaryBtn"
+                    onClick={() => setDeliveryModalOpen(true)}
+                  >
+                    {deliveryReady ? "Cambiar" : "Completar"}
+                  </button>
+                </div>
+              )}
+
+              <div className="sf-entryActions">
+                <button
+                  type="button"
+                  className="sf-secondaryBtn"
+                  onClick={() => navigate(`/${partnerSlug}`)}
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="button"
+                  className="sf-primaryBtn"
+                  disabled={!canContinue}
+                  onClick={continueToMenu}
+                >
                   {canContinue ? "Entrar al menu" : "Elige una opcion"}
-            </button>
-          </div>
+                </button>
+              </div>
+            </>
+          )}
         </section>
       </div>
 

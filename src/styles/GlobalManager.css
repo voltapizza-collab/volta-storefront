@@ -385,10 +385,6 @@
   gap: 12px;
 }
 
-.gmo-kpiGrid--movements {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
 .gmo-kpiCard {
   display: grid;
   gap: 8px;
@@ -424,6 +420,301 @@
 .gmo-kpiCard--pending {
   border-color: rgba(247, 37, 133, 0.26);
   background: linear-gradient(180deg, rgba(247, 37, 133, 0.08), #fff);
+}
+
+.gmo-calendarGrid {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.85fr) minmax(360px, 1.15fr);
+  gap: 12px;
+}
+
+.gmo-calendarCard {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid rgba(59, 0, 139, 0.1);
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 12px 28px rgba(59, 0, 139, 0.08);
+}
+
+.gmo-calendarCard--expected {
+  border-color: rgba(21, 94, 57, 0.16);
+}
+
+.gmo-calendarHead {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.gmo-calendarHead span {
+  display: block;
+  margin-bottom: 3px;
+  color: #3b008b;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.gmo-calendarHead h3 {
+  margin: 0;
+  color: #1f172a;
+}
+
+.gmo-calendarHead b {
+  flex: 0 0 auto;
+  padding: 7px 10px;
+  border-radius: 8px;
+  background: rgba(255, 182, 28, 0.18);
+  color: #1f172a;
+  font-size: 13px;
+  font-weight: 950;
+  white-space: nowrap;
+}
+
+.gmo-calendarValue {
+  color: #155e39;
+  font-size: 30px;
+  line-height: 1;
+}
+
+.gmo-calendarCard p {
+  margin: 0;
+  color: rgba(31, 23, 42, 0.62);
+  font-weight: 800;
+}
+
+.gmo-calendarAverages {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.gmo-calendarAverages div {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  padding: 10px;
+  border-radius: 8px;
+  background: rgba(31, 23, 42, 0.04);
+}
+
+.gmo-calendarAverages span,
+.gmo-calendarAverages small {
+  color: rgba(31, 23, 42, 0.56);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.gmo-calendarAverages strong {
+  color: #1f172a;
+  font-size: 16px;
+}
+
+.gmo-calendarMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.gmo-calendarMeta span {
+  min-height: 28px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 10px;
+  border-radius: 8px;
+  background: rgba(59, 0, 139, 0.07);
+  color: #3b008b;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.gmo-tramoRanks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.gmo-tramoRanks span {
+  min-width: 0;
+  padding: 9px 10px;
+  border-radius: 8px;
+  background: rgba(59, 0, 139, 0.06);
+  color: rgba(31, 23, 42, 0.62);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.gmo-tramoRanks strong {
+  color: #1f172a;
+}
+
+.gmo-tramoCalendar {
+  display: grid;
+  gap: 12px;
+}
+
+.gmo-monthCalendar {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.gmo-monthCalendar h4 {
+  margin: 0;
+  color: #1f172a;
+  text-transform: capitalize;
+}
+
+.gmo-weekdays,
+.gmo-monthGrid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 5px;
+}
+
+.gmo-weekdays span {
+  color: rgba(31, 23, 42, 0.5);
+  font-size: 11px;
+  font-weight: 900;
+  text-align: center;
+}
+
+.gmo-dayCell {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 3px;
+  min-height: 66px;
+  min-width: 0;
+  padding: 7px;
+  border: 1px solid rgba(59, 0, 139, 0.08);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.gmo-dayCell--empty {
+  border-color: transparent;
+  background: transparent;
+}
+
+.gmo-dayCell--strong {
+  border-color: rgba(255, 182, 28, 0.38);
+  background: rgba(255, 182, 28, 0.12);
+}
+
+.gmo-dayCell--cross {
+  border-color: rgba(21, 94, 57, 0.32);
+  background: rgba(21, 94, 57, 0.1);
+}
+
+.gmo-dayCell strong {
+  color: #1f172a;
+  font-size: 13px;
+  line-height: 1;
+}
+
+.gmo-dayCell span {
+  width: fit-content;
+  max-width: 100%;
+  padding: 3px 5px;
+  border-radius: 6px;
+  background: rgba(31, 23, 42, 0.07);
+  color: rgba(31, 23, 42, 0.72);
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.gmo-dayCell--cross span {
+  background: rgba(21, 94, 57, 0.16);
+  color: #155e39;
+}
+
+.gmo-dayCell small {
+  color: #155e39;
+  font-size: 11px;
+  font-weight: 900;
+  line-height: 1.15;
+}
+
+.gmo-calendarList {
+  display: grid;
+  gap: 8px;
+}
+
+.gmo-calendarList--tramos {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.gmo-calendarRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-top: 1px solid rgba(59, 0, 139, 0.08);
+}
+
+.gmo-calendarList--tramos .gmo-calendarRow {
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  min-height: 118px;
+  padding: 10px;
+  border: 1px solid rgba(59, 0, 139, 0.08);
+  border-radius: 8px;
+  background: rgba(31, 23, 42, 0.025);
+}
+
+.gmo-calendarRow--strong {
+  border-color: rgba(255, 182, 28, 0.35);
+  background: rgba(255, 182, 28, 0.1);
+}
+
+.gmo-calendarRow--cross {
+  border-color: rgba(21, 94, 57, 0.28);
+  background: rgba(21, 94, 57, 0.08);
+}
+
+.gmo-calendarRow span {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.gmo-calendarRow strong {
+  color: #1f172a;
+}
+
+.gmo-calendarRow small {
+  color: rgba(31, 23, 42, 0.56);
+  font-weight: 800;
+}
+
+.gmo-calendarRow b {
+  color: #155e39;
+  white-space: nowrap;
+}
+
+.gmo-calendarRow em {
+  min-width: 58px;
+  padding: 5px 7px;
+  border-radius: 8px;
+  background: rgba(31, 23, 42, 0.06);
+  color: rgba(31, 23, 42, 0.7);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 900;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.gmo-calendarList--tramos .gmo-calendarRow em {
+  justify-self: start;
+  white-space: normal;
 }
 
 .gmo-mainGrid {
@@ -472,6 +763,10 @@
 
 .gmo-tableWrap {
   overflow: auto;
+}
+
+.gmo-tableWrap--sticky {
+  max-height: min(68vh, 720px);
 }
 
 .gmo-table {
@@ -812,6 +1107,10 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
+  .gmo-calendarGrid {
+    grid-template-columns: 1fr;
+  }
+
   .gmo-mainGrid {
     grid-template-columns: 1fr;
   }
@@ -849,5 +1148,19 @@
 
   .gmo-kpiGrid {
     grid-template-columns: 1fr;
+  }
+
+  .gmo-tramoRanks,
+  .gmo-calendarList--tramos {
+    grid-template-columns: 1fr;
+  }
+
+  .gmo-calendarRow {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .gmo-calendarRow em {
+    width: fit-content;
   }
 }

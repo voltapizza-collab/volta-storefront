@@ -28,7 +28,10 @@ const formatDateTime = (value) => {
 
 const formatDate = (value) => {
   if (!value) return "-";
-  const date = new Date(value);
+  const date =
+    typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value)
+      ? new Date(`${value}T00:00:00`)
+      : new Date(value);
   if (Number.isNaN(date.getTime())) return "-";
 
   return new Intl.DateTimeFormat("es-ES", {
@@ -36,6 +39,51 @@ const formatDate = (value) => {
     month: "2-digit",
     year: "numeric",
   }).format(date);
+};
+
+const parseIsoDateParts = (value) => {
+  const [year, month, day] = String(value || "").split("-").map(Number);
+  if (!year || !month || !day) return null;
+  return { year, month, day };
+};
+
+const formatCalendarMonth = (year, month) =>
+  new Intl.DateTimeFormat("es-ES", {
+    month: "long",
+    year: "numeric",
+  }).format(new Date(Date.UTC(year, month - 1, 1)));
+
+const buildTramoMonths = (days) => {
+  const grouped = new Map();
+
+  days.forEach((day) => {
+    const parts = parseIsoDateParts(day.date);
+    if (!parts) return;
+
+    const key = `${parts.year}-${String(parts.month).padStart(2, "0")}`;
+    if (!grouped.has(key)) {
+      grouped.set(key, {
+        key,
+        label: formatCalendarMonth(parts.year, parts.month),
+        year: parts.year,
+        month: parts.month,
+        days: [],
+      });
+    }
+
+    grouped.get(key).days.push({ ...day, dayNumber: parts.day });
+  });
+
+  return [...grouped.values()].map((month) => {
+    const firstDay = new Date(Date.UTC(month.year, month.month - 1, 1)).getUTCDay();
+    const leadingSlots = firstDay === 0 ? 6 : firstDay - 1;
+
+    return {
+      ...month,
+      leadingSlots,
+      days: month.days.sort((left, right) => left.dayNumber - right.dayNumber),
+    };
+  });
 };
 
 const toDateInputValue = (value) => {
@@ -128,6 +176,110 @@ function KpiCard({ label, value, hint, tone }) {
   );
 }
 
+function CalendarIndicators({ indicators, currency }) {
+  const expectedToday = indicators?.expectedToday;
+  const topDays = indicators?.topUpcomingDays || [];
+  const weights = expectedToday?.weights || {};
+  const bestDay = topDays[0];
+  const weekdayRankings = indicators?.rankings?.weekdays || [];
+  const monthdayRankings = indicators?.rankings?.monthdays || [];
+  const tramoMonths = buildTramoMonths((indicators?.upcomingDays || []).slice(0, 14));
+
+  return (
+    <section className="gmo-calendarGrid">
+      <article className="gmo-calendarCard gmo-calendarCard--expected">
+        <div className="gmo-calendarHead">
+          <div>
+            <span>Expected day</span>
+            <h3>Venta esperada del dia</h3>
+          </div>
+        </div>
+        <strong className="gmo-calendarValue">
+          {formatMoney(expectedToday?.expectedRevenue, currency)}
+        </strong>
+        <p>{`${expectedToday?.weekdayLabel || "-"} dia ${expectedToday?.dayOfMonth || "-"}`}</p>
+        <div className="gmo-calendarAverages">
+          <div>
+            <span>Prom. dia semana</span>
+            <strong>{formatMoney(expectedToday?.weekdayAverage, currency)}</strong>
+            <small>{formatNumber(expectedToday?.weekdaySamples)} dias</small>
+          </div>
+          <div>
+            <span>Prom. dia mes</span>
+            <strong>{formatMoney(expectedToday?.monthdayAverage, currency)}</strong>
+            <small>{formatNumber(expectedToday?.monthdaySamples)} dias</small>
+          </div>
+        </div>
+        <div className="gmo-calendarMeta">
+          <span>Semana {formatNumber(weights.weekdayPct)}%</span>
+          <span>Dia mes {formatNumber(weights.monthdayPct)}%</span>
+          <span>
+            {weights.stronger === "monthday"
+              ? "Manda dia mes"
+              : weights.stronger === "weekday"
+              ? "Manda semana"
+              : "Fuerza pareja"}
+          </span>
+        </div>
+      </article>
+
+      <article className="gmo-calendarCard">
+        <div className="gmo-calendarHead">
+          <div>
+            <span>Tramos</span>
+            <h3>Calendario de cruces</h3>
+          </div>
+          <b>{bestDay ? formatMoney(bestDay.expectedRevenue, currency) : "-"}</b>
+        </div>
+        <p>
+          {bestDay
+            ? `Mejor cruce proximo: ${formatDate(bestDay.date)} - ${bestDay.weekdayLabel} dia ${bestDay.dayOfMonth}`
+            : "Sin dias proyectados por ahora."}
+        </p>
+        <div className="gmo-tramoRanks">
+          <span>
+            Top semana:{" "}
+            <strong>{weekdayRankings.slice(0, 3).map((row) => row.label).join(", ") || "-"}</strong>
+          </span>
+          <span>
+            Top dia mes:{" "}
+            <strong>{monthdayRankings.slice(0, 3).map((row) => row.key).join(", ") || "-"}</strong>
+          </span>
+        </div>
+        <div className="gmo-tramoCalendar">
+          {tramoMonths.map((month) => (
+            <div key={month.key} className="gmo-monthCalendar">
+              <h4>{month.label}</h4>
+              <div className="gmo-weekdays">
+                {["L", "M", "X", "J", "V", "S", "D"].map((label) => (
+                  <span key={`${month.key}-${label}`}>{label}</span>
+                ))}
+              </div>
+              <div className="gmo-monthGrid">
+                {Array.from({ length: month.leadingSlots }, (_, index) => (
+                  <span key={`${month.key}-blank-${index}`} className="gmo-dayCell gmo-dayCell--empty" />
+                ))}
+                {month.days.map((day) => (
+                  <div
+                    key={day.date}
+                    className={`gmo-dayCell gmo-dayCell--${day.tramoLevel || "normal"}`}
+                    title={`${formatDate(day.date)} - ${day.tramoReason || "Potencial normal"}`}
+                  >
+                    <strong>{day.dayNumber}</strong>
+                    {day.isTopWeekday && day.isTopMonthday && <span>Cruce</span>}
+                    <small>{formatMoney(day.expectedRevenue, currency)}</small>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+          {!tramoMonths.length && <div className="gmo-empty gmo-empty--small">Sin ventas registradas.</div>}
+        </div>
+      </article>
+    </section>
+  );
+}
+
 export default function MyOrdersModule({ partner = null }) {
   const [orders, setOrders] = useState([]);
   const [summary, setSummary] = useState(null);
@@ -197,6 +349,10 @@ export default function MyOrdersModule({ partner = null }) {
   }, [loadAll]);
 
   const visibleStores = useMemo(() => summary?.stores || [], [summary]);
+  const selectableStores = useMemo(
+    () => summary?.availableStores || summary?.stores || [],
+    [summary]
+  );
 
   const readyOrder = async () => {
     if (!confirmReadyId) return;
@@ -250,8 +406,8 @@ export default function MyOrdersModule({ partner = null }) {
         <label className="gmo-filter">
           <span>Tienda</span>
           <select value={storeId} onChange={(event) => setStoreId(event.target.value)}>
-            <option value="all">Todas las tiendas activas</option>
-            {visibleStores.map((store) => (
+            <option value="all">Todas las tiendas</option>
+            {selectableStores.map((store) => (
               <option key={store.storeId} value={store.storeId}>
                 {store.partnerName ? `${store.partnerName} - ` : ""}
                 {store.storeName}
@@ -302,6 +458,8 @@ export default function MyOrdersModule({ partner = null }) {
           hint="Delivery / Pickup"
         />
       </section>
+
+      <CalendarIndicators indicators={summary?.calendarIndicators} currency={currency} />
 
       <div className="gmo-mainGrid">
         <section className="gmo-panel gmo-panel--orders">
@@ -405,7 +563,7 @@ export default function MyOrdersModule({ partner = null }) {
                 </button>
               ))}
               {visibleStores.length === 0 && (
-                <div className="gmo-empty gmo-empty--small">No hay tiendas activas.</div>
+                <div className="gmo-empty gmo-empty--small">No hay tiendas disponibles.</div>
               )}
             </div>
           </section>
@@ -455,7 +613,7 @@ export default function MyOrdersModule({ partner = null }) {
                   <span>Boots</span>
                   <strong>
                     Prioridad #{selectedOrder.queuePosition || selectedOrder.boost.targetPosition || 1}
-                    {" · "}
+                    {" Ã‚Â· "}
                     {formatMoney(selectedOrder.boost.amount, selectedOrder.currency || currency)}
                   </strong>
                 </div>
@@ -577,14 +735,12 @@ export function OrdersMovementsModule({ partner = null }) {
     });
   }, [fromDate, movements, status, storeName, toDate]);
 
-  const total = filteredMovements.reduce((sum, sale) => sum + Number(sale.total || 0), 0);
-
   return (
     <div className="gmo-shell">
       <header className="gm-moduleHeader">
         <div>
           <span>My Orders</span>
-          <h2>Movimientos de clientes</h2>
+          <h2>Movimientos</h2>
         </div>
         <button type="button" onClick={load} disabled={loading}>
           {loading ? "Actualizando..." : "Actualizar"}
@@ -650,35 +806,15 @@ export function OrdersMovementsModule({ partner = null }) {
 
       {message && <div className="gmo-message">{message}</div>}
 
-      <section className="gmo-kpiGrid gmo-kpiGrid--movements">
-        <KpiCard
-          label="Movimientos"
-          value={formatNumber(filteredMovements.length)}
-          hint="Segun filtros activos"
-        />
-        <KpiCard
-          label="Importe"
-          value={formatMoney(total, currency)}
-          hint="Ventas de clientes"
-          tone="revenue"
-        />
-        <KpiCard
-          label="Tiendas"
-          value={formatNumber(stores.length)}
-          hint="Con actividad reciente"
-        />
-      </section>
-
       <section className="gmo-panel">
         <div className="gmo-panelHead">
           <div>
-            <span>Historial</span>
-            <h3>Ventas y pagos de clientes</h3>
+            <h3>Movimientos</h3>
           </div>
           <small>{data?.updatedAt ? `Ultima lectura ${formatDateTime(data.updatedAt)}` : ""}</small>
         </div>
 
-        <div className="gmo-tableWrap">
+        <div className="gmo-tableWrap gmo-tableWrap--sticky">
           <table className="gmo-table gmo-table--movements">
             <thead>
               <tr>

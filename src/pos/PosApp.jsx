@@ -191,6 +191,9 @@ const isIncentiveRewardLine = (item) =>
   String(item?.source || "").toLowerCase() === "incentive_reward" ||
   String(item?.type || "").toUpperCase() === "INCENTIVE_REWARD";
 
+const isCompletedPaidOrder = (order) =>
+  String(order?.status || "").toUpperCase() === "PAID" && order?.processed === true;
+
 const isHalfAndHalfLine = (item) =>
   Boolean(item?.leftName && item?.rightName) ||
   String(item?.cartLineId || "").startsWith("half-");
@@ -1607,7 +1610,10 @@ export default function PosApp() {
         },
       });
       const data = response.data || {};
-      setDayOrders(Array.isArray(data?.orders) ? data.orders : []);
+      const completedOrders = Array.isArray(data?.orders)
+        ? data.orders.filter(isCompletedPaidOrder)
+        : [];
+      setDayOrders(completedOrders);
       setDayOrdersKpis(data?.kpis || null);
     } catch (error) {
       console.error(error);
@@ -2523,7 +2529,7 @@ export default function PosApp() {
             {dayOrdersLoading && dayOrders.length === 0 ? (
               <div className="pos-emptySmall">Cargando tickets del dia...</div>
             ) : dayOrders.length === 0 ? (
-              <div className="pos-emptySmall">Todavia no hay pedidos registrados hoy.</div>
+              <div className="pos-emptySmall">Todavia no hay pedidos completados hoy.</div>
             ) : (
               <div className="pos-dayOrdersList" aria-label="Tickets del dia">
                 {dayOrders.map((order) => (

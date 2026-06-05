@@ -1825,6 +1825,7 @@ const normalizeCartLine = (line, index = 0) => {
     leftName: line?.leftName || "",
     rightName: line?.rightName || "",
     name: line?.name || line?.label || "Producto",
+    categoryId: line?.categoryId ?? null,
     category: line?.category || "",
     size: line?.size || line?.selectedSize || "M",
     qty,
@@ -1866,15 +1867,17 @@ const isCouponCartLine = (line) => {
 };
 
 const isCouponEligibleCartLine = (line) => {
-  const source = String(line?.source || "").trim();
-  const type = String(line?.type || "").trim();
+  const source = String(line?.source || "").trim().toLowerCase();
+  const type = String(line?.type || "").trim().toUpperCase();
+  const cartLineId = String(line?.cartLineId || "").trim().toLowerCase();
 
   if (isCouponCartLine(line)) return false;
   if (isIncentiveRewardCartLine(line)) return false;
-  if (source === "queue_boost" || type === "queue_boost") return false;
-  if (source === "promo" || type === "PROMO") return false;
-  if (source === "offer" || type === "OFFER") return false;
-  if (source === "discount" || type === "DISCOUNT") return false;
+  if (source === "queue_boost" || type === "QUEUE_BOOST") return false;
+  if (source === "promo" || type === "PROMO" || line?.promoId || cartLineId.startsWith("promo-")) return false;
+  if (Array.isArray(line?.promoItems) && line.promoItems.length > 0) return false;
+  if (["offer", "discount", "direct_discount", "direct-discount", "top_deal", "topdeal"].includes(source)) return false;
+  if (["OFFER", "DISCOUNT", "DIRECT_DISCOUNT", "DIRECT-DISCOUNT", "TOP_DEAL", "TOPDEAL"].includes(type)) return false;
   if (line?.directDiscount) return false;
 
   return num(line?.subtotal) > 0;
@@ -4318,6 +4321,7 @@ export default function StorePage() {
       cartLineId: `${selectedProduct.pizzaId}-${Date.now()}`,
       pizzaId: selectedProduct.pizzaId,
       name: selectedProduct.name,
+      categoryId: selectedProduct.categoryId ?? null,
       category: selectedProduct.category,
       size: productSelection.size,
       qty: Number(productSelection.qty || 1),
@@ -4739,6 +4743,7 @@ export default function StorePage() {
 
       if (data?.valid && num(data.discount) > 0 && data?.coupon?.code) {
         const discount = Math.min(num(data.discount), couponEligibleSubtotal);
+        autoCouponApplyRef.current = `active:${data.coupon.code}:${store?.id}:${couponEligibleSubtotal.toFixed(2)}`;
         const line = {
           cartLineId: `coupon-${data.coupon.code}`,
           type: "COUPON",
@@ -4840,6 +4845,46 @@ export default function StorePage() {
     if (cart.some(isCouponCartLine)) return;
 
     const applyKey = `cart:${code}:${store.id}:${couponEligibleSubtotal.toFixed(2)}`;
+    if (autoCouponApplyRef.current === applyKey) return;
+    autoCouponApplyRef.current = applyKey;
+
+    applyCouponCode(code, { openInfo: false, openCartOnValid: false });
+  }, [
+    applyCouponCode,
+    cart,
+    couponCode,
+    couponEligibleSubtotal,
+    couponInfoData?.coupon?.code,
+    partner?.id,
+    store?.id,
+    store?.partnerId,
+  ]);
+
+  useEffect(() => {
+    const couponLine = cart.find(isCouponCartLine);
+    if (!couponLine || !store?.id || !(partner?.id || store?.partnerId)) return;
+
+    const code = String(couponLine.couponCode || couponCode || couponInfoData?.coupon?.code || "")
+      .trim()
+      .toUpperCase();
+    if (!code) return;
+
+    if (couponEligibleSubtotal <= 0) {
+      autoCouponApplyRef.current = "";
+      setCart((current) => current.filter((item) => !isCouponCartLine(item)));
+      const blockedData = {
+        valid: false,
+        status: "no_eligible_products",
+        message: "El cupon no aplica a Promos, Top Deals, Boost ni recompensas.",
+        coupon: couponLine.coupon || { code },
+        discount: 0,
+      };
+      setCouponStatus(blockedData.message);
+      setCouponInfoData(blockedData);
+      return;
+    }
+
+    const applyKey = `active:${code}:${store.id}:${couponEligibleSubtotal.toFixed(2)}`;
     if (autoCouponApplyRef.current === applyKey) return;
     autoCouponApplyRef.current = applyKey;
 
@@ -5407,9 +5452,9 @@ export default function StorePage() {
       cartLineId: `queue-boost-${store?.id || "store"}`,
       type: "queue_boost",
       source: "queue_boost",
-      name: "Emergency Boost",
+      name: "Boost de emergencia",
       category: "Boost",
-      size: `#${bootsPositionLabel} -> #${selectedBootsOption.targetPosition}`,
+      size: `Posicion #${selectedBootsOption.targetPosition}`,
       qty: 1,
       price: selectedBootsOption.amount,
       subtotal: selectedBootsOption.amount,
@@ -7335,8 +7380,7 @@ export default function StorePage() {
                         )}
                         {line.source === "queue_boost" && (
                           <small>
-                            {line.boost?.positionsToJump || 0} salto
-                            {Number(line.boost?.positionsToJump || 0) === 1 ? "" : "s"} de cola
+                            Nueva posicion #{line.boost?.targetPosition || line.size?.replace(/\D/g, "") || ""}
                           </small>
                         )}
                         {line.extras?.length > 0 && (
@@ -8594,8 +8638,7 @@ export default function StorePage() {
             <div className="sf-bootsPulse" aria-hidden="true">!!</div>
             <h3>Boost de emergencia</h3>
             <p>
-              Ahora estas en la posicion #{bootsPositionLabel}. Elige hasta
-              donde quieres avanzar en la cola.
+              Consulta tu posicion actual y elige una posicion disponible.
             </p>
 
             <div className="sf-bootsCurrent">
@@ -8606,15 +8649,15 @@ export default function StorePage() {
                   ? "Actualizando cola..."
                   : bootsCurrentPosition == null
                   ? "No pudimos leer la cola de esta tienda."
-                  : `Hay ${bootsCurrentPosition} personas delante de ti.`}
+                  : "Posicion actual en cola."}
               </small>
             </div>
 
-            <div className="sf-bootsOptionGroup" role="radiogroup" aria-label="Elige tu nueva posicion">
-              <span>Elige tu nueva posicion</span>
+            <div className="sf-bootsOptionGroup" role="radiogroup" aria-label="Posiciones disponibles">
+              <span>Posiciones disponibles</span>
               {bootsOptions.length === 0 ? (
                 <div className="sf-bootsEmpty">
-                  No hay cola suficiente para activar Boost ahora mismo.
+                  No hay posiciones disponibles para activar Boost ahora mismo.
                 </div>
               ) : bootsOptions.map((option) => {
                 const active =
@@ -8633,35 +8676,12 @@ export default function StorePage() {
                     aria-checked={active}
                   >
                     <strong>#{option.targetPosition}</strong>
-                    <span>
-                      {option.jumps} salto{option.jumps === 1 ? "" : "s"} de cola
-                    </span>
+                    <span>Posicion disponible</span>
                     <em>{formatMoney(option.amount, boostCurrency)}</em>
                   </button>
                 );
               })}
             </div>
-
-            {selectedBootsOption && (
-              <div className="sf-bootsQuote">
-                <div>
-                  <span>Ahora</span>
-                  <strong>#{bootsPositionLabel}</strong>
-                </div>
-                <div>
-                  <span>Destino</span>
-                  <strong>#{selectedBootsOption.targetPosition}</strong>
-                </div>
-                <div>
-                  <span>Salto</span>
-                  <strong>{selectedBootsOption.jumps}</strong>
-                </div>
-                <div>
-                  <span>Precio</span>
-                  <strong>{formatMoney(selectedBootsOption.amount, boostCurrency)}</strong>
-                </div>
-              </div>
-            )}
 
             <small className="sf-bootsCheckoutNote">
               {cartHasBoost

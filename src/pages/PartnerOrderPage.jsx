@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import OrderPortalTransition from "../components/Storefront/OrderPortalTransition";
+import { ReactComponent as PizzaBg } from "../assets/logo/pizza.svg";
 import api from "../services/api";
 import "../styles/Storefront.css";
 
@@ -451,9 +452,20 @@ export default function PartnerOrderPage() {
 
           {isStorefrontClosed ? (
             <div className="sf-closedNotice" role="status">
-              <span>Cerrado</span>
-              <strong>{closedCopy.title}</strong>
-              <small>{closedCopy.body}</small>
+              <div className="sf-closedNotice__pizzaWrap" aria-hidden="true">
+                <PizzaBg className="sf-closedNotice__pizza" />
+              </div>
+              <div className="sf-closedNotice__copy">
+                <strong>{closedCopy.title}</strong>
+                <small>{closedCopy.body}</small>
+              </div>
+              <button
+                type="button"
+                className="sf-closedNotice__action"
+                onClick={() => navigate(`/${partnerSlug}`)}
+              >
+                Volver al inicio
+              </button>
             </div>
           ) : (
             <>

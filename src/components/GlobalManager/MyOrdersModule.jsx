@@ -13,6 +13,35 @@ const formatMoney = (value, currency = "EUR") =>
 const formatNumber = (value) =>
   new Intl.NumberFormat("es-ES").format(Number(value || 0));
 
+const VOLTA_HEAT_COLORS = {
+  empty: "#fff5eb",
+  low: "#ffe0bd",
+  high: "#ff5a00",
+};
+
+const hexToRgb = (hex) => {
+  const value = String(hex || "").replace("#", "");
+  const parsed = Number.parseInt(value, 16);
+  return {
+    r: (parsed >> 16) & 255,
+    g: (parsed >> 8) & 255,
+    b: parsed & 255,
+  };
+};
+
+const mixHex = (from, to, amount) => {
+  const start = hexToRgb(from);
+  const end = hexToRgb(to);
+  const ratio = Math.max(0, Math.min(1, amount));
+  const channel = (left, right) => Math.round(left + (right - left) * ratio);
+  return `rgb(${channel(start.r, end.r)}, ${channel(start.g, end.g)}, ${channel(start.b, end.b)})`;
+};
+
+const getVoltaHeatColor = (heat) => {
+  if (!heat) return VOLTA_HEAT_COLORS.empty;
+  return mixHex(VOLTA_HEAT_COLORS.low, VOLTA_HEAT_COLORS.high, heat);
+};
+
 const formatDateTime = (value) => {
   if (!value) return "-";
   const date = new Date(value);
@@ -47,6 +76,12 @@ const parseIsoDateParts = (value) => {
   return { year, month, day };
 };
 
+const toCalendarColumn = (weekday) => {
+  const normalized = Number(weekday);
+  if (!Number.isInteger(normalized) || normalized < 0 || normalized > 6) return null;
+  return normalized === 0 ? 7 : normalized;
+};
+
 const formatCalendarMonth = (year, month) =>
   new Intl.DateTimeFormat("es-ES", {
     month: "long",
@@ -71,17 +106,20 @@ const buildTramoMonths = (days) => {
       });
     }
 
-    grouped.get(key).days.push({ ...day, dayNumber: parts.day });
+    const fallbackWeekday = new Date(Date.UTC(parts.year, parts.month - 1, parts.day)).getUTCDay();
+    grouped.get(key).days.push({
+      ...day,
+      dayNumber: parts.day,
+      calendarColumn: toCalendarColumn(day.weekday) || toCalendarColumn(fallbackWeekday),
+    });
   });
 
   return [...grouped.values()].map((month) => {
-    const firstDay = new Date(Date.UTC(month.year, month.month - 1, 1)).getUTCDay();
-    const leadingSlots = firstDay === 0 ? 6 : firstDay - 1;
+    const sortedDays = month.days.sort((left, right) => left.dayNumber - right.dayNumber);
 
     return {
       ...month,
-      leadingSlots,
-      days: month.days.sort((left, right) => left.dayNumber - right.dayNumber),
+      days: sortedDays,
     };
   });
 };
@@ -130,13 +168,6 @@ const lineName = (item) => {
 
 const lineSize = (item) => String(item?.size || item?.selectedSize || "").trim();
 
-const getTypeLabel = (order) => {
-  const raw = String(order?.type || order?.delivery || "").toUpperCase();
-  if (raw.includes("DELIVERY") || raw.includes("COURIER")) return "Delivery";
-  if (raw.includes("PICKUP")) return "Pickup";
-  return raw || "-";
-};
-
 function OrderItems({ order }) {
   const products = asArray(order?.products);
 
@@ -184,6 +215,7 @@ function CalendarIndicators({ indicators, currency }) {
   const weekdayRankings = indicators?.rankings?.weekdays || [];
   const monthdayRankings = indicators?.rankings?.monthdays || [];
   const tramoMonths = buildTramoMonths((indicators?.upcomingDays || []).slice(0, 14));
+  const topUpcomingDates = new Set(topDays.slice(0, 3).map((day) => day.date).filter(Boolean));
 
   return (
     <section className="gmo-calendarGrid">
@@ -256,26 +288,112 @@ function CalendarIndicators({ indicators, currency }) {
                 ))}
               </div>
               <div className="gmo-monthGrid">
-                {Array.from({ length: month.leadingSlots }, (_, index) => (
-                  <span key={`${month.key}-blank-${index}`} className="gmo-dayCell gmo-dayCell--empty" />
-                ))}
-                {month.days.map((day) => (
-                  <div
-                    key={day.date}
-                    className={`gmo-dayCell gmo-dayCell--${day.tramoLevel || "normal"}`}
-                    title={`${formatDate(day.date)} - ${day.tramoReason || "Potencial normal"}`}
-                  >
-                    <strong>{day.dayNumber}</strong>
-                    {day.isTopWeekday && day.isTopMonthday && <span>Cruce</span>}
-                    <small>{formatMoney(day.expectedRevenue, currency)}</small>
-                  </div>
-                ))}
+                {month.days.map((day) => {
+                  const isTopUpcoming = topUpcomingDates.has(day.date);
+
+                  return (
+                    <div
+                      key={day.date}
+                      className={`gmo-dayCell gmo-dayCell--${day.tramoLevel || "normal"} ${
+                        isTopUpcoming ? "gmo-dayCell--topUpcoming" : ""
+                      }`}
+                      style={day.calendarColumn ? { gridColumn: day.calendarColumn } : undefined}
+                      title={`${formatDate(day.date)} - ${day.tramoReason || "Potencial normal"}`}
+                    >
+                      <strong>{day.dayNumber}</strong>
+                      {day.isTopWeekday && day.isTopMonthday && <span>Cruce</span>}
+                      {isTopUpcoming && !(day.isTopWeekday && day.isTopMonthday) && <span>Top</span>}
+                      <small>{formatMoney(day.expectedRevenue, currency)}</small>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           ))}
           {!tramoMonths.length && <div className="gmo-empty gmo-empty--small">Sin ventas registradas.</div>}
         </div>
       </article>
+    </section>
+  );
+}
+
+function TrafficHeatmap({ heatmap, currency, updatedAt }) {
+  const days = heatmap?.days || [];
+  const rows = heatmap?.rows || [];
+  const current = heatmap?.current || {};
+
+  return (
+    <section className="gmo-panel gmo-heatmapPanel">
+      <div className="gmo-panelHead gmo-heatmapHead">
+        <div>
+          <span>Horario de trabajo</span>
+          <h3>Productos por dia y hora</h3>
+        </div>
+        <small>{updatedAt ? `Ultima lectura ${formatDateTime(updatedAt)}` : ""}</small>
+      </div>
+
+      <div className="gmo-heatmapLegend" aria-label="Leyenda de intensidad">
+        <span>Menos</span>
+        <i className="gmo-heatLegend gmo-heatLegend--low" />
+        <i className="gmo-heatLegend gmo-heatLegend--mid" />
+        <i className="gmo-heatLegend gmo-heatLegend--high" />
+        <span>Mas productos</span>
+      </div>
+
+      {rows.length && days.length ? (
+        <div className="gmo-heatmapScroll">
+          <div
+            className="gmo-heatmapGrid"
+            style={{
+              "--gmo-heatmap-columns": `54px repeat(${days.length}, minmax(78px, 1fr))`,
+            }}
+          >
+            <div className="gmo-heatmapCorner">Hora</div>
+            {days.map((day) => (
+              <div key={day.weekday} className="gmo-heatmapDayHead">
+                <strong>{day.label}</strong>
+                <span>{formatNumber(day.products ?? day.orders)} prod</span>
+              </div>
+            ))}
+
+            {rows.map((row) => (
+              <div key={row.hour} className="gmo-heatmapRow">
+                <div className="gmo-heatmapHour">{row.label}</div>
+                {row.cells.map((cell) => {
+                  const isCurrent =
+                    current?.weekday === cell.weekday && current?.hour === cell.hour;
+                  const productCount = cell.products ?? cell.orders;
+                  const isOpen = cell.isOpen !== false;
+                  const visualHeat = isOpen && productCount
+                    ? Math.max(0.2, Number(cell.intensity || 0))
+                    : 0;
+                  const heatColor = getVoltaHeatColor(visualHeat);
+                  const tooltipValue = formatNumber(productCount);
+
+                  return (
+                    <div
+                      key={`${cell.weekday}-${cell.hour}`}
+                      className={`gmo-heatCell ${!isOpen ? "is-closed" : ""} ${
+                        cell.isPeak ? "is-peak" : ""
+                      } ${
+                        isCurrent ? "is-current" : ""
+                      }`}
+                      style={{
+                        "--heat": visualHeat.toFixed(2),
+                        "--heat-color": heatColor,
+                      }}
+                      data-tooltip={isOpen ? tooltipValue : undefined}
+                      title={isOpen ? tooltipValue : undefined}
+                    />
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div className="gmo-empty">Aun no hay historial suficiente para pintar productos por hora.</div>
+      )}
     </section>
   );
 }
@@ -348,7 +466,6 @@ export default function MyOrdersModule({ partner = null }) {
     return () => window.clearInterval(timer);
   }, [loadAll]);
 
-  const visibleStores = useMemo(() => summary?.stores || [], [summary]);
   const selectableStores = useMemo(
     () => summary?.availableStores || summary?.stores || [],
     [summary]
@@ -426,26 +543,26 @@ export default function MyOrdersModule({ partner = null }) {
 
       <section className="gmo-kpiGrid">
         <KpiCard
-          label="Ventas"
+          label="Ventas periodo"
           value={formatMoney(kpis.revenue, currency)}
-          hint={summary?.periodLabel || "Periodo actual"}
+          hint={summary?.periodLabel || "Total cobrado"}
           tone="revenue"
         />
         <KpiCard
-          label="Ordenes"
+          label="Pedidos periodo"
           value={formatNumber(kpis.ordersCount)}
           hint={`Ticket medio ${formatMoney(kpis.averageTicket, currency)}`}
         />
         <KpiCard
-          label="Pendientes"
+          label="Cola pendiente"
           value={formatNumber(pendingTotal)}
-          hint="Cola operativa actual"
+          hint="Por preparar ahora"
           tone={pendingTotal > 0 ? "pending" : ""}
         />
         <KpiCard
           label="Clientes nuevos"
           value={formatNumber(kpis.newCustomers)}
-          hint={`${formatNumber(kpis.uniqueCustomers)} clientes con compra`}
+          hint={`${formatNumber(kpis.uniqueCustomers)} compradores`}
         />
         <KpiCard
           label="Tiendas activas"
@@ -453,141 +570,20 @@ export default function MyOrdersModule({ partner = null }) {
           hint="Dentro del alcance"
         />
         <KpiCard
-          label="Canal"
+          label="Delivery / Pickup"
           value={`${formatNumber(kpis.deliveryOrders)} / ${formatNumber(kpis.pickupOrders)}`}
-          hint="Delivery / Pickup"
+          hint="Pedidos por canal"
         />
       </section>
 
       <CalendarIndicators indicators={summary?.calendarIndicators} currency={currency} />
 
       <div className="gmo-mainGrid">
-        <section className="gmo-panel gmo-panel--orders">
-          <div className="gmo-panelHead">
-            <div>
-              <span>Pending orders</span>
-              <h3>Pedidos por procesar</h3>
-            </div>
-            <small>
-              {summary?.updatedAt ? `Ultima lectura ${formatDateTime(summary.updatedAt)}` : ""}
-            </small>
-          </div>
-
-          {orders.length === 0 ? (
-            <div className="gmo-empty">No hay pedidos pendientes ahora.</div>
-          ) : (
-            <div className="gmo-tableWrap">
-              <table className="gmo-table">
-                <thead>
-                  <tr>
-                    <th>Codigo</th>
-                    <th>Hora</th>
-                    <th>Tienda</th>
-                    <th>Tipo</th>
-                    <th>Items</th>
-                    <th>Cliente</th>
-                    <th>Total</th>
-                    <th>Accion</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {orders.map((order) => (
-                    <tr key={order.id} className={order.boost?.active ? "gmo-orderBoosted" : ""}>
-                      <td>
-                        <button
-                          type="button"
-                          className="gmo-codeBtn"
-                          onClick={() => setSelectedOrder(order)}
-                        >
-                          {order.code}
-                        </button>
-                        {order.boost?.active && (
-                          <span className="gmo-boostBadge">
-                            Boots #{order.queuePosition || order.boost.targetPosition || 1}
-                          </span>
-                        )}
-                      </td>
-                      <td>{formatDateTime(order.date || order.createdAt)}</td>
-                      <td>
-                        <strong>{order.storeName || "-"}</strong>
-                        <span className="gmo-cellSub">{order.partnerName || ""}</span>
-                      </td>
-                      <td>{getTypeLabel(order)}</td>
-                      <td>
-                        <OrderItems order={order} />
-                      </td>
-                      <td>
-                        <strong>{order.customerData?.name || "-"}</strong>
-                        <span className="gmo-cellSub">{order.customerData?.phone || ""}</span>
-                      </td>
-                      <td>{formatMoney(order.total, order.currency || currency)}</td>
-                      <td>
-                        <button
-                          type="button"
-                          className="gmo-readyBtn"
-                          onClick={() => setConfirmReadyId(order.id)}
-                        >
-                          Ready
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </section>
-
-        <aside className="gmo-side">
-          <section className="gmo-panel">
-            <div className="gmo-panelHead">
-              <div>
-                <span>Tiendas</span>
-                <h3>Rendimiento por tienda</h3>
-              </div>
-            </div>
-            <div className="gmo-storeList">
-              {visibleStores.map((store) => (
-                <button
-                  key={store.storeId}
-                  type="button"
-                  className={`gmo-storeRow ${String(store.storeId) === String(storeId) ? "active" : ""}`}
-                  onClick={() => setStoreId(String(store.storeId))}
-                >
-                  <span>
-                    <strong>{store.storeName}</strong>
-                    <small>{store.partnerName}</small>
-                  </span>
-                  <b>{formatMoney(store.revenue, store.currency || currency)}</b>
-                  <em>{store.pending} pendientes</em>
-                </button>
-              ))}
-              {visibleStores.length === 0 && (
-                <div className="gmo-empty gmo-empty--small">No hay tiendas disponibles.</div>
-              )}
-            </div>
-          </section>
-
-          <section className="gmo-panel">
-            <div className="gmo-panelHead">
-              <div>
-                <span>Top items</span>
-                <h3>Mas vendido</h3>
-              </div>
-            </div>
-            <div className="gmo-productList">
-              {(summary?.topProducts || []).map((item) => (
-                <div key={item.name} className="gmo-productRow">
-                  <strong>{item.name}</strong>
-                  <span>{formatNumber(item.qty)} uds</span>
-                </div>
-              ))}
-              {!summary?.topProducts?.length && (
-                <div className="gmo-empty gmo-empty--small">Sin ventas en este periodo.</div>
-              )}
-            </div>
-          </section>
-        </aside>
+        <TrafficHeatmap
+          heatmap={summary?.trafficHeatmap}
+          currency={currency}
+          updatedAt={summary?.updatedAt}
+        />
       </div>
 
       {selectedOrder && (
@@ -613,7 +609,7 @@ export default function MyOrdersModule({ partner = null }) {
                   <span>Boots</span>
                   <strong>
                     Prioridad #{selectedOrder.queuePosition || selectedOrder.boost.targetPosition || 1}
-                    {" Ã‚Â· "}
+                    {" - "}
                     {formatMoney(selectedOrder.boost.amount, selectedOrder.currency || currency)}
                   </strong>
                 </div>

@@ -1,0 +1,460 @@
+.rv-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.rv-panel {
+  max-width: 1180px;
+  padding: 28px;
+  border-radius: 28px;
+  background:
+    linear-gradient(180deg, rgba(255, 250, 239, 0.94), #ffffff 42%),
+    #ffffff;
+  border: 1px solid rgba(41, 11, 94, 0.1);
+  box-shadow: 0 18px 42px rgba(41, 11, 94, 0.08);
+}
+
+.rv-head,
+.rv-headActions,
+.rv-cardHead,
+.rv-scoreHead,
+.rv-scoreSplit,
+.rv-personRow,
+.rv-productRow,
+.rv-storeRow,
+.rv-activityRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.rv-head {
+  align-items: flex-start;
+  margin-bottom: 22px;
+}
+
+.rv-headActions {
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.rv-kicker {
+  margin-bottom: 10px;
+  color: #3513a4;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.rv-head h2 {
+  margin: 0;
+  color: #1c1230;
+  font-size: 34px;
+  line-height: 1.05;
+}
+
+.rv-head p {
+  margin: 8px 0 0;
+  color: rgba(36, 22, 57, 0.66);
+  font-weight: 800;
+}
+
+.rv-select,
+.rv-btn {
+  min-height: 44px;
+  border-radius: 16px;
+  border: 1px solid rgba(41, 11, 94, 0.12);
+  font: inherit;
+}
+
+.rv-select {
+  min-width: 230px;
+  padding: 0 14px;
+  background: #ffffff;
+  color: #241639;
+}
+
+.rv-dateFilters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  max-width: 430px;
+}
+
+.rv-dateBtn {
+  min-height: 34px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(53, 19, 164, 0.12);
+  background: rgba(255, 255, 255, 0.9);
+  color: #241639;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 950;
+  cursor: pointer;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.rv-dateBtn:hover {
+  transform: translateY(-1px);
+  border-color: rgba(53, 19, 164, 0.35);
+}
+
+.rv-dateBtn.is-active {
+  border-color: #3513a4;
+  background: #3513a4;
+  color: #ffffff;
+  box-shadow: 0 10px 18px rgba(53, 19, 164, 0.16);
+}
+
+.rv-dateInput {
+  min-height: 34px;
+  padding: 0 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(53, 19, 164, 0.14);
+  background: #ffffff;
+  color: #241639;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.rv-btn {
+  padding: 0 18px;
+  background: linear-gradient(135deg, #ffb61c, #ffd36e);
+  color: #23163b;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.rv-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.72;
+}
+
+.rv-error,
+.rv-empty {
+  padding: 16px;
+  border-radius: 18px;
+  background: #fff4f2;
+  color: #982c1f;
+  border: 1px solid rgba(152, 44, 31, 0.12);
+}
+
+.rv-empty {
+  background: rgba(53, 19, 164, 0.05);
+  color: rgba(36, 22, 57, 0.66);
+  border-color: rgba(53, 19, 164, 0.08);
+  text-align: center;
+  font-weight: 800;
+}
+
+.rv-kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(150px, 1fr));
+  gap: 14px;
+}
+
+.rv-kpi {
+  min-height: 132px;
+  padding: 17px;
+  border-radius: 20px;
+  background: #ffffff;
+  border: 1px solid rgba(41, 11, 94, 0.08);
+  display: grid;
+  align-content: space-between;
+  gap: 10px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+}
+
+.rv-kpi span,
+.rv-kpi small,
+.rv-cardHead span,
+.rv-scoreHead span,
+.rv-lastLike span,
+.rv-personRow span,
+.rv-personRow small,
+.rv-productRow span,
+.rv-storeRow span,
+.rv-storeNumbers small,
+.rv-activityRow small {
+  color: rgba(36, 22, 57, 0.66);
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.rv-kpi strong {
+  color: #1c1230;
+  font-size: 30px;
+  line-height: 1;
+}
+
+.rv-kpi-ink {
+  background: linear-gradient(180deg, #ffffff, rgba(53, 19, 164, 0.06));
+}
+
+.rv-kpi-gold {
+  background: linear-gradient(180deg, #ffffff, rgba(255, 182, 28, 0.18));
+}
+
+.rv-kpi-blue {
+  background: linear-gradient(180deg, #ffffff, rgba(33, 150, 243, 0.12));
+}
+
+.rv-kpi-green,
+.rv-tone-good {
+  background: linear-gradient(180deg, #ffffff, rgba(39, 174, 96, 0.13));
+}
+
+.rv-kpi-rose,
+.rv-tone-low {
+  background: linear-gradient(180deg, #ffffff, rgba(255, 45, 111, 0.12));
+}
+
+.rv-tone-watch {
+  background: linear-gradient(180deg, #ffffff, rgba(255, 193, 7, 0.16));
+}
+
+.rv-spotlightGrid {
+  display: grid;
+  grid-template-columns: 1fr minmax(240px, 0.8fr) 1fr;
+  gap: 14px;
+  margin: 18px 0;
+}
+
+.rv-scorePanel,
+.rv-lastLike,
+.rv-card {
+  border: 1px solid rgba(41, 11, 94, 0.08);
+  border-radius: 22px;
+  background: #ffffff;
+  box-shadow: 0 12px 24px rgba(41, 11, 94, 0.05);
+}
+
+.rv-scorePanel,
+.rv-lastLike {
+  padding: 18px;
+}
+
+.rv-scoreHead strong,
+.rv-lastLike strong,
+.rv-cardHead strong,
+.rv-productRow b,
+.rv-storeNumbers b,
+.rv-personRow b {
+  color: #1c1230;
+}
+
+.rv-scoreHead strong {
+  font-size: 28px;
+}
+
+.rv-meter {
+  height: 14px;
+  border-radius: 999px;
+  background: rgba(255, 45, 111, 0.16);
+  overflow: hidden;
+  margin: 18px 0 12px;
+}
+
+.rv-meter i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #24a860, #ffb61c);
+}
+
+.rv-meter-response {
+  background: rgba(53, 19, 164, 0.1);
+}
+
+.rv-meter-response i {
+  background: linear-gradient(90deg, #3513a4, #2b8fff);
+}
+
+.rv-lastLike {
+  display: grid;
+  align-content: center;
+  gap: 8px;
+  background: linear-gradient(135deg, rgba(255, 182, 28, 0.2), rgba(255, 255, 255, 0.94));
+}
+
+.rv-lastLike strong {
+  font-size: 22px;
+  line-height: 1.15;
+}
+
+.rv-lastLike small {
+  color: rgba(36, 22, 57, 0.66);
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.rv-contentGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+  gap: 14px;
+}
+
+.rv-contentGrid-bottom {
+  grid-template-columns: minmax(320px, 0.85fr) minmax(0, 1.15fr);
+  margin-top: 14px;
+}
+
+.rv-cardStack {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+
+.rv-card {
+  min-width: 0;
+  padding: 18px;
+}
+
+.rv-card-large {
+  min-height: 310px;
+}
+
+.rv-cardHead {
+  margin-bottom: 14px;
+}
+
+.rv-cardHead strong {
+  font-size: 22px;
+}
+
+.rv-list,
+.rv-productList,
+.rv-storeList,
+.rv-activityList {
+  display: grid;
+  gap: 10px;
+}
+
+.rv-personRow,
+.rv-productRow,
+.rv-storeRow,
+.rv-activityRow {
+  min-height: 58px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: rgba(247, 245, 252, 0.78);
+  border: 1px solid rgba(41, 11, 94, 0.06);
+}
+
+.rv-personRow > div,
+.rv-productRow > div,
+.rv-storeRow > div,
+.rv-activityRow > div {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.rv-personRow strong,
+.rv-productRow strong,
+.rv-storeRow strong,
+.rv-activityRow strong {
+  color: #1c1230;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rv-personRow > div:last-child,
+.rv-storeNumbers {
+  text-align: right;
+}
+
+.rv-productRow b {
+  flex: 0 0 auto;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: rgba(39, 174, 96, 0.12);
+  color: #176b3a;
+}
+
+.rv-rankBadge {
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  display: inline-grid;
+  place-items: center;
+  background: rgba(53, 19, 164, 0.1);
+  color: #3513a4;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 950;
+}
+
+.rv-productRow-alert b {
+  background: rgba(255, 45, 111, 0.12);
+  color: #a30f45;
+}
+
+.rv-voteBadge {
+  flex: 0 0 auto;
+  min-width: 72px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 950;
+}
+
+.rv-voteBadge.is-like {
+  background: rgba(39, 174, 96, 0.14);
+  color: #176b3a;
+}
+
+.rv-voteBadge.is-dislike {
+  background: rgba(255, 45, 111, 0.14);
+  color: #a30f45;
+}
+
+@media (max-width: 1100px) {
+  .rv-kpiGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .rv-spotlightGrid,
+  .rv-contentGrid,
+  .rv-contentGrid-bottom {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .rv-panel {
+    padding: 20px;
+  }
+
+  .rv-head,
+  .rv-headActions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .rv-kpiGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .rv-select {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .rv-dateFilters {
+    max-width: none;
+  }
+
+  .rv-dateInput {
+    width: 100%;
+  }
+}

@@ -481,6 +481,10 @@
   box-shadow: 0 18px 38px rgba(41, 11, 94, 0.08);
 }
 
+.bo-settingsCard--wide {
+  max-width: 1120px;
+}
+
 .bo-settingsHeader {
   display: flex;
   align-items: flex-start;
@@ -820,6 +824,175 @@
 .bo-logoUploadHint {
   color: rgba(45, 33, 71, 0.74);
   line-height: 1.5;
+}
+
+.bo-pricePolicyPanel {
+  margin-top: 26px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(41, 11, 94, 0.08);
+  display: grid;
+  gap: 18px;
+}
+
+.bo-pricePolicyGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.bo-pricePolicyGrid--single {
+  grid-template-columns: 1fr;
+}
+
+.bo-priceRuleEditor,
+.bo-priceRuleList {
+  padding: 20px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.76);
+  border: 1px solid rgba(41, 11, 94, 0.08);
+}
+
+.bo-priceRuleList {
+  display: grid;
+  gap: 12px;
+  max-height: 760px;
+  overflow: auto;
+}
+
+.bo-priceRuleBadge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: rgba(255, 182, 28, 0.22);
+  color: #23163b;
+}
+
+.bo-priceSelector {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  max-height: 190px;
+  overflow: auto;
+  padding: 6px;
+  border-radius: 16px;
+  background: rgba(106, 61, 240, 0.04);
+  border: 1px solid rgba(106, 61, 240, 0.08);
+}
+
+.bo-priceSelector--tall {
+  max-height: 260px;
+}
+
+.bo-checkTile {
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: 14px;
+  background: #ffffff;
+  border: 1px solid rgba(41, 11, 94, 0.08);
+  color: #2d2147;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.bo-checkTile input {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+}
+
+.bo-checkTile span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.bo-timePair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.bo-dayPicker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.bo-dayChip {
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  border: 1px solid rgba(41, 11, 94, 0.12);
+  background: #ffffff;
+  color: #2d2147;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.bo-dayChip.is-active {
+  background: var(--brand-2);
+  border-color: transparent;
+  color: #23163b;
+}
+
+.bo-priceRuleCard {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #ffffff, rgba(255, 248, 232, 0.72));
+  border: 1px solid rgba(41, 11, 94, 0.08);
+}
+
+.bo-priceRuleCard strong,
+.bo-priceRuleCard span {
+  display: block;
+}
+
+.bo-priceRuleCard strong {
+  color: #1c1230;
+}
+
+.bo-priceRuleCard b {
+  color: #3513a4;
+  font-size: 20px;
+}
+
+.bo-priceRuleMeta {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.bo-priceRuleMeta span {
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(53, 19, 164, 0.06);
+  color: rgba(28, 18, 48, 0.72);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.bo-ruleActions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.bo-ruleActions button {
+  padding: 9px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(41, 11, 94, 0.12);
+  background: #ffffff;
+  color: #2d2147;
+  font-weight: 800;
+  cursor: pointer;
 }
 
 .bo-trackingHero {
@@ -1926,6 +2099,7 @@
   .bo-settingsGrid--single,
   .bo-settingsGrid--triple,
   .bo-settingsGrid--doubleTight,
+  .bo-pricePolicyGrid,
   .bo-trackingServiceGrid,
   .bo-trackingKpis,
   .bo-buttonGallery,
@@ -1943,6 +2117,10 @@
   }
 
   .bo-offerVariantGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .bo-priceSelector {
     grid-template-columns: 1fr;
   }
 }

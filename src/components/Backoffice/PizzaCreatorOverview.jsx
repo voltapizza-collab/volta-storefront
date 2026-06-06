@@ -1,8 +1,6 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import api from "../../setupAxios";
 import "../../styles/PizzaCreator.css";
-
-const sizeList = ["S", "M", "L", "XL", "XXL", "ST"];
 
 const formatDate = (value) => {
   if (!value) return "Sin fecha";
@@ -17,190 +15,48 @@ const formatDate = (value) => {
   }).format(parsed);
 };
 
-const createEmptyCounter = () =>
-  Object.fromEntries(sizeList.map((size) => [size, 0]));
+const EMPTY_OVERVIEW = {
+  categories: [],
+  topIngredients: [],
+  topPizzaByStore: [],
+  latestProduct: null,
+  totals: {
+    active: 0,
+    inactive: 0,
+    total: 0,
+  },
+};
 
 export default function PizzaCreatorOverview({ partner, onOpenProducts }) {
   const partnerId = partner?.partnerId;
-  const [categories, setCategories] = useState([]);
-  const [pizzas, setPizzas] = useState([]);
-  const [inventory, setInventory] = useState([]);
+  const [overview, setOverview] = useState(EMPTY_OVERVIEW);
   const [loading, setLoading] = useState(true);
 
-  const loadCategories = useCallback(async () => {
-    if (!partnerId) return [];
+  const loadOverview = useCallback(async () => {
+    if (!partnerId) return;
 
     try {
-      const response = await api.get(`/api/partners/${partnerId}/categories`);
-      return Array.isArray(response.data) ? response.data : [];
+      setLoading(true);
+      const response = await api.get(`/api/pizzas/overview?partnerId=${partnerId}`);
+      setOverview({
+        ...EMPTY_OVERVIEW,
+        ...(response.data || {}),
+        totals: {
+          ...EMPTY_OVERVIEW.totals,
+          ...(response.data?.totals || {}),
+        },
+      });
     } catch (err) {
-      console.error(err);
-
-      try {
-        const fallback = await api.get("/api/categories");
-        return Array.isArray(fallback.data) ? fallback.data : [];
-      } catch (fallbackErr) {
-        console.error(fallbackErr);
-        return [];
-      }
+      console.error("Error loading pizza creator overview", err);
+      setOverview(EMPTY_OVERVIEW);
+    } finally {
+      setLoading(false);
     }
   }, [partnerId]);
-
-  const loadPizzas = useCallback(async () => {
-    if (!partnerId) return [];
-
-    try {
-      const response = await api.get(`/api/pizzas?partnerId=${partnerId}`);
-      return Array.isArray(response.data) ? response.data : [];
-    } catch (err) {
-      console.error(err);
-      return [];
-    }
-  }, [partnerId]);
-
-  const loadInventory = useCallback(async () => {
-    try {
-      const response = await api.get("/ingredients");
-      return Array.isArray(response.data) ? response.data : [];
-    } catch (err) {
-      console.error(err);
-      return [];
-    }
-  }, []);
 
   useEffect(() => {
-    let alive = true;
-
-    const loadModuleData = async () => {
-      if (!partnerId) return;
-
-      setLoading(true);
-
-      try {
-        const [nextCategories, nextPizzas, nextInventory] = await Promise.all([
-          loadCategories(),
-          loadPizzas(),
-          loadInventory(),
-        ]);
-
-        if (!alive) return;
-
-        setCategories(nextCategories);
-        setPizzas(nextPizzas);
-        setInventory(nextInventory);
-      } finally {
-        if (alive) {
-          setLoading(false);
-        }
-      }
-    };
-
-    loadModuleData();
-
-    return () => {
-      alive = false;
-    };
-  }, [partnerId, loadCategories, loadInventory, loadPizzas]);
-
-  const totalPizzas = pizzas.length;
-  const activePizzas = pizzas.filter((pizza) => pizza.status !== "INACTIVE").length;
-  const inactivePizzas = totalPizzas - activePizzas;
-  const totalConfiguredSizes = pizzas.reduce(
-    (sum, pizza) => sum + (Array.isArray(pizza.selectSize) ? pizza.selectSize.length : 0),
-    0
-  );
-  const avgSizesPerPizza = totalPizzas
-    ? (totalConfiguredSizes / totalPizzas).toFixed(1)
-    : "0.0";
-  const avgIngredientsPerPizza = totalPizzas
-    ? (
-        pizzas.reduce(
-          (sum, pizza) => sum + (Array.isArray(pizza.ingredients) ? pizza.ingredients.length : 0),
-          0
-        ) / totalPizzas
-      ).toFixed(1)
-    : "0.0";
-
-  const categoryRanking = useMemo(() => {
-    const counts = new Map();
-
-    categories.forEach((category) => {
-      counts.set(category.name, 0);
-    });
-
-    pizzas.forEach((pizza) => {
-      const name = pizza.categoryName || pizza.category || "Sin categoria";
-      counts.set(name, (counts.get(name) || 0) + 1);
-    });
-
-    return [...counts.entries()]
-      .map(([name, total]) => ({ name, total }))
-      .sort((a, b) => b.total - a.total || a.name.localeCompare(b.name, "es"));
-  }, [categories, pizzas]);
-
-  const topCategory = categoryRanking.find((item) => item.total > 0) || null;
-
-  const topIngredients = useMemo(() => {
-    const usage = new Map();
-
-    pizzas.forEach((pizza) => {
-      (pizza.ingredients || []).forEach((ingredient) => {
-        const key = ingredient.id || ingredient.name;
-        const qtyBySize = ingredient.qtyBySize || {};
-        const totalQty = Object.values(qtyBySize).reduce(
-          (sum, value) => sum + Number(value || 0),
-          0
-        );
-
-        if (!usage.has(key)) {
-          usage.set(key, {
-            id: ingredient.id,
-            name: ingredient.name || `Ingrediente ${ingredient.id}`,
-            pizzas: 0,
-            totalQty: 0,
-          });
-        }
-
-        const current = usage.get(key);
-        current.pizzas += 1;
-        current.totalQty += totalQty;
-      });
-    });
-
-    return [...usage.values()]
-      .sort((a, b) => b.pizzas - a.pizzas || b.totalQty - a.totalQty || a.name.localeCompare(b.name, "es"))
-      .slice(0, 5);
-  }, [pizzas]);
-
-  const sizeCoverage = useMemo(() => {
-    const counter = createEmptyCounter();
-
-    pizzas.forEach((pizza) => {
-      (pizza.selectSize || []).forEach((size) => {
-        if (counter[size] == null) {
-          counter[size] = 0;
-        }
-        counter[size] += 1;
-      });
-    });
-
-    const maxCount = Math.max(1, ...Object.values(counter));
-
-    return Object.entries(counter).map(([size, total]) => ({
-      size,
-      total,
-      width: `${Math.max(12, Math.round((total / maxCount) * 100))}%`,
-    }));
-  }, [pizzas]);
-
-  const chronologicalPizzas = useMemo(() => {
-    return [...pizzas]
-      .filter((pizza) => pizza.createdAt)
-      .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-  }, [pizzas]);
-
-  const oldestPizza = chronologicalPizzas[0] || null;
-  const newestPizza = chronologicalPizzas[chronologicalPizzas.length - 1] || null;
+    loadOverview();
+  }, [loadOverview]);
 
   return (
     <div className="pc-overview">
@@ -208,10 +64,6 @@ export default function PizzaCreatorOverview({ partner, onOpenProducts }) {
         <div>
           <div className="pc-sectionTitle">Pizza Creator</div>
           <h2 className="pc-overviewTitle">Panel del modulo</h2>
-          <p className="pc-overviewIntro">
-            Esta vista padre ya no cae en el hijo por defecto: resume el estado del
-            catalogo, las categorias y el armado actual de pizzas del partner.
-          </p>
         </div>
 
         <button
@@ -223,110 +75,94 @@ export default function PizzaCreatorOverview({ partner, onOpenProducts }) {
         </button>
       </section>
 
-      <section className="pc-overviewStats">
-        <article className="pc-kpiCard">
-          <span className="pc-kpiLabel">Pizzas cargadas</span>
-          <strong className="pc-kpiValue">{totalPizzas}</strong>
-          <span className="pc-kpiMeta">
-            {activePizzas} activas, {inactivePizzas} inactivas
-          </span>
-        </article>
-
-        <article className="pc-kpiCard">
-          <span className="pc-kpiLabel">Categoria lider</span>
-          <strong className="pc-kpiValue">
-            {topCategory ? topCategory.name : "Sin datos"}
-          </strong>
-          <span className="pc-kpiMeta">
-            {topCategory ? `${topCategory.total} productos` : "Aun no hay pizzas"}
-          </span>
-        </article>
-
-        <article className="pc-kpiCard">
-          <span className="pc-kpiLabel">Tamanos por pizza</span>
-          <strong className="pc-kpiValue">{avgSizesPerPizza}</strong>
-          <span className="pc-kpiMeta">Promedio de configuraciones activas</span>
-        </article>
-
-        <article className="pc-kpiCard">
-          <span className="pc-kpiLabel">Ingredientes por pizza</span>
-          <strong className="pc-kpiValue">{avgIngredientsPerPizza}</strong>
-          <span className="pc-kpiMeta">{inventory.length} ingredientes disponibles</span>
-        </article>
-      </section>
-
-      <div className="pc-overviewGrid">
+      <div className="pc-overviewGrid pc-overviewGrid--compact">
         <section className="pc-section">
-          <div className="pc-sectionTitle">Categorias</div>
-          <div className="pc-overviewList">
-            {categoryRanking.length ? (
-              categoryRanking.map((category) => (
-                <div key={category.name} className="pc-overviewRow">
-                  <span className="pc-overviewRowTitle">{category.name}</span>
+          <div className="pc-sectionHeader">
+            <div>
+              <div className="pc-sectionTitle">Categorias</div>
+              <p className="pc-sectionHint">Sin bebidas ni complementos</p>
+            </div>
+            <span className="pc-overviewRowBadge">{overview.totals.total}</span>
+          </div>
+
+          <div className="pc-compactCategoryList">
+            {overview.categories.length ? (
+              overview.categories.map((category) => (
+                <div key={category.categoryId || category.name} className="pc-categoryCompactRow">
+                  <div>
+                    <span className="pc-overviewRowTitle">{category.name}</span>
+                    <span className="pc-overviewRowMeta">
+                      {category.active} activos, {category.inactive} inactivos
+                    </span>
+                  </div>
                   <span className="pc-overviewRowBadge">{category.total}</span>
                 </div>
               ))
             ) : (
-              <div className="pc-emptyState">No hay categorias disponibles.</div>
+              <div className="pc-emptyState">No hay categorias con productos.</div>
             )}
           </div>
         </section>
 
         <section className="pc-section">
-          <div className="pc-sectionTitle">Ingredientes mas usados</div>
+          <div className="pc-sectionTitle">Top 5 ingredientes usados</div>
           <div className="pc-overviewList">
-            {topIngredients.length ? (
-              topIngredients.map((ingredient) => (
+            {overview.topIngredients.length ? (
+              overview.topIngredients.map((ingredient) => (
                 <div key={ingredient.id || ingredient.name} className="pc-overviewRow">
                   <div>
                     <div className="pc-overviewRowTitle">{ingredient.name}</div>
                     <div className="pc-overviewRowMeta">
-                      Presente en {ingredient.pizzas} pizzas
+                      Presente en {ingredient.pizzas} productos
                     </div>
                   </div>
                   <span className="pc-overviewRowBadge">{ingredient.totalQty}</span>
                 </div>
               ))
             ) : (
-              <div className="pc-emptyState">Aun no hay ingredientes vinculados.</div>
+              <div className="pc-emptyState">Sin ingredientes suficientes.</div>
             )}
           </div>
         </section>
 
         <section className="pc-section">
-          <div className="pc-sectionTitle">Cobertura por tamano</div>
-          <div className="pc-sizeCoverage">
-            {sizeCoverage.map((item) => (
-              <div key={item.size} className="pc-sizeCoverageRow">
-                <span className="pc-sizeCoverageLabel">{item.size}</span>
-                <div className="pc-sizeCoverageTrack">
-                  <div className="pc-sizeCoverageFill" style={{ width: item.width }} />
+          <div className="pc-sectionTitle">Pizza mas vendida por tienda</div>
+          <div className="pc-overviewList">
+            {overview.topPizzaByStore.length ? (
+              overview.topPizzaByStore.map((store) => (
+                <div key={store.storeId} className="pc-overviewRow">
+                  <div>
+                    <div className="pc-overviewRowTitle">{store.storeName}</div>
+                    <div className="pc-overviewRowMeta">
+                      {store.topPizza
+                        ? store.topPizza.name
+                        : "Sin ventas registradas"}
+                    </div>
+                  </div>
+                  <span className="pc-overviewRowBadge">
+                    {store.topPizza ? store.topPizza.qty : 0}
+                  </span>
                 </div>
-                <span className="pc-sizeCoverageValue">{item.total}</span>
-              </div>
-            ))}
+              ))
+            ) : (
+              <div className="pc-emptyState">No hay tiendas disponibles.</div>
+            )}
           </div>
         </section>
 
         <section className="pc-section">
-          <div className="pc-sectionTitle">Ciclo del catalogo</div>
-          <div className="pc-timelineCard">
-            <span className="pc-timelineLabel">Pizza mas antigua</span>
-            <strong className="pc-timelineValue">
-              {oldestPizza ? oldestPizza.name : "Sin datos"}
-            </strong>
-            <span className="pc-timelineMeta">
-              {oldestPizza ? formatDate(oldestPizza.createdAt) : "Todavia no hay registros"}
+          <div className="pc-sectionTitle">Ultima incorporacion</div>
+          <div className="pc-timelineCard pc-timelineCard--single">
+            <span className="pc-timelineLabel">
+              {overview.latestProduct?.category || "Catalogo"}
             </span>
-          </div>
-
-          <div className="pc-timelineCard">
-            <span className="pc-timelineLabel">Ultima incorporacion</span>
             <strong className="pc-timelineValue">
-              {newestPizza ? newestPizza.name : "Sin datos"}
+              {overview.latestProduct ? overview.latestProduct.name : "Sin datos"}
             </strong>
             <span className="pc-timelineMeta">
-              {newestPizza ? formatDate(newestPizza.createdAt) : "Todavia no hay registros"}
+              {overview.latestProduct
+                ? formatDate(overview.latestProduct.createdAt)
+                : "Todavia no hay productos"}
             </span>
           </div>
         </section>

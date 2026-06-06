@@ -40,6 +40,21 @@
   line-height: 1.55;
 }
 
+.pc-sectionHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.pc-sectionHint {
+  margin: -4px 0 0;
+  color: rgba(0, 0, 0, 0.58);
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
 .pc-overviewCta {
   border: none;
   border-radius: 18px;
@@ -98,9 +113,31 @@
   gap: 18px;
 }
 
+.pc-overviewGrid--compact {
+  align-items: start;
+}
+
 .pc-overviewList {
   display: grid;
   gap: 10px;
+}
+
+.pc-compactCategoryList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.pc-categoryCompactRow {
+  min-height: 78px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #ffffff, #fffaf4);
+  border: 1px solid rgba(59, 0, 139, 0.08);
 }
 
 .pc-overviewRow {
@@ -176,6 +213,11 @@
 
 .pc-timelineCard + .pc-timelineCard {
   margin-top: 12px;
+}
+
+.pc-timelineCard--single {
+  min-height: 150px;
+  justify-content: center;
 }
 
 .pc-title-creator {
@@ -322,6 +364,61 @@
 .pizza-form select:focus {
   border-color: rgba(106, 61, 240, 0.45);
   box-shadow: 0 0 0 4px rgba(106, 61, 240, 0.08);
+}
+
+.pc-dateGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.pc-dateGrid label,
+.pc-dateGrid input[type="datetime-local"] {
+  min-width: 0;
+}
+
+.pc-subsectionTitle {
+  margin-bottom: 8px;
+  color: rgba(59, 0, 139, 0.72);
+  font-size: 0.74rem;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.pc-tagGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.pizza-form .pc-tagOption {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  margin: 0;
+  padding: 8px 12px;
+  border: 1px solid rgba(59, 0, 139, 0.12);
+  border-radius: 14px;
+  background: linear-gradient(180deg, #ffffff, #fffaf4);
+  color: var(--brand-1);
+  cursor: pointer;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.18s ease;
+}
+
+.pizza-form .pc-tagOption.is-active {
+  border-color: rgba(106, 61, 240, 0.35);
+  background: linear-gradient(180deg, rgba(106, 61, 240, 0.08), #ffffff);
+  box-shadow: 0 8px 18px rgba(59, 0, 139, 0.08);
+}
+
+.pc-tagOption span {
+  white-space: nowrap;
 }
 
 .pc-sizesRow {
@@ -851,6 +948,19 @@
   background: rgba(106, 61, 240, 0.04);
 }
 
+.pc-productTagBadge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(255, 182, 28, 0.16);
+  border: 1px solid rgba(255, 182, 28, 0.28);
+  color: var(--brand-1);
+  font-size: 12px;
+  font-weight: 900;
+}
+
 .pc-ingredientBadge {
   border: 1px solid rgba(59, 0, 139, 0.1);
   border-radius: 8px;
@@ -910,12 +1020,17 @@
   }
 
   .pc-overviewStats,
-  .pc-overviewGrid {
+  .pc-overviewGrid,
+  .pc-compactCategoryList {
     grid-template-columns: 1fr;
   }
 
   .pc-title-creator {
     font-size: 1.6rem;
+  }
+
+  .pc-dateGrid {
+    grid-template-columns: 1fr;
   }
 
   .ing-row {

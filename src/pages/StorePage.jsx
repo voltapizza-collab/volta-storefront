@@ -31,6 +31,10 @@ const DEFAULT_BOOST_SETTINGS = {
 };
 const DEFAULT_TRENDING_PRICE_BAND = 0.5;
 const TRENDING_PRICE_REFRESH_MS = 5000;
+const PRODUCT_TAG_LABELS = {
+  spicy: "Picante",
+  vegan: "Vegano",
+};
 const isGridFocusViewport = () =>
   typeof window !== "undefined" && window.innerWidth <= 760;
 
@@ -42,11 +46,19 @@ const normalizeCheckoutPhoneInput = (value) => {
   return digits;
 };
 
-const hasBasicCustomerProfile = (profile) =>
+const normalizeCheckoutEmailInput = (value) => String(value || "").trim().toLowerCase();
+
+const isValidCheckoutEmail = (value) =>
+  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizeCheckoutEmailInput(value));
+
+const hasCheckoutIdentity = (profile) =>
   Boolean(
     String(profile?.name || "").trim() &&
       normalizeCheckoutPhoneInput(profile?.phone).length === 9
   );
+
+const hasBasicCustomerProfile = (profile) =>
+  hasCheckoutIdentity(profile) && isValidCheckoutEmail(profile?.email);
 const NON_INCENTIVE_LINE_SOURCES = new Set([
   "queue_boost",
   "incentive_reward",
@@ -326,6 +338,9 @@ function filterMenuItems(items, query) {
   return items.filter((item) => {
     const pizzaName = String(item.name || "").toLowerCase();
     const pizzaCategory = String(item.category || "").toLowerCase();
+    const tagMatch = (item.productTags || []).some((tag) =>
+      String(PRODUCT_TAG_LABELS[tag] || tag || "").toLowerCase().includes(query)
+    );
     const ingredientMatch = (item.ingredients || []).some((ingredient) =>
       String(ingredient.name || "").toLowerCase().includes(query)
     );
@@ -333,6 +348,7 @@ function filterMenuItems(items, query) {
     return (
       pizzaName.includes(query) ||
       pizzaCategory.includes(query) ||
+      tagMatch ||
       ingredientMatch
     );
   });
@@ -1619,6 +1635,36 @@ const renderAllergenNotice = (allergens = []) => {
   );
 };
 
+const normalizeProductTagList = (productTags = []) =>
+  (Array.isArray(productTags) ? productTags : [])
+    .map((tag) => {
+      const value = String(tag || "").trim();
+      if (!value) return null;
+      return {
+        value,
+        label: PRODUCT_TAG_LABELS[value] || value,
+      };
+    })
+    .filter(Boolean);
+
+const renderProductTagNotice = (productTags = []) => {
+  const tags = normalizeProductTagList(productTags);
+  if (tags.length === 0) return null;
+
+  return (
+    <div className="sf-productTagNotice" role="note" aria-label="Avisos especiales">
+      <span>Avisos especiales</span>
+      <div>
+        {tags.map((tag) => (
+          <strong key={tag.value} className={`sf-productTagNotice__chip sf-productTagNotice__chip--${tag.value}`}>
+            {tag.label}
+          </strong>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 const formatCustomPlacementLabel = (value) => {
   const raw = String(value || "").toUpperCase();
   if (raw === "FULL") return "Entera";
@@ -2082,6 +2128,7 @@ export default function StorePage() {
   const [checkoutProfileForm, setCheckoutProfileForm] = useState({
     name: "",
     phone: "",
+    email: "",
   });
   const [savedCustomerProfile, setSavedCustomerProfile] = useState(null);
   const [productModalOpen, setProductModalOpen] = useState(false);
@@ -2505,16 +2552,18 @@ export default function StorePage() {
     try {
       const stored = window.localStorage.getItem(customerProfileStorageKey);
       const parsed = stored ? JSON.parse(stored) : null;
-      if (hasBasicCustomerProfile(parsed)) {
+      if (hasCheckoutIdentity(parsed)) {
         const normalized = {
           id: parsed.id || parsed.customerId || null,
           name: String(parsed.name || "").trim(),
           phone: normalizeCheckoutPhoneInput(parsed.phone),
+          email: normalizeCheckoutEmailInput(parsed.email),
         };
         setSavedCustomerProfile(normalized);
         setCheckoutProfileForm((current) => ({
           name: current.name || normalized.name,
           phone: current.phone || normalized.phone,
+          email: current.email || normalized.email,
         }));
       }
     } catch {
@@ -4931,6 +4980,7 @@ export default function StorePage() {
       setCheckoutProfileForm((current) => ({
         name: current.name || "",
         phone: normalizeCheckoutPhoneInput(current.phone || repeatPhone),
+        email: current.email || "",
       }));
       setCheckoutProfileOpen(true);
       setCartOpen(false);
@@ -4955,6 +5005,7 @@ export default function StorePage() {
         id: basicProfile.id || basicProfile.customerId || null,
         name: String(basicProfile.name || "").trim(),
         phone: normalizeCheckoutPhoneInput(basicProfile.phone),
+        email: normalizeCheckoutEmailInput(basicProfile.email),
         address_1: [deliveryAddress, deliveryAddressLine2].filter(Boolean).join(", "),
       };
       const checkoutResponse = await api.post("/api/checkout/session", {
@@ -4988,6 +5039,7 @@ export default function StorePage() {
             id: checkoutData?.customerId || checkoutProfile.id || null,
             name: checkoutProfile.name,
             phone: checkoutProfile.phone,
+            email: checkoutProfile.email,
           };
           window.localStorage.setItem(customerProfileStorageKey, JSON.stringify(nextProfile));
           setSavedCustomerProfile(nextProfile);
@@ -5009,7 +5061,7 @@ export default function StorePage() {
         stripe_not_configured: "Stripe no esta configurado para esta tienda.",
         coupon_not_available: "El cupon ya no esta disponible. Quitalo y valida de nuevo.",
         coupon_not_applicable: "El cupon ya no aplica a este carrito.",
-        customer_profile_required: "Necesitamos tu nombre y telefono para hacer seguimiento al pedido.",
+        customer_profile_required: "Necesitamos tu nombre, telefono y email para hacer seguimiento al pedido.",
         custom_build_missing_ingredients:
           "La pizza personalizada no tiene ingredientes guardados. Quitala y vuelve a armarla.",
         amount_too_low: "El importe es demasiado bajo para procesar el pago.",
@@ -5090,6 +5142,14 @@ export default function StorePage() {
     bootsOptions.find(
       (option) => String(option.targetPosition) === String(bootsTargetPosition)
     ) || bootsOptions[0];
+  const selectedBootsJumpLabel = selectedBootsOption
+    ? selectedBootsOption.jumps === 1
+      ? "1 puesto"
+      : `${selectedBootsOption.jumps} puestos`
+    : "Sin salto";
+  const selectedBootsTargetLabel = selectedBootsOption
+    ? `#${selectedBootsOption.targetPosition}`
+    : "--";
   const repeatPreviewLines = useMemo(
     () =>
       Array.isArray(repeatDraft?.items)
@@ -5389,12 +5449,14 @@ export default function StorePage() {
         id: draft.customerData.id || draft.customerId || null,
         name: String(draft.customerData.name || "").trim(),
         phone: normalizeCheckoutPhoneInput(draft.customerData.phone),
+        email: normalizeCheckoutEmailInput(draft.customerData.email),
       };
 
       setSavedCustomerProfile(repeatProfile);
       setCheckoutProfileForm({
         name: repeatProfile.name,
         phone: repeatProfile.phone,
+        email: repeatProfile.email,
       });
       try {
         window.localStorage.setItem(customerProfileStorageKey, JSON.stringify(repeatProfile));
@@ -5550,6 +5612,30 @@ export default function StorePage() {
     );
   };
 
+  const renderProductTags = (item) => {
+    const tags = Array.isArray(item?.productTags)
+      ? item.productTags
+          .map((tag) => ({
+            value: tag,
+            label: PRODUCT_TAG_LABELS[tag] || tag,
+          }))
+          .filter((tag) => tag.label)
+          .slice(0, 3)
+      : [];
+
+    if (!tags.length) return null;
+
+    return (
+      <div className="lsf-productTags" aria-label="Etiquetas del producto">
+        {tags.map((tag) => (
+          <span key={tag.value} className={`lsf-productTag lsf-productTag--${tag.value}`}>
+            {tag.label}
+          </span>
+        ))}
+      </div>
+    );
+  };
+
   const renderProductCard = (item) => {
     const flipped = flippedId === item.pizzaId;
     const image = item.image || "";
@@ -5581,6 +5667,7 @@ export default function StorePage() {
             {renderDirectDiscountBadge(item, incentiveNowMs)}
             {renderTrendingBadge(item)}
             {renderTrendingKpis(item) || renderCategoryDealCountdown(item)}
+            {renderProductTags(item)}
 
             <button
               type="button"
@@ -5644,6 +5731,7 @@ export default function StorePage() {
               <span className="lsf-topDealBadge">Top Deal</span>
               {renderTrendingBadge(item)}
               {renderTrendingKpis(item) || renderOfferRibbon(countdownLabel, "Termina en:", "deal")}
+              {renderProductTags(item)}
               {discountSticker && (
                 <span className="lsf-topDealDiscountSticker">
                   <strong>{discountSticker}</strong>
@@ -6702,6 +6790,7 @@ export default function StorePage() {
                                 "Comienza en:",
                                 "upcoming"
                               )}
+                              {renderProductTags(item)}
 
                               <button
                                 type="button"
@@ -6776,6 +6865,7 @@ export default function StorePage() {
                                 "Termina en:",
                                 "deal"
                               )}
+                            {renderProductTags(item)}
 
                             <button
                               type="button"
@@ -7162,6 +7252,7 @@ export default function StorePage() {
                 </div>
 
                 {renderAllergenNotice(selectedPurchaseAllergens)}
+                {renderProductTagNotice(selectedProduct.productTags)}
 
                 <div className="sf-productPickerRow">
                   <span>Qty</span>
@@ -7509,10 +7600,11 @@ export default function StorePage() {
                 const nextProfile = {
                   name: String(checkoutProfileForm.name || "").trim(),
                   phone: normalizeCheckoutPhoneInput(checkoutProfileForm.phone),
+                  email: normalizeCheckoutEmailInput(checkoutProfileForm.email),
                 };
 
                 if (!hasBasicCustomerProfile(nextProfile)) {
-                  setCheckoutMessage("Escribe tu nombre y un telefono de 9 digitos.");
+                  setCheckoutMessage("Escribe tu nombre, un telefono de 9 digitos y un email valido.");
                   return;
                 }
 
@@ -7550,6 +7642,23 @@ export default function StorePage() {
                   }
                   placeholder="612345678"
                   autoComplete="tel"
+                  disabled={checkoutLoading}
+                />
+              </label>
+
+              <label>
+                <span>Email</span>
+                <input
+                  type="email"
+                  value={checkoutProfileForm.email}
+                  onChange={(event) =>
+                    setCheckoutProfileForm((current) => ({
+                      ...current,
+                      email: event.target.value,
+                    }))
+                  }
+                  placeholder="tu@email.com"
+                  autoComplete="email"
                   disabled={checkoutLoading}
                 />
               </label>
@@ -8635,26 +8744,47 @@ export default function StorePage() {
       {bootsOpen && (
         <div className="sf-modalOverlay" onClick={() => setBootsOpen(false)}>
           <div className="sf-modalCard sf-bootsModal" onClick={(event) => event.stopPropagation()}>
-            <div className="sf-bootsPulse" aria-hidden="true">!!</div>
-            <h3>Boost de emergencia</h3>
-            <p>
-              Consulta tu posicion actual y elige una posicion disponible.
-            </p>
+            <div className="sf-bootsHero">
+              <div className="sf-bootsHeroTop">
+                <div className="sf-bootsPulse" aria-hidden="true">!!</div>
+                <div>
+                  <span>Prioridad de cola</span>
+                  <h3>Boost de emergencia</h3>
+                </div>
+              </div>
+              <p>
+                Sube este pedido en la cola y bloquea la posicion elegida antes de pagar.
+              </p>
 
-            <div className="sf-bootsCurrent">
-              <span>Tu posicion actual</span>
-              <strong>#{bootsPositionLabel}</strong>
-              <small>
-                {bootsQueueLoading
-                  ? "Actualizando cola..."
-                  : bootsCurrentPosition == null
-                  ? "No pudimos leer la cola de esta tienda."
-                  : "Posicion actual en cola."}
-              </small>
+              <div className="sf-bootsRoute" aria-label="Resumen de salto en cola">
+                <div className="sf-bootsCurrent">
+                  <span>Ahora</span>
+                  <strong>#{bootsPositionLabel}</strong>
+                  <small>
+                    {bootsQueueLoading
+                      ? "Actualizando cola..."
+                      : bootsCurrentPosition == null
+                      ? "Cola no disponible"
+                      : "Posicion actual"}
+                  </small>
+                </div>
+                <div className="sf-bootsRouteArrow" aria-hidden="true">
+                  <span />
+                </div>
+                <div className="sf-bootsCurrent sf-bootsCurrent--target">
+                  <span>Objetivo</span>
+                  <strong>{selectedBootsTargetLabel}</strong>
+                  <small>
+                    {selectedBootsOption
+                      ? `${selectedBootsJumpLabel} arriba`
+                      : "Elige posicion"}
+                  </small>
+                </div>
+              </div>
             </div>
 
             <div className="sf-bootsOptionGroup" role="radiogroup" aria-label="Posiciones disponibles">
-              <span>Posiciones disponibles</span>
+              <span>Elige tu salto</span>
               {bootsOptions.length === 0 ? (
                 <div className="sf-bootsEmpty">
                   No hay posiciones disponibles para activar Boost ahora mismo.
@@ -8676,7 +8806,11 @@ export default function StorePage() {
                     aria-checked={active}
                   >
                     <strong>#{option.targetPosition}</strong>
-                    <span>Posicion disponible</span>
+                    <span>
+                      {option.jumps === 1
+                        ? "Sube 1 puesto"
+                        : `Sube ${option.jumps} puestos`}
+                    </span>
                     <em>{formatMoney(option.amount, boostCurrency)}</em>
                   </button>
                 );

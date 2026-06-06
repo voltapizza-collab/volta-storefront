@@ -8,12 +8,12 @@
 
 /* SIDEBAR */
 .gm-sidebar {
-  width: 220px;
- background: var(--brand-2);
-  padding: 20px;
+  width: 206px;
+  background: var(--brand-2);
+  padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 14px;
 }
 
 /* TITLE */
@@ -27,12 +27,12 @@
 .gm-nav {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 7px;
 }
 
 /* BUTTONS */
 .gm-btn {
-  padding: 10px;
+  padding: 9px 10px;
   background: transparent;
   border: 1px solid rgba(255,255,255,0.1);
   color: rgba(255,255,255,0.7);
@@ -81,7 +81,8 @@
 /* WORKSPACE */
 .gm-workspace {
   flex: 1;
-  padding: 30px;
+  padding: 18px 24px;
+  overflow: auto;
 }
 
 /* FOOTER override (para integrarlo mejor) */
@@ -99,7 +100,7 @@
   justify-content: space-between;
   align-items: center;
   gap: 16px;
-  margin-bottom: 18px;
+  margin-bottom: 10px;
 }
 
 .gm-moduleHeader span {
@@ -113,13 +114,15 @@
 .gm-moduleHeader h2 {
   margin: 4px 0 0;
   color: #1f172a;
+  font-size: 22px;
+  line-height: 1.1;
 }
 
 .gm-moduleHeader button,
 .gm-smsRecharge button {
   border: none;
-  border-radius: 14px;
-  padding: 12px 16px;
+  border-radius: 8px;
+  padding: 10px 14px;
   background: #ffb61c;
   color: #1f172a;
   font-weight: 900;
@@ -249,16 +252,16 @@
 
 .gmo-shell {
   display: grid;
-  gap: 16px;
+  gap: 10px;
   color: #1f172a;
 }
 
 .gmo-toolbar {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   flex-wrap: wrap;
-  padding: 14px;
+  padding: 10px 12px;
   border: 1px solid rgba(59, 0, 139, 0.12);
   border-radius: 8px;
   background: #fff;
@@ -279,7 +282,7 @@
 
 .gmo-segmented {
   display: inline-grid;
-  grid-template-columns: repeat(2, minmax(86px, 1fr));
+  grid-template-columns: repeat(2, minmax(76px, 1fr));
   gap: 4px;
   padding: 4px;
   border-radius: 8px;
@@ -299,7 +302,7 @@
 .gmo-segmented button {
   border: 0;
   border-radius: 6px;
-  padding: 10px 12px;
+  padding: 8px 10px;
   background: transparent;
   color: rgba(31, 23, 42, 0.72);
   font-weight: 900;
@@ -313,8 +316,8 @@
 
 .gmo-filter {
   display: grid;
-  gap: 6px;
-  min-width: 260px;
+  gap: 4px;
+  min-width: 250px;
 }
 
 .gmo-filter span {
@@ -327,7 +330,7 @@
 
 .gmo-filter select,
 .gmo-filter input {
-  min-height: 40px;
+  min-height: 36px;
   border: 1px solid rgba(59, 0, 139, 0.16);
   border-radius: 8px;
   padding: 0 12px;
@@ -349,7 +352,7 @@
 
 .gmo-liveBadge {
   margin-left: auto;
-  min-height: 40px;
+  min-height: 36px;
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -382,14 +385,15 @@
 .gmo-kpiGrid {
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 12px;
+  gap: 8px;
 }
 
 .gmo-kpiCard {
   display: grid;
-  gap: 8px;
-  min-height: 118px;
-  padding: 16px;
+  grid-template-rows: auto auto 1fr;
+  gap: 4px;
+  min-height: 76px;
+  padding: 9px 10px;
   border: 1px solid rgba(59, 0, 139, 0.1);
   border-radius: 8px;
   background: #fff;
@@ -398,19 +402,24 @@
 
 .gmo-kpiCard span {
   color: rgba(31, 23, 42, 0.62);
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 900;
+  letter-spacing: 0.03em;
+  line-height: 1.05;
+  text-transform: uppercase;
 }
 
 .gmo-kpiCard strong {
   color: #3b008b;
-  font-size: 25px;
+  font-size: 20px;
   line-height: 1.1;
 }
 
 .gmo-kpiCard small {
   color: rgba(31, 23, 42, 0.58);
+  font-size: 11px;
   font-weight: 800;
+  line-height: 1.1;
 }
 
 .gmo-kpiCard--revenue strong {
@@ -424,15 +433,15 @@
 
 .gmo-calendarGrid {
   display: grid;
-  grid-template-columns: minmax(280px, 0.85fr) minmax(360px, 1.15fr);
-  gap: 12px;
+  grid-template-columns: minmax(240px, 0.6fr) minmax(360px, 1.4fr);
+  gap: 10px;
 }
 
 .gmo-calendarCard {
   display: grid;
-  gap: 12px;
+  gap: 7px;
   min-width: 0;
-  padding: 16px;
+  padding: 10px 12px;
   border: 1px solid rgba(59, 0, 139, 0.1);
   border-radius: 8px;
   background: #fff;
@@ -447,12 +456,12 @@
   display: flex;
   align-items: start;
   justify-content: space-between;
-  gap: 12px;
+  gap: 10px;
 }
 
 .gmo-calendarHead span {
   display: block;
-  margin-bottom: 3px;
+  margin-bottom: 2px;
   color: #3b008b;
   font-size: 11px;
   font-weight: 900;
@@ -463,11 +472,13 @@
 .gmo-calendarHead h3 {
   margin: 0;
   color: #1f172a;
+  font-size: 17px;
+  line-height: 1.1;
 }
 
 .gmo-calendarHead b {
   flex: 0 0 auto;
-  padding: 7px 10px;
+  padding: 5px 8px;
   border-radius: 8px;
   background: rgba(255, 182, 28, 0.18);
   color: #1f172a;
@@ -478,13 +489,14 @@
 
 .gmo-calendarValue {
   color: #155e39;
-  font-size: 30px;
+  font-size: 23px;
   line-height: 1;
 }
 
 .gmo-calendarCard p {
   margin: 0;
   color: rgba(31, 23, 42, 0.62);
+  font-size: 13px;
   font-weight: 800;
 }
 
@@ -496,9 +508,9 @@
 
 .gmo-calendarAverages div {
   display: grid;
-  gap: 4px;
+  gap: 3px;
   min-width: 0;
-  padding: 10px;
+  padding: 7px;
   border-radius: 8px;
   background: rgba(31, 23, 42, 0.04);
 }
@@ -506,46 +518,46 @@
 .gmo-calendarAverages span,
 .gmo-calendarAverages small {
   color: rgba(31, 23, 42, 0.56);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 900;
 }
 
 .gmo-calendarAverages strong {
   color: #1f172a;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .gmo-calendarMeta {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 5px;
 }
 
 .gmo-calendarMeta span {
-  min-height: 28px;
+  min-height: 22px;
   display: inline-flex;
   align-items: center;
-  padding: 0 10px;
+  padding: 0 8px;
   border-radius: 8px;
   background: rgba(59, 0, 139, 0.07);
   color: #3b008b;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 900;
 }
 
 .gmo-tramoRanks {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 6px;
 }
 
 .gmo-tramoRanks span {
   min-width: 0;
-  padding: 9px 10px;
+  padding: 6px 8px;
   border-radius: 8px;
   background: rgba(59, 0, 139, 0.06);
   color: rgba(31, 23, 42, 0.62);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 900;
 }
 
@@ -555,18 +567,20 @@
 
 .gmo-tramoCalendar {
   display: grid;
-  gap: 12px;
+  gap: 8px;
 }
 
 .gmo-monthCalendar {
   display: grid;
-  gap: 8px;
+  gap: 6px;
   min-width: 0;
 }
 
 .gmo-monthCalendar h4 {
   margin: 0;
   color: #1f172a;
+  font-size: 15px;
+  line-height: 1.1;
   text-transform: capitalize;
 }
 
@@ -574,12 +588,12 @@
 .gmo-monthGrid {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 5px;
+  gap: 4px;
 }
 
 .gmo-weekdays span {
   color: rgba(31, 23, 42, 0.5);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 900;
   text-align: center;
 }
@@ -588,10 +602,10 @@
   position: relative;
   display: grid;
   align-content: start;
-  gap: 3px;
-  min-height: 66px;
+  gap: 2px;
+  min-height: 40px;
   min-width: 0;
-  padding: 7px;
+  padding: 5px;
   border: 1px solid rgba(59, 0, 139, 0.08);
   border-radius: 8px;
   background: #fff;
@@ -607,25 +621,40 @@
   background: rgba(255, 182, 28, 0.12);
 }
 
+.gmo-dayCell--topUpcoming {
+  border-color: rgba(255, 182, 28, 0.68);
+  background:
+    linear-gradient(180deg, rgba(255, 182, 28, 0.18), rgba(255, 182, 28, 0.1)),
+    #fff;
+  box-shadow: inset 0 0 0 1px rgba(255, 182, 28, 0.22);
+}
+
 .gmo-dayCell--cross {
   border-color: rgba(21, 94, 57, 0.32);
   background: rgba(21, 94, 57, 0.1);
 }
 
+.gmo-dayCell--cross.gmo-dayCell--topUpcoming {
+  border-color: rgba(255, 182, 28, 0.72);
+  background:
+    linear-gradient(180deg, rgba(255, 182, 28, 0.16), rgba(21, 94, 57, 0.1)),
+    #fff;
+}
+
 .gmo-dayCell strong {
   color: #1f172a;
-  font-size: 13px;
+  font-size: 12px;
   line-height: 1;
 }
 
 .gmo-dayCell span {
   width: fit-content;
   max-width: 100%;
-  padding: 3px 5px;
+  padding: 2px 4px;
   border-radius: 6px;
   background: rgba(31, 23, 42, 0.07);
   color: rgba(31, 23, 42, 0.72);
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 900;
 }
 
@@ -636,7 +665,7 @@
 
 .gmo-dayCell small {
   color: #155e39;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 900;
   line-height: 1.15;
 }
@@ -719,7 +748,7 @@
 
 .gmo-mainGrid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 340px;
+  grid-template-columns: minmax(0, 1fr);
   gap: 14px;
   align-items: start;
 }
@@ -952,6 +981,179 @@
   padding: 16px;
 }
 
+.gmo-heatmapPanel {
+  overflow: hidden;
+}
+
+.gmo-heatmapHead {
+  min-height: 42px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  background: #ffffff;
+}
+
+.gmo-heatmapHead h3 {
+  font-size: 19px;
+  line-height: 1.05;
+}
+
+.gmo-heatmapLegend {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  color: rgba(31, 23, 42, 0.56);
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.gmo-heatLegend {
+  display: block;
+  width: 24px;
+  height: 8px;
+  border-radius: 999px;
+}
+
+.gmo-heatLegend--low {
+  background: #ffe0bd;
+}
+
+.gmo-heatLegend--mid {
+  background: #ff9a4d;
+}
+
+.gmo-heatLegend--high {
+  background: #ff5a00;
+}
+
+.gmo-heatmapScroll {
+  width: 100%;
+  overflow-x: auto;
+  padding: 0 12px 8px;
+}
+
+.gmo-heatmapGrid {
+  display: grid;
+  grid-template-columns: var(--gmo-heatmap-columns);
+  gap: 2px;
+  min-width: 660px;
+}
+
+.gmo-heatmapRow {
+  display: contents;
+}
+
+.gmo-heatmapCorner,
+.gmo-heatmapDayHead,
+.gmo-heatmapHour {
+  min-width: 0;
+  box-sizing: border-box;
+  border-radius: 6px;
+  background: #fff2e8;
+  color: rgba(31, 23, 42, 0.66);
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.gmo-heatmapCorner,
+.gmo-heatmapHour {
+  display: grid;
+  place-items: center;
+  height: 24px;
+  min-height: 0;
+}
+
+.gmo-heatmapDayHead {
+  display: grid;
+  gap: 1px;
+  align-content: center;
+  height: 28px;
+  min-height: 0;
+  padding: 3px 5px;
+  text-transform: capitalize;
+}
+
+.gmo-heatmapDayHead strong {
+  color: #1f172a;
+  font-size: 11px;
+  line-height: 1;
+}
+
+.gmo-heatmapDayHead span {
+  color: rgba(31, 23, 42, 0.48);
+  font-size: 10px;
+  line-height: 1;
+}
+
+.gmo-heatCell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  height: 24px;
+  min-height: 0;
+  min-width: 0;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--heat-color, #fff5eb) 72%, #cc4700);
+  border-radius: 6px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0)),
+    var(--heat-color, #fff5eb);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.28);
+  cursor: default;
+}
+
+.gmo-heatCell.is-peak {
+  border-color: #ff5a00;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.36),
+    0 0 0 2px rgba(255, 90, 0, 0.18);
+}
+
+.gmo-heatCell.is-current {
+  outline: 1px solid #cc4700;
+  outline-offset: -1px;
+}
+
+.gmo-heatCell.is-closed {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+  pointer-events: none;
+}
+
+.gmo-heatCell::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 6px);
+  z-index: 4;
+  width: max-content;
+  max-width: 220px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: #1f172a;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 900;
+  line-height: 1.2;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(3px);
+  transition: opacity 0.12s ease, transform 0.12s ease;
+  white-space: normal;
+}
+
+.gmo-heatCell:hover {
+  z-index: 3;
+  border-color: rgba(204, 71, 0, 0.54);
+}
+
+.gmo-heatCell:hover::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
 .gmo-modalBack {
   position: fixed;
   inset: 0;
@@ -1148,6 +1350,10 @@
 
   .gmo-kpiGrid {
     grid-template-columns: 1fr;
+  }
+
+  .gmo-heatmapGrid {
+    min-width: 660px;
   }
 
   .gmo-tramoRanks,

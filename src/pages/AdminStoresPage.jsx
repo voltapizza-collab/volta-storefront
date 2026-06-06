@@ -56,6 +56,19 @@ const segmentCards = [
   { key: "S5", shortLabel: "VIP", color: "#db2777" },
 ];
 
+const customerTimeFilters = [
+  { key: "today", label: "Hoy", days: 1 },
+  { key: "7d", label: "7 dias", days: 7 },
+  { key: "30d", label: "30 dias", days: 30 },
+  { key: "all", label: "Historico", days: null },
+];
+
+const customerReviewFilters = [
+  { key: "all", label: "Reviews", color: "#3b008b" },
+  { key: "LIKE", label: "Likes", color: "#16a34a" },
+  { key: "DISLIKE", label: "Dislikes", color: "#db2777" },
+];
+
 const segmentMetaByKey = segmentCards.reduce((acc, segment) => {
   acc[segment.key] = segment;
   return acc;
@@ -92,6 +105,23 @@ const formatMoney = (value, currency = "EUR") => {
 };
 
 const formatPercent = (value) => `${Math.round(Number(value || 0))}%`;
+
+const startOfToday = () => {
+  const now = new Date();
+  return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+};
+
+const isCustomerInTimeFilter = (customer, filterKey) => {
+  const filter = customerTimeFilters.find((item) => item.key === filterKey);
+  if (!filter || filter.key === "all") return true;
+
+  const createdAt = new Date(customer?.createdAt || "");
+  if (Number.isNaN(createdAt.getTime())) return false;
+
+  const from = startOfToday();
+  from.setDate(from.getDate() - (filter.days - 1));
+  return createdAt >= from;
+};
 
 const formatCustomerMoney = (customer, value) =>
   Number(customer?.orderCount || 0) > 0 ? formatMoney(value) : "-";
@@ -137,8 +167,10 @@ const createStorePinIcon = (google, active) => ({
   anchor: new google.maps.Point(17, 42),
 });
 
-const createCustomerPinIcon = (google, customer, isSelected) => {
+const createCustomerPinIcon = (google, customer, isSelected, reviewFilter = "all") => {
   const segment = getCustomerSegmentMeta(customer);
+  const reviewMode = customerReviewFilters.find((item) => item.key === reviewFilter);
+  const markerColor = reviewMode && reviewMode.key !== "all" ? reviewMode.color : segment.color;
   const size = isSelected ? 25 : 19;
   const strokeWidth = isSelected ? 4 : 3;
 
@@ -146,7 +178,7 @@ const createCustomerPinIcon = (google, customer, isSelected) => {
     url: svgToDataUrl(`
       <svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 32 32">
         <circle cx="16" cy="16" r="14.2" fill="white" opacity="0.96"/>
-        <circle cx="16" cy="16" r="11.8" fill="${segment.color}" stroke="white" stroke-width="${strokeWidth}"/>
+        <circle cx="16" cy="16" r="11.8" fill="${markerColor}" stroke="white" stroke-width="${strokeWidth}"/>
         <circle cx="16" cy="16" r="3.6" fill="white"/>
       </svg>
     `),
@@ -1007,6 +1039,7 @@ function MapPanel({
   customerPostalCode,
   selectedStoreId,
   selectedCustomerId,
+  customerReviewFilter,
   onSelectStore,
   onSelectCustomer,
 }) {
@@ -1225,8 +1258,8 @@ function MapPanel({
             const marker = new google.maps.Marker({
               map: mapRef.current,
               position: { lat: customer.lat, lng: customer.lng },
-              icon: createCustomerPinIcon(google, customer, isSelected),
-              title: `${customer.name || "Cliente"} - ${segment.shortLabel}`,
+              icon: createCustomerPinIcon(google, customer, isSelected, customerReviewFilter),
+              title: `${customer.name || "Cliente"} - ${segment.shortLabel} - ${customer.reviewLikes || 0} likes / ${customer.reviewDislikes || 0} dislikes`,
               zIndex: isSelected ? 60 : 20,
             });
 
@@ -1304,6 +1337,7 @@ function MapPanel({
     center,
     customerMarkers,
     customerPostalCode,
+    customerReviewFilter,
     onSelectStore,
     onSelectCustomer,
     selectedCustomerId,
@@ -1353,6 +1387,8 @@ export default function AdminStoresPage({
   const [showCust, setShowCust] = useState(false);
   const [customerPostalCode, setCustomerPostalCode] = useState("all");
   const [customerSegmentFilter, setCustomerSegmentFilter] = useState("all");
+  const [customerReviewFilter, setCustomerReviewFilter] = useState("all");
+  const [customerTimeFilter, setCustomerTimeFilter] = useState("all");
   const [selectedMapStoreId, setSelectedMapStoreId] = useState("all");
   const [selectedCustomerId, setSelectedCustomerId] = useState("");
   const [boostCustomer, setBoostCustomer] = useState(null);
@@ -1486,20 +1522,28 @@ export default function AdminStoresPage({
     });
   }, [customersWithTags, selectedMapStoreId, stores]);
 
+  const timeScopedCustomers = useMemo(
+    () =>
+      scopedCustomers.filter((customer) =>
+        isCustomerInTimeFilter(customer, customerTimeFilter)
+      ),
+    [customerTimeFilter, scopedCustomers]
+  );
+
   const customerPostalCodes = useMemo(
     () =>
-      [...new Set(scopedCustomers.map((customer) => customer.postalCode))]
+      [...new Set(timeScopedCustomers.map((customer) => customer.postalCode))]
         .filter(Boolean)
         .sort((left, right) => String(left).localeCompare(String(right))),
-    [scopedCustomers]
+    [timeScopedCustomers]
   );
 
   const customerFilterBase = useMemo(
     () =>
-      scopedCustomers.filter((customer) =>
+      timeScopedCustomers.filter((customer) =>
         customerPostalCode === "all" ? true : customer.postalCode === customerPostalCode
       ),
-    [customerPostalCode, scopedCustomers]
+    [customerPostalCode, timeScopedCustomers]
   );
 
   const visibleCustomers = useMemo(
@@ -1508,16 +1552,34 @@ export default function AdminStoresPage({
         .filter((customer) => {
           const matchesSegment =
             customerSegmentFilter === "all" ? true : getCustomerSegmentKey(customer) === customerSegmentFilter;
+          const matchesReview =
+            customerReviewFilter === "LIKE"
+              ? Number(customer.reviewLikes || 0) > 0
+              : customerReviewFilter === "DISLIKE"
+                ? Number(customer.reviewDislikes || 0) > 0
+                : true;
 
-          return matchesSegment;
+          return matchesSegment && matchesReview;
         })
         .sort((left, right) =>
           String(left.name || "").localeCompare(String(right.name || ""), "es", {
             sensitivity: "base",
           })
         ),
-    [customerFilterBase, customerSegmentFilter]
+    [customerFilterBase, customerReviewFilter, customerSegmentFilter]
   );
+
+  const customerReviewStats = useMemo(() => {
+    const total = customerFilterBase.filter((customer) => Number(customer.reviewVotes || 0) > 0).length;
+    const likes = customerFilterBase.filter((customer) => Number(customer.reviewLikes || 0) > 0).length;
+    const dislikes = customerFilterBase.filter((customer) => Number(customer.reviewDislikes || 0) > 0).length;
+
+    return {
+      all: total,
+      LIKE: likes,
+      DISLIKE: dislikes,
+    };
+  }, [customerFilterBase]);
 
   const customerSegmentStats = useMemo(() => {
     const total = customerFilterBase.length;
@@ -1544,6 +1606,9 @@ export default function AdminStoresPage({
     };
   }, [customerFilterBase]);
 
+  const customerFilterColor =
+    segmentMetaByKey[customerSegmentFilter]?.color || "#3b008b";
+
   useEffect(() => {
     if (customerPostalCode === "all") return;
     if (customerPostalCodes.includes(customerPostalCode)) return;
@@ -1553,6 +1618,7 @@ export default function AdminStoresPage({
   useEffect(() => {
     setCustomerPostalCode("all");
     setCustomerSegmentFilter("all");
+    setCustomerReviewFilter("all");
     setSelectedCustomerId("");
   }, [selectedMapStoreId]);
 
@@ -1849,6 +1915,28 @@ export default function AdminStoresPage({
 
           {showCust && (
             <div className="sc-mapControls">
+              <div
+                className="sc-timeFilters"
+                aria-label="Filtro de alta de clientes"
+                style={{ "--sc-time-filter-color": customerFilterColor }}
+              >
+                <span>Altas</span>
+                <div className="sc-timeFilterChips">
+                  {customerTimeFilters.map((filter) => (
+                    <button
+                      key={filter.key}
+                      type="button"
+                      className={`sc-timeFilterBtn ${
+                        customerTimeFilter === filter.key ? "is-active" : ""
+                      }`}
+                      onClick={() => setCustomerTimeFilter(filter.key)}
+                    >
+                      {filter.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               <div className="sc-territoryModes" aria-label="Filtros de segmento">
                 <button
                   type="button"
@@ -1889,6 +1977,31 @@ export default function AdminStoresPage({
                 })}
               </div>
 
+              <div className="sc-reviewModes" aria-label="Filtros de reviews">
+                {customerReviewFilters.map((filter) => {
+                  const count =
+                    filter.key === "all"
+                      ? customerReviewStats.all
+                      : customerReviewStats[filter.key] || 0;
+
+                  return (
+                    <button
+                      key={filter.key}
+                      type="button"
+                      className={`sc-territoryModeBtn is-review ${
+                        customerReviewFilter === filter.key ? "is-active" : ""
+                      }`}
+                      style={{ "--sc-review-color": filter.color }}
+                      onClick={() => setCustomerReviewFilter(filter.key)}
+                    >
+                      <span className="sc-reviewSwatch" />
+                      <span className="sc-territoryLabel">{filter.label}</span>
+                      <span className="sc-reviewMetric">{count}</span>
+                    </button>
+                  );
+                })}
+              </div>
+
             </div>
           )}
 
@@ -1899,6 +2012,7 @@ export default function AdminStoresPage({
             customerPostalCode={customerPostalCode}
             selectedStoreId={selectedMapStoreId}
             selectedCustomerId={selectedCustomerId}
+            customerReviewFilter={customerReviewFilter}
             onSelectStore={(storeId) => setSelectedMapStoreId(String(storeId))}
             onSelectCustomer={setSelectedCustomerId}
           />

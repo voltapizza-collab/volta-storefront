@@ -12,6 +12,10 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 
 const sizeList = ["S", "M", "L", "XL", "XXL", "ST"];
+const PRODUCT_TAG_OPTIONS = [
+  { value: "spicy", label: "Picante" },
+  { value: "vegan", label: "Vegano" },
+];
 
 function Modal({ open, title, onClose, children }) {
   if (!open) return null;
@@ -94,6 +98,8 @@ const createInitialForm = () => ({
   sizes: [],
   priceBySize: { S: "", M: "", L: "", XL: "", XXL: "", ST: "" },
   launchAt: "",
+  availableUntil: "",
+  productTags: [],
   imageFile: null,
   ingredients: [],
 });
@@ -335,6 +341,8 @@ export default function PizzaCreator({ partner }) {
         ST: "",
       },
       launchAt: toDateTimeLocalValue(pizza.launchAt),
+      availableUntil: toDateTimeLocalValue(pizza.availableUntil),
+      productTags: Array.isArray(pizza.productTags) ? pizza.productTags : [],
       imageFile: null,
       ingredients: (pizza.ingredients || []).map((i) => ({
         id: i.id,
@@ -398,6 +406,19 @@ export default function PizzaCreator({ partner }) {
 
   const onChange = (e) =>
     setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
+
+  const toggleProductTag = (tagValue) => {
+    setForm((current) => {
+      const currentTags = Array.isArray(current.productTags)
+        ? current.productTags
+        : [];
+      const productTags = currentTags.includes(tagValue)
+        ? currentTags.filter((tag) => tag !== tagValue)
+        : [...currentTags, tagValue];
+
+      return { ...current, productTags };
+    });
+  };
 
   const onCategoryChange = (e) => {
     const selectedId = e.target.value;
@@ -551,6 +572,20 @@ export default function PizzaCreator({ partner }) {
       return;
     }
 
+    if (form.launchAt && form.availableUntil) {
+      const launchDate = new Date(form.launchAt);
+      const endDate = new Date(form.availableUntil);
+
+      if (
+        !Number.isNaN(launchDate.getTime()) &&
+        !Number.isNaN(endDate.getTime()) &&
+        endDate <= launchDate
+      ) {
+        alert("La fecha de finalizacion debe ser posterior a la fecha de lanzamiento.");
+        return;
+      }
+    }
+
     if (inventoryLoadError) {
       alert(
         "No se puede guardar el producto porque los ingredientes no cargaron correctamente. Recarga el modulo e intenta de nuevo."
@@ -598,6 +633,8 @@ export default function PizzaCreator({ partner }) {
       payload.append("priceBySize", JSON.stringify(form.priceBySize));
       payload.append("ingredients", JSON.stringify(ingredientsPayload));
       payload.append("launchAt", form.launchAt || "");
+      payload.append("availableUntil", form.availableUntil || "");
+      payload.append("productTags", JSON.stringify(form.productTags || []));
       payload.append("cookingMethod", "");
       if (includeImage && form.imageFile) {
         payload.append("image", form.imageFile);
@@ -792,18 +829,49 @@ export default function PizzaCreator({ partner }) {
                 </select>
               </label>
 
-              <label>
-                Fecha de lanzamiento
-                <input
-                  type="datetime-local"
-                  name="launchAt"
-                  value={form.launchAt}
-                  onChange={onChange}
-                />
-              </label>
+              <div className="pc-dateGrid">
+                <label>
+                  Fecha de lanzamiento
+                  <input
+                    type="datetime-local"
+                    name="launchAt"
+                    value={form.launchAt}
+                    onChange={onChange}
+                  />
+                </label>
 
-              <div className="pc-note">
-                Si eliges una fecha futura, el producto aparecera en Proximos y no se vendera hasta ese momento.
+                <label>
+                  Fecha de finalizacion
+                  <input
+                    type="datetime-local"
+                    name="availableUntil"
+                    value={form.availableUntil}
+                    onChange={onChange}
+                  />
+                </label>
+              </div>
+
+              <div className="pc-block">
+                <div className="pc-subsectionTitle">Avisos especiales</div>
+                <div className="pc-tagGrid">
+                  {PRODUCT_TAG_OPTIONS.map((tag) => {
+                    const checked = (form.productTags || []).includes(tag.value);
+
+                    return (
+                      <label
+                        key={tag.value}
+                        className={`pc-tagOption ${checked ? "is-active" : ""}`}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={checked}
+                          onChange={() => toggleProductTag(tag.value)}
+                        />
+                        <span>{tag.label}</span>
+                      </label>
+                    );
+                  })}
+                </div>
               </div>
 
               {!editingPizzaId && (
@@ -1176,6 +1244,19 @@ export default function PizzaCreator({ partner }) {
                                       {sz}: EUR{price}
                                     </span>
                                   ))}
+
+                              {Array.isArray(p.productTags) &&
+                                p.productTags.map((tag) => {
+                                  const option = PRODUCT_TAG_OPTIONS.find(
+                                    (item) => item.value === tag
+                                  );
+
+                                  return (
+                                    <span key={tag} className="pc-productTagBadge">
+                                      {option?.label || tag}
+                                    </span>
+                                  );
+                                })}
 
                               {p.ingredients?.map((ing) => (
                                 <span

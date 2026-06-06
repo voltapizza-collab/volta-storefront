@@ -98,6 +98,21 @@ export default function PizzaCreatorExtras({ partner }) {
     [categorySizesById]
   );
 
+  const selectableCategories = useMemo(
+    () =>
+      categories.filter(
+        (category) =>
+          category.enabled !== false &&
+          categorySizesById.has(category.id)
+      ),
+    [categories, categorySizesById]
+  );
+
+  const selectableCategoryIds = useMemo(
+    () => new Set(selectableCategories.map((category) => category.id)),
+    [selectableCategories]
+  );
+
   const loadAll = useCallback(async () => {
     if (!storeId) return;
 
@@ -145,14 +160,16 @@ export default function PizzaCreatorExtras({ partner }) {
   const openEdit = (extra) => {
     setSelectedIngredient(String(extra.ingredientId));
     setSelectedCategories(
-      extra.categories.map((category) => ({
-        id: category.id,
-        priceBySize: normalizePriceBySize(
-          category.priceBySize,
-          getCategorySizes(category.id),
-          category.price
-        ),
-      }))
+      extra.categories
+        .filter((category) => selectableCategoryIds.has(category.id))
+        .map((category) => ({
+          id: category.id,
+          priceBySize: normalizePriceBySize(
+            category.priceBySize,
+            getCategorySizes(category.id),
+            category.price
+          ),
+        }))
     );
     setEditingExtra(extra);
     setFeedback("");
@@ -219,14 +236,23 @@ export default function PizzaCreatorExtras({ partner }) {
     try {
       setSaving(true);
 
-      await api.post("/api/ingredient-extras", {
-        storeId,
-        ingredientId: Number(selectedIngredient),
-        links: selectedCategories.map((category) => ({
+      const links = selectedCategories
+        .filter((category) => selectableCategoryIds.has(category.id))
+        .map((category) => ({
           categoryId: category.id,
           price: getPrimaryPrice(category.priceBySize),
           priceBySize: category.priceBySize,
-        })),
+        }));
+
+      if (!links.length) {
+        alert("Selecciona al menos una categoria con productos");
+        return;
+      }
+
+      await api.post("/api/ingredient-extras", {
+        storeId,
+        ingredientId: Number(selectedIngredient),
+        links,
       });
 
       closeModal();
@@ -320,7 +346,7 @@ export default function PizzaCreatorExtras({ partner }) {
             <div className="pcex-field">
               <label>Categorias</label>
               <div className="pcex-categoryGrid">
-                {categories.map((category) => {
+                {selectableCategories.map((category) => {
                   const selected = selectedCategories.find(
                     (item) => item.id === category.id
                   );

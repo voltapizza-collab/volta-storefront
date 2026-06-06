@@ -19,6 +19,7 @@ import MyOrdersModule, { OrdersMovementsModule } from "../components/GlobalManag
 import EngineBackground from "../components/Backoffice/EngineBackground";
 import AppFooter from "../components/Layout/AppFooter";
 import AdminStoresPage from "./AdminStoresPage";
+import ReviewsModule from "../components/Backoffice/ReviewsModule";
 import api from "../setupAxios";
 
 const readSavedBackofficeAuth = () => {
@@ -302,10 +303,12 @@ export default function Backoffice() {
     isFinanceBillingActive;
   const isStoresListActive = activeModule === "stores";
   const isStoresLocationsActive = activeModule === "storesLocations";
+  const isStoresReviewsActive = activeModule === "storesReviews";
   const isStoresGroupActive =
     activeModuleGroup === "stores" ||
     isStoresListActive ||
-    isStoresLocationsActive;
+    isStoresLocationsActive ||
+    isStoresReviewsActive;
 
   if (!auth) {
     return (
@@ -502,6 +505,19 @@ export default function Backoffice() {
                     type="button"
                   >
                     Locations
+                  </button>
+
+                  <button
+                    className={`bo-subbtn ${
+                      isStoresReviewsActive ? "active" : ""
+                    }`}
+                    onClick={() => {
+                      setActiveModule("storesReviews");
+                      setActiveModuleGroup("stores");
+                    }}
+                    type="button"
+                  >
+                    Reviews
                   </button>
                 </div>
               )}
@@ -783,6 +799,10 @@ export default function Backoffice() {
               lockPartner
               view="locations"
             />
+          )}
+
+          {activeModule === "storesReviews" && auth.partnerId && (
+            <ReviewsModule partner={auth} />
           )}
 
           {activeModule === "customers" && auth.partnerId && (

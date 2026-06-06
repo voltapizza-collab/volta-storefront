@@ -83,6 +83,13 @@ export default function SettingsModule({
     [partnerData?.brandOfferButtonStyle]
   );
   const minimumPaymentAmount = Number(partnerData?.minimumPaymentAmount || 0);
+  const priceAdjustmentRules = useMemo(() => {
+    const parsed = parseMaybeJson(partnerData?.priceAdjustmentRules, []);
+    return Array.isArray(parsed) ? parsed : [];
+  }, [partnerData?.priceAdjustmentRules]);
+  const activePriceAdjustmentCount = priceAdjustmentRules.filter(
+    (rule) => String(rule?.status || "ACTIVE").toUpperCase() === "ACTIVE"
+  ).length;
   const buttonConfig = useMemo(
     () => normalizeStorefrontButtonConfig(partnerData?.storefrontButtonConfig),
     [partnerData?.storefrontButtonConfig]
@@ -136,9 +143,13 @@ export default function SettingsModule({
                   : "Sin minimo"}
               </strong>
             </div>
+            <div className="bo-settingsMetricRow">
+              <span>Ajustes precio</span>
+              <strong>{activePriceAdjustmentCount} activos</strong>
+            </div>
             <p className="bo-settingsCardHint">
-              Centraliza el pago minimo, logo e identidad base sin abrir
-              controles libres de color por boton.
+              Centraliza el pago minimo, logo, identidad base y ajustes de
+              precio por bloque sin editar productos uno a uno.
             </p>
           </article>
 

@@ -91,10 +91,17 @@ const getSizePrice = (item, size = item?.size) => {
 const isPubliclyLaunched = (pizza) => {
   if (pizza?.status && pizza.status !== "ACTIVE") return false;
   if (pizza?.type && pizza.type !== "SELLABLE") return false;
+  const now = new Date();
+
+  if (pizza?.availableUntil) {
+    const endDate = new Date(pizza.availableUntil);
+    if (!Number.isNaN(endDate.getTime()) && endDate <= now) return false;
+  }
+
   if (!pizza?.launchAt) return true;
 
   const launchDate = new Date(pizza.launchAt);
-  return Number.isNaN(launchDate.getTime()) || launchDate <= new Date();
+  return Number.isNaN(launchDate.getTime()) || launchDate <= now;
 };
 
 export default function PromosPanel({ partnerId }) {

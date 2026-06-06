@@ -356,7 +356,58 @@
   margin: 8px 0 14px;
 }
 
+.sc-timeFilters {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.sc-timeFilters > span {
+  flex: 0 0 auto;
+  color: rgba(36, 22, 59, 0.62);
+  font-size: 12px;
+  font-weight: 950;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.sc-timeFilterChips {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  overflow-x: auto;
+}
+
+.sc-timeFilterBtn {
+  flex: 0 0 auto;
+  min-height: 34px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(59, 0, 139, 0.1);
+  background: rgba(255, 255, 255, 0.88);
+  color: #241639;
+  font-size: 12px;
+  font-weight: 950;
+  cursor: pointer;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.sc-timeFilterBtn:hover {
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--sc-time-filter-color, #3b008b) 38%, #ffffff);
+}
+
+.sc-timeFilterBtn.is-active {
+  border-color: var(--sc-time-filter-color, #3b008b);
+  background: var(--sc-time-filter-color, #3b008b);
+  color: #ffffff;
+  box-shadow: 0 10px 18px color-mix(in srgb, var(--sc-time-filter-color, #3b008b) 18%, transparent);
+}
+
 .sc-territoryModes,
+.sc-reviewModes,
 .sc-mapLegend {
   display: flex;
   flex-wrap: wrap;
@@ -377,6 +428,12 @@
 }
 
 .sc-territoryModeBtn.is-segment {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sc-territoryModeBtn.is-review {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -429,6 +486,11 @@
   border-color: var(--sc-segment-color, var(--brand-1));
 }
 
+.sc-territoryModeBtn.is-review.is-active {
+  background: var(--sc-review-color, var(--brand-1));
+  border-color: var(--sc-review-color, var(--brand-1));
+}
+
 .sc-segmentSwatch {
   width: 11px;
   height: 11px;
@@ -439,9 +501,40 @@
   box-shadow: 0 0 0 1px rgba(36, 22, 59, 0.14);
 }
 
-.sc-territoryModeBtn.is-active .sc-segmentSwatch {
+.sc-reviewSwatch {
+  width: 11px;
+  height: 11px;
+  flex: 0 0 11px;
+  border-radius: 50%;
+  background: var(--sc-review-color, var(--brand-1));
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 0 1px rgba(36, 22, 59, 0.14);
+}
+
+.sc-territoryModeBtn.is-active .sc-segmentSwatch,
+.sc-territoryModeBtn.is-active .sc-reviewSwatch {
   background: #ffffff;
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.32);
+}
+
+.sc-reviewMetric {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  min-height: 22px;
+  padding: 0 7px;
+  border-radius: 999px;
+  background: rgba(59, 0, 139, 0.07);
+  color: var(--sc-review-color, var(--brand-1));
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 950;
+}
+
+.sc-territoryModeBtn.is-active .sc-reviewMetric {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
 }
 
 .sc-legendItem {
@@ -1222,10 +1315,16 @@
   }
 
   .sc-mapActions,
+  .sc-timeFilters,
   .sc-territoryModes,
   .sc-mapLegend {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .sc-timeFilterChips {
+    flex-wrap: wrap;
+    overflow-x: visible;
   }
 
   .sc-page--locations .sc-mapCard {

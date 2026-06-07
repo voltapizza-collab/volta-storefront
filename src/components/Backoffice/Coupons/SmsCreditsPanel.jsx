@@ -27,7 +27,7 @@ export default function SmsCreditsPanel({ partnerId }) {
       setSelectedPackageAmount((current) => current || (data?.packages?.[0] ? String(data.packages[0].amount) : "10"));
     } catch (error) {
       console.error(error);
-      setMessage("No se pudo cargar el saldo de mensajes.");
+      setMessage("No se pudo cargar el saldo de SMS cortos.");
     } finally {
       setLoading(false);
     }
@@ -82,7 +82,7 @@ export default function SmsCreditsPanel({ partnerId }) {
       const errorCode = error.response?.data?.error;
       const messages = {
         stripe_not_configured: "Stripe no esta configurado en el backend.",
-        insufficient_volta_sms_inventory: "No hay suficientes mensajes disponibles para vender este paquete.",
+        insufficient_volta_sms_inventory: "No hay suficientes SMS cortos disponibles para vender este paquete.",
         bad_recharge_amount: "Paquete invalido.",
       };
       setMessage(messages[errorCode] || "No se pudo iniciar la compra.");
@@ -94,10 +94,10 @@ export default function SmsCreditsPanel({ partnerId }) {
   return (
     <section className="cp-smsWallet">
       <div>
-        <div className="cp-kicker">Mensajes</div>
+        <div className="cp-kicker">SMS cortos</div>
         <h3>{loading ? "Cargando saldo..." : `${formatNumber(balance?.smsCredits)} disponibles`}</h3>
         <p>
-          {formatNumber(balance?.smsConsumed)} usados - {formatNumber(balance?.smsRecharged)} recargados
+          {formatNumber(balance?.smsConsumed)} consumidos - {formatNumber(balance?.smsRecharged)} recargados
         </p>
       </div>
 
@@ -112,7 +112,7 @@ export default function SmsCreditsPanel({ partnerId }) {
             ))}
           </select>
         </label>
-        <strong>{formatNumber(selectedPackage?.credits)} mensajes</strong>
+        <strong>{formatNumber(selectedPackage?.credits)} SMS cortos</strong>
         <button className="cp-primaryBtn" disabled={!partnerId || !selectedPackage || purchasing} type="submit">
           {purchasing ? "Abriendo pago..." : "Comprar"}
         </button>

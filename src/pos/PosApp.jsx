@@ -2044,7 +2044,7 @@ export default function PosApp() {
       return;
     }
 
-    const question = customerHelpText.trim();
+    const question = customerHelpText.trim().slice(0, 70);
     if (!question) {
       setMessage("Escribe la duda antes de contactar al cliente.");
       return;
@@ -2719,10 +2719,10 @@ export default function PosApp() {
                     value={customerHelpText}
                     onChange={(event) => setCustomerHelpText(event.target.value)}
                     rows={5}
-                    maxLength={600}
+                    maxLength={70}
                     placeholder="Escribe aqui el mensaje exacto para el cliente..."
                   />
-                  <small>{customerHelpText.trim().length}/600</small>
+                  <small>{customerHelpText.trim().length}/70 - max. 1 part SMS</small>
                 </label>
               </div>
             )}

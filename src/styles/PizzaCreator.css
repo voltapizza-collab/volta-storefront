@@ -129,15 +129,78 @@
 }
 
 .pc-categoryCompactRow {
-  min-height: 78px;
+  min-height: 112px;
   display: flex;
-  align-items: center;
+  align-items: stretch;
   justify-content: space-between;
   gap: 12px;
   padding: 12px 14px;
   border-radius: 16px;
   background: linear-gradient(180deg, #ffffff, #fffaf4);
   border: 1px solid rgba(59, 0, 139, 0.08);
+}
+
+.pc-categoryCompactInfo {
+  min-width: 0;
+  flex: 1;
+  display: grid;
+  align-content: center;
+  gap: 8px;
+}
+
+.pc-categoryStatus {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.pc-categoryStatusPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 26px;
+  padding: 5px 9px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.pc-categoryStatusPill strong {
+  font-size: 0.9rem;
+}
+
+.pc-categoryStatusPill--active {
+  background: rgba(22, 163, 74, 0.11);
+  color: #11643a;
+}
+
+.pc-categoryStatusPill--inactive {
+  background: rgba(120, 113, 108, 0.13);
+  color: #57534e;
+}
+
+.pc-categoryStatusDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+.pc-categoryMeter {
+  width: 100%;
+  height: 7px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(120, 113, 108, 0.18);
+}
+
+.pc-categoryMeter span {
+  display: block;
+  height: 100%;
+  min-width: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #16a34a, #86efac);
 }
 
 .pc-overviewRow {
@@ -154,9 +217,11 @@
 .pc-overviewRowTitle {
   color: var(--brand-1);
   font-weight: 900;
+  overflow-wrap: anywhere;
 }
 
 .pc-overviewRowBadge {
+  align-self: center;
   min-width: 44px;
   padding: 8px 10px;
   border-radius: 999px;

@@ -249,7 +249,7 @@ export default function LandingPage() {
             <div className="vp-consoleRows">
               <div className="vp-consoleRow"><span>Promos activas</span><strong>8</strong></div>
               <div className="vp-consoleRow"><span>Cupones generados</span><strong>248</strong></div>
-              <div className="vp-consoleRow"><span>Mensajes disponibles</span><strong>12.500</strong></div>
+              <div className="vp-consoleRow"><span>SMS cortos disponibles</span><strong>101</strong></div>
             </div>
             <div className="vp-consoleFooter">
               <span className="vp-consoleBadge">Menu publicado</span>

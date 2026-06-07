@@ -358,9 +358,9 @@ export default function OfferCreatePanel({ partnerId }) {
         no_recipients: "No hay clientes que coincidan con ese destino privado. Prueba seleccionando otro segmento, tienda o codigo postal.",
         bad_store_ids: "Alguna tienda seleccionada no pertenece a este partner.",
         public_coupons_cannot_have_segments: "Los cupones publicos no pueden tener segmentos privados.",
-        insufficient_sms_credits: `Saldo de mensajes insuficiente. Disponibles: ${
+        insufficient_sms_credits: `Saldo de SMS cortos insuficiente. Disponibles: ${
           requestError.response?.data?.balance || 0
-        }. Necesarios: ${requestError.response?.data?.required || 0}. Recarga mensajes para enviar cupones privados.`,
+        }. Necesarios: ${requestError.response?.data?.required || 0}. Recarga SMS cortos para enviar cupones privados.`,
       };
       setMessage(errorMessages[errorCode] || errorCode || "No se pudo crear la oferta.");
     } finally {

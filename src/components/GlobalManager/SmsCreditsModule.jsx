@@ -7,6 +7,10 @@ const formatMoney = (value, currency = "EUR") => {
   const parsed = Number(String(value || "0").replace(",", "."));
   return `${currency || "EUR"} ${Number.isFinite(parsed) ? parsed.toFixed(2) : "0.00"}`;
 };
+const formatUnitPrice = (value, currency = "EUR") => {
+  const parsed = Number(String(value || "0").replace(",", "."));
+  return `${currency || "EUR"} ${Number.isFinite(parsed) ? parsed.toFixed(4) : "0.0000"}`;
+};
 const formatDateTime = (value) => {
   if (!value) return "-";
   const date = new Date(value);
@@ -45,8 +49,13 @@ export default function SmsCreditsModule() {
     [packages, selectedPackageAmount]
   );
   const inventory = data?.providerInventory || {};
+  const pricing = data?.pricing || {};
+  const providerCostEur = pricing.providerCost || 0.062;
+  const marginPerSms = pricing.marginPerSms ?? Number(pricing.sellPrice || 0) - Number(pricing.providerCost || 0);
   const canSellSelectedPackage =
     inventory.availableToSell == null || !selectedPackage || selectedPackage.credits <= inventory.availableToSell;
+  const inventoryWarning =
+    inventory.availableToSell != null && inventory.availableToSell <= 0 && Number(inventory.committedMessages || 0) > 0;
 
   const load = async () => {
     try {
@@ -84,7 +93,7 @@ export default function SmsCreditsModule() {
         packageAmount: selectedPackage?.amount || Number(selectedPackageAmount),
         source: "global_manager",
       });
-      setMessage(`Recarga registrada: ${formatNumber(response.data?.credits)} mensajes.`);
+      setMessage(`Recarga registrada: ${formatNumber(response.data?.credits)} SMS cortos.`);
       await load();
     } catch (error) {
       console.error(error);
@@ -99,7 +108,7 @@ export default function SmsCreditsModule() {
       <header className="gm-moduleHeader">
         <div>
           <span>SMS credits</span>
-          <h2>Saldo de mensajes</h2>
+          <h2>Saldo de SMS cortos</h2>
         </div>
         <button type="button" onClick={load} disabled={loading}>
           {loading ? "Cargando..." : "Actualizar"}
@@ -108,24 +117,27 @@ export default function SmsCreditsModule() {
 
       <div className="gm-smsStats">
         <article>
-          <span>Bolsa Volta Telnyx</span>
-          <strong>{inventory.ok ? formatNumber(inventory.availableMessages) : "--"}</strong>
-          <small>{inventory.ok ? formatMoney(inventory.availableCredit, inventory.currency) : "Telnyx no disponible"}</small>
-        </article>
-        <article>
-          <span>Libres para vender</span>
+          <span>Bolsa Volta disponible</span>
           <strong>{inventory.availableToSell == null ? "--" : formatNumber(inventory.availableToSell)}</strong>
-          <small>Coste {Number(data?.pricing?.providerCost || 0.0004).toFixed(4)} EUR</small>
+          <small>
+            {!inventory.ok
+              ? "Telnyx no disponible"
+              : inventory.availableToSell == null
+              ? "Inventario pendiente"
+              : `${formatNumber(inventory.availableMessages)} Telnyx - ${formatNumber(inventory.committedMessages)} comprometidos / coste ${formatUnitPrice(providerCostEur, "EUR")}`}
+          </small>
         </article>
         <article>
           <span>Comprometidos clientes</span>
           <strong>{formatNumber(data?.totals?.credits)}</strong>
-          <small>Saldo pendiente de uso</small>
+          <small>SMS cortos pendientes de uso</small>
         </article>
         <article>
-          <span>Margen por mensaje</span>
-          <strong>EUR {(Number(data?.pricing?.sellPrice || 0) - Number(data?.pricing?.providerCost || 0)).toFixed(4)}</strong>
-          <small>Venta {Number(data?.pricing?.sellPrice || 0.0008).toFixed(4)} EUR</small>
+          <span>Margen por SMS corto</span>
+          <strong>{formatUnitPrice(marginPerSms, "EUR")}</strong>
+          <small>
+            Venta {formatUnitPrice(pricing.sellPrice || 0.099, "EUR")} / coste {formatUnitPrice(pricing.providerCost || 0.062, "EUR")}
+          </small>
         </article>
         <article>
           <span>Vendidos</span>
@@ -141,10 +153,16 @@ export default function SmsCreditsModule() {
         </article>
         <article>
           <span>Paquete base</span>
-          <strong>{formatNumber(data?.pricing?.messagesPer10Eur)}</strong>
-          <small>10 EUR</small>
+          <strong>{formatNumber(pricing.messagesPer10Eur)}</strong>
+          <small>SMS 1 part por 10 EUR al partner</small>
         </article>
       </div>
+
+      {inventoryWarning && (
+        <div className="gm-smsMessage">
+          Inventario bloqueado: los SMS comprometidos a clientes superan el saldo real disponible en Telnyx.
+        </div>
+      )}
 
       <form className="gm-smsRecharge" onSubmit={submit}>
         <label>
@@ -162,13 +180,13 @@ export default function SmsCreditsModule() {
           <select value={selectedPackageAmount} onChange={(event) => setSelectedPackageAmount(event.target.value)}>
             {packages.map((item) => (
               <option key={item.amount} value={item.amount} disabled={inventory.availableToSell != null && item.credits > inventory.availableToSell}>
-                {item.amount} EUR - {formatNumber(item.credits)} mensajes
+                {item.amount} EUR
               </option>
             ))}
           </select>
         </label>
         <div>
-          <span>Mensajes</span>
+          <span>SMS cortos</span>
           <strong>{formatNumber(selectedPackage?.credits)}</strong>
         </div>
         <button type="submit" disabled={saving || !selectedPartner || !selectedPackage || !canSellSelectedPackage}>
@@ -184,9 +202,9 @@ export default function SmsCreditsModule() {
           <thead>
             <tr>
               <th>Partner</th>
-              <th>Disponibles</th>
-              <th>Vendidos</th>
-              <th>Consumidos</th>
+              <th>SMS cortos disponibles</th>
+              <th>SMS cortos recargados</th>
+              <th>SMS cortos consumidos</th>
             </tr>
           </thead>
           <tbody>
@@ -210,7 +228,7 @@ export default function SmsCreditsModule() {
               <th>Fecha</th>
               <th>Partner</th>
               <th>Tipo</th>
-              <th>Mensajes</th>
+              <th>SMS cortos</th>
               <th>Importe</th>
               <th>Origen</th>
               <th>Referencia</th>

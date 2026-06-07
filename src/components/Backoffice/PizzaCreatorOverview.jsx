@@ -87,17 +87,37 @@ export default function PizzaCreatorOverview({ partner, onOpenProducts }) {
 
           <div className="pc-compactCategoryList">
             {overview.categories.length ? (
-              overview.categories.map((category) => (
-                <div key={category.categoryId || category.name} className="pc-categoryCompactRow">
-                  <div>
-                    <span className="pc-overviewRowTitle">{category.name}</span>
-                    <span className="pc-overviewRowMeta">
-                      {category.active} activos, {category.inactive} inactivos
-                    </span>
+              overview.categories.map((category) => {
+                const active = Number(category.active) || 0;
+                const inactive = Number(category.inactive) || 0;
+                const total = Number(category.total) || active + inactive;
+                const activePercent = total ? Math.round((active / total) * 100) : 0;
+
+                return (
+                  <div key={category.categoryId || category.name} className="pc-categoryCompactRow">
+                    <div className="pc-categoryCompactInfo">
+                      <span className="pc-overviewRowTitle">{category.name}</span>
+                      <div
+                        className="pc-categoryStatus"
+                        aria-label={`${active} activos y ${inactive} inactivos`}
+                      >
+                        <span className="pc-categoryStatusPill pc-categoryStatusPill--active">
+                          <span className="pc-categoryStatusDot" aria-hidden="true" />
+                          <strong>{active}</strong> activos
+                        </span>
+                        <span className="pc-categoryStatusPill pc-categoryStatusPill--inactive">
+                          <span className="pc-categoryStatusDot" aria-hidden="true" />
+                          <strong>{inactive}</strong> inactivos
+                        </span>
+                      </div>
+                      <div className="pc-categoryMeter" aria-hidden="true">
+                        <span style={{ width: `${activePercent}%` }} />
+                      </div>
+                    </div>
+                    <span className="pc-overviewRowBadge">{total}</span>
                   </div>
-                  <span className="pc-overviewRowBadge">{category.total}</span>
-                </div>
-              ))
+                );
+              })
             ) : (
               <div className="pc-emptyState">No hay categorias con productos.</div>
             )}

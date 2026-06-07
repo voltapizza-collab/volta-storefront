@@ -36,6 +36,10 @@ const defaultPreview = {
   recipients: 0,
   validPhones: 0,
   invalidPhones: 0,
+  smsPartsPerRecipient: 1,
+  estimatedCreditsRequired: 0,
+  smsEncoding: "GSM-7",
+  smsLength: 0,
   sample: [],
 };
 
@@ -330,6 +334,10 @@ export default function CommunicationsPanel({ partnerId }) {
         recipients: data?.recipients || 0,
         validPhones: data?.validPhones || 0,
         invalidPhones: data?.invalidPhones || 0,
+        smsPartsPerRecipient: data?.smsPartsPerRecipient || 1,
+        estimatedCreditsRequired: data?.estimatedCreditsRequired || 0,
+        smsEncoding: data?.smsEncoding || "GSM-7",
+        smsLength: data?.smsLength || 0,
         sample: Array.isArray(data?.sample) ? data.sample : [],
       });
       if (!data?.recipients) {
@@ -376,7 +384,8 @@ export default function CommunicationsPanel({ partnerId }) {
         no_recipients: "No hay clientes que coincidan con ese destino.",
         no_valid_phones: "La audiencia existe, pero no tiene telefonos validos para SMS.",
         bad_store_ids: "Alguna tienda seleccionada no pertenece a este partner.",
-        bad_message: "El mensaje debe tener entre 3 y 600 caracteres.",
+        bad_message: "El mensaje debe tener entre 3 y 120 caracteres.",
+        sms_too_long: "El SMS supera 1 part. Reduce el texto hasta que el preview marque 1 part.",
         insufficient_sms_credits: `Saldo SMS insuficiente. Disponibles: ${
           requestError.response?.data?.balance || 0
         }. Necesarios: ${requestError.response?.data?.required || 0}.`,
@@ -576,13 +585,13 @@ export default function CommunicationsPanel({ partnerId }) {
         <textarea
           rows="5"
           value={message}
-          maxLength={600}
+          maxLength={120}
           onChange={(event) => setMessage(event.target.value)}
           placeholder="Escribe el mensaje para el cliente"
         />
       </label>
       <div className="cp-helper">
-        {message.trim().length}/600 caracteres. Se agregara automaticamente la marca y la instruccion STOP.
+        {message.trim().length}/120 caracteres. Regla: maximo 1 part SMS.
       </div>
 
       <div className="cp-kpiGrid cp-kpiGrid--three">
@@ -597,6 +606,18 @@ export default function CommunicationsPanel({ partnerId }) {
         <div className="cp-kpiCard">
           <span>Omitidos</span>
           <strong>{preview.invalidPhones}</strong>
+        </div>
+        <div className="cp-kpiCard">
+          <span>Partes por SMS</span>
+          <strong>{preview.smsPartsPerRecipient}</strong>
+        </div>
+        <div className="cp-kpiCard">
+          <span>Creditos estimados</span>
+          <strong>{preview.estimatedCreditsRequired}</strong>
+        </div>
+        <div className="cp-kpiCard">
+          <span>Codificacion</span>
+          <strong>{preview.smsEncoding}</strong>
         </div>
       </div>
 

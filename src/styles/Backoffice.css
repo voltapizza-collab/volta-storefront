@@ -472,6 +472,10 @@
   gap: 20px;
 }
 
+.bo-settingsShell--sms {
+  padding-bottom: 88px;
+}
+
 .bo-settingsCard {
   max-width: 980px;
   padding: 28px;
@@ -812,6 +816,11 @@
   color: #23163b;
   font-weight: 800;
   cursor: pointer;
+}
+
+.bo-settingsSave:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
 }
 
 .bo-logoUploadRow {
@@ -1245,35 +1254,198 @@
   font-weight: 800;
 }
 
-.bo-confirmContactBox {
-  padding: 16px 18px;
+.bo-smsStoreGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.bo-smsStoreCard {
+  min-height: 128px;
+  padding: 18px;
   border-radius: 18px;
-  border: 1px solid rgba(53, 19, 164, 0.12);
-  background: rgba(106, 61, 240, 0.05);
+  border: 1px solid rgba(41, 11, 94, 0.12);
+  background: linear-gradient(180deg, #ffffff, #fffaf4);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
 }
 
-.bo-confirmContactBox span {
+.bo-smsStoreCard.is-active {
+  border-color: rgba(255, 182, 28, 0.78);
+  box-shadow: 0 14px 26px rgba(255, 182, 28, 0.12);
+}
+
+.bo-smsStoreCard span,
+.bo-smsSwitchRow span {
+  color: rgba(53, 19, 164, 0.74);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.bo-smsStoreCard strong {
   display: block;
-  margin-bottom: 8px;
-  color: #241639;
+  margin-top: 5px;
+  color: #1c1230;
+  font-size: 20px;
+}
+
+.bo-smsStoreCard small {
+  display: block;
+  margin-top: 8px;
+  color: rgba(36, 22, 57, 0.62);
   font-weight: 700;
 }
 
-.bo-confirmContactBox strong {
-  display: block;
+.bo-smsStoreCard button {
+  border: none;
+  border-radius: 14px;
+  padding: 11px 14px;
+  background: var(--brand-2);
   color: #1c1230;
-  line-height: 1.35;
+  font-weight: 900;
+  cursor: pointer;
+  white-space: nowrap;
 }
 
-.bo-confirmContactBox small {
+.bo-brandingModalCard.bo-smsStoreModal {
+  width: min(940px, 100%);
+  max-height: calc(100vh - 48px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.bo-smsStoreModal .bo-brandingModalHead {
+  flex: 0 0 auto;
+}
+
+.bo-smsModalList {
+  display: grid;
+  gap: 18px;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  padding: 0 8px 4px 0;
+  overscroll-behavior: contain;
+}
+
+.bo-smsSwitchList {
+  display: grid;
+  gap: 10px;
+}
+
+.bo-smsSwitchRow {
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(41, 11, 94, 0.1);
+  background: #ffffff;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.bo-smsSwitchRow.is-active {
+  border-color: rgba(255, 182, 28, 0.78);
+  background: #fffaf0;
+}
+
+.bo-smsSwitchRow strong {
   display: block;
-  margin-top: 6px;
-  color: rgba(36, 22, 57, 0.66);
-  line-height: 1.4;
+  margin-top: 4px;
+  color: #1c1230;
+  font-size: 17px;
+}
+
+.bo-smsSwitchRow p {
+  margin: 7px 0 0;
+  color: rgba(36, 22, 57, 0.7);
+  line-height: 1.45;
+}
+
+.bo-smsPhonePanel {
+  display: grid;
+  gap: 14px;
+  padding: 18px 0 22px;
+  border-top: 1px solid rgba(41, 11, 94, 0.08);
+  border-bottom: 1px solid rgba(41, 11, 94, 0.08);
+}
+
+.bo-smsPhoneTitleRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+}
+
+.bo-smsConfirmInline {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: #241639;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.bo-smsConfirmInline input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--brand-1);
+}
+
+.bo-smsConfirmInline input:disabled + span {
+  opacity: 0.45;
+}
+
+.bo-smsPhoneFields {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) minmax(220px, 1fr) auto;
+  gap: 12px;
+  align-items: end;
+}
+
+.bo-smsPhoneFields .bo-settingsSave {
+  min-height: 48px;
+}
+
+.bo-smsPhoneList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 32px;
+  align-items: center;
+}
+
+.bo-smsPhoneList span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px 8px 12px;
+  border-radius: 999px;
+  background: rgba(53, 19, 164, 0.08);
+  color: #2a1f44;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.bo-smsPhoneList button {
+  border: 0;
+  border-radius: 999px;
+  padding: 4px 7px;
+  background: rgba(53, 19, 164, 0.1);
+  color: #3b008b;
+  font-size: 11px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.bo-smsPhoneList em {
+  color: rgba(36, 22, 57, 0.58);
+  font-size: 13px;
+  font-style: normal;
 }
 
 .bo-brandingStage {
@@ -2089,7 +2261,7 @@
   .bo-switchRow,
   .bo-trackingHero,
   .bo-trackingLiveHeader,
-  .bo-confirmContactBox {
+  .bo-smsPhoneTitleRow {
     flex-direction: column;
     align-items: flex-start;
   }
@@ -2100,6 +2272,7 @@
   .bo-settingsGrid--triple,
   .bo-settingsGrid--doubleTight,
   .bo-pricePolicyGrid,
+  .bo-smsStoreGrid,
   .bo-trackingServiceGrid,
   .bo-trackingKpis,
   .bo-buttonGallery,
@@ -2121,6 +2294,11 @@
   }
 
   .bo-priceSelector {
+    grid-template-columns: 1fr;
+  }
+
+  .bo-smsPhoneFields {
+    width: 100%;
     grid-template-columns: 1fr;
   }
 }

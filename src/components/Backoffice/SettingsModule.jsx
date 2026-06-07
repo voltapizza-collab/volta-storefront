@@ -30,7 +30,11 @@ const parseMaybeJson = (value, fallback) => {
 
 const readTrackingSettings = (value) => {
   const parsed = parseMaybeJson(parseMaybeJson(value, {}), {});
-  return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
+  if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return {};
+  if (Number(parsed.schemaVersion || 0) < 2) {
+    return { ...parsed, enabled: false, services: {} };
+  }
+  return parsed;
 };
 
 export default function SettingsModule({

@@ -148,6 +148,11 @@ const asArray = (value) => {
   return Array.isArray(second) ? second : [];
 };
 
+const asObject = (value) => {
+  const parsed = parseMaybeJson(value, {});
+  return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
+};
+
 const lineQty = (item) => {
   const qty = Number(item?.quantity ?? item?.qty ?? item?.cantidad ?? 1);
   return Number.isFinite(qty) && qty > 0 ? qty : 1;
@@ -683,6 +688,7 @@ export function OrdersMovementsModule({ partner = null }) {
   const [storeName, setStoreName] = useState("all");
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
+  const [selectedMovement, setSelectedMovement] = useState(null);
 
   const partnerId = partner?.partnerId || partner?.id;
   const currency = data?.currency || "EUR";
@@ -708,12 +714,18 @@ export function OrdersMovementsModule({ partner = null }) {
   }, [load]);
 
   const movements = useMemo(() => {
-    return (data?.recentSales || []).map((sale) => ({
-      ...sale,
-      dateValue: toDateInputValue(sale.date),
-      statusLabel: sale.status || "REGISTRADO",
-      storeLabel: sale.storeName || "Sin tienda",
-    }));
+    return (data?.recentSales || []).map((sale) => {
+      const customerData = asObject(sale.customerData);
+
+      return {
+        ...sale,
+        customerData,
+        dateValue: toDateInputValue(sale.date),
+        statusLabel: sale.status || "REGISTRADO",
+        storeLabel: sale.storeName || "Sin tienda",
+        customerLabel: sale.customerName || customerData.name || "Sin cliente",
+      };
+    });
   }, [data?.recentSales]);
 
   const stores = useMemo(
@@ -815,10 +827,12 @@ export function OrdersMovementsModule({ partner = null }) {
             <thead>
               <tr>
                 <th>Codigo</th>
+                <th>Cliente</th>
                 <th>Fecha</th>
                 <th>Tienda</th>
                 <th>Estado</th>
                 <th>Total</th>
+                <th>Detalle</th>
               </tr>
             </thead>
             <tbody>
@@ -827,23 +841,107 @@ export function OrdersMovementsModule({ partner = null }) {
                   <td>
                     <strong>{sale.code}</strong>
                   </td>
+                  <td>
+                    <strong>{sale.customerLabel}</strong>
+                    {sale.customerData?.phone && (
+                      <span className="gmo-cellSub">{sale.customerData.phone}</span>
+                    )}
+                  </td>
                   <td>{formatDate(sale.date)}</td>
                   <td>{sale.storeLabel}</td>
                   <td>
                     <span className="gmo-statusPill">{sale.statusLabel}</span>
                   </td>
                   <td>{formatMoney(sale.total, sale.currency || currency)}</td>
+                  <td>
+                    <button
+                      className="gmo-codeBtn"
+                      type="button"
+                      onClick={() => setSelectedMovement(sale)}
+                    >
+                      Ver ticket
+                    </button>
+                  </td>
                 </tr>
               ))}
               {!filteredMovements.length && (
                 <tr>
-                  <td colSpan="5">Sin movimientos para los filtros seleccionados.</td>
+                  <td colSpan="7">Sin movimientos para los filtros seleccionados.</td>
                 </tr>
               )}
             </tbody>
           </table>
         </div>
       </section>
+
+      {selectedMovement && (
+        <div className="gmo-modalBack" onMouseDown={() => setSelectedMovement(null)}>
+          <div className="gmo-modalCard" onMouseDown={(event) => event.stopPropagation()}>
+            <header className="gmo-modalHead">
+              <div>
+                <span>Ticket</span>
+                <h3>{selectedMovement.code}</h3>
+              </div>
+              <button type="button" onClick={() => setSelectedMovement(null)}>
+                x
+              </button>
+            </header>
+
+            <div className="gmo-ticket">
+              <div className="gmo-ticketLine">
+                <span>Cliente</span>
+                <strong>{selectedMovement.customerLabel}</strong>
+              </div>
+              <div className="gmo-ticketLine">
+                <span>Telefono</span>
+                <strong>{selectedMovement.customerData?.phone || "-"}</strong>
+              </div>
+              <div className="gmo-ticketLine">
+                <span>Tienda</span>
+                <strong>{selectedMovement.storeLabel}</strong>
+              </div>
+              <div className="gmo-ticketLine">
+                <span>Fecha</span>
+                <strong>{formatDate(selectedMovement.date)}</strong>
+              </div>
+              <div className="gmo-ticketLine">
+                <span>Estado</span>
+                <strong>{selectedMovement.statusLabel}</strong>
+              </div>
+              {selectedMovement.customerData?.address_1 && (
+                <div className="gmo-ticketLine gmo-ticketLine--block">
+                  <span>Direccion</span>
+                  <strong>{selectedMovement.customerData.address_1}</strong>
+                </div>
+              )}
+              <div className="gmo-ticketItems">
+                <OrderItems order={selectedMovement} />
+              </div>
+              {selectedMovement.notes && (
+                <div className="gmo-ticketLine gmo-ticketLine--block">
+                  <span>Notas</span>
+                  <strong>{selectedMovement.notes}</strong>
+                </div>
+              )}
+              <div className="gmo-ticketTotal">
+                <span>Total</span>
+                <strong>
+                  {formatMoney(selectedMovement.total, selectedMovement.currency || currency)}
+                </strong>
+              </div>
+            </div>
+
+            <footer className="gmo-modalActions">
+              <button type="button" onClick={() => window.print()}>
+                Print
+              </button>
+              <button type="button" onClick={() => setSelectedMovement(null)}>
+                Cerrar
+              </button>
+            </footer>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

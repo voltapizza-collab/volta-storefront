@@ -1190,7 +1190,8 @@ export default function PosApp() {
     ? "stale"
     : "online";
   const hasVisitors = Number(presence.activeVisitors || 0) > 0;
-  const showVisitorAlert = orders.length === 0 && trustState === "online" && hasVisitors;
+  const hasCheckoutVisitors = Number(presence.checkoutVisitors || 0) > 0;
+  const showVisitorAlert = orders.length === 0 && trustState === "online" && hasCheckoutVisitors;
   const showModeTabs = activePanel !== "orders" || Boolean(selectedOrder) || orders.length > 0;
   const showOrderUtilityFabs =
     activePanel === "orders" &&

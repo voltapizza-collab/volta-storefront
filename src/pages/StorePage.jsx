@@ -22,6 +22,8 @@ const UPCOMING_TAB = "__UPCOMING__";
 const CUSTOM_BASE_PRICE_FACTOR = 0.8;
 const STOREFRONT_TERMS_VERSION = "2026-05-full-legal-v3";
 const STOREFRONT_TERMS_KEY = `volta_storefront_terms_${STOREFRONT_TERMS_VERSION}`;
+const STOREFRONT_VISITOR_KEY = "volta_storefront_visitor_id";
+const CHECKOUT_PRESENCE_SIGNAL_TIMEOUT_MS = 1200;
 const DEFAULT_BOOST_SETTINGS = {
   active: true,
   unitPrice: 0.2,
@@ -48,9 +50,6 @@ const normalizeCheckoutPhoneInput = (value) => {
 
 const normalizeCheckoutEmailInput = (value) => String(value || "").trim().toLowerCase();
 
-const isValidCheckoutEmail = (value) =>
-  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizeCheckoutEmailInput(value));
-
 const hasCheckoutIdentity = (profile) =>
   Boolean(
     String(profile?.name || "").trim() &&
@@ -58,7 +57,44 @@ const hasCheckoutIdentity = (profile) =>
   );
 
 const hasBasicCustomerProfile = (profile) =>
-  hasCheckoutIdentity(profile) && isValidCheckoutEmail(profile?.email);
+  hasCheckoutIdentity(profile);
+
+const getStorefrontVisitorId = () => {
+  const fallback = () => `visitor-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+
+  if (typeof window === "undefined") return fallback();
+
+  try {
+    let visitorId = window.localStorage.getItem(STOREFRONT_VISITOR_KEY) || "";
+    if (!visitorId) {
+      visitorId = fallback();
+      window.localStorage.setItem(STOREFRONT_VISITOR_KEY, visitorId);
+    }
+    return visitorId;
+  } catch {
+    return fallback();
+  }
+};
+
+const postStorefrontPresence = ({ partnerId, storeId, state }) => {
+  const numericPartnerId = Number(partnerId);
+  const numericStoreId = Number(storeId);
+
+  if (!numericPartnerId || !numericStoreId) return Promise.resolve(null);
+
+  return api
+    .post("/api/presence/heartbeat", {
+      partnerId: numericPartnerId,
+      storeId: numericStoreId,
+      visitorId: getStorefrontVisitorId(),
+      state,
+      path: typeof window === "undefined" ? "" : window.location.pathname,
+    })
+    .catch((err) => {
+      console.warn("[presence] heartbeat failed", err);
+      return null;
+    });
+};
 const NON_INCENTIVE_LINE_SOURCES = new Set([
   "queue_boost",
   "incentive_reward",
@@ -1399,6 +1435,36 @@ const getTrendingPricingSnapshot = (item, size) => {
   };
 };
 
+const freezeProductSelectionPrice = (item) => {
+  if (!item || typeof item !== "object") return null;
+
+  return {
+    ...item,
+    priceBySize: { ...(item.priceBySize || {}) },
+    originalPriceBySize: { ...(item.originalPriceBySize || {}) },
+    trendingPricing:
+      item.trendingPricing && typeof item.trendingPricing === "object"
+        ? {
+            ...item.trendingPricing,
+            basePriceBySize: { ...(item.trendingPricing.basePriceBySize || {}) },
+            currentPriceBySize: { ...(item.trendingPricing.currentPriceBySize || {}) },
+            currentAdjustmentBySize: {
+              ...(item.trendingPricing.currentAdjustmentBySize || {}),
+            },
+          }
+        : item.trendingPricing || null,
+    trend:
+      item.trend && typeof item.trend === "object"
+        ? { ...item.trend }
+        : item.trend || null,
+    directDiscount:
+      item.directDiscount && typeof item.directDiscount === "object"
+        ? { ...item.directDiscount }
+        : item.directDiscount || null,
+    productTags: Array.isArray(item.productTags) ? [...item.productTags] : item.productTags,
+  };
+};
+
 const formatTrendingAdjustmentLabel = (trendingPricing) => {
   if (!trendingPricing) return "";
 
@@ -2128,11 +2194,11 @@ export default function StorePage() {
   const [checkoutProfileForm, setCheckoutProfileForm] = useState({
     name: "",
     phone: "",
-    email: "",
   });
   const [savedCustomerProfile, setSavedCustomerProfile] = useState(null);
   const [productModalOpen, setProductModalOpen] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState(null);
+  const [selectedProductSnapshot, setSelectedProductSnapshot] = useState(null);
   const [productSelection, setProductSelection] = useState({
     size: "",
     qty: 1,
@@ -2439,35 +2505,15 @@ export default function StorePage() {
   useEffect(() => {
     if (!partner?.id || !store?.id) return undefined;
 
-    const visitorKey = "volta_storefront_visitor_id";
-    let visitorId = "";
-
-    try {
-      visitorId = window.localStorage.getItem(visitorKey) || "";
-      if (!visitorId) {
-        visitorId = `visitor-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
-        window.localStorage.setItem(visitorKey, visitorId);
-      }
-    } catch {
-      visitorId = `visitor-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
-    }
-
     const sendPresence = () => {
       if (document.visibilityState === "hidden") return;
 
-      const state = checkoutLoading ? "checkout" : cartOpen || cart.length > 0 ? "cart" : "browsing";
-
-      api
-        .post("/api/presence/heartbeat", {
-          partnerId: Number(partner.id),
-          storeId: Number(store.id),
-          visitorId,
-          state,
-          path: window.location.pathname,
-        })
-        .catch((err) => {
-          console.warn("[presence] heartbeat failed", err);
-        });
+      const state = cartOpen || cart.length > 0 ? "cart" : "browsing";
+      postStorefrontPresence({
+        partnerId: partner.id,
+        storeId: store.id,
+        state,
+      });
     };
 
     sendPresence();
@@ -2478,7 +2524,7 @@ export default function StorePage() {
       window.clearInterval(intervalId);
       document.removeEventListener("visibilitychange", sendPresence);
     };
-  }, [cart.length, cartOpen, checkoutLoading, partner?.id, store?.id]);
+  }, [cart.length, cartOpen, partner?.id, store?.id]);
 
   useEffect(() => {
     const intervalId = window.setInterval(() => {
@@ -2563,7 +2609,6 @@ export default function StorePage() {
         setCheckoutProfileForm((current) => ({
           name: current.name || normalized.name,
           phone: current.phone || normalized.phone,
-          email: current.email || normalized.email,
         }));
       }
     } catch {
@@ -3737,6 +3782,7 @@ export default function StorePage() {
   }, [deliveryLabel, deliveryMetaLabel, partner, store, utilityPills]);
 
   const selectedProduct = useMemo(() => {
+    if (selectedProductSnapshot) return selectedProductSnapshot;
     if (!selectedProductId) return null;
 
     const allProducts = [
@@ -3748,7 +3794,7 @@ export default function StorePage() {
     return allProducts.find(
       (item) => Number(item.pizzaId) === Number(selectedProductId)
     ) || null;
-  }, [menu, selectedProductId, trending, upcoming]);
+  }, [menu, selectedProductId, selectedProductSnapshot, trending, upcoming]);
 
   const selectedProductSizes = useMemo(
     () => getAvailableSizes(selectedProduct),
@@ -4347,8 +4393,10 @@ export default function StorePage() {
   }, [customModalOpen]);
 
   const openProductModal = (item) => {
-    const sizes = getAvailableSizes(item);
+    const snapshot = freezeProductSelectionPrice(item);
+    const sizes = getAvailableSizes(snapshot);
     setSelectedProductId(item.pizzaId);
+    setSelectedProductSnapshot(snapshot);
     setProductSelection({
       size: sizes.length === 1 ? sizes[0] : "",
       qty: 1,
@@ -4356,6 +4404,11 @@ export default function StorePage() {
     });
     setShowAllExtras(false);
     setProductModalOpen(true);
+  };
+
+  const closeProductModal = () => {
+    setProductModalOpen(false);
+    setSelectedProductSnapshot(null);
   };
 
   const addProductLine = () => {
@@ -4392,7 +4445,7 @@ export default function StorePage() {
     };
 
     setCart((current) => [...current, line]);
-    setProductModalOpen(false);
+    closeProductModal();
   };
 
   const decProductQty = () => {
@@ -4980,7 +5033,6 @@ export default function StorePage() {
       setCheckoutProfileForm((current) => ({
         name: current.name || "",
         phone: normalizeCheckoutPhoneInput(current.phone || repeatPhone),
-        email: current.email || "",
       }));
       setCheckoutProfileOpen(true);
       setCartOpen(false);
@@ -5046,6 +5098,14 @@ export default function StorePage() {
         } catch {
           setSavedCustomerProfile(checkoutProfile);
         }
+        await Promise.race([
+          postStorefrontPresence({
+            partnerId: partner?.id || store?.partnerId,
+            storeId: store?.id,
+            state: "checkout",
+          }),
+          new Promise((resolve) => window.setTimeout(resolve, CHECKOUT_PRESENCE_SIGNAL_TIMEOUT_MS)),
+        ]);
         setCheckoutProfileOpen(false);
         window.location.assign(checkoutUrl);
         return;
@@ -5061,7 +5121,7 @@ export default function StorePage() {
         stripe_not_configured: "Stripe no esta configurado para esta tienda.",
         coupon_not_available: "El cupon ya no esta disponible. Quitalo y valida de nuevo.",
         coupon_not_applicable: "El cupon ya no aplica a este carrito.",
-        customer_profile_required: "Necesitamos tu nombre, telefono y email para hacer seguimiento al pedido.",
+        customer_profile_required: "Necesitamos tu nombre y telefono para hacer seguimiento al pedido.",
         custom_build_missing_ingredients:
           "La pizza personalizada no tiene ingredientes guardados. Quitala y vuelve a armarla.",
         amount_too_low: "El importe es demasiado bajo para procesar el pago.",
@@ -5456,7 +5516,6 @@ export default function StorePage() {
       setCheckoutProfileForm({
         name: repeatProfile.name,
         phone: repeatProfile.phone,
-        email: repeatProfile.email,
       });
       try {
         window.localStorage.setItem(customerProfileStorageKey, JSON.stringify(repeatProfile));
@@ -7203,7 +7262,7 @@ export default function StorePage() {
       </div>
 
       {productModalOpen && (
-        <div className="sf-modalOverlay" onClick={() => setProductModalOpen(false)}>
+        <div className="sf-modalOverlay" onClick={closeProductModal}>
           <div
             className="sf-modalCard sf-productModal"
             onClick={(event) => event.stopPropagation()}
@@ -7216,7 +7275,7 @@ export default function StorePage() {
               <button
                 type="button"
                 className="sf-modalCloseBtn"
-                onClick={() => setProductModalOpen(false)}
+                onClick={closeProductModal}
                 aria-label="Cerrar"
               >
                 x
@@ -7344,7 +7403,7 @@ export default function StorePage() {
                   <button
                     type="button"
                     className="sf-secondaryBtn"
-                    onClick={() => setProductModalOpen(false)}
+                    onClick={closeProductModal}
                   >
                     Continue
                   </button>
@@ -7600,11 +7659,10 @@ export default function StorePage() {
                 const nextProfile = {
                   name: String(checkoutProfileForm.name || "").trim(),
                   phone: normalizeCheckoutPhoneInput(checkoutProfileForm.phone),
-                  email: normalizeCheckoutEmailInput(checkoutProfileForm.email),
                 };
 
                 if (!hasBasicCustomerProfile(nextProfile)) {
-                  setCheckoutMessage("Escribe tu nombre, un telefono de 9 digitos y un email valido.");
+                  setCheckoutMessage("Escribe tu nombre y un telefono de 9 digitos.");
                   return;
                 }
 
@@ -7642,23 +7700,6 @@ export default function StorePage() {
                   }
                   placeholder="612345678"
                   autoComplete="tel"
-                  disabled={checkoutLoading}
-                />
-              </label>
-
-              <label>
-                <span>Email</span>
-                <input
-                  type="email"
-                  value={checkoutProfileForm.email}
-                  onChange={(event) =>
-                    setCheckoutProfileForm((current) => ({
-                      ...current,
-                      email: event.target.value,
-                    }))
-                  }
-                  placeholder="tu@email.com"
-                  autoComplete="email"
                   disabled={checkoutLoading}
                 />
               </label>

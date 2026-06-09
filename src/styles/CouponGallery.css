@@ -1173,6 +1173,29 @@
   width: 100%;
 }
 
+.cg-zoneCard .cg-field {
+  align-items: center;
+  width: min(100%, 420px);
+  max-width: none;
+  margin-inline: auto;
+}
+
+.cg-zoneCard .cg-field span {
+  width: 100%;
+  text-align: center;
+}
+
+.cg-zoneCard .cg-zipField {
+  width: 100%;
+}
+
+.cg-zoneCard .cg-zipField input {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+
 .cg-zipSuggest {
   position: absolute;
   top: calc(100% + 8px);
@@ -1801,11 +1824,11 @@
   }
 
   .cg-zoneCard .cg-field {
-    max-width: 280px;
+    max-width: 100%;
   }
 
-  .cg-zoneCard .cg-field input {
-    max-width: 280px;
+  .cg-zoneCard .cg-zipField {
+    width: 100%;
   }
 
   .cg-zoneMetaRow {

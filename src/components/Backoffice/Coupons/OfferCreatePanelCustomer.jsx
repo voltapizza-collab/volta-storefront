@@ -7,6 +7,18 @@ const TYPE_LABELS = {
   FIXED_AMOUNT: "€ fijo",
 };
 
+const pad2 = (value) => String(value).padStart(2, "0");
+
+const toDatetimeLocalValue = (date) =>
+  `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}T${pad2(date.getHours())}:${pad2(date.getMinutes())}`;
+
+const defaultExpiresAt = () => {
+  const date = new Date();
+  date.setDate(date.getDate() + 30);
+  date.setHours(23, 59, 0, 0);
+  return toDatetimeLocalValue(date);
+};
+
 export default function OfferCreatePanelCustomer({ partnerId, customer, onDone, onClose }) {
   const [form, setForm] = useState({
     type: "RANDOM_PERCENT",
@@ -16,8 +28,7 @@ export default function OfferCreatePanelCustomer({ partnerId, customer, onDone, 
     amount: 5,
     minAmount: "",
     maxAmount: "",
-    expiresAt: "",
-    notes: "",
+    expiresAt: defaultExpiresAt(),
   });
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
@@ -34,6 +45,9 @@ export default function OfferCreatePanelCustomer({ partnerId, customer, onDone, 
     if (!partnerId) return "Partner inválido.";
     if (!customer?.id) return "Cliente inválido.";
     if (!form.expiresAt) return "Debes indicar fecha/hora de caducidad.";
+    const expiresAt = new Date(form.expiresAt);
+    if (!Number.isFinite(expiresAt.getTime())) return "Fecha de caducidad invalida.";
+    if (expiresAt <= new Date()) return "La caducidad debe ser futura.";
 
     if (isRandom) {
       const min = Number(form.percentMin);
@@ -81,7 +95,6 @@ export default function OfferCreatePanelCustomer({ partnerId, customer, onDone, 
         customerId: customer.id,
         type: form.type,
         expiresAt: form.expiresAt,
-        notes: form.notes || null,
         ...(isRandom && {
           percentMin: Number(form.percentMin),
           percentMax: Number(form.percentMax),
@@ -103,15 +116,22 @@ export default function OfferCreatePanelCustomer({ partnerId, customer, onDone, 
           ? delivery.error.detail || delivery.error.title
           : delivery?.error;
       const deliveryText = delivery?.sent
-        ? ` SMS ${delivery.status || "enviado"}.`
+        ? " SMS enviado."
         : ` SMS no enviado${deliveryError ? `: ${deliveryError}` : "."}`;
       setMessage(`Cupon ${data?.coupon?.code || ""} creado.${deliveryText}`);
-      window.setTimeout(() => {
-        onDone?.();
-      }, 800);
+      if (delivery?.sent) {
+        window.setTimeout(() => {
+          onDone?.();
+        }, 1200);
+      }
     } catch (requestError) {
       console.error(requestError);
-      setMessage(requestError.response?.data?.error || "No se pudo crear el cupón.");
+      const errorCode = requestError.response?.data?.error;
+      const errorMessages = {
+        invalid_recipient_phone: "El telefono del cliente no es valido para SMS. Corrige el numero antes de crear el boost.",
+        insufficient_sms_credits: `Saldo de SMS insuficiente. Disponibles: ${requestError.response?.data?.balance || 0}.`,
+      };
+      setMessage(errorMessages[errorCode] || errorCode || "No se pudo crear el cupón.");
     } finally {
       setSaving(false);
     }
@@ -156,6 +176,7 @@ export default function OfferCreatePanelCustomer({ partnerId, customer, onDone, 
             <span>Vence</span>
             <input
               type="datetime-local"
+              required
               value={form.expiresAt}
               onChange={(event) => updateForm("expiresAt", event.target.value)}
             />
@@ -237,23 +258,14 @@ export default function OfferCreatePanelCustomer({ partnerId, customer, onDone, 
             </label>
           )}
 
-          <label className="cu-field cu-field-wide">
-            <span>Nota interna</span>
-            <textarea
-              rows="3"
-              value={form.notes}
-              onChange={(event) => updateForm("notes", event.target.value)}
-            />
-          </label>
-
           <div className="cu-modalActions cu-field-wide">
-            <span className="cu-boostHint">Hoy dejamos listo el alta del cupón. Mañana montamos la capa de mensajes.</span>
+            <span className="cu-boostHint">El cupon se enviara por SMS al crear el boost.</span>
             <div className="cu-actionsRight">
               <button className="cu-btn cu-btn-ghost" onClick={onClose} type="button">
                 Cancel
               </button>
               <button className="cu-btn cu-btn-primary" disabled={saving} type="submit">
-                {saving ? "Creando..." : "Crear boost"}
+                {saving ? "Enviando..." : "Crear y enviar"}
               </button>
             </div>
           </div>

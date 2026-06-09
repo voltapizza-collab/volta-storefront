@@ -284,19 +284,6 @@ export default function ReviewsModule({ partner }) {
             </small>
           </article>
 
-          <article className="rv-scorePanel">
-            <div className="rv-scoreHead">
-              <span>Uso de mensajes</span>
-              <strong>{formatPercent(summary.responseRate)}</strong>
-            </div>
-            <div className="rv-meter rv-meter-response" aria-hidden="true">
-              <i style={{ width: `${Math.max(0, Math.min(100, Number(summary.responseRate || 0)))}%` }} />
-            </div>
-            <div className="rv-scoreSplit">
-              <span>{formatNumber(summary.usedMessages)} usados</span>
-              <span>{formatNumber(summary.sentMessages)} enviados</span>
-            </div>
-          </article>
         </div>
 
         <div className="rv-contentGrid">

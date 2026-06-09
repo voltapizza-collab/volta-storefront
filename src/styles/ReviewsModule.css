@@ -347,6 +347,20 @@
   border: 1px solid rgba(41, 11, 94, 0.06);
 }
 
+.rv-productRow {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  justify-content: start;
+  text-align: left;
+}
+
+.rv-activityRow {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  justify-content: start;
+  text-align: left;
+}
+
 .rv-personRow > div,
 .rv-productRow > div,
 .rv-storeRow > div,

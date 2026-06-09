@@ -78,7 +78,6 @@ export default function OfferCreatePanel({ partnerId }) {
     windowStart: "",
     windowEnd: "",
     gameId: "",
-    notes: "",
   });
 
   const type = useMemo(() => form.type, [form.type]);
@@ -293,7 +292,6 @@ export default function OfferCreatePanel({ partnerId }) {
         segments: isPublic ? [] : form.segments,
         storeIds: form.storeIds,
         zipCodes: form.zipCodes,
-        notes: form.notes,
         ...(type === "RANDOM_PERCENT" && {
           percentMin: Number(form.percentMin),
           percentMax: Number(form.percentMax),
@@ -739,15 +737,6 @@ export default function OfferCreatePanel({ partnerId }) {
           <div className="cp-helper">Todavia no hay minijuegos activos configurados para este partner.</div>
         )}
       </div>
-
-      <label className="cp-field">
-        <span>Notas</span>
-        <textarea
-          rows="3"
-          value={form.notes}
-          onChange={(event) => updateForm("notes", event.target.value)}
-        />
-      </label>
 
       <div className="cp-actions">
         <button className="cp-primaryBtn" disabled={saving} type="submit">

@@ -396,7 +396,10 @@ function CouponCard({ card, onClaim }) {
       {deliveryFree ? (
         <div className="cg-cardBody cg-dfBody">
           <p className="cg-cardEyebrow">Delivery Free</p>
-          <h2 className="cg-cardTitle">Envio gratis</h2>
+          <h2 className="cg-cardTitle">
+            <span>Envio</span>
+            <span>gratis</span>
+          </h2>
           <p className="cg-cardSubtitle">Envio Gratis</p>
 
           <div className="cg-dfActionScene" aria-hidden="true">

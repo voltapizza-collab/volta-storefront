@@ -1083,6 +1083,16 @@
   z-index: 2;
 }
 
+.cg-card-deliveryFree .cg-cardTitle {
+  display: grid;
+  max-width: 170px;
+  line-height: 0.88;
+}
+
+.cg-card-deliveryFree .cg-cardTitle span {
+  display: block;
+}
+
 .cg-card-deliveryFree .cg-ctaWord::after {
   content: none;
 }
@@ -2334,6 +2344,18 @@
     gap: 7px;
     min-height: 0;
     overflow: hidden;
+  }
+
+  .cg-card-deliveryFree .cg-cardTitle {
+    max-width: 128px;
+    font-size: clamp(2rem, 13vw, 2.72rem);
+    line-height: 0.88;
+  }
+
+  .cg-card-deliveryFree .cg-cardSubtitle {
+    max-width: 116px;
+    margin-top: 4px;
+    padding: 6px 8px;
   }
 
   .cg-card-deliveryFree .cg-dfCopy {

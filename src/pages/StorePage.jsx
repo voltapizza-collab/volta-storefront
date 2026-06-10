@@ -71,16 +71,38 @@ const compactTickerText = (value, maxLength = 34) => {
   return `${text.slice(0, maxLength - 3).trimEnd()}...`;
 };
 
+const cleanDeliveryAddressTickerText = (value) => {
+  const parts = String(value || "")
+    .replace(/\s+/g, " ")
+    .split(",")
+    .map((part) => part.trim())
+    .filter(Boolean);
+  const streetLikePart =
+    parts.find((part) => !/^\d{5}\b/.test(part) && !/^(spain|espana)$/i.test(part)) || "";
+  const cleaned = streetLikePart
+    .replace(/\b\d{5}\b/g, "")
+    .replace(/\b(spain|espana)\b/gi, "")
+    .replace(/[,\s]+$/g, "")
+    .trim();
+
+  return compactTickerText(cleaned, 30);
+};
+
 const getDeliveryDestinationTickerLabel = (selection) => {
   if (String(selection?.serviceMode || "").toLowerCase() !== "delivery") return "";
 
   const address = selection?.deliveryAddress || selection?.deliveryResolution?.formattedAddress || "";
   const addressLine2 = selection?.deliveryAddressLine2 || "";
+  const formattedAddress = selection?.deliveryResolution?.formattedAddress || "";
   const postalCode =
-    [addressLine2, address, selection?.deliveryResolution?.formattedAddress]
+    [addressLine2, address, formattedAddress]
       .map((value) => String(value || "").match(/\b\d{5}\b/)?.[0])
       .find(Boolean) || "";
-  const destination = postalCode || compactTickerText(address || addressLine2);
+  const destination =
+    cleanDeliveryAddressTickerText(address) ||
+    cleanDeliveryAddressTickerText(formattedAddress) ||
+    cleanDeliveryAddressTickerText(addressLine2) ||
+    postalCode;
 
   return destination ? `Enviamos a ${destination}` : "";
 };
@@ -2301,6 +2323,7 @@ export default function StorePage() {
   const [checkoutTrackingCode, setCheckoutTrackingCode] = useState("");
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [checkoutProfileOpen, setCheckoutProfileOpen] = useState(false);
+  const [paymentMethodModalOpen, setPaymentMethodModalOpen] = useState(false);
   const [checkoutPaymentMode, setCheckoutPaymentMode] = useState("card");
   const [checkoutProfileForm, setCheckoutProfileForm] = useState({
     name: "",
@@ -4892,6 +4915,57 @@ export default function StorePage() {
     [partner?.paymentPolicySettings]
   );
   const cashPaymentEnabled = isPaymentMethodAllowedForStore(paymentPolicySettings, "cash", store?.id);
+  const availablePaymentMethods = useMemo(() => {
+    const methods = [
+      {
+        id: "card",
+        icon: "▰",
+        title: "Tarjeta",
+        description: "Pago seguro online.",
+        ready: true,
+      },
+    ];
+
+    if (cashPaymentEnabled) {
+      methods.push({
+        id: "cash",
+        icon: "€",
+        title: "Efectivo",
+        description: "Paga al recibir o recoger.",
+        ready: true,
+      });
+    }
+
+    if (isPaymentMethodAllowedForStore(paymentPolicySettings, "paypal", store?.id)) {
+      methods.push({
+        id: "paypal",
+        icon: "P",
+        title: "PayPal",
+        description: "Medio externo pendiente de conexion.",
+        ready: false,
+      });
+    }
+
+    if (isPaymentMethodAllowedForStore(paymentPolicySettings, "crypto", store?.id)) {
+      methods.push({
+        id: "crypto",
+        icon: "₿",
+        title: "Cripto",
+        description: "Medio externo pendiente de conexion.",
+        ready: false,
+      });
+    }
+
+    return methods;
+  }, [cashPaymentEnabled, paymentPolicySettings, store?.id]);
+  const shouldShowPaymentMethodModal = availablePaymentMethods.length > 1;
+
+  useEffect(() => {
+    if (!shouldShowPaymentMethodModal && paymentMethodModalOpen) {
+      setPaymentMethodModalOpen(false);
+    }
+  }, [paymentMethodModalOpen, shouldShowPaymentMethodModal]);
+
   const cartSubtotal = useMemo(
     () => cart.reduce((sum, item) => sum + getCartLinePayableTotal(item), 0),
     [cart]
@@ -5375,6 +5449,32 @@ export default function StorePage() {
     store?.id,
     store?.partnerId,
   ]);
+
+  const handlePrimaryCheckout = useCallback(() => {
+    const readyMethods = availablePaymentMethods.filter((method) => method.ready);
+    if (shouldShowPaymentMethodModal) {
+      setCheckoutMessage("");
+      setCartOpen(false);
+      setPaymentMethodModalOpen(true);
+      return;
+    }
+
+    startCheckout(readyMethods[0]?.id || "card");
+  }, [availablePaymentMethods, shouldShowPaymentMethodModal, startCheckout]);
+
+  const selectPaymentMethod = useCallback(
+    (method) => {
+      if (!method?.ready) {
+        setCheckoutMessage(`${method?.title || "Este metodo"} aun no esta conectado.`);
+        return;
+      }
+
+      setPaymentMethodModalOpen(false);
+      startCheckout(method.id);
+    },
+    [startCheckout]
+  );
+
   const cartProductSubtotal = useMemo(
     () => {
       const eligibleGross = cart
@@ -7206,7 +7306,7 @@ export default function StorePage() {
                 <button
                   type="button"
                   className="sf-engineBottomBtn sf-engineBottomBtn--pay"
-                  onClick={() => startCheckout("card")}
+                  onClick={handlePrimaryCheckout}
                   disabled={cartCount === 0 || checkoutLoading}
                 >
                   <span>{checkoutLoading ? "Estas muy cerca" : "Pay now"}</span>
@@ -7411,7 +7511,7 @@ export default function StorePage() {
             <button
               type="button"
               className="sf-engineBottomBtn sf-engineBottomBtn--pay"
-              onClick={() => startCheckout("card")}
+              onClick={handlePrimaryCheckout}
               disabled={cartCount === 0 || checkoutLoading}
             >
               <span>{checkoutLoading ? "Estas muy cerca" : "Pay now"}</span>
@@ -7901,6 +8001,66 @@ export default function StorePage() {
                 </div>
               </>
             )}
+          </div>
+        </div>
+      )}
+
+      {paymentMethodModalOpen && shouldShowPaymentMethodModal && (
+        <div
+          className="sf-modalOverlay"
+          onClick={() => !checkoutLoading && setPaymentMethodModalOpen(false)}
+        >
+          <div
+            className="sf-modalCard sf-paymentMethodModal"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="sf-cartModalHead">
+              <div>
+                <span>Metodo de pago</span>
+                <h3>Como quieres pagar?</h3>
+              </div>
+              <button
+                type="button"
+                className="sf-modalCloseBtn"
+                onClick={() => setPaymentMethodModalOpen(false)}
+                disabled={checkoutLoading}
+                aria-label="Cerrar"
+              >
+                x
+              </button>
+            </div>
+
+            <div className="sf-paymentMethodGrid">
+              {availablePaymentMethods.map((method) => (
+                <button
+                  key={method.id}
+                  type="button"
+                  className={`sf-paymentMethodCard sf-paymentMethodCard--${method.id} ${
+                    method.ready ? "is-ready" : "is-disabled"
+                  }`}
+                  onClick={() => selectPaymentMethod(method)}
+                  disabled={checkoutLoading}
+                >
+                  <span className="sf-paymentMethodMark" aria-hidden="true">
+                    {method.icon}
+                  </span>
+                  <span className="sf-paymentMethodCopy">
+                    <strong>{method.title}</strong>
+                    <small>{method.description}</small>
+                  </span>
+                  {!method.ready && <em>Proximamente</em>}
+                </button>
+              ))}
+            </div>
+
+            {checkoutMessage && (
+              <div className="sf-reservationMessage">{checkoutMessage}</div>
+            )}
+
+            <div className="sf-paymentMethodTotal">
+              <span>Total</span>
+              <strong>EUR {cartTotal.toFixed(2)}</strong>
+            </div>
           </div>
         </div>
       )}

@@ -6074,18 +6074,22 @@ export default function StorePage() {
 
   const renderStoreInfoTicker = () => {
     const showSelectProductsPrompt = isStorefrontButtonVisible("selectProducts");
+    const deliveryDestinationLabel = getDeliveryDestinationTickerLabel(orderSelection);
     const tickerLabel = [
       `Bienvenidos a ${partner?.name || store.storeName}`,
       store?.city || "Ciudad",
       store.storeName,
+      deliveryDestinationLabel,
       showSelectProductsPrompt ? "Selecciona productos" : "",
     ].filter(Boolean).join(", ");
 
     return (
       <span
-        className="sf-engineUtilityPill sf-lsfStoreTicker"
+        className={`sf-engineUtilityPill sf-lsfStoreTicker ${
+          deliveryDestinationLabel ? "has-delivery-destination" : ""
+        }`}
         aria-label={tickerLabel}
-        data-mobile-label={`${store?.city || "Ciudad"} - ${store.storeName}`}
+        data-mobile-label={deliveryDestinationLabel || `${store?.city || "Ciudad"} - ${store.storeName}`}
       >
         <span className="sf-engineUtilityPillTicker">
           <span className="sf-engineUtilityPillTrack">
@@ -6104,6 +6108,11 @@ export default function StorePage() {
                 <span>{store.storeName}</span>
               </span>
             </span>
+            {deliveryDestinationLabel && (
+              <span className="sf-engineUtilityPillLine sf-engineUtilityPillLine--delivery">
+                {deliveryDestinationLabel}
+              </span>
+            )}
             {showSelectProductsPrompt && (
               <span className="sf-engineUtilityPillLine sf-engineUtilityPillLine--select">
                 Selecciona productos

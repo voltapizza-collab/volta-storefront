@@ -8820,6 +8820,34 @@
   }
 }
 
+@keyframes sfStoreTicker6 {
+  0%,
+  13%,
+  100% {
+    transform: translateY(0);
+  }
+  16.66%,
+  29.66% {
+    transform: translateY(calc(-1 * var(--sf-lsf-ticker-step, 1.82em)));
+  }
+  33.33%,
+  46.33% {
+    transform: translateY(calc(-2 * var(--sf-lsf-ticker-step, 1.82em)));
+  }
+  50%,
+  63% {
+    transform: translateY(calc(-3 * var(--sf-lsf-ticker-step, 1.82em)));
+  }
+  66.66%,
+  79.66% {
+    transform: translateY(calc(-4 * var(--sf-lsf-ticker-step, 1.82em)));
+  }
+  83.33%,
+  96.33% {
+    transform: translateY(calc(-5 * var(--sf-lsf-ticker-step, 1.82em)));
+  }
+}
+
 .sf-storeHeader--desktop .lsf-top__actions {
   grid-template-columns: minmax(148px, 1fr) minmax(128px, 156px) 44px;
   width: min(430px, 100%);
@@ -8841,9 +8869,19 @@
   justify-items: center;
 }
 
+.sf-lsfStoreTicker.has-delivery-destination .sf-engineUtilityPillTrack {
+  animation-name: sfStoreTicker6;
+  animation-duration: 11.4s;
+}
+
 .sf-lsfStoreTicker:hover .sf-engineUtilityPillTrack,
 .sf-lsfStoreTicker:focus-within .sf-engineUtilityPillTrack {
   transform: translateY(calc(-4 * var(--sf-lsf-ticker-step, 1.82em)));
+}
+
+.sf-lsfStoreTicker.has-delivery-destination:hover .sf-engineUtilityPillTrack,
+.sf-lsfStoreTicker.has-delivery-destination:focus-within .sf-engineUtilityPillTrack {
+  transform: translateY(calc(-5 * var(--sf-lsf-ticker-step, 1.82em)));
 }
 
 .sf-lsfStoreTicker .sf-engineUtilityPillLine {
@@ -8877,6 +8915,14 @@
     0 1px 0 #ffffff,
     0 0 8px rgba(32, 191, 255, 0.6),
     0 0 18px rgba(32, 191, 255, 0.38);
+}
+
+.sf-lsfStoreTicker .sf-engineUtilityPillLine--delivery {
+  color: #e11d24;
+  text-shadow:
+    0 1px 0 #ffffff,
+    0 0 8px rgba(255, 255, 255, 0.82),
+    0 0 16px rgba(225, 29, 36, 0.28);
 }
 
 .sf-engineUtilityPillLine--select {
@@ -9030,6 +9076,10 @@
     gap: 0;
     line-height: 24px;
     animation: sfStoreTicker5 9.4s steps(1, end) infinite;
+  }
+
+  .sf-lsfMobileHeader .sf-lsfStoreTicker.has-delivery-destination .sf-engineUtilityPillTrack {
+    animation: sfStoreTicker6 11.4s steps(1, end) infinite;
   }
 
   .sf-lsfMobileHeader .sf-lsfStoreTicker .sf-engineUtilityPillLine {
@@ -13392,9 +13442,19 @@
   justify-items: center;
 }
 
+.sf-lsfStoreTicker.has-delivery-destination .sf-engineUtilityPillTrack {
+  animation-name: sfStoreTicker6;
+  animation-duration: 11.4s;
+}
+
 .sf-lsfStoreTicker:hover .sf-engineUtilityPillTrack,
 .sf-lsfStoreTicker:focus-within .sf-engineUtilityPillTrack {
   transform: translateY(calc(-4 * var(--sf-lsf-ticker-step, 1.82em)));
+}
+
+.sf-lsfStoreTicker.has-delivery-destination:hover .sf-engineUtilityPillTrack,
+.sf-lsfStoreTicker.has-delivery-destination:focus-within .sf-engineUtilityPillTrack {
+  transform: translateY(calc(-5 * var(--sf-lsf-ticker-step, 1.82em)));
 }
 
 .sf-lsfStoreTicker .sf-engineUtilityPillLine {
@@ -13426,6 +13486,14 @@
     0 0 18px rgba(32, 191, 255, 0.4);
 }
 
+.sf-lsfStoreTicker .sf-engineUtilityPillLine--delivery {
+  color: #e11d24;
+  text-shadow:
+    0 1px 0 #ffffff,
+    0 0 8px rgba(255, 255, 255, 0.82),
+    0 0 16px rgba(225, 29, 36, 0.28);
+}
+
 @media (max-width: 560px) {
   .sf-lsfSurface .sf-lsfMobileHeader {
     grid-template-columns: minmax(0, 1fr) clamp(148px, 43vw, 166px);
@@ -13454,6 +13522,10 @@
     justify-items: center;
     line-height: 24px;
     animation: sfStoreTicker5 9.4s steps(1, end) infinite;
+  }
+
+  .sf-lsfMobileHeader .sf-lsfStoreTicker.has-delivery-destination .sf-engineUtilityPillTrack {
+    animation: sfStoreTicker6 11.4s steps(1, end) infinite;
   }
 
   .sf-lsfMobileHeader .sf-lsfStoreTicker .sf-engineUtilityPillLine {
@@ -20252,6 +20324,19 @@
 
   .sf-shell--mode-commercial-light .sf-storeHeader--desktop .sf-lsfStoreTicker .sf-engineUtilityPillLine:nth-child(5) {
     animation-delay: 8s;
+  }
+
+  .sf-shell--mode-commercial-light .sf-storeHeader--desktop .sf-lsfStoreTicker.has-delivery-destination .sf-engineUtilityPillLine,
+  .sf-shell--mode-commercial-light .sf-storeHeader--desktop .sf-lsfStoreTicker.has-delivery-destination .sf-engineUtilityPillLine--select {
+    animation-duration: 12s;
+  }
+
+  .sf-shell--mode-commercial-light .sf-storeHeader--desktop .sf-lsfStoreTicker.has-delivery-destination .sf-engineUtilityPillLine:nth-child(5) {
+    animation-delay: 8s;
+  }
+
+  .sf-shell--mode-commercial-light .sf-storeHeader--desktop .sf-lsfStoreTicker.has-delivery-destination .sf-engineUtilityPillLine:nth-child(6) {
+    animation-delay: 10s;
   }
 
   .sf-shell--mode-commercial-light .sf-storeHeader--desktop .sf-lsfStoreTicker .sf-engineUtilityPillInline {

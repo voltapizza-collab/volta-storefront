@@ -172,13 +172,28 @@ const formatScheduledFor = (value) => {
 };
 
 const isDeliveryOrder = (order) => {
-  const raw = [order?.delivery, order?.type]
+  const raw = [order?.delivery, order?.type, order?.customerData?.delivery?.method]
     .filter(Boolean)
     .map((value) => String(value).toUpperCase())
     .join(" ");
 
   return raw.includes("DELIVERY") || raw.includes("COURIER");
 };
+
+const getDeliveryAddress = (order) => {
+  const delivery = order?.customerData?.delivery || {};
+  const nestedAddress = [delivery.address, delivery.addressLine2]
+    .filter(Boolean)
+    .join(", ");
+  const address = String(order?.customerData?.address_1 || order?.address_1 || nestedAddress || "").trim();
+
+  return address && !/^\(PICKUP\)/i.test(address) ? address : "";
+};
+
+const getPaymentLabel = (order) =>
+  String(order?.customerData?.paymentMode || "").toLowerCase() === "cash"
+    ? "Efectivo pendiente"
+    : "Tarjeta";
 
 export const mockPrinter = {
   id: "windows-browser-print",
@@ -208,6 +223,7 @@ export const mockPrinter = {
     const printedAt = new Date().toISOString();
     const items = readOrderItems(order);
     const scheduledFor = formatScheduledFor(getScheduledFor(order));
+    const deliveryAddress = getDeliveryAddress(order);
     const lines = [
       "VOLTA POS VIRTUAL",
       `Pedido: ${order?.code || order?.id || "-"}`,
@@ -215,8 +231,9 @@ export const mockPrinter = {
       ...(scheduledFor ? [`PROGRAMADO: ${scheduledFor}`] : []),
       `Cliente: ${order?.customerData?.name || "-"}`,
       `Telefono: ${order?.customerData?.phone || "-"}`,
-      ...(isDeliveryOrder(order) && order?.customerData?.address_1
-        ? [`Direccion: ${order.customerData.address_1}`]
+      `Pago: ${getPaymentLabel(order)}`,
+      ...(isDeliveryOrder(order) && deliveryAddress
+        ? [`Direccion: ${deliveryAddress}`]
         : []),
       "------------------------------",
       ...items.flatMap((item) => {

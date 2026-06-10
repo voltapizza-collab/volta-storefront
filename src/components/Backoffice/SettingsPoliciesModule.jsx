@@ -3,7 +3,44 @@ import api from "../../setupAxios";
 
 const DEFAULT_FORM = {
   minimumPaymentAmount: "0",
+  paymentPolicySettings: {
+    card: true,
+    cash: false,
+    cashStoreIds: [],
+    paypal: false,
+    paypalStoreIds: [],
+    crypto: false,
+    cryptoStoreIds: [],
+  },
 };
+
+const PAYMENT_METHODS = [
+  {
+    id: "card",
+    title: "Tarjeta",
+    label: "Administrado por Volta",
+    description: "Stripe queda activo por defecto para el checkout online.",
+    locked: true,
+  },
+  {
+    id: "cash",
+    title: "Efectivo",
+    label: "Cobro en tienda o entrega",
+    description: "El cliente confirma el pedido sin Stripe y paga al recibir o recoger.",
+  },
+  {
+    id: "paypal",
+    title: "PayPal",
+    label: "Medio externo",
+    description: "Queda registrado como aceptado por la empresa. La pasarela no esta conectada aun.",
+  },
+  {
+    id: "crypto",
+    title: "Criptomonedas",
+    label: "Medio externo",
+    description: "Queda registrado como aceptado por la empresa. La pasarela no esta conectada aun.",
+  },
+];
 
 const DEFAULT_RULE_FORM = {
   title: "",
@@ -35,6 +72,48 @@ const TARGET_OPTIONS = [
   { value: "ALL", label: "Todas las categorias con productos" },
   { value: "CATEGORY", label: "Categorias especificas" },
 ];
+
+const parseMaybeJson = (value, fallback) => {
+  if (value == null || value === "") return fallback;
+  if (typeof value !== "string") return value;
+
+  try {
+    return JSON.parse(value);
+  } catch {
+    return fallback;
+  }
+};
+
+const normalizePositiveIds = (value) => {
+  const list = Array.isArray(value) ? value : value == null || value === "" ? [] : [value];
+  return [
+    ...new Set(
+      list
+        .map((item) => Number(item))
+        .filter((item) => Number.isInteger(item) && item > 0)
+    ),
+  ];
+};
+
+const normalizePaymentPolicySettings = (value) => {
+  const parsed = parseMaybeJson(parseMaybeJson(value, {}), {});
+  const source = parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
+
+  return {
+    card: true,
+    cash: Boolean(source.cash),
+    cashStoreIds: normalizePositiveIds(source.cashStoreIds),
+    paypal: Boolean(source.paypal),
+    paypalStoreIds: normalizePositiveIds(source.paypalStoreIds),
+    crypto: Boolean(source.crypto),
+    cryptoStoreIds: normalizePositiveIds(source.cryptoStoreIds),
+  };
+};
+
+const paymentStoreKey = (methodId) => `${methodId}StoreIds`;
+
+const paymentMethodLabel = (methodId) =>
+  PAYMENT_METHODS.find((method) => method.id === methodId)?.title || "Metodo de pago";
 
 const formatCurrency = (value, currency = "EUR") =>
   new Intl.NumberFormat("es-ES", {
@@ -202,6 +281,8 @@ export default function SettingsPoliciesModule({ partner }) {
   const [rules, setRules] = useState([]);
   const [categories, setCategories] = useState([]);
   const [stores, setStores] = useState([]);
+  const [paymentStoreModal, setPaymentStoreModal] = useState(null);
+  const [paymentStoreSelection, setPaymentStoreSelection] = useState([]);
 
   useEffect(() => {
     const loadPolicies = async () => {
@@ -239,6 +320,7 @@ export default function SettingsPoliciesModule({ partner }) {
             currentPartner.minimumPaymentAmount == null
               ? "0"
               : String(currentPartner.minimumPaymentAmount),
+          paymentPolicySettings: normalizePaymentPolicySettings(currentPartner.paymentPolicySettings),
         });
         setRules(
           rulesResponse.status === "fulfilled" &&
@@ -266,7 +348,7 @@ export default function SettingsPoliciesModule({ partner }) {
         setError("");
       } catch (loadError) {
         console.error("Error loading policies", loadError);
-        setError("No pudimos cargar las policies.");
+        setError("No pudimos cargar las reglas.");
       } finally {
         setLoading(false);
       }
@@ -295,6 +377,78 @@ export default function SettingsPoliciesModule({ partner }) {
       [field]: value,
     }));
     setSuccess("");
+  };
+
+  const handlePaymentToggle = (methodId) => {
+    if (methodId === "card") return;
+
+    const currentSettings = normalizePaymentPolicySettings(form.paymentPolicySettings);
+    const currentlyEnabled = Boolean(currentSettings[methodId]);
+
+    if (!currentlyEnabled) {
+      const storeKey = paymentStoreKey(methodId);
+      const currentStoreIds = currentSettings[storeKey] || [];
+      const fallbackStoreIds = stores.map((store) => Number(store.id)).filter(Boolean);
+      setPaymentStoreSelection(currentStoreIds.length ? currentStoreIds : fallbackStoreIds);
+      setPaymentStoreModal(methodId);
+      setSuccess("");
+      return;
+    }
+
+    setForm((current) => ({
+      ...current,
+      paymentPolicySettings: {
+        ...normalizePaymentPolicySettings(current.paymentPolicySettings),
+        [methodId]: false,
+      },
+    }));
+    setSuccess("");
+  };
+
+  const confirmPaymentStores = () => {
+    if (!paymentStoreModal) return;
+
+    const selectedIds = normalizePositiveIds(paymentStoreSelection);
+    if (!selectedIds.length) {
+      setError("Selecciona al menos una tienda para activar este medio de pago.");
+      return;
+    }
+
+    setForm((current) => {
+      const currentSettings = normalizePaymentPolicySettings(current.paymentPolicySettings);
+      return {
+        ...current,
+        paymentPolicySettings: {
+          ...currentSettings,
+          [paymentStoreModal]: true,
+          [paymentStoreKey(paymentStoreModal)]: selectedIds,
+        },
+      };
+    });
+    setPaymentStoreModal(null);
+    setPaymentStoreSelection([]);
+    setError("");
+    setSuccess("");
+  };
+
+  const cancelPaymentStores = () => {
+    setPaymentStoreModal(null);
+    setPaymentStoreSelection([]);
+  };
+
+  const togglePaymentStore = (storeId) => {
+    setPaymentStoreSelection((current) => toggleId(current.map(String), storeId).map(Number));
+  };
+
+  const selectAllPaymentStores = () => {
+    const allStoreIds = stores.map((store) => Number(store.id)).filter(Boolean);
+    setPaymentStoreSelection((current) =>
+      current.length === allStoreIds.length ? [] : allStoreIds
+    );
+  };
+
+  const clearPaymentStores = () => {
+    setPaymentStoreSelection([]);
   };
 
   const handleLogoUpload = async (event) => {
@@ -348,13 +502,18 @@ export default function SettingsPoliciesModule({ partner }) {
 
       const response = await api.patch(`/partners/by-id/${partner.partnerId}/policies`, {
         minimumPaymentAmount: minimum,
+        paymentPolicySettings: normalizePaymentPolicySettings(form.paymentPolicySettings),
       });
 
       setPartnerData(response.data);
-      setSuccess("Policies guardadas.");
+      setForm((current) => ({
+        ...current,
+        paymentPolicySettings: normalizePaymentPolicySettings(response.data?.paymentPolicySettings),
+      }));
+      setSuccess("Reglas guardadas.");
     } catch (saveError) {
-      console.error("Error saving policies", saveError);
-      setError("No pudimos guardar las policies.");
+      console.error("Error saving rules", saveError);
+      setError("No pudimos guardar las reglas.");
     } finally {
       setSaving(false);
     }
@@ -443,7 +602,7 @@ export default function SettingsPoliciesModule({ partner }) {
     return (
       <section className="bo-settingsShell">
         <div className="bo-settingsCard">
-          <h2 className="bo-settingsTitle">Policies</h2>
+          <h2 className="bo-settingsTitle">Reglas</h2>
           <p className="bo-settingsHint">Cargando reglas comerciales...</p>
         </div>
       </section>
@@ -455,10 +614,10 @@ export default function SettingsPoliciesModule({ partner }) {
       <div className="bo-settingsCard bo-settingsCard--wide">
         <div className="bo-settingsHeader">
           <div>
-            <div className="bo-settingsEyebrow">Settings / Policies</div>
-            <h2 className="bo-settingsTitle">Politicas de empresa</h2>
+            <div className="bo-settingsEyebrow">Settings / Reglas</div>
+            <h2 className="bo-settingsTitle">Reglas de empresa</h2>
             <p className="bo-settingsHint">
-              Este espacio concentra reglas del negocio: pago minimo, logo,
+              Este espacio concentra reglas del negocio: cobro, logo,
               checkout y ajustes de precio en bloque.
             </p>
           </div>
@@ -489,7 +648,7 @@ export default function SettingsPoliciesModule({ partner }) {
             </div>
 
             <div className="bo-settingsPreview">
-              <div className="bo-settingsPreviewLabel">Politica activa</div>
+              <div className="bo-settingsPreviewLabel">Regla activa</div>
               <strong>{minimumPreview}</strong>
               <span>
                 Si el carrito queda por debajo, el storefront mostrara el aviso
@@ -497,9 +656,66 @@ export default function SettingsPoliciesModule({ partner }) {
               </span>
             </div>
 
+            <div className="bo-policyBlock">
+              <div className="bo-settingsEyebrow">Medios de pago</div>
+              <div className="bo-paymentMethodList">
+                {PAYMENT_METHODS.map((method) => {
+                  const paymentSettings = normalizePaymentPolicySettings(form.paymentPolicySettings);
+                  const checked = method.locked || Boolean(paymentSettings[method.id]);
+                  const selectedStoreIds = normalizePositiveIds(paymentSettings[paymentStoreKey(method.id)]);
+                  const storeSummary = selectedStoreIds.length
+                    ? `${selectedStoreIds.length} tienda${selectedStoreIds.length === 1 ? "" : "s"}`
+                    : "Todas las tiendas";
+                  return (
+                    <article
+                      key={method.id}
+                      className={`bo-smsSwitchRow bo-paymentMethodRow ${checked ? "is-active" : ""} ${method.locked ? "is-locked" : ""}`}
+                    >
+                      <div>
+                        <span>{method.label}</span>
+                        <strong>{method.title}</strong>
+                        <p>{method.description}</p>
+                        {!method.locked && checked && (
+                          <small className="bo-paymentStoreSummary">{storeSummary}</small>
+                        )}
+                      </div>
+                      <div className="bo-paymentMethodControls">
+                        {!method.locked && checked && (
+                          <button
+                            type="button"
+                            className="bo-settingsMiniCta"
+                            onClick={() => {
+                              setPaymentStoreSelection(
+                                selectedStoreIds.length
+                                  ? selectedStoreIds
+                                  : stores.map((store) => Number(store.id)).filter(Boolean)
+                              );
+                              setPaymentStoreModal(method.id);
+                              setError("");
+                            }}
+                          >
+                            Tiendas
+                          </button>
+                        )}
+                        <label className="bo-toggleControl" title={method.locked ? "Tarjeta siempre activa" : method.title}>
+                          <input
+                            type="checkbox"
+                            checked={checked}
+                            disabled={method.locked}
+                            onChange={() => handlePaymentToggle(method.id)}
+                          />
+                          <i />
+                        </label>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+            </div>
+
             <div className="bo-settingsActions">
               <button type="submit" className="bo-settingsSave" disabled={saving}>
-                {saving ? "Guardando..." : "Guardar policies"}
+                {saving ? "Guardando..." : "Guardar reglas"}
               </button>
             </div>
           </form>
@@ -712,6 +928,70 @@ export default function SettingsPoliciesModule({ partner }) {
         {error && <div className="bo-settingsError">{error}</div>}
         {success && <div className="bo-settingsSuccess">{success}</div>}
       </div>
+
+      {paymentStoreModal && (
+        <div className="bo-brandingModalBackdrop" role="presentation">
+          <div
+            className="bo-brandingModalCard bo-paymentStoreModal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="payment-store-modal-title"
+          >
+            <div className="bo-brandingModalHead">
+              <div>
+                <div className="bo-settingsEyebrow">Medios de pago</div>
+                <h3 id="payment-store-modal-title" className="bo-settingsSectionTitle">
+                  Selecciona las tiendas
+                </h3>
+                <p className="bo-settingsHint">
+                  {paymentMethodLabel(paymentStoreModal)} quedara activo solo en las tiendas marcadas.
+                </p>
+              </div>
+              <button
+                type="button"
+                className="bo-brandingModalClose"
+                onClick={cancelPaymentStores}
+              >
+                Cerrar
+              </button>
+            </div>
+
+            <div className="bo-paymentStoreActions">
+              <button type="button" className="bo-settingsMiniCta" onClick={selectAllPaymentStores}>
+                Seleccionar todo
+              </button>
+              <button type="button" className="bo-settingsMiniCta" onClick={clearPaymentStores}>
+                Limpiar
+              </button>
+            </div>
+
+            <div className="bo-priceSelector bo-paymentStoreGrid">
+              {stores.map((store) => {
+                const storeId = Number(store.id);
+                return (
+                  <label key={store.id} className="bo-checkTile">
+                    <input
+                      type="checkbox"
+                      checked={paymentStoreSelection.includes(storeId)}
+                      onChange={() => togglePaymentStore(store.id)}
+                    />
+                    <span>{store.storeName}</span>
+                  </label>
+                );
+              })}
+              {!stores.length && (
+                <span className="bo-settingsCardHint">Sin tiendas cargadas.</span>
+              )}
+            </div>
+
+            <div className="bo-settingsActions">
+              <button type="button" className="bo-settingsSave" onClick={confirmPaymentStores}>
+                Aceptar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

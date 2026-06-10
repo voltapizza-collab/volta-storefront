@@ -407,7 +407,7 @@ const printOrderWithWindowsDialog = (order) => {
 };
 
 const getOrderType = (order) => {
-  const raw = [order?.delivery, order?.type]
+  const raw = [order?.delivery, order?.type, order?.customerData?.delivery?.method]
     .filter(Boolean)
     .map((value) => String(value).toUpperCase())
     .join(" ");
@@ -422,7 +422,8 @@ const isDeliveryOrder = (order) => getOrderType(order) === "Delivery";
 const getOrderContext = (order) => {
   const type = getOrderType(order);
   const customer = order?.customerData || {};
-  const address = customer.address_1 || order?.address_1 || "";
+  const delivery = customer.delivery || {};
+  const address = customer.address_1 || order?.address_1 || [delivery.address, delivery.addressLine2].filter(Boolean).join(", ");
   const name = customer.name || "";
 
   if (type === "Delivery" && address) return address;
@@ -650,10 +651,23 @@ const getCustomerTags = (order) => {
   ];
 };
 
-const getCustomerAddress = (order) =>
-  isDeliveryOrder(order)
-    ? String(order?.customerData?.address_1 || order?.address_1 || "").trim()
-    : "";
+const getCustomerAddress = (order) => {
+  const delivery = order?.customerData?.delivery || {};
+  const nestedAddress = [delivery.address, delivery.addressLine2]
+    .filter(Boolean)
+    .join(", ");
+  const address = String(order?.customerData?.address_1 || order?.address_1 || nestedAddress || "").trim();
+
+  if (!address || /^\(PICKUP\)/i.test(address)) return "";
+  return isDeliveryOrder(order) || String(delivery.method || "").toUpperCase() === "COURIER" ? address : "";
+};
+
+const getPaymentLabel = (order) => {
+  const customerData = order?.customerData || {};
+  const mode = String(customerData.paymentMode || "").toLowerCase();
+  if (mode === "cash") return "Efectivo pendiente";
+  return "Tarjeta";
+};
 
 const formatElapsed = (value) => {
   if (!value) return "nunca";
@@ -817,6 +831,10 @@ function TicketPreview({ order }) {
         <span>Cliente</span>
         <strong>{order.customerData?.name || "-"}</strong>
         <small>{order.customerData?.phone || ""}</small>
+      </div>
+      <div className="pos-ticketBlock">
+        <span>Pago</span>
+        <strong>{getPaymentLabel(order)}</strong>
       </div>
       {address && (
         <div className="pos-ticketBlock">
@@ -2471,6 +2489,7 @@ export default function PosApp() {
                       <div className="pos-orderSummary">
                         <span>{getOrderType(order)}</span>
                         <span>{formatTime(order.date || order.createdAt)}</span>
+                        <span>{getPaymentLabel(order)}</span>
                         <b>{formatMoney(order.total, order.currency || "EUR")}</b>
                       </div>
 

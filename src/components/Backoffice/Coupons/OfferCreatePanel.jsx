@@ -1,7 +1,15 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import api from "../../../setupAxios";
 import "../../../styles/CouponsModule.css";
 import { COUPON_SEGMENTS, COUPON_TYPES } from "../../../constants/coupons";
+import { DndContext, closestCenter } from "@dnd-kit/core";
+import {
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+  arrayMove,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 const WEEK_DAYS = [
   { value: "lunes", label: "Lun" },
@@ -46,10 +54,61 @@ const defaultSurpriseMidAmount = (minValue, maxValue) => {
   return (midCents / 100).toFixed(2);
 };
 
+const formatGalleryType = (type = "") => {
+  const labels = {
+    DELIVERY_FREE: "Delivery Free",
+    FIXED_AMOUNT: "Importe fijo",
+    SURPRISE_AMOUNT: "Cupon sorpresa",
+    FIXED_PERCENT: "Porcentaje fijo",
+    RANDOM_PERCENT: "Porcentaje random",
+  };
+
+  return labels[String(type || "").toUpperCase()] || String(type || "Cupon").replaceAll("_", " ");
+};
+
+const formatPoolScope = (pool) => {
+  const stores = pool?.territory?.storeIds || [];
+  const zipCodes = pool?.territory?.zipCodes || [];
+  if (!stores.length && !zipCodes.length) return "Todas las tiendas y codigos postales";
+
+  return [
+    stores.length ? `${stores.length} tienda${stores.length === 1 ? "" : "s"}` : "",
+    zipCodes.length ? `${zipCodes.length} CP` : "",
+  ].filter(Boolean).join(" - ");
+};
+
+const galleryPoolId = (pool) => `${pool.type}:${pool.key}:${pool.gameId || ""}`;
+
+function SortableGalleryPool({ id, children }) {
+  const {
+    setNodeRef,
+    transform,
+    transition,
+    attributes,
+    listeners,
+    isDragging,
+  } = useSortable({ id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  return (
+    <div ref={setNodeRef} style={style} className={isDragging ? "is-dragging" : ""} {...attributes}>
+      {children(listeners)}
+    </div>
+  );
+}
+
 export default function OfferCreatePanel({ partnerId }) {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
   const [sample, setSample] = useState([]);
+  const [galleryPools, setGalleryPools] = useState([]);
+  const [galleryLoading, setGalleryLoading] = useState(false);
+  const [galleryDeleting, setGalleryDeleting] = useState("");
+  const [galleryOrdering, setGalleryOrdering] = useState(false);
   const [territory, setTerritory] = useState({
     stores: [],
     zipCodes: [],
@@ -83,6 +142,7 @@ export default function OfferCreatePanel({ partnerId }) {
   const type = useMemo(() => form.type, [form.type]);
   const isPublic = useMemo(() => form.visibility === "PUBLIC", [form.visibility]);
   const isSurpriseAmount = useMemo(() => type === "SURPRISE_AMOUNT", [type]);
+  const isDeliveryFree = useMemo(() => type === "DELIVERY_FREE", [type]);
   const linkedZipCodes = useMemo(
     () => {
       const selectedStores = territory.stores.filter((store) =>
@@ -137,6 +197,21 @@ export default function OfferCreatePanel({ partnerId }) {
       allStoreIds.every((storeId) => form.storeIds.some((item) => String(item) === String(storeId))),
     [allStoreIds, form.storeIds]
   );
+  const galleryPoolIds = useMemo(() => galleryPools.map(galleryPoolId), [galleryPools]);
+
+  const loadGalleryPools = useCallback(async () => {
+    if (!partnerId) return;
+
+    try {
+      setGalleryLoading(true);
+      const { data } = await api.get(`/api/coupons/gallery-pools?partnerId=${partnerId}`);
+      setGalleryPools(Array.isArray(data?.cards) ? data.cards : []);
+    } catch (requestError) {
+      console.error("Error loading gallery coupon pools", requestError);
+    } finally {
+      setGalleryLoading(false);
+    }
+  }, [partnerId]);
 
   useEffect(() => {
     if (!partnerId) return;
@@ -166,11 +241,12 @@ export default function OfferCreatePanel({ partnerId }) {
     };
 
     loadTerritory();
+    loadGalleryPools();
 
     return () => {
       isMounted = false;
     };
-  }, [partnerId]);
+  }, [loadGalleryPools, partnerId]);
 
   const updateForm = (key, value) => {
     setForm((prev) => {
@@ -270,6 +346,68 @@ export default function OfferCreatePanel({ partnerId }) {
     });
   }, [availableZipCodes]);
 
+  const persistGalleryOrder = async (nextPools) => {
+    if (!partnerId) return;
+
+    try {
+      setGalleryOrdering(true);
+      await api.put("/api/coupons/gallery-pools/order", {
+        partnerId,
+        items: nextPools.map((pool, index) => ({
+          type: pool.type,
+          key: pool.key,
+          gameId: pool.gameId || null,
+          galleryOrder: index,
+        })),
+      });
+    } catch (requestError) {
+      console.error("Error saving gallery coupon order", requestError);
+      setMessage("No se pudo guardar el orden de CouponGallery.");
+      await loadGalleryPools();
+    } finally {
+      setGalleryOrdering(false);
+    }
+  };
+
+  const handleGalleryDragEnd = async ({ active, over }) => {
+    if (!over || active.id === over.id) return;
+
+    const oldIndex = galleryPoolIds.indexOf(active.id);
+    const newIndex = galleryPoolIds.indexOf(over.id);
+    if (oldIndex < 0 || newIndex < 0) return;
+
+    const nextPools = arrayMove(galleryPools, oldIndex, newIndex);
+    setGalleryPools(nextPools);
+    await persistGalleryOrder(nextPools);
+  };
+
+  const deleteGalleryPool = async (pool) => {
+    if (!pool?.type || !pool?.key) return;
+    const confirmed = window.confirm(`Eliminar de CouponGallery el pool "${pool.title}"?`);
+    if (!confirmed) return;
+
+    const params = new URLSearchParams({
+      partnerId: String(partnerId),
+      type: pool.type,
+      key: pool.key,
+    });
+
+    if (pool.gameId) params.set("gameId", String(pool.gameId));
+
+    try {
+      setGalleryDeleting(`${pool.type}:${pool.key}:${pool.gameId || ""}`);
+      setMessage("");
+      const { data } = await api.delete(`/api/coupons/gallery-pools?${params.toString()}`);
+      setMessage(`Pool retirado de CouponGallery. Cupones afectados: ${data?.removed || 0}.`);
+      await loadGalleryPools();
+    } catch (requestError) {
+      console.error(requestError);
+      setMessage("No se pudo retirar ese pool de CouponGallery.");
+    } finally {
+      setGalleryDeleting("");
+    }
+  };
+
   const submit = async (event) => {
     event.preventDefault();
     setSaving(true);
@@ -345,10 +483,13 @@ export default function OfferCreatePanel({ partnerId }) {
           : "";
       setMessage(
         isPublic
-          ? `Se crearon ${data?.created || 0} cupones visibles en gallery.${distributionText}`
+          ? `Se crearon ${data?.created || 0} cupones visibles en gallery.${distributionText}${
+              isDeliveryFree ? " Tipo: Delivery Free." : ""
+            }`
           : `Se asignaron ${data?.created || 0} cupones privados al grupo filtrado (${data?.recipients || 0} clientes).${distributionText}${deliveryText}`
       );
       setSample(Array.isArray(data?.sample) ? data.sample : []);
+      await loadGalleryPools();
     } catch (requestError) {
       console.error(requestError);
       const errorCode = requestError.response?.data?.error;
@@ -367,6 +508,7 @@ export default function OfferCreatePanel({ partnerId }) {
   };
 
   return (
+    <>
     <form className="cp-card cp-form" onSubmit={submit}>
       <div className="cp-kicker">Create</div>
       <h3>{isPublic ? "Generar cupones publicos" : "Generar cupones privados"}</h3>
@@ -428,6 +570,12 @@ export default function OfferCreatePanel({ partnerId }) {
             <div className="cp-helper">
               Si no marcas tiendas ni codigos postales, se enviara al grupo completo que cumpla ese filtro.
             </div>
+          </div>
+        )}
+
+        {isDeliveryFree && (
+          <div className="cp-info">
+            Este cupon elimina el costo del envio cuando el cliente lo aplica en un pedido delivery.
           </div>
         )}
 
@@ -747,5 +895,74 @@ export default function OfferCreatePanel({ partnerId }) {
       {message && <div className="cp-feedback">{message}</div>}
       {!!sample.length && <div className="cp-sample">Ejemplos: {sample.join(", ")}</div>}
     </form>
+
+    <section className="cp-card cp-galleryManager">
+      <div className="cp-galleryManagerHead">
+        <div>
+          <div className="cp-kicker">CouponGallery</div>
+          <h3>Cupones publicados</h3>
+          <p>Retira pools activos de la galeria cuando necesites recrearlos desde cero.</p>
+        </div>
+        <button
+          type="button"
+          className="cp-pill"
+          onClick={loadGalleryPools}
+          disabled={galleryLoading}
+        >
+          {galleryLoading || galleryOrdering ? "Actualizando..." : "Actualizar"}
+        </button>
+      </div>
+
+      <div className="cp-galleryPoolList">
+        <DndContext collisionDetection={closestCenter} onDragEnd={handleGalleryDragEnd}>
+          <SortableContext items={galleryPoolIds} strategy={verticalListSortingStrategy}>
+            {galleryPools.map((pool) => {
+              const deleteKey = galleryPoolId(pool);
+              return (
+                <SortableGalleryPool key={deleteKey} id={deleteKey}>
+                  {(listeners) => (
+                    <article className="cp-galleryPoolRow">
+                      <button
+                        type="button"
+                        className="cp-galleryDragHandle"
+                        aria-label={`Mover ${pool.title}`}
+                        disabled={galleryOrdering}
+                        {...listeners}
+                      >
+                        <span />
+                        <span />
+                        <span />
+                      </button>
+                      <div className="cp-galleryPoolMain">
+                        <strong>{pool.title}</strong>
+                        <span>{formatGalleryType(pool.type)} - {formatPoolScope(pool)}</span>
+                        <small>Codigo muestra: {pool.sampleCode || "sin codigo"}</small>
+                      </div>
+                      <div className="cp-galleryPoolMeta">
+                        <b>{pool.remaining == null ? "Sin limite" : pool.remaining}</b>
+                        <span>disponibles</span>
+                      </div>
+                      <button
+                        type="button"
+                        className="cp-dangerBtn"
+                        onClick={() => deleteGalleryPool(pool)}
+                        disabled={galleryDeleting === deleteKey || galleryOrdering}
+                      >
+                        {galleryDeleting === deleteKey ? "Retirando..." : "Eliminar"}
+                      </button>
+                    </article>
+                  )}
+                </SortableGalleryPool>
+              );
+            })}
+          </SortableContext>
+        </DndContext>
+
+        {!galleryLoading && !galleryPools.length && (
+          <div className="cp-empty">No hay cupones publicos activos en CouponGallery.</div>
+        )}
+      </div>
+    </section>
+    </>
   );
 }

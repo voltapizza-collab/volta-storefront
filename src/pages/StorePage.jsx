@@ -23,6 +23,7 @@ const CUSTOM_BASE_PRICE_FACTOR = 0.8;
 const STOREFRONT_TERMS_VERSION = "2026-05-full-legal-v3";
 const STOREFRONT_TERMS_KEY = `volta_storefront_terms_${STOREFRONT_TERMS_VERSION}`;
 const STOREFRONT_VISITOR_KEY = "volta_storefront_visitor_id";
+const DELIVERY_SELECTION_KEY = "volta_storefront_delivery_selection";
 const CHECKOUT_PRESENCE_SIGNAL_TIMEOUT_MS = 1200;
 const DEFAULT_BOOST_SETTINGS = {
   active: true,
@@ -49,6 +50,109 @@ const normalizeCheckoutPhoneInput = (value) => {
 };
 
 const normalizeCheckoutEmailInput = (value) => String(value || "").trim().toLowerCase();
+
+const readDeliverySelection = ({ partnerSlug, storeSlug }) => {
+  if (typeof window === "undefined") return null;
+
+  try {
+    const parsed = JSON.parse(window.sessionStorage.getItem(DELIVERY_SELECTION_KEY) || "null");
+    if (!parsed || typeof parsed !== "object") return null;
+    if (parsed.partnerSlug && parsed.partnerSlug !== partnerSlug) return null;
+    if (parsed.storeSlug && parsed.storeSlug !== storeSlug) return null;
+    return parsed;
+  } catch {
+    return null;
+  }
+};
+
+const compactTickerText = (value, maxLength = 34) => {
+  const text = String(value || "").replace(/\s+/g, " ").trim();
+  if (text.length <= maxLength) return text;
+  return `${text.slice(0, maxLength - 3).trimEnd()}...`;
+};
+
+const getDeliveryDestinationTickerLabel = (selection) => {
+  if (String(selection?.serviceMode || "").toLowerCase() !== "delivery") return "";
+
+  const address = selection?.deliveryAddress || selection?.deliveryResolution?.formattedAddress || "";
+  const addressLine2 = selection?.deliveryAddressLine2 || "";
+  const postalCode =
+    [addressLine2, address, selection?.deliveryResolution?.formattedAddress]
+      .map((value) => String(value || "").match(/\b\d{5}\b/)?.[0])
+      .find(Boolean) || "";
+  const destination = postalCode || compactTickerText(address || addressLine2);
+
+  return destination ? `Enviamos a ${destination}` : "";
+};
+
+const parseNonNegativeMoney = (value) => {
+  const amount = Number(value);
+  return Number.isFinite(amount) && amount > 0 ? Math.round(amount * 100) / 100 : 0;
+};
+
+const parseMaybeJson = (value, fallback) => {
+  if (value == null || value === "") return fallback;
+  if (typeof value !== "string") return value;
+
+  try {
+    return JSON.parse(value);
+  } catch {
+    return fallback;
+  }
+};
+
+const normalizePositiveIds = (value) => {
+  const list = Array.isArray(value) ? value : value == null || value === "" ? [] : [value];
+  return [
+    ...new Set(
+      list
+        .map((item) => Number(item))
+        .filter((item) => Number.isInteger(item) && item > 0)
+    ),
+  ];
+};
+
+const normalizePaymentPolicySettings = (value) => {
+  const parsed = parseMaybeJson(parseMaybeJson(value, {}), {});
+  const source = parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
+
+  return {
+    card: true,
+    cash: Boolean(source.cash),
+    cashStoreIds: normalizePositiveIds(source.cashStoreIds),
+    paypal: Boolean(source.paypal),
+    paypalStoreIds: normalizePositiveIds(source.paypalStoreIds),
+    crypto: Boolean(source.crypto),
+    cryptoStoreIds: normalizePositiveIds(source.cryptoStoreIds),
+  };
+};
+
+const paymentStoreKey = (methodId) => `${methodId}StoreIds`;
+
+const isPaymentMethodAllowedForStore = (settings, methodId, storeId) => {
+  if (!settings?.[methodId]) return false;
+  const storeIds = normalizePositiveIds(settings[paymentStoreKey(methodId)]);
+  const numericStoreId = Number(storeId);
+
+  return !storeIds.length || storeIds.includes(numericStoreId);
+};
+
+const isDeliveryFreeCouponData = (coupon) => {
+  const markers = [
+    coupon?.type,
+    coupon?.campaign,
+    coupon?.key,
+    coupon?.meta?.type,
+    coupon?.meta?.campaign,
+  ].map((value) => String(value || "").toUpperCase());
+  const couponCode = String(coupon?.code || coupon?.sampleCode || coupon?.displayCode || "").toUpperCase();
+
+  return (
+    markers.includes("DELIVERY_FREE") ||
+    Boolean(coupon?.meta?.deliveryFree) ||
+    couponCode.startsWith("VOL-DF")
+  );
+};
 
 const hasCheckoutIdentity = (profile) =>
   Boolean(
@@ -2146,6 +2250,11 @@ export default function StorePage() {
   const { partnerSlug, storeSlug } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
+  const orderSelection = useMemo(() => {
+    const state = location.state && typeof location.state === "object" ? location.state : {};
+    if (state.serviceMode) return state;
+    return readDeliverySelection({ partnerSlug, storeSlug }) || state;
+  }, [location.state, partnerSlug, storeSlug]);
 
   const [menu, setMenu] = useState([]);
   const [trending, setTrending] = useState([]);
@@ -2162,6 +2271,7 @@ export default function StorePage() {
   const [couponInfoOpen, setCouponInfoOpen] = useState(false);
   const [couponInfoData, setCouponInfoData] = useState(null);
   const [couponLoading, setCouponLoading] = useState(false);
+  const [hasDeliveryFreeCouponAvailable, setHasDeliveryFreeCouponAvailable] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [activeTab, setActiveTab] = useState("");
   const [scheduleOpen, setScheduleOpen] = useState(false);
@@ -2191,6 +2301,7 @@ export default function StorePage() {
   const [checkoutTrackingCode, setCheckoutTrackingCode] = useState("");
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [checkoutProfileOpen, setCheckoutProfileOpen] = useState(false);
+  const [checkoutPaymentMode, setCheckoutPaymentMode] = useState("card");
   const [checkoutProfileForm, setCheckoutProfileForm] = useState({
     name: "",
     phone: "",
@@ -4761,9 +4872,33 @@ export default function StorePage() {
     () => cart.filter((item) => !isCouponCartLine(item)).reduce((sum, item) => sum + getCartLineQty(item), 0),
     [cart]
   );
-  const cartTotal = useMemo(
+  const deliveryCheckoutFee = useMemo(() => {
+    const serviceMode = String(orderSelection?.serviceMode || "pickup").toLowerCase();
+    const resolution = orderSelection?.deliveryResolution || {};
+
+    if (serviceMode !== "delivery") return 0;
+
+    const resolvedFee = parseNonNegativeMoney(resolution.deliveryFee);
+    if (resolvedFee > 0) return resolvedFee;
+
+    if (partner?.deliveryPricingMode === "VARIABLE") {
+      return parseNonNegativeMoney(partner.deliveryFeeBase);
+    }
+
+    return parseNonNegativeMoney(partner?.deliveryFeeFixed);
+  }, [orderSelection, partner?.deliveryFeeBase, partner?.deliveryFeeFixed, partner?.deliveryPricingMode]);
+  const paymentPolicySettings = useMemo(
+    () => normalizePaymentPolicySettings(partner?.paymentPolicySettings),
+    [partner?.paymentPolicySettings]
+  );
+  const cashPaymentEnabled = isPaymentMethodAllowedForStore(paymentPolicySettings, "cash", store?.id);
+  const cartSubtotal = useMemo(
     () => cart.reduce((sum, item) => sum + getCartLinePayableTotal(item), 0),
     [cart]
+  );
+  const cartTotal = useMemo(
+    () => Math.round((cartSubtotal + deliveryCheckoutFee) * 100) / 100,
+    [cartSubtotal, deliveryCheckoutFee]
   );
   const minimumPaymentAmount = useMemo(() => {
     const value = Number(partner?.minimumPaymentAmount || 0);
@@ -4778,6 +4913,10 @@ export default function StorePage() {
   );
   const couponDiscountTotal = useMemo(
     () => cart.filter(isCouponCartLine).reduce((sum, item) => sum + Math.abs(num(item.subtotal)), 0),
+    [cart]
+  );
+  const hasDeliveryFreeCouponApplied = useMemo(
+    () => cart.some((line) => isCouponCartLine(line) && isDeliveryFreeCouponData(line.coupon)),
     [cart]
   );
   const couponFooterPercent = useMemo(() => {
@@ -4814,11 +4953,11 @@ export default function StorePage() {
       return emptyData;
     }
 
-    if (couponEligibleSubtotal <= 0) {
+    if (couponEligibleSubtotal <= 0 && deliveryCheckoutFee <= 0) {
       const pendingData = {
         valid: false,
         status: "waiting_for_cart",
-        message: "Codigo listo. Agrega productos elegibles para validar el descuento.",
+        message: "Codigo listo. Agrega productos o activa delivery para validar el descuento.",
         coupon: { code },
         discount: 0,
       };
@@ -4836,6 +4975,7 @@ export default function StorePage() {
         storeId: Number(store?.id),
         code,
         subtotal: couponEligibleSubtotal,
+        deliveryFee: deliveryCheckoutFee,
       });
       const data = response?.data || response || {};
 
@@ -4844,17 +4984,20 @@ export default function StorePage() {
       setCouponStatus(data?.message || "Cupon revisado.");
 
       if (data?.valid && num(data.discount) > 0 && data?.coupon?.code) {
-        const discount = Math.min(num(data.discount), couponEligibleSubtotal);
-        autoCouponApplyRef.current = `active:${data.coupon.code}:${store?.id}:${couponEligibleSubtotal.toFixed(2)}`;
+        const isDeliveryFree = isDeliveryFreeCouponData(data.coupon);
+        const discount = isDeliveryFree
+          ? Math.min(num(data.discount), deliveryCheckoutFee)
+          : Math.min(num(data.discount), couponEligibleSubtotal);
+        autoCouponApplyRef.current = `active:${data.coupon.code}:${store?.id}:${couponEligibleSubtotal.toFixed(2)}:${deliveryCheckoutFee.toFixed(2)}`;
         const line = {
           cartLineId: `coupon-${data.coupon.code}`,
           type: "COUPON",
           source: "coupon",
           couponId: data.coupon.id,
           couponCode: data.coupon.code,
-          name: `Cupon ${data.coupon.code}`,
+          name: isDeliveryFree ? `Delivery Free ${data.coupon.code}` : `Cupon ${data.coupon.code}`,
           category: "Descuento",
-          size: data.coupon.title || "Oferta",
+          size: isDeliveryFree ? "Envio gratis" : data.coupon.title || "Oferta",
           qty: 1,
           price: -discount,
           subtotal: -discount,
@@ -4888,7 +5031,7 @@ export default function StorePage() {
     } finally {
       setCouponLoading(false);
     }
-  }, [couponEligibleSubtotal, partner?.id, store?.id, store?.partnerId]);
+  }, [couponEligibleSubtotal, deliveryCheckoutFee, partner?.id, store?.id, store?.partnerId]);
 
   const validateCouponCode = async (event) => {
     event.preventDefault();
@@ -4912,11 +5055,11 @@ export default function StorePage() {
 
     if (!store?.id || !(partner?.id || store?.partnerId)) return;
 
-    if (couponEligibleSubtotal <= 0) {
+    if (couponEligibleSubtotal <= 0 && deliveryCheckoutFee <= 0) {
       const pendingData = {
         valid: false,
         status: "waiting_for_cart",
-        message: "Codigo listo. Agrega productos elegibles para validar el descuento.",
+        message: "Codigo listo. Agrega productos o activa delivery para validar el descuento.",
         coupon: { code: incomingCoupon },
         discount: 0,
       };
@@ -4926,7 +5069,7 @@ export default function StorePage() {
       return;
     }
 
-    const applyKey = `${incomingCoupon}:${store.id}:${couponEligibleSubtotal.toFixed(2)}`;
+    const applyKey = `${incomingCoupon}:${store.id}:${couponEligibleSubtotal.toFixed(2)}:${deliveryCheckoutFee.toFixed(2)}`;
     if (autoCouponApplyRef.current === applyKey) return;
     autoCouponApplyRef.current = applyKey;
 
@@ -4934,6 +5077,7 @@ export default function StorePage() {
   }, [
     applyCouponCode,
     couponEligibleSubtotal,
+    deliveryCheckoutFee,
     location.search,
     partner?.id,
     store?.id,
@@ -4943,10 +5087,10 @@ export default function StorePage() {
   useEffect(() => {
     const code = String(couponCode || couponInfoData?.coupon?.code || "").trim().toUpperCase();
     if (!code || !store?.id || !(partner?.id || store?.partnerId)) return;
-    if (couponEligibleSubtotal <= 0) return;
+    if (couponEligibleSubtotal <= 0 && deliveryCheckoutFee <= 0) return;
     if (cart.some(isCouponCartLine)) return;
 
-    const applyKey = `cart:${code}:${store.id}:${couponEligibleSubtotal.toFixed(2)}`;
+    const applyKey = `cart:${code}:${store.id}:${couponEligibleSubtotal.toFixed(2)}:${deliveryCheckoutFee.toFixed(2)}`;
     if (autoCouponApplyRef.current === applyKey) return;
     autoCouponApplyRef.current = applyKey;
 
@@ -4956,6 +5100,7 @@ export default function StorePage() {
     cart,
     couponCode,
     couponEligibleSubtotal,
+    deliveryCheckoutFee,
     couponInfoData?.coupon?.code,
     partner?.id,
     store?.id,
@@ -4971,13 +5116,16 @@ export default function StorePage() {
       .toUpperCase();
     if (!code) return;
 
-    if (couponEligibleSubtotal <= 0) {
+    const isDeliveryFreeLine = isDeliveryFreeCouponData(couponLine.coupon);
+    if (couponEligibleSubtotal <= 0 && (!isDeliveryFreeLine || deliveryCheckoutFee <= 0)) {
       autoCouponApplyRef.current = "";
       setCart((current) => current.filter((item) => !isCouponCartLine(item)));
       const blockedData = {
         valid: false,
         status: "no_eligible_products",
-        message: "El cupon no aplica a Promos, Top Deals, Boost ni recompensas.",
+        message: isDeliveryFreeLine
+          ? "El cupon Delivery Free necesita un pedido con envio."
+          : "El cupon no aplica a Promos, Top Deals, Boost ni recompensas.",
         coupon: couponLine.coupon || { code },
         discount: 0,
       };
@@ -4986,7 +5134,7 @@ export default function StorePage() {
       return;
     }
 
-    const applyKey = `active:${code}:${store.id}:${couponEligibleSubtotal.toFixed(2)}`;
+    const applyKey = `active:${code}:${store.id}:${couponEligibleSubtotal.toFixed(2)}:${deliveryCheckoutFee.toFixed(2)}`;
     if (autoCouponApplyRef.current === applyKey) return;
     autoCouponApplyRef.current = applyKey;
 
@@ -4996,15 +5144,52 @@ export default function StorePage() {
     cart,
     couponCode,
     couponEligibleSubtotal,
+    deliveryCheckoutFee,
     couponInfoData?.coupon?.code,
     partner?.id,
     store?.id,
     store?.partnerId,
   ]);
 
-  const startStripeCheckout = useCallback(async (profileOverride = null) => {
+  useEffect(() => {
+    const partnerId = Number(partner?.id || store?.partnerId);
+    if (!partnerId) {
+      setHasDeliveryFreeCouponAvailable(false);
+      return;
+    }
+
+    let cancelled = false;
+
+    const loadDeliveryFreeCouponStatus = async () => {
+      try {
+        const data = await api.get(`/api/coupons/gallery-pools?partnerId=${partnerId}`);
+        const cards = Array.isArray(data?.cards) ? data.cards : [];
+        if (!cancelled) {
+          setHasDeliveryFreeCouponAvailable(cards.some(isDeliveryFreeCouponData));
+        }
+      } catch (error) {
+        if (!cancelled) setHasDeliveryFreeCouponAvailable(false);
+      }
+    };
+
+    loadDeliveryFreeCouponStatus();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [partner?.id, store?.partnerId]);
+
+  const startCheckout = useCallback(async (paymentMode = "card", profileOverride = null) => {
+    const normalizedPaymentMode = paymentMode === "cash" ? "cash" : "card";
+
     if (profileOverride?.preventDefault) {
       profileOverride = null;
+    }
+
+    if (normalizedPaymentMode === "cash" && !cashPaymentEnabled) {
+      setCheckoutMessage("Esta tienda no tiene efectivo activo para pedidos online.");
+      setCartOpen(true);
+      return;
     }
 
     if (!cartCount || cartTotal <= 0) {
@@ -5030,6 +5215,7 @@ export default function StorePage() {
       : null;
 
     if (!basicProfile) {
+      setCheckoutPaymentMode(normalizedPaymentMode);
       setCheckoutProfileForm((current) => ({
         name: current.name || "",
         phone: normalizeCheckoutPhoneInput(current.phone || repeatPhone),
@@ -5043,16 +5229,16 @@ export default function StorePage() {
     try {
       setCheckoutLoading(true);
       setCheckoutMessage("");
-      const serviceMode = String(location.state?.serviceMode || "pickup").toLowerCase();
-      const deliveryResolution = location.state?.deliveryResolution || {};
+      const serviceMode = String(orderSelection?.serviceMode || "pickup").toLowerCase();
+      const deliveryResolution = orderSelection?.deliveryResolution || {};
       const deliveryMethod = serviceMode === "delivery" ? "COURIER" : "PICKUP";
       const deliveryCoords = deliveryResolution?.coords || {};
       const deliveryAddress =
         serviceMode === "delivery"
-          ? location.state?.deliveryAddress || deliveryResolution?.formattedAddress || ""
+          ? orderSelection?.deliveryAddress || deliveryResolution?.formattedAddress || ""
           : "";
       const deliveryAddressLine2 =
-        serviceMode === "delivery" ? location.state?.deliveryAddressLine2 || "" : "";
+        serviceMode === "delivery" ? orderSelection?.deliveryAddressLine2 || "" : "";
       const checkoutProfile = {
         id: basicProfile.id || basicProfile.customerId || null,
         name: String(basicProfile.name || "").trim(),
@@ -5066,6 +5252,7 @@ export default function StorePage() {
         cart,
         total: cartTotal,
         currency: partner?.currency || "EUR",
+        paymentMode: normalizedPaymentMode,
         scheduledFor: scheduledAtIsValid ? scheduledAt.toISOString() : null,
         customer: checkoutProfile,
         delivery: {
@@ -5074,6 +5261,8 @@ export default function StorePage() {
           addressLine2: deliveryAddressLine2,
           lat: deliveryCoords?.lat,
           lng: deliveryCoords?.lng,
+          deliveryFee: deliveryCheckoutFee,
+          distanceKm: deliveryResolution?.nearestStore?.distanceKm,
         },
         frontendOrigin: window.location.origin,
         returnPath: window.location.pathname,
@@ -5111,14 +5300,41 @@ export default function StorePage() {
         return;
       }
 
+      if (normalizedPaymentMode === "cash" && checkoutData?.orderCode) {
+        const nextProfile = {
+          id: checkoutData?.customerId || checkoutProfile.id || null,
+          name: checkoutProfile.name,
+          phone: checkoutProfile.phone,
+          email: checkoutProfile.email,
+        };
+        try {
+          window.localStorage.setItem(customerProfileStorageKey, JSON.stringify(nextProfile));
+        } catch {
+          // Profile persistence is non-critical for confirmed cash orders.
+        }
+        setSavedCustomerProfile(nextProfile);
+        setCheckoutTrackingCode(checkoutData.orderCode);
+        setCheckoutProfileOpen(false);
+        setCheckoutMessage("Pedido confirmado. Pagaras en efectivo al recibir o recoger.");
+        setCart([]);
+        try {
+          window.localStorage.removeItem(cartDraftStorageKey);
+        } catch {
+          // Ignore storage cleanup failures.
+        }
+        setCartOpen(true);
+        return;
+      }
+
       console.warn("[StorePage] checkout session without url", checkoutData);
-      setCheckoutMessage("Stripe no devolvio una URL de pago. Intentalo de nuevo.");
+      setCheckoutMessage("No pudimos abrir el metodo de pago. Intentalo de nuevo.");
       setCartOpen(true);
     } catch (err) {
       console.error(err);
       const errorCode = err.response?.data?.error;
       const messages = {
         stripe_not_configured: "Stripe no esta configurado para esta tienda.",
+        cash_payment_not_allowed: "Esta tienda no tiene efectivo activo para pedidos online.",
         coupon_not_available: "El cupon ya no esta disponible. Quitalo y valida de nuevo.",
         coupon_not_applicable: "El cupon ya no aplica a este carrito.",
         customer_profile_required: "Necesitamos tu nombre y telefono para hacer seguimiento al pedido.",
@@ -5140,13 +5356,16 @@ export default function StorePage() {
     }
   }, [
     cart,
+    cartDraftStorageKey,
     cartCount,
     cartTotal,
     cartBelowMinimumPayment,
+    cashPaymentEnabled,
     customerProfileStorageKey,
-    location.state,
+    deliveryCheckoutFee,
     minimumPaymentAmount,
     minimumPaymentMissing,
+    orderSelection,
     partner?.currency,
     partner?.id,
     repeatPhone,
@@ -5848,7 +6067,7 @@ export default function StorePage() {
         title="Loading store"
         eyebrow="Store launch"
         mode="store"
-        partnerName={location.state?.storeName || location.state?.partnerName || storeSlug}
+        partnerName={orderSelection?.storeName || orderSelection?.partnerName || storeSlug}
       />
     );
   }
@@ -6261,8 +6480,10 @@ export default function StorePage() {
                   type="button"
                   className={
                     storefrontMode === "commercial-light"
-                      ? "sf-couponEntryBtn"
-                      : `sf-offersBtn sf-lsfOfferBtn sf-lsfOfferBtn--mobilePunch ${offerVariant.className}`
+                      ? `sf-couponEntryBtn ${hasDeliveryFreeCouponAvailable ? "has-delivery-free" : ""}`
+                      : `sf-offersBtn sf-lsfOfferBtn sf-lsfOfferBtn--mobilePunch ${offerVariant.className} ${
+                          hasDeliveryFreeCouponAvailable ? "has-delivery-free" : ""
+                        }`
                   }
                   onClick={() =>
                     navigate(`/${partnerSlug}/coupons`, {
@@ -6277,7 +6498,14 @@ export default function StorePage() {
                         : "sf-offersBtnLabel"
                     }
                   >
-                    {offerVariant.label}
+                    {hasDeliveryFreeCouponAvailable ? (
+                      <>
+                        <span>COUPONS</span>
+                        <span>ENVIO GRATIS</span>
+                      </>
+                    ) : (
+                      offerVariant.label
+                    )}
                   </span>
                 </button>
               )}
@@ -6969,7 +7197,7 @@ export default function StorePage() {
                 <button
                   type="button"
                   className="sf-engineBottomBtn sf-engineBottomBtn--pay"
-                  onClick={startStripeCheckout}
+                  onClick={() => startCheckout("card")}
                   disabled={cartCount === 0 || checkoutLoading}
                 >
                   <span>{checkoutLoading ? "Estas muy cerca" : "Pay now"}</span>
@@ -7071,6 +7299,8 @@ export default function StorePage() {
                     className={`sf-couponDockTicker sf-footerNavLabel ${
                       couponFooterPercent > 0
                         ? "is-applied"
+                        : hasDeliveryFreeCouponApplied
+                          ? "is-applied"
                         : couponCode.trim()
                           ? "is-ready"
                           : ""
@@ -7078,17 +7308,25 @@ export default function StorePage() {
                     aria-live="polite"
                   >
                     <span>
-                      {couponFooterPercent > 0
+                      {hasDeliveryFreeCouponApplied
+                        ? "DELIVERY FREE"
+                        : couponFooterPercent > 0
                         ? `${couponFooterPercent}% OFF`
                         : couponCode.trim()
                           ? "Validar"
+                          : hasDeliveryFreeCouponAvailable
+                            ? "Cupones"
                           : "Cupones"}
                     </span>
                     <span>
-                      {couponFooterPercent > 0
+                      {hasDeliveryFreeCouponApplied
+                        ? "Aplicado"
+                        : couponFooterPercent > 0
                         ? "Aplicado"
                         : couponCode.trim()
                           ? "Validar"
+                          : hasDeliveryFreeCouponAvailable
+                            ? "Delivery Free aqui"
                           : "Aqui"}
                     </span>
                   </span>
@@ -7164,7 +7402,7 @@ export default function StorePage() {
             <button
               type="button"
               className="sf-engineBottomBtn sf-engineBottomBtn--pay"
-              onClick={startStripeCheckout}
+              onClick={() => startCheckout("card")}
               disabled={cartCount === 0 || checkoutLoading}
             >
               <span>{checkoutLoading ? "Estas muy cerca" : "Pay now"}</span>
@@ -7207,6 +7445,8 @@ export default function StorePage() {
                 className={`sf-couponDockTicker ${
                   couponFooterPercent > 0
                     ? "is-applied"
+                    : hasDeliveryFreeCouponApplied
+                      ? "is-applied"
                     : couponCode.trim()
                       ? "is-ready"
                       : ""
@@ -7214,18 +7454,26 @@ export default function StorePage() {
                 aria-live="polite"
               >
                 <span>
-                  {couponFooterPercent > 0
-                    ? `${couponFooterPercent}% OFF`
-                    : couponCode.trim()
-                      ? "Validar"
-                      : "Cupones"}
+                  {hasDeliveryFreeCouponApplied
+                    ? "DELIVERY FREE"
+                    : couponFooterPercent > 0
+                      ? `${couponFooterPercent}% OFF`
+                      : couponCode.trim()
+                        ? "Validar"
+                        : hasDeliveryFreeCouponAvailable
+                          ? "Cupones"
+                          : "Cupones"}
                 </span>
                 <span>
-                  {couponFooterPercent > 0
+                  {hasDeliveryFreeCouponApplied
                     ? "Aplicado"
-                    : couponCode.trim()
-                      ? "Validar"
-                      : "¡AQUI..!"}
+                    : couponFooterPercent > 0
+                      ? "Aplicado"
+                      : couponCode.trim()
+                        ? "Validar"
+                        : hasDeliveryFreeCouponAvailable
+                          ? "Delivery Free aqui"
+                          : "Aqui"}
                 </span>
               </span>
               {couponStatus && <small>{couponStatus}</small>}
@@ -7435,7 +7683,9 @@ export default function StorePage() {
                 <span>{cart.length === 0 && checkoutMessage ? "Pedido confirmado" : "Carrito"}</span>
                 <h3>
                   {cart.length === 0 && checkoutMessage
-                    ? "Pago recibido"
+                    ? checkoutMessage.includes("efectivo")
+                      ? "Pedido confirmado"
+                      : "Pago recibido"
                     : `EUR ${cartTotal.toFixed(2)}`}
                 </h3>
               </div>
@@ -7451,7 +7701,7 @@ export default function StorePage() {
 
             {checkoutMessage && (
               <div className={`sf-reservationMessage ${
-                checkoutMessage.includes("Pago recibido")
+                checkoutMessage.includes("Pago recibido") || checkoutMessage.includes("Pedido confirmado")
                   ? "is-success"
                   : checkoutMessage.includes("Pago rechazado")
                   ? "is-error"
@@ -7588,12 +7838,18 @@ export default function StorePage() {
                 <div className="sf-cartFoot">
                   <div className="sf-cartFootLine">
                     <span>Subtotal</span>
-                    <strong>EUR {(cartTotal + couponDiscountTotal).toFixed(2)}</strong>
+                    <strong>EUR {(cartSubtotal + couponDiscountTotal).toFixed(2)}</strong>
                   </div>
                   {couponDiscountTotal > 0 && (
                     <div className="sf-cartFootLine">
                       <span>Cupon</span>
                       <strong>-EUR {couponDiscountTotal.toFixed(2)}</strong>
+                    </div>
+                  )}
+                  {deliveryCheckoutFee > 0 && (
+                    <div className="sf-cartFootLine">
+                      <span>Envio</span>
+                      <strong>EUR {deliveryCheckoutFee.toFixed(2)}</strong>
                     </div>
                   )}
                   <div className="sf-cartFootLine sf-cartFootLine--total">
@@ -7617,11 +7873,21 @@ export default function StorePage() {
                     <button
                       type="button"
                       className="sf-primaryBtn"
-                      onClick={startStripeCheckout}
+                      onClick={() => startCheckout("card")}
                       disabled={checkoutLoading}
                     >
-                      {checkoutLoading ? "Preparando tu pago..." : "Pagar ahora"}
+                      {checkoutLoading ? "Preparando tu pago..." : "Pagar con tarjeta"}
                     </button>
+                    {cashPaymentEnabled && (
+                      <button
+                        type="button"
+                        className="sf-secondaryBtn sf-cashPaymentBtn"
+                        onClick={() => startCheckout("cash")}
+                        disabled={checkoutLoading}
+                      >
+                        Pagar en efectivo
+                      </button>
+                    )}
                   </div>
                 </div>
               </>
@@ -7667,7 +7933,7 @@ export default function StorePage() {
                 }
 
                 setSavedCustomerProfile(nextProfile);
-                startStripeCheckout(nextProfile);
+                startCheckout(checkoutPaymentMode, nextProfile);
               }}
             >
               <label>

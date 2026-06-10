@@ -11,6 +11,7 @@ const normalizeZipCode = (value = "") => {
 const normalizeZipInput = (value = "") => String(value || "").replace(/\D/g, "").slice(0, 5);
 const COUPON_GALLERY_LEGAL_VERSION = "2026-05-coupon-games-legal-v1";
 const COUPON_GALLERY_LEGAL_KEY = `volta_coupon_gallery_legal_${COUPON_GALLERY_LEGAL_VERSION}`;
+const COUPON_GALLERY_BUILD_MARK = "coupon-gallery-delivery-template-v6";
 
 const withCouponQuery = (path, code) => {
   const basePath = String(path || "/");
@@ -64,6 +65,8 @@ const getDisplayType = (type = "") => {
       return "CASH DISCOUNT";
     case "SURPRISE_AMOUNT":
       return "SURPRISE REWARD";
+    case "DELIVERY_FREE":
+      return "DELIVERY FREE";
     default:
       return String(type || "REWARD").replaceAll("_", " ");
   }
@@ -77,6 +80,7 @@ const getCardTheme = (type = "") => {
       return "cg-card-theme-random";
     case "fixed_amount":
     case "surprise_amount":
+    case "delivery_free":
       return "cg-card-theme-cash";
     default:
       return "cg-card-theme-default";
@@ -87,6 +91,60 @@ const isGameCoupon = (card) =>
   String(card?.acquisition || "").toUpperCase() === "GAME" ||
   String(card?.channel || "").toUpperCase() === "GAME" ||
   Boolean(card?.gameId || card?.game);
+
+const parseCouponCardAmount = (value) => {
+  if (value == null || value === "") return null;
+  const cleaned = String(value)
+    .replace(/\u00a0/g, " ")
+    .replace(/[^\d,.-]/g, "")
+    .replace(",", ".")
+    .trim();
+  if (!cleaned) return null;
+  const parsed = Number(cleaned);
+  return Number.isFinite(parsed) ? parsed : null;
+};
+
+const isZeroFixedAmountCard = (card) => {
+  if (String(card?.type || "").trim().toUpperCase() !== "FIXED_AMOUNT") return false;
+  return [card?.amount, card?.key, card?.title].some((value) => parseCouponCardAmount(value) === 0);
+};
+
+const isDeliveryFreeCard = (card) =>
+  String(card?.type || "").trim().toUpperCase() === "DELIVERY_FREE" ||
+  String(card?.campaign || "").trim().toUpperCase() === "DELIVERY_FREE" ||
+  String(card?.key || "").trim().toUpperCase() === "DELIVERY_FREE" ||
+  Boolean(card?.meta?.deliveryFree) ||
+  String(card?.title || "").trim().toUpperCase() === "DELIVERY FREE" ||
+  isZeroFixedAmountCard(card);
+
+const normalizeRandomPercentCard = (card) => {
+  if (String(card?.type || "").trim().toUpperCase() !== "RANDOM_PERCENT") return card;
+  const key = String(card?.key || "").trim();
+  const rangeMatch = key.match(/^(\d+(?:[.,]\d+)?)\s*[-–]\s*(\d+(?:[.,]\d+)?)$/);
+  if (!rangeMatch) return card;
+
+  return {
+    ...card,
+    title: `${rangeMatch[1].replace(",", ".")}-${rangeMatch[2].replace(",", ".")}%`,
+    subtitle: "Descuento aleatorio",
+  };
+};
+
+const normalizeGalleryCard = (card) => {
+  if (isDeliveryFreeCard(card)) {
+    return {
+      ...card,
+      type: "DELIVERY_FREE",
+      key: "DELIVERY_FREE",
+      title: "Delivery Free",
+      subtitle: "Envio Gratis",
+      campaign: "DELIVERY_FREE",
+      meta: { ...(card?.meta || {}), deliveryFree: true },
+    };
+  }
+
+  return normalizeRandomPercentCard(card);
+};
 
 const getDisplaySubtitle = (card) => {
   const subtitle = String(card?.subtitle || "").trim();
@@ -303,43 +361,99 @@ function CouponGalleryLegalGate({ open, partnerName, onAccept }) {
   );
 }
 
-function CouponCard({ card, partner, onClaim }) {
+function CouponCard({ card, onClaim }) {
+  const normalizedCard = normalizeGalleryCard(card);
   const isUnlimited = card.remaining == null;
   const remaining = isUnlimited ? null : Number(card.remaining || 0);
   const isSoldOut = !isUnlimited && remaining <= 0;
   const isLowStock = !isUnlimited && remaining > 0 && remaining <= 3;
-  const isSegmented = Boolean(card.isSegmented);
-  const gameCoupon = isGameCoupon(card);
-  const partnerLogo = partner?.brandLogoUrl || "";
-  const cardStyle = partnerLogo
-    ? { "--cg-card-logo": `url("${partnerLogo}")` }
-    : undefined;
+  const isSegmented = Boolean(normalizedCard.isSegmented);
+  const gameCoupon = isGameCoupon(normalizedCard);
+  const deliveryFree = isDeliveryFreeCard(normalizedCard);
+  const ctaWords = [
+    isSoldOut ? "AGOTADO" : gameCoupon ? "JUGAR" : isSegmented ? "VER SI APLICA" : "CLAIM",
+    isSoldOut ? "SOLD OUT" : gameCoupon ? "PLAY" : isSegmented ? "COMPROBAR" : "RECLAMAR",
+    isSoldOut ? "AGOTADO" : gameCoupon ? "WIN" : isSegmented ? "DESBLOQUEAR" : "CANJEAR",
+    isSoldOut ? "SOLD OUT" : gameCoupon ? "JUGAR" : isSegmented ? "VER SI APLICA" : "CLAIM",
+  ];
 
   return (
     <article
-      className={`cg-card ${getCardTheme(card.type)} ${gameCoupon ? "cg-card-game" : ""} ${
+      className={`cg-card ${getCardTheme(normalizedCard.type)} ${gameCoupon ? "cg-card-game" : ""} ${
+        deliveryFree ? "cg-card-deliveryFree" : ""
+      } ${
         isSoldOut ? "is-soldout" : ""
       }`}
-      style={cardStyle}
     >
       <header className="cg-cardTop">
-        <span className="cg-cardBadge">
-          {gameCoupon ? "Play & Win" : isSegmented ? "Personalizado" : "Reward"}
+        <span className={`cg-cardBadge ${deliveryFree ? "cg-dfBadge" : ""}`}>
+          {deliveryFree && <span className="cg-dfBadgeMoto" aria-hidden="true" />}
+          {deliveryFree ? "Delivery Free" : gameCoupon ? "Play & Win" : isSegmented ? "Personalizado" : "Reward"}
         </span>
-        <span className="cg-cardType">{getDisplayType(card.type)}</span>
+        <span className="cg-cardType">{deliveryFree ? "Cupon especial" : getDisplayType(normalizedCard.type)}</span>
       </header>
 
-      <div className="cg-cardBody">
-        <p className="cg-cardEyebrow">{String(card.type || "").replaceAll("_", " ")}</p>
-        <h2 className="cg-cardTitle">{card.title}</h2>
-        {gameCoupon && (
-          <p className="cg-cardGameLine">{card.game?.name || "Premio dorado"}</p>
-        )}
-        <p className="cg-cardSubtitle">{getDisplaySubtitle(card)}</p>
-        {isSegmented && (
-          <p className="cg-cardHint">Disponible segun tu perfil de cliente.</p>
-        )}
-      </div>
+      {deliveryFree ? (
+        <div className="cg-cardBody cg-dfBody">
+          <p className="cg-cardEyebrow">Delivery Free</p>
+          <h2 className="cg-cardTitle">Envio gratis</h2>
+          <p className="cg-cardSubtitle">Envio Gratis</p>
+
+          <div className="cg-dfActionScene" aria-hidden="true">
+            <span className="cg-dfFlare cg-dfFlare-1" />
+            <span className="cg-dfFlare cg-dfFlare-2" />
+            <span className="cg-dfTrail cg-dfTrail-1" />
+            <span className="cg-dfTrail cg-dfTrail-2" />
+            <span className="cg-dfTrail cg-dfTrail-3" />
+            <span className="cg-dfOrbit" />
+            <span className="cg-dfOrbit cg-dfOrbit-2" />
+            <div className="cg-dfMotoWrap">
+              <svg className="cg-dfMoto" viewBox="0 0 220 150" role="presentation">
+                <g className="cg-dfMotoPizzaBox">
+                  <path d="M108 42h56l14 28-12 18h-58z" />
+                  <path d="M117 51h39l7 13h-48z" />
+                  <path d="M126 60l10 10 18-16" />
+                </g>
+                <g className="cg-dfMotoRider">
+                  <circle cx="78" cy="36" r="13" />
+                  <path d="M66 51h32l18 29H83l-24-16z" />
+                  <path d="M94 58l25 13 20 2" />
+                  <path d="M77 72l-20 20" />
+                </g>
+                <g className="cg-dfMotoBody">
+                  <path d="M42 94h63c13 0 24-8 31-21l21 2c19 2 34 14 39 31h-36c-7-13-20-21-36-21s-29 8-36 21H74c-5-11-15-18-29-18-14 0-25 7-31 18H8c4-22 17-35 34-35z" />
+                  <path d="M43 80h50l13 14H39z" />
+                  <path d="M134 75l16-21h32l-9 25" />
+                  <path d="M36 62h26l14 18H41z" />
+                </g>
+                <g className="cg-dfMotoLines">
+                  <path d="M18 54h37" />
+                  <path d="M7 70h50" />
+                  <path d="M21 86h28" />
+                </g>
+                <g className="cg-dfMotoWheels">
+                  <circle cx="45" cy="109" r="24" />
+                  <circle cx="45" cy="109" r="10" />
+                  <circle cx="126" cy="109" r="24" />
+                  <circle cx="126" cy="109" r="10" />
+                </g>
+              </svg>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="cg-cardBody">
+          <p className="cg-cardEyebrow">{String(normalizedCard.type || "").replaceAll("_", " ")}</p>
+          <h2 className="cg-cardTitle">{normalizedCard.title}</h2>
+          {gameCoupon && (
+            <p className="cg-cardGameLine">{normalizedCard.game?.name || "Premio dorado"}</p>
+          )}
+          <p className="cg-cardSubtitle">{getDisplaySubtitle(normalizedCard)}</p>
+          {isSegmented && (
+            <p className="cg-cardHint">Disponible segun tu perfil de cliente.</p>
+          )}
+        </div>
+      )}
 
       <footer className="cg-cardFooter">
         <div className="cg-cardStockBlock">
@@ -357,18 +471,11 @@ function CouponCard({ card, partner, onClaim }) {
         >
           <span className="cg-ctaViewport" aria-hidden="true">
             <span className="cg-ctaSlider">
-              <span className="cg-ctaWord">
-                {isSoldOut ? "AGOTADO" : gameCoupon ? "JUGAR" : isSegmented ? "VER SI APLICA" : "CLAIM"}
-              </span>
-              <span className="cg-ctaWord">
-                {isSoldOut ? "SOLD OUT" : gameCoupon ? "PLAY" : isSegmented ? "COMPROBAR" : "RECLAMAR"}
-              </span>
-              <span className="cg-ctaWord">
-                {isSoldOut ? "AGOTADO" : gameCoupon ? "WIN" : isSegmented ? "DESBLOQUEAR" : "CANJEAR"}
-              </span>
-              <span className="cg-ctaWord">
-                {isSoldOut ? "SOLD OUT" : gameCoupon ? "JUGAR" : isSegmented ? "VER SI APLICA" : "CLAIM"}
-              </span>
+              {ctaWords.map((word, index) => (
+                <span className="cg-ctaWord" key={`${word}-${index}`}>
+                  {word}
+                </span>
+              ))}
             </span>
           </span>
         </button>
@@ -378,6 +485,7 @@ function CouponCard({ card, partner, onClaim }) {
 }
 
 function ClaimModal({ card, partnerId, zipCode, redeemBasePath, onClose, onClaimed, onGoToRedeem }) {
+  const normalizedCard = normalizeGalleryCard(card);
   const [form, setForm] = useState({ name: "", phone: "" });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -411,8 +519,8 @@ function ClaimModal({ card, partnerId, zipCode, redeemBasePath, onClose, onClaim
     try {
       const { data } = await api.post("/api/coupons/direct-claim", {
         partnerId,
-        type: card.type,
-        key: card.key,
+        type: normalizedCard.type,
+        key: normalizedCard.key,
         name: form.name,
         phone: form.phone,
         zipCode,
@@ -439,12 +547,12 @@ function ClaimModal({ card, partnerId, zipCode, redeemBasePath, onClose, onClaim
   };
 
   return (
-    <div className="cg-modalBack" onMouseDown={onClose}>
+    <div className="cg-modalBack cg-modalBack-claim" onMouseDown={onClose}>
       <div className="cg-modalCard cg-claimModalCard" onMouseDown={(event) => event.stopPropagation()}>
         <div className="cg-modalHead">
           <div>
             <div className="cg-kicker">Volta Coupon Gallery</div>
-            <h3>{card.title}</h3>
+            <h3>{normalizedCard.title}</h3>
           </div>
           <button className="cg-ghostBtn" onClick={onClose} type="button">
             Cerrar
@@ -580,7 +688,19 @@ export default function CouponGallery({ partner }) {
 
     try {
       const { data } = await api.get(`/api/coupons/gallery?partnerId=${partnerId}&zipCode=${zipCode}`);
-      setCards(Array.isArray(data?.cards) ? data.cards : []);
+      const normalizedCards = Array.isArray(data?.cards) ? data.cards.map(normalizeGalleryCard) : [];
+      console.info("[CouponGallery]", COUPON_GALLERY_BUILD_MARK, {
+        partnerId,
+        zipCode,
+        cards: normalizedCards.map((card) => ({
+          type: card.type,
+          key: card.key,
+          title: card.title,
+          remaining: card.remaining,
+          campaign: card.campaign,
+        })),
+      });
+      setCards(normalizedCards);
     } catch (requestError) {
       console.error(requestError);
       setError("No se pudo cargar la galeria de cupones.");
@@ -716,7 +836,7 @@ export default function CouponGallery({ partner }) {
   };
 
   return (
-    <div className="cg-shell">
+    <div className="cg-shell" data-build={COUPON_GALLERY_BUILD_MARK}>
       <div className="cg-wrap">
         <header className="cg-hero">
           <div className="cg-kicker">Coupon Gallery</div>
@@ -756,28 +876,31 @@ export default function CouponGallery({ partner }) {
         {zipReady && !loading && !error && (
           <section className="cg-galleryRail" aria-label="Cupones disponibles">
             <div className="cg-grid">
-              {cards.map((card) => (
-                <CouponCard
-                  key={`${card.type}-${card.key}`}
-                  card={card}
-                  partner={partner}
-                  onClaim={() => {
-                    if (!legalAccepted) return;
-                    if (isGameCoupon(card)) {
-                      navigate(`/${partner?.slug}/games/${card.game?.slug || "winning-number"}`, {
-                        state: {
-                          couponTrail: "game",
-                          gameName: card.game?.name || "Premio dorado",
-                          partnerName: partner?.name || "Partner",
-                          returnToStorePath,
-                        },
-                      });
-                      return;
-                    }
-                    setClaimingCard(card);
-                  }}
-                />
-              ))}
+              {cards.map((card) => {
+                const normalizedCard = normalizeGalleryCard(card);
+                return (
+                  <CouponCard
+                    key={`${normalizedCard.type}-${normalizedCard.key}`}
+                    card={normalizedCard}
+                    partner={partner}
+                    onClaim={() => {
+                      if (!legalAccepted) return;
+                      if (isGameCoupon(normalizedCard)) {
+                        navigate(`/${partner?.slug}/games/${normalizedCard.game?.slug || "winning-number"}`, {
+                          state: {
+                            couponTrail: "game",
+                            gameName: normalizedCard.game?.name || "Premio dorado",
+                            partnerName: partner?.name || "Partner",
+                            returnToStorePath,
+                          },
+                        });
+                        return;
+                      }
+                      setClaimingCard(normalizedCard);
+                    }}
+                  />
+                );
+              })}
             </div>
 
             {!cards.length && (

@@ -37,6 +37,18 @@ const readTrackingSettings = (value) => {
   return parsed;
 };
 
+const readPaymentPolicySettings = (value) => {
+  const parsed = parseMaybeJson(parseMaybeJson(value, {}), {});
+  const source = parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
+
+  return {
+    card: true,
+    cash: Boolean(source.cash),
+    paypal: Boolean(source.paypal),
+    crypto: Boolean(source.crypto),
+  };
+};
+
 export default function SettingsModule({
   partner,
   onOpenDelivery,
@@ -94,6 +106,16 @@ export default function SettingsModule({
   const activePriceAdjustmentCount = priceAdjustmentRules.filter(
     (rule) => String(rule?.status || "ACTIVE").toUpperCase() === "ACTIVE"
   ).length;
+  const paymentPolicySettings = useMemo(
+    () => readPaymentPolicySettings(partnerData?.paymentPolicySettings),
+    [partnerData?.paymentPolicySettings]
+  );
+  const activePaymentMethods = [
+    paymentPolicySettings.card && "Tarjeta",
+    paymentPolicySettings.cash && "Efectivo",
+    paymentPolicySettings.paypal && "PayPal",
+    paymentPolicySettings.crypto && "Cripto",
+  ].filter(Boolean);
   const buttonConfig = useMemo(
     () => normalizeStorefrontButtonConfig(partnerData?.storefrontButtonConfig),
     [partnerData?.storefrontButtonConfig]
@@ -115,7 +137,7 @@ export default function SettingsModule({
             <h2 className="bo-settingsTitle">Capa global del partner</h2>
             <p className="bo-settingsHint">
               Este modulo padre resume como estamos configurando el motor del partner.
-              Desde aqui entramos a policies, entregas y personalizacion.
+              Desde aqui entramos a reglas, entregas y personalizacion.
             </p>
           </div>
           <div className="bo-settingsStoreChip">
@@ -127,8 +149,8 @@ export default function SettingsModule({
           <article className="bo-settingsSummaryCard">
             <div className="bo-settingsSummaryTop">
               <div>
-                <div className="bo-settingsEyebrow">Policies</div>
-                <h3 className="bo-settingsSectionTitle">Politicas de empresa</h3>
+                <div className="bo-settingsEyebrow">Reglas</div>
+                <h3 className="bo-settingsSectionTitle">Reglas de empresa</h3>
               </div>
               <button
                 type="button"
@@ -151,8 +173,12 @@ export default function SettingsModule({
               <span>Ajustes precio</span>
               <strong>{activePriceAdjustmentCount} activos</strong>
             </div>
+            <div className="bo-settingsMetricRow">
+              <span>Pagos</span>
+              <strong>{activePaymentMethods.join(", ")}</strong>
+            </div>
             <p className="bo-settingsCardHint">
-              Centraliza el pago minimo, logo, identidad base y ajustes de
+              Centraliza pago minimo, medios de pago, logo y ajustes de
               precio por bloque sin editar productos uno a uno.
             </p>
           </article>

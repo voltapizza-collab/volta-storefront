@@ -21257,3 +21257,73 @@
     scroll-padding-bottom: var(--sf-grid-focus-end-space);
   }
 }
+
+.sf-shell .sf-couponEntryBtn.has-delivery-free,
+.sf-shell .sf-offersBtn.sf-lsfOfferBtn.has-delivery-free {
+  border-color: rgba(220, 38, 38, 0.72);
+  color: #fff;
+  background:
+    radial-gradient(circle at 18% 20%, rgba(255, 255, 255, 0.72), transparent 24%),
+    radial-gradient(circle at 84% 76%, rgba(255, 218, 66, 0.5), transparent 28%),
+    linear-gradient(112deg, transparent 0 42%, rgba(255, 255, 255, 0.18) 48%, transparent 56%),
+    linear-gradient(135deg, #ff2d50 0%, #e11d24 52%, #9f0000 100%);
+  box-shadow:
+    0 5px 14px rgba(220, 38, 38, 0.28),
+    0 0 18px rgba(255, 193, 7, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.62);
+  animation: sfDeliveryCouponButtonPulse 2.8s ease-in-out infinite;
+}
+
+.sf-shell .sf-couponEntryBtn.has-delivery-free::before,
+.sf-shell .sf-offersBtn.sf-lsfOfferBtn.has-delivery-free::before {
+  background: linear-gradient(90deg, transparent, rgba(255, 218, 66, 0.36), rgba(255, 255, 255, 0.86), transparent);
+}
+
+.sf-shell .sf-couponEntryBtn.has-delivery-free::after,
+.sf-shell .sf-offersBtn.sf-lsfOfferBtn.has-delivery-free::after {
+  border-color: rgba(255, 255, 255, 0.42);
+}
+
+.sf-shell .sf-couponEntryBtn.has-delivery-free .sf-couponEntryBtn__label,
+.sf-shell .sf-offersBtn.sf-lsfOfferBtn.has-delivery-free .sf-offersBtnLabel {
+  display: grid;
+  height: 1.05em;
+  overflow: hidden;
+  color: #fff;
+  text-shadow:
+    0 1px 0 rgba(80, 0, 0, 0.54),
+    0 0 10px rgba(255, 255, 255, 0.32);
+}
+
+.sf-shell .sf-couponEntryBtn.has-delivery-free .sf-couponEntryBtn__label > span,
+.sf-shell .sf-offersBtn.sf-lsfOfferBtn.has-delivery-free .sf-offersBtnLabel > span {
+  display: block;
+  height: 1.05em;
+  line-height: 1.05;
+  color: inherit;
+  animation: sfDeliveryCouponLabelSwap 3s ease-in-out infinite;
+}
+
+@keyframes sfDeliveryCouponLabelSwap {
+  0%,
+  42% {
+    transform: translateY(0);
+  }
+  50%,
+  92% {
+    transform: translateY(-1.05em);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes sfDeliveryCouponButtonPulse {
+  0%,
+  100% {
+    filter: saturate(1) brightness(1);
+  }
+  50% {
+    filter: saturate(1.14) brightness(1.05);
+  }
+}

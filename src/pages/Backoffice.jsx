@@ -723,7 +723,7 @@ export default function Backoffice() {
                     }}
                     type="button"
                   >
-                    Policies
+                    Reglas
                   </button>
 
                   <button

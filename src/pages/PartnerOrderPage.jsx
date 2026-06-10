@@ -7,6 +7,7 @@ import "../styles/Storefront.css";
 
 const GOOGLE_KEY = process.env.REACT_APP_GOOGLE_KEY || "";
 const GOOGLE_PLACES_SCRIPT_ID = "volta-google-places-script";
+const DELIVERY_SELECTION_KEY = "volta_storefront_delivery_selection";
 
 const normalizeSearchText = (value) =>
   String(value || "")
@@ -50,6 +51,14 @@ const loadGooglePlaces = (apiKey) =>
     script.onerror = reject;
     document.head.appendChild(script);
   });
+
+const rememberDeliverySelection = (selection) => {
+  try {
+    window.sessionStorage.setItem(DELIVERY_SELECTION_KEY, JSON.stringify(selection));
+  } catch {
+    // The navigation state still carries the same payload during normal SPA flow.
+  }
+};
 
 export default function PartnerOrderPage() {
   const navigate = useNavigate();
@@ -257,6 +266,11 @@ export default function PartnerOrderPage() {
       rememberPickupStore(store.slug);
       setSelectedStoreSlug(store.slug);
       setPickupModalOpen(false);
+      try {
+        window.sessionStorage.removeItem(DELIVERY_SELECTION_KEY);
+      } catch {
+        // Pickup should never reuse a previous delivery selection.
+      }
 
       navigate(`/${partnerSlug}/${store.slug}`, {
         state: {
@@ -362,17 +376,24 @@ export default function PartnerOrderPage() {
       setDeliveryResolution(resolution);
 
       if (resolution?.withinRange && resolution?.nearestStore?.slug) {
+        const selection = {
+          partnerSlug,
+          storeSlug: resolution.nearestStore.slug,
+          serviceMode: "delivery",
+          deliveryAddress: trimmedAddress,
+          deliveryAddressLine2: deliveryAddressLine2.trim(),
+          deliveryResolution: resolution,
+        };
+
         setSelectedStoreSlug(resolution.nearestStore.slug);
         setDeliveryModalOpen(false);
+        rememberDeliverySelection(selection);
         navigate(`/${partnerSlug}/${resolution.nearestStore.slug}`, {
           state: {
             orderTrail: "store",
             partnerName: partner?.name,
             storeName: resolution.nearestStore.storeName || resolution.nearestStore.slug,
-            serviceMode: "delivery",
-            deliveryAddress: trimmedAddress,
-            deliveryAddressLine2: deliveryAddressLine2.trim(),
-            deliveryResolution: resolution,
+            ...selection,
           },
         });
       } else {
@@ -398,15 +419,31 @@ export default function PartnerOrderPage() {
   const continueToMenu = () => {
     if (!canContinue) return;
 
+    const selection = {
+      partnerSlug,
+      storeSlug: selectedStoreSlug,
+      serviceMode,
+      deliveryAddress: serviceMode === "delivery" ? deliveryAddress.trim() : "",
+      deliveryAddressLine2: serviceMode === "delivery" ? deliveryAddressLine2.trim() : "",
+      deliveryResolution: serviceMode === "delivery" ? deliveryResolution : null,
+    };
+
+    if (serviceMode === "delivery") {
+      rememberDeliverySelection(selection);
+    } else {
+      try {
+        window.sessionStorage.removeItem(DELIVERY_SELECTION_KEY);
+      } catch {
+        // Pickup does not need persisted delivery state.
+      }
+    }
+
     navigate(`/${partnerSlug}/${selectedStoreSlug}`, {
       state: {
         orderTrail: "store",
         partnerName: partner.name,
         storeName: selectedStore?.storeName || selectedStoreSlug,
-        serviceMode,
-        deliveryAddress: deliveryAddress.trim(),
-        deliveryAddressLine2: deliveryAddressLine2.trim(),
-        deliveryResolution,
+        ...selection,
       },
     });
   };

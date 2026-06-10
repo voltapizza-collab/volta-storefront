@@ -336,6 +336,14 @@
   font: inherit;
 }
 
+.cp-info {
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: rgba(255, 182, 28, 0.14);
+  color: #23163b;
+  font-weight: 700;
+}
+
 .cp-fileControl {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
@@ -474,6 +482,22 @@
   cursor: not-allowed;
 }
 
+.cp-dangerBtn {
+  border: 1px solid rgba(196, 22, 22, 0.18);
+  border-radius: 999px;
+  padding: 10px 14px;
+  background: rgba(196, 22, 22, 0.08);
+  color: #9b1c1c;
+  font: inherit;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.cp-dangerBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .cp-pill:disabled {
   opacity: 0.6;
   cursor: not-allowed;
@@ -492,6 +516,108 @@
 .cp-helper {
   background: rgba(59, 0, 139, 0.05);
   color: rgba(34, 21, 52, 0.72);
+}
+
+.cp-galleryManager {
+  display: grid;
+  gap: 16px;
+}
+
+.cp-galleryManagerHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.cp-galleryManagerHead p {
+  margin: 8px 0 0;
+  color: rgba(34, 21, 52, 0.7);
+}
+
+.cp-galleryPoolList {
+  display: grid;
+  gap: 10px;
+}
+
+.cp-galleryPoolRow {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(59, 0, 139, 0.08);
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.cp-galleryPoolList .is-dragging {
+  position: relative;
+  z-index: 4;
+}
+
+.cp-galleryPoolList .is-dragging .cp-galleryPoolRow {
+  border-color: rgba(59, 0, 139, 0.22);
+  box-shadow: 0 16px 34px rgba(59, 0, 139, 0.14);
+}
+
+.cp-galleryDragHandle {
+  width: 26px;
+  height: 34px;
+  display: inline-grid;
+  grid-template-columns: repeat(3, 3px);
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  cursor: grab;
+}
+
+.cp-galleryDragHandle:active {
+  cursor: grabbing;
+}
+
+.cp-galleryDragHandle:disabled {
+  cursor: wait;
+  opacity: 0.55;
+}
+
+.cp-galleryDragHandle span {
+  width: 3px;
+  height: 18px;
+  border-radius: 999px;
+  background: rgba(59, 0, 139, 0.22);
+}
+
+.cp-galleryPoolMain {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.cp-galleryPoolRow strong {
+  color: #23163b;
+}
+
+.cp-galleryPoolRow span,
+.cp-galleryPoolRow small {
+  color: rgba(34, 21, 52, 0.65);
+  font-weight: 700;
+}
+
+.cp-galleryPoolMeta {
+  display: grid;
+  justify-items: end;
+  gap: 2px;
+  color: rgba(34, 21, 52, 0.65);
+}
+
+.cp-galleryPoolMeta b {
+  color: var(--brand-1);
+  font-size: 22px;
 }
 
 .cp-kpiGrid--three {
@@ -1092,5 +1218,22 @@
 
   .cp-incentiveRow {
     grid-template-columns: 1fr;
+  }
+
+  .cp-galleryManagerHead {
+    grid-template-columns: 1fr;
+  }
+
+  .cp-galleryPoolRow {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .cp-galleryPoolMeta,
+  .cp-galleryPoolRow .cp-dangerBtn {
+    grid-column: 2;
+  }
+
+  .cp-galleryPoolMeta {
+    justify-items: start;
   }
 }

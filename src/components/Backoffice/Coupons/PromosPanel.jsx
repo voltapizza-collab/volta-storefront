@@ -88,6 +88,46 @@ const getSizePrice = (item, size = item?.size) => {
   return Number.isFinite(price) ? price : null;
 };
 
+const isChoiceItem = (item) => {
+  const type = String(item?.type || "").toUpperCase();
+  return type === "CHOICE" || type === "CATEGORY";
+};
+
+const getChoiceOptionIds = (item) =>
+  Array.isArray(item?.optionProductIds)
+    ? item.optionProductIds.map((id) => Number(id)).filter((id) => Number.isInteger(id) && id > 0)
+    : [];
+
+const getPromoItemKey = (item) => {
+  if (isChoiceItem(item)) {
+    const optionIds = getChoiceOptionIds(item);
+    const scope = optionIds.length
+      ? `products-${optionIds.join("-")}`
+      : `category-${item.categoryId || item.categoryName || item.category || item.name}`;
+    return `choice-${scope}`;
+  }
+
+  return `product-${item?.pizzaId}`;
+};
+
+const getCategorySizes = (rows = []) => [
+  ...new Set(rows.flatMap((pizza) => getPizzaSizes(pizza))),
+];
+
+const getLowestCategoryPrices = (rows = []) => {
+  const result = {};
+
+  rows.forEach((pizza) => {
+    getPizzaSizes(pizza).forEach((size) => {
+      const price = getSizePrice({ priceBySize: pizza.priceBySize || {} }, size);
+      if (price == null) return;
+      if (result[size] == null || price < result[size]) result[size] = price;
+    });
+  });
+
+  return result;
+};
+
 const isPubliclyLaunched = (pizza) => {
   if (pizza?.status && pizza.status !== "ACTIVE") return false;
   if (pizza?.type && pizza.type !== "SELLABLE") return false;
@@ -114,6 +154,8 @@ export default function PromosPanel({ partnerId }) {
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
+  const [choiceDrafts, setChoiceDrafts] = useState({});
+  const [openCategoryKey, setOpenCategoryKey] = useState("");
 
   const loadAll = useCallback(async () => {
     if (!partnerId) return;
@@ -161,13 +203,26 @@ export default function PromosPanel({ partnerId }) {
 
     pizzas.filter(isPubliclyLaunched).forEach((pizza) => {
       const category = pizza.categoryName || pizza.category || "Sin categoria";
-      if (!map.has(category)) map.set(category, []);
-      map.get(category).push(pizza);
+      const categoryId = Number(pizza.categoryId);
+      const key = Number.isInteger(categoryId) && categoryId > 0
+        ? `id:${categoryId}`
+        : `name:${category}`;
+      if (!map.has(key)) {
+        map.set(key, {
+          key,
+          categoryId: Number.isInteger(categoryId) && categoryId > 0 ? categoryId : null,
+          category,
+          rows: [],
+        });
+      }
+      map.get(key).rows.push(pizza);
     });
 
-    return [...map.entries()].map(([category, rows]) => ({
-      category,
-      rows: rows
+    return [...map.values()].map((group) => ({
+      ...group,
+      sizeOptions: getCategorySizes(group.rows),
+      priceBySize: getLowestCategoryPrices(group.rows),
+      rows: group.rows
         .slice()
         .sort((left, right) =>
           String(left.name || "").localeCompare(String(right.name || ""), "es", {
@@ -177,10 +232,16 @@ export default function PromosPanel({ partnerId }) {
     }));
   }, [pizzas]);
 
+  useEffect(() => {
+    setOpenCategoryKey((current) => current || pizzasByCategory[0]?.key || "");
+  }, [pizzasByCategory]);
+
   const resetForm = () => {
     setForm(initialForm);
     setEditingId(null);
     setExistingImage("");
+    setChoiceDrafts({});
+    setOpenCategoryKey(pizzasByCategory[0]?.key || "");
   };
 
   const updateForm = (key, value) => {
@@ -201,8 +262,10 @@ export default function PromosPanel({ partnerId }) {
     const defaultSize = sizeOptions[0] || "";
 
     return {
+      type: "PRODUCT",
       pizzaId: pizza.id,
       name: pizza.name,
+      categoryId: pizza.categoryId || null,
       category: pizza.categoryName || pizza.category || "Sin categoria",
       quantity: 1,
       size: defaultSize,
@@ -210,6 +273,106 @@ export default function PromosPanel({ partnerId }) {
       priceBySize: pizza.priceBySize || {},
       unitPrice: getSizePrice({ priceBySize: pizza.priceBySize }, defaultSize),
     };
+  };
+
+  const getChoiceDraft = (group) =>
+    choiceDrafts[group.key] || {
+      source: "CATEGORY",
+      quantity: 1,
+      productIds: [],
+    };
+
+  const updateChoiceDraft = (groupKey, patch) => {
+    setChoiceDrafts((prev) => ({
+      ...prev,
+      [groupKey]: {
+        source: "CATEGORY",
+        quantity: 1,
+        productIds: [],
+        ...(prev[groupKey] || {}),
+        ...patch,
+      },
+    }));
+  };
+
+  const toggleChoiceDraftProduct = (groupKey, pizzaId) => {
+    setChoiceDrafts((prev) => {
+      const draft = {
+        source: "PRODUCTS",
+        quantity: 1,
+        productIds: [],
+        ...(prev[groupKey] || {}),
+      };
+      const currentIds = draft.productIds.map((id) => Number(id));
+      const exists = currentIds.includes(Number(pizzaId));
+
+      return {
+        ...prev,
+        [groupKey]: {
+          ...draft,
+          source: "PRODUCTS",
+          productIds: exists
+            ? currentIds.filter((id) => id !== Number(pizzaId))
+            : [...currentIds, Number(pizzaId)],
+        },
+      };
+    });
+  };
+
+  const buildChoicePromoItem = (group, draft = getChoiceDraft(group)) => {
+    const defaultSize = group.sizeOptions[0] || "";
+    const source = draft.source === "PRODUCTS" ? "PRODUCTS" : "CATEGORY";
+    const optionProductIds =
+      source === "PRODUCTS"
+        ? draft.productIds.map((id) => Number(id)).filter((id) => Number.isInteger(id) && id > 0)
+        : [];
+    const selectedNames = optionProductIds
+      .map((id) => pizzaById.get(id)?.name)
+      .filter(Boolean);
+    const label =
+      source === "PRODUCTS" && selectedNames.length
+        ? selectedNames.join(" / ")
+        : group.category;
+
+    return {
+      type: "CHOICE",
+      choiceType: source,
+      categoryId: group.categoryId || null,
+      categoryName: group.category,
+      name: label,
+      category: group.category,
+      quantity: Math.max(1, Number(draft.quantity || 1)),
+      optionProductIds,
+      size: defaultSize,
+      sizeOptions: group.sizeOptions,
+      priceBySize: group.priceBySize || {},
+    };
+  };
+
+  const addChoiceItem = (group) => {
+    const draft = getChoiceDraft(group);
+    const choiceItem = buildChoicePromoItem(group, draft);
+    const itemKey = getPromoItemKey(choiceItem);
+
+    if (choiceItem.choiceType === "PRODUCTS" && !choiceItem.optionProductIds.length) {
+      setMessage("Marca al menos un producto para esa eleccion.");
+      return;
+    }
+
+    if (choiceItem.choiceType === "PRODUCTS" && choiceItem.quantity > choiceItem.optionProductIds.length) {
+      setMessage("La cantidad a elegir no puede superar los productos marcados.");
+      return;
+    }
+
+    setMessage("");
+    setForm((prev) => ({
+      ...prev,
+      items: [
+        ...prev.items.filter((item) => getPromoItemKey(item) !== itemKey),
+        choiceItem,
+      ],
+    }));
+    setOpenCategoryKey("");
   };
 
   const addItem = (pizza) => {
@@ -232,38 +395,11 @@ export default function PromosPanel({ partnerId }) {
 
   const isItemSelected = (pizzaId) => form.items.some((item) => item.pizzaId === pizzaId);
 
-  const isCategorySelected = (group) =>
-    group.rows.length > 0 && group.rows.every((pizza) => isItemSelected(pizza.id));
-
-  const toggleCategory = (group) => {
-    setForm((prev) => {
-      const categoryIds = new Set(group.rows.map((pizza) => pizza.id));
-      const currentIds = new Set(prev.items.map((item) => item.pizzaId));
-      const allSelected = group.rows.length > 0 && group.rows.every((pizza) => currentIds.has(pizza.id));
-
-      if (allSelected) {
-        return {
-          ...prev,
-          items: prev.items.filter((item) => !categoryIds.has(item.pizzaId)),
-        };
-      }
-
-      const missingItems = group.rows
-        .filter((pizza) => !currentIds.has(pizza.id))
-        .map((pizza) => buildPromoItem(pizza));
-
-      return {
-        ...prev,
-        items: [...prev.items, ...missingItems],
-      };
-    });
-  };
-
-  const updateItem = (pizzaId, key, value) => {
+  const updateItem = (itemKey, key, value) => {
     setForm((prev) => ({
       ...prev,
       items: prev.items.map((item) =>
-        item.pizzaId === pizzaId
+        getPromoItemKey(item) === itemKey
           ? {
               ...item,
               [key]: value,
@@ -274,10 +410,10 @@ export default function PromosPanel({ partnerId }) {
     }));
   };
 
-  const removeItem = (pizzaId) => {
+  const removeItem = (itemKey) => {
     setForm((prev) => ({
       ...prev,
-      items: prev.items.filter((item) => item.pizzaId !== pizzaId),
+      items: prev.items.filter((item) => getPromoItemKey(item) !== itemKey),
     }));
   };
 
@@ -371,10 +507,45 @@ export default function PromosPanel({ partnerId }) {
   };
 
   const selectedFileName = form.imageFile?.name || (existingImage ? "Imagen actual" : "Sin archivo");
-  const selectedProductCount = form.items.length;
-  const selectedCategoryCount = pizzasByCategory.filter(isCategorySelected).length;
+  const selectedProductCount = form.items.filter((item) => !isChoiceItem(item)).length;
+  const selectedChoiceCount = form.items.filter(isChoiceItem).length;
 
   const normalizePromoItem = (item) => {
+    if (isChoiceItem(item)) {
+      const optionProductIds = getChoiceOptionIds(item);
+      const matchingGroup = pizzasByCategory.find(
+        (group) =>
+          (group.categoryId && Number(group.categoryId) === Number(item.categoryId)) ||
+          String(group.category) === String(item.categoryName || item.category || item.name)
+      );
+      const sizeOptions = matchingGroup?.sizeOptions?.length
+        ? matchingGroup.sizeOptions
+        : getItemSizes(item);
+      const priceBySize = matchingGroup?.priceBySize || item.priceBySize || {};
+      const size = sizeOptions.includes(item.size) ? item.size : sizeOptions[0] || "";
+      const categoryName = matchingGroup?.category || item.categoryName || item.category || item.name || "Categoria";
+      const optionNames = optionProductIds
+        .map((id) => pizzaById.get(id)?.name)
+        .filter(Boolean);
+      const choiceType = optionProductIds.length ? "PRODUCTS" : item.choiceType || "CATEGORY";
+
+      return {
+        ...item,
+        type: "CHOICE",
+        choiceType,
+        categoryId: matchingGroup?.categoryId || item.categoryId || null,
+        categoryName,
+        name: choiceType === "PRODUCTS" && optionNames.length ? optionNames.join(" / ") : categoryName,
+        category: categoryName,
+        optionProductIds,
+        quantity: Math.max(1, Number(item.quantity || 1)),
+        size,
+        sizeOptions,
+        priceBySize,
+        unitPrice: getSizePrice({ priceBySize }, size),
+      };
+    }
+
     const pizza = pizzaById.get(item.pizzaId);
     const priceBySize = pizza?.priceBySize || item.priceBySize || {};
     const sizeOptions = pizza ? getPizzaSizes(pizza) : getItemSizes(item);
@@ -382,7 +553,9 @@ export default function PromosPanel({ partnerId }) {
 
     return {
       ...item,
+      type: "PRODUCT",
       name: pizza?.name || item.name,
+      categoryId: pizza?.categoryId || item.categoryId || null,
       category: pizza?.categoryName || pizza?.category || item.category || "Sin categoria",
       size,
       sizeOptions,
@@ -519,53 +692,140 @@ export default function PromosPanel({ partnerId }) {
           <div>
             <div className="cp-kicker">Productos</div>
             <div className="cp-helper">
-              {selectedProductCount} seleccionados: {selectedCategoryCount} categoria
-              {selectedCategoryCount === 1 ? "" : "s"} completa{selectedCategoryCount === 1 ? "" : "s"} y{" "}
-              {selectedProductCount} producto{selectedProductCount === 1 ? "" : "s"} en bolsa.
+              {selectedProductCount + selectedChoiceCount} bloques:{" "}
+              {selectedProductCount} producto{selectedProductCount === 1 ? "" : "s"} fijo
+              {selectedProductCount === 1 ? "" : "s"} y {selectedChoiceCount} eleccion
+              {selectedChoiceCount === 1 ? "" : "es"} del cliente.
             </div>
           </div>
 
-          {pizzasByCategory.map((group, index) => (
-            <details key={group.category} className="cp-directCategory" open={index === 0}>
-              <summary className="cp-directCategorySummary">
-                <strong>{group.category}</strong>
-                <span>{group.rows.length} productos</span>
-              </summary>
+          {pizzasByCategory.map((group, index) => {
+            const draft = getChoiceDraft(group);
+            const draftProductIds = draft.productIds.map((id) => Number(id));
+            const draftOptionCount =
+              draft.source === "PRODUCTS" ? draftProductIds.length : group.rows.length;
+            const choicePreview =
+              draft.source === "PRODUCTS"
+                ? `${draftOptionCount} producto${draftOptionCount === 1 ? "" : "s"} marcado${draftOptionCount === 1 ? "" : "s"}`
+                : `toda la categoria ${group.category}`;
 
-              <label className={`cp-directCategorySelect ${isCategorySelected(group) ? "is-selected" : ""}`}>
-                <input
-                  type="checkbox"
-                  checked={isCategorySelected(group)}
-                  onChange={() => toggleCategory(group)}
-                />
-                <span>
-                  <strong>Seleccionar categoria completa</strong>
-                  <small>Todos los productos de {group.category} se agregan a la bolsa.</small>
-                </span>
-              </label>
+            return (
+              <details
+                key={group.key}
+                className="cp-directCategory"
+                open={openCategoryKey === group.key}
+                onToggle={(event) => {
+                  if (event.currentTarget.open) {
+                    setOpenCategoryKey(group.key);
+                  } else if (openCategoryKey === group.key) {
+                    setOpenCategoryKey("");
+                  }
+                }}
+              >
+                <summary className="cp-directCategorySummary">
+                  <strong>{group.category}</strong>
+                  <span>{group.rows.length} productos</span>
+                </summary>
 
-              <div className="cp-directProductList">
-                {group.rows.map((pizza) => {
-                  const selected = isItemSelected(pizza.id);
+                <div className="cp-choiceBuilder">
+                  <div>
+                    <strong>Eleccion del cliente</strong>
+                    <small>
+                      El cliente elige {draft.quantity} de {choicePreview}.
+                    </small>
+                  </div>
 
-                  return (
-                    <label
-                      key={pizza.id}
-                      className={`cp-directProductRow ${selected ? "is-selected" : ""}`}
-                    >
-                      <input
-                        type="checkbox"
-                        checked={selected}
-                        onChange={() => addItem(pizza)}
-                      />
-                      <span>{pizza.name}</span>
-                      {selected && <em>En bolsa</em>}
+                  <div className="cp-choiceControls">
+                    <label>
+                      Puede elegir
+                      <select
+                        value={draft.source}
+                        onChange={(event) =>
+                          updateChoiceDraft(group.key, {
+                            source: event.target.value,
+                            productIds: event.target.value === "CATEGORY" ? [] : draft.productIds,
+                          })
+                        }
+                      >
+                        <option value="CATEGORY">Toda la categoria</option>
+                        <option value="PRODUCTS">Productos marcados</option>
+                      </select>
                     </label>
-                  );
-                })}
-              </div>
-            </details>
-          ))}
+
+                    <label>
+                      Cantidad
+                      <select
+                        value={draft.quantity}
+                        onChange={(event) =>
+                          updateChoiceDraft(group.key, {
+                            quantity: Number(event.target.value),
+                          })
+                        }
+                      >
+                        {QUANTITY_OPTIONS.map((quantity) => (
+                          <option key={quantity} value={quantity}>
+                            {quantity}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+
+                    <button
+                      type="button"
+                      className="cp-tabBtn"
+                      onClick={() => addChoiceItem(group)}
+                    >
+                      Anadir eleccion
+                    </button>
+                  </div>
+
+                  {draft.source === "PRODUCTS" && (
+                    <div className="cp-choiceOptionList">
+                      {group.rows.map((pizza) => {
+                        const checked = draftProductIds.includes(Number(pizza.id));
+
+                        return (
+                          <label
+                            key={`choice-${pizza.id}`}
+                            className={`cp-choiceOption ${checked ? "is-selected" : ""}`}
+                          >
+                            <input
+                              type="checkbox"
+                              checked={checked}
+                              onChange={() => toggleChoiceDraftProduct(group.key, pizza.id)}
+                            />
+                            <span>{pizza.name}</span>
+                          </label>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+
+                <div className="cp-directProductList">
+                  <div className="cp-directProductListHead">Productos fijos</div>
+                  {group.rows.map((pizza) => {
+                    const selected = isItemSelected(pizza.id);
+
+                    return (
+                      <label
+                        key={pizza.id}
+                        className={`cp-directProductRow ${selected ? "is-selected" : ""}`}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={selected}
+                          onChange={() => addItem(pizza)}
+                        />
+                        <span>{pizza.name}</span>
+                        {selected && <em>Fijo</em>}
+                      </label>
+                    );
+                  })}
+                </div>
+              </details>
+            );
+          })}
 
           {!pizzasByCategory.length && (
             <div className="cp-empty">No hay productos cargados para este partner.</div>
@@ -580,20 +840,33 @@ export default function PromosPanel({ partnerId }) {
 
           {form.items.map((item) => {
             const normalizedItem = normalizePromoItem(item);
+            const itemKey = getPromoItemKey(normalizedItem);
+            const choiceItem = isChoiceItem(normalizedItem);
+            const optionCount = getChoiceOptionIds(normalizedItem).length;
 
             return (
-            <div key={normalizedItem.pizzaId} className="cp-promoBagRow">
+            <div key={itemKey} className="cp-promoBagRow">
               <div>
-                <strong>{normalizedItem.name}</strong>
-                <span>{normalizedItem.category}</span>
+                <strong>
+                  {choiceItem
+                    ? `El cliente elige ${normalizedItem.quantity || 1}`
+                    : normalizedItem.name}
+                </strong>
+                <span>
+                  {choiceItem
+                    ? optionCount
+                      ? `${optionCount} opciones de ${normalizedItem.category}`
+                      : `De ${normalizedItem.category}`
+                    : normalizedItem.category}
+                </span>
               </div>
 
               <label>
-                Cant.
+                {choiceItem ? "Elige" : "Cant."}
                 <select
                   value={normalizedItem.quantity}
                   onChange={(event) =>
-                    updateItem(normalizedItem.pizzaId, "quantity", Number(event.target.value))
+                    updateItem(itemKey, "quantity", Number(event.target.value))
                   }
                 >
                   {QUANTITY_OPTIONS.map((quantity) => (
@@ -609,7 +882,7 @@ export default function PromosPanel({ partnerId }) {
                 <select
                   value={normalizedItem.size || ""}
                   onChange={(event) =>
-                    updateItem(normalizedItem.pizzaId, "size", event.target.value)
+                    updateItem(itemKey, "size", event.target.value)
                   }
                 >
                   {getItemSizes(normalizedItem).map((size) => (
@@ -622,7 +895,7 @@ export default function PromosPanel({ partnerId }) {
               </label>
 
               <label>
-                Precio
+                {choiceItem ? "Base" : "Precio"}
                 <span className="cp-promoBagPrice">
                   {getSizePrice(normalizedItem) == null ? "-" : formatPrice(getSizePrice(normalizedItem))}
                 </span>
@@ -631,7 +904,7 @@ export default function PromosPanel({ partnerId }) {
               <button
                 type="button"
                 className="cp-miniDanger"
-                onClick={() => removeItem(normalizedItem.pizzaId)}
+                onClick={() => removeItem(itemKey)}
               >
                 Quitar
               </button>

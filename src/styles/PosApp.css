@@ -1267,18 +1267,18 @@
   text-transform: uppercase;
 }
 
-.pos-segmentBadge--s2,
-.pos-segmentBadge--s4 {
+.pos-segmentBadge--nuevo,
+.pos-segmentBadge--activo {
   background: #dcfce7;
   color: #166534;
 }
 
-.pos-segmentBadge--s3 {
+.pos-segmentBadge--dormido {
   background: #fef3c7;
   color: #92400e;
 }
 
-.pos-segmentBadge--s5 {
+.pos-segmentBadge--vip {
   background: linear-gradient(180deg, #fff8db, #ffd66e);
   color: var(--pos-brand-1);
   box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.16);

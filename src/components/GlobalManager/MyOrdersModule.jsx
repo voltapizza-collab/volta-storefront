@@ -1,5 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import api from "../../setupAxios";
+import {
+  customerSegmentMeta,
+  customerSegmentLabel,
+  normalizeCustomerSegment,
+} from "../../constants/customerSegments";
 import "../../styles/GlobalManager.css";
 
 const POLL_MS = 10000;
@@ -151,6 +156,16 @@ const asArray = (value) => {
 const asObject = (value) => {
   const parsed = parseMaybeJson(value, {});
   return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
+};
+
+const formatCustomerSegment = (value) => {
+  const segment = normalizeCustomerSegment(value);
+  return segment ? customerSegmentLabel(segment) : "";
+};
+
+const getCustomerSegmentTone = (value) => {
+  const segment = normalizeCustomerSegment(value);
+  return segment ? customerSegmentMeta(segment).tone : "";
 };
 
 const lineQty = (item) => {
@@ -724,6 +739,8 @@ export function OrdersMovementsModule({ partner = null }) {
         statusLabel: sale.status || "REGISTRADO",
         storeLabel: sale.storeName || "Sin tienda",
         customerLabel: sale.customerName || customerData.name || "Sin cliente",
+        customerSegmentLabel: formatCustomerSegment(customerData.segment),
+        customerSegmentTone: getCustomerSegmentTone(customerData.segment),
       };
     });
   }, [data?.recentSales]);
@@ -846,6 +863,15 @@ export function OrdersMovementsModule({ partner = null }) {
                     {sale.customerData?.phone && (
                       <span className="gmo-cellSub">{sale.customerData.phone}</span>
                     )}
+                    {sale.customerSegmentLabel && (
+                      <span
+                        className={`gmo-segmentPill ${
+                          sale.customerSegmentTone ? `gmo-segmentPill--${sale.customerSegmentTone}` : ""
+                        }`}
+                      >
+                        {sale.customerSegmentLabel}
+                      </span>
+                    )}
                   </td>
                   <td>{formatDate(sale.date)}</td>
                   <td>{sale.storeLabel}</td>
@@ -895,6 +921,24 @@ export function OrdersMovementsModule({ partner = null }) {
               <div className="gmo-ticketLine">
                 <span>Telefono</span>
                 <strong>{selectedMovement.customerData?.phone || "-"}</strong>
+              </div>
+              <div className="gmo-ticketLine">
+                <span>Segmento</span>
+                <strong>
+                  {selectedMovement.customerSegmentLabel ? (
+                    <span
+                      className={`gmo-segmentPill ${
+                        selectedMovement.customerSegmentTone
+                          ? `gmo-segmentPill--${selectedMovement.customerSegmentTone}`
+                          : ""
+                      }`}
+                    >
+                      {selectedMovement.customerSegmentLabel}
+                    </span>
+                  ) : (
+                    "-"
+                  )}
+                </strong>
               </div>
               <div className="gmo-ticketLine">
                 <span>Tienda</span>

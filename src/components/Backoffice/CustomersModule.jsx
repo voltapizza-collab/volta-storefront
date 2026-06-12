@@ -1,5 +1,13 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import api from "../../setupAxios";
+import {
+  createCustomerSegmentCounts,
+  CUSTOMER_SEGMENTS,
+  customerSegmentLabel,
+  customerSegmentMeta,
+  DEFAULT_CUSTOMER_SEGMENT,
+  normalizeCustomerSegment,
+} from "../../constants/customerSegments";
 import "../../styles/CustomersModule.css";
 import OfferCreatePanelCustomer from "./Coupons/OfferCreatePanelCustomer";
 
@@ -14,14 +22,6 @@ const emptyCustomer = {
 };
 
 const normalizePhone = (value = "") => value.replace(/[^\d]/g, "");
-
-const segmentCards = [
-  { key: "S1", shortLabel: "Potencial", description: "0 compras" },
-  { key: "S2", shortLabel: "Nuevo", description: "1 compra" },
-  { key: "S3", shortLabel: "Dormido", description: "2+ compras y +30 dias" },
-  { key: "S4", shortLabel: "Activo", description: "2+ compras y compra reciente" },
-  { key: "S5", shortLabel: "VIP", description: "5+ compras y sobre media" },
-];
 
 const displayESPhone = (phone = "") => {
   const raw = String(phone || "").trim();
@@ -110,11 +110,26 @@ const escapeCsv = (value) => {
 };
 
 function SegmentBadge({ value }) {
-  const segment = segmentCards.find((item) => item.key === value) || segmentCards[0];
+  const segment = customerSegmentMeta(value);
   return (
-    <span className={`cu-badge cu-badge-${String(segment.key || "s1").toLowerCase()}`}>
+    <span className={`cu-badge cu-badge-${segment.tone || DEFAULT_CUSTOMER_SEGMENT}`}>
       {segment.shortLabel}
     </span>
+  );
+}
+
+function SortableHeader({ label, sortKey, sortConfig, onSort }) {
+  const active = sortConfig.key === sortKey;
+  return (
+    <button
+      className={`cu-sortBtn ${active ? "is-active" : ""}`}
+      onClick={() => onSort(sortKey)}
+      type="button"
+      aria-label={`Ordenar por ${label}`}
+    >
+      <span>{label}</span>
+      <em>{active ? (sortConfig.direction === "asc" ? "ASC" : "DESC") : "SORT"}</em>
+    </button>
   );
 }
 
@@ -135,7 +150,7 @@ function CustomerInsightModal({ customer, onClose, onEdit, onBoost }) {
     {
       label: "Valor acumulado",
       value: formatCustomerMoney(customer, customer.lifetimeValue),
-      meta: customer.segment || "S1",
+      meta: customerSegmentLabel(customer.segment),
     },
     {
       label: "Dias sin pedir",
@@ -399,7 +414,7 @@ export default function CustomersModule({ partner }) {
   });
   const [stats, setStats] = useState({
     total: 0,
-    counts: { S1: 0, S2: 0, S3: 0, S4: 0, S5: 0 },
+    counts: createCustomerSegmentCounts(),
     active: { restricted: 0, unrestricted: 0 },
     zipCodes: [],
   });
@@ -411,6 +426,7 @@ export default function CustomersModule({ partner }) {
   const [profileCustomer, setProfileCustomer] = useState(null);
   const [boosting, setBoosting] = useState(null);
   const [segmentFilter, setSegmentFilter] = useState(null);
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: "desc" });
 
   const loadStats = useCallback(async () => {
     if (!partnerId) return;
@@ -418,7 +434,7 @@ export default function CustomersModule({ partner }) {
     setStats(
       response.data || {
         total: 0,
-        counts: { S1: 0, S2: 0, S3: 0, S4: 0, S5: 0 },
+        counts: createCustomerSegmentCounts(),
         active: { restricted: 0, unrestricted: 0 },
         zipCodes: [],
       }
@@ -507,17 +523,19 @@ export default function CustomersModule({ partner }) {
     return () => window.clearTimeout(timeoutId);
   }, [activeCountry, loadRows, partnerId, query, storeQuery, zipQuery]);
 
-  const orderedSegments = useMemo(() => segmentCards, []);
+  const orderedSegments = useMemo(() => CUSTOMER_SEGMENTS, []);
   const hasActiveFilters = Boolean(segmentFilter || countryQuery || storeQuery || query || zipQuery);
+  const hasActiveTableControls = Boolean(hasActiveFilters || sortConfig.key);
   const visibleStats = useMemo(() => {
     if (!hasActiveFilters) return stats;
 
-    const counts = { S1: 0, S2: 0, S3: 0, S4: 0, S5: 0 };
+    const counts = createCustomerSegmentCounts();
     let restricted = 0;
 
     rows.forEach((customer) => {
-      if (customer?.segment && Object.prototype.hasOwnProperty.call(counts, customer.segment)) {
-        counts[customer.segment] += 1;
+      const segment = normalizeCustomerSegment(customer?.segment);
+      if (segment && Object.prototype.hasOwnProperty.call(counts, segment)) {
+        counts[segment] += 1;
       }
       if (customer?.isRestricted) restricted += 1;
     });
@@ -543,6 +561,13 @@ export default function CustomersModule({ partner }) {
     const total = Number(stats.total || 0);
     if (!total) return 0;
     return (Number(stats.counts?.[segmentKey] || 0) / total) * 100;
+  };
+
+  const toggleSort = (key) => {
+    setSortConfig((prev) => ({
+      key,
+      direction: prev.key === key && prev.direction === "desc" ? "asc" : "desc",
+    }));
   };
 
   useEffect(() => {
@@ -633,6 +658,61 @@ export default function CustomersModule({ partner }) {
     }
   };
 
+  const sortedRows = useMemo(() => {
+    if (!sortConfig.key) return rows;
+
+    const direction = sortConfig.direction === "asc" ? 1 : -1;
+    const getNumericSortValue = (customer) => {
+      if (!Number(customer?.orderCount || 0)) return null;
+      if (sortConfig.key === "averageTicket") return Number(customer?.averageTicket || 0);
+      if (sortConfig.key === "lastOrderAt") {
+        const time = customer?.lastOrderAt ? new Date(customer.lastOrderAt).getTime() : NaN;
+        return Number.isFinite(time) ? time : null;
+      }
+      return null;
+    };
+
+    return rows
+      .map((customer, index) => ({ customer, index }))
+      .sort((left, right) => {
+        if (sortConfig.key === "favoriteProduct") {
+          const leftProduct = getFavoriteProduct(left.customer);
+          const rightProduct = getFavoriteProduct(right.customer);
+          const leftMissing = !leftProduct?.name;
+          const rightMissing = !rightProduct?.name;
+
+          if (leftMissing || rightMissing) {
+            if (leftMissing && rightMissing) return left.index - right.index;
+            return leftMissing ? 1 : -1;
+          }
+
+          const unitsDiff = Number(leftProduct.units || 0) - Number(rightProduct.units || 0);
+          if (unitsDiff) return unitsDiff * direction;
+
+          const nameDiff = String(leftProduct.name || "").localeCompare(String(rightProduct.name || ""), "es", {
+            sensitivity: "base",
+          });
+          if (nameDiff) return nameDiff * direction;
+          return left.index - right.index;
+        }
+
+        const leftValue = getNumericSortValue(left.customer);
+        const rightValue = getNumericSortValue(right.customer);
+        const leftMissing = leftValue == null;
+        const rightMissing = rightValue == null;
+
+        if (leftMissing || rightMissing) {
+          if (leftMissing && rightMissing) return left.index - right.index;
+          return leftMissing ? 1 : -1;
+        }
+
+        const valueDiff = leftValue - rightValue;
+        if (valueDiff) return valueDiff * direction;
+        return left.index - right.index;
+      })
+      .map((item) => item.customer);
+  }, [rows, sortConfig]);
+
   const exportRows = () => {
     const headers = [
       "code",
@@ -653,13 +733,13 @@ export default function CustomersModule({ partner }) {
     ];
     const lines = [
       headers.join(","),
-      ...rows.map((customer) =>
+      ...sortedRows.map((customer) =>
         [
           customer.code,
           customer.name,
           displayESPhone(customer.phone || ""),
           customer.email,
-          customer.segment,
+          customerSegmentLabel(customer.segment),
           customer.zipCode,
           customer.daysOff,
           customer.orderCount,
@@ -704,7 +784,7 @@ export default function CustomersModule({ partner }) {
               className="cu-btn cu-btn-ghost"
               onClick={exportRows}
               type="button"
-              disabled={!rows.length}
+            disabled={!rows.length}
             >
               Exportar lista
             </button>
@@ -804,7 +884,7 @@ export default function CustomersModule({ partner }) {
             ))}
           </div>
 
-          {hasActiveFilters && (
+          {hasActiveTableControls && (
             <button
               className="cu-filterReset"
               onClick={() => {
@@ -813,6 +893,7 @@ export default function CustomersModule({ partner }) {
                 setStoreQuery("");
                 setQuery("");
                 setZipQuery("");
+                setSortConfig({ key: null, direction: "desc" });
               }}
               type="button"
             >
@@ -831,15 +912,36 @@ export default function CustomersModule({ partner }) {
                 <th>Name</th>
                 <th>Phone</th>
                 <th>Segment</th>
-                <th>Ticket prom.</th>
-                <th>Ultima compra</th>
-                <th>Pizza mas comprada</th>
+                <th>
+                  <SortableHeader
+                    label="Ticket prom."
+                    sortKey="averageTicket"
+                    sortConfig={sortConfig}
+                    onSort={toggleSort}
+                  />
+                </th>
+                <th>
+                  <SortableHeader
+                    label="Ultima compra"
+                    sortKey="lastOrderAt"
+                    sortConfig={sortConfig}
+                    onSort={toggleSort}
+                  />
+                </th>
+                <th>
+                  <SortableHeader
+                    label="Pizza mas comprada"
+                    sortKey="favoriteProduct"
+                    sortConfig={sortConfig}
+                    onSort={toggleSort}
+                  />
+                </th>
                 <th className="actions">Actions</th>
               </tr>
             </thead>
 
             <tbody>
-              {rows.map((customer) => {
+              {sortedRows.map((customer) => {
                 const favoriteProduct = getFavoriteProduct(customer);
 
                 return (
@@ -874,6 +976,7 @@ export default function CustomersModule({ partner }) {
                         <strong title={formatFavoriteProductTitle(favoriteProduct)}>
                           {favoriteProduct?.name || "-"}
                         </strong>
+                        {favoriteProduct && <span>{formatFavoriteProductTitle(favoriteProduct)}</span>}
                       </div>
                     </td>
                     <td className="actions">
@@ -915,7 +1018,7 @@ export default function CustomersModule({ partner }) {
                 );
               })}
 
-              {!loading && rows.length === 0 && (
+              {!loading && sortedRows.length === 0 && (
                 <tr>
                   <td colSpan="8">
                     <div className="cu-empty">No customers yet.</div>

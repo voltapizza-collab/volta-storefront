@@ -1,10 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import api from "../../setupAxios";
-import { COUPON_SEGMENTS } from "../../constants/coupons";
+import {
+  CUSTOMER_SEGMENTS,
+  customerSegmentLabel,
+} from "../../constants/customerSegments";
 import SmsCreditsPanel from "./Coupons/SmsCreditsPanel";
 import "../../styles/CouponsModule.css";
 
-const COMMUNICATION_SEGMENTS = COUPON_SEGMENTS.filter((segment) => /^S\d$/i.test(segment.key));
+const COMMUNICATION_SEGMENTS = CUSTOMER_SEGMENTS;
 
 const formatPercent = (value) => `${Math.round(Number(value || 0))}%`;
 
@@ -25,7 +28,7 @@ const selectedCustomerLabel = (customer) => {
   return [
     customer.name || `Cliente #${customer.id}`,
     customer.phone,
-    customer.segment,
+    customer.segment ? customerSegmentLabel(customer.segment) : "",
     customer.zipCode,
   ]
     .filter(Boolean)
@@ -86,6 +89,7 @@ export default function CommunicationsPanel({ partnerId }) {
             customer.address_1,
             customer.zipCode,
             customer.segment,
+            customer.segment ? customerSegmentLabel(customer.segment) : "",
           ]
             .filter(Boolean)
             .join(" ")
@@ -462,7 +466,7 @@ export default function CommunicationsPanel({ partnerId }) {
                 >
                   <strong>{customer.name || `Cliente #${customer.id}`}</strong>
                   <span>
-                    {[customer.phone, customer.segment, customer.zipCode]
+                    {[customer.phone, customer.segment ? customerSegmentLabel(customer.segment) : "", customer.zipCode]
                       .filter(Boolean)
                       .join(" - ")}
                   </span>
@@ -638,7 +642,7 @@ export default function CommunicationsPanel({ partnerId }) {
                 <tr key={customer.id}>
                   <td>{customer.name || `Cliente #${customer.id}`}</td>
                   <td>{customer.phone || "-"}</td>
-                  <td>{customer.segment || "-"}</td>
+                  <td>{customer.segment ? customerSegmentLabel(customer.segment) : "-"}</td>
                   <td>{customer.zipCode || "-"}</td>
                   <td>{customer.canSend ? "OK" : "Telefono invalido"}</td>
                 </tr>

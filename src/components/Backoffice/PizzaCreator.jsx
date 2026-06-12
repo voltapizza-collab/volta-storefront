@@ -1222,6 +1222,14 @@ export default function PizzaCreator({ partner }) {
                             |||
                           </span>
 
+                          <div className="pc-modalThumb" aria-hidden={!p.image}>
+                            {p.image ? (
+                              <img src={p.image} alt={p.name || "Producto"} />
+                            ) : (
+                              <span>{String(p.name || "?").trim().slice(0, 1).toUpperCase()}</span>
+                            )}
+                          </div>
+
                           <div className="pc-modalInfo">
                             <div className="pc-modalName">{p.name}</div>
 

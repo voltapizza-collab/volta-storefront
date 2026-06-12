@@ -523,7 +523,7 @@ function filterPromos(items, query) {
     const title = String(promo.title || "").toLowerCase();
     const description = String(promo.description || "").toLowerCase();
     const itemMatch = (promo.items || []).some((item) =>
-      String(item.name || "").toLowerCase().includes(query)
+      String(item.name || item.categoryName || item.category || "").toLowerCase().includes(query)
     );
 
     return title.includes(query) || description.includes(query) || itemMatch;
@@ -531,7 +531,7 @@ function filterPromos(items, query) {
 }
 
 function promoHasProducts(promo) {
-  return Array.isArray(promo?.items) && promo.items.some((item) => item?.pizzaId || item?.name);
+  return Array.isArray(promo?.items) && promo.items.some((item) => item?.pizzaId || item?.name || item?.categoryName);
 }
 
 function filterTrendingItems(items, query) {
@@ -2179,7 +2179,71 @@ const formatCouponExpiry = (value) => {
   }).format(date);
 };
 
+const isPromoCategoryItem = (promoItem) =>
+  ["CATEGORY", "CHOICE"].includes(String(promoItem?.type || "").trim().toUpperCase());
+
+const getPromoCategoryName = (promoItem) =>
+  String(promoItem?.categoryName || promoItem?.category || promoItem?.name || "Categoria").trim();
+
+const getPromoOptionIds = (promoItem) =>
+  Array.isArray(promoItem?.optionProductIds)
+    ? promoItem.optionProductIds.map((id) => Number(id)).filter((id) => Number.isInteger(id) && id > 0)
+    : [];
+
+const getPromoRequiredChoiceCount = (promoItem) => {
+  const quantity = Number(promoItem?.quantity || promoItem?.qty || 1);
+  return Number.isFinite(quantity) && quantity > 0 ? Math.floor(quantity) : 1;
+};
+
+const getPromoChoiceKey = (promoItem, index) =>
+  `promo-choice-${
+    getPromoOptionIds(promoItem).join("-") ||
+    promoItem?.categoryId ||
+    normalizeSearchText(getPromoCategoryName(promoItem)) ||
+    index
+  }-${index}`;
+
+const getPromoCategoryOptions = (promoItem, menu = []) => {
+  const categoryId = Number(promoItem?.categoryId);
+  const categoryName = normalizeSearchText(getPromoCategoryName(promoItem));
+  const requestedSize = String(promoItem?.size || "").trim();
+  const optionIds = getPromoOptionIds(promoItem);
+
+  return menu
+    .filter((item) => {
+      if (optionIds.length && !optionIds.includes(Number(item?.pizzaId))) return false;
+
+      const itemCategoryId = Number(item?.categoryId);
+      const idMatch =
+        Number.isInteger(categoryId) &&
+        categoryId > 0 &&
+        Number.isInteger(itemCategoryId) &&
+        itemCategoryId === categoryId;
+      const nameMatch =
+        categoryName &&
+        normalizeSearchText(item?.category || item?.categoryName) === categoryName;
+
+      if (!optionIds.length && !idMatch && !nameMatch) return false;
+      if (!requestedSize) return true;
+      return getAvailableSizes(item).includes(requestedSize);
+    })
+    .sort((left, right) =>
+      String(left.name || "").localeCompare(String(right.name || ""), "es", {
+        sensitivity: "base",
+      })
+    );
+};
+
+const getPromoItemLabel = (item) =>
+  isPromoCategoryItem(item)
+    ? `Elige ${getPromoRequiredChoiceCount(item)} de ${getPromoCategoryName(item)}${item.size ? ` ${item.size}` : ""}`
+    : `${item.quantity || 1}x ${item.name}${item.size ? ` ${item.size}` : ""}`;
+
 const findPromoMenuItem = (promoItem, menu = []) => {
+  if (isPromoCategoryItem(promoItem)) {
+    return getPromoCategoryOptions(promoItem, menu)[0] || null;
+  }
+
   const itemId = Number(promoItem?.pizzaId ?? promoItem?.id ?? promoItem?.productId);
   if (itemId) {
     const byId = menu.find((item) => Number(item?.pizzaId) === itemId);
@@ -2197,9 +2261,24 @@ const getPromoOriginalTotal = (promo, menu = []) => {
 
   return roundMoney(
     promoItems.reduce((sum, promoItem) => {
+      const qty = Math.max(1, Number(promoItem?.quantity || promoItem?.qty || 1));
+
+      if (isPromoCategoryItem(promoItem)) {
+        const prices = getPromoCategoryOptions(promoItem, menu)
+          .map((item) => {
+            const size = promoItem?.size || getDealSize(item);
+            return (
+              priceForSize(item?.originalPriceBySize, size) ||
+              priceForSize(item?.priceBySize, size)
+            );
+          })
+          .filter((price) => price > 0);
+        const price = prices.length ? Math.min(...prices) : num(promoItem?.unitPrice);
+        return sum + price * qty;
+      }
+
       const menuItem = findPromoMenuItem(promoItem, menu);
       const size = promoItem?.size || getDealSize(menuItem);
-      const qty = Math.max(1, Number(promoItem?.quantity || promoItem?.qty || 1));
       const price =
         priceForSize(menuItem?.originalPriceBySize, size) ||
         priceForSize(menuItem?.priceBySize, size) ||
@@ -2283,6 +2362,10 @@ export default function StorePage() {
   const trendingRef = useRef([]);
   const [upcoming, setUpcoming] = useState([]);
   const [promos, setPromos] = useState([]);
+  const [promoPickerOpen, setPromoPickerOpen] = useState(false);
+  const [pendingPromo, setPendingPromo] = useState(null);
+  const [promoPickerSelections, setPromoPickerSelections] = useState({});
+  const [promoPickerMessage, setPromoPickerMessage] = useState("");
   const [store, setStore] = useState(null);
   const [partner, setPartner] = useState(null);
   const [error, setError] = useState("");
@@ -5846,18 +5929,75 @@ export default function StorePage() {
     setRepeatOpen(false);
   };
 
-  const addPromoLine = (promo) => {
+  const promoNeedsChoices = (promo) =>
+    Array.isArray(promo?.items) && promo.items.some(isPromoCategoryItem);
+
+  const openPromoPicker = (promo) => {
+    setPendingPromo(promo);
+    setPromoPickerSelections({});
+    setPromoPickerMessage("");
+    setPromoPickerOpen(true);
+  };
+
+  const closePromoPicker = () => {
+    setPromoPickerOpen(false);
+    setPendingPromo(null);
+    setPromoPickerSelections({});
+    setPromoPickerMessage("");
+  };
+
+  const choosePromoOption = (choiceKey, item, maxChoices = 1) => {
+    setPromoPickerSelections((current) => {
+      const currentItems = Array.isArray(current[choiceKey]) ? current[choiceKey] : [];
+      const exists = currentItems.some((selected) => Number(selected?.pizzaId) === Number(item?.pizzaId));
+      const nextItems = exists
+        ? currentItems.filter((selected) => Number(selected?.pizzaId) !== Number(item?.pizzaId))
+        : currentItems.length >= maxChoices
+          ? [...currentItems.slice(1), item]
+          : [...currentItems, item];
+
+      return {
+        ...current,
+        [choiceKey]: nextItems,
+      };
+    });
+    setPromoPickerMessage("");
+  };
+
+  const addPromoLine = (promo, selections = {}) => {
     const promoId = Number(promo?.id);
     const totalPrice = roundMoney(num(promo?.totalPrice));
     if (!promoId || totalPrice <= 0) return;
 
     const promoItems = Array.isArray(promo.items)
-      ? promo.items.map((item, index) => ({
-          pizzaId: item?.pizzaId ?? null,
-          name: item?.name || `Producto ${index + 1}`,
-          size: item?.size || "",
-          quantity: getCartLineQty(item),
-        }))
+      ? promo.items.map((item, index) => {
+          if (isPromoCategoryItem(item)) {
+            const choiceKey = getPromoChoiceKey(item, index);
+            const selectedItems = Array.isArray(selections[choiceKey]) ? selections[choiceKey] : [];
+
+            return selectedItems.map((selected) => ({
+              promoItemType: "CHOICE",
+              pizzaId: selected?.pizzaId ?? null,
+              name: selected?.name || getPromoCategoryName(item),
+              categoryId: selected?.categoryId ?? item?.categoryId ?? null,
+              category: selected?.category || getPromoCategoryName(item),
+              selectedFromCategory: getPromoCategoryName(item),
+              size: item?.size || getDealSize(selected),
+              quantity: 1,
+            }));
+          }
+
+          return {
+            promoItemType: "PRODUCT",
+            pizzaId: item?.pizzaId ?? null,
+            name: item?.name || `Producto ${index + 1}`,
+            categoryId: item?.categoryId ?? null,
+            category: item?.category || "",
+            size: item?.size || "",
+            quantity: getCartLineQty(item),
+          };
+        })
+          .flat()
       : [];
 
     const line = {
@@ -5879,6 +6019,34 @@ export default function StorePage() {
     };
 
     setCart((current) => [...current, line]);
+  };
+
+  const handlePromoAdd = (promo) => {
+    if (promoNeedsChoices(promo)) {
+      openPromoPicker(promo);
+      return;
+    }
+
+    addPromoLine(promo);
+  };
+
+  const confirmPromoPicker = () => {
+    if (!pendingPromo) return;
+    const missingChoice = (pendingPromo.items || []).some(
+      (item, index) =>
+        isPromoCategoryItem(item) &&
+        (Array.isArray(promoPickerSelections[getPromoChoiceKey(item, index)])
+          ? promoPickerSelections[getPromoChoiceKey(item, index)].length
+          : 0) !== getPromoRequiredChoiceCount(item)
+    );
+
+    if (missingChoice) {
+      setPromoPickerMessage("Completa la cantidad exacta de cada eleccion de la promo.");
+      return;
+    }
+
+    addPromoLine(pendingPromo, promoPickerSelections);
+    closePromoPicker();
   };
 
   const activateBoots = () => {
@@ -6391,8 +6559,7 @@ export default function StorePage() {
                           {promoItems.length ? (
                             promoItems.map((item, index) => (
                               <span key={`grid-focus-back-promo-item-${promo.id}-${item.pizzaId || item.name || index}`}>
-                                {item.quantity || 1}x {item.name}
-                                {item.size ? ` ${item.size}` : ""}
+                                {getPromoItemLabel(item)}
                               </span>
                             ))
                           ) : (
@@ -7081,7 +7248,7 @@ export default function StorePage() {
                                 className="lsf-card__addbtn"
                                 onClick={(event) => {
                                   event.stopPropagation();
-                                  addPromoLine(promo);
+                                  handlePromoAdd(promo);
                                 }}
                                 aria-label={`Elegir promo ${promo.title}`}
                               >
@@ -7105,8 +7272,7 @@ export default function StorePage() {
                                   {promoItems.length ? (
                                     promoItems.map((item, index) => (
                                       <span key={`${promo.id}-${item.pizzaId || item.name || index}`}>
-                                        {item.quantity || 1}x {item.name}
-                                        {item.size ? ` ${item.size}` : ""}
+                                        {getPromoItemLabel(item)}
                                       </span>
                                     ))
                                   ) : (
@@ -7777,6 +7943,107 @@ export default function StorePage() {
                 </div>
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {promoPickerOpen && pendingPromo && (
+        <div className="sf-modalOverlay" onClick={closePromoPicker}>
+          <div
+            className="sf-modalCard sf-promoPickerModal"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="sf-cartModalHead">
+              <div>
+                <span>Promo</span>
+                <h3>{pendingPromo.title || "Elige tu promo"}</h3>
+              </div>
+              <button
+                type="button"
+                className="sf-modalCloseBtn"
+                onClick={closePromoPicker}
+                aria-label="Cerrar"
+              >
+                x
+              </button>
+            </div>
+
+            <div className="sf-promoPickerBody">
+              {(pendingPromo.items || []).map((item, index) => {
+                if (!isPromoCategoryItem(item)) {
+                  return (
+                    <div key={`fixed-${item.pizzaId || item.name || index}`} className="sf-promoFixedLine">
+                      <strong>{item.name}</strong>
+                      <span>{item.quantity || 1}x{item.size ? ` ${item.size}` : ""}</span>
+                    </div>
+                  );
+                }
+
+                const choiceKey = getPromoChoiceKey(item, index);
+                const options = getPromoCategoryOptions(item, menuCatalog);
+                const requiredCount = getPromoRequiredChoiceCount(item);
+                const selectedItems = Array.isArray(promoPickerSelections[choiceKey])
+                  ? promoPickerSelections[choiceKey]
+                  : [];
+                const selectedIds = new Set(selectedItems.map((selected) => Number(selected?.pizzaId)));
+
+                return (
+                  <section key={choiceKey} className="sf-promoChoiceGroup">
+                    <div className="sf-promoChoiceHead">
+                      <strong>Elige {requiredCount} de {getPromoCategoryName(item)}</strong>
+                      <span>{selectedItems.length}/{requiredCount}{item.size ? ` - ${item.size}` : ""}</span>
+                    </div>
+
+                    {options.length ? (
+                      <div className="sf-promoChoiceGrid">
+                        {options.map((option) => {
+                          const active = selectedIds.has(Number(option.pizzaId));
+                          const size = item.size || getDealSize(option);
+
+                          return (
+                            <button
+                              key={option.pizzaId}
+                              type="button"
+                              className={`sf-promoChoiceOption ${active ? "is-selected" : ""}`}
+                              onClick={() => choosePromoOption(choiceKey, option, requiredCount)}
+                            >
+                              <span className="sf-promoChoiceImage">
+                                {option.image ? (
+                                  <img src={option.image} alt={option.name} />
+                                ) : (
+                                  <span>{String(option.name || "P").slice(0, 1)}</span>
+                                )}
+                              </span>
+                              <span>
+                                <strong>{option.name}</strong>
+                                <small>{size || option.category || "Producto"}</small>
+                              </span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <div className="sf-promoChoiceEmpty">
+                        No hay productos disponibles en esta categoria.
+                      </div>
+                    )}
+                  </section>
+                );
+              })}
+
+              {promoPickerMessage && (
+                <div className="sf-reservationMessage is-error">{promoPickerMessage}</div>
+              )}
+            </div>
+
+            <div className="sf-productPickerActions">
+              <button type="button" className="sf-secondaryBtn" onClick={closePromoPicker}>
+                Cancelar
+              </button>
+              <button type="button" className="sf-primaryBtn" onClick={confirmPromoPicker}>
+                Add to cart - EUR {num(pendingPromo.totalPrice).toFixed(2)}
+              </button>
+            </div>
           </div>
         </div>
       )}

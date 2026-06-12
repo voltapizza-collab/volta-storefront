@@ -489,6 +489,10 @@
   max-width: 1120px;
 }
 
+.bo-settingsCard--rules {
+  padding: 24px;
+}
+
 .bo-settingsHeader {
   display: flex;
   align-items: flex-start;
@@ -530,6 +534,11 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px;
+}
+
+.bo-settingsOverviewGrid--rules {
+  grid-template-columns: minmax(0, 1fr) minmax(340px, 0.88fr);
+  align-items: start;
 }
 
 .bo-settingsOverviewGrid--branding {
@@ -619,6 +628,92 @@
   max-height: 88px;
   object-fit: cover;
   object-position: center;
+}
+
+.bo-settingsCard--rules .bo-settingsHeader {
+  margin-bottom: 20px;
+}
+
+.bo-settingsCard--rules .bo-settingsHint {
+  margin-top: 8px;
+}
+
+.bo-settingsCard--rules .bo-settingsForm {
+  gap: 16px;
+}
+
+.bo-settingsCard--rules .bo-settingsGrid {
+  gap: 12px;
+}
+
+.bo-settingsCard--rules .bo-field input,
+.bo-settingsCard--rules .bo-field textarea,
+.bo-settingsCard--rules .bo-field select {
+  padding: 12px 14px;
+  border-radius: 14px;
+}
+
+.bo-settingsCard--rules .bo-settingsPreview {
+  padding: 16px 18px;
+  border-radius: 18px;
+}
+
+.bo-settingsCard--rules .bo-paymentMethodList {
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.bo-settingsCard--rules .bo-smsSwitchRow {
+  padding: 12px 14px;
+}
+
+.bo-settingsCard--rules .bo-smsSwitchRow strong {
+  margin-top: 3px;
+  font-size: 16px;
+}
+
+.bo-settingsCard--rules .bo-smsSwitchRow p {
+  margin-top: 5px;
+  line-height: 1.38;
+}
+
+.bo-settingsCard--rules .bo-pricePolicyPanel {
+  margin-top: 22px;
+  padding-top: 20px;
+}
+
+.bo-rulesLogoCard {
+  align-self: start;
+  gap: 12px;
+  padding: 20px;
+  border-radius: 22px;
+}
+
+.bo-rulesLogoPreview {
+  min-height: 104px;
+  padding: 10px 12px;
+  border-radius: 20px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.74), rgba(255, 255, 255, 0.42)),
+    rgba(53, 19, 164, 0.055);
+}
+
+.bo-rulesLogoPreview img {
+  width: 100%;
+  height: 108px;
+  max-height: 108px;
+  object-fit: contain;
+  object-position: center;
+}
+
+.bo-rulesLogoUpload {
+  gap: 12px;
+}
+
+.bo-rulesLogoUpload .bo-logoUploadHint {
+  flex: 1 1 220px;
+  font-size: 13px;
+  line-height: 1.4;
 }
 
 .bo-brandingSwatches {

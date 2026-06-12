@@ -253,6 +253,49 @@
   background: rgba(59, 0, 139, 0.06);
 }
 
+.cu-sortBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 900;
+  text-align: left;
+  cursor: pointer;
+}
+
+.cu-sortBtn span {
+  min-width: 0;
+}
+
+.cu-sortBtn em {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  padding: 3px 6px;
+  border-radius: 999px;
+  background: rgba(59, 0, 139, 0.08);
+  color: rgba(59, 0, 139, 0.58);
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 950;
+  letter-spacing: 0.05em;
+  line-height: 1;
+}
+
+.cu-sortBtn.is-active {
+  color: var(--brand-1);
+}
+
+.cu-sortBtn.is-active em {
+  background: rgba(255, 182, 28, 0.28);
+  color: #6a4800;
+}
+
 .cu-error,
 .cu-empty {
   padding: 16px;
@@ -442,27 +485,27 @@
   font-weight: 800;
 }
 
-.cu-badge-s1 {
+.cu-badge-potencial {
   background: rgba(200, 200, 200, 0.2);
   color: var(--brand-1);
 }
 
-.cu-badge-s2 {
+.cu-badge-nuevo {
   background: rgba(255, 193, 7, 0.2);
   color: #7c5d00;
 }
 
-.cu-badge-s3 {
+.cu-badge-dormido {
   background: rgba(33, 150, 243, 0.2);
   color: #0b5f9f;
 }
 
-.cu-badge-s4 {
+.cu-badge-activo {
   background: rgba(76, 175, 80, 0.2);
   color: #1b6f1f;
 }
 
-.cu-badge-s5 {
+.cu-badge-vip {
   background: rgba(255, 45, 111, 0.16);
   color: #a30f45;
 }

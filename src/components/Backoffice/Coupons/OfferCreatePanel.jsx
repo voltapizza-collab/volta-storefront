@@ -722,7 +722,7 @@ export default function OfferCreatePanel({ partnerId }) {
               </button>
             ))}
           </div>
-          <div className="cp-helper">Puedes mezclar segmentos S1-S5 con estado Hot/Cold.</div>
+          <div className="cp-helper">Puedes mezclar segmentos de cliente con estado Hot/Cold.</div>
         </div>
       )}
 

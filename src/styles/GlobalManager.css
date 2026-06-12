@@ -840,6 +840,49 @@
   font-weight: 700;
 }
 
+.gmo-segmentPill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  margin-top: 5px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(255, 182, 28, 0.18);
+  color: #3b008b;
+  font-size: 11px;
+  font-weight: 950;
+  line-height: 1;
+}
+
+.gmo-ticketLine .gmo-segmentPill {
+  margin-top: 0;
+}
+
+.gmo-segmentPill--potencial {
+  background: rgba(200, 200, 200, 0.2);
+  color: var(--brand-1);
+}
+
+.gmo-segmentPill--nuevo {
+  background: rgba(255, 193, 7, 0.2);
+  color: #7c5d00;
+}
+
+.gmo-segmentPill--dormido {
+  background: rgba(33, 150, 243, 0.2);
+  color: #0b5f9f;
+}
+
+.gmo-segmentPill--activo {
+  background: rgba(76, 175, 80, 0.2);
+  color: #1b6f1f;
+}
+
+.gmo-segmentPill--vip {
+  background: rgba(255, 45, 111, 0.16);
+  color: #a30f45;
+}
+
 .gmo-items {
   display: grid;
   gap: 7px;

@@ -1,5 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import api from "../setupAxios";
+import {
+  customerSegmentMeta,
+  normalizeCustomerSegment,
+  VIP_CUSTOMER_SEGMENT,
+} from "../constants/customerSegments";
 import { mockPrinter } from "./printers/mockPrinter";
 import "../styles/PosApp.css";
 
@@ -459,14 +464,6 @@ const getBoostText = (order) => {
   return "Prioridad activa";
 };
 
-const CUSTOMER_SEGMENT_META = {
-  S1: { label: "Potencial", tone: "s1" },
-  S2: { label: "Nuevo", tone: "s2" },
-  S3: { label: "Dormido", tone: "s3" },
-  S4: { label: "Activo", tone: "s4" },
-  S5: { label: "VIP", tone: "s5" },
-};
-
 const createTone = (
   ctx,
   { frequency, startAt, duration, volume, type = "sine", attack = 0.018 }
@@ -601,12 +598,12 @@ const getUnreadCustomerChatIds = (orders = []) =>
   );
 
 const getCustomerSegment = (order) => {
-  const key = String(order?.customerData?.segment || "").trim().toUpperCase();
-  return CUSTOMER_SEGMENT_META[key] || { label: key || "Sin segmento", tone: "default" };
+  const key = normalizeCustomerSegment(order?.customerData?.segment);
+  return key ? customerSegmentMeta(key) : { label: "Sin segmento", tone: "default" };
 };
 
 const isVipOrder = (order) =>
-  String(order?.customerData?.segment || "").trim().toUpperCase() === "S5";
+  normalizeCustomerSegment(order?.customerData?.segment) === VIP_CUSTOMER_SEGMENT;
 
 const getOrderPriority = (order) => {
   if (isBoostedOrder(order)) {

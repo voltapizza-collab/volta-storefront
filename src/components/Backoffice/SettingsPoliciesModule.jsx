@@ -611,7 +611,7 @@ export default function SettingsPoliciesModule({ partner }) {
 
   return (
     <section className="bo-settingsShell">
-      <div className="bo-settingsCard bo-settingsCard--wide">
+      <div className="bo-settingsCard bo-settingsCard--wide bo-settingsCard--rules">
         <div className="bo-settingsHeader">
           <div>
             <div className="bo-settingsEyebrow">Settings / Reglas</div>
@@ -626,7 +626,7 @@ export default function SettingsPoliciesModule({ partner }) {
           </div>
         </div>
 
-        <div className="bo-settingsOverviewGrid">
+        <div className="bo-settingsOverviewGrid bo-settingsOverviewGrid--rules">
           <form className="bo-settingsForm" onSubmit={handleSubmit}>
             <div className="bo-policyBlock">
               <div className="bo-settingsEyebrow">Cobro</div>
@@ -720,17 +720,17 @@ export default function SettingsPoliciesModule({ partner }) {
             </div>
           </form>
 
-          <aside className="bo-settingsSummaryCard">
+          <aside className="bo-settingsSummaryCard bo-rulesLogoCard">
             <div className="bo-settingsEyebrow">Identidad base</div>
             <h3 className="bo-settingsSectionTitle">Logo del partner</h3>
-            <div className="bo-brandingPreviewLogo">
+            <div className="bo-brandingPreviewLogo bo-rulesLogoPreview">
               {partnerData?.brandLogoUrl ? (
                 <img src={partnerData.brandLogoUrl} alt={partnerData?.name || "Partner"} />
               ) : (
                 <span>Sin logo</span>
               )}
             </div>
-            <div className="bo-logoUploadRow">
+            <div className="bo-logoUploadRow bo-rulesLogoUpload">
               <label className="bo-settingsMiniCta bo-settingsMiniCta--file">
                 {uploadingLogo ? "Subiendo..." : "Subir logo"}
                 <input

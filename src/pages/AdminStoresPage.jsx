@@ -1,6 +1,13 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import api from "../setupAxios";
 import OfferCreatePanelCustomer from "../components/Backoffice/Coupons/OfferCreatePanelCustomer";
+import {
+  CUSTOMER_SEGMENTS,
+  customerSegmentLabel,
+  customerSegmentMeta,
+  DEFAULT_CUSTOMER_SEGMENT,
+  normalizeCustomerSegment,
+} from "../constants/customerSegments";
 import "../styles/StoreCreator.css";
 
 const emptyStore = {
@@ -48,13 +55,7 @@ const loadGoogleMaps = (apiKey) =>
     document.head.appendChild(script);
   });
 
-const segmentCards = [
-  { key: "S1", shortLabel: "Potencial", color: "#7c3aed" },
-  { key: "S2", shortLabel: "Nuevo", color: "#0ea5e9" },
-  { key: "S3", shortLabel: "Dormido", color: "#f59e0b" },
-  { key: "S4", shortLabel: "Activo", color: "#16a34a" },
-  { key: "S5", shortLabel: "VIP", color: "#db2777" },
-];
+const segmentCards = CUSTOMER_SEGMENTS;
 
 const customerTimeFilters = [
   { key: "today", label: "Hoy", days: 1 },
@@ -147,11 +148,12 @@ const formatDateTime = (value) => {
 const svgToDataUrl = (svg) => `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
 
 const getCustomerSegmentKey = (customer) => {
-  const key = String(customer?.segment || "S1").trim().toUpperCase();
-  return segmentMetaByKey[key] ? key : "S1";
+  const key = normalizeCustomerSegment(customer?.segment, DEFAULT_CUSTOMER_SEGMENT);
+  return segmentMetaByKey[key] ? key : DEFAULT_CUSTOMER_SEGMENT;
 };
 
-const getCustomerSegmentMeta = (customer) => segmentMetaByKey[getCustomerSegmentKey(customer)];
+const getCustomerSegmentMeta = (customer) =>
+  segmentMetaByKey[getCustomerSegmentKey(customer)] || customerSegmentMeta(customer?.segment);
 
 const createStorePinIcon = (google, active) => ({
   url: svgToDataUrl(`
@@ -983,7 +985,7 @@ function CustomerProfileModal({ customer, onClose, onBoostCustomer }) {
             >
               {segment.shortLabel}
             </span>
-            <span>{customer.segment || "S1"}</span>
+            <span>{customerSegmentLabel(customer.segment)}</span>
             <span>{getTicketComparisonLabel(customer)}</span>
           </div>
 

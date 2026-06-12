@@ -1,9 +1,15 @@
+import {
+  CUSTOMER_SEGMENTS,
+  customerSegmentLabel,
+  normalizeCustomerSegment,
+} from "./customerSegments";
+
 export const COUPON_SEGMENTS = [
-  { key: "S1", label: "Potencial" },
-  { key: "S2", label: "Nuevo" },
-  { key: "S3", label: "Dormido" },
-  { key: "S4", label: "Activo" },
-  { key: "S5", label: "VIP" },
+  ...CUSTOMER_SEGMENTS.map((segment) => ({
+    key: segment.key,
+    label: segment.label,
+    type: "segment",
+  })),
   { key: "HOT", label: "Hot" },
   { key: "COLD", label: "Cold" },
 ];
@@ -16,5 +22,8 @@ export const COUPON_TYPES = [
   { key: "DELIVERY_FREE", label: "Delivery Free" },
 ];
 
-export const couponSegmentLabel = (segment) =>
-  COUPON_SEGMENTS.find((item) => item.key === segment)?.label || segment;
+export const couponSegmentLabel = (segment) => {
+  const customerSegment = normalizeCustomerSegment(segment);
+  if (customerSegment) return customerSegmentLabel(customerSegment);
+  return COUPON_SEGMENTS.find((item) => item.key === segment)?.label || segment;
+};

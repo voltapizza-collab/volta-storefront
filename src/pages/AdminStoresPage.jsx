@@ -64,12 +64,6 @@ const customerTimeFilters = [
   { key: "all", label: "Historico", days: null },
 ];
 
-const customerReviewFilters = [
-  { key: "all", label: "Reviews", color: "#3b008b" },
-  { key: "LIKE", label: "Likes", color: "#16a34a" },
-  { key: "DISLIKE", label: "Dislikes", color: "#db2777" },
-];
-
 const segmentMetaByKey = segmentCards.reduce((acc, segment) => {
   acc[segment.key] = segment;
   return acc;
@@ -169,10 +163,9 @@ const createStorePinIcon = (google, active) => ({
   anchor: new google.maps.Point(17, 42),
 });
 
-const createCustomerPinIcon = (google, customer, isSelected, reviewFilter = "all") => {
+const createCustomerPinIcon = (google, customer, isSelected) => {
   const segment = getCustomerSegmentMeta(customer);
-  const reviewMode = customerReviewFilters.find((item) => item.key === reviewFilter);
-  const markerColor = reviewMode && reviewMode.key !== "all" ? reviewMode.color : segment.color;
+  const markerColor = segment.color;
   const size = isSelected ? 25 : 19;
   const strokeWidth = isSelected ? 4 : 3;
 
@@ -1041,7 +1034,6 @@ function MapPanel({
   customerPostalCode,
   selectedStoreId,
   selectedCustomerId,
-  customerReviewFilter,
   onSelectStore,
   onSelectCustomer,
 }) {
@@ -1260,8 +1252,8 @@ function MapPanel({
             const marker = new google.maps.Marker({
               map: mapRef.current,
               position: { lat: customer.lat, lng: customer.lng },
-              icon: createCustomerPinIcon(google, customer, isSelected, customerReviewFilter),
-              title: `${customer.name || "Cliente"} - ${segment.shortLabel} - ${customer.reviewLikes || 0} likes / ${customer.reviewDislikes || 0} dislikes`,
+              icon: createCustomerPinIcon(google, customer, isSelected),
+              title: `${customer.name || "Cliente"} - ${segment.shortLabel}`,
               zIndex: isSelected ? 60 : 20,
             });
 
@@ -1339,7 +1331,6 @@ function MapPanel({
     center,
     customerMarkers,
     customerPostalCode,
-    customerReviewFilter,
     onSelectStore,
     onSelectCustomer,
     selectedCustomerId,
@@ -1389,7 +1380,6 @@ export default function AdminStoresPage({
   const [showCust, setShowCust] = useState(false);
   const [customerPostalCode, setCustomerPostalCode] = useState("all");
   const [customerSegmentFilter, setCustomerSegmentFilter] = useState("all");
-  const [customerReviewFilter, setCustomerReviewFilter] = useState("all");
   const [customerTimeFilter, setCustomerTimeFilter] = useState("all");
   const [selectedMapStoreId, setSelectedMapStoreId] = useState("all");
   const [selectedCustomerId, setSelectedCustomerId] = useState("");
@@ -1554,34 +1544,16 @@ export default function AdminStoresPage({
         .filter((customer) => {
           const matchesSegment =
             customerSegmentFilter === "all" ? true : getCustomerSegmentKey(customer) === customerSegmentFilter;
-          const matchesReview =
-            customerReviewFilter === "LIKE"
-              ? Number(customer.reviewLikes || 0) > 0
-              : customerReviewFilter === "DISLIKE"
-                ? Number(customer.reviewDislikes || 0) > 0
-                : true;
 
-          return matchesSegment && matchesReview;
+          return matchesSegment;
         })
         .sort((left, right) =>
           String(left.name || "").localeCompare(String(right.name || ""), "es", {
             sensitivity: "base",
           })
         ),
-    [customerFilterBase, customerReviewFilter, customerSegmentFilter]
+    [customerFilterBase, customerSegmentFilter]
   );
-
-  const customerReviewStats = useMemo(() => {
-    const total = customerFilterBase.filter((customer) => Number(customer.reviewVotes || 0) > 0).length;
-    const likes = customerFilterBase.filter((customer) => Number(customer.reviewLikes || 0) > 0).length;
-    const dislikes = customerFilterBase.filter((customer) => Number(customer.reviewDislikes || 0) > 0).length;
-
-    return {
-      all: total,
-      LIKE: likes,
-      DISLIKE: dislikes,
-    };
-  }, [customerFilterBase]);
 
   const customerSegmentStats = useMemo(() => {
     const total = customerFilterBase.length;
@@ -1620,7 +1592,6 @@ export default function AdminStoresPage({
   useEffect(() => {
     setCustomerPostalCode("all");
     setCustomerSegmentFilter("all");
-    setCustomerReviewFilter("all");
     setSelectedCustomerId("");
   }, [selectedMapStoreId]);
 
@@ -1979,31 +1950,6 @@ export default function AdminStoresPage({
                 })}
               </div>
 
-              <div className="sc-reviewModes" aria-label="Filtros de reviews">
-                {customerReviewFilters.map((filter) => {
-                  const count =
-                    filter.key === "all"
-                      ? customerReviewStats.all
-                      : customerReviewStats[filter.key] || 0;
-
-                  return (
-                    <button
-                      key={filter.key}
-                      type="button"
-                      className={`sc-territoryModeBtn is-review ${
-                        customerReviewFilter === filter.key ? "is-active" : ""
-                      }`}
-                      style={{ "--sc-review-color": filter.color }}
-                      onClick={() => setCustomerReviewFilter(filter.key)}
-                    >
-                      <span className="sc-reviewSwatch" />
-                      <span className="sc-territoryLabel">{filter.label}</span>
-                      <span className="sc-reviewMetric">{count}</span>
-                    </button>
-                  );
-                })}
-              </div>
-
             </div>
           )}
 
@@ -2014,7 +1960,6 @@ export default function AdminStoresPage({
             customerPostalCode={customerPostalCode}
             selectedStoreId={selectedMapStoreId}
             selectedCustomerId={selectedCustomerId}
-            customerReviewFilter={customerReviewFilter}
             onSelectStore={(storeId) => setSelectedMapStoreId(String(storeId))}
             onSelectCustomer={setSelectedCustomerId}
           />

@@ -357,6 +357,7 @@ const buildWindowsPrintTicketHtml = (order) => {
       <section class="block">
         <div>Cliente: ${escapeHtml(customer.name || "-")}</div>
         <div>Telefono: ${escapeHtml(customer.phone || "-")}</div>
+        <div>Pago: ${escapeHtml(getPaymentLabel(order))}</div>
         ${showAddress ? `<div>Direccion: ${escapeHtml(customer.address_1)}</div>` : ""}
       </section>
       <section class="block">
@@ -661,8 +662,23 @@ const getCustomerAddress = (order) => {
 
 const getPaymentLabel = (order) => {
   const customerData = order?.customerData || {};
-  const mode = String(customerData.paymentMode || "").toLowerCase();
-  if (mode === "cash") return "Efectivo pendiente";
+  const paymentSignal = [
+    order?.paymentMode,
+    order?.paymentStatus,
+    order?.paymentMethod,
+    customerData.paymentMode,
+    customerData.paymentStatus,
+    customerData.paymentMethod,
+  ]
+    .filter(Boolean)
+    .map((value) => String(value).trim().toLowerCase())
+    .join(" ");
+
+  if (paymentSignal.includes("cash") || paymentSignal.includes("efectivo")) return "Efectivo pendiente";
+  if (paymentSignal.includes("card") || paymentSignal.includes("tarjeta") || paymentSignal.includes("stripe")) {
+    return "Tarjeta";
+  }
+
   return "Tarjeta";
 };
 

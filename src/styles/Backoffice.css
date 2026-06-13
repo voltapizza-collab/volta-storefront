@@ -59,7 +59,15 @@
   background: #ffc94e;
   background-clip: content-box;
 }
+.bo-titleBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
 .bo-title {
+  min-width: 0;
   font-weight: 700;
   font-size: 20px;
   line-height: 1.2;
@@ -79,6 +87,36 @@
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.6);
   margin-bottom: 8px;
+}
+
+.bo-languageSelect {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.bo-languageSelect select {
+  min-width: 58px;
+  height: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 999px;
+  padding: 0 24px 0 11px;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--white);
+  font-size: 11px;
+  font-weight: 900;
+  outline: none;
+  cursor: pointer;
+}
+
+.bo-languageSelect select:focus {
+  border-color: rgba(255, 182, 28, 0.86);
+  box-shadow: 0 0 0 3px rgba(255, 182, 28, 0.16);
+}
+
+.bo-languageSelect option {
+  color: #241639;
+  background: #ffffff;
 }
 .bo-partnerName {
   font-size: 22px;
@@ -1466,6 +1504,8 @@
   align-items: center;
   gap: 10px;
   flex-shrink: 0;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .bo-paymentStoreSummary {
@@ -1476,8 +1516,45 @@
   font-weight: 900;
 }
 
+.bo-paymentConfigSummary {
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  margin-top: 8px;
+  padding: 5px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 900;
+  word-break: break-word;
+}
+
+.bo-paymentConfigSummary.is-ready {
+  background: rgba(53, 19, 164, 0.08);
+  color: #3513a4;
+}
+
+.bo-paymentConfigSummary.is-pending {
+  background: rgba(210, 71, 40, 0.1);
+  color: #9b2a12;
+}
+
+.bo-paymentConfigButton {
+  padding-inline: 12px;
+  background: #ffffff;
+  border: 1px solid rgba(53, 19, 164, 0.16);
+}
+
 .bo-paymentStoreModal {
   width: min(720px, 100%);
+}
+
+.bo-paymentConfigModal {
+  width: min(560px, 100%);
+}
+
+.bo-paymentConfigField textarea {
+  min-height: 128px;
+  resize: vertical;
 }
 
 .bo-paymentStoreActions {

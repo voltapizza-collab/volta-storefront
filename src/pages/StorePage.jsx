@@ -41,6 +41,23 @@ const PRODUCT_TAG_LABELS = {
 const isGridFocusViewport = () =>
   typeof window !== "undefined" && window.innerWidth <= 760;
 
+const PayPalLogo = () => (
+  <svg
+    className="sf-paymentMethodPayPalLogo"
+    viewBox="0 0 148 40"
+    role="img"
+    aria-label="PayPal"
+    focusable="false"
+  >
+    <text x="0" y="29" fill="#003087" fontFamily="Arial, Helvetica, sans-serif" fontSize="28" fontWeight="700">
+      Pay
+    </text>
+    <text x="49" y="29" fill="#009cde" fontFamily="Arial, Helvetica, sans-serif" fontSize="28" fontWeight="700">
+      Pal
+    </text>
+  </svg>
+);
+
 const normalizeCheckoutPhoneInput = (value) => {
   const digits = String(value || "").replace(/\D/g, "");
   if (digits.length === 9) return digits;
@@ -137,15 +154,21 @@ const normalizePositiveIds = (value) => {
 const normalizePaymentPolicySettings = (value) => {
   const parsed = parseMaybeJson(parseMaybeJson(value, {}), {});
   const source = parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
+  const paypalEmail = String(source.paypalEmail || source.paypalAddress || "").trim();
+  const cryptoWalletAddress = String(
+    source.cryptoWalletAddress || source.cryptoAddress || source.walletAddress || ""
+  ).trim();
 
   return {
     card: true,
     cash: Boolean(source.cash),
     cashStoreIds: normalizePositiveIds(source.cashStoreIds),
-    paypal: Boolean(source.paypal),
+    paypal: Boolean(source.paypal) && Boolean(paypalEmail),
     paypalStoreIds: normalizePositiveIds(source.paypalStoreIds),
-    crypto: Boolean(source.crypto),
+    paypalEmail,
+    crypto: Boolean(source.crypto) && Boolean(cryptoWalletAddress),
     cryptoStoreIds: normalizePositiveIds(source.cryptoStoreIds),
+    cryptoWalletAddress,
   };
 };
 
@@ -5022,7 +5045,7 @@ export default function StorePage() {
     if (isPaymentMethodAllowedForStore(paymentPolicySettings, "paypal", store?.id)) {
       methods.push({
         id: "paypal",
-        icon: "P",
+        icon: <PayPalLogo />,
         title: "PayPal",
         description: "Medio externo pendiente de conexion.",
         ready: false,
@@ -5033,8 +5056,8 @@ export default function StorePage() {
       methods.push({
         id: "crypto",
         icon: "₿",
-        title: "Cripto",
-        description: "Medio externo pendiente de conexion.",
+        title: "Cartera virtual",
+        description: "Pago con billetera externa pendiente de conexion.",
         ready: false,
       });
     }

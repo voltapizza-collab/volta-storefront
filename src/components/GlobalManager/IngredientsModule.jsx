@@ -18,7 +18,8 @@ const INGREDIENTS_LEGACY_BASE = {
     { name: "Queso de cabra", allergens: ["MILK"] },
     { name: "Emmental", allergens: ["MILK"] },
     { name: "Provolone", allergens: ["MILK"] },
-    { name: "Relleno de Mozzarela", allergens: ["MILK"] }
+    { name: "Relleno de Mozzarela", allergens: ["MILK"] },
+    { name: "1kg Relleno de Mozzarela", allergens: ["MILK"] }
   ],
 
   SALSAS: [

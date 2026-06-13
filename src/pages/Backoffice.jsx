@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import "../styles/Backoffice.css";
 import voltaLogo from "../assets/logo/the pizza sale enganine.png";
 import { ReactComponent as PizzaBg } from "../assets/logo/pizza.svg";
@@ -21,6 +21,13 @@ import AppFooter from "../components/Layout/AppFooter";
 import AdminStoresPage from "./AdminStoresPage";
 import ReviewsModule from "../components/Backoffice/ReviewsModule";
 import api from "../setupAxios";
+import {
+  BACKOFFICE_LANGUAGES,
+  BACKOFFICE_LANGUAGE_STORAGE_KEY,
+  createBackofficeTranslator,
+  getInitialBackofficeLanguage,
+  normalizeBackofficeLanguage,
+} from "../constants/i18n";
 
 const readSavedBackofficeAuth = () => {
   try {
@@ -63,6 +70,7 @@ const createDemoSession = async () => {
 
 export default function Backoffice() {
   const initialSmsPaymentStatus = new URLSearchParams(window.location.search).get("sms_payment");
+  const [language, setLanguage] = useState(getInitialBackofficeLanguage);
   const [activeModule, setActiveModule] = useState(initialSmsPaymentStatus ? "customersCommunications" : "inventory");
   const [activeModuleGroup, setActiveModuleGroup] = useState(initialSmsPaymentStatus ? "customers" : "inventory");
   const [expandedModules, setExpandedModules] = useState({
@@ -84,6 +92,11 @@ export default function Backoffice() {
   const [loginError, setLoginError] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const t = useMemo(() => createBackofficeTranslator(language), [language]);
+
+  useEffect(() => {
+    localStorage.setItem(BACKOFFICE_LANGUAGE_STORAGE_KEY, language);
+  }, [language]);
 
   useEffect(() => {
     if (!isDemoLinkRequest() || auth?.isDemo) return undefined;
@@ -107,7 +120,7 @@ export default function Backoffice() {
       } catch (err) {
         if (!isActive) return;
         console.error("Error starting demo session", err);
-        setLoginError("No se pudo preparar la sesion demo.");
+        setLoginError(t("auth.demoError"));
       } finally {
         if (isActive) setLoginLoading(false);
       }
@@ -118,7 +131,7 @@ export default function Backoffice() {
     return () => {
       isActive = false;
     };
-  }, [auth?.isDemo]);
+  }, [auth?.isDemo, t]);
 
   useEffect(() => {
     const hydrateStore = async () => {
@@ -166,7 +179,7 @@ export default function Backoffice() {
     const password = normalizeLoginValue(loginForm.password);
 
     if (!username || !password) {
-      setLoginError("Debes introducir usuario y contrasena.");
+      setLoginError(t("auth.required"));
       return;
     }
 
@@ -188,7 +201,7 @@ export default function Backoffice() {
       }
 
       if (username !== password) {
-        setLoginError("Credenciales invalidas.");
+        setLoginError(t("auth.invalid"));
         return;
       }
 
@@ -217,8 +230,8 @@ export default function Backoffice() {
     } catch (err) {
       console.error("Error starting demo session", err);
       const message = isDemoLoginCredential(username, password) && err.response?.status >= 500
-        ? "No se pudo preparar la sesion demo."
-        : "Credenciales invalidas.";
+        ? t("auth.demoError")
+        : t("auth.invalid");
       setLoginError(message);
     } finally {
       setLoginLoading(false);
@@ -230,6 +243,10 @@ export default function Backoffice() {
     localStorage.removeItem("volta_backoffice_auth");
     setActiveModule("inventory");
     setActiveModuleGroup("inventory");
+  };
+
+  const handleLanguageChange = (event) => {
+    setLanguage(normalizeBackofficeLanguage(event.target.value));
   };
 
   const toggleModuleSection = (group, fallbackModule) => {
@@ -325,10 +342,10 @@ export default function Backoffice() {
             className="bo-loginLogo"
           />
 
-          <h1 className="bo-loginTitlePro">Backoffice</h1>
+          <h1 className="bo-loginTitlePro">{t("auth.title")}</h1>
 
           <p className="bo-loginSubtitle">
-            Accede con tu partner o con credenciales demo
+            {t("auth.subtitle")}
           </p>
 
           <form onSubmit={handleLogin} className="bo-loginForm">
@@ -338,7 +355,7 @@ export default function Backoffice() {
                 name="username"
                 value={loginForm.username}
                 onChange={handleLoginChange}
-                placeholder="Usuario"
+                placeholder={t("auth.username")}
               />
             </div>
 
@@ -348,16 +365,16 @@ export default function Backoffice() {
                 name="password"
                 value={loginForm.password}
                 onChange={handleLoginChange}
-                placeholder="Contrasena"
+                placeholder={t("auth.password")}
               />
 
               <button
                 type="button"
                 className="bo-passwordToggle"
                 onClick={() => setShowPassword((prev) => !prev)}
-                aria-label={showPassword ? "Ocultar contrasena" : "Mostrar contrasena"}
+                aria-label={showPassword ? t("auth.hidePasswordLabel") : t("auth.showPasswordLabel")}
               >
-                {showPassword ? "Ocultar" : "Ver"}
+                {showPassword ? t("auth.hidePassword") : t("auth.showPassword")}
               </button>
             </div>
 
@@ -368,7 +385,7 @@ export default function Backoffice() {
             )}
 
             <button type="submit" className="bo-loginBtnPro" disabled={loginLoading}>
-              {loginLoading ? "Iniciando..." : "Entrar"}
+              {loginLoading ? t("auth.loading") : t("auth.submit")}
             </button>
           </form>
         </div>
@@ -382,16 +399,27 @@ export default function Backoffice() {
     <div className="bo-container">
       <div className="bo-sidebar">
         <div className="bo-sidebarTop">
-          <div className="bo-title">Volta - Backoffice</div>
+          <div className="bo-titleBar">
+            <div className="bo-title">{t("app.title")}</div>
+            <label className="bo-languageSelect" aria-label={t("language.label")}>
+              <select value={language} onChange={handleLanguageChange}>
+                {BACKOFFICE_LANGUAGES.map((option) => (
+                  <option key={option.code} value={option.code}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
 
           <div className="bo-partnerBox">
-            <div className="bo-partnerLabel">Empresa</div>
+            <div className="bo-partnerLabel">{t("partner.company")}</div>
             <div className="bo-partnerName">{auth.partnerName}</div>
-            {auth.isDemo && <div className="bo-demoBadge">Modo demo</div>}
+            {auth.isDemo && <div className="bo-demoBadge">{t("partner.demoMode")}</div>}
           </div>
 
           <div className="bo-modulesBox">
-            <div className="bo-modulesLabel">Modules</div>
+            <div className="bo-modulesLabel">{t("nav.modules")}</div>
 
             <div className="bo-nav">
               <button
@@ -404,7 +432,7 @@ export default function Backoffice() {
                 }}
                 type="button"
               >
-                Toppings Inventory
+                {t("nav.inventory")}
               </button>
 
               <button
@@ -416,7 +444,7 @@ export default function Backoffice() {
                 onClick={() => toggleModuleSection("pizzaCreator", "inventory")}
                 type="button"
               >
-                <span>Pizza Creator</span>
+                <span>{t("nav.pizzaCreator")}</span>
                 <span className="bo-btnChevron">
                   {expandedModules.pizzaCreator ? "v" : "^"}
                 </span>
@@ -438,7 +466,7 @@ export default function Backoffice() {
                     }}
                     type="button"
                   >
-                    Productos
+                    {t("nav.products")}
                   </button>
 
                   <button
@@ -451,7 +479,7 @@ export default function Backoffice() {
                     }}
                     type="button"
                   >
-                    Extras
+                    {t("nav.extras")}
                   </button>
                 </div>
               )}
@@ -482,7 +510,7 @@ export default function Backoffice() {
                 }}
                 type="button"
               >
-                <span>Stores</span>
+                <span>{t("nav.stores")}</span>
                 <span className="bo-btnChevron">
                   {expandedModules.stores ? "v" : "^"}
                 </span>
@@ -504,7 +532,7 @@ export default function Backoffice() {
                     }}
                     type="button"
                   >
-                    Locations
+                    {t("nav.locations")}
                   </button>
 
                   <button
@@ -517,7 +545,7 @@ export default function Backoffice() {
                     }}
                     type="button"
                   >
-                    Reviews
+                    {t("nav.reviews")}
                   </button>
                 </div>
               )}
@@ -531,7 +559,7 @@ export default function Backoffice() {
                 onClick={() => toggleModuleSection("customers", "inventory")}
                 type="button"
               >
-                <span>Customers</span>
+                <span>{t("nav.customers")}</span>
                 <span className="bo-btnChevron">
                   {expandedModules.customers ? "v" : "^"}
                 </span>
@@ -551,7 +579,7 @@ export default function Backoffice() {
                     }}
                     type="button"
                   >
-                    SMS
+                    {t("nav.sms")}
                   </button>
                 </div>
               )}
@@ -565,7 +593,7 @@ export default function Backoffice() {
                 onClick={() => toggleModuleSection("offers", "inventory")}
                 type="button"
               >
-                <span>Ofertas</span>
+                <span>{t("nav.offers")}</span>
                 <span className="bo-btnChevron">
                   {expandedModules.offers ? "v" : "^"}
                 </span>
@@ -585,7 +613,7 @@ export default function Backoffice() {
                     }}
                     type="button"
                     >
-                      Cupones
+                      {t("nav.coupons")}
                     </button>
                     <button
                       className={`bo-subbtn ${isOffersPromosActive ? "active" : ""}`}
@@ -595,7 +623,7 @@ export default function Backoffice() {
                       }}
                       type="button"
                     >
-                      Promos
+                      {t("nav.promos")}
                     </button>
                     <button
                       className={`bo-subbtn ${isOffersDirectDiscountsActive ? "active" : ""}`}
@@ -605,7 +633,7 @@ export default function Backoffice() {
                       }}
                       type="button"
                     >
-                      Top Deals
+                      {t("nav.topDeals")}
                     </button>
                     <button
                       className={`bo-subbtn ${isOffersIncentivesActive ? "active" : ""}`}
@@ -615,7 +643,7 @@ export default function Backoffice() {
                       }}
                       type="button"
                     >
-                      Incentivos
+                      {t("nav.incentives")}
                     </button>
                   </div>
                 )}
@@ -629,7 +657,7 @@ export default function Backoffice() {
                 onClick={() => toggleModuleSection("myorders", "inventory")}
                 type="button"
               >
-                <span>My Orders</span>
+                <span>{t("nav.orders")}</span>
                 <span className="bo-btnChevron">
                   {expandedModules.myorders ? "v" : "^"}
                 </span>
@@ -651,7 +679,7 @@ export default function Backoffice() {
                     }}
                     type="button"
                   >
-                    Movimientos
+                    {t("nav.movements")}
                   </button>
                 </div>
               )}
@@ -665,7 +693,7 @@ export default function Backoffice() {
                 onClick={() => toggleModuleSection("finance", "inventory")}
                 type="button"
               >
-                <span>Finance</span>
+                <span>{t("nav.finance")}</span>
                 <span className="bo-btnChevron">
                   {expandedModules.finance ? "v" : "^"}
                 </span>
@@ -687,7 +715,7 @@ export default function Backoffice() {
                     }}
                     type="button"
                   >
-                    Facturas
+                    {t("nav.invoices")}
                   </button>
                 </div>
               )}
@@ -701,7 +729,7 @@ export default function Backoffice() {
                 onClick={() => toggleModuleSection("settings", "inventory")}
                 type="button"
               >
-                <span>Settings</span>
+                <span>{t("nav.settings")}</span>
                 <span className="bo-btnChevron">
                   {expandedModules.settings ? "v" : "^"}
                 </span>
@@ -723,7 +751,7 @@ export default function Backoffice() {
                     }}
                     type="button"
                   >
-                    Reglas
+                    {t("nav.rules")}
                   </button>
 
                   <button
@@ -736,7 +764,7 @@ export default function Backoffice() {
                     }}
                     type="button"
                   >
-                    Entregas
+                    {t("nav.delivery")}
                   </button>
 
                   <button
@@ -749,7 +777,7 @@ export default function Backoffice() {
                     }}
                     type="button"
                   >
-                    Personalizacion
+                    {t("nav.branding")}
                   </button>
 
                   <button
@@ -762,7 +790,7 @@ export default function Backoffice() {
                     }}
                     type="button"
                   >
-                    Seguimiento
+                    {t("nav.tracking")}
                   </button>
                 </div>
               )}
@@ -775,7 +803,7 @@ export default function Backoffice() {
           onClick={handleLogout}
           type="button"
         >
-          Logout
+          {t("nav.logout")}
         </button>
       </div>
 

@@ -9,8 +9,10 @@ const DEFAULT_FORM = {
     cashStoreIds: [],
     paypal: false,
     paypalStoreIds: [],
+    paypalEmail: "",
     crypto: false,
     cryptoStoreIds: [],
+    cryptoWalletAddress: "",
   },
 };
 
@@ -32,13 +34,21 @@ const PAYMENT_METHODS = [
     id: "paypal",
     title: "PayPal",
     label: "Medio externo",
-    description: "Queda registrado como aceptado por la empresa. La pasarela no esta conectada aun.",
+    description: "Registra el correo PayPal donde la tienda recibira el pago.",
+    configKey: "paypalEmail",
+    configLabel: "Correo PayPal de cobro",
+    configPlaceholder: "pagos@tuempresa.com",
+    configType: "email",
   },
   {
     id: "crypto",
-    title: "Criptomonedas",
+    title: "Cartera virtual",
     label: "Medio externo",
-    description: "Queda registrado como aceptado por la empresa. La pasarela no esta conectada aun.",
+    description: "Registra la direccion o hash de la billetera donde se recibira el pago.",
+    configKey: "cryptoWalletAddress",
+    configLabel: "Direccion/hash de cartera",
+    configPlaceholder: "Wallet, hash o direccion de cobro",
+    configType: "textarea",
   },
 ];
 
@@ -98,15 +108,21 @@ const normalizePositiveIds = (value) => {
 const normalizePaymentPolicySettings = (value) => {
   const parsed = parseMaybeJson(parseMaybeJson(value, {}), {});
   const source = parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
+  const paypalEmail = String(source.paypalEmail || source.paypalAddress || "").trim();
+  const cryptoWalletAddress = String(
+    source.cryptoWalletAddress || source.cryptoAddress || source.walletAddress || ""
+  ).trim();
 
   return {
     card: true,
     cash: Boolean(source.cash),
     cashStoreIds: normalizePositiveIds(source.cashStoreIds),
-    paypal: Boolean(source.paypal),
+    paypal: Boolean(source.paypal) && Boolean(paypalEmail),
     paypalStoreIds: normalizePositiveIds(source.paypalStoreIds),
-    crypto: Boolean(source.crypto),
+    paypalEmail,
+    crypto: Boolean(source.crypto) && Boolean(cryptoWalletAddress),
     cryptoStoreIds: normalizePositiveIds(source.cryptoStoreIds),
+    cryptoWalletAddress,
   };
 };
 
@@ -114,6 +130,26 @@ const paymentStoreKey = (methodId) => `${methodId}StoreIds`;
 
 const paymentMethodLabel = (methodId) =>
   PAYMENT_METHODS.find((method) => method.id === methodId)?.title || "Metodo de pago";
+
+const paymentConfigValue = (settings, method) =>
+  method?.configKey ? String(settings?.[method.configKey] || "").trim() : "";
+
+const maskPaymentConfigValue = (value, method) => {
+  const cleanValue = String(value || "").trim();
+  if (!cleanValue) return "Config pendiente";
+  if (method?.id === "paypal") return cleanValue;
+  if (cleanValue.length <= 18) return cleanValue;
+  return `${cleanValue.slice(0, 10)}...${cleanValue.slice(-6)}`;
+};
+
+const validatePaymentConfigValue = (value, method) => {
+  const cleanValue = String(value || "").trim();
+  if (!method?.configKey) return true;
+  if (method.id === "paypal") {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanValue);
+  }
+  return cleanValue.length >= 6;
+};
 
 const formatCurrency = (value, currency = "EUR") =>
   new Intl.NumberFormat("es-ES", {
@@ -283,6 +319,8 @@ export default function SettingsPoliciesModule({ partner }) {
   const [stores, setStores] = useState([]);
   const [paymentStoreModal, setPaymentStoreModal] = useState(null);
   const [paymentStoreSelection, setPaymentStoreSelection] = useState([]);
+  const [paymentConfigModal, setPaymentConfigModal] = useState(null);
+  const [paymentConfigDraft, setPaymentConfigDraft] = useState("");
 
   useEffect(() => {
     const loadPolicies = async () => {
@@ -382,10 +420,19 @@ export default function SettingsPoliciesModule({ partner }) {
   const handlePaymentToggle = (methodId) => {
     if (methodId === "card") return;
 
+    const method = PAYMENT_METHODS.find((item) => item.id === methodId);
     const currentSettings = normalizePaymentPolicySettings(form.paymentPolicySettings);
     const currentlyEnabled = Boolean(currentSettings[methodId]);
 
     if (!currentlyEnabled) {
+      if (method?.configKey) {
+        setPaymentConfigDraft(paymentConfigValue(currentSettings, method));
+        setPaymentConfigModal({ methodId, activateAfterSave: true });
+        setError("");
+        setSuccess("");
+        return;
+      }
+
       const storeKey = paymentStoreKey(methodId);
       const currentStoreIds = currentSettings[storeKey] || [];
       const fallbackStoreIds = stores.map((store) => Number(store.id)).filter(Boolean);
@@ -403,6 +450,61 @@ export default function SettingsPoliciesModule({ partner }) {
       },
     }));
     setSuccess("");
+  };
+
+  const openPaymentConfigModal = (methodId, activateAfterSave = false) => {
+    const method = PAYMENT_METHODS.find((item) => item.id === methodId);
+    if (!method?.configKey) return;
+
+    const currentSettings = normalizePaymentPolicySettings(form.paymentPolicySettings);
+    setPaymentConfigDraft(paymentConfigValue(currentSettings, method));
+    setPaymentConfigModal({ methodId, activateAfterSave });
+    setError("");
+    setSuccess("");
+  };
+
+  const confirmPaymentConfig = () => {
+    if (!paymentConfigModal) return;
+
+    const method = PAYMENT_METHODS.find((item) => item.id === paymentConfigModal.methodId);
+    if (!method?.configKey) return;
+
+    const cleanValue = paymentConfigDraft.trim();
+    if (!validatePaymentConfigValue(cleanValue, method)) {
+      setError(
+        method.id === "paypal"
+          ? "Introduce un correo PayPal valido para activar este medio de pago."
+          : "Introduce una direccion o hash valido para activar la cartera virtual."
+      );
+      return;
+    }
+
+    setForm((current) => ({
+      ...current,
+      paymentPolicySettings: {
+        ...normalizePaymentPolicySettings(current.paymentPolicySettings),
+        [method.configKey]: cleanValue,
+      },
+    }));
+
+    if (paymentConfigModal.activateAfterSave) {
+      const currentSettings = normalizePaymentPolicySettings(form.paymentPolicySettings);
+      const storeKey = paymentStoreKey(method.id);
+      const currentStoreIds = currentSettings[storeKey] || [];
+      const fallbackStoreIds = stores.map((store) => Number(store.id)).filter(Boolean);
+      setPaymentStoreSelection(currentStoreIds.length ? currentStoreIds : fallbackStoreIds);
+      setPaymentStoreModal(method.id);
+    }
+
+    setPaymentConfigModal(null);
+    setPaymentConfigDraft("");
+    setError("");
+    setSuccess("");
+  };
+
+  const cancelPaymentConfig = () => {
+    setPaymentConfigModal(null);
+    setPaymentConfigDraft("");
   };
 
   const confirmPaymentStores = () => {
@@ -663,6 +765,7 @@ export default function SettingsPoliciesModule({ partner }) {
                   const paymentSettings = normalizePaymentPolicySettings(form.paymentPolicySettings);
                   const checked = method.locked || Boolean(paymentSettings[method.id]);
                   const selectedStoreIds = normalizePositiveIds(paymentSettings[paymentStoreKey(method.id)]);
+                  const configuredValue = paymentConfigValue(paymentSettings, method);
                   const storeSummary = selectedStoreIds.length
                     ? `${selectedStoreIds.length} tienda${selectedStoreIds.length === 1 ? "" : "s"}`
                     : "Todas las tiendas";
@@ -675,11 +778,29 @@ export default function SettingsPoliciesModule({ partner }) {
                         <span>{method.label}</span>
                         <strong>{method.title}</strong>
                         <p>{method.description}</p>
+                        {method.configKey && (
+                          <small
+                            className={`bo-paymentConfigSummary ${
+                              configuredValue ? "is-ready" : "is-pending"
+                            }`}
+                          >
+                            {maskPaymentConfigValue(configuredValue, method)}
+                          </small>
+                        )}
                         {!method.locked && checked && (
                           <small className="bo-paymentStoreSummary">{storeSummary}</small>
                         )}
                       </div>
                       <div className="bo-paymentMethodControls">
+                        {method.configKey && (
+                          <button
+                            type="button"
+                            className="bo-settingsMiniCta bo-paymentConfigButton"
+                            onClick={() => openPaymentConfigModal(method.id)}
+                          >
+                            Datos
+                          </button>
+                        )}
                         {!method.locked && checked && (
                           <button
                             type="button"
@@ -928,6 +1049,74 @@ export default function SettingsPoliciesModule({ partner }) {
         {error && <div className="bo-settingsError">{error}</div>}
         {success && <div className="bo-settingsSuccess">{success}</div>}
       </div>
+
+      {paymentConfigModal && (
+        <div className="bo-brandingModalBackdrop" role="presentation">
+          {(() => {
+            const method = PAYMENT_METHODS.find((item) => item.id === paymentConfigModal.methodId);
+            if (!method) return null;
+            const isValidConfig = validatePaymentConfigValue(paymentConfigDraft, method);
+
+            return (
+              <div
+                className="bo-brandingModalCard bo-paymentConfigModal"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="payment-config-modal-title"
+              >
+                <div className="bo-brandingModalHead">
+                  <div>
+                    <div className="bo-settingsEyebrow">Medios de pago</div>
+                    <h3 id="payment-config-modal-title" className="bo-settingsSectionTitle">
+                      Configurar {method.title}
+                    </h3>
+                    <p className="bo-settingsHint">
+                      Este dato se mostrara como referencia para que la tienda cobre por este medio.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    className="bo-brandingModalClose"
+                    onClick={cancelPaymentConfig}
+                  >
+                    Cerrar
+                  </button>
+                </div>
+
+                <label className="bo-field bo-paymentConfigField">
+                  <span>{method.configLabel}</span>
+                  {method.configType === "textarea" ? (
+                    <textarea
+                      value={paymentConfigDraft}
+                      onChange={(event) => setPaymentConfigDraft(event.target.value)}
+                      placeholder={method.configPlaceholder}
+                      rows={4}
+                    />
+                  ) : (
+                    <input
+                      type={method.configType || "text"}
+                      value={paymentConfigDraft}
+                      onChange={(event) => setPaymentConfigDraft(event.target.value)}
+                      placeholder={method.configPlaceholder}
+                    />
+                  )}
+                </label>
+
+                <div className="bo-settingsActions">
+                  <button
+                    type="button"
+                    className="bo-settingsSave"
+                    onClick={confirmPaymentConfig}
+                    disabled={!isValidConfig}
+                  >
+                    Guardar datos
+                  </button>
+                </div>
+              </div>
+            );
+          })()}
+        </div>
+      )}
 
       {paymentStoreModal && (
         <div className="bo-brandingModalBackdrop" role="presentation">

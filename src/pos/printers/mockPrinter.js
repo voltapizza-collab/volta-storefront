@@ -190,10 +190,23 @@ const getDeliveryAddress = (order) => {
   return address && !/^\(PICKUP\)/i.test(address) ? address : "";
 };
 
-const getPaymentLabel = (order) =>
-  String(order?.customerData?.paymentMode || "").toLowerCase() === "cash"
-    ? "Efectivo pendiente"
-    : "Tarjeta";
+const getPaymentLabel = (order) => {
+  const customerData = order?.customerData || {};
+  const paymentSignal = [
+    order?.paymentMode,
+    order?.paymentStatus,
+    order?.paymentMethod,
+    customerData.paymentMode,
+    customerData.paymentStatus,
+    customerData.paymentMethod,
+  ]
+    .filter(Boolean)
+    .map((value) => String(value).trim().toLowerCase())
+    .join(" ");
+
+  if (paymentSignal.includes("cash") || paymentSignal.includes("efectivo")) return "Efectivo pendiente";
+  return "Tarjeta";
+};
 
 export const mockPrinter = {
   id: "windows-browser-print",

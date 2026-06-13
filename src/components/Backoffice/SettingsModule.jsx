@@ -40,12 +40,16 @@ const readTrackingSettings = (value) => {
 const readPaymentPolicySettings = (value) => {
   const parsed = parseMaybeJson(parseMaybeJson(value, {}), {});
   const source = parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
+  const paypalEmail = String(source.paypalEmail || source.paypalAddress || "").trim();
+  const cryptoWalletAddress = String(
+    source.cryptoWalletAddress || source.cryptoAddress || source.walletAddress || ""
+  ).trim();
 
   return {
     card: true,
     cash: Boolean(source.cash),
-    paypal: Boolean(source.paypal),
-    crypto: Boolean(source.crypto),
+    paypal: Boolean(source.paypal) && Boolean(paypalEmail),
+    crypto: Boolean(source.crypto) && Boolean(cryptoWalletAddress),
   };
 };
 
@@ -114,7 +118,7 @@ export default function SettingsModule({
     paymentPolicySettings.card && "Tarjeta",
     paymentPolicySettings.cash && "Efectivo",
     paymentPolicySettings.paypal && "PayPal",
-    paymentPolicySettings.crypto && "Cripto",
+    paymentPolicySettings.crypto && "Cartera virtual",
   ].filter(Boolean);
   const buttonConfig = useMemo(
     () => normalizeStorefrontButtonConfig(partnerData?.storefrontButtonConfig),

@@ -12,6 +12,7 @@ import LandingPage from "./pages/LandingPage";
 import ReservationCancelPage from "./pages/ReservationCancelPage";
 import OrderTracking from "./pages/OrderTracking";
 import ProductReviewPage from "./pages/ProductReviewPage";
+import OnboardingFormPage from "./pages/OnboardingFormPage";
 import CouponShortRedirect from "./pages/CouponShortRedirect";
 import AppLayout from "./components/Layout/AppLayout";
 import PosApp from "./pos/PosApp";
@@ -27,6 +28,7 @@ function App() {
         <Route path="/reservation/:id/cancel" element={<ReservationCancelPage />} />
         <Route path="/seguimiento/:code" element={<OrderTracking />} />
         <Route path="/review/:token" element={<ProductReviewPage />} />
+        <Route path="/onboarding/:token" element={<OnboardingFormPage />} />
         <Route path="/c/:code" element={<CouponShortRedirect />} />
 
         {/* STORE (motor de vents) */}

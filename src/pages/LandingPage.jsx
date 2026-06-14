@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ReactComponent as PizzaBg } from "../assets/logo/pizza.svg";
 import voltaSystemsLogo from "../assets/logo/the pizza sale enganine.png";
 import EngineBackground from "../components/Backoffice/EngineBackground";
+import api from "../setupAxios";
 import "../styles/LandingPage.css";
 
 const modules = [
@@ -108,27 +109,43 @@ export default function LandingPage() {
     phone: "",
     message: "",
   });
+  const [leadStatus, setLeadStatus] = useState("");
+  const [submittingLead, setSubmittingLead] = useState(false);
 
   const updateLead = (field) => (event) => {
     setLead((current) => ({ ...current, [field]: event.target.value }));
+    setLeadStatus("");
   };
 
-  const submitLead = (event) => {
+  const submitLead = async (event) => {
     event.preventDefault();
 
-    const subject = encodeURIComponent(`Nuevo contacto Volta Pizza - ${lead.business || lead.name || "Pizzeria"}`);
-    const body = encodeURIComponent(
-      [
-        `Nombre: ${lead.name}`,
-        `Pizzeria: ${lead.business}`,
-        `Email: ${lead.email}`,
-        `Telefono: ${lead.phone}`,
-        "",
-        lead.message || "Quiero informacion sobre Volta Pizza.",
-      ].join("\n")
-    );
+    try {
+      setSubmittingLead(true);
+      setLeadStatus("");
 
-    window.location.href = `mailto:contacto@voltapizza.com?subject=${subject}&body=${body}`;
+      const response = await api.post("/api/onboarding/requests", lead);
+      const emailStatus = response.data?.request?.emailStatus;
+
+      setLead({
+        name: "",
+        business: "",
+        email: "",
+        phone: "",
+        message: "",
+      });
+
+      setLeadStatus(
+        emailStatus === "SENT"
+          ? "Solicitud recibida. Te hemos enviado el enlace de onboarding formal."
+          : "Solicitud recibida. Revisaremos el envio del enlace de onboarding."
+      );
+    } catch (error) {
+      console.error(error);
+      setLeadStatus("No pudimos enviar la solicitud. Intentalo de nuevo o escribe a contacto@voltapizza.com.");
+    } finally {
+      setSubmittingLead(false);
+    }
   };
 
   const backofficeHref = getBackofficeHref();
@@ -299,7 +316,10 @@ export default function LandingPage() {
             <span>Mensaje</span>
             <textarea value={lead.message} onChange={updateLead("message")} rows="4" />
           </label>
-          <button type="submit">Enviar solicitud</button>
+          <button type="submit" disabled={submittingLead}>
+            {submittingLead ? "Enviando..." : "Enviar solicitud"}
+          </button>
+          {leadStatus && <div className="vp-formStatus">{leadStatus}</div>}
         </form>
       </section>
 

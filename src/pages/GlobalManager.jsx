@@ -8,6 +8,7 @@ import CategoriesModule from "../components/GlobalManager/CategoriesModule";
 import SmsCreditsModule from "../components/GlobalManager/SmsCreditsModule";
 import MyOrdersModule from "../components/GlobalManager/MyOrdersModule";
 import BoostSettingsModule from "../components/GlobalManager/BoostSettingsModule";
+import OnboardingModule from "../components/GlobalManager/OnboardingModule";
 
 // footer global
 import AppFooter from "../components/Layout/AppFooter";
@@ -175,8 +176,13 @@ export default function GlobalManager() {
             Boost
           </button>
 
-          <button className="gm-btn" disabled>
-            Partners
+          <button
+            className={`gm-btn ${
+              activeModule === "onboarding" ? "active" : ""
+            }`}
+            onClick={() => setActiveModule("onboarding")}
+          >
+            Onboarding
           </button>
 
           <button className="gm-btn" disabled>
@@ -204,8 +210,9 @@ export default function GlobalManager() {
           {activeModule === "categories" && <CategoriesModule />}
           {activeModule === "smsCredits" && <SmsCreditsModule />}
           {activeModule === "boostSettings" && <BoostSettingsModule />}
+          {activeModule === "onboarding" && <OnboardingModule />}
 
-          {!["myorders", "ingredients", "categories", "smsCredits", "boostSettings"].includes(activeModule) && (
+          {!["myorders", "ingredients", "categories", "smsCredits", "boostSettings", "onboarding"].includes(activeModule) && (
             <div style={{ opacity: 0.6 }}>
               Module not implemented yet
             </div>

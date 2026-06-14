@@ -243,9 +243,270 @@
   background: rgba(255, 182, 28, 0.12);
 }
 
+.gmon-shell {
+  display: grid;
+  gap: 12px;
+  color: #1f172a;
+}
+
+.gmon-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.gmon-stats article,
+.gmon-filters,
+.gmon-list,
+.gmon-detail,
+.gmon-review,
+.gmon-data {
+  border: 1px solid rgba(59, 0, 139, 0.12);
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 12px 28px rgba(59, 0, 139, 0.08);
+}
+
+.gmon-stats article {
+  display: grid;
+  gap: 4px;
+  padding: 14px;
+}
+
+.gmon-stats span,
+.gmon-summary span,
+.gmon-review span,
+.gmon-data span {
+  color: rgba(31, 23, 42, 0.58);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.gmon-stats strong {
+  color: #3b008b;
+  font-size: 26px;
+}
+
+.gmon-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 8px;
+}
+
+.gmon-filters button,
+.gmon-card,
+.gmon-detailHead a,
+.gmon-review button,
+.gmon-review select,
+.gmon-review textarea {
+  font: inherit;
+}
+
+.gmon-filters button {
+  border: 0;
+  border-radius: 6px;
+  padding: 8px 10px;
+  background: rgba(59, 0, 139, 0.06);
+  color: rgba(31, 23, 42, 0.72);
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.gmon-filters button.active {
+  background: #3b008b;
+  color: #fff;
+}
+
+.gmon-message {
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: rgba(255, 182, 28, 0.18);
+  color: #3b008b;
+  font-weight: 900;
+}
+
+.gmon-grid {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.42fr) minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+}
+
+.gmon-list {
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+}
+
+.gmon-card {
+  display: grid;
+  gap: 4px;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid rgba(59, 0, 139, 0.1);
+  border-radius: 8px;
+  background: #fff;
+  color: #1f172a;
+  text-align: left;
+  cursor: pointer;
+}
+
+.gmon-card.active {
+  border-color: #ffb61c;
+  box-shadow: inset 0 0 0 1px #ffb61c;
+}
+
+.gmon-card span,
+.gmon-card small,
+.gmon-summary small,
+.gmon-detailHead p {
+  color: rgba(31, 23, 42, 0.58);
+  font-weight: 800;
+}
+
+.gmon-detail {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+}
+
+.gmon-detailHead {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.gmon-detailHead span {
+  color: #3b008b;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.gmon-detailHead h3 {
+  margin: 3px 0 0;
+  color: #1f172a;
+  font-size: 24px;
+}
+
+.gmon-detailHead p {
+  margin: 6px 0 0;
+}
+
+.gmon-detailHead a,
+.gmon-review button {
+  border: 0;
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: #ffb61c;
+  color: #1f172a;
+  font-weight: 900;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.gmon-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.gmon-summary div,
+.gmon-dataGrid div {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  padding: 10px;
+  border-radius: 8px;
+  background: rgba(31, 23, 42, 0.04);
+}
+
+.gmon-summary strong,
+.gmon-dataGrid strong {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.gmon-review {
+  display: grid;
+  grid-template-columns: minmax(180px, 0.35fr) minmax(260px, 1fr) auto;
+  gap: 10px;
+  align-items: end;
+  padding: 12px;
+  box-shadow: none;
+}
+
+.gmon-review label {
+  display: grid;
+  gap: 6px;
+}
+
+.gmon-review select,
+.gmon-review textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid rgba(59, 0, 139, 0.16);
+  border-radius: 8px;
+  padding: 10px 11px;
+  color: #1f172a;
+}
+
+.gmon-review textarea {
+  resize: vertical;
+}
+
+.gmon-review button:disabled {
+  opacity: 0.62;
+  cursor: wait;
+}
+
+.gmon-data {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  box-shadow: none;
+}
+
+.gmon-data h4 {
+  margin: 0;
+  color: #1f172a;
+  font-size: 18px;
+}
+
+.gmon-dataGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.gmon-wide {
+  grid-column: 1 / -1;
+}
+
+.gmon-empty {
+  padding: 22px 14px;
+  color: rgba(31, 23, 42, 0.58);
+  font-weight: 900;
+}
+
+.gmon-empty--compact {
+  padding: 10px;
+}
+
 @media (max-width: 980px) {
   .gm-smsStats,
-  .gm-smsRecharge {
+  .gm-smsRecharge,
+  .gmon-stats,
+  .gmon-grid,
+  .gmon-summary,
+  .gmon-review,
+  .gmon-dataGrid {
     grid-template-columns: 1fr;
   }
 }

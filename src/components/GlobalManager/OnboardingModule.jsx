@@ -78,7 +78,7 @@ const formatDate = (value) => {
 const fieldLabels = [
   ["partnerType", "Tipo de titular"],
   ["legalName", "Razon social"],
-  ["taxId", "CIF / NIF / VAT"],
+  ["taxId", "CIF / NIF / NIE"],
   ["legalRepresentative", "Responsable legal"],
   ["representativeId", "Documento responsable"],
   ["representativeRole", "Cargo"],

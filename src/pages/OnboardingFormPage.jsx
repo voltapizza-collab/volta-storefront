@@ -52,24 +52,6 @@ const documentFields = [
     description: "Modelo 036/037, certificado censal, escritura o documento de sociedad.",
     required: true,
   },
-  {
-    key: "BANK",
-    title: "Titularidad bancaria",
-    description: "Certificado bancario o justificante donde aparezcan titular e IBAN.",
-    required: true,
-  },
-  {
-    key: "REPRESENTATION",
-    title: "Representacion",
-    description: "Poder, nombramiento o autorizacion si el firmante no figura claramente.",
-    required: false,
-  },
-  {
-    key: "HEALTH",
-    title: "Licencia o autorizacion sanitaria",
-    description: "Opcional en esta fase, recomendable si ya la tienes disponible.",
-    required: false,
-  },
 ];
 
 export default function OnboardingFormPage() {
@@ -218,7 +200,7 @@ export default function OnboardingFormPage() {
               <input value={form.legalName} onChange={updateField("legalName")} required disabled={isLocked} />
             </label>
             <label>
-              <span>CIF / NIF / VAT</span>
+              <span>CIF / NIF / NIE</span>
               <input value={form.taxId} onChange={updateField("taxId")} required disabled={isLocked} />
             </label>
             <label>
@@ -291,7 +273,7 @@ export default function OnboardingFormPage() {
           <div className="onb-section">
             <h2>Documentacion basica</h2>
             <p className="onb-sectionIntro">
-              Sube solo lo necesario para validar quien firma, la empresa/autonomo y la cuenta de liquidacion.
+              Sube solo lo necesario para validar quien firma y la empresa/autonomo.
             </p>
             {documentFields.map((field) => {
               const existingForType = existingDocumentsByType[field.key] || [];

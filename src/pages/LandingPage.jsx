@@ -137,8 +137,8 @@ export default function LandingPage() {
 
       setLeadStatus(
         emailStatus === "SENT"
-          ? "Solicitud recibida. Te hemos enviado el enlace de onboarding formal."
-          : "Solicitud recibida. Revisaremos el envio del enlace de onboarding."
+          ? "Solicitud recibida. Te hemos enviado el enlace para completar la fase 2."
+          : "Solicitud recibida. Revisaremos el envio del enlace de fase 2."
       );
     } catch (error) {
       console.error(error);

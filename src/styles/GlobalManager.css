@@ -251,7 +251,7 @@
 
 .gmon-stats {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 10px;
 }
 
@@ -330,22 +330,28 @@
 
 .gmon-grid {
   display: grid;
-  grid-template-columns: minmax(260px, 0.42fr) minmax(0, 1fr);
+  grid-template-columns: minmax(260px, 0.32fr) minmax(0, 1fr);
   gap: 12px;
   align-items: start;
+  min-width: 0;
 }
 
 .gmon-list {
   display: grid;
   gap: 8px;
   padding: 10px;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .gmon-card {
+  position: relative;
   display: grid;
   gap: 4px;
   width: 100%;
-  padding: 12px;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 12px 42px 12px 12px;
   border: 1px solid rgba(59, 0, 139, 0.1);
   border-radius: 8px;
   background: #fff;
@@ -354,9 +360,49 @@
   cursor: pointer;
 }
 
+.gmon-card:focus-visible {
+  outline: 2px solid #6a3df0;
+  outline-offset: 2px;
+}
+
 .gmon-card.active {
   border-color: #ffb61c;
   box-shadow: inset 0 0 0 1px #ffb61c;
+}
+
+.gmon-cardText {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.gmon-deleteRequest {
+  position: absolute;
+  top: 9px;
+  right: 9px;
+  width: 26px;
+  height: 26px;
+  border: 1px solid rgba(59, 0, 139, 0.14);
+  border-radius: 999px;
+  background: rgba(59, 0, 139, 0.06);
+  color: #3b008b;
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.gmon-deleteRequest:hover,
+.gmon-deleteRequest:focus-visible {
+  background: #3b008b;
+  color: #fff;
+  outline: none;
+}
+
+.gmon-deleteRequest:disabled {
+  opacity: 0.55;
+  cursor: wait;
 }
 
 .gmon-card span,
@@ -367,10 +413,21 @@
   font-weight: 800;
 }
 
+.gmon-card strong,
+.gmon-card span,
+.gmon-card small {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .gmon-detail {
   display: grid;
   gap: 12px;
   padding: 14px;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .gmon-detailHead {
@@ -396,6 +453,93 @@
 
 .gmon-detailHead p {
   margin: 6px 0 0;
+}
+
+.gmon-phaseBox {
+  display: grid;
+  grid-template-columns: minmax(180px, 0.32fr) minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid rgba(255, 182, 28, 0.5);
+  border-radius: 8px;
+  background: rgba(255, 182, 28, 0.13);
+}
+
+.gmon-phaseBox div {
+  display: grid;
+  gap: 3px;
+}
+
+.gmon-phaseBox span {
+  color: #3b008b;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.gmon-phaseBox strong {
+  color: #1f172a;
+  font-size: 18px;
+}
+
+.gmon-phaseBox p {
+  margin: 0;
+  color: rgba(31, 23, 42, 0.72);
+  font-weight: 850;
+}
+
+.gmon-contractActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 12px;
+  border: 1px solid rgba(59, 0, 139, 0.12);
+  border-radius: 8px;
+  background: rgba(106, 61, 240, 0.06);
+}
+
+.gmon-contractActions div {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.gmon-contractActions span {
+  color: #3b008b;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.gmon-contractActions strong {
+  color: #1f172a;
+  font-size: 16px;
+}
+
+.gmon-contractActions small {
+  color: rgba(31, 23, 42, 0.6);
+  font-weight: 800;
+}
+
+.gmon-contractActions button {
+  border: 0;
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: #3b008b;
+  color: #fff;
+  font: inherit;
+  font-weight: 900;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.gmon-contractActions button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 .gmon-detailHead a,
@@ -430,6 +574,13 @@
 .gmon-summary strong,
 .gmon-dataGrid strong {
   min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.gmon-dataGrid small {
+  color: rgba(31, 23, 42, 0.58);
+  font-size: 12px;
+  font-weight: 750;
   overflow-wrap: anywhere;
 }
 
@@ -489,6 +640,24 @@
   grid-column: 1 / -1;
 }
 
+.gmon-docLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.gmon-docLinks a {
+  max-width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: rgba(106, 61, 240, 0.08);
+  color: #3b008b;
+  font-size: 12px;
+  font-weight: 900;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
 .gmon-empty {
   padding: 22px 14px;
   color: rgba(31, 23, 42, 0.58);
@@ -504,6 +673,8 @@
   .gm-smsRecharge,
   .gmon-stats,
   .gmon-grid,
+  .gmon-phaseBox,
+  .gmon-contractActions,
   .gmon-summary,
   .gmon-review,
   .gmon-dataGrid {

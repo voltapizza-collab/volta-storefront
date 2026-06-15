@@ -74,6 +74,14 @@
   font-size: 20px;
 }
 
+.onb-sectionIntro {
+  grid-column: 1 / -1;
+  margin: -2px 0 2px;
+  color: rgba(31, 23, 42, 0.66);
+  font-size: 13px;
+  font-weight: 750;
+}
+
 .onb-section label {
   display: grid;
   gap: 6px;
@@ -88,6 +96,7 @@
 }
 
 .onb-section input,
+.onb-section select,
 .onb-section textarea {
   width: 100%;
   box-sizing: border-box;
@@ -99,11 +108,66 @@
   font: inherit;
 }
 
+.onb-section select {
+  appearance: none;
+}
+
+.onb-staticNotice {
+  display: grid;
+  gap: 4px;
+  padding: 12px;
+  border: 1px solid rgba(59, 0, 139, 0.14);
+  border-radius: 8px;
+  background: rgba(255, 182, 28, 0.13);
+}
+
+.onb-staticNotice strong {
+  color: #1f172a;
+  font-size: 15px;
+}
+
+.onb-staticNotice small {
+  color: rgba(31, 23, 42, 0.62);
+  font-weight: 750;
+}
+
+.onb-fileField small {
+  color: rgba(31, 23, 42, 0.58);
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.onb-fileField {
+  padding: 12px;
+  border: 1px solid rgba(59, 0, 139, 0.12);
+  border-radius: 8px;
+  background: rgba(31, 23, 42, 0.025);
+}
+
+.onb-docList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.onb-docList span {
+  max-width: 100%;
+  padding: 8px 10px;
+  border: 1px solid rgba(59, 0, 139, 0.14);
+  border-radius: 8px;
+  background: rgba(106, 61, 240, 0.07);
+  color: #3b008b;
+  font-size: 12px;
+  font-weight: 900;
+  overflow-wrap: anywhere;
+}
+
 .onb-section textarea {
   resize: vertical;
 }
 
 .onb-section input:disabled,
+.onb-section select:disabled,
 .onb-section textarea:disabled {
   background: rgba(31, 23, 42, 0.04);
   color: rgba(31, 23, 42, 0.56);

@@ -724,82 +724,110 @@ function OrderItems({ order }) {
   );
 }
 
-function PosLogin({ partners, stores, loading, onStart }) {
-  const [partnerId, setPartnerId] = useState("");
-  const [storeId, setStoreId] = useState("");
-  const filteredStores = stores.filter(
-    (store) => !partnerId || String(store.partnerId) === String(partnerId)
-  );
+function PosLogin({ onStart }) {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
-  useEffect(() => {
-    if (!partnerId && partners[0]?.id) {
-      setPartnerId(String(partners[0].id));
+  const canSubmit = username.trim() && password.trim() && !submitting;
+
+  const submitLogin = async (event) => {
+    event.preventDefault();
+    if (!canSubmit) return;
+
+    try {
+      setSubmitting(true);
+      setError("");
+      const response = await api.post("/partners/backoffice-login", {
+        username: username.trim(),
+        password,
+      });
+      const data = response.data || {};
+
+      if (!data.partnerId || !data.storeId) {
+        setError("Esta cuenta aun no tiene una tienda asociada para usar el POS.");
+        return;
+      }
+
+      onStart({
+        partnerId: data.partnerId,
+        partnerName: data.partnerName || data.partnerSlug || "Partner",
+        storeId: data.storeId,
+        storeName: data.storeName || data.storeSlug || data.partnerName || "Store",
+        deviceName: "Volta POS Virtual",
+        pairedAt: new Date().toISOString(),
+      });
+    } catch (loginError) {
+      console.error(loginError);
+      setError("Usuario o contrasena incorrectos.");
+    } finally {
+      setSubmitting(false);
     }
-  }, [partnerId, partners]);
-
-  useEffect(() => {
-    if (!filteredStores.length) {
-      setStoreId("");
-      return;
-    }
-
-    if (!filteredStores.some((store) => String(store.id) === String(storeId))) {
-      setStoreId(String(filteredStores[0].id));
-    }
-  }, [filteredStores, storeId]);
-
-  const selectedPartner = partners.find((partner) => String(partner.id) === String(partnerId));
-  const selectedStore = stores.find((store) => String(store.id) === String(storeId));
+  };
 
   return (
     <main className="pos-loginScreen">
-      <section className="pos-loginPanel">
-        <span className="pos-kicker">Volta POS Virtual</span>
-        <h1>Emparejar dispositivo</h1>
-        <p>
-          Esta pantalla simula el terminal Android. Luego se empaqueta como APK y se conecta a
-          SUNMI o Bluetooth.
-        </p>
+      <form className="pos-loginPanel" onSubmit={submitLogin}>
+        <section className="pos-loginBrandPanel" aria-label="Volta POS">
+          <div className="pos-loginLogo">V</div>
+          <span className="pos-kicker">Volta POS Virtual</span>
+          <div className="pos-loginBrandTitle">Pedidos, caja y operaciones en una sola consola.</div>
+          <div className="pos-loginSignalGrid" aria-hidden="true">
+            <div>
+              <span>Pedidos</span>
+              <strong>En vivo</strong>
+            </div>
+            <div>
+              <span>Tienda</span>
+              <strong>Conectada</strong>
+            </div>
+            <div>
+              <span>Equipo</span>
+              <strong>Listo</strong>
+            </div>
+          </div>
+        </section>
 
-        <label>
-          Partner
-          <select value={partnerId} onChange={(event) => setPartnerId(event.target.value)}>
-            {partners.map((partner) => (
-              <option key={partner.id} value={partner.id}>
-                {partner.name || partner.slug || `Partner ${partner.id}`}
-              </option>
-            ))}
-          </select>
-        </label>
+        <section className="pos-loginFormPanel">
+          <span className="pos-loginEyebrow">Acceso privado</span>
+          <h1>Entrar al POS</h1>
+          <p>Usa las credenciales recibidas por email para atender los pedidos de tu tienda.</p>
 
-        <label>
-          Tienda
-          <select value={storeId} onChange={(event) => setStoreId(event.target.value)}>
-            {filteredStores.map((store) => (
-              <option key={store.id} value={store.id}>
-                {store.storeName || store.name || `Store ${store.id}`}
-              </option>
-            ))}
-          </select>
-        </label>
+          <div className="pos-loginField">
+            <label htmlFor="pos-username">Usuario</label>
+            <input
+              id="pos-username"
+              type="text"
+              autoComplete="username"
+              value={username}
+              onChange={(event) => setUsername(event.target.value)}
+            />
+          </div>
 
-        <button
-          type="button"
-          disabled={loading || !selectedPartner || !selectedStore}
-          onClick={() =>
-            onStart({
-              partnerId: selectedPartner.id,
-              partnerName: selectedPartner.name || selectedPartner.slug || "Partner",
-              storeId: selectedStore.id,
-              storeName: selectedStore.storeName || selectedStore.name || "Store",
-              deviceName: "Volta POS Virtual",
-              pairedAt: new Date().toISOString(),
-            })
-          }
-        >
-          Iniciar POS
-        </button>
-      </section>
+          <div className="pos-loginField">
+            <label htmlFor="pos-password">Contrasena</label>
+            <input
+              id="pos-password"
+              type="password"
+              autoComplete="current-password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+            />
+          </div>
+
+          {error ? <div className="pos-loginError">{error}</div> : null}
+
+          <button type="submit" disabled={!canSubmit}>
+            {submitting ? "Entrando..." : "Entrar al POS"}
+          </button>
+
+          <div className="pos-loginTrust">
+            <span aria-hidden="true" />
+            Sesion segura para partners Volta Pizza
+          </div>
+        </section>
+      </form>
     </main>
   );
 }
@@ -1118,8 +1146,6 @@ export default function PosApp() {
       return null;
     }
   });
-  const [partners, setPartners] = useState([]);
-  const [stores, setStores] = useState([]);
   const [orders, setOrders] = useState([]);
   const [activePanel, setActivePanel] = useState("orders");
   const [selectedOrderId, setSelectedOrderId] = useState(null);
@@ -1127,7 +1153,6 @@ export default function PosApp() {
   const [dayOrdersKpis, setDayOrdersKpis] = useState(null);
   const [dayOrdersLoading, setDayOrdersLoading] = useState(false);
   const [dayOrdersError, setDayOrdersError] = useState("");
-  const [loadingSetup, setLoadingSetup] = useState(true);
   const [loadingOrders, setLoadingOrders] = useState(false);
   const [storeActive, setStoreActive] = useState(true);
   const [savingStore, setSavingStore] = useState(false);
@@ -1487,27 +1512,6 @@ export default function PosApp() {
     createTone(ctx, { frequency: 493.88, startAt: now, duration: 0.2, volume: 0.017, type: "triangle" });
     createTone(ctx, { frequency: 587.33, startAt: now + 0.22, duration: 0.24, volume: 0.014, type: "triangle" });
   }, [getUnlockedAudioContext]);
-
-  useEffect(() => {
-    const loadSetup = async () => {
-      try {
-        setLoadingSetup(true);
-        const [partnersResponse, storesResponse] = await Promise.all([
-          api.get("/partners"),
-          api.get("/api/stores"),
-        ]);
-        setPartners(Array.isArray(partnersResponse.data) ? partnersResponse.data : []);
-        setStores(Array.isArray(storesResponse.data) ? storesResponse.data : []);
-      } catch (error) {
-        console.error(error);
-        setMessage("No se pudo cargar la configuracion del POS.");
-      } finally {
-        setLoadingSetup(false);
-      }
-    };
-
-    loadSetup();
-  }, []);
 
   const loadOrders = useCallback(async ({ force = false } = {}) => {
     if (!session?.partnerId || !session?.storeId) return;
@@ -2166,9 +2170,6 @@ export default function PosApp() {
   if (!session) {
     return (
       <PosLogin
-        partners={partners}
-        stores={stores}
-        loading={loadingSetup}
         onStart={startSession}
       />
     );

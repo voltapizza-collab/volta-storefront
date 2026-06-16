@@ -43,16 +43,108 @@
 .pos-loginScreen {
   display: grid;
   place-items: center;
-  padding: 24px;
+  padding: 28px;
+  background:
+    linear-gradient(120deg, rgba(59, 0, 139, 0.09), rgba(249, 38, 114, 0.07) 42%, rgba(255, 182, 28, 0.14)),
+    #f8f4ef;
 }
 
 .pos-loginPanel {
-  width: min(460px, 100%);
+  width: min(880px, 100%);
+  display: grid;
+  grid-template-columns: minmax(280px, 0.9fr) minmax(320px, 1fr);
+  overflow: hidden;
   background: #fff;
-  border: 1px solid #dfe3e8;
+  border: 1px solid rgba(59, 0, 139, 0.12);
   border-radius: 8px;
-  padding: 24px;
-  box-shadow: 0 18px 50px rgba(15, 23, 42, 0.12);
+  padding: 0;
+  box-shadow: 0 24px 70px rgba(44, 22, 68, 0.18);
+}
+
+.pos-loginBrandPanel {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 470px;
+  padding: 28px;
+  background:
+    linear-gradient(150deg, rgba(59, 0, 139, 0.98), rgba(106, 61, 240, 0.92) 50%, rgba(249, 38, 114, 0.88)),
+    #3b008b;
+  color: #fff;
+}
+
+.pos-loginLogo {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.72);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffdf8a;
+  font-size: 26px;
+  font-weight: 950;
+}
+
+.pos-loginBrandPanel .pos-kicker {
+  color: #ffdf8a;
+}
+
+.pos-loginBrandTitle {
+  margin-top: 12px;
+  max-width: 290px;
+  color: #fff;
+  font-size: 31px;
+  font-weight: 950;
+  line-height: 1;
+}
+
+.pos-loginSignalGrid {
+  display: grid;
+  gap: 10px;
+  margin-top: 30px;
+}
+
+.pos-loginSignalGrid div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 46px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.pos-loginSignalGrid span {
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.pos-loginSignalGrid strong {
+  color: #fff;
+  font-size: 13px;
+  font-weight: 950;
+}
+
+.pos-loginFormPanel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 34px;
+}
+
+.pos-loginEyebrow {
+  align-self: flex-start;
+  border: 1px solid rgba(255, 182, 28, 0.56);
+  border-radius: 999px;
+  background: #fff8e7;
+  color: #9a5d00;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 900;
 }
 
 .pos-kicker {
@@ -64,7 +156,12 @@
   text-transform: uppercase;
 }
 
-.pos-loginPanel h1,
+.pos-loginPanel h1 {
+  margin: 12px 0 0;
+  font-size: 28px;
+  line-height: 1;
+}
+
 .pos-topbar h1 {
   margin: 4px 0 0;
   font-size: 20px;
@@ -72,27 +169,50 @@
 }
 
 .pos-loginPanel p {
-  margin: 12px 0 20px;
+  margin: 12px 0 22px;
   color: #5d6673;
   line-height: 1.45;
 }
 
-.pos-loginPanel label {
+.pos-loginField {
   display: grid;
   gap: 7px;
-  margin-top: 14px;
+  margin-top: 15px;
+}
+
+.pos-loginPanel label {
   color: #303846;
   font-size: 13px;
   font-weight: 700;
 }
 
-.pos-loginPanel select {
-  min-height: 44px;
-  border: 1px solid #ccd3dd;
+.pos-loginPanel select,
+.pos-loginPanel input {
+  min-height: 50px;
+  border: 1px solid #d7dce5;
   border-radius: 8px;
-  background: #fff;
-  padding: 0 12px;
+  background: #fbfbfd;
+  padding: 0 14px;
   font: inherit;
+  color: #171717;
+}
+
+.pos-loginPanel input:focus {
+  border-color: var(--pos-brand-3);
+  box-shadow: 0 0 0 3px rgba(106, 61, 240, 0.14);
+  outline: none;
+}
+
+.pos-loginError {
+  margin-top: 14px;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  background: #fef2f2;
+  color: #991b1b;
+  padding: 10px 12px;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.35;
 }
 
 .pos-loginPanel button,
@@ -112,7 +232,10 @@
 
 .pos-loginPanel button {
   width: 100%;
+  min-height: 50px;
   margin-top: 22px;
+  background: linear-gradient(90deg, #3b008b, #f92672);
+  box-shadow: 0 12px 24px rgba(249, 38, 114, 0.22);
 }
 
 .pos-loginPanel button:disabled,
@@ -120,6 +243,25 @@
 .pos-sectionHead button:disabled {
   opacity: 0.45;
   cursor: not-allowed;
+  box-shadow: none;
+}
+
+.pos-loginTrust {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  color: #5f6675;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.pos-loginTrust span {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #10b981;
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.12);
 }
 
 .pos-topbar {
@@ -3089,6 +3231,45 @@
 }
 
 @media (max-width: 860px) {
+  .pos-loginScreen {
+    padding: 16px;
+  }
+
+  .pos-loginPanel {
+    grid-template-columns: 1fr;
+    width: min(520px, 100%);
+  }
+
+  .pos-loginBrandPanel {
+    min-height: auto;
+    padding: 22px;
+  }
+
+  .pos-loginBrandTitle {
+    max-width: none;
+    font-size: 24px;
+  }
+
+  .pos-loginSignalGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin-top: 22px;
+  }
+
+  .pos-loginSignalGrid div {
+    display: grid;
+    align-content: center;
+    justify-content: start;
+    min-height: 58px;
+  }
+
+  .pos-loginFormPanel {
+    padding: 24px;
+  }
+
+  .pos-loginPanel h1 {
+    font-size: 24px;
+  }
+
   .pos-topbar,
   .pos-workspace {
     grid-template-columns: 1fr;

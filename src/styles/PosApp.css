@@ -53,11 +53,11 @@
   width: min(490px, 100%);
   display: block;
   position: relative;
-  overflow: visible;
+  overflow: hidden;
   background: #fff;
   border: 1px solid rgba(59, 0, 139, 0.12);
   border-radius: 8px;
-  padding: 30px 32px 28px;
+  padding: 0 32px 28px;
   box-shadow: 0 24px 70px rgba(44, 22, 68, 0.18);
 }
 
@@ -65,15 +65,24 @@
   position: relative;
   display: grid;
   justify-items: center;
-  gap: 10px;
-  min-height: 150px;
-  margin-bottom: 14px;
-  padding-top: 6px;
+  align-items: center;
+  gap: 6px;
+  min-height: 172px;
+  margin: 0 -32px 20px;
+  padding: 18px 32px 16px;
+  background:
+    linear-gradient(180deg, rgba(255, 248, 231, 0.98), rgba(255, 242, 192, 0.82)),
+    #fff1a8;
+  border-bottom: 1px solid rgba(255, 182, 28, 0.38);
 }
 
 .pos-loginHero .pos-kicker {
   position: relative;
   z-index: 2;
+  margin-top: -8px;
+  color: #3b008b;
+  font-size: 12px;
+  font-weight: 950;
 }
 
 .pos-loginFormPanel {
@@ -106,10 +115,10 @@
 .pos-loginLogoMark {
   position: relative;
   z-index: 2;
-  width: min(214px, 72%);
-  height: 104px;
+  width: min(250px, 76%);
+  height: 128px;
   object-fit: contain;
-  filter: drop-shadow(0 12px 22px rgba(59, 0, 139, 0.12));
+  filter: drop-shadow(0 12px 22px rgba(59, 0, 139, 0.16));
 }
 
 .pos-loginPizzaOrbit {
@@ -121,8 +130,8 @@
 
 .pos-loginPizzaOrbit img {
   position: absolute;
-  width: 54px;
-  height: 54px;
+  width: 58px;
+  height: 58px;
   object-fit: contain;
   opacity: 0.92;
   filter: drop-shadow(0 10px 18px rgba(255, 182, 28, 0.24));
@@ -130,15 +139,15 @@
 }
 
 .pos-loginPizzaOrbit img:nth-child(1) {
-  left: 38px;
-  top: 18px;
+  left: 54px;
+  top: 54px;
 }
 
 .pos-loginPizzaOrbit img:nth-child(2) {
-  right: 36px;
-  top: 28px;
-  width: 46px;
-  height: 46px;
+  right: 54px;
+  top: 54px;
+  width: 58px;
+  height: 58px;
   animation-duration: 8.5s;
   animation-direction: reverse;
 }
@@ -185,6 +194,8 @@
 
 .pos-loginPanel select,
 .pos-loginPanel input {
+  width: 100%;
+  box-sizing: border-box;
   min-height: 50px;
   border: 1px solid #d7dce5;
   border-radius: 8px;
@@ -3291,30 +3302,34 @@
 
   .pos-loginPanel {
     width: min(460px, 100%);
-    padding: 24px 22px;
+    padding: 0 22px 24px;
   }
 
   .pos-loginHero {
-    min-height: 132px;
+    min-height: 150px;
+    margin: 0 -22px 18px;
+    padding: 16px 22px 14px;
   }
 
   .pos-loginLogoMark {
-    height: 92px;
+    height: 108px;
   }
 
   .pos-loginPizzaOrbit img {
-    width: 42px;
-    height: 42px;
+    width: 44px;
+    height: 44px;
   }
 
   .pos-loginPizzaOrbit img:nth-child(1) {
-    left: 14px;
+    left: 20px;
+    top: 52px;
   }
 
   .pos-loginPizzaOrbit img:nth-child(2) {
-    right: 12px;
-    width: 38px;
-    height: 38px;
+    right: 20px;
+    top: 52px;
+    width: 44px;
+    height: 44px;
   }
 
   .pos-loginPanel h1 {

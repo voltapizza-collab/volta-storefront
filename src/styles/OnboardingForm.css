@@ -115,6 +115,7 @@
 .onb-contractDoc h2,
 .onb-contractDoc h3,
 .onb-contractDoc h4,
+.onb-contractDoc h5,
 .onb-contractDoc p {
   margin: 0;
 }
@@ -137,11 +138,38 @@
   font-size: 14px;
 }
 
+.onb-contractDoc h5 {
+  color: #111;
+  font-size: 14px;
+}
+
 .onb-contractDoc p {
   color: #111;
   font-size: 14px;
   line-height: 1.48;
   text-align: justify;
+}
+
+.onb-contractDoc ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.onb-contractDoc li {
+  color: #111;
+  font-size: 14px;
+  line-height: 1.45;
+  text-align: justify;
+}
+
+.onb-contractDoc header strong {
+  margin-top: 7px;
+  color: #3b008b;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .onb-signatureGrid {
@@ -169,6 +197,7 @@
 }
 
 .onb-activationBox,
+.onb-signedSeal,
 .onb-signForm {
   display: grid;
   gap: 8px;
@@ -178,9 +207,25 @@
   background: rgba(255, 182, 28, 0.13);
 }
 
+.onb-signedSeal {
+  border-color: rgba(59, 0, 139, 0.28);
+  background: rgba(59, 0, 139, 0.06);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
 .onb-activationBox strong,
-.onb-activationBox small {
+.onb-activationBox small,
+.onb-signedSeal strong,
+.onb-signedSeal small {
   color: #1f172a;
+}
+
+.onb-signedSeal span {
+  color: #3b008b;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .onb-signForm label {

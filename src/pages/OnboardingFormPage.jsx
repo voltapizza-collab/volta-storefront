@@ -74,6 +74,19 @@ const formatContractDate = (value) => {
   });
 };
 
+const formatSignatureDate = (value) => {
+  if (!value) return "-";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "-";
+  return date.toLocaleString("es-ES", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
+
 const buildContractData = (request) => {
   const formalData = request?.formalData || {};
   const commercialName = formalData.commercialName || request?.businessName || "-";
@@ -107,27 +120,33 @@ const buildContractData = (request) => {
 
 function ContractDocument({ contract, request }) {
   const activation = request?.formalData?.activation || null;
+  const signature = request?.formalData?.contractSignature || null;
+  const isSigned = request?.status === "ACTIVATED" && signature?.acceptedAt;
 
   return (
     <article className="onb-contractDoc">
       <header>
         <h2>CONTRATO DE ADHESION COMERCIAL</h2>
+        {isSigned && <strong>Documento firmado electronicamente</strong>}
       </header>
 
       <section>
         <p>
-          En fecha {contract.contractDate}, Volta Pizza y el Comerciante identificado
-          en este documento formalizan el presente contrato de adhesion comercial.
+          En fecha {contract.contractDate}, por medio de aceptacion y firma electronica,
+          Volta Pizza y el Comerciante identificado en este documento formalizan el
+          presente contrato de adhesion comercial, que se regira por las siguientes
+          manifestaciones y clausulas.
         </p>
       </section>
 
       <section>
-        <h3>REUNIDOS</h3>
+        <h4>REUNIDOS</h4>
         <p>
-          De una parte, VOLTA PIZZA, SOCIEDAD LIMITADA, con domicilio social en CALLE
-          IRMANS VILLAR, 1, Piso 1, Puerta B, 32005, Ourense, Ourense, Galicia,
-          Espana, representada por Luigi Vincenzo Roppo Gonzalez, en adelante,
-          "Volta".
+          De una parte, VOLTA PIZZA, SOCIEDAD LIMITADA, con domicilio social en CALLE IRMANS
+          VILLAR, 1, Piso 1, Puerta B, 32005, Ourense, Ourense, Galicia, Espana, representada
+          en este acto por Luigi Vincenzo Roppo Gonzalez, con NIE Z0329461Z, titular o gestora
+          de la plataforma comercial, tecnologica y operativa destinada a la promocion,
+          recepcion, gestion y seguimiento de pedidos de restauracion, en adelante, "Volta".
         </p>
         <p>
           De otra parte, {contract.legalName}, {contract.partnerType}, con
@@ -136,45 +155,185 @@ function ContractDocument({ contract, request }) {
           representada por {contract.legalRepresentative}, en calidad de
           {` ${contract.representativeRole}`}, en adelante, el "Comerciante".
         </p>
+        <p>
+          Las partes se reconocen capacidad suficiente para contratar y obligarse. El
+          Comerciante declara que los datos anteriores son exactos, completos y han sido
+          facilitados por el mismo durante el proceso de alta.
+        </p>
       </section>
 
       <section>
-        <h3>CLAUSULAS</h3>
-        <h4>1. Objeto</h4>
+        <h4>EXPONEN</h4>
+        <p>
+          I. Que Volta dispone de una plataforma y de servicios asociados para incorporar
+          negocios de restauracion, organizar su presencia comercial, recibir pedidos y
+          facilitar su gestion.
+        </p>
+        <p>
+          II. Que el Comerciante desarrolla una actividad de restauracion bajo el nombre
+          comercial {contract.commercialName} y desea adherirse a las condiciones comerciales
+          de Volta.
+        </p>
+        <p>
+          III. Que el presente documento contiene condiciones generales predispuestas por
+          Volta para una pluralidad de relaciones comerciales de la misma naturaleza, sin
+          perjuicio de los datos particulares del Comerciante y de los anexos economicos u
+          operativos que se acepten.
+        </p>
+      </section>
+
+      <section>
+        <h4>CLAUSULAS</h4>
+        <h5>1. Naturaleza del contrato</h5>
+        <p>
+          Este contrato es un contrato de adhesion comercial. Su aceptacion por el Comerciante
+          se produce mediante firma electronica o por cualquier otro mecanismo de aceptacion
+          electronica habilitado por Volta que deje constancia de la identidad del firmante,
+          fecha, documento aceptado y trazabilidad de la operacion.
+        </p>
+      </section>
+
+      <section>
+        <h5>2. Definiciones</h5>
+        <ul>
+          <li>"Plataforma": el sitio web, aplicaciones, paneles, herramientas y canales operados por Volta para la gestion comercial y operativa.</li>
+          <li>"Comerciante": la persona fisica o juridica que se adhiere a este contrato y ofrece productos de restauracion a traves de Volta.</li>
+          <li>"Cliente": el usuario final que realiza pedidos o interactua con la oferta comercial del Comerciante.</li>
+          <li>"Pedido": solicitud de productos realizada por un Cliente y recibida por el Comerciante a traves de la Plataforma.</li>
+          <li>"Comision": importe, porcentaje, tarifa fija, coste tecnico, coste de pasarela o cargo pactado a favor de Volta por el uso de la Plataforma o servicios asociados.</li>
+          <li>"Liquidacion": calculo periodico de importes a favor del Comerciante, una vez descontadas comisiones, ajustes, devoluciones, incidencias, impuestos o costes aplicables.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h5>3. Objeto</h5>
         <p>
           El contrato regula la adhesion del Comerciante a Volta para la publicacion,
-          promocion, recepcion y gestion de pedidos, asi como el uso de herramientas
-          comerciales, operativas y de administracion asociadas a su actividad.
+          promocion, recepcion y gestion de pedidos de su negocio, asi como el uso de las
+          herramientas y procesos que Volta habilite para dicha relacion comercial.
         </p>
-        <h4>2. Alta, datos y documentacion</h4>
+      </section>
+
+      <section>
+        <h5>4. Alta, datos y documentacion</h5>
         <p>
-          El Comerciante declara que los datos facilitados son reales, completos y
-          actualizados, y que la persona firmante esta autorizada para representar el
-          negocio. Volta podra solicitar documentacion adicional para validar el alta.
+          El Comerciante se obliga a facilitar datos reales, completos y actualizados. Volta
+          podra solicitar documentacion de identidad, titularidad, representacion, actividad,
+          cuenta bancaria o cualquier otra razonablemente necesaria para validar el alta,
+          prevenir fraude, cumplir obligaciones legales o proteger la Plataforma.
         </p>
-        <h4>3. Modelo operativo</h4>
+      </section>
+
+      <section>
+        <h5>5. Modelo operativo</h5>
         <p>
-          Volta pone a disposicion del Comerciante una plataforma de ventas,
-          comunicacion con clientes, creacion de ofertas, gestion de precios,
-          seguimiento de pedidos y administracion. El Comerciante conserva la
-          direccion de su negocio, la preparacion de productos y el cumplimiento de
-          sus obligaciones legales, fiscales, sanitarias y laborales.
+          El modelo operativo de Volta consiste en poner a disposicion del Comerciante una
+          plataforma de ventas, gestion comercial, comunicacion con clientes, creacion de
+          ofertas, segmentacion de clientes, gestion de precios, seguimiento de pedidos,
+          acciones promocionales y herramientas de administracion asociadas a su actividad
+          de restauracion.
         </p>
-        <h4>4. Comisiones y liquidaciones</h4>
         <p>
-          Salvo pacto escrito distinto, el importe neto de ventas computable para
-          liquidacion se distribuira en un noventa por ciento (90%) para el Comerciante,
-          nueve por ciento (9%) para Volta y uno por ciento (1%) para el embajador
-          asociado, cuando exista. La cuenta declarada para liquidaciones es titularidad
-          de {contract.accountHolder}, IBAN {contract.iban}.
+          El Comerciante conserva la direccion de su negocio, la definicion final de su
+          oferta, la preparacion de los productos, la atencion de incidencias propias de su
+          actividad y el cumplimiento de las obligaciones legales, fiscales, sanitarias y
+          laborales que le correspondan.
         </p>
-        <h4>5. Comunicaciones, duracion y firma electronica</h4>
+      </section>
+
+      <section>
+        <h5>6. Comisiones y liquidaciones</h5>
         <p>
-          Las comunicaciones contractuales se remitiran preferentemente por medios
-          electronicos al correo {contract.businessEmail}. El contrato tendra duracion
-          indefinida desde su aceptacion electronica. La aceptacion por boton, codigo,
-          trazabilidad de envio, registro tecnico o mecanismo equivalente habilitado
-          por Volta acreditara la firma y aceptacion del documento.
+          Salvo pacto escrito distinto, el importe neto de ventas computable para liquidacion
+          se distribuira de la siguiente manera: noventa por ciento (90%) para el Comerciante,
+          nueve por ciento (9%) para Volta y uno por ciento (1%) para el embajador asociado a
+          la pizzeria, cuando exista.
+        </p>
+        <p>
+          Esta distribucion no incluye otros cargos, consumos, descuentos, costes o servicios
+          adicionales que puedan generarse por el uso de herramientas o prestaciones
+          complementarias, incluyendo, a titulo enunciativo, descuentos aplicados desde el
+          POS, hardware o dispositivos utilizados, paquetes de mensajes, acciones Boost,
+          promociones, servicios adicionales, ajustes, devoluciones, incidencias, costes de
+          pasarela o cualquier otro concepto aceptado o generado dentro de la operativa de la
+          Plataforma.
+        </p>
+        <p>
+          La cuenta declarada para liquidaciones es titularidad de {contract.accountHolder},
+          IBAN {contract.iban}. El Comerciante responde de la exactitud de estos datos y
+          debera comunicar cualquier modificacion antes de que produzca efectos.
+        </p>
+      </section>
+
+      <section>
+        <h5>7. Obligaciones del Comerciante</h5>
+        <p>
+          El Comerciante debera preparar los pedidos aceptados, mantener actualizada su
+          oferta, precios, horarios, disponibilidad, informacion alimentaria y alergenos,
+          atender incidencias, cumplir la normativa sanitaria, fiscal, laboral, de consumo y
+          proteccion de datos que le resulte aplicable, y no utilizar la Plataforma para fines
+          distintos de los autorizados.
+        </p>
+      </section>
+
+      <section>
+        <h5>8. Obligaciones de Volta</h5>
+        <p>
+          Volta pondra a disposicion del Comerciante los medios tecnicos y comerciales
+          razonables para la gestion de su presencia en la Plataforma, sin garantizar volumen
+          minimo de pedidos, facturacion, posicionamiento, continuidad absoluta del servicio
+          ni resultados economicos.
+        </p>
+      </section>
+
+      <section>
+        <h5>9. Suspension y resolucion</h5>
+        <p>
+          Volta podra suspender el alta, la publicacion, la recepcion de pedidos o las
+          liquidaciones cuando existan datos incompletos, documentacion no validada, riesgo de
+          fraude, incumplimiento legal, incidencias graves, impagos, reclamaciones relevantes
+          o riesgo para clientes, repartidores, terceros o para la Plataforma. Cualquiera de
+          las partes podra resolver el contrato mediante comunicacion escrita con treinta dias
+          naturales de preaviso, sin perjuicio de las cantidades devengadas y obligaciones
+          pendientes.
+        </p>
+      </section>
+
+      <section>
+        <h5>10. Comunicaciones</h5>
+        <p>
+          Las comunicaciones contractuales y operativas se remitiran preferentemente por medios
+          electronicos. A efectos de notificaciones al Comerciante se designa el correo
+          {` ${contract.businessEmail}`}. El Comerciante debera mantenerlo operativo y
+          actualizado.
+        </p>
+      </section>
+
+      <section>
+        <h5>11. Duracion</h5>
+        <p>
+          El contrato entrara en vigor desde su aceptacion electronica y tendra duracion
+          indefinida, salvo resolucion conforme a la clausula anterior o sustitucion por una
+          nueva version aceptada por el Comerciante.
+        </p>
+      </section>
+
+      <section>
+        <h5>12. Ley aplicable y fuero</h5>
+        <p>
+          El contrato se regira por la legislacion espanola. Las partes se someten a los
+          juzgados y tribunales de Madrid, salvo que una norma imperativa establezca otro
+          fuero.
+        </p>
+      </section>
+
+      <section>
+        <h5>13. Firma electronica</h5>
+        <p>
+          La firma electronica, aceptacion por codigo, trazabilidad de envio, registro de IP,
+          sello temporal o cualquier mecanismo equivalente habilitado por Volta servira para
+          acreditar la aceptacion del documento por el Comerciante. Cada ejemplar electronico
+          aceptado o firmado tendra valor de original entre las partes.
         </p>
       </section>
 
@@ -182,15 +341,25 @@ function ContractDocument({ contract, request }) {
         <div>
           <span>VOLTA</span>
           <strong>Volta Pizza</strong>
-          <small>Firma electronica emitida por plataforma</small>
+          <small>{isSigned ? "Firma electronica emitida por plataforma" : "Firma electronica pendiente"}</small>
         </div>
         <div>
           <span>COMERCIANTE</span>
           <strong>{contract.legalName}</strong>
           <small>{contract.legalRepresentative} - {contract.representativeRole}</small>
           <small>{contract.businessEmail}</small>
+          {isSigned && <small>Firmado: {formatSignatureDate(signature.acceptedAt)}</small>}
         </div>
       </section>
+
+      {isSigned && (
+        <section className="onb-signedSeal">
+          <span>Sello de firma electronica</span>
+          <strong>Contrato aceptado y firmado electronicamente</strong>
+          <small>Fecha de firma: {formatSignatureDate(signature.acceptedAt)}</small>
+          {signature.acceptedFrom && <small>Origen: {signature.acceptedFrom}</small>}
+        </section>
+      )}
 
       {activation && (
         <div className="onb-activationBox">

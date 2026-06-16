@@ -31,6 +31,11 @@ const displayESPhone = (phone = "") => {
   return digits.length >= 9 ? digits.slice(-9) : raw;
 };
 
+const formatCustomerName = (name = "") => {
+  const normalized = String(name || "").trim().replace(/\s+/g, " ");
+  return normalized ? normalized.toLocaleUpperCase("es-ES") : "-";
+};
+
 const formatMoney = (value, currency = "EUR") => {
   const amount = Number(value || 0);
   return `${currency} ${amount.toFixed(2)}`;
@@ -79,6 +84,12 @@ const formatDate = (value) => {
 const formatLastOrderDate = (customer) => {
   if (!Number(customer?.orderCount || 0)) return "-";
   return customer?.lastOrderAt ? formatDate(customer.lastOrderAt) : "-";
+};
+
+const formatLastOrderWithCount = (customer) => {
+  const orderCount = Number(customer?.orderCount || 0);
+  const lastOrder = formatLastOrderDate(customer);
+  return orderCount > 0 && lastOrder !== "-" ? `${lastOrder} (${orderCount})` : "-";
 };
 
 const formatCustomerAge = (customer) => {
@@ -145,7 +156,7 @@ function CustomerInsightModal({ customer, onClose, onEdit, onBoost }) {
     {
       label: "Ultimo ticket",
       value: formatCustomerMoney(customer, customer.lastTicket),
-      meta: formatLastOrderDate(customer),
+      meta: formatLastOrderWithCount(customer),
     },
     {
       label: "Valor acumulado",
@@ -155,7 +166,7 @@ function CustomerInsightModal({ customer, onClose, onEdit, onBoost }) {
     {
       label: "Dias sin pedir",
       value: formatDaysOff(customer),
-      meta: formatLastOrderDate(customer),
+      meta: formatLastOrderWithCount(customer),
     },
   ];
 
@@ -165,7 +176,7 @@ function CustomerInsightModal({ customer, onClose, onEdit, onBoost }) {
         <div className="cu-modalHead">
           <div>
             <div className="cu-kicker">Perfil de cliente</div>
-            <h3>{customer.name || "Cliente"}</h3>
+            <h3>{formatCustomerName(customer.name)}</h3>
             <p className="cu-profileSub">
               {customer.phone ? displayESPhone(customer.phone) : "Sin telefono"} - {customer.zipCode || "Sin CP"}
             </p>
@@ -247,7 +258,7 @@ function CustomerModal({ initial, loading, onClose, onSubmit, onDelete }) {
     },
     {
       label: "Ultima compra",
-      value: formatLastOrderDate(initial),
+      value: formatLastOrderWithCount(initial),
       meta: formatDaysOff(initial),
     },
     {
@@ -949,7 +960,7 @@ export default function CustomersModule({ partner }) {
                     <td>{customer.code || "-"}</td>
                     <td>
                       <div className="cu-nameCell">
-                        <strong>{customer.name || "-"}</strong>
+                        <strong title={customer.name || ""}>{formatCustomerName(customer.name)}</strong>
                       </div>
                     </td>
                     <td>{customer.phone ? displayESPhone(customer.phone) : "-"}</td>
@@ -968,7 +979,7 @@ export default function CustomersModule({ partner }) {
                     </td>
                     <td>
                       <div className="cu-moneyCell">
-                        <strong title={formatDaysOff(customer)}>{formatLastOrderDate(customer)}</strong>
+                        <strong title={formatDaysOff(customer)}>{formatLastOrderWithCount(customer)}</strong>
                       </div>
                     </td>
                     <td>

@@ -158,6 +158,24 @@ const asObject = (value) => {
   return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
 };
 
+const normalizeSearchText = (value = "") =>
+  String(value || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+
+const formatCustomerName = (name = "") => {
+  const normalized = String(name || "").trim().replace(/\s+/g, " ");
+  return normalized ? normalized.toLocaleUpperCase("es-ES") : "SIN CLIENTE";
+};
+
+const formatCustomerNameWithCount = (name = "", orderCount = 0) => {
+  const formattedName = formatCustomerName(name);
+  const count = Number(orderCount || 0);
+  return count > 0 ? `${formattedName} (${count})` : formattedName;
+};
+
 const formatCustomerSegment = (value) => {
   const segment = normalizeCustomerSegment(value);
   return segment ? customerSegmentLabel(segment) : "";
@@ -699,7 +717,7 @@ export function OrdersMovementsModule({ partner = null }) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
-  const [status, setStatus] = useState("all");
+  const [customerQuery, setCustomerQuery] = useState("");
   const [storeName, setStoreName] = useState("all");
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
@@ -729,7 +747,7 @@ export function OrdersMovementsModule({ partner = null }) {
   }, [load]);
 
   const movements = useMemo(() => {
-    return (data?.recentSales || []).map((sale) => {
+    return (data?.recentSales || []).filter((sale) => sale.status === "PAID").map((sale) => {
       const customerData = asObject(sale.customerData);
 
       return {
@@ -738,12 +756,17 @@ export function OrdersMovementsModule({ partner = null }) {
         dateValue: toDateInputValue(sale.date),
         statusLabel: sale.status || "REGISTRADO",
         storeLabel: sale.storeName || "Sin tienda",
+        partnerLabel: sale.partnerName || data?.partner?.name || "Sin partner",
         customerLabel: sale.customerName || customerData.name || "Sin cliente",
+        customerDisplayLabel: formatCustomerNameWithCount(
+          sale.customerName || customerData.name || "Sin cliente",
+          customerData.orderCount
+        ),
         customerSegmentLabel: formatCustomerSegment(customerData.segment),
         customerSegmentTone: getCustomerSegmentTone(customerData.segment),
       };
     });
-  }, [data?.recentSales]);
+  }, [data?.partner?.name, data?.recentSales]);
 
   const stores = useMemo(
     () => [...new Set(movements.map((sale) => sale.storeLabel).filter(Boolean))],
@@ -751,14 +774,30 @@ export function OrdersMovementsModule({ partner = null }) {
   );
 
   const filteredMovements = useMemo(() => {
+    const search = normalizeSearchText(customerQuery);
+
     return movements.filter((sale) => {
-      if (status !== "all" && sale.statusLabel !== status) return false;
       if (storeName !== "all" && sale.storeLabel !== storeName) return false;
       if (fromDate && sale.dateValue < fromDate) return false;
       if (toDate && sale.dateValue > toDate) return false;
+      if (search) {
+        const searchableText = normalizeSearchText(
+          [
+            sale.customerLabel,
+            sale.customerDisplayLabel,
+            sale.customerData?.phone,
+            sale.customerData?.email,
+            sale.customerData?.code,
+            sale.code,
+          ]
+            .filter(Boolean)
+            .join(" ")
+        );
+        if (!searchableText.includes(search)) return false;
+      }
       return true;
     });
-  }, [fromDate, movements, status, storeName, toDate]);
+  }, [customerQuery, fromDate, movements, storeName, toDate]);
 
   return (
     <div className="gmo-shell">
@@ -792,6 +831,16 @@ export function OrdersMovementsModule({ partner = null }) {
         </label>
 
         <label className="gmo-filter">
+          <span>Cliente</span>
+          <input
+            type="search"
+            value={customerQuery}
+            onChange={(event) => setCustomerQuery(event.target.value)}
+            placeholder="Nombre, telefono o codigo"
+          />
+        </label>
+
+        <label className="gmo-filter">
           <span>Tienda</span>
           <select value={storeName} onChange={(event) => setStoreName(event.target.value)}>
             <option value="all">Todas las tiendas</option>
@@ -803,23 +852,11 @@ export function OrdersMovementsModule({ partner = null }) {
           </select>
         </label>
 
-        <label className="gmo-filter">
-          <span>Estado</span>
-          <select value={status} onChange={(event) => setStatus(event.target.value)}>
-            <option value="all">Todos</option>
-            {[...new Set(movements.map((sale) => sale.statusLabel))].map((item) => (
-              <option key={item} value={item}>
-                {item}
-              </option>
-            ))}
-          </select>
-        </label>
-
         <button
           className="gmo-clearFilters"
           type="button"
           onClick={() => {
-            setStatus("all");
+            setCustomerQuery("");
             setStoreName("all");
             setFromDate("");
             setToDate("");
@@ -839,13 +876,14 @@ export function OrdersMovementsModule({ partner = null }) {
           <small>{data?.updatedAt ? `Ultima lectura ${formatDateTime(data.updatedAt)}` : ""}</small>
         </div>
 
-        <div className="gmo-tableWrap gmo-tableWrap--sticky">
+        <div className="gmo-tableWrap gmo-tableWrap--sticky gmo-tableWrap--movements">
           <table className="gmo-table gmo-table--movements">
             <thead>
               <tr>
                 <th>Codigo</th>
                 <th>Cliente</th>
                 <th>Fecha</th>
+                <th>Partner</th>
                 <th>Tienda</th>
                 <th>Estado</th>
                 <th>Total</th>
@@ -859,21 +897,13 @@ export function OrdersMovementsModule({ partner = null }) {
                     <strong>{sale.code}</strong>
                   </td>
                   <td>
-                    <strong>{sale.customerLabel}</strong>
+                    <strong title={sale.customerLabel}>{sale.customerDisplayLabel}</strong>
                     {sale.customerData?.phone && (
                       <span className="gmo-cellSub">{sale.customerData.phone}</span>
                     )}
-                    {sale.customerSegmentLabel && (
-                      <span
-                        className={`gmo-segmentPill ${
-                          sale.customerSegmentTone ? `gmo-segmentPill--${sale.customerSegmentTone}` : ""
-                        }`}
-                      >
-                        {sale.customerSegmentLabel}
-                      </span>
-                    )}
                   </td>
                   <td>{formatDate(sale.date)}</td>
+                  <td>{sale.partnerLabel}</td>
                   <td>{sale.storeLabel}</td>
                   <td>
                     <span className="gmo-statusPill">{sale.statusLabel}</span>
@@ -892,7 +922,7 @@ export function OrdersMovementsModule({ partner = null }) {
               ))}
               {!filteredMovements.length && (
                 <tr>
-                  <td colSpan="7">Sin movimientos para los filtros seleccionados.</td>
+                  <td colSpan="8">Sin movimientos para los filtros seleccionados.</td>
                 </tr>
               )}
             </tbody>
@@ -916,7 +946,7 @@ export function OrdersMovementsModule({ partner = null }) {
             <div className="gmo-ticket">
               <div className="gmo-ticketLine">
                 <span>Cliente</span>
-                <strong>{selectedMovement.customerLabel}</strong>
+                <strong>{selectedMovement.customerDisplayLabel}</strong>
               </div>
               <div className="gmo-ticketLine">
                 <span>Telefono</span>
@@ -939,6 +969,10 @@ export function OrdersMovementsModule({ partner = null }) {
                     "-"
                   )}
                 </strong>
+              </div>
+              <div className="gmo-ticketLine">
+                <span>Partner</span>
+                <strong>{selectedMovement.partnerLabel}</strong>
               </div>
               <div className="gmo-ticketLine">
                 <span>Tienda</span>

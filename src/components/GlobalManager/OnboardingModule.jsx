@@ -458,9 +458,6 @@ export default function OnboardingModule() {
                 <button type="button" disabled={!selected.formalData} onClick={openContractPreview}>
                   Ver contrato
                 </button>
-                <button type="button" disabled={!canSendContract || sendingContract} onClick={sendContract}>
-                  {sendingContract ? "Enviando..." : "Enviar contrato"}
-                </button>
               </div>
 
               <div className="gmon-phaseBox">

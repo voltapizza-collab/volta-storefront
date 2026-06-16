@@ -6,6 +6,7 @@ import {
   VIP_CUSTOMER_SEGMENT,
 } from "../constants/customerSegments";
 import voltaLogo from "../assets/logo/the pizza sale enganine.png";
+import pizzaIcon from "../assets/logo/pizza.svg";
 import { mockPrinter } from "./printers/mockPrinter";
 import "../styles/PosApp.css";
 
@@ -774,9 +775,9 @@ function PosLogin({ onStart }) {
         <div className="pos-loginHero" aria-label="Volta POS">
           <img className="pos-loginLogoMark" src={voltaLogo} alt="Volta Pizza" />
           <div className="pos-loginPizzaRow" aria-hidden="true">
-            <span className="pos-miniPizza" />
-            <span className="pos-miniPizza" />
-            <span className="pos-miniPizza" />
+            <img className="pos-realPizza" src={pizzaIcon} alt="" />
+            <img className="pos-realPizza" src={pizzaIcon} alt="" />
+            <img className="pos-realPizza" src={pizzaIcon} alt="" />
           </div>
           <span className="pos-kicker">Volta POS Virtual</span>
         </div>

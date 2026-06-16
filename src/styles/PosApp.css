@@ -126,47 +126,29 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  min-height: 34px;
+  gap: 9px;
+  min-height: 38px;
 }
 
-.pos-miniPizza {
-  position: relative;
-  width: 30px;
-  height: 30px;
-  border: 2px solid var(--brand-1, #3b008b);
-  border-radius: 999px;
-  background:
-    radial-gradient(circle at 34% 36%, #d71920 0 9%, transparent 10%),
-    radial-gradient(circle at 66% 37%, #d71920 0 8%, transparent 9%),
-    radial-gradient(circle at 45% 66%, #d71920 0 8%, transparent 9%),
-    radial-gradient(circle at 66% 68%, #ffffff 0 7%, transparent 8%),
-    conic-gradient(from 18deg, var(--brand-2, #ffb61c), #ffd76a 20%, var(--brand-2, #ffb61c) 42%, #ffd76a 62%, var(--brand-2, #ffb61c) 84%, #ffd76a);
-  box-shadow: 0 8px 18px rgba(59, 0, 139, 0.16);
-  animation: posPizzaSpin 5.5s linear infinite;
+.pos-realPizza {
+  width: 38px;
+  height: 38px;
+  display: block;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+  filter: saturate(1.08) contrast(1.06) drop-shadow(0 7px 12px rgba(59, 0, 139, 0.14));
+  animation: posPizzaSpin 6.4s linear infinite;
 }
 
-.pos-miniPizza::after {
-  content: "";
-  position: absolute;
-  inset: -4px -4px auto auto;
-  width: 13px;
-  height: 13px;
-  background: color-mix(in srgb, var(--brand-2, #ffb61c) 55%, var(--white, #ffffff));
-  border-left: 2px solid var(--brand-1, #3b008b);
-  border-bottom: 2px solid var(--brand-1, #3b008b);
-  transform: rotate(45deg);
-}
-
-.pos-miniPizza:nth-child(2) {
-  width: 36px;
-  height: 36px;
-  animation-duration: 6.8s;
+.pos-realPizza:nth-child(2) {
+  width: 44px;
+  height: 44px;
+  animation-duration: 7.2s;
   animation-direction: reverse;
 }
 
-.pos-miniPizza:nth-child(3) {
-  animation-duration: 7.8s;
+.pos-realPizza:nth-child(3) {
+  animation-duration: 8.2s;
 }
 
 @keyframes posPizzaSpin {
@@ -3338,14 +3320,14 @@
     min-height: 32px;
   }
 
-  .pos-miniPizza {
-    width: 27px;
-    height: 27px;
+  .pos-realPizza {
+    width: 33px;
+    height: 33px;
   }
 
-  .pos-miniPizza:nth-child(2) {
-    width: 32px;
-    height: 32px;
+  .pos-realPizza:nth-child(2) {
+    width: 39px;
+    height: 39px;
   }
 
   .pos-loginPanel h1 {

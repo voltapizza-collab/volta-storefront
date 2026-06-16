@@ -81,6 +81,16 @@ const getPhase = (status) =>
     next: "Revisar internamente.",
   };
 
+const getStatusTone = (status) => {
+  if (["RECEIVED", "EMAIL_SENT"].includes(status)) return "waiting";
+  if (["FORM_COMPLETED", "IN_REVIEW"].includes(status)) return "review";
+  if (["APPROVED", "CONTRACT_SENT"].includes(status)) return "contract";
+  if (status === "ACTIVATED") return "done";
+  if (status === "NEEDS_INFO") return "blocked";
+  if (status === "REJECTED") return "closed";
+  return "neutral";
+};
+
 const formatDate = (value) => {
   if (!value) return "-";
   return new Date(value).toLocaleString("es-ES", {
@@ -395,37 +405,53 @@ export default function OnboardingModule() {
 
       <div className="gmon-grid">
         <section className="gmon-list">
+          <div className="gmon-listLegend" aria-label="Leyenda de fases">
+            <span className="gmon-legendItem gmon-legendItem--waiting">Esperando</span>
+            <span className="gmon-legendItem gmon-legendItem--review">Revision</span>
+            <span className="gmon-legendItem gmon-legendItem--contract">Contrato</span>
+            <span className="gmon-legendItem gmon-legendItem--done">Completada</span>
+          </div>
           {loading ? (
             <div className="gmon-empty">Cargando solicitudes...</div>
           ) : requests.length === 0 ? (
             <div className="gmon-empty">No hay solicitudes en este filtro.</div>
           ) : (
-            requests.map((item) => (
-              <div
-                key={item.id}
-                role="button"
-                tabIndex={0}
-                className={`gmon-card ${selected?.id === item.id ? "active" : ""}`}
-                onClick={() => selectRequest(item.id)}
-                onKeyDown={handleCardKeyDown(item.id)}
-              >
-                <div className="gmon-cardText">
-                  <strong>{item.businessName}</strong>
-                  <span>{item.name} - {item.email}</span>
-                  <small>{getPhase(item.status).step} - {getPhase(item.status).title} - {formatDate(item.createdAt)}</small>
-                </div>
-                <button
-                  type="button"
-                  className="gmon-deleteRequest"
-                  aria-label={`Eliminar solicitud de ${item.businessName}`}
-                  title="Eliminar solicitud"
-                  disabled={deletingId === item.id}
-                  onClick={(event) => deleteRequest(event, item)}
+            requests.map((item) => {
+              const itemPhase = getPhase(item.status);
+              const tone = getStatusTone(item.status);
+              const isDone = item.status === "ACTIVATED";
+
+              return (
+                <div
+                  key={item.id}
+                  role="button"
+                  tabIndex={0}
+                  className={`gmon-card gmon-card--${tone} ${selected?.id === item.id ? "active" : ""}`}
+                  onClick={() => selectRequest(item.id)}
+                  onKeyDown={handleCardKeyDown(item.id)}
                 >
-                  X
-                </button>
-              </div>
-            ))
+                  <div className="gmon-cardText">
+                    <div className="gmon-cardTopline">
+                      <strong>{item.businessName}</strong>
+                      <span className="gmon-statusPill">{itemPhase.step}</span>
+                    </div>
+                    <span>{item.name} - {item.email}</span>
+                    <small>{itemPhase.title} - {formatDate(item.createdAt)}</small>
+                    {isDone ? <em>Proceso completado: puedes quitarla de esta lista.</em> : null}
+                  </div>
+                  <button
+                    type="button"
+                    className="gmon-deleteRequest"
+                    aria-label={`Eliminar solicitud de ${item.businessName}`}
+                    title="Eliminar solicitud"
+                    disabled={deletingId === item.id}
+                    onClick={(event) => deleteRequest(event, item)}
+                  >
+                    X
+                  </button>
+                </div>
+              );
+            })
           )}
         </section>
 

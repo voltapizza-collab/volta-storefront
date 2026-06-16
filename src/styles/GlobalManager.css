@@ -344,20 +344,102 @@
   overflow: hidden;
 }
 
+.gmon-listLegend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0 2px 4px;
+}
+
+.gmon-legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: rgba(31, 23, 42, 0.7);
+  font-size: 11px;
+  font-weight: 950;
+  line-height: 1;
+}
+
+.gmon-legendItem::before {
+  content: "";
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: #6a3df0;
+}
+
+.gmon-legendItem--waiting::before {
+  background: #f59e0b;
+}
+
+.gmon-legendItem--review::before {
+  background: #2563eb;
+}
+
+.gmon-legendItem--contract::before {
+  background: #7c3aed;
+}
+
+.gmon-legendItem--done::before {
+  background: #10b981;
+}
+
 .gmon-card {
   position: relative;
   display: grid;
   gap: 4px;
+  --gmon-card-accent: #6a3df0;
+  --gmon-card-bg: #fff;
+  --gmon-card-pill-bg: rgba(106, 61, 240, 0.1);
+  --gmon-card-pill-fg: #3b008b;
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
   padding: 12px 42px 12px 12px;
   border: 1px solid rgba(59, 0, 139, 0.1);
+  border-left: 5px solid var(--gmon-card-accent);
   border-radius: 8px;
-  background: #fff;
+  background: var(--gmon-card-bg);
   color: #1f172a;
   text-align: left;
   cursor: pointer;
+}
+
+.gmon-card--waiting {
+  --gmon-card-accent: #f59e0b;
+  --gmon-card-bg: #fffbeb;
+  --gmon-card-pill-bg: #fef3c7;
+  --gmon-card-pill-fg: #92400e;
+}
+
+.gmon-card--review {
+  --gmon-card-accent: #2563eb;
+  --gmon-card-bg: #eff6ff;
+  --gmon-card-pill-bg: #dbeafe;
+  --gmon-card-pill-fg: #1d4ed8;
+}
+
+.gmon-card--contract {
+  --gmon-card-accent: #7c3aed;
+  --gmon-card-bg: #f5f3ff;
+  --gmon-card-pill-bg: #ede9fe;
+  --gmon-card-pill-fg: #5b21b6;
+}
+
+.gmon-card--done {
+  --gmon-card-accent: #10b981;
+  --gmon-card-bg: #ecfdf5;
+  --gmon-card-pill-bg: #d1fae5;
+  --gmon-card-pill-fg: #047857;
+}
+
+.gmon-card--blocked,
+.gmon-card--closed {
+  --gmon-card-accent: #ef4444;
+  --gmon-card-bg: #fef2f2;
+  --gmon-card-pill-bg: #fee2e2;
+  --gmon-card-pill-fg: #991b1b;
 }
 
 .gmon-card:focus-visible {
@@ -367,7 +449,8 @@
 
 .gmon-card.active {
   border-color: #ffb61c;
-  box-shadow: inset 0 0 0 1px #ffb61c;
+  border-left-color: var(--gmon-card-accent);
+  box-shadow: inset 0 0 0 1px #ffb61c, 0 10px 24px rgba(31, 23, 42, 0.08);
 }
 
 .gmon-cardText {
@@ -375,6 +458,32 @@
   gap: 4px;
   min-width: 0;
   max-width: 100%;
+}
+
+.gmon-cardTopline {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.gmon-statusPill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 112px;
+  border-radius: 999px;
+  background: var(--gmon-card-pill-bg);
+  color: var(--gmon-card-pill-fg);
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: 950;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.gmon-card .gmon-statusPill {
+  color: var(--gmon-card-pill-fg);
 }
 
 .gmon-deleteRequest {
@@ -407,6 +516,7 @@
 
 .gmon-card span,
 .gmon-card small,
+.gmon-card em,
 .gmon-summary small,
 .gmon-detailHead p {
   color: rgba(31, 23, 42, 0.58);
@@ -415,11 +525,19 @@
 
 .gmon-card strong,
 .gmon-card span,
-.gmon-card small {
+.gmon-card small,
+.gmon-card em {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.gmon-card em {
+  color: #047857;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 950;
 }
 
 .gmon-detail {

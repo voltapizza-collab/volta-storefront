@@ -467,6 +467,24 @@
   transform: translateY(-1px);
   opacity: 0.95;
 }
+
+.bo-loginLinkBtn {
+  width: 100%;
+  margin-top: 10px;
+  border: 0;
+  background: transparent;
+  color: #3b008b;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 900;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.bo-loginLinkBtn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
 .bo-engineBackground {
   z-index: 1; /* 🔥 clave */
   position: absolute !important;

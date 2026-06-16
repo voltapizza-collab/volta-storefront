@@ -92,6 +92,16 @@ export default function Backoffice() {
   const [loginError, setLoginError] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [authView, setAuthView] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("reset") ? "reset" : "login";
+  });
+  const [resetIdentifier, setResetIdentifier] = useState("");
+  const [resetMessage, setResetMessage] = useState("");
+  const [resetForm, setResetForm] = useState({
+    password: "",
+    confirmPassword: "",
+  });
   const t = useMemo(() => createBackofficeTranslator(language), [language]);
 
   useEffect(() => {
@@ -176,7 +186,8 @@ export default function Backoffice() {
     e.preventDefault();
 
     const username = normalizeLoginValue(loginForm.username);
-    const password = normalizeLoginValue(loginForm.password);
+    const password = String(loginForm.password || "").trim();
+    const demoPassword = normalizeLoginValue(password);
 
     if (!username || !password) {
       setLoginError(t("auth.required"));
@@ -186,7 +197,7 @@ export default function Backoffice() {
     try {
       setLoginLoading(true);
 
-      if (isDemoLoginCredential(username, password)) {
+      if (isDemoLoginCredential(username, demoPassword)) {
         const session = await createDemoSession();
 
         setAuth(session);
@@ -200,22 +211,11 @@ export default function Backoffice() {
         return;
       }
 
-      if (username !== password) {
-        setLoginError(t("auth.invalid"));
-        return;
-      }
-
-      const partnerResponse = await api.get(`/partners/${username}`);
-      const partner = partnerResponse.data;
-      const stores = Array.isArray(partner?.stores) ? partner.stores : [];
-      const store = stores[0] || null;
-      const session = {
-        partnerId: partner.id,
-        storeId: store?.id,
-        partnerName: partner.name,
-        partnerSlug: partner.slug,
-        isDemo: false,
-      };
+      const loginResponse = await api.post("/partners/backoffice-login", {
+        username,
+        password,
+      });
+      const session = loginResponse.data;
 
       console.log("SESSION:", session);
 
@@ -229,10 +229,64 @@ export default function Backoffice() {
       setLoginError("");
     } catch (err) {
       console.error("Error starting demo session", err);
-      const message = isDemoLoginCredential(username, password) && err.response?.status >= 500
+      const message = isDemoLoginCredential(username, demoPassword) && err.response?.status >= 500
         ? t("auth.demoError")
         : t("auth.invalid");
       setLoginError(message);
+    } finally {
+      setLoginLoading(false);
+    }
+  };
+
+  const requestPasswordReset = async (event) => {
+    event.preventDefault();
+    const identifier = resetIdentifier.trim();
+
+    if (!identifier) {
+      setResetMessage("Introduce tu usuario o el email de la tienda.");
+      return;
+    }
+
+    try {
+      setLoginLoading(true);
+      setResetMessage("");
+      await api.post("/partners/backoffice-password/request", { identifier });
+      setResetMessage("Si encontramos una cuenta asociada, enviaremos un enlace para restablecer la contrasena.");
+    } catch (error) {
+      console.error("PASSWORD RESET REQUEST ERROR:", error);
+      setResetMessage("No pudimos procesar la solicitud. Intentalo de nuevo.");
+    } finally {
+      setLoginLoading(false);
+    }
+  };
+
+  const submitNewPassword = async (event) => {
+    event.preventDefault();
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("reset") || "";
+    const password = resetForm.password.trim();
+
+    if (password.length < 6) {
+      setResetMessage("La nueva contrasena debe tener al menos 6 caracteres.");
+      return;
+    }
+
+    if (password !== resetForm.confirmPassword.trim()) {
+      setResetMessage("Las contrasenas no coinciden.");
+      return;
+    }
+
+    try {
+      setLoginLoading(true);
+      setResetMessage("");
+      await api.post("/partners/backoffice-password/reset", { token, password });
+      window.history.replaceState(null, "", window.location.pathname);
+      setAuthView("login");
+      setResetForm({ password: "", confirmPassword: "" });
+      setLoginError("Contrasena actualizada. Ya puedes entrar con la nueva contrasena.");
+    } catch (error) {
+      console.error("PASSWORD RESET ERROR:", error);
+      setResetMessage("El enlace no es valido o ha caducado. Solicita uno nuevo.");
     } finally {
       setLoginLoading(false);
     }
@@ -345,49 +399,135 @@ export default function Backoffice() {
           <h1 className="bo-loginTitlePro">{t("auth.title")}</h1>
 
           <p className="bo-loginSubtitle">
-            {t("auth.subtitle")}
+            {authView === "reset"
+              ? "Crea una nueva contrasena para tu backoffice."
+              : authView === "forgot"
+                ? "Te enviaremos un enlace seguro al email asociado a tu tienda."
+                : t("auth.subtitle")}
           </p>
 
-          <form onSubmit={handleLogin} className="bo-loginForm">
-            <div className="bo-inputGroup">
-              <input
-                type="text"
-                name="username"
-                value={loginForm.username}
-                onChange={handleLoginChange}
-                placeholder={t("auth.username")}
-              />
-            </div>
+          {authView === "forgot" ? (
+            <form onSubmit={requestPasswordReset} className="bo-loginForm">
+              <div className="bo-inputGroup">
+                <input
+                  type="text"
+                  value={resetIdentifier}
+                  onChange={(event) => {
+                    setResetIdentifier(event.target.value);
+                    setResetMessage("");
+                  }}
+                  placeholder="Usuario o email"
+                />
+              </div>
 
-            <div className="bo-inputGroup bo-passwordGroup">
-              <input
-                type={showPassword ? "text" : "password"}
-                name="password"
-                value={loginForm.password}
-                onChange={handleLoginChange}
-                placeholder={t("auth.password")}
-              />
+              {resetMessage && <div className="bo-loginErrorPro">{resetMessage}</div>}
 
+              <button type="submit" className="bo-loginBtnPro" disabled={loginLoading}>
+                {loginLoading ? "Enviando..." : "Enviar enlace"}
+              </button>
               <button
                 type="button"
-                className="bo-passwordToggle"
-                onClick={() => setShowPassword((prev) => !prev)}
-                aria-label={showPassword ? t("auth.hidePasswordLabel") : t("auth.showPasswordLabel")}
+                className="bo-loginLinkBtn"
+                onClick={() => {
+                  setAuthView("login");
+                  setResetMessage("");
+                }}
               >
-                {showPassword ? t("auth.hidePassword") : t("auth.showPassword")}
+                Volver al login
               </button>
-            </div>
-
-            {loginError && (
-              <div className="bo-loginErrorPro">
-                {loginError}
+            </form>
+          ) : authView === "reset" ? (
+            <form onSubmit={submitNewPassword} className="bo-loginForm">
+              <div className="bo-inputGroup">
+                <input
+                  type="password"
+                  value={resetForm.password}
+                  onChange={(event) =>
+                    setResetForm((previous) => ({ ...previous, password: event.target.value }))
+                  }
+                  placeholder="Nueva contrasena"
+                />
               </div>
-            )}
+              <div className="bo-inputGroup">
+                <input
+                  type="password"
+                  value={resetForm.confirmPassword}
+                  onChange={(event) =>
+                    setResetForm((previous) => ({ ...previous, confirmPassword: event.target.value }))
+                  }
+                  placeholder="Confirmar contrasena"
+                />
+              </div>
 
-            <button type="submit" className="bo-loginBtnPro" disabled={loginLoading}>
-              {loginLoading ? t("auth.loading") : t("auth.submit")}
-            </button>
-          </form>
+              {resetMessage && <div className="bo-loginErrorPro">{resetMessage}</div>}
+
+              <button type="submit" className="bo-loginBtnPro" disabled={loginLoading}>
+                {loginLoading ? "Guardando..." : "Guardar nueva contrasena"}
+              </button>
+              <button
+                type="button"
+                className="bo-loginLinkBtn"
+                onClick={() => {
+                  window.history.replaceState(null, "", window.location.pathname);
+                  setAuthView("login");
+                  setResetMessage("");
+                }}
+              >
+                Volver al login
+              </button>
+            </form>
+          ) : (
+            <form onSubmit={handleLogin} className="bo-loginForm">
+              <div className="bo-inputGroup">
+                <input
+                  type="text"
+                  name="username"
+                  value={loginForm.username}
+                  onChange={handleLoginChange}
+                  placeholder={t("auth.username")}
+                />
+              </div>
+
+              <div className="bo-inputGroup bo-passwordGroup">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  value={loginForm.password}
+                  onChange={handleLoginChange}
+                  placeholder={t("auth.password")}
+                />
+
+                <button
+                  type="button"
+                  className="bo-passwordToggle"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  aria-label={showPassword ? t("auth.hidePasswordLabel") : t("auth.showPasswordLabel")}
+                >
+                  {showPassword ? t("auth.hidePassword") : t("auth.showPassword")}
+                </button>
+              </div>
+
+              {loginError && (
+                <div className="bo-loginErrorPro">
+                  {loginError}
+                </div>
+              )}
+
+              <button type="submit" className="bo-loginBtnPro" disabled={loginLoading}>
+                {loginLoading ? t("auth.loading") : t("auth.submit")}
+              </button>
+              <button
+                type="button"
+                className="bo-loginLinkBtn"
+                onClick={() => {
+                  setAuthView("forgot");
+                  setLoginError("");
+                }}
+              >
+                No recuerdo la contrasena
+              </button>
+            </form>
+          )}
         </div>
       </div>
     );

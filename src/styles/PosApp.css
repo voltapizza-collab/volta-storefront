@@ -50,90 +50,37 @@
 }
 
 .pos-loginPanel {
-  width: min(880px, 100%);
-  display: grid;
-  grid-template-columns: minmax(280px, 0.9fr) minmax(320px, 1fr);
-  overflow: hidden;
+  width: min(490px, 100%);
+  display: block;
+  position: relative;
+  overflow: visible;
   background: #fff;
   border: 1px solid rgba(59, 0, 139, 0.12);
   border-radius: 8px;
-  padding: 0;
+  padding: 30px 32px 28px;
   box-shadow: 0 24px 70px rgba(44, 22, 68, 0.18);
 }
 
-.pos-loginBrandPanel {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 470px;
-  padding: 28px;
-  background:
-    linear-gradient(150deg, rgba(59, 0, 139, 0.98), rgba(106, 61, 240, 0.92) 50%, rgba(249, 38, 114, 0.88)),
-    #3b008b;
-  color: #fff;
-}
-
-.pos-loginLogo {
-  width: 52px;
-  height: 52px;
+.pos-loginHero {
+  position: relative;
   display: grid;
-  place-items: center;
-  margin-bottom: 18px;
-  border: 2px solid rgba(255, 255, 255, 0.72);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.14);
-  color: #ffdf8a;
-  font-size: 26px;
-  font-weight: 950;
-}
-
-.pos-loginBrandPanel .pos-kicker {
-  color: #ffdf8a;
-}
-
-.pos-loginBrandTitle {
-  margin-top: 12px;
-  max-width: 290px;
-  color: #fff;
-  font-size: 31px;
-  font-weight: 950;
-  line-height: 1;
-}
-
-.pos-loginSignalGrid {
-  display: grid;
+  justify-items: center;
   gap: 10px;
-  margin-top: 30px;
+  min-height: 150px;
+  margin-bottom: 14px;
+  padding-top: 6px;
 }
 
-.pos-loginSignalGrid div {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-height: 46px;
-  border: 1px solid rgba(255, 255, 255, 0.24);
-  border-radius: 8px;
-  padding: 10px 12px;
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.pos-loginSignalGrid span {
-  color: rgba(255, 255, 255, 0.76);
-  font-size: 12px;
-  font-weight: 800;
-}
-
-.pos-loginSignalGrid strong {
-  color: #fff;
-  font-size: 13px;
-  font-weight: 950;
+.pos-loginHero .pos-kicker {
+  position: relative;
+  z-index: 2;
 }
 
 .pos-loginFormPanel {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 34px;
+  padding: 0;
 }
 
 .pos-loginEyebrow {
@@ -154,6 +101,56 @@
   font-weight: 800;
   letter-spacing: 0;
   text-transform: uppercase;
+}
+
+.pos-loginLogoMark {
+  position: relative;
+  z-index: 2;
+  width: min(214px, 72%);
+  height: 104px;
+  object-fit: contain;
+  filter: drop-shadow(0 12px 22px rgba(59, 0, 139, 0.12));
+}
+
+.pos-loginPizzaOrbit {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.pos-loginPizzaOrbit img {
+  position: absolute;
+  width: 54px;
+  height: 54px;
+  object-fit: contain;
+  opacity: 0.92;
+  filter: drop-shadow(0 10px 18px rgba(255, 182, 28, 0.24));
+  animation: posPizzaSpin 7s linear infinite;
+}
+
+.pos-loginPizzaOrbit img:nth-child(1) {
+  left: 38px;
+  top: 18px;
+}
+
+.pos-loginPizzaOrbit img:nth-child(2) {
+  right: 36px;
+  top: 28px;
+  width: 46px;
+  height: 46px;
+  animation-duration: 8.5s;
+  animation-direction: reverse;
+}
+
+@keyframes posPizzaSpin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .pos-loginPanel h1 {
@@ -3236,34 +3233,31 @@
   }
 
   .pos-loginPanel {
-    grid-template-columns: 1fr;
-    width: min(520px, 100%);
+    width: min(460px, 100%);
+    padding: 24px 22px;
   }
 
-  .pos-loginBrandPanel {
-    min-height: auto;
-    padding: 22px;
+  .pos-loginHero {
+    min-height: 132px;
   }
 
-  .pos-loginBrandTitle {
-    max-width: none;
-    font-size: 24px;
+  .pos-loginLogoMark {
+    height: 92px;
   }
 
-  .pos-loginSignalGrid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    margin-top: 22px;
+  .pos-loginPizzaOrbit img {
+    width: 42px;
+    height: 42px;
   }
 
-  .pos-loginSignalGrid div {
-    display: grid;
-    align-content: center;
-    justify-content: start;
-    min-height: 58px;
+  .pos-loginPizzaOrbit img:nth-child(1) {
+    left: 14px;
   }
 
-  .pos-loginFormPanel {
-    padding: 24px;
+  .pos-loginPizzaOrbit img:nth-child(2) {
+    right: 12px;
+    width: 38px;
+    height: 38px;
   }
 
   .pos-loginPanel h1 {

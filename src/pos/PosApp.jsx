@@ -5,6 +5,8 @@ import {
   normalizeCustomerSegment,
   VIP_CUSTOMER_SEGMENT,
 } from "../constants/customerSegments";
+import voltaLogo from "../assets/logo/the pizza sale enganine.png";
+import pizzaIcon from "../assets/logo/pizza.svg";
 import { mockPrinter } from "./printers/mockPrinter";
 import "../styles/PosApp.css";
 
@@ -769,25 +771,14 @@ function PosLogin({ onStart }) {
   return (
     <main className="pos-loginScreen">
       <form className="pos-loginPanel" onSubmit={submitLogin}>
-        <section className="pos-loginBrandPanel" aria-label="Volta POS">
-          <div className="pos-loginLogo">V</div>
-          <span className="pos-kicker">Volta POS Virtual</span>
-          <div className="pos-loginBrandTitle">Pedidos, caja y operaciones en una sola consola.</div>
-          <div className="pos-loginSignalGrid" aria-hidden="true">
-            <div>
-              <span>Pedidos</span>
-              <strong>En vivo</strong>
-            </div>
-            <div>
-              <span>Tienda</span>
-              <strong>Conectada</strong>
-            </div>
-            <div>
-              <span>Equipo</span>
-              <strong>Listo</strong>
-            </div>
+        <div className="pos-loginHero" aria-label="Volta POS">
+          <div className="pos-loginPizzaOrbit" aria-hidden="true">
+            <img src={pizzaIcon} alt="" />
+            <img src={pizzaIcon} alt="" />
           </div>
-        </section>
+          <img className="pos-loginLogoMark" src={voltaLogo} alt="Volta Pizza" />
+          <span className="pos-kicker">Volta POS Virtual</span>
+        </div>
 
         <section className="pos-loginFormPanel">
           <span className="pos-loginEyebrow">Acceso privado</span>

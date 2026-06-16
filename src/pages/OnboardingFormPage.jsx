@@ -34,6 +34,8 @@ const statusCopy = {
   EMAIL_SENT: "Fase 2 pendiente",
   FORM_COMPLETED: "Formulario completado",
   IN_REVIEW: "En revision",
+  CONTRACT_SENT: "Contrato pendiente de firma",
+  ACTIVATED: "Backoffice activado",
   APPROVED: "Aprobada",
   REJECTED: "Rechazada",
   NEEDS_INFO: "Falta informacion",
@@ -54,19 +56,179 @@ const documentFields = [
   },
 ];
 
+const formalValueLabels = {
+  AUTONOMO: "Autonomo",
+  SOCIEDAD: "Sociedad",
+  PARTNER_DELIVERY: "Reparto gestionado por el partner",
+};
+
+const formatFormalValue = (value) => formalValueLabels[value] || value || "-";
+
+const formatContractDate = (value) => {
+  const date = value ? new Date(value) : new Date();
+  if (Number.isNaN(date.getTime())) return "-";
+  return date.toLocaleDateString("es-ES", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  });
+};
+
+const buildContractData = (request) => {
+  const formalData = request?.formalData || {};
+  const commercialName = formalData.commercialName || request?.businessName || "-";
+  const legalName = formalData.legalName || commercialName;
+  const contractDate = request?.submittedAt || request?.reviewedAt || request?.createdAt;
+  const address = [
+    formalData.fiscalAddress || formalData.businessAddress,
+    formalData.city,
+    formalData.postalCode,
+    formalData.country,
+  ]
+    .filter(Boolean)
+    .join(", ");
+
+  return {
+    contractDate: formatContractDate(contractDate),
+    legalName: formatFormalValue(legalName),
+    commercialName: formatFormalValue(commercialName),
+    partnerType: formatFormalValue(formalData.partnerType),
+    taxId: formatFormalValue(formalData.taxId),
+    address: formatFormalValue(address),
+    legalRepresentative: formatFormalValue(formalData.legalRepresentative),
+    representativeRole: formatFormalValue(formalData.representativeRole),
+    businessEmail: formatFormalValue(formalData.businessEmail || request?.email),
+    businessPhone: formatFormalValue(formalData.businessPhone || request?.phone),
+    accountHolder: formatFormalValue(formalData.accountHolder),
+    iban: formatFormalValue(formalData.iban),
+    operationMode: formatFormalValue(formalData.operationMode),
+  };
+};
+
+function ContractDocument({ contract, request }) {
+  const activation = request?.formalData?.activation || null;
+
+  return (
+    <article className="onb-contractDoc">
+      <header>
+        <h2>CONTRATO DE ADHESION COMERCIAL</h2>
+      </header>
+
+      <section>
+        <p>
+          En fecha {contract.contractDate}, Volta Pizza y el Comerciante identificado
+          en este documento formalizan el presente contrato de adhesion comercial.
+        </p>
+      </section>
+
+      <section>
+        <h3>REUNIDOS</h3>
+        <p>
+          De una parte, VOLTA PIZZA, SOCIEDAD LIMITADA, con domicilio social en CALLE
+          IRMANS VILLAR, 1, Piso 1, Puerta B, 32005, Ourense, Ourense, Galicia,
+          Espana, representada por Luigi Vincenzo Roppo Gonzalez, en adelante,
+          "Volta".
+        </p>
+        <p>
+          De otra parte, {contract.legalName}, {contract.partnerType}, con
+          CIF/NIF/NIE {contract.taxId}, domicilio o local operativo en {contract.address},
+          telefono {contract.businessPhone} y correo electronico {contract.businessEmail},
+          representada por {contract.legalRepresentative}, en calidad de
+          {` ${contract.representativeRole}`}, en adelante, el "Comerciante".
+        </p>
+      </section>
+
+      <section>
+        <h3>CLAUSULAS</h3>
+        <h4>1. Objeto</h4>
+        <p>
+          El contrato regula la adhesion del Comerciante a Volta para la publicacion,
+          promocion, recepcion y gestion de pedidos, asi como el uso de herramientas
+          comerciales, operativas y de administracion asociadas a su actividad.
+        </p>
+        <h4>2. Alta, datos y documentacion</h4>
+        <p>
+          El Comerciante declara que los datos facilitados son reales, completos y
+          actualizados, y que la persona firmante esta autorizada para representar el
+          negocio. Volta podra solicitar documentacion adicional para validar el alta.
+        </p>
+        <h4>3. Modelo operativo</h4>
+        <p>
+          Volta pone a disposicion del Comerciante una plataforma de ventas,
+          comunicacion con clientes, creacion de ofertas, gestion de precios,
+          seguimiento de pedidos y administracion. El Comerciante conserva la
+          direccion de su negocio, la preparacion de productos y el cumplimiento de
+          sus obligaciones legales, fiscales, sanitarias y laborales.
+        </p>
+        <h4>4. Comisiones y liquidaciones</h4>
+        <p>
+          Salvo pacto escrito distinto, el importe neto de ventas computable para
+          liquidacion se distribuira en un noventa por ciento (90%) para el Comerciante,
+          nueve por ciento (9%) para Volta y uno por ciento (1%) para el embajador
+          asociado, cuando exista. La cuenta declarada para liquidaciones es titularidad
+          de {contract.accountHolder}, IBAN {contract.iban}.
+        </p>
+        <h4>5. Comunicaciones, duracion y firma electronica</h4>
+        <p>
+          Las comunicaciones contractuales se remitiran preferentemente por medios
+          electronicos al correo {contract.businessEmail}. El contrato tendra duracion
+          indefinida desde su aceptacion electronica. La aceptacion por boton, codigo,
+          trazabilidad de envio, registro tecnico o mecanismo equivalente habilitado
+          por Volta acreditara la firma y aceptacion del documento.
+        </p>
+      </section>
+
+      <section className="onb-signatureGrid">
+        <div>
+          <span>VOLTA</span>
+          <strong>Volta Pizza</strong>
+          <small>Firma electronica emitida por plataforma</small>
+        </div>
+        <div>
+          <span>COMERCIANTE</span>
+          <strong>{contract.legalName}</strong>
+          <small>{contract.legalRepresentative} - {contract.representativeRole}</small>
+          <small>{contract.businessEmail}</small>
+        </div>
+      </section>
+
+      {activation && (
+        <div className="onb-activationBox">
+          <span>Backoffice activado</span>
+          <strong>{activation.partnerName}</strong>
+          <small>Usuario: {activation.username} - Contrasena: {activation.password}</small>
+        </div>
+      )}
+    </article>
+  );
+}
+
 export default function OnboardingFormPage() {
   const { token } = useParams();
   const [request, setRequest] = useState(null);
   const [form, setForm] = useState(initialForm);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [signingContract, setSigningContract] = useState(false);
+  const [acceptedContract, setAcceptedContract] = useState(false);
   const [message, setMessage] = useState("");
   const [documents, setDocuments] = useState({});
 
   const isLocked = useMemo(
-    () => ["IN_REVIEW", "APPROVED", "REJECTED"].includes(request?.status),
+    () => ["IN_REVIEW", "CONTRACT_SENT", "ACTIVATED", "APPROVED", "REJECTED"].includes(request?.status),
     [request?.status]
   );
+
+  const shouldShowContract = useMemo(() => {
+    if (!request?.formalData) return false;
+    const params = new URLSearchParams(window.location.search);
+    return (
+      params.get("contract") === "1" ||
+      ["CONTRACT_SENT", "ACTIVATED"].includes(request.status)
+    );
+  }, [request]);
+
+  const canSignContract = request?.status === "CONTRACT_SENT";
 
   const existingDocuments = useMemo(
     () => request?.formalData?.supportingDocuments || [],
@@ -163,12 +325,105 @@ export default function OnboardingFormPage() {
     }
   };
 
+  const signContract = async (event) => {
+    event.preventDefault();
+
+    if (!acceptedContract) {
+      setMessage("Debes aceptar el contrato para continuar.");
+      return;
+    }
+
+    try {
+      setSigningContract(true);
+      setMessage("");
+      const response = await api.post(`/api/onboarding/form/${token}/sign-contract`, {
+        acceptedContract: true,
+      });
+      setRequest(response.data?.request);
+      setMessage("Contrato aceptado. Hemos enviado tus credenciales iniciales por email.");
+    } catch (error) {
+      console.error(error);
+      setMessage("No pudimos completar la firma del contrato. Contacta con Volta Pizza.");
+    } finally {
+      setSigningContract(false);
+    }
+  };
+
   if (loading) {
     return <main className="onb-page"><div className="onb-shell">Cargando onboarding...</div></main>;
   }
 
   if (!request) {
     return <main className="onb-page"><div className="onb-shell">{message}</div></main>;
+  }
+
+  const contract = buildContractData(request);
+
+  if (shouldShowContract) {
+    return (
+      <main className="onb-page onb-page--contract">
+        <section className="onb-shell">
+          <div className="onb-header onb-header--contract">
+            <span>Volta Pizza Onboarding</span>
+            <h1>Contrato de adhesion comercial</h1>
+            <p>
+              Revisa el contrato completo de {request.businessName}. Para continuar
+              con la activacion del backoffice debes confirmar la aceptacion y firmarlo
+              electronicamente.
+            </p>
+            <strong>{statusCopy[request.status] || request.status}</strong>
+          </div>
+
+          <section className="onb-contractPanel">
+            <div className="onb-contractHead">
+              <div>
+                <span>Firma electronica</span>
+                <h2>{contract.commercialName}</h2>
+              </div>
+              <strong>{statusCopy[request.status] || request.status}</strong>
+            </div>
+
+            <ContractDocument contract={contract} request={request} />
+
+            {canSignContract && (
+              <form className="onb-signForm" onSubmit={signContract}>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={acceptedContract}
+                    onChange={(event) => setAcceptedContract(event.target.checked)}
+                  />
+                  <span>
+                    He revisado integramente el contrato, acepto sus condiciones y lo firmo
+                    electronicamente en senal de conformidad, declarando que tengo facultades
+                    suficientes para representar al Comerciante.
+                  </span>
+                </label>
+                <button type="submit" disabled={signingContract || !acceptedContract}>
+                  {signingContract ? "Firmando..." : "Firmar contrato y activar backoffice"}
+                </button>
+              </form>
+            )}
+
+            {request.status === "ACTIVATED" && (
+              <div className="onb-message">
+                Contrato firmado. Hemos enviado el ultimo correo con las credenciales
+                iniciales de backoffice.
+              </div>
+            )}
+
+            {!canSignContract && request.status !== "ACTIVATED" && (
+              <div className="onb-message">
+                Este contrato aun no esta habilitado para firma. Espera el correo de Volta
+                Pizza o contacta con el equipo.
+              </div>
+            )}
+
+            {message && <div className="onb-message">{message}</div>}
+          </section>
+        </section>
+      </main>
+    );
   }
 
   return (
@@ -212,16 +467,8 @@ export default function OnboardingFormPage() {
               <input value={form.legalRepresentative} onChange={updateField("legalRepresentative")} required disabled={isLocked} />
             </label>
             <label>
-              <span>Documento responsable</span>
-              <input value={form.representativeId} onChange={updateField("representativeId")} required disabled={isLocked} />
-            </label>
-            <label>
               <span>Cargo</span>
               <input value={form.representativeRole} onChange={updateField("representativeRole")} required disabled={isLocked} />
-            </label>
-            <label>
-              <span>Direccion fiscal</span>
-              <input value={form.fiscalAddress} onChange={updateField("fiscalAddress")} required disabled={isLocked} />
             </label>
           </div>
 

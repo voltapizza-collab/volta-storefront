@@ -52,6 +52,167 @@
   gap: 14px;
 }
 
+.onb-contractPanel {
+  display: grid;
+  gap: 14px;
+  margin-bottom: 18px;
+  padding: 16px;
+  border: 1px solid rgba(59, 0, 139, 0.12);
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 12px 28px rgba(59, 0, 139, 0.08);
+}
+
+.onb-contractHead {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: start;
+}
+
+.onb-contractHead span,
+.onb-activationBox span,
+.onb-signatureGrid span {
+  color: #3b008b;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.onb-contractHead h2 {
+  margin: 3px 0 0;
+  color: #1f172a;
+}
+
+.onb-contractHead strong {
+  flex: 0 0 auto;
+  padding: 7px 10px;
+  border-radius: 8px;
+  background: rgba(255, 182, 28, 0.18);
+  color: #3b008b;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.onb-contractDoc {
+  display: grid;
+  gap: 14px;
+  padding: 32px 38px;
+  border: 1px solid #d4d4d4;
+  background: #fff;
+  color: #111;
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+.onb-contractDoc header {
+  display: grid;
+  justify-items: center;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #111;
+}
+
+.onb-contractDoc h2,
+.onb-contractDoc h3,
+.onb-contractDoc h4,
+.onb-contractDoc p {
+  margin: 0;
+}
+
+.onb-contractDoc h2 {
+  color: #111;
+  font-size: 21px;
+  line-height: 1.1;
+  text-align: center;
+}
+
+.onb-contractDoc h3 {
+  color: #111;
+  font-size: 14px;
+  text-align: center;
+}
+
+.onb-contractDoc h4 {
+  color: #111;
+  font-size: 14px;
+}
+
+.onb-contractDoc p {
+  color: #111;
+  font-size: 14px;
+  line-height: 1.48;
+  text-align: justify;
+}
+
+.onb-signatureGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.onb-signatureGrid div {
+  display: grid;
+  gap: 7px;
+  min-height: 130px;
+  padding: 14px;
+  border: 1px solid #111;
+}
+
+.onb-signatureGrid strong,
+.onb-signatureGrid small {
+  color: #111;
+  overflow-wrap: anywhere;
+}
+
+.onb-signatureGrid strong {
+  align-self: end;
+}
+
+.onb-activationBox,
+.onb-signForm {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid rgba(59, 0, 139, 0.14);
+  border-radius: 8px;
+  background: rgba(255, 182, 28, 0.13);
+}
+
+.onb-activationBox strong,
+.onb-activationBox small {
+  color: #1f172a;
+}
+
+.onb-signForm label {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px;
+  align-items: start;
+  color: #1f172a;
+  font-weight: 800;
+}
+
+.onb-signForm input {
+  margin-top: 3px;
+  accent-color: #3b008b;
+}
+
+.onb-signForm button {
+  justify-self: start;
+  border: 0;
+  border-radius: 8px;
+  padding: 12px 16px;
+  background: #3b008b;
+  color: #fff;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.onb-signForm button:disabled {
+  opacity: 0.58;
+  cursor: not-allowed;
+}
+
 .onb-section {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -233,6 +394,19 @@
   .onb-section {
     grid-template-columns: 1fr;
     padding: 14px;
+  }
+
+  .onb-contractHead,
+  .onb-signatureGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .onb-contractHead {
+    display: grid;
+  }
+
+  .onb-contractDoc {
+    padding: 22px 18px;
   }
 
   .onb-form button {

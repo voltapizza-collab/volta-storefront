@@ -23,6 +23,25 @@ const emptyStore = {
   reservationCapacity: "",
 };
 
+const toStoreCoordinate = (value) => {
+  if (value === "" || value == null) return null;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : null;
+};
+
+const hasUsableStoreCoordinates = (store) => {
+  const latitude = toStoreCoordinate(store?.latitude);
+  const longitude = toStoreCoordinate(store?.longitude);
+  return (
+    latitude != null &&
+    longitude != null &&
+    latitude >= -90 &&
+    latitude <= 90 &&
+    longitude >= -180 &&
+    longitude <= 180
+  );
+};
+
 const GOOGLE_KEY = process.env.REACT_APP_GOOGLE_KEY || "";
 const GOOGLE_SCRIPT_ID = "volta-google-maps-script";
 
@@ -1391,6 +1410,7 @@ export default function AdminStoresPage({
   const [showAdd, setShowAdd] = useState(false);
   const [form, setForm] = useState(emptyStore);
   const [editingStore, setEditingStore] = useState(null);
+  const [coordinatesModalStore, setCoordinatesModalStore] = useState(null);
   const [loading, setLoading] = useState(true);
   const [feedback, setFeedback] = useState("");
   const [pageError, setPageError] = useState("");
@@ -1648,11 +1668,26 @@ export default function AdminStoresPage({
     }
   };
 
-  const toggleActive = async (id, next) => {
-    await api.patch(`/api/stores/${id}/active`, { active: next });
-    setStores((current) =>
-      current.map((store) => (store.id === id ? { ...store, active: next } : store))
-    );
+  const toggleActive = async (store, next) => {
+    if (next && !hasUsableStoreCoordinates(store)) {
+      setCoordinatesModalStore(store);
+      return;
+    }
+
+    try {
+      const response = await api.patch(`/api/stores/${store.id}/active`, { active: next });
+      const nextActive = Boolean(response.data?.active ?? next);
+      setStores((current) =>
+        current.map((row) => (row.id === store.id ? { ...row, active: nextActive } : row))
+      );
+    } catch (requestError) {
+      console.error("TOGGLE STORE ACTIVE ERROR:", requestError);
+      if (requestError.response?.data?.error === "store_coordinates_required") {
+        setCoordinatesModalStore(store);
+        return;
+      }
+      setFeedback(requestError.response?.data?.message || requestError.response?.data?.error || "No pudimos cambiar el estado de la tienda.");
+    }
   };
 
   const deleteStore = async (id) => {
@@ -1762,7 +1797,12 @@ export default function AdminStoresPage({
               </tr>
             </thead>
             <tbody>
-              {stores.map((store) => (
+              {stores.map((store) => {
+                const storeHasCoordinates = hasUsableStoreCoordinates(store);
+                const isOperationalActive = Boolean(store.active && storeHasCoordinates);
+                const isCoordinateBlocked = Boolean(store.active && !storeHasCoordinates);
+
+                return (
                 <tr key={store.id}>
                   <td>
                     <button
@@ -1791,11 +1831,18 @@ export default function AdminStoresPage({
                   <td>{store.address || "-"}</td>
                   <td>
                     <button
-                      className={`table-btn status ${store.active ? "active" : "inactive"}`}
-                      onClick={() => toggleActive(store.id, !store.active)}
+                      className={`table-btn status ${
+                        isOperationalActive ? "active" : isCoordinateBlocked ? "blocked" : "inactive"
+                      }`}
+                      onClick={() => toggleActive(store, !isOperationalActive)}
                       type="button"
+                      title={
+                        storeHasCoordinates
+                          ? "Cambiar estado operativo"
+                          : "Completa latitud y longitud antes de activar"
+                      }
                     >
-                      {store.active ? "Activa" : "Inactiva"}
+                      {isOperationalActive ? "Activa" : isCoordinateBlocked ? "Config coords" : "Inactiva"}
                     </button>
                   </td>
                   <td>
@@ -1823,7 +1870,8 @@ export default function AdminStoresPage({
                     </button>
                   </td>
                 </tr>
-              ))}
+                );
+              })}
 
               {stores.length === 0 && (
                 <tr>
@@ -1984,6 +2032,61 @@ export default function AdminStoresPage({
           onClose={() => setBoostCustomer(null)}
           onDone={() => setBoostCustomer(null)}
         />
+      )}
+
+      {coordinatesModalStore && (
+        <div className="sc-modalBack" onMouseDown={() => setCoordinatesModalStore(null)}>
+          <div
+            className="sc-modalBox sc-modalBox--notice"
+            onMouseDown={(event) => event.stopPropagation()}
+          >
+            <header className="sc-modalHead">
+              <div>
+                <span className="sc-modalEyebrow">Configuracion pendiente</span>
+                <h3 className="sc-modalTitle">Faltan coordenadas de la tienda</h3>
+              </div>
+              <button
+                className="sc-iconBtn"
+                onClick={() => setCoordinatesModalStore(null)}
+                type="button"
+                aria-label="Cerrar aviso de coordenadas"
+              >
+                x
+              </button>
+            </header>
+            <div className="sc-modalBody sc-coordinateNotice">
+              <p>
+                Para considerar activa la tienda {coordinatesModalStore.storeName}, necesitamos
+                que tenga configuradas latitud y longitud. Completa esos campos en la ficha de
+                la tienda y luego vuelve a activarla.
+              </p>
+              <div className="sc-coordinateChecklist">
+                <span>Latitud: {coordinatesModalStore.latitude ?? "pendiente"}</span>
+                <span>Longitud: {coordinatesModalStore.longitude ?? "pendiente"}</span>
+              </div>
+            </div>
+            <footer className="sc-modalFooter">
+              <button
+                type="button"
+                className="sc-btn ghost"
+                onClick={() => setCoordinatesModalStore(null)}
+              >
+                Cerrar
+              </button>
+              <button
+                type="button"
+                className="sc-btn primary"
+                onClick={() => {
+                  const store = coordinatesModalStore;
+                  setCoordinatesModalStore(null);
+                  editStore(store);
+                }}
+              >
+                Completar coordenadas
+              </button>
+            </footer>
+          </div>
+        </div>
       )}
 
       {showAdd && (

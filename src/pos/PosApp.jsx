@@ -815,7 +815,11 @@ function PosLogin({ onStart }) {
                 title={showPassword ? "Ocultar contrasena" : "Mostrar contrasena"}
                 onClick={() => setShowPassword((current) => !current)}
               >
-                <span className="pos-eyeIcon" aria-hidden="true" />
+                <svg className="pos-eyeIcon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z" />
+                  <circle cx="12" cy="12" r="3" />
+                  {showPassword ? <path className="pos-eyeSlash" d="M4 20 20 4" /> : null}
+                </svg>
               </button>
             </div>
           </div>

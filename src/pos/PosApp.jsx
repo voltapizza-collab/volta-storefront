@@ -729,6 +729,7 @@ function OrderItems({ order }) {
 function PosLogin({ onStart }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
@@ -798,13 +799,25 @@ function PosLogin({ onStart }) {
 
           <div className="pos-loginField">
             <label htmlFor="pos-password">Contrasena</label>
-            <input
-              id="pos-password"
-              type="password"
-              autoComplete="current-password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-            />
+            <div className="pos-passwordInput">
+              <input
+                id="pos-password"
+                type={showPassword ? "text" : "password"}
+                autoComplete="current-password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+              />
+              <button
+                type="button"
+                className={`pos-passwordToggle ${showPassword ? "is-visible" : ""}`}
+                aria-label={showPassword ? "Ocultar contrasena" : "Mostrar contrasena"}
+                aria-pressed={showPassword}
+                title={showPassword ? "Ocultar contrasena" : "Mostrar contrasena"}
+                onClick={() => setShowPassword((current) => !current)}
+              >
+                <span className="pos-eyeIcon" aria-hidden="true" />
+              </button>
+            </div>
           </div>
 
           {error ? <div className="pos-loginError">{error}</div> : null}

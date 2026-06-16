@@ -200,6 +200,81 @@
   outline: none;
 }
 
+.pos-passwordInput {
+  position: relative;
+}
+
+.pos-passwordInput input {
+  width: 100%;
+  padding-right: 52px;
+}
+
+.pos-loginPanel .pos-passwordToggle {
+  position: absolute;
+  top: 50%;
+  right: 9px;
+  width: 36px;
+  height: 36px;
+  min-height: 36px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #3b008b;
+  padding: 0;
+  transform: translateY(-50%);
+  box-shadow: none;
+}
+
+.pos-loginPanel .pos-passwordToggle:hover,
+.pos-loginPanel .pos-passwordToggle:focus-visible {
+  background: rgba(106, 61, 240, 0.1);
+  outline: none;
+}
+
+.pos-loginPanel .pos-passwordToggle:focus-visible {
+  box-shadow: 0 0 0 3px rgba(106, 61, 240, 0.16);
+}
+
+.pos-eyeIcon {
+  position: relative;
+  width: 22px;
+  height: 14px;
+  border: 2px solid currentColor;
+  border-radius: 999px 999px 999px 999px / 78% 78% 78% 78%;
+}
+
+.pos-eyeIcon::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: currentColor;
+  transform: translate(-50%, -50%);
+}
+
+.pos-eyeIcon::after {
+  content: "";
+  position: absolute;
+  left: -2px;
+  top: 50%;
+  width: 27px;
+  height: 2px;
+  border-radius: 999px;
+  background: currentColor;
+  opacity: 0;
+  transform: rotate(-38deg);
+  transform-origin: center;
+}
+
+.pos-passwordToggle.is-visible .pos-eyeIcon::after {
+  opacity: 1;
+}
+
 .pos-loginError {
   margin-top: 14px;
   border: 1px solid #fecaca;

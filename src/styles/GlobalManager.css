@@ -1215,6 +1215,14 @@
   background: #fff;
 }
 
+.gmon-voltaSignature {
+  align-self: end;
+  width: min(190px, 100%);
+  height: 72px;
+  object-fit: contain;
+  object-position: left center;
+}
+
 .gmon-signatureGrid span {
   color: #111;
   font-size: 11px;

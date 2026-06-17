@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../setupAxios";
+import voltaSignature from "../assets/signatures/volta-signature.png";
 import "../styles/OnboardingForm.css";
 
 const initialForm = {
@@ -56,6 +57,27 @@ const documentFields = [
   },
 ];
 
+const requiredFieldLabels = {
+  partnerType: "Tipo de titular",
+  legalName: "Razon social o nombre fiscal",
+  taxId: "CIF / NIF / NIE",
+  businessEmail: "Email comercial",
+  legalRepresentative: "Responsable legal",
+  representativeRole: "Cargo",
+  commercialName: "Nombre comercial",
+  businessAddress: "Direccion del local",
+  city: "Ciudad",
+  postalCode: "Codigo postal",
+  country: "Pais",
+  businessPhone: "Telefono comercial",
+  accountHolder: "Titular de la cuenta",
+  iban: "IBAN",
+  acceptedTerms: "Declaracion de informacion real",
+  acceptedCompliance: "Autorizacion de revision",
+  "document:IDENTITY": "Identidad del responsable",
+  "document:FISCAL": "Documento fiscal o societario",
+};
+
 const formalValueLabels = {
   AUTONOMO: "Autonomo",
   SOCIEDAD: "Sociedad",
@@ -63,6 +85,71 @@ const formalValueLabels = {
 };
 
 const formatFormalValue = (value) => formalValueLabels[value] || value || "-";
+
+const buildContractPdfTitle = (contract) => {
+  const base = String(contract?.commercialName || contract?.legalName || "contrato-volta")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/gi, "-")
+    .replace(/^-+|-+$/g, "")
+    .toLowerCase();
+
+  return `contrato-volta-${base || "partner"}`;
+};
+
+const downloadContractPdf = (contract) => {
+  const previousTitle = document.title;
+  document.title = buildContractPdfTitle(contract);
+  window.print();
+  window.setTimeout(() => {
+    document.title = previousTitle;
+  }, 800);
+};
+
+const isEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value || "").trim());
+
+const cleanIban = (value) => String(value || "").replace(/\s+/g, "").toUpperCase();
+
+const isLikelyIban = (value) => /^[A-Z]{2}\d{2}[A-Z0-9]{11,30}$/.test(cleanIban(value));
+
+const buildInvalidFormalFields = (form, documents, existingDocumentsByType) => {
+  const invalid = {};
+  const requireText = (field) => {
+    if (!String(form[field] || "").trim()) invalid[field] = true;
+  };
+
+  [
+    "partnerType",
+    "legalName",
+    "taxId",
+    "legalRepresentative",
+    "representativeRole",
+    "commercialName",
+    "businessAddress",
+    "city",
+    "postalCode",
+    "country",
+    "businessPhone",
+    "accountHolder",
+  ].forEach(requireText);
+
+  if (!isEmail(form.businessEmail)) invalid.businessEmail = true;
+  if (!isLikelyIban(form.iban)) invalid.iban = true;
+
+  documentFields.forEach((field) => {
+    if (!field.required) return;
+    const existingForType = existingDocumentsByType[field.key] || [];
+    const selectedForType = documents[field.key] || [];
+    if (!existingForType.length && !selectedForType.length) {
+      invalid[`document:${field.key}`] = true;
+    }
+  });
+
+  if (!form.acceptedTerms) invalid.acceptedTerms = true;
+  if (!form.acceptedCompliance) invalid.acceptedCompliance = true;
+
+  return invalid;
+};
 
 const formatContractDate = (value) => {
   const date = value ? new Date(value) : new Date();
@@ -142,11 +229,12 @@ function ContractDocument({ contract, request }) {
       <section>
         <h4>REUNIDOS</h4>
         <p>
-          De una parte, VOLTA PIZZA, SOCIEDAD LIMITADA, con domicilio social en CALLE IRMANS
-          VILLAR, 1, Piso 1, Puerta B, 32005, Ourense, Ourense, Galicia, Espana, representada
-          en este acto por Luigi Vincenzo Roppo Gonzalez, con NIE Z0329461Z, titular o gestora
-          de la plataforma comercial, tecnologica y operativa destinada a la promocion,
-          recepcion, gestion y seguimiento de pedidos de restauracion, en adelante, "Volta".
+          De una parte, VOLTA PIZZA, S.L.U., con NIF B88818414 y domicilio social en CALLE
+          IRMANS VILLAR, NUM 1, PLANTA 1, PUERTA B, 32005 OURENSE (OURENSE), Espana,
+          representada en este acto por Luigi Vincenzo Roppo Gonzalez, con NIE Z0329461Z,
+          titular o gestora de la plataforma comercial, tecnologica y operativa destinada a
+          la promocion, recepcion, gestion y seguimiento de pedidos de restauracion, en
+          adelante, "Volta".
         </p>
         <p>
           De otra parte, {contract.legalName}, {contract.partnerType}, con
@@ -252,11 +340,10 @@ function ContractDocument({ contract, request }) {
         <p>
           Esta distribucion no incluye otros cargos, consumos, descuentos, costes o servicios
           adicionales que puedan generarse por el uso de herramientas o prestaciones
-          complementarias, incluyendo, a titulo enunciativo, descuentos aplicados desde el
-          POS, hardware o dispositivos utilizados, paquetes de mensajes, acciones Boost,
-          promociones, servicios adicionales, ajustes, devoluciones, incidencias, costes de
-          pasarela o cualquier otro concepto aceptado o generado dentro de la operativa de la
-          Plataforma.
+          complementarias, incluyendo, a titulo enunciativo, hardware o dispositivos
+          utilizados, paquetes de mensajes, acciones Boost, promociones, servicios
+          adicionales, ajustes, devoluciones, incidencias, costes de pasarela o cualquier
+          otro concepto aceptado o generado dentro de la operativa de la Plataforma.
         </p>
         <p>
           La cuenta declarada para liquidaciones es titularidad de {contract.accountHolder},
@@ -303,9 +390,10 @@ function ContractDocument({ contract, request }) {
         <h5>10. Comunicaciones</h5>
         <p>
           Las comunicaciones contractuales y operativas se remitiran preferentemente por medios
-          electronicos. A efectos de notificaciones al Comerciante se designa el correo
-          {` ${contract.businessEmail}`}. El Comerciante debera mantenerlo operativo y
-          actualizado.
+          electronicos. A efectos de notificaciones al Comerciante se designan el correo
+          {` ${contract.businessEmail}`} y el telefono {contract.businessPhone} como
+          elementos de contacto. El Comerciante se compromete a mantenerlos activos,
+          operativos y actualizados.
         </p>
       </section>
 
@@ -340,8 +428,10 @@ function ContractDocument({ contract, request }) {
       <section className="onb-signatureGrid">
         <div>
           <span>VOLTA</span>
+          <img className="onb-voltaSignature" src={voltaSignature} alt="Firma de Volta Pizza" />
           <strong>Volta Pizza</strong>
-          <small>{isSigned ? "Firma electronica emitida por plataforma" : "Firma electronica pendiente"}</small>
+          <small>Luigi Vincenzo Roppo Gonzalez</small>
+          <small>Firma incorporada por Volta</small>
         </div>
         <div>
           <span>COMERCIANTE</span>
@@ -374,6 +464,7 @@ function ContractDocument({ contract, request }) {
 
 export default function OnboardingFormPage() {
   const { token } = useParams();
+  const fieldRefs = useRef({});
   const [request, setRequest] = useState(null);
   const [form, setForm] = useState(initialForm);
   const [loading, setLoading] = useState(true);
@@ -382,6 +473,7 @@ export default function OnboardingFormPage() {
   const [acceptedContract, setAcceptedContract] = useState(false);
   const [message, setMessage] = useState("");
   const [documents, setDocuments] = useState({});
+  const [invalidFields, setInvalidFields] = useState({});
 
   const isLocked = useMemo(
     () => ["IN_REVIEW", "CONTRACT_SENT", "ACTIVATED", "APPROVED", "REJECTED"].includes(request?.status),
@@ -444,6 +536,11 @@ export default function OnboardingFormPage() {
     const value =
       event.target.type === "checkbox" ? event.target.checked : event.target.value;
     setForm((current) => ({ ...current, [field]: value }));
+    setInvalidFields((current) => {
+      if (!current[field]) return current;
+      const { [field]: _removed, ...next } = current;
+      return next;
+    });
     setMessage("");
   };
 
@@ -452,11 +549,50 @@ export default function OnboardingFormPage() {
       ...current,
       [documentType]: Array.from(event.target.files || []),
     }));
+    setInvalidFields((current) => {
+      const field = `document:${documentType}`;
+      if (!current[field]) return current;
+      const { [field]: _removed, ...next } = current;
+      return next;
+    });
     setMessage("");
+  };
+
+  const fieldProps = (field) => ({
+    ref: (node) => {
+      if (node) fieldRefs.current[field] = node;
+    },
+    "aria-invalid": Boolean(invalidFields[field]),
+  });
+
+  const fieldClassName = (field, extraClass = "") =>
+    [extraClass, invalidFields[field] ? "is-invalidField" : ""]
+      .filter(Boolean)
+      .join(" ");
+
+  const showInvalidFields = (nextInvalid) => {
+    setInvalidFields({});
+    window.requestAnimationFrame(() => {
+      setInvalidFields(nextInvalid);
+      const firstInvalidField = Object.keys(nextInvalid)[0];
+      const firstInvalidNode = fieldRefs.current[firstInvalidField];
+      firstInvalidNode?.scrollIntoView?.({ behavior: "smooth", block: "center" });
+      firstInvalidNode?.focus?.({ preventScroll: true });
+    });
   };
 
   const submit = async (event) => {
     event.preventDefault();
+
+    const nextInvalid = buildInvalidFormalFields(form, documents, existingDocumentsByType);
+    const invalidKeys = Object.keys(nextInvalid);
+
+    if (invalidKeys.length) {
+      showInvalidFields(nextInvalid);
+      const firstLabel = requiredFieldLabels[invalidKeys[0]] || "un campo obligatorio";
+      setMessage(`Revisa ${firstLabel}. Hay datos obligatorios pendientes o con formato invalido.`);
+      return;
+    }
 
     try {
       setSaving(true);
@@ -549,7 +685,12 @@ export default function OnboardingFormPage() {
                 <span>Firma electronica</span>
                 <h2>{contract.commercialName}</h2>
               </div>
-              <strong>{statusCopy[request.status] || request.status}</strong>
+              <div className="onb-contractHeadActions">
+                <button type="button" onClick={() => downloadContractPdf(contract)}>
+                  Descargar PDF
+                </button>
+                <strong>{statusCopy[request.status] || request.status}</strong>
+              </div>
             </div>
 
             <ContractDocument contract={contract} request={request} />
@@ -608,76 +749,76 @@ export default function OnboardingFormPage() {
           <strong>{statusCopy[request.status] || request.status}</strong>
         </div>
 
-        <form className="onb-form" onSubmit={submit}>
+        <form className="onb-form" onSubmit={submit} noValidate>
           <div className="onb-section">
             <h2>Datos legales</h2>
-            <label>
+            <label className={fieldClassName("partnerType")}>
               <span>Tipo de titular</span>
-              <select value={form.partnerType} onChange={updateField("partnerType")} required disabled={isLocked}>
+              <select value={form.partnerType} onChange={updateField("partnerType")} required disabled={isLocked} {...fieldProps("partnerType")}>
                 <option value="">Selecciona una opcion</option>
                 <option value="AUTONOMO">Autonomo</option>
                 <option value="SOCIEDAD">Sociedad</option>
               </select>
             </label>
-            <label>
+            <label className={fieldClassName("legalName")}>
               <span>Razon social o nombre fiscal</span>
-              <input value={form.legalName} onChange={updateField("legalName")} required disabled={isLocked} />
+              <input value={form.legalName} onChange={updateField("legalName")} required disabled={isLocked} {...fieldProps("legalName")} />
             </label>
-            <label>
+            <label className={fieldClassName("taxId")}>
               <span>CIF / NIF / NIE</span>
-              <input value={form.taxId} onChange={updateField("taxId")} required disabled={isLocked} />
+              <input value={form.taxId} onChange={updateField("taxId")} required disabled={isLocked} {...fieldProps("taxId")} />
             </label>
-            <label>
+            <label className={fieldClassName("businessEmail")}>
               <span>Email comercial</span>
-              <input type="email" value={form.businessEmail} onChange={updateField("businessEmail")} required disabled={isLocked} />
+              <input type="email" value={form.businessEmail} onChange={updateField("businessEmail")} required disabled={isLocked} {...fieldProps("businessEmail")} />
             </label>
-            <label>
+            <label className={fieldClassName("legalRepresentative")}>
               <span>Responsable legal</span>
-              <input value={form.legalRepresentative} onChange={updateField("legalRepresentative")} required disabled={isLocked} />
+              <input value={form.legalRepresentative} onChange={updateField("legalRepresentative")} required disabled={isLocked} {...fieldProps("legalRepresentative")} />
             </label>
-            <label>
+            <label className={fieldClassName("representativeRole")}>
               <span>Cargo</span>
-              <input value={form.representativeRole} onChange={updateField("representativeRole")} required disabled={isLocked} />
+              <input value={form.representativeRole} onChange={updateField("representativeRole")} required disabled={isLocked} {...fieldProps("representativeRole")} />
             </label>
           </div>
 
           <div className="onb-section">
             <h2>Negocio</h2>
-            <label>
+            <label className={fieldClassName("commercialName")}>
               <span>Nombre comercial</span>
-              <input value={form.commercialName} onChange={updateField("commercialName")} required disabled={isLocked} />
+              <input value={form.commercialName} onChange={updateField("commercialName")} required disabled={isLocked} {...fieldProps("commercialName")} />
             </label>
-            <label>
+            <label className={fieldClassName("businessAddress")}>
               <span>Direccion del local</span>
-              <input value={form.businessAddress} onChange={updateField("businessAddress")} required disabled={isLocked} />
+              <input value={form.businessAddress} onChange={updateField("businessAddress")} required disabled={isLocked} {...fieldProps("businessAddress")} />
             </label>
-            <label>
+            <label className={fieldClassName("city")}>
               <span>Ciudad</span>
-              <input value={form.city} onChange={updateField("city")} required disabled={isLocked} />
+              <input value={form.city} onChange={updateField("city")} required disabled={isLocked} {...fieldProps("city")} />
             </label>
-            <label>
+            <label className={fieldClassName("postalCode")}>
               <span>Codigo postal</span>
-              <input value={form.postalCode} onChange={updateField("postalCode")} required disabled={isLocked} />
+              <input value={form.postalCode} onChange={updateField("postalCode")} required disabled={isLocked} {...fieldProps("postalCode")} />
             </label>
-            <label>
+            <label className={fieldClassName("country")}>
               <span>Pais</span>
-              <input value={form.country} onChange={updateField("country")} required disabled={isLocked} />
+              <input value={form.country} onChange={updateField("country")} required disabled={isLocked} {...fieldProps("country")} />
             </label>
-            <label>
+            <label className={fieldClassName("businessPhone")}>
               <span>Telefono comercial</span>
-              <input value={form.businessPhone} onChange={updateField("businessPhone")} required disabled={isLocked} />
+              <input value={form.businessPhone} onChange={updateField("businessPhone")} required disabled={isLocked} {...fieldProps("businessPhone")} />
             </label>
           </div>
 
           <div className="onb-section">
             <h2>Cobros</h2>
-            <label>
+            <label className={fieldClassName("accountHolder")}>
               <span>Titular de la cuenta</span>
-              <input value={form.accountHolder} onChange={updateField("accountHolder")} required disabled={isLocked} />
+              <input value={form.accountHolder} onChange={updateField("accountHolder")} required disabled={isLocked} {...fieldProps("accountHolder")} />
             </label>
-            <label>
+            <label className={fieldClassName("iban")}>
               <span>IBAN</span>
-              <input value={form.iban} onChange={updateField("iban")} required disabled={isLocked} placeholder="ES00 0000 0000 0000 0000 0000" />
+              <input value={form.iban} onChange={updateField("iban")} required disabled={isLocked} placeholder="ES00 0000 0000 0000 0000 0000" {...fieldProps("iban")} />
             </label>
             <div className="onb-wide onb-staticNotice">
               <span>Reparto</span>
@@ -694,8 +835,9 @@ export default function OnboardingFormPage() {
             {documentFields.map((field) => {
               const existingForType = existingDocumentsByType[field.key] || [];
               const selectedForType = documents[field.key] || [];
+              const invalidField = `document:${field.key}`;
               return (
-                <label key={field.key} className="onb-wide onb-fileField">
+                <label key={field.key} className={fieldClassName(invalidField, "onb-wide onb-fileField")}>
                   <span>{field.title}{field.required ? " *" : ""}</span>
                   <input
                     type="file"
@@ -704,6 +846,7 @@ export default function OnboardingFormPage() {
                     onChange={updateDocuments(field.key)}
                     required={field.required && !existingForType.length}
                     disabled={isLocked}
+                    {...fieldProps(invalidField)}
                   />
                   <small>{field.description} PDF, JPG o PNG. Maximo 8 MB por archivo.</small>
                   {(existingForType.length > 0 || selectedForType.length > 0) && (
@@ -722,12 +865,12 @@ export default function OnboardingFormPage() {
           </div>
 
           <div className="onb-section onb-checks">
-            <label>
-              <input type="checkbox" checked={form.acceptedTerms} onChange={updateField("acceptedTerms")} required disabled={isLocked} />
+            <label className={fieldClassName("acceptedTerms")}>
+              <input type="checkbox" checked={form.acceptedTerms} onChange={updateField("acceptedTerms")} required disabled={isLocked} {...fieldProps("acceptedTerms")} />
               <span>Declaro que la informacion enviada es real y que estoy autorizado para representar este negocio.</span>
             </label>
-            <label>
-              <input type="checkbox" checked={form.acceptedCompliance} onChange={updateField("acceptedCompliance")} required disabled={isLocked} />
+            <label className={fieldClassName("acceptedCompliance")}>
+              <input type="checkbox" checked={form.acceptedCompliance} onChange={updateField("acceptedCompliance")} required disabled={isLocked} {...fieldProps("acceptedCompliance")} />
               <span>Acepto que Volta Pizza revise estos datos para preparar el contrato y continuar el proceso de activacion.</span>
             </label>
           </div>

@@ -282,8 +282,8 @@ color: var(--black);
 
 .inv-itemsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
-  gap: 9px;
+  grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+  gap: 12px;
   max-height: 382px;
   overflow-y: auto;
   padding: 12px;
@@ -299,15 +299,16 @@ color: var(--black);
 }
 
 .inv-ingredientTile {
-  min-height: 112px;
-  padding: 9px 10px;
+  position: relative;
+  min-height: 178px;
+  padding: 10px;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
   background: #ffffff;
   color: #111827;
   display: grid;
-  grid-template-rows: 40px minmax(30px, 1fr) 18px;
-  gap: 6px;
+  grid-template-rows: 94px minmax(34px, 1fr) 20px;
+  gap: 8px;
   align-items: center;
   justify-items: center;
   text-align: center;
@@ -336,32 +337,54 @@ color: var(--black);
 }
 
 .inv-tileMedia {
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
+  width: 100%;
+  height: 94px;
+  border-radius: 10px;
   overflow: hidden;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: #eef2f7;
+  background: #f8fafc;
   color: var(--brand-1);
-  font-size: 13px;
+  font-size: 22px;
   font-weight: 900;
 }
 
 .inv-tileMedia img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  background: #ffffff;
+}
+
+.inv-tileStatus {
+  position: absolute;
+  top: 17px;
+  right: 17px;
+  min-height: 24px;
+  max-width: calc(100% - 34px);
+  padding: 0 9px;
+  border-radius: 999px;
+  background: rgba(17, 24, 39, 0.78);
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 900;
+  line-height: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .inv-tileName {
   width: 100%;
   color: inherit;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 900;
   line-height: 1.2;
-  max-height: 43px;
+  max-height: 48px;
   overflow-y: auto;
   overflow-wrap: anywhere;
   scrollbar-width: none;
@@ -380,7 +403,7 @@ color: var(--black);
   justify-content: space-between;
   gap: 6px;
   color: #64748b;
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 800;
 }
 
@@ -671,6 +694,25 @@ color: var(--black);
   font-weight: 700;
 }
 
+.inv-aliasList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.inv-aliasList span {
+  min-height: 30px;
+  padding: 0 11px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  background: #f8fafc;
+  border: 1px solid #d9e2ec;
+  color: #475569;
+  font-size: 11px;
+  font-weight: 900;
+}
+
 .inv-detailField {
   display: grid;
   gap: 8px;
@@ -714,7 +756,18 @@ color: var(--black);
   }
 
   .inv-itemsGrid {
-    grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
+  }
+
+  .inv-catTitle {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .inv-catRight,
+  .inv-categorySearch {
+    width: 100%;
   }
 
   .inv-detailHero {
@@ -761,6 +814,13 @@ color: var(--black);
   color: var(--brand-1);
   font-size: 12px;
   font-weight: 900;
+}
+
+.inv-priceModalField small {
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.35;
+  font-weight: 700;
 }
 
 .inv-priceModalField div {
@@ -1097,6 +1157,77 @@ color: var(--black);
 .inv-catRight {
   display: flex;
   align-items: center;
+}
+
+.inv-categorySearch {
+  width: min(320px, 44vw);
+  min-height: 34px;
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr) 24px;
+  align-items: center;
+  gap: 8px;
+  padding: 0 8px 0 11px;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 1px solid rgba(59, 0, 139, 0.14);
+  color: var(--brand-1);
+  box-shadow: 0 8px 16px rgba(59, 0, 139, 0.06);
+}
+
+.inv-categorySearch .inv-addIcon {
+  width: 14px;
+  height: 14px;
+}
+
+.inv-categorySearch input {
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #111827;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.inv-categorySearch input::placeholder {
+  color: #94a3b8;
+}
+
+.inv-categorySearch button {
+  width: 22px;
+  height: 22px;
+  border: none;
+  border-radius: 999px;
+  background: #eef2f7;
+  color: #475569;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.inv-categoryEmpty {
+  padding: 0 14px 16px;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.inv-categoryEmpty button {
+  min-height: 34px;
+  padding: 0 13px;
+  border: none;
+  border-radius: 999px;
+  background: var(--brand-1);
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 900;
 }
 
 /* badge contador */

@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import api from "../../setupAxios";
+import voltaSignature from "../../assets/signatures/volta-signature.png";
 
 const statuses = [
   ["ALL", "Todas"],
@@ -627,11 +628,12 @@ export default function OnboardingModule() {
                       <section>
                         <h4>REUNIDOS</h4>
                         <p>
-                          De una parte, VOLTA PIZZA, SOCIEDAD LIMITADA, con domicilio social en CALLE IRMANS
-                          VILLAR, 1, Piso 1, Puerta B, 32005, Ourense, Ourense, Galicia, Espana, representada en
-                          este acto por Luigi Vincenzo Roppo Gonzalez, con NIE Z0329461Z, titular o gestora de la
-                          plataforma comercial, tecnologica y operativa destinada a la promocion, recepcion, gestion
-                          y seguimiento de pedidos de restauracion, en adelante, "Volta".
+                          De una parte, VOLTA PIZZA, S.L.U., con NIF B88818414 y domicilio social en CALLE
+                          IRMANS VILLAR, NUM 1, PLANTA 1, PUERTA B, 32005 OURENSE (OURENSE), Espana,
+                          representada en este acto por Luigi Vincenzo Roppo Gonzalez, con NIE Z0329461Z,
+                          titular o gestora de la plataforma comercial, tecnologica y operativa destinada a la
+                          promocion, recepcion, gestion y seguimiento de pedidos de restauracion, en adelante,
+                          "Volta".
                         </p>
                         <p>
                           De otra parte, {contract.legalName}, {contract.partnerType}, con CIF/NIF/NIE {contract.taxId},
@@ -730,10 +732,9 @@ export default function OnboardingModule() {
                         <p>
                           Esta distribucion no incluye otros cargos, consumos, descuentos, costes o servicios adicionales
                           que puedan generarse por el uso de herramientas o prestaciones complementarias, incluyendo,
-                          a titulo enunciativo, descuentos aplicados desde el POS, hardware o dispositivos utilizados,
-                          paquetes de mensajes, acciones Boost, promociones, servicios adicionales, ajustes, devoluciones,
-                          incidencias, costes de pasarela o cualquier otro concepto aceptado o generado dentro de la
-                          operativa de la Plataforma.
+                          a titulo enunciativo, hardware o dispositivos utilizados, paquetes de mensajes, acciones Boost,
+                          promociones, servicios adicionales, ajustes, devoluciones, incidencias, costes de pasarela o
+                          cualquier otro concepto aceptado o generado dentro de la operativa de la Plataforma.
                         </p>
                         <p>
                           La cuenta declarada para liquidaciones es titularidad de {contract.accountHolder}, IBAN
@@ -777,8 +778,9 @@ export default function OnboardingModule() {
                         <h5>10. Comunicaciones</h5>
                         <p>
                           Las comunicaciones contractuales y operativas se remitiran preferentemente por medios
-                          electronicos. A efectos de notificaciones al Comerciante se designa el correo
-                          {` ${contract.businessEmail}`}. El Comerciante debera mantenerlo operativo y actualizado.
+                          electronicos. A efectos de notificaciones al Comerciante se designan el correo
+                          {` ${contract.businessEmail}`} y el telefono {contract.businessPhone} como elementos de
+                          contacto. El Comerciante se compromete a mantenerlos activos, operativos y actualizados.
                         </p>
                       </section>
 
@@ -810,8 +812,10 @@ export default function OnboardingModule() {
                         <div className="gmon-signatureGrid">
                           <div>
                             <span>VOLTA</span>
+                            <img className="gmon-voltaSignature" src={voltaSignature} alt="Firma de Volta Pizza" />
                             <strong>Volta Pizza</strong>
-                            <small>Firma electronica pendiente</small>
+                            <small>Luigi Vincenzo Roppo Gonzalez</small>
+                            <small>Firma incorporada por Volta</small>
                           </div>
                           <div>
                             <span>COMERCIANTE</span>

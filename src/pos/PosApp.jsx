@@ -6,7 +6,9 @@ import {
   VIP_CUSTOMER_SEGMENT,
 } from "../constants/customerSegments";
 import voltaLogo from "../assets/logo/the pizza sale enganine.png";
+import { ReactComponent as PizzaBg } from "../assets/logo/pizza.svg";
 import pizzaIcon from "../assets/logo/pizza.svg";
+import EngineBackground from "../components/Backoffice/EngineBackground";
 import { mockPrinter } from "./printers/mockPrinter";
 import "../styles/PosApp.css";
 
@@ -781,6 +783,10 @@ function PosLogin({ onStart }) {
 
   return (
     <main className="pos-loginScreen">
+      <div className="pos-engineLines" />
+      <EngineBackground />
+      <PizzaBg className="pos-loginBgPizza" />
+
       <form className="pos-loginPanel" onSubmit={submitLogin}>
         <div className="pos-loginHero" aria-label="Volta POS">
           <img className="pos-loginLogoMark" src={voltaLogo} alt="Volta Pizza" />
@@ -793,15 +799,15 @@ function PosLogin({ onStart }) {
         </div>
 
         <section className="pos-loginFormPanel">
-          <span className="pos-loginEyebrow">Acceso privado</span>
           <h1>Entrar al POS</h1>
           <p>Usa el usuario del partner y el PIN de 6 digitos de tu tienda.</p>
 
           <div className="pos-loginField">
-            <label htmlFor="pos-username">Usuario</label>
             <input
               id="pos-username"
               type="text"
+              aria-label="Usuario"
+              placeholder="Usuario"
               autoComplete="username"
               value={username}
               onChange={(event) => setUsername(event.target.value)}
@@ -809,11 +815,12 @@ function PosLogin({ onStart }) {
           </div>
 
           <div className="pos-loginField">
-            <label htmlFor="pos-password">PIN de tienda</label>
             <div className="pos-passwordInput">
               <input
                 id="pos-password"
                 type={showPassword ? "text" : "password"}
+                aria-label="PIN de tienda"
+                placeholder="PIN de tienda"
                 autoComplete="current-password"
                 inputMode="numeric"
                 pattern="[0-9]{6}"
@@ -829,25 +836,16 @@ function PosLogin({ onStart }) {
                 title={showPassword ? "Ocultar PIN" : "Mostrar PIN"}
                 onClick={() => setShowPassword((current) => !current)}
               >
-                <svg className="pos-eyeIcon" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z" />
-                  <circle cx="12" cy="12" r="3" />
-                  {showPassword ? <path className="pos-eyeSlash" d="M4 20 20 4" /> : null}
-                </svg>
+                {showPassword ? "Hide" : "Show"}
               </button>
             </div>
           </div>
 
           {error ? <div className="pos-loginError">{error}</div> : null}
 
-          <button type="submit" disabled={!canSubmit}>
+          <button className="pos-loginSubmit" type="submit" disabled={!canSubmit}>
             {submitting ? "Entrando..." : "Entrar al POS"}
           </button>
-
-          <div className="pos-loginTrust">
-            <span aria-hidden="true" />
-            Sesion segura para partners Volta Pizza
-          </div>
         </section>
       </form>
     </main>

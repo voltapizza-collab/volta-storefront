@@ -41,45 +41,135 @@
 }
 
 .pos-loginScreen {
-  display: grid;
-  place-items: center;
-  padding: 28px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 26px 20px;
   background:
-    linear-gradient(120deg, rgba(59, 0, 139, 0.09), rgba(249, 38, 114, 0.07) 42%, rgba(255, 182, 28, 0.14)),
-    #f8f4ef;
+    linear-gradient(135deg, var(--brand-3, #6a3df0), var(--brand-1, #3b008b)),
+    var(--brand-1, #3b008b);
+}
+
+.pos-loginScreen .engine-bg {
+  z-index: 1;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(106, 61, 240, 0.9), transparent 28%),
+    linear-gradient(135deg, var(--brand-3, #6a3df0), var(--brand-1, #3b008b));
+}
+
+.pos-loginScreen .gear {
+  opacity: 0.16;
+  background:
+    repeating-conic-gradient(
+      rgba(255, 255, 255, 0.22) 0deg 4deg,
+      rgba(255, 182, 28, 0.28) 4deg 8deg,
+      transparent 8deg 12deg
+    );
+}
+
+.pos-loginScreen .gear::after {
+  background: var(--brand-1, #3b008b);
+}
+
+.pos-loginScreen .engine-glow {
+  background: radial-gradient(
+    circle,
+    rgba(255, 182, 28, 0.16),
+    rgba(106, 61, 240, 0.24),
+    transparent
+  );
+}
+
+.pos-engineLines {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  opacity: 0.3;
+  background:
+    repeating-radial-gradient(
+      circle at center,
+      rgba(255, 255, 255, 0.1) 0px,
+      rgba(255, 255, 255, 0.1) 4px,
+      transparent 2px,
+      transparent 22px
+    ),
+    linear-gradient(135deg, var(--brand-3, #6a3df0), var(--brand-1, #3b008b));
+  animation: posTunnelMove 10s linear infinite;
+}
+
+.pos-loginBgPizza {
+  position: absolute;
+  width: 3000px;
+  height: 3000px;
+  top: 50%;
+  left: 50%;
+  z-index: 3;
+  color: rgba(255, 255, 255, 0.86);
+  fill: currentColor;
+  opacity: 0.08;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  animation: posSpinPizza 30s linear infinite;
+}
+
+@keyframes posTunnelMove {
+  from {
+    transform: scale(1);
+  }
+
+  to {
+    transform: scale(1.4);
+  }
+}
+
+@keyframes posSpinPizza {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
 }
 
 .pos-loginPanel {
-  width: min(490px, 100%);
-  display: block;
   position: relative;
-  overflow: hidden;
-  background: #fff;
-  border: 1px solid rgba(59, 0, 139, 0.12);
-  border-radius: 8px;
-  padding: 0 32px 28px;
-  box-shadow: 0 24px 70px rgba(44, 22, 68, 0.18);
+  z-index: 4;
+  width: min(430px, 100%);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: visible;
+  padding: 40px 30px;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
 }
 
 .pos-loginHero {
   position: relative;
-  display: grid;
-  justify-items: center;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
   align-items: center;
-  gap: 5px;
-  min-height: 206px;
-  margin: 0 -32px 20px;
-  padding: 16px 32px 15px;
-  background:
-    linear-gradient(180deg, color-mix(in srgb, var(--brand-2, #ffb61c) 34%, var(--white, #ffffff)), color-mix(in srgb, var(--brand-2, #ffb61c) 58%, var(--white, #ffffff))),
-    var(--brand-2, #ffb61c);
-  border-bottom: 1px solid color-mix(in srgb, var(--brand-2, #ffb61c) 72%, var(--brand-1, #3b008b));
+  gap: 4px;
+  min-height: 0;
+  margin: 0 0 10px;
+  padding: 0;
 }
 
 .pos-loginHero .pos-kicker {
   position: relative;
   z-index: 2;
-  margin-top: 3px;
+  margin-top: 0;
   color: var(--brand-1, #3b008b);
   font-size: 12px;
   font-weight: 950;
@@ -87,9 +177,10 @@
 }
 
 .pos-loginFormPanel {
+  width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  align-items: center;
   padding: 0;
 }
 
@@ -116,10 +207,11 @@
 .pos-loginLogoMark {
   position: relative;
   z-index: 2;
-  width: min(286px, 82%);
-  height: 142px;
+  width: 500px;
+  max-width: none;
+  height: auto;
   object-fit: contain;
-  filter: drop-shadow(0 12px 22px rgba(59, 0, 139, 0.16));
+  margin-bottom: 0;
 }
 
 .pos-loginPizzaRow {
@@ -128,15 +220,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 14px;
-  min-height: 46px;
-  margin-top: -6px;
-  margin-bottom: 2px;
+  gap: 9px;
+  min-height: 34px;
+  margin-top: -18px;
+  margin-bottom: 0;
 }
 
 .pos-realPizza {
-  width: 42px;
-  height: 42px;
+  width: 32px;
+  height: 32px;
   display: grid;
   place-items: center;
   border-radius: 2px;
@@ -146,8 +238,8 @@
 }
 
 .pos-pizzaDisc {
-  width: 28px;
-  height: 28px;
+  width: 22px;
+  height: 22px;
   display: block;
   overflow: hidden;
   border: 2px solid #3b008b;
@@ -158,31 +250,31 @@
 }
 
 .pos-pizzaDisc img {
-  width: 50px;
-  height: 28px;
+  width: 40px;
+  height: 22px;
   display: block;
   object-fit: cover;
   object-position: center;
-  transform: translateX(-11px);
+  transform: translateX(-9px);
 }
 
 .pos-realPizza:nth-child(2) {
-  width: 48px;
-  height: 48px;
+  width: 38px;
+  height: 38px;
   transform: rotate(-8deg);
 }
 
 .pos-realPizza:nth-child(2) .pos-pizzaDisc {
-  width: 30px;
-  height: 30px;
+  width: 24px;
+  height: 24px;
   animation-duration: 7.2s;
   animation-direction: reverse;
 }
 
 .pos-realPizza:nth-child(2) .pos-pizzaDisc img {
-  width: 54px;
-  height: 30px;
-  transform: translateX(-12px);
+  width: 44px;
+  height: 24px;
+  transform: translateX(-10px);
 }
 
 .pos-realPizza:nth-child(3) {
@@ -204,9 +296,12 @@
 }
 
 .pos-loginPanel h1 {
-  margin: 12px 0 0;
-  font-size: 28px;
-  line-height: 1;
+  margin: 8px 0 0;
+  color: #000;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.1;
+  text-align: center;
 }
 
 .pos-topbar h1 {
@@ -216,15 +311,17 @@
 }
 
 .pos-loginPanel p {
-  margin: 12px 0 22px;
-  color: #5d6673;
-  line-height: 1.45;
+  margin: 6px 0 20px;
+  color: #666;
+  font-size: 14px;
+  line-height: 1.35;
+  text-align: center;
 }
 
 .pos-loginField {
-  display: grid;
-  gap: 7px;
-  margin-top: 15px;
+  width: 100%;
+  display: block;
+  margin-top: 0;
 }
 
 .pos-loginPanel label {
@@ -237,18 +334,22 @@
 .pos-loginPanel input {
   width: 100%;
   box-sizing: border-box;
-  min-height: 50px;
-  border: 1px solid #d7dce5;
-  border-radius: 8px;
-  background: #fbfbfd;
-  padding: 0 14px;
+  min-height: 0;
+  margin-bottom: 14px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  background: #f7f7f7;
+  padding: 14px 16px;
   font: inherit;
+  font-size: 14px;
   color: #171717;
+  outline: none;
 }
 
 .pos-loginPanel input:focus {
-  border-color: var(--pos-brand-3);
-  box-shadow: 0 0 0 3px rgba(106, 61, 240, 0.14);
+  border-color: var(--brand-2, #ffb61c);
+  background: #fff;
+  box-shadow: none;
   outline: none;
 }
 
@@ -258,32 +359,33 @@
 
 .pos-passwordInput input {
   width: 100%;
-  padding-right: 52px;
+  padding-right: 88px;
 }
 
 .pos-loginPanel .pos-passwordToggle {
   position: absolute;
   top: 50%;
-  right: 9px;
+  right: 12px;
   z-index: 2;
-  width: 36px;
-  height: 36px;
-  min-height: 36px;
+  width: auto;
+  height: auto;
+  min-height: 0;
   margin: 0;
-  display: grid;
-  place-items: center;
-  border: 1px solid rgba(59, 0, 139, 0.16);
-  border-radius: 8px;
-  background: #ffffff;
-  color: #3b008b;
-  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: #6a3df0;
+  padding: 4px 6px;
+  font-size: 13px;
+  font-weight: 700;
   transform: translateY(-50%);
-  box-shadow: 0 6px 14px rgba(59, 0, 139, 0.08);
+  box-shadow: none;
 }
 
 .pos-loginPanel .pos-passwordToggle:hover,
 .pos-loginPanel .pos-passwordToggle:focus-visible {
-  background: #f6f1ff;
+  color: #4f27d8;
+  background: transparent;
   outline: none;
 }
 
@@ -291,35 +393,21 @@
   box-shadow: 0 0 0 3px rgba(106, 61, 240, 0.16);
 }
 
-.pos-eyeIcon {
-  width: 21px;
-  height: 21px;
-  display: block;
-  fill: none;
-  stroke: currentColor;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-width: 2;
-}
-
 .pos-passwordToggle.is-visible {
   color: #f92672;
 }
 
-.pos-eyeSlash {
-  stroke-width: 2.4;
-}
-
 .pos-loginError {
-  margin-top: 14px;
-  border: 1px solid #fecaca;
-  border-radius: 8px;
-  background: #fef2f2;
+  margin-bottom: 12px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
   color: #991b1b;
-  padding: 10px 12px;
+  padding: 0;
   font-size: 13px;
   font-weight: 800;
   line-height: 1.35;
+  text-align: center;
 }
 
 .pos-loginPanel button,
@@ -339,10 +427,21 @@
 
 .pos-loginPanel button {
   width: 100%;
-  min-height: 50px;
-  margin-top: 22px;
-  background: linear-gradient(90deg, #3b008b, #f92672);
-  box-shadow: 0 12px 24px rgba(249, 38, 114, 0.22);
+  min-height: 0;
+  margin-top: 15px;
+  padding: 14px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #6a00ff, var(--brand-2, #ffb61c));
+  box-shadow: none;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.pos-loginPanel .pos-loginSubmit:hover:not(:disabled) {
+  opacity: 0.95;
+  transform: translateY(-1px);
 }
 
 .pos-loginPanel button:disabled,
@@ -3339,43 +3438,44 @@
 
 @media (max-width: 860px) {
   .pos-loginScreen {
-    padding: 16px;
+    padding: 12px;
   }
 
   .pos-loginPanel {
-    width: min(460px, 100%);
-    padding: 0 22px 24px;
+    width: min(430px, 100%);
+    padding: 34px 28px;
   }
 
   .pos-loginHero {
-    min-height: 150px;
-    margin: 0 -22px 18px;
-    padding: 16px 22px 14px;
+    min-height: 0;
+    margin: 0 0 10px;
+    padding: 0;
   }
 
   .pos-loginLogoMark {
-    width: min(254px, 86%);
-    height: 124px;
+    width: 460px;
+    max-width: none;
+    height: auto;
   }
 
   .pos-loginPizzaRow {
-    gap: 12px;
-    min-height: 40px;
-    margin-top: -5px;
+    gap: 9px;
+    min-height: 34px;
+    margin-top: -18px;
   }
 
   .pos-realPizza {
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
   }
 
   .pos-realPizza:nth-child(2) {
-    width: 42px;
-    height: 42px;
+    width: 38px;
+    height: 38px;
   }
 
   .pos-loginPanel h1 {
-    font-size: 24px;
+    font-size: 22px;
   }
 
   .pos-topbar,

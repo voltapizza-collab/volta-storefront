@@ -95,6 +95,26 @@
   font-weight: 900;
 }
 
+.onb-contractHeadActions {
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.onb-contractHeadActions button {
+  border: 0;
+  border-radius: 8px;
+  padding: 9px 12px;
+  background: #3b008b;
+  color: #fff;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
 .onb-contractDoc {
   display: grid;
   gap: 14px;
@@ -184,6 +204,14 @@
   min-height: 130px;
   padding: 14px;
   border: 1px solid #111;
+}
+
+.onb-voltaSignature {
+  align-self: end;
+  width: min(190px, 100%);
+  height: 72px;
+  object-fit: contain;
+  object-position: left center;
 }
 
 .onb-signatureGrid strong,
@@ -314,6 +342,31 @@
   font: inherit;
 }
 
+.onb-section label.is-invalidField input,
+.onb-section label.is-invalidField select,
+.onb-section label.is-invalidField textarea {
+  border-color: #d4145f;
+  background: #fff5fa;
+  box-shadow:
+    0 0 0 3px rgba(212, 20, 95, 0.14),
+    0 10px 22px rgba(212, 20, 95, 0.12);
+}
+
+.onb-section label.is-invalidField {
+  animation: onbRequiredShake 0.36s ease;
+}
+
+.onb-section label.is-invalidField span {
+  color: #b60f4b;
+}
+
+.onb-section label.is-invalidField::after {
+  content: "Revisa este campo";
+  color: #b60f4b;
+  font-size: 12px;
+  font-weight: 900;
+}
+
 .onb-section select {
   appearance: none;
 }
@@ -348,6 +401,14 @@
   border: 1px solid rgba(59, 0, 139, 0.12);
   border-radius: 8px;
   background: rgba(31, 23, 42, 0.025);
+}
+
+.onb-fileField.is-invalidField {
+  border-color: #d4145f;
+  background: #fff5fa;
+  box-shadow:
+    0 0 0 3px rgba(212, 20, 95, 0.1),
+    0 10px 22px rgba(212, 20, 95, 0.1);
 }
 
 .onb-docList {
@@ -391,6 +452,13 @@
   background: rgba(31, 23, 42, 0.04);
 }
 
+.onb-checks label.is-invalidField {
+  background: #fff5fa;
+  box-shadow:
+    inset 0 0 0 1px rgba(212, 20, 95, 0.42),
+    0 10px 22px rgba(212, 20, 95, 0.1);
+}
+
 .onb-checks input {
   width: auto;
   margin-top: 2px;
@@ -427,6 +495,29 @@
   font-weight: 900;
 }
 
+@keyframes onbRequiredShake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  20% {
+    transform: translateX(-7px);
+  }
+
+  40% {
+    transform: translateX(6px);
+  }
+
+  60% {
+    transform: translateX(-4px);
+  }
+
+  80% {
+    transform: translateX(3px);
+  }
+}
+
 @media (max-width: 720px) {
   .onb-page {
     padding: 22px 12px;
@@ -450,11 +541,83 @@
     display: grid;
   }
 
+  .onb-contractHeadActions {
+    justify-content: start;
+  }
+
   .onb-contractDoc {
     padding: 22px 18px;
   }
 
   .onb-form button {
     width: 100%;
+  }
+}
+
+@media print {
+  @page {
+    size: A4;
+    margin: 14mm;
+  }
+
+  body {
+    background: #fff !important;
+  }
+
+  .onb-page {
+    min-height: auto;
+    padding: 0;
+    background: #fff;
+  }
+
+  .onb-shell {
+    width: 100%;
+    margin: 0;
+  }
+
+  .onb-header,
+  .onb-contractHead,
+  .onb-signForm,
+  .onb-message,
+  .onb-activationBox {
+    display: none !important;
+  }
+
+  .onb-contractPanel {
+    display: block;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+  }
+
+  .onb-contractDoc {
+    gap: 10px;
+    padding: 0;
+    border: 0;
+  }
+
+  .onb-contractDoc p,
+  .onb-contractDoc li {
+    font-size: 11px;
+    line-height: 1.32;
+  }
+
+  .onb-contractDoc h2 {
+    font-size: 17px;
+  }
+
+  .onb-contractDoc h4,
+  .onb-contractDoc h5 {
+    font-size: 12px;
+  }
+
+  .onb-signatureGrid div {
+    min-height: 100px;
+    break-inside: avoid;
+  }
+
+  .onb-voltaSignature {
+    height: 54px;
   }
 }

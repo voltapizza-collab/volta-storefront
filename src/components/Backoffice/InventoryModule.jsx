@@ -10,12 +10,33 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
+const normalizeSearchText = (value) =>
+  String(value || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^\p{L}\p{N}]+/gu, " ")
+    .trim();
+
+const getIngredientSearchText = (ing) =>
+  normalizeSearchText(
+    [
+      ing?.name,
+      ing?.category,
+      ing?.description,
+      ...(Array.isArray(ing?.allergens) ? ing.allergens : []),
+    ]
+      .filter(Boolean)
+      .join(" ")
+  );
+
 export default function InventoryModule({ partner }) {
   const [ingredients, setIngredients] = useState([]);
   const [categories, setCategories] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState("search"); // 🔥 clave
   const [search, setSearch] = useState("");
+  const [categorySearches, setCategorySearches] = useState({});
   const [openCat, setOpenCat] = useState("");
   const [newIngredientName, setNewIngredientName] = useState("");
   const [newIngredientCategory, setNewIngredientCategory] = useState("");
@@ -74,11 +95,9 @@ export default function InventoryModule({ partner }) {
 
   const filteredIngredients = useMemo(() => {
     if (!search.trim()) return [];
-    const q = search.toLowerCase();
+    const q = normalizeSearchText(search);
 
-    return ingredients.filter((ing) =>
-      ing.name.toLowerCase().includes(q)
-    );
+    return ingredients.filter((ing) => getIngredientSearchText(ing).includes(q));
   }, [search, ingredients]);
 
   const normalizePriceInput = (value) =>
@@ -248,6 +267,33 @@ export default function InventoryModule({ partner }) {
   const isIngredientInactiveInStore = (ingredient) =>
     Boolean(ingredient?.exists && ingredient?.active === false);
 
+  const updateCategorySearch = (category, value) => {
+    setCategorySearches((current) => ({
+      ...current,
+      [category]: value,
+    }));
+  };
+
+  const getFilteredCategoryIngredients = (list, query) => {
+    const q = normalizeSearchText(query);
+    if (!q) return list;
+    return list.filter((ing) => getIngredientSearchText(ing).includes(q));
+  };
+
+  const getIngredientStatusLabel = (ingredient) => {
+    if (isIngredientActiveInStore(ingredient)) return "Activo";
+    if (isIngredientInactiveInStore(ingredient)) return "Inactivo";
+    return "Agregar";
+  };
+
+  const getKnownAliases = (ingredient) =>
+    Array.isArray(ingredient?.aliases)
+      ? ingredient.aliases
+          .map((alias) => String(alias || "").trim())
+          .filter(Boolean)
+          .slice(0, 6)
+      : [];
+
   const renderIngredientTile = (ing) => {
     const allergens = getAllergenTags(ing);
     const activePrice = formatIngredientPrice(ing.costPrice);
@@ -270,6 +316,7 @@ export default function InventoryModule({ partner }) {
             <span>{getIngredientInitials(ing.name)}</span>
           )}
         </span>
+        <span className="inv-tileStatus">{getIngredientStatusLabel(ing)}</span>
         <span className="inv-tileName">{getDisplayName(ing.name)}</span>
         <span className="inv-tileMeta">
           <span>{allergens[0]}</span>
@@ -422,6 +469,17 @@ export default function InventoryModule({ partner }) {
               </small>
             </div>
 
+            {getKnownAliases(detailIngredient).length > 0 && (
+              <div className="inv-detailSection">
+                <span>Tambien conocido como</span>
+                <div className="inv-aliasList">
+                  {getKnownAliases(detailIngredient).map((alias) => (
+                    <span key={`${detailIngredient.id}-${alias}`}>{alias}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <label className="inv-detailField">
               <span>Descripción breve</span>
               <textarea
@@ -438,7 +496,7 @@ export default function InventoryModule({ partner }) {
             </label>
 
             <label className="inv-priceModalField">
-              <span>Ingresa precio</span>
+              <span>Precio de armado</span>
               <div>
                 <strong>EUR</strong>
                 <input
@@ -461,6 +519,9 @@ export default function InventoryModule({ partner }) {
                   disabled={Boolean(savingOnboardingId)}
                 />
               </div>
+              <small>
+                Este precio se usa para el armado de la pizza. No es el precio de venta final al cliente.
+              </small>
             </label>
 
             <div className="inv-priceModalActions">
@@ -520,6 +581,11 @@ export default function InventoryModule({ partner }) {
                   <SortableCategory key={cat} cat={cat}>
                     {({ attributes, listeners }) => {
                       const isOpen = openCat === cat;
+                      const categorySearch = categorySearches[cat] || "";
+                      const visibleList = getFilteredCategoryIngredients(
+                        list,
+                        categorySearch
+                      );
 
                       return (
                         <>
@@ -553,18 +619,67 @@ export default function InventoryModule({ partner }) {
                             </div>
 
                             <div className="inv-catRight">
-                              <span className="inv-count">
-                                <strong>{activeCount}</strong>
-                                <span>/</span>
-                                <small>{list.length}</small>
-                              </span>
+                              {isOpen ? (
+                                <label
+                                  className="inv-categorySearch"
+                                  onMouseDown={(event) => event.stopPropagation()}
+                                >
+                                  <span className="inv-addIcon" aria-hidden="true" />
+                                  <input
+                                    type="search"
+                                    value={categorySearch}
+                                    placeholder={`Buscar en ${getCategoryDisplayName(cat)}`}
+                                    onChange={(event) =>
+                                      updateCategorySearch(cat, event.target.value)
+                                    }
+                                    onClick={(event) => event.stopPropagation()}
+                                  />
+                                  {categorySearch && (
+                                    <button
+                                      type="button"
+                                      onClick={(event) => {
+                                        event.stopPropagation();
+                                        updateCategorySearch(cat, "");
+                                      }}
+                                      aria-label="Limpiar busqueda"
+                                    >
+                                      x
+                                    </button>
+                                  )}
+                                </label>
+                              ) : (
+                                <span className="inv-count">
+                                  <strong>{activeCount}</strong>
+                                  <span>/</span>
+                                  <small>{list.length}</small>
+                                </span>
+                              )}
                             </div>
                           </div>
 
                           {isOpen && (
-                            <div className="inv-itemsGrid">
-                              {list.map(renderIngredientTile)}
-                            </div>
+                            <>
+                              <div className="inv-itemsGrid">
+                                {visibleList.map(renderIngredientTile)}
+                              </div>
+                              {visibleList.length === 0 && (
+                                <div className="inv-categoryEmpty">
+                                  <span>No hay ingredientes que coincidan en esta categoria.</span>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setNewIngredientCategory(cat);
+                                      setNewIngredientName(categorySearch.trim());
+                                      setCreateFeedback("");
+                                      setModalMode("create");
+                                      setModalOpen(true);
+                                    }}
+                                  >
+                                    Solicitar ingrediente
+                                  </button>
+                                </div>
+                              )}
+                            </>
                           )}
                         </>
                       );

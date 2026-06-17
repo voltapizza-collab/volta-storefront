@@ -328,6 +328,304 @@
   font-weight: 900;
 }
 
+.gmp-shell {
+  display: grid;
+  gap: 12px;
+  color: #1f172a;
+}
+
+.gmp-stats {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.gmp-stats article,
+.gmp-toolbar,
+.gmp-tableWrap {
+  border: 1px solid rgba(59, 0, 139, 0.12);
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 12px 28px rgba(59, 0, 139, 0.08);
+}
+
+.gmp-stats article {
+  display: grid;
+  gap: 5px;
+  padding: 14px;
+}
+
+.gmp-stats span,
+.gmp-toolbar span,
+.gmp-detail span {
+  color: rgba(31, 23, 42, 0.58);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.gmp-stats strong {
+  color: #3b008b;
+  font-size: 24px;
+  line-height: 1.05;
+}
+
+.gmp-toolbar {
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr) auto;
+  align-items: end;
+  gap: 12px;
+  padding: 12px;
+}
+
+.gmp-toolbar label {
+  display: grid;
+  gap: 6px;
+}
+
+.gmp-toolbar input {
+  min-height: 40px;
+  border: 1px solid rgba(59, 0, 139, 0.14);
+  border-radius: 8px;
+  padding: 0 12px;
+  color: #1f172a;
+  font: inherit;
+}
+
+.gmp-filterGroup,
+.gmp-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.gmp-filterGroup button,
+.gmp-actions button,
+.gmp-partnerName {
+  font: inherit;
+}
+
+.gmp-filterGroup button,
+.gmp-actions button {
+  min-height: 34px;
+  border: 1px solid rgba(59, 0, 139, 0.14);
+  border-radius: 6px;
+  background: rgba(59, 0, 139, 0.06);
+  color: #3b008b;
+  padding: 0 10px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.gmp-filterGroup button.active,
+.gmp-actions button:hover,
+.gmp-actions button:focus-visible {
+  background: #3b008b;
+  color: #fff;
+  outline: none;
+}
+
+.gmp-actions button.danger {
+  color: #991b1b;
+  border-color: rgba(153, 27, 27, 0.22);
+  background: rgba(153, 27, 27, 0.06);
+}
+
+.gmp-actions button.danger:hover,
+.gmp-actions button.danger:focus-visible {
+  background: #991b1b;
+  color: #fff;
+}
+
+.gmp-actions button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.gmp-message {
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: rgba(255, 182, 28, 0.18);
+  color: #3b008b;
+  font-weight: 900;
+}
+
+.gmp-posCredentialNotice {
+  display: grid;
+  grid-template-columns: minmax(160px, 1fr) minmax(140px, 0.8fr) minmax(90px, 0.45fr) auto;
+  gap: 10px;
+  align-items: center;
+  padding: 12px 14px;
+  border: 1px solid rgba(4, 120, 87, 0.18);
+  border-radius: 8px;
+  background: #ecfdf5;
+  color: #064e3b;
+}
+
+.gmp-posCredentialNotice span {
+  display: block;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.gmp-posCredentialNotice strong {
+  display: block;
+  overflow-wrap: anywhere;
+}
+
+.gmp-posCredentialNotice button,
+.gmp-storeCredentialRow button {
+  border: 0;
+  border-radius: 6px;
+  background: #3b008b;
+  color: #fff;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.gmp-posCredentialNotice button {
+  padding: 8px 10px;
+}
+
+.gmp-tableWrap {
+  overflow: auto;
+}
+
+.gmp-table {
+  width: 100%;
+  min-width: 1040px;
+  border-collapse: collapse;
+}
+
+.gmp-table th,
+.gmp-table td {
+  padding: 12px;
+  border-bottom: 1px solid rgba(59, 0, 139, 0.08);
+  text-align: left;
+  vertical-align: top;
+}
+
+.gmp-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #f7f2ff;
+  color: #3b008b;
+  font-size: 12px;
+  font-weight: 950;
+}
+
+.gmp-table tr.is-restricted td {
+  background: rgba(153, 27, 27, 0.035);
+}
+
+.gmp-table td strong,
+.gmp-table td small {
+  display: block;
+}
+
+.gmp-table td small {
+  margin-top: 3px;
+  color: rgba(31, 23, 42, 0.58);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.gmp-partnerName {
+  display: grid;
+  gap: 3px;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: #1f172a;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
+}
+
+.gmp-partnerName strong {
+  color: #1f172a;
+  font-size: 14px;
+}
+
+.gmp-partnerName span {
+  color: rgba(31, 23, 42, 0.58);
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.gmp-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 92px;
+  border-radius: 999px;
+  padding: 5px 9px;
+  font-size: 12px;
+  font-weight: 950;
+}
+
+.gmp-status.is-active {
+  background: #d1fae5;
+  color: #047857;
+}
+
+.gmp-status.is-restricted {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.gmp-detailRow td {
+  padding: 0;
+  background: #fffbeb;
+}
+
+.gmp-detail {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(120px, 1fr)) minmax(240px, 1.5fr);
+  gap: 10px;
+  padding: 12px;
+}
+
+.gmp-detail > div {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid rgba(59, 0, 139, 0.1);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.gmp-detail strong {
+  color: #1f172a;
+}
+
+.gmp-storeList small {
+  color: rgba(31, 23, 42, 0.7);
+  font-weight: 800;
+}
+
+.gmp-storeCredentialRow {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.gmp-storeCredentialRow button {
+  flex: 0 0 auto;
+  padding: 6px 8px;
+  font-size: 11px;
+}
+
+.gmp-storeCredentialRow button:disabled {
+  opacity: 0.56;
+  cursor: wait;
+}
+
 .gmon-grid {
   display: grid;
   grid-template-columns: minmax(260px, 0.32fr) minmax(0, 1fr);
@@ -2108,6 +2406,18 @@
 }
 
 @media (max-width: 1180px) {
+  .gmp-stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .gmp-detail {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .gmp-storeList {
+    grid-column: 1 / -1;
+  }
+
   .gmo-kpiGrid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -2134,6 +2444,17 @@
 
   .gmo-toolbar {
     align-items: stretch;
+  }
+
+  .gmp-stats,
+  .gmp-toolbar,
+  .gmp-detail {
+    grid-template-columns: 1fr;
+  }
+
+  .gmp-filterGroup,
+  .gmp-actions {
+    width: 100%;
   }
 
   .gmo-movementToolbar {

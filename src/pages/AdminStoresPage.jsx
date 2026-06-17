@@ -1414,6 +1414,9 @@ export default function AdminStoresPage({
   const [loading, setLoading] = useState(true);
   const [feedback, setFeedback] = useState("");
   const [pageError, setPageError] = useState("");
+  const [resettingCredentialId, setResettingCredentialId] = useState(null);
+  const [posCredentialModal, setPosCredentialModal] = useState(null);
+  const [loadingCredentialId, setLoadingCredentialId] = useState(null);
 
   const loadPartners = useCallback(async () => {
     const response = await api.get("/partners");
@@ -1654,8 +1657,23 @@ export default function AdminStoresPage({
         await api.patch(`/api/stores/${editingStore}`, payload);
         setFeedback("Tienda actualizada.");
       } else {
-        await api.post("/api/stores", payload);
-        setFeedback("Tienda creada.");
+        const response = await api.post("/api/stores", payload);
+        const credential = response.data?.posCredentials || {};
+        if (credential.pin) {
+          setPosCredentialModal({
+            id: response.data?.id,
+            storeName: response.data?.storeName || form.storeName,
+            username:
+              credential.username ||
+              partners.find((partner) => String(partner.id) === String(selectedPartnerId))?.name ||
+              "",
+            pin: credential.pin,
+            configured: true,
+          });
+          setFeedback("Tienda creada. Copia el PIN POS ahora: solo se muestra una vez.");
+        } else {
+          setFeedback("Tienda creada.");
+        }
       }
 
       await loadStores(selectedPartnerId);
@@ -1687,6 +1705,83 @@ export default function AdminStoresPage({
         return;
       }
       setFeedback(requestError.response?.data?.message || requestError.response?.data?.error || "No pudimos cambiar el estado de la tienda.");
+    }
+  };
+
+  const regeneratePosPin = async (store) => {
+    const confirmed = window.confirm(
+      `Regenerar PIN POS para ${store.storeName}? El PIN anterior dejara de funcionar.`
+    );
+    if (!confirmed) return;
+
+    try {
+      setResettingCredentialId(store.id);
+      setFeedback("");
+      const response = await api.post(`/api/stores/${store.id}/pos-credentials/regenerate`);
+      const credential = response.data?.posCredentials || {};
+      setPosCredentialModal({
+        ...store,
+        storeName: store.storeName,
+        username:
+          credential.username ||
+          partners.find((partner) => String(partner.id) === String(selectedPartnerId))?.name ||
+          "",
+        pin: credential.pin || "",
+        configured: true,
+      });
+      await loadStores(selectedPartnerId);
+      setFeedback("PIN POS regenerado. Copialo ahora: solo se muestra una vez.");
+    } catch (requestError) {
+      console.error("REGENERATE POS PIN ERROR:", requestError);
+      setFeedback("No pudimos regenerar el PIN POS de la tienda.");
+    } finally {
+      setResettingCredentialId(null);
+    }
+  };
+
+  const openPosPinModal = async (store) => {
+    const username =
+      partners.find((partner) => String(partner.id) === String(selectedPartnerId))?.name ||
+      "";
+
+    setPosCredentialModal({
+      ...store,
+      username,
+      pin: "",
+      configured: Boolean(store.posCredentialsConfigured),
+      loading: true,
+    });
+
+    try {
+      setLoadingCredentialId(store.id);
+      const response = await api.get(`/api/stores/${store.id}/pos-credentials`);
+      const credential = response.data?.posCredentials || {};
+      const safeStore = response.data?.store || store;
+      setPosCredentialModal({
+        ...safeStore,
+        storeName: safeStore.storeName || store.storeName,
+        username: credential.username || username,
+        pin: credential.pin || "",
+        configured: true,
+        loading: false,
+        regenerated: Boolean(response.data?.regenerated),
+      });
+      if (response.data?.regenerated) {
+        await loadStores(selectedPartnerId);
+        setFeedback("Se genero un nuevo PIN POS recuperable para esta tienda.");
+      }
+    } catch (requestError) {
+      console.error("FETCH POS PIN ERROR:", requestError);
+      setPosCredentialModal({
+        ...store,
+        username,
+        pin: "",
+        configured: Boolean(store.posCredentialsConfigured),
+        loading: false,
+        error: "No pudimos cargar el PIN POS.",
+      });
+    } finally {
+      setLoadingCredentialId(null);
     }
   };
 
@@ -1790,6 +1885,7 @@ export default function AdminStoresPage({
                 <th>City</th>
                 <th>Address</th>
                 <th>Status</th>
+                <th>PIN POS</th>
                 <th>Menu</th>
                 <th>Reporte</th>
                 <th>Hours</th>
@@ -1846,6 +1942,20 @@ export default function AdminStoresPage({
                     </button>
                   </td>
                   <td>
+                    <button
+                      className={`sc-posPinMask ${store.posCredentialsConfigured ? "is-ready" : "is-missing"}`}
+                      onClick={() => openPosPinModal(store)}
+                      type="button"
+                      disabled={loadingCredentialId === store.id}
+                    >
+                      {loadingCredentialId === store.id
+                        ? "..."
+                        : store.posCredentialsConfigured
+                          ? "******"
+                          : "Sin PIN"}
+                    </button>
+                  </td>
+                  <td>
                     <button className="table-btn stock" onClick={() => setStockModal(store)} type="button">
                       Menu
                     </button>
@@ -1875,7 +1985,7 @@ export default function AdminStoresPage({
 
               {stores.length === 0 && (
                 <tr>
-                  <td colSpan="10">
+                  <td colSpan="11">
                     <div className="sc-emptyState">No hay tiendas para este partner todavia.</div>
                   </td>
                 </tr>
@@ -2083,6 +2193,80 @@ export default function AdminStoresPage({
                 }}
               >
                 Completar coordenadas
+              </button>
+            </footer>
+          </div>
+        </div>
+      )}
+
+      {posCredentialModal && (
+        <div className="sc-modalBack" onMouseDown={() => setPosCredentialModal(null)}>
+          <div
+            className="sc-modalBox sc-modalBox--notice"
+            onMouseDown={(event) => event.stopPropagation()}
+          >
+            <header className="sc-modalHead">
+              <div>
+                <span className="sc-modalEyebrow">PIN POS</span>
+                <h3 className="sc-modalTitle">{posCredentialModal.storeName}</h3>
+              </div>
+              <button
+                className="sc-iconBtn"
+                onClick={() => setPosCredentialModal(null)}
+                type="button"
+                aria-label="Cerrar PIN POS"
+              >
+                x
+              </button>
+            </header>
+            <div className="sc-modalBody sc-posPinModal">
+              <div>
+                <span>Usuario</span>
+                <strong>{posCredentialModal.username || "-"}</strong>
+              </div>
+              <div>
+                <span>PIN</span>
+                <strong>
+                  {posCredentialModal.loading
+                    ? "Cargando..."
+                    : posCredentialModal.error
+                      ? "-"
+                      : posCredentialModal.pin || "Sin PIN"}
+                </strong>
+              </div>
+              <p>
+                {posCredentialModal.error
+                  ? posCredentialModal.error
+                  : posCredentialModal.loading
+                    ? "Consultando el PIN POS de la tienda."
+                    : posCredentialModal.regenerated
+                      ? "Este PIN acaba de generarse porque la tienda tenia una credencial antigua no recuperable."
+                      : posCredentialModal.pin
+                        ? "Este es el PIN POS actual de la tienda."
+                  : posCredentialModal.configured
+                    ? "El PIN POS esta configurado."
+                    : "Esta tienda todavia no tiene PIN POS configurado."}
+              </p>
+            </div>
+            <footer className="sc-modalFooter">
+              <button
+                type="button"
+                className="sc-btn ghost"
+                onClick={() => setPosCredentialModal(null)}
+              >
+                Cerrar
+              </button>
+              <button
+                type="button"
+                className="sc-btn primary"
+                onClick={() => regeneratePosPin(posCredentialModal)}
+                disabled={resettingCredentialId === posCredentialModal.id}
+              >
+                {resettingCredentialId === posCredentialModal.id
+                  ? "Generando..."
+                  : posCredentialModal.configured
+                    ? "Regenerar PIN"
+                    : "Generar PIN"}
               </button>
             </footer>
           </div>

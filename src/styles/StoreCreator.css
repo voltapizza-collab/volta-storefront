@@ -238,6 +238,68 @@
   background: rgba(106, 61, 240, 0.08);
 }
 
+.sc-posPinMask {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  min-width: 82px;
+  padding: 8px 12px;
+  border: 1px solid rgba(59, 0, 139, 0.12);
+  border-radius: 14px;
+  background: rgba(106, 61, 240, 0.08);
+  color: var(--brand-1);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+}
+
+.sc-posPinMask.is-ready {
+  background: rgba(106, 61, 240, 0.08);
+}
+
+.sc-posPinMask.is-missing {
+  background: rgba(125, 133, 147, 0.14);
+  color: rgba(36, 22, 59, 0.68);
+  letter-spacing: 0;
+}
+
+.sc-posPinModal {
+  display: grid;
+  gap: 12px;
+}
+
+.sc-posPinModal > div {
+  display: grid;
+  gap: 4px;
+  padding: 12px;
+  border: 1px solid rgba(59, 0, 139, 0.1);
+  border-radius: 14px;
+  background: #f8f5ff;
+}
+
+.sc-posPinModal span {
+  color: var(--brand-1);
+  font-size: 11px;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.sc-posPinModal strong {
+  color: #201233;
+  font-size: 22px;
+  letter-spacing: 0.08em;
+}
+
+.sc-posPinModal p {
+  margin: 0;
+  color: rgba(32, 18, 51, 0.68);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
 .table-btn.status.active {
   background: linear-gradient(135deg, var(--brand-2), #ffd36e);
   color: #23163b;

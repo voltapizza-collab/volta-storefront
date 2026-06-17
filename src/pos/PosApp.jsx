@@ -726,6 +726,16 @@ function OrderItems({ order }) {
   );
 }
 
+function PosPizzaMark() {
+  return (
+    <span className="pos-realPizza" aria-hidden="true">
+      <span className="pos-pizzaDisc">
+        <img src={pizzaIcon} alt="" />
+      </span>
+    </span>
+  );
+}
+
 function PosLogin({ onStart }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -733,7 +743,7 @@ function PosLogin({ onStart }) {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
-  const canSubmit = username.trim() && password.trim() && !submitting;
+  const canSubmit = username.trim() && /^\d{6}$/.test(password.trim()) && !submitting;
 
   const submitLogin = async (event) => {
     event.preventDefault();
@@ -742,9 +752,9 @@ function PosLogin({ onStart }) {
     try {
       setSubmitting(true);
       setError("");
-      const response = await api.post("/partners/backoffice-login", {
+      const response = await api.post("/partners/pos-login", {
         username: username.trim(),
-        password,
+        pin: password.trim(),
       });
       const data = response.data || {};
 
@@ -763,7 +773,7 @@ function PosLogin({ onStart }) {
       });
     } catch (loginError) {
       console.error(loginError);
-      setError("Usuario o contrasena incorrectos.");
+      setError("Usuario o PIN incorrectos.");
     } finally {
       setSubmitting(false);
     }
@@ -775,9 +785,9 @@ function PosLogin({ onStart }) {
         <div className="pos-loginHero" aria-label="Volta POS">
           <img className="pos-loginLogoMark" src={voltaLogo} alt="Volta Pizza" />
           <div className="pos-loginPizzaRow" aria-hidden="true">
-            <img className="pos-realPizza" src={pizzaIcon} alt="" />
-            <img className="pos-realPizza" src={pizzaIcon} alt="" />
-            <img className="pos-realPizza" src={pizzaIcon} alt="" />
+            <PosPizzaMark />
+            <PosPizzaMark />
+            <PosPizzaMark />
           </div>
           <span className="pos-kicker">Volta POS Virtual</span>
         </div>
@@ -785,7 +795,7 @@ function PosLogin({ onStart }) {
         <section className="pos-loginFormPanel">
           <span className="pos-loginEyebrow">Acceso privado</span>
           <h1>Entrar al POS</h1>
-          <p>Usa las credenciales recibidas por email para atender los pedidos de tu tienda.</p>
+          <p>Usa el usuario del partner y el PIN de 6 digitos de tu tienda.</p>
 
           <div className="pos-loginField">
             <label htmlFor="pos-username">Usuario</label>
@@ -799,21 +809,24 @@ function PosLogin({ onStart }) {
           </div>
 
           <div className="pos-loginField">
-            <label htmlFor="pos-password">Contrasena</label>
+            <label htmlFor="pos-password">PIN de tienda</label>
             <div className="pos-passwordInput">
               <input
                 id="pos-password"
                 type={showPassword ? "text" : "password"}
                 autoComplete="current-password"
+                inputMode="numeric"
+                pattern="[0-9]{6}"
+                maxLength={6}
                 value={password}
-                onChange={(event) => setPassword(event.target.value)}
+                onChange={(event) => setPassword(event.target.value.replace(/\D/g, "").slice(0, 6))}
               />
               <button
                 type="button"
                 className={`pos-passwordToggle ${showPassword ? "is-visible" : ""}`}
-                aria-label={showPassword ? "Ocultar contrasena" : "Mostrar contrasena"}
+                aria-label={showPassword ? "Ocultar PIN" : "Mostrar PIN"}
                 aria-pressed={showPassword}
-                title={showPassword ? "Ocultar contrasena" : "Mostrar contrasena"}
+                title={showPassword ? "Ocultar PIN" : "Mostrar PIN"}
                 onClick={() => setShowPassword((current) => !current)}
               >
                 <svg className="pos-eyeIcon" viewBox="0 0 24 24" aria-hidden="true">

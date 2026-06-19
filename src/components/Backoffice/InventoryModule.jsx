@@ -21,16 +21,20 @@ const normalizeSearchText = (value) =>
 const getIngredientSearchText = (ing) =>
   normalizeSearchText(
     [
+      ing?.searchText,
+      ing?.displayName,
       ing?.name,
+      ing?.displayCategory,
       ing?.category,
       ing?.description,
+      ...(Array.isArray(ing?.aliases) ? ing.aliases : []),
       ...(Array.isArray(ing?.allergens) ? ing.allergens : []),
     ]
       .filter(Boolean)
       .join(" ")
   );
 
-export default function InventoryModule({ partner }) {
+export default function InventoryModule({ partner, language = "es" }) {
   const [ingredients, setIngredients] = useState([]);
   const [categories, setCategories] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
@@ -51,10 +55,13 @@ export default function InventoryModule({ partner }) {
   const [savingOnboardingId, setSavingOnboardingId] = useState(null);
 
   const storeId = partner?.storeId;
+  const activeLocale = String(language || "es").trim().toLowerCase();
 
   const fetchIngredients = useCallback(async () => {
     try {
-      const res = await api.get(`/stores/${storeId}/ingredients`);
+      const res = await api.get(`/stores/${storeId}/ingredients`, {
+        params: { locale: activeLocale },
+      });
       const data = Array.isArray(res.data) ? res.data : [];
 
       setIngredients(data);
@@ -65,15 +72,24 @@ export default function InventoryModule({ partner }) {
             .map((i) => (i.category || "").toUpperCase().trim())
             .filter(Boolean)
         ),
-      ].sort((left, right) =>
-        left.localeCompare(right, "es", { sensitivity: "base" })
-      );
+      ].sort((left, right) => {
+        const leftLabel =
+          data.find((item) => (item.category || "").toUpperCase().trim() === left)
+            ?.displayCategory || left;
+        const rightLabel =
+          data.find((item) => (item.category || "").toUpperCase().trim() === right)
+            ?.displayCategory || right;
+
+        return leftLabel.localeCompare(rightLabel, activeLocale, {
+          sensitivity: "base",
+        });
+      });
 
       setCategories(uniqueCategories);
     } catch (err) {
       console.error(err);
     }
-  }, [storeId]);
+  }, [storeId, activeLocale]);
 
   useEffect(() => {
     if (!storeId) return;
@@ -92,6 +108,20 @@ export default function InventoryModule({ partner }) {
 
     return map;
   }, [ingredients, categories]);
+
+  const categoryDisplayNames = useMemo(() => {
+    const names = {};
+
+    ingredients.forEach((ing) => {
+      const category = (ing.category || "").toUpperCase().trim();
+      const displayCategory = String(ing.displayCategory || "").trim();
+      if (category && displayCategory && !names[category]) {
+        names[category] = displayCategory;
+      }
+    });
+
+    return names;
+  }, [ingredients]);
 
   const filteredIngredients = useMemo(() => {
     if (!search.trim()) return [];
@@ -233,6 +263,8 @@ export default function InventoryModule({ partner }) {
   };
 
   const getDisplayName = (name) => (name || "").toUpperCase();
+  const getIngredientDisplayName = (ingredient) =>
+    ingredient?.displayName || ingredient?.name || "";
   const categoryLabels = {
     ACEITES_GRASAS_VINAGRES: "Aceites, grasas y vinagres",
     AROMAS_Y_EXTRACTOS: "Aromas y extractos",
@@ -287,12 +319,62 @@ export default function InventoryModule({ partner }) {
   };
 
   const getKnownAliases = (ingredient) =>
-    Array.isArray(ingredient?.aliases)
-      ? ingredient.aliases
-          .map((alias) => String(alias || "").trim())
-          .filter(Boolean)
-          .slice(0, 6)
-      : [];
+    [
+      ...(Array.isArray(ingredient?.aliases) ? ingredient.aliases : []),
+      ...(Array.isArray(ingredient?.searchAliases)
+        ? ingredient.searchAliases
+        : []),
+    ]
+      .map((alias) => String(alias || "").trim())
+      .filter(Boolean)
+      .filter(
+        (alias, index, aliases) =>
+          aliases.findIndex(
+            (candidate) =>
+              normalizeSearchText(candidate) === normalizeSearchText(alias)
+          ) === index
+      )
+      .filter(
+        (alias) =>
+          normalizeSearchText(alias) !==
+          normalizeSearchText(getIngredientDisplayName(ingredient))
+      )
+      .slice(0, 8);
+
+  const languageLabels = {
+    es: "ES",
+    en: "EN",
+    it: "IT",
+    fr: "FR",
+    pt: "PT",
+    ar: "AR",
+    zh: "ZH",
+  };
+
+  const getSemanticTranslations = (ingredient) => {
+    const seen = new Set();
+
+    return (Array.isArray(ingredient?.semanticTranslations)
+      ? ingredient.semanticTranslations
+      : []
+    ).reduce((result, translation) => {
+      const locale = String(translation?.locale || "").trim().toLowerCase();
+      const name = String(translation?.name || "").trim();
+
+      if (!locale || !name || seen.has(locale)) return result;
+      seen.add(locale);
+      result.push({ locale, name });
+      return result;
+    }, []);
+  };
+
+  const hasSemanticIdentity = (ingredient) =>
+    Boolean(
+      ingredient?.canonicalKey ||
+        ingredient?.semanticStatus === "REVIEWED" ||
+        getKnownAliases(ingredient).length ||
+        getSemanticTranslations(ingredient).length
+    );
 
   const renderIngredientTile = (ing) => {
     const allergens = getAllergenTags(ing);
@@ -313,11 +395,11 @@ export default function InventoryModule({ partner }) {
           {ing.image ? (
             <img src={ing.image} alt="" />
           ) : (
-            <span>{getIngredientInitials(ing.name)}</span>
+            <span>{getIngredientInitials(getIngredientDisplayName(ing))}</span>
           )}
         </span>
         <span className="inv-tileStatus">{getIngredientStatusLabel(ing)}</span>
-        <span className="inv-tileName">{getDisplayName(ing.name)}</span>
+        <span className="inv-tileName">{getDisplayName(getIngredientDisplayName(ing))}</span>
         <span className="inv-tileMeta">
           <span>{allergens[0]}</span>
           {activePrice ? <strong>{activePrice.replace("EUR ", "")}</strong> : null}
@@ -327,6 +409,7 @@ export default function InventoryModule({ partner }) {
   };
 
   const getCategoryDisplayName = (category) =>
+    categoryDisplayNames[category] ||
     categoryLabels[category] ||
     String(category || "")
       .toLowerCase()
@@ -334,6 +417,8 @@ export default function InventoryModule({ partner }) {
       .filter(Boolean)
       .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
       .join(" ");
+  const getIngredientCategoryDisplayName = (ingredient) =>
+    ingredient?.displayCategory || getCategoryDisplayName(ingredient?.category);
 
   const highlightMatch = (text, query) => {
     if (!query) return <span>{text}</span>;
@@ -422,7 +507,7 @@ export default function InventoryModule({ partner }) {
                 {detailDraft.imagePreview ? (
                   <img src={detailDraft.imagePreview} alt="" />
                 ) : (
-                  <span>{getIngredientInitials(detailIngredient.name)}</span>
+                  <span>{getIngredientInitials(getIngredientDisplayName(detailIngredient))}</span>
                 )}
                 <input
                   type="file"
@@ -434,12 +519,15 @@ export default function InventoryModule({ partner }) {
               </label>
 
               <div className="inv-detailIntro">
-                <h3>{getDisplayName(detailIngredient.name)}</h3>
-                <p>{getCategoryDisplayName(detailIngredient.category)}</p>
+                <h3>{getDisplayName(getIngredientDisplayName(detailIngredient))}</h3>
+                <p>{getIngredientCategoryDisplayName(detailIngredient)}</p>
                 <div className="inv-detailStatus">
                   <span className={isIngredientActiveInStore(detailIngredient) ? "is-active" : "is-inactive"}>
                     {isIngredientActiveInStore(detailIngredient) ? "Activo en tienda" : "Pendiente de activar"}
                   </span>
+                  {detailIngredient.semanticStatus === "REVIEWED" && (
+                    <span className="is-reviewed">Identidad revisada</span>
+                  )}
                   {formatIngredientPrice(detailIngredient.costPrice) && (
                     <strong>{formatIngredientPrice(detailIngredient.costPrice)}</strong>
                   )}
@@ -449,6 +537,53 @@ export default function InventoryModule({ partner }) {
 
             {createFeedback && (
               <div className="inv-priceModalError">{createFeedback}</div>
+            )}
+
+            {hasSemanticIdentity(detailIngredient) && (
+              <div className="inv-semanticPanel">
+                <div>
+                  <span>Identidad global</span>
+                  <strong>
+                    {detailIngredient.canonicalKey || "Pendiente de clave canonica"}
+                  </strong>
+                </div>
+                {normalizeSearchText(detailIngredient.name) !==
+                  normalizeSearchText(getIngredientDisplayName(detailIngredient)) && (
+                  <small>
+                    Nombre original: {detailIngredient.name}
+                  </small>
+                )}
+                {getKnownAliases(detailIngredient).length > 0 && (
+                  <div className="inv-semanticAliases">
+                    <span>Se puede buscar como</span>
+                    <div className="inv-aliasList">
+                      {getKnownAliases(detailIngredient).map((alias) => (
+                        <span key={`${detailIngredient.id}-semantic-${alias}`}>
+                          {alias}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {getSemanticTranslations(detailIngredient).length > 0 && (
+                  <div className="inv-semanticTranslations">
+                    <span>Traducciones revisadas</span>
+                    <div>
+                      {getSemanticTranslations(detailIngredient).map((translation) => (
+                        <span
+                          key={`${detailIngredient.id}-translation-${translation.locale}`}
+                        >
+                          <strong>
+                            {languageLabels[translation.locale] ||
+                              translation.locale.toUpperCase()}
+                          </strong>
+                          {translation.name}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             )}
 
             <div className="inv-detailSection">
@@ -468,17 +603,6 @@ export default function InventoryModule({ partner }) {
                 y ayuda a decidir si el ingrediente puede usarse en una receta.
               </small>
             </div>
-
-            {getKnownAliases(detailIngredient).length > 0 && (
-              <div className="inv-detailSection">
-                <span>Tambien conocido como</span>
-                <div className="inv-aliasList">
-                  {getKnownAliases(detailIngredient).map((alias) => (
-                    <span key={`${detailIngredient.id}-${alias}`}>{alias}</span>
-                  ))}
-                </div>
-              </div>
-            )}
 
             <label className="inv-detailField">
               <span>Descripción breve</span>
@@ -784,11 +908,11 @@ export default function InventoryModule({ partner }) {
                           {ing.image ? (
                             <img src={ing.image} alt="" />
                           ) : (
-                            <span>{getIngredientInitials(ing.name)}</span>
+                            <span>{getIngredientInitials(getIngredientDisplayName(ing))}</span>
                           )}
                         </span>
                         <span className="inv-tileName">
-                          {highlightMatch(getDisplayName(ing.name), search)}
+                          {highlightMatch(getDisplayName(getIngredientDisplayName(ing)), search)}
                         </span>
                         <span className="inv-tileMeta">
                           <span>{getAllergenTags(ing)[0]}</span>

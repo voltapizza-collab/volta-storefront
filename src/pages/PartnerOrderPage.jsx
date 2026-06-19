@@ -117,10 +117,10 @@ export default function PartnerOrderPage() {
   }, [partner]);
 
   const stores = useMemo(() => {
-    return activeStores.filter((store) => store?.acceptingOrders !== false);
+    return activeStores;
   }, [activeStores]);
 
-  const isStorefrontClosed = activeStores.length === 0 || stores.length === 0;
+  const isStorefrontClosed = activeStores.length === 0;
 
   const selectedStore = useMemo(() => {
     return stores.find((store) => store.slug === selectedStoreSlug) || null;
@@ -212,13 +212,9 @@ export default function PartnerOrderPage() {
       };
     }
 
-    const everyStorePaused = activeStores.every((store) => store?.acceptingOrders === false);
-
     return {
       title: "Cerrado",
-      body: everyStorePaused
-        ? "Las tiendas no estan aceptando pedidos ahora mismo."
-        : "No hay tiendas disponibles para recibir pedidos ahora.",
+      body: "No hay tiendas disponibles para recibir pedidos ahora.",
     };
   }, [activeStores]);
 

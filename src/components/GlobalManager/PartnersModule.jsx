@@ -23,9 +23,8 @@ const formatDate = (value) => {
 const getStatusLabel = (partner) => (partner.active ? "Activo" : "Restringido");
 
 const getPrimaryStorePath = (partner) => {
-  const store = partner.stores?.[0];
   if (!partner.slug) return "";
-  return store?.slug ? `/${partner.slug}/${store.slug}` : `/${partner.slug}`;
+  return `/${partner.slug}/order`;
 };
 
 export default function PartnersModule() {

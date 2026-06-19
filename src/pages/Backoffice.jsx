@@ -71,6 +71,7 @@ const createDemoSession = async () => {
 export default function Backoffice() {
   const initialSmsPaymentStatus = new URLSearchParams(window.location.search).get("sms_payment");
   const [language, setLanguage] = useState(getInitialBackofficeLanguage);
+  const [languageMenuOpen, setLanguageMenuOpen] = useState(false);
   const [activeModule, setActiveModule] = useState(initialSmsPaymentStatus ? "customersCommunications" : "inventory");
   const [activeModuleGroup, setActiveModuleGroup] = useState(initialSmsPaymentStatus ? "customers" : "inventory");
   const [expandedModules, setExpandedModules] = useState({
@@ -103,6 +104,12 @@ export default function Backoffice() {
     confirmPassword: "",
   });
   const t = useMemo(() => createBackofficeTranslator(language), [language]);
+  const selectedLanguage = useMemo(
+    () =>
+      BACKOFFICE_LANGUAGES.find((option) => option.code === language) ||
+      BACKOFFICE_LANGUAGES[0],
+    [language]
+  );
 
   useEffect(() => {
     localStorage.setItem(BACKOFFICE_LANGUAGE_STORAGE_KEY, language);
@@ -299,8 +306,9 @@ export default function Backoffice() {
     setActiveModuleGroup("inventory");
   };
 
-  const handleLanguageChange = (event) => {
-    setLanguage(normalizeBackofficeLanguage(event.target.value));
+  const handleLanguageChange = (value) => {
+    setLanguage(normalizeBackofficeLanguage(value));
+    setLanguageMenuOpen(false);
   };
 
   const toggleModuleSection = (group, fallbackModule) => {
@@ -541,15 +549,44 @@ export default function Backoffice() {
         <div className="bo-sidebarTop">
           <div className="bo-titleBar">
             <div className="bo-title">{t("app.title")}</div>
-            <label className="bo-languageSelect" aria-label={t("language.label")}>
-              <select value={language} onChange={handleLanguageChange}>
-                {BACKOFFICE_LANGUAGES.map((option) => (
-                  <option key={option.code} value={option.code}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <div
+              className="bo-languageSelect"
+              onBlur={(event) => {
+                if (!event.currentTarget.contains(event.relatedTarget)) {
+                  setLanguageMenuOpen(false);
+                }
+              }}
+            >
+              <button
+                type="button"
+                className="bo-languageButton"
+                aria-haspopup="listbox"
+                aria-expanded={languageMenuOpen}
+                aria-label={t("language.label")}
+                onClick={() => setLanguageMenuOpen((open) => !open)}
+              >
+                <span aria-hidden="true">Aa</span>
+                <strong>{selectedLanguage.label}</strong>
+              </button>
+              {languageMenuOpen && (
+                <div className="bo-languageMenu" role="listbox">
+                  {BACKOFFICE_LANGUAGES.map((option) => (
+                    <button
+                      key={option.code}
+                      type="button"
+                      role="option"
+                      aria-selected={option.code === language}
+                      className={option.code === language ? "is-active" : ""}
+                      onMouseDown={(event) => event.preventDefault()}
+                      onClick={() => handleLanguageChange(option.code)}
+                    >
+                      <strong>{option.label}</strong>
+                      <span>{option.name}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
           <div className="bo-partnerBox">
@@ -950,7 +987,7 @@ export default function Backoffice() {
       <div className="bo-main">
         <div className="bo-workspace">
           {activeModule === "inventory" && auth.storeId && (
-            <InventoryModule partner={auth} />
+            <InventoryModule partner={auth} language={language} />
           )}
 
           {activeModule === "stores" && auth.partnerId && (

@@ -42,6 +42,15 @@ const lineQty = (item) => {
   return Number.isFinite(qty) && qty > 0 ? qty : 1;
 };
 
+const getPromoItemDetails = (item) =>
+  readArray(item?.promoItems)
+    .map((promoItem) => {
+      const name = lineName(promoItem);
+      const size = promoItem?.size || promoItem?.selectedSize || "";
+      return `${lineQty(promoItem)}x ${name}${size ? ` ${size}` : ""}`.trim();
+    })
+    .filter(Boolean);
+
 const isCustomBuildLine = (item) =>
   String(item?.type || "").toUpperCase() === "CUSTOM_BUILD" ||
   String(item?.cartLineId || "").startsWith("custom-");
@@ -101,6 +110,8 @@ const getLineDetailRows = (item) => {
     if (item.leftName) rows.push(`Mitad A: ${item.leftName}`);
     if (item.rightName) rows.push(`Mitad B: ${item.rightName}`);
   }
+
+  getPromoItemDetails(item).forEach((detail) => rows.push(detail));
 
   const ingredientRows = [];
   const sourceIngredients = readArray(item?.ingredients).length

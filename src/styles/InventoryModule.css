@@ -589,7 +589,8 @@ color: var(--black);
 .inv-detailPhoto img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  background: #ffffff;
   grid-area: 1 / 1;
 }
 
@@ -614,6 +615,24 @@ color: var(--black);
   justify-content: center;
   font-size: 10px;
   font-weight: 900;
+}
+
+.inv-detailPhoto small {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  top: 8px;
+  min-height: 24px;
+  border-radius: 999px;
+  background: rgba(15, 118, 110, 0.88);
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  font-size: 9px;
+  font-weight: 900;
+  line-height: 1;
 }
 
 .inv-detailIntro {
@@ -760,6 +779,21 @@ color: var(--black);
 
 .inv-allergenTags--detail {
   justify-content: flex-start;
+}
+
+.inv-inheritedAllergens {
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+  border-radius: 12px;
+  background: #f8fafc;
+  border: 1px solid #d9e2ec;
+}
+
+.inv-inheritedAllergens > span {
+  color: #0f766e;
+  font-size: 11px;
+  font-weight: 900;
 }
 
 .inv-detailSection small {
@@ -974,6 +1008,12 @@ color: var(--black);
   background: #eef2f7;
   color: #475569;
   border: 1px solid #d9e2ec;
+}
+
+.inv-allergenTag--inherited {
+  background: rgba(15, 118, 110, 0.1);
+  color: #0f766e;
+  border-color: rgba(15, 118, 110, 0.24);
 }
 
 /* BUTTON */

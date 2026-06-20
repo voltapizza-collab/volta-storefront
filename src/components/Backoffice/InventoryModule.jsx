@@ -22,13 +22,24 @@ const getIngredientSearchText = (ing) =>
   normalizeSearchText(
     [
       ing?.searchText,
+      ing?.semanticMapping?.globalIngredient?.searchText,
       ing?.displayName,
       ing?.name,
+      ing?.semanticMapping?.globalIngredient?.displayName,
+      ing?.semanticMapping?.globalIngredient?.name,
+      ing?.semanticMapping?.globalIngredient?.canonicalKey,
       ing?.displayCategory,
       ing?.category,
+      ing?.semanticMapping?.globalIngredient?.displayCategory,
       ing?.description,
       ...(Array.isArray(ing?.aliases) ? ing.aliases : []),
+      ...(Array.isArray(ing?.semanticMapping?.globalIngredient?.searchAliases)
+        ? ing.semanticMapping.globalIngredient.searchAliases
+        : []),
       ...(Array.isArray(ing?.allergens) ? ing.allergens : []),
+      ...(Array.isArray(ing?.semanticMapping?.globalIngredient?.allergens)
+        ? ing.semanticMapping.globalIngredient.allergens
+        : []),
     ]
       .filter(Boolean)
       .join(" ")
@@ -265,6 +276,31 @@ export default function InventoryModule({ partner, language = "es" }) {
   const getDisplayName = (name) => (name || "").toUpperCase();
   const getIngredientDisplayName = (ingredient) =>
     ingredient?.displayName || ingredient?.name || "";
+  const getMappedGlobalIngredient = (ingredient) =>
+    ingredient?.semanticMapping?.globalIngredient || null;
+  const getEffectiveSemanticIngredient = (ingredient) =>
+    getMappedGlobalIngredient(ingredient) || ingredient;
+  const hasGlobalSemanticMapping = (ingredient) =>
+    Boolean(getMappedGlobalIngredient(ingredient));
+  const getIngredientImage = (ingredient) =>
+    ingredient?.image || getMappedGlobalIngredient(ingredient)?.image || "";
+  const hasInheritedGlobalImage = (ingredient) =>
+    Boolean(!ingredient?.image && getMappedGlobalIngredient(ingredient)?.image);
+  const getInheritedAllergenTags = (ingredient) => {
+    const globalAllergens = Array.isArray(
+      getMappedGlobalIngredient(ingredient)?.allergens
+    )
+      ? getMappedGlobalIngredient(ingredient).allergens
+      : [];
+    const localAllergens = Array.isArray(ingredient?.allergens)
+      ? ingredient.allergens
+      : [];
+    const localKeys = new Set(localAllergens.map(normalizeSearchText));
+
+    return globalAllergens
+      .filter(Boolean)
+      .filter((tag) => !localKeys.has(normalizeSearchText(tag)));
+  };
   const categoryLabels = {
     ACEITES_GRASAS_VINAGRES: "Aceites, grasas y vinagres",
     AROMAS_Y_EXTRACTOS: "Aromas y extractos",
@@ -324,6 +360,12 @@ export default function InventoryModule({ partner, language = "es" }) {
       ...(Array.isArray(ingredient?.searchAliases)
         ? ingredient.searchAliases
         : []),
+      ...(Array.isArray(getMappedGlobalIngredient(ingredient)?.aliases)
+        ? getMappedGlobalIngredient(ingredient).aliases
+        : []),
+      ...(Array.isArray(getMappedGlobalIngredient(ingredient)?.searchAliases)
+        ? getMappedGlobalIngredient(ingredient).searchAliases
+        : []),
     ]
       .map((alias) => String(alias || "").trim())
       .filter(Boolean)
@@ -353,9 +395,10 @@ export default function InventoryModule({ partner, language = "es" }) {
 
   const getSemanticTranslations = (ingredient) => {
     const seen = new Set();
+    const semanticIngredient = getEffectiveSemanticIngredient(ingredient);
 
-    return (Array.isArray(ingredient?.semanticTranslations)
-      ? ingredient.semanticTranslations
+    return (Array.isArray(semanticIngredient?.semanticTranslations)
+      ? semanticIngredient.semanticTranslations
       : []
     ).reduce((result, translation) => {
       const locale = String(translation?.locale || "").trim().toLowerCase();
@@ -370,7 +413,8 @@ export default function InventoryModule({ partner, language = "es" }) {
 
   const hasSemanticIdentity = (ingredient) =>
     Boolean(
-      ingredient?.canonicalKey ||
+      hasGlobalSemanticMapping(ingredient) ||
+        ingredient?.canonicalKey ||
         ingredient?.semanticStatus === "REVIEWED" ||
         getKnownAliases(ingredient).length ||
         getSemanticTranslations(ingredient).length
@@ -381,6 +425,7 @@ export default function InventoryModule({ partner, language = "es" }) {
     const activePrice = formatIngredientPrice(ing.costPrice);
     const isActive = isIngredientActiveInStore(ing);
     const isInactive = isIngredientInactiveInStore(ing);
+    const tileImage = getIngredientImage(ing);
 
     return (
       <button
@@ -392,8 +437,8 @@ export default function InventoryModule({ partner, language = "es" }) {
         onClick={() => openIngredientDetail(ing)}
       >
         <span className="inv-tileMedia">
-          {ing.image ? (
-            <img src={ing.image} alt="" />
+          {tileImage ? (
+            <img src={tileImage} alt="" />
           ) : (
             <span>{getIngredientInitials(getIngredientDisplayName(ing))}</span>
           )}
@@ -468,6 +513,15 @@ export default function InventoryModule({ partner, language = "es" }) {
     }
   };
 
+  const detailImage =
+    detailDraft.imagePreview ||
+    getMappedGlobalIngredient(detailIngredient)?.image ||
+    "";
+  const detailImageIsInherited =
+    Boolean(detailIngredient) &&
+    !detailDraft.imagePreview &&
+    hasInheritedGlobalImage(detailIngredient);
+
   return (
     <div className="inv-wrapper">
 
@@ -504,8 +558,8 @@ export default function InventoryModule({ partner, language = "es" }) {
           >
             <div className="inv-detailHero">
               <label className="inv-detailPhoto">
-                {detailDraft.imagePreview ? (
-                  <img src={detailDraft.imagePreview} alt="" />
+                {detailImage ? (
+                  <img src={detailImage} alt="" />
                 ) : (
                   <span>{getIngredientInitials(getIngredientDisplayName(detailIngredient))}</span>
                 )}
@@ -515,7 +569,16 @@ export default function InventoryModule({ partner, language = "es" }) {
                   onChange={handleDetailImageSelect}
                   disabled={Boolean(savingOnboardingId)}
                 />
-                <strong>{detailDraft.imagePreview ? "Cambiar foto" : "Subir foto"}</strong>
+                <strong>
+                  {detailDraft.imagePreview
+                    ? "Cambiar foto"
+                    : detailImageIsInherited
+                    ? "Subir foto propia"
+                    : "Subir foto"}
+                </strong>
+                {detailImageIsInherited && (
+                  <small>Imagen global heredada</small>
+                )}
               </label>
 
               <div className="inv-detailIntro">
@@ -527,6 +590,9 @@ export default function InventoryModule({ partner, language = "es" }) {
                   </span>
                   {detailIngredient.semanticStatus === "REVIEWED" && (
                     <span className="is-reviewed">Identidad revisada</span>
+                  )}
+                  {hasGlobalSemanticMapping(detailIngredient) && (
+                    <span className="is-reviewed">Mapeado global</span>
                   )}
                   {formatIngredientPrice(detailIngredient.costPrice) && (
                     <strong>{formatIngredientPrice(detailIngredient.costPrice)}</strong>
@@ -542,11 +608,23 @@ export default function InventoryModule({ partner, language = "es" }) {
             {hasSemanticIdentity(detailIngredient) && (
               <div className="inv-semanticPanel">
                 <div>
-                  <span>Identidad global</span>
+                  <span>
+                    {hasGlobalSemanticMapping(detailIngredient)
+                      ? "Mapeado a identidad global"
+                      : "Identidad global"}
+                  </span>
                   <strong>
-                    {detailIngredient.canonicalKey || "Pendiente de clave canonica"}
+                    {getEffectiveSemanticIngredient(detailIngredient)?.canonicalKey ||
+                      "Pendiente de clave canonica"}
                   </strong>
                 </div>
+                {hasGlobalSemanticMapping(detailIngredient) && (
+                  <small>
+                    Ingrediente local: {detailIngredient.name}. Identidad global:{" "}
+                    {getMappedGlobalIngredient(detailIngredient)?.displayName ||
+                      getMappedGlobalIngredient(detailIngredient)?.name}
+                  </small>
+                )}
                 {normalizeSearchText(detailIngredient.name) !==
                   normalizeSearchText(getIngredientDisplayName(detailIngredient)) && (
                   <small>
@@ -598,6 +676,21 @@ export default function InventoryModule({ partner, language = "es" }) {
                   </span>
                 ))}
               </div>
+              {getInheritedAllergenTags(detailIngredient).length > 0 && (
+                <div className="inv-inheritedAllergens">
+                  <span>Alergenos heredados</span>
+                  <div className="inv-allergenTags inv-allergenTags--detail">
+                    {getInheritedAllergenTags(detailIngredient).map((tag) => (
+                      <span
+                        key={`${detailIngredient.id}-inherited-${tag}`}
+                        className="inv-allergenTag inv-allergenTag--inherited"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
               <small>
                 Esta información aparece como referencia operativa para el producto
                 y ayuda a decidir si el ingrediente puede usarse en una receta.
@@ -905,8 +998,8 @@ export default function InventoryModule({ partner, language = "es" }) {
                         onClick={() => openIngredientDetail(ing)}
                       >
                         <span className="inv-tileMedia">
-                          {ing.image ? (
-                            <img src={ing.image} alt="" />
+                          {getIngredientImage(ing) ? (
+                            <img src={getIngredientImage(ing)} alt="" />
                           ) : (
                             <span>{getIngredientInitials(getIngredientDisplayName(ing))}</span>
                           )}

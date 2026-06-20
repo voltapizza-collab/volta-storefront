@@ -1368,9 +1368,17 @@ const SEMANTIC_AUDIT_FILTERS = [
   { key: "REVIEWED", label: "Reviewed" },
   { key: "NEEDS_REVIEW", label: "Needs review" },
   { key: "UNREVIEWED", label: "Unreviewed" },
+  { key: "REJECTED", label: "Rejected" },
   { key: "MISSING_KEY", label: "Missing key" },
   { key: "MISSING_CATEGORY", label: "Missing category" },
   { key: "MISSING_TRANSLATIONS", label: "Missing i18n" },
+];
+const LOCAL_SEMANTIC_FILTERS = [
+  { key: "ALL", label: "All" },
+  { key: "MAPPED", label: "Mapped" },
+  { key: "SUGGESTED", label: "Suggested" },
+  { key: "AMBIGUOUS", label: "Ambiguous" },
+  { key: "NO_SUGGESTION", label: "No suggestion" },
 ];
 const LEGACY_TO_SEMANTIC_CATEGORY_KEY = {
   ACEITES_GRASAS_VINAGRES: "oils_fats_vinegars",
@@ -1537,6 +1545,10 @@ const getSemanticDraftValidation = (draft = {}) => {
 };
 
 const getIngredientMissingLocales = (ingredient = {}) => {
+  if (getIngredientSemanticStatus(ingredient) === "REJECTED") {
+    return [];
+  }
+
   const translations = Array.isArray(ingredient.semanticTranslations)
     ? ingredient.semanticTranslations
     : [];
@@ -1553,6 +1565,10 @@ const getIngredientMissingLocales = (ingredient = {}) => {
 };
 
 const getIngredientSemanticGaps = (ingredient = {}) => {
+  if (getIngredientSemanticStatus(ingredient) === "REJECTED") {
+    return [];
+  }
+
   const gaps = [];
   const missingLocales = getIngredientMissingLocales(ingredient);
 
@@ -1581,12 +1597,12 @@ const getIngredientSemanticGaps = (ingredient = {}) => {
 };
 
 const getIngredientSemanticPriority = (ingredient = {}) => {
+  if (getIngredientSemanticStatus(ingredient) === "REJECTED") return 100;
   if (!String(ingredient.canonicalKey || "").trim()) return 10;
   if (!ingredient.semanticCategoryId) return 20;
   if (getIngredientMissingLocales(ingredient).length > 0) return 30;
   if (getIngredientSemanticStatus(ingredient) === "NEEDS_REVIEW") return 40;
   if (getIngredientSemanticStatus(ingredient) === "UNREVIEWED") return 50;
-  if (getIngredientSemanticStatus(ingredient) === "REJECTED") return 60;
   return 100;
 };
 
@@ -1605,8 +1621,16 @@ export default function IngredientsModule() {
   const [semanticLoading, setSemanticLoading] = useState(false);
   const [semanticSaving, setSemanticSaving] = useState(false);
   const [semanticAuditFilter, setSemanticAuditFilter] = useState("ALL");
+  const [localSemanticMappings, setLocalSemanticMappings] = useState([]);
+  const [localSemanticOptions, setLocalSemanticOptions] = useState([]);
+  const [localSemanticDrafts, setLocalSemanticDrafts] = useState({});
+  const [localSemanticLoading, setLocalSemanticLoading] = useState(false);
+  const [localSemanticSavingId, setLocalSemanticSavingId] = useState(null);
+  const [localSemanticFilter, setLocalSemanticFilter] = useState("ALL");
 
 const getDisplayName = (name) => (name || "").toUpperCase();
+const getIngredientDisplayName = (ingredient) =>
+  ingredient?.displayName || ingredient?.name || "";
 const normalizeIngredientName = (name) =>
   normalizeIngredientKey(name);
 
@@ -1655,10 +1679,44 @@ const loadSemanticCategories = async () => {
   }
 };
 
+const buildLocalSemanticDrafts = (items = []) =>
+  items.reduce((acc, item) => {
+    acc[item.id] = {
+      globalIngredientId:
+        item.semanticMapping?.globalIngredientId ||
+        item.semanticMapping?.globalIngredient?.id ||
+        "",
+      notes: item.semanticMapping?.notes || "",
+      status: item.semanticMapping?.status || "MAPPED",
+    };
+    return acc;
+  }, {});
+
+const loadLocalSemanticMappings = async () => {
+  try {
+    setLocalSemanticLoading(true);
+    const res = await api.get("/ingredients/local-semantic-mappings");
+    const localIngredients = Array.isArray(res.data?.localIngredients)
+      ? res.data.localIngredients
+      : [];
+    setLocalSemanticMappings(localIngredients);
+    setLocalSemanticOptions(
+      Array.isArray(res.data?.globalOptions) ? res.data.globalOptions : []
+    );
+    setLocalSemanticDrafts(buildLocalSemanticDrafts(localIngredients));
+  } catch (err) {
+    console.error(err);
+  } finally {
+    setLocalSemanticLoading(false);
+  }
+};
+
 useEffect(() => {
   loadIngredients();
   loadSuggestions();
   loadSemanticCategories();
+  loadLocalSemanticMappings();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
 }, []);
 
 const handleCreate = async () => {
@@ -1699,6 +1757,77 @@ const handleReject = async (id) => {
     loadSuggestions();
   } catch (err) {
     console.error(err);
+  }
+};
+
+const updateLocalSemanticDraft = (ingredientId, field, value) => {
+  setLocalSemanticDrafts((current) => ({
+    ...current,
+    [ingredientId]: {
+      ...(current[ingredientId] || { status: "MAPPED" }),
+      [field]: value,
+    },
+  }));
+};
+
+const saveLocalSemanticMapping = async (ingredientId) => {
+  const draft = localSemanticDrafts[ingredientId] || {};
+
+  if (!draft.globalIngredientId) return;
+
+  try {
+    setLocalSemanticSavingId(ingredientId);
+    await api.patch(`/ingredients/local-semantic-mappings/${ingredientId}`, {
+      globalIngredientId: draft.globalIngredientId,
+      status: draft.status || "MAPPED",
+      notes: draft.notes || "",
+    });
+    await loadLocalSemanticMappings();
+  } catch (err) {
+    console.error(err);
+  } finally {
+    setLocalSemanticSavingId(null);
+  }
+};
+
+const applyLocalSemanticSuggestion = async (ingredient) => {
+  const suggestion = ingredient?.suggestedMapping;
+
+  if (!ingredient?.id || !suggestion?.globalIngredientId || suggestion?.isAmbiguous) {
+    return;
+  }
+
+  try {
+    setLocalSemanticSavingId(ingredient.id);
+    await api.patch(`/ingredients/local-semantic-mappings/${ingredient.id}`, {
+      globalIngredientId: suggestion.globalIngredientId,
+      status: "MAPPED",
+      source: "SUGGESTED_ACCEPTED",
+      suggestedGlobalIngredientId: suggestion.globalIngredientId,
+      suggestionScore: suggestion.score,
+      suggestionConfidence: suggestion.confidence,
+      suggestionReasons: Array.isArray(suggestion.reasons) ? suggestion.reasons : [],
+      notes: `Accepted suggestion (${suggestion.score}%): ${
+        Array.isArray(suggestion.reasons) ? suggestion.reasons.join(", ") : ""
+      }`,
+    });
+    await loadLocalSemanticMappings();
+  } catch (err) {
+    console.error(err);
+  } finally {
+    setLocalSemanticSavingId(null);
+  }
+};
+
+const deleteLocalSemanticMapping = async (ingredientId) => {
+  try {
+    setLocalSemanticSavingId(ingredientId);
+    await api.delete(`/ingredients/local-semantic-mappings/${ingredientId}`);
+    await loadLocalSemanticMappings();
+  } catch (err) {
+    console.error(err);
+  } finally {
+    setLocalSemanticSavingId(null);
   }
 };
 
@@ -1922,6 +2051,7 @@ const saveSemanticEditor = async ({ advance = false } = {}) => {
     });
 
     const updatedIngredients = await loadIngredients();
+    loadLocalSemanticMappings();
 
     if (advance && nextAfterCurrent) {
       const nextIngredient =
@@ -1948,6 +2078,50 @@ const existingIngredientNames = new Set(
   ingredients.map((ing) => normalizeIngredientName(ing.name))
 );
 
+const semanticCatalogIngredients = ingredients.filter(
+  (ingredient) => ingredient.isSystem !== false
+);
+const localIngredientCount = ingredients.length - semanticCatalogIngredients.length;
+const localMappedCount = localSemanticMappings.filter(
+  (ingredient) => ingredient.semanticMapping
+).length;
+const localUnmappedCount = localSemanticMappings.length - localMappedCount;
+const localSuggestedCount = localSemanticMappings.filter(
+  (ingredient) => !ingredient.semanticMapping && ingredient.suggestedMapping
+).length;
+const localAmbiguousCount = localSemanticMappings.filter(
+  (ingredient) =>
+    !ingredient.semanticMapping && ingredient.suggestedMapping?.isAmbiguous
+).length;
+const localNoSuggestionCount = localSemanticMappings.filter(
+  (ingredient) => !ingredient.semanticMapping && !ingredient.suggestedMapping
+).length;
+const getLocalSemanticFilterCount = (filterKey) => {
+  if (filterKey === "MAPPED") return localMappedCount;
+  if (filterKey === "SUGGESTED") return localSuggestedCount;
+  if (filterKey === "AMBIGUOUS") return localAmbiguousCount;
+  if (filterKey === "NO_SUGGESTION") return localNoSuggestionCount;
+  return localSemanticMappings.length;
+};
+const localIngredientMatchesFilter = (ingredient) => {
+  if (localSemanticFilter === "MAPPED") return Boolean(ingredient.semanticMapping);
+  if (localSemanticFilter === "SUGGESTED") {
+    return Boolean(!ingredient.semanticMapping && ingredient.suggestedMapping);
+  }
+  if (localSemanticFilter === "AMBIGUOUS") {
+    return Boolean(
+      !ingredient.semanticMapping && ingredient.suggestedMapping?.isAmbiguous
+    );
+  }
+  if (localSemanticFilter === "NO_SUGGESTION") {
+    return Boolean(!ingredient.semanticMapping && !ingredient.suggestedMapping);
+  }
+  return true;
+};
+const filteredLocalSemanticMappings = localSemanticMappings.filter(
+  localIngredientMatchesFilter
+);
+
 const availableBaseIngredients = category
   ? INGREDIENTS_BASE[category].filter(
       (item) =>
@@ -1961,7 +2135,7 @@ const availableBaseIngredients = category
     )
   : [];
 
-const semanticAudit = ingredients.reduce(
+const semanticAudit = semanticCatalogIngredients.reduce(
   (acc, ingredient) => {
     const status = getIngredientSemanticStatus(ingredient);
     const translations = Array.isArray(ingredient.semanticTranslations)
@@ -1979,9 +2153,11 @@ const semanticAudit = ingredients.reduce(
           : 0)
     );
 
-    if (!String(ingredient.canonicalKey || "").trim()) acc.missingKey += 1;
-    if (!ingredient.semanticCategoryId) acc.missingCategory += 1;
-    if (missingLocales.length > 0) acc.missingTranslations += 1;
+    if (status !== "REJECTED") {
+      if (!String(ingredient.canonicalKey || "").trim()) acc.missingKey += 1;
+      if (!ingredient.semanticCategoryId) acc.missingCategory += 1;
+      if (missingLocales.length > 0) acc.missingTranslations += 1;
+    }
 
     SEMANTIC_LOCALES.forEach((locale) => {
       const hasReviewedTranslation = translations.some(
@@ -2025,19 +2201,19 @@ const ingredientMatchesAuditFilter = (ingredient) => {
 
   if (semanticAuditFilter === "ALL") return true;
   if (semanticAuditFilter === "MISSING_KEY") {
-    return !String(ingredient.canonicalKey || "").trim();
+    return status !== "REJECTED" && !String(ingredient.canonicalKey || "").trim();
   }
   if (semanticAuditFilter === "MISSING_CATEGORY") {
-    return !ingredient.semanticCategoryId;
+    return status !== "REJECTED" && !ingredient.semanticCategoryId;
   }
   if (semanticAuditFilter === "MISSING_TRANSLATIONS") {
-    return getIngredientMissingLocales(ingredient).length > 0;
+    return status !== "REJECTED" && getIngredientMissingLocales(ingredient).length > 0;
   }
 
   return status === semanticAuditFilter;
 };
 
-const filteredIngredients = ingredients.filter(ingredientMatchesAuditFilter);
+const filteredIngredients = semanticCatalogIngredients.filter(ingredientMatchesAuditFilter);
 const semanticWorkQueue = filteredIngredients
   .filter((ingredient) => getIngredientSemanticPriority(ingredient) < 100)
   .sort((a, b) => {
@@ -2046,9 +2222,11 @@ const semanticWorkQueue = filteredIngredients
 
     if (priorityDiff !== 0) return priorityDiff;
 
-    return String(a.name || "").localeCompare(String(b.name || ""), "es", {
-      sensitivity: "base",
-    });
+    return String(getIngredientDisplayName(a)).localeCompare(
+      String(getIngredientDisplayName(b)),
+      "es",
+      { sensitivity: "base" }
+    );
   });
 const nextSemanticIssue = semanticWorkQueue[0] || null;
 const semanticDraftValidation = getSemanticDraftValidation(semanticDraft);
@@ -2073,13 +2251,14 @@ const treeData = Object.entries(treeCategories)
     name: category,
     children: items
     .sort((a, b) =>
-        a.name.localeCompare(b.name, "es", { sensitivity: "base" })
+        getIngredientDisplayName(a).localeCompare(getIngredientDisplayName(b), "es", { sensitivity: "base" })
       )
       .map((i) => ({
         id: `ing-${i.id}`, // 🔥 ID SEGURO
         idValue: i.id,
         ingredientId: i.id,
         name: i.name,
+        displayName: i.displayName || "",
         category: i.category,
         canonicalKey: i.canonicalKey || "",
         semanticStatus: i.semanticStatus || "UNREVIEWED",
@@ -2182,6 +2361,9 @@ const treeData = Object.entries(treeCategories)
           <span>{semanticWorkQueue.length} actionable</span>
           <span>{semanticAudit.translationCount} translations</span>
           <span>{semanticAudit.aliasCount} aliases</span>
+          {localIngredientCount > 0 && (
+            <span>{localIngredientCount} local excluded</span>
+          )}
           {semanticAvailable === false && (
             <span className="gm-auditWarning">{semanticError}</span>
           )}
@@ -2214,6 +2396,201 @@ const treeData = Object.entries(treeCategories)
               {semanticAudit.localeCoverage[locale]}/{semanticAudit.total}
             </span>
           ))}
+        </div>
+      </section>
+      <section className="gm-localSemantic" aria-label="Local ingredient mapping">
+        <div className="gm-auditHeader">
+          <div>
+            <span>Local ingredient mapping</span>
+            <strong>
+              {localMappedCount}/{localSemanticMappings.length} mapped
+            </strong>
+          </div>
+          <div className="gm-auditProgress" aria-hidden="true">
+            <span
+              style={{
+                width: localSemanticMappings.length
+                  ? `${Math.round((localMappedCount / localSemanticMappings.length) * 100)}%`
+                  : "0%",
+              }}
+            />
+          </div>
+        </div>
+
+        <div className="gm-auditSecondary">
+          <span>{localSemanticOptions.length} reviewed global options</span>
+          <span>{filteredLocalSemanticMappings.length}/{localSemanticMappings.length} showing</span>
+          <span>{localUnmappedCount} unmapped local</span>
+          <span>{localAmbiguousCount} ambiguous</span>
+          {localSemanticLoading && <span>Loading local mappings</span>}
+        </div>
+
+        <div className="gm-auditMetrics gm-localSemanticMetrics">
+          {LOCAL_SEMANTIC_FILTERS.map((filter) => (
+            <button
+              key={filter.key}
+              type="button"
+              className={`gm-auditCard ${
+                localSemanticFilter === filter.key ? "is-active" : ""
+              }`}
+              onClick={() => setLocalSemanticFilter(filter.key)}
+            >
+              <span>{filter.label}</span>
+              <strong>{getLocalSemanticFilterCount(filter.key)}</strong>
+            </button>
+          ))}
+        </div>
+
+        <div className="gm-localSemanticList">
+          {localSemanticMappings.length === 0 && (
+            <p>No local ingredients outside the global catalog.</p>
+          )}
+          {localSemanticMappings.length > 0 &&
+            filteredLocalSemanticMappings.length === 0 && (
+              <p>No local ingredients match this filter.</p>
+            )}
+
+          {filteredLocalSemanticMappings.map((ingredient) => {
+            const draft = localSemanticDrafts[ingredient.id] || {};
+            const mappedName =
+              ingredient.semanticMapping?.globalIngredient?.displayName ||
+              ingredient.semanticMapping?.globalIngredient?.name ||
+              "";
+            const suggestedName =
+              ingredient.suggestedMapping?.globalIngredient?.displayName ||
+              ingredient.suggestedMapping?.globalIngredient?.name ||
+              "";
+            const suggestionAlternatives = Array.isArray(
+              ingredient.suggestionAlternatives
+            )
+              ? ingredient.suggestionAlternatives
+              : [];
+            const saving = Number(localSemanticSavingId) === Number(ingredient.id);
+
+            return (
+              <div className="gm-localSemanticRow" key={ingredient.id}>
+                <div className="gm-localSemanticInfo">
+                  <strong>{getDisplayName(ingredient.name)}</strong>
+                  <span>
+                    {ingredient.category} · {ingredient.usageCount || 0} uses
+                    {mappedName ? ` · mapped to ${mappedName}` : ""}
+                  </span>
+                  {ingredient.semanticMapping?.source === "SUGGESTED_ACCEPTED" && (
+                    <small>
+                      Accepted suggestion - {ingredient.semanticMapping.suggestionScore}% -{" "}
+                      {ingredient.semanticMapping.suggestionConfidence}
+                    </small>
+                  )}
+                  {!mappedName && suggestedName && (
+                    <small>
+                      Suggested {suggestedName} - {ingredient.suggestedMapping.score}% -{" "}
+                      {ingredient.suggestedMapping.confidence}
+                      {ingredient.suggestedMapping.isAmbiguous ? " - needs review" : ""}
+                    </small>
+                  )}
+                  {!mappedName && suggestionAlternatives.length > 0 && (
+                    <div className="gm-localSemanticAlternatives">
+                      <span>Alternatives</span>
+                      {suggestionAlternatives.map((suggestion) => {
+                        const alternativeName =
+                          suggestion.globalIngredient?.displayName ||
+                          suggestion.globalIngredient?.name ||
+                          suggestion.globalIngredient?.canonicalKey ||
+                          "Global ingredient";
+                        const selected =
+                          String(draft.globalIngredientId || "") ===
+                          String(suggestion.globalIngredientId || "");
+
+                        return (
+                          <button
+                            key={`${ingredient.id}-${suggestion.globalIngredientId}`}
+                            type="button"
+                            className={selected ? "is-selected" : ""}
+                            onClick={() =>
+                              updateLocalSemanticDraft(
+                                ingredient.id,
+                                "globalIngredientId",
+                                suggestion.globalIngredientId
+                              )
+                            }
+                            disabled={saving || localSemanticLoading}
+                          >
+                            {alternativeName} · {suggestion.score}%
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+
+                <select
+                  value={draft.globalIngredientId || ""}
+                  onChange={(event) =>
+                    updateLocalSemanticDraft(
+                      ingredient.id,
+                      "globalIngredientId",
+                      event.target.value
+                    )
+                  }
+                  disabled={saving || localSemanticLoading}
+                >
+                  <option value="">Select global identity</option>
+                  {localSemanticOptions.map((option) => (
+                    <option key={option.id} value={option.id}>
+                      {option.displayName || option.name} · {option.canonicalKey}
+                    </option>
+                  ))}
+                </select>
+
+                <input
+                  value={draft.notes || ""}
+                  onChange={(event) =>
+                    updateLocalSemanticDraft(
+                      ingredient.id,
+                      "notes",
+                      event.target.value
+                    )
+                  }
+                  placeholder="Internal mapping note"
+                  disabled={saving || localSemanticLoading}
+                />
+
+                <div className="gm-localSemanticActions">
+                  <button
+                    type="button"
+                    onClick={() => saveLocalSemanticMapping(ingredient.id)}
+                    disabled={!draft.globalIngredientId || saving}
+                  >
+                    {saving ? "Saving" : "Map"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => applyLocalSemanticSuggestion(ingredient)}
+                    title={
+                      ingredient.suggestedMapping?.isAmbiguous
+                        ? "Review manually before mapping"
+                        : ""
+                    }
+                    disabled={
+                      !ingredient.suggestedMapping ||
+                      ingredient.semanticMapping ||
+                      ingredient.suggestedMapping?.isAmbiguous ||
+                      saving
+                    }
+                  >
+                    {ingredient.suggestedMapping?.isAmbiguous ? "Review" : "Apply"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => deleteLocalSemanticMapping(ingredient.id)}
+                    disabled={!ingredient.semanticMapping || saving}
+                  >
+                    Clear
+                  </button>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </section>
       {/* 🔥 SUGGESTIONS */}
@@ -2301,7 +2678,7 @@ const treeData = Object.entries(treeCategories)
 
                   <span className="gm-name">
                     {isIngredientNode
-                      ? getDisplayName(node.data.name)
+                      ? getDisplayName(getIngredientDisplayName(node.data))
                       : node.data.name}
                   </span>
                 </div>
@@ -2350,7 +2727,7 @@ const treeData = Object.entries(treeCategories)
                         e.stopPropagation();
                         handleDeleteIngredient(
                           node.data.ingredientId,
-                          node.data.name
+                          getIngredientDisplayName(node.data)
                         );
                       }}
                     >
@@ -2372,7 +2749,7 @@ const treeData = Object.entries(treeCategories)
             <div className="gm-modalHeader">
               <div>
                 <p>Ingredient semantics</p>
-                <h3>{getDisplayName(semanticIngredient.name)}</h3>
+                <h3>{getDisplayName(getIngredientDisplayName(semanticIngredient))}</h3>
               </div>
               <button
                 type="button"

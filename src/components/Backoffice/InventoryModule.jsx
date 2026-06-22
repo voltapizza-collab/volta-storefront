@@ -18,6 +18,24 @@ const normalizeSearchText = (value) =>
     .replace(/[^\p{L}\p{N}]+/gu, " ")
     .trim();
 
+const CATEGORY_GROUP_ALIASES = {
+  AROMAS_Y_EXTRACTOS: "HIERBAS_ESPECIAS",
+  CHEESE: "QUESOS",
+  SAUCE: "SALSAS",
+  VEGETABLE: "VERDURAS",
+  PROTEIN: "CARNES",
+};
+
+const getIngredientCategoryGroupKey = (ingredient) => {
+  const rawCategory = String(ingredient?.category || "").toUpperCase().trim();
+  if (!rawCategory) return "";
+  if (CATEGORY_GROUP_ALIASES[rawCategory]) {
+    return CATEGORY_GROUP_ALIASES[rawCategory];
+  }
+
+  return rawCategory;
+};
+
 const getIngredientSearchText = (ing) =>
   normalizeSearchText(
     [
@@ -80,15 +98,15 @@ export default function InventoryModule({ partner, language = "es" }) {
       const uniqueCategories = [
         ...new Set(
           data
-            .map((i) => (i.category || "").toUpperCase().trim())
+            .map((i) => getIngredientCategoryGroupKey(i))
             .filter(Boolean)
         ),
       ].sort((left, right) => {
         const leftLabel =
-          data.find((item) => (item.category || "").toUpperCase().trim() === left)
+          data.find((item) => getIngredientCategoryGroupKey(item) === left)
             ?.displayCategory || left;
         const rightLabel =
-          data.find((item) => (item.category || "").toUpperCase().trim() === right)
+          data.find((item) => getIngredientCategoryGroupKey(item) === right)
             ?.displayCategory || right;
 
         return leftLabel.localeCompare(rightLabel, activeLocale, {
@@ -112,7 +130,7 @@ export default function InventoryModule({ partner, language = "es" }) {
     for (const cat of categories) map[cat] = [];
 
     for (const ing of ingredients) {
-      const cat = (ing.category || "").toUpperCase().trim();
+      const cat = getIngredientCategoryGroupKey(ing);
       if (!map[cat]) map[cat] = [];
       map[cat].push(ing);
     }
@@ -124,9 +142,14 @@ export default function InventoryModule({ partner, language = "es" }) {
     const names = {};
 
     ingredients.forEach((ing) => {
-      const category = (ing.category || "").toUpperCase().trim();
+      const category = getIngredientCategoryGroupKey(ing);
+      const rawCategory = String(ing.category || "").toUpperCase().trim();
       const displayCategory = String(ing.displayCategory || "").trim();
-      if (category && displayCategory && !names[category]) {
+      if (
+        category &&
+        displayCategory &&
+        (!names[category] || rawCategory === category)
+      ) {
         names[category] = displayCategory;
       }
     });
@@ -463,7 +486,9 @@ export default function InventoryModule({ partner, language = "es" }) {
       .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
       .join(" ");
   const getIngredientCategoryDisplayName = (ingredient) =>
-    ingredient?.displayCategory || getCategoryDisplayName(ingredient?.category);
+    getCategoryDisplayName(getIngredientCategoryGroupKey(ingredient));
+  const getCategorySubmissionKey = (category) =>
+    grouped[category]?.[0]?.category || category;
 
   const highlightMatch = (text, query) => {
     if (!query) return <span>{text}</span>;
@@ -499,7 +524,7 @@ export default function InventoryModule({ partner, language = "es" }) {
     try {
       await api.post("/ingredients/suggestions", {
         name: newIngredientName.trim(),
-        category: newIngredientCategory,
+        category: getCategorySubmissionKey(newIngredientCategory),
       });
 
       setNewIngredientName("");

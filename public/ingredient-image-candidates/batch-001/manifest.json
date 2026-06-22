@@ -1,0 +1,102 @@
+{
+  "batchId": "ingredient-image-batch-001",
+  "policyVersion": "v1",
+  "source": "AI_GENERATED",
+  "backgroundPolicy": "WHITE_BACKGROUND_ONLY",
+  "createdAt": "2026-06-21",
+  "reviewStatus": "CANDIDATE_ONLY",
+  "notes": "Estos archivos son candidatos visuales para revisar en Global Manager. No son imagenes oficiales hasta que se suben al backend y se aprueban como REVIEWED.",
+  "items": [
+    {
+      "semanticKey": "mozzarella",
+      "category": "quesos",
+      "file": "mozzarella-v1-generated.png",
+      "candidateStatus": "READY_FOR_REVIEW",
+      "qaNote": "Imagen disponible para mozzarella."
+    },
+    {
+      "semanticKey": "tomato_sauce",
+      "category": "salsas",
+      "file": "tomato_sauce-v1-generated.png",
+      "candidateStatus": "READY_FOR_REVIEW",
+      "qaNote": "Identidad clara de salsa de tomate sobre fondo blanco, sin recipiente."
+    },
+    {
+      "semanticKey": "button_mushrooms",
+      "category": "setas",
+      "file": "button_mushrooms-v1-generated.png",
+      "candidateStatus": "READY_FOR_REVIEW",
+      "qaNote": "Identidad clara de champinon, con piezas enteras y laminadas."
+    },
+    {
+      "semanticKey": "pepperoni",
+      "category": "embutidos",
+      "file": "pepperoni-v1-generated.png",
+      "candidateStatus": "READY_FOR_REVIEW",
+      "qaNote": "Identidad clara de pepperoni para topping, con rodajas redondas."
+    },
+    {
+      "semanticKey": "bacon",
+      "category": "carnes",
+      "file": "bacon-v1-generated.png",
+      "candidateStatus": "READY_FOR_REVIEW",
+      "qaNote": "Identidad clara de bacon para topping, con piezas cocidas."
+    },
+    {
+      "semanticKey": "garlic_oil",
+      "ingredientId": 70,
+      "category": "aceites, grasas y vinagres",
+      "file": "garlic_oil-v1-generated.png",
+      "candidateStatus": "READY_FOR_REVIEW",
+      "qaNote": "Aceite de ajo en botella de vidrio sobre fondo blanco."
+    },
+    {
+      "semanticKey": "aceite_de_chile",
+      "ingredientId": 71,
+      "category": "aceites, grasas y vinagres",
+      "file": "chili_oil_alias-v1-generated.png",
+      "candidateStatus": "READY_FOR_REVIEW",
+      "qaNote": "Aceite de chile en botella de vidrio sobre fondo blanco."
+    },
+    {
+      "semanticKey": "corn_oil",
+      "ingredientId": 72,
+      "category": "aceites, grasas y vinagres",
+      "file": "corn_oil-v1-generated.png",
+      "candidateStatus": "READY_FOR_REVIEW",
+      "qaNote": "Aceite de maiz en botella de vidrio sobre fondo blanco."
+    },
+    {
+      "semanticKey": "olive_oil",
+      "ingredientId": 40,
+      "category": "aceites, grasas y vinagres",
+      "file": "olive_oil-v1-generated.png",
+      "candidateStatus": "READY_FOR_REVIEW",
+      "qaNote": "Aceite de oliva en botella de vidrio sobre fondo blanco."
+    },
+    {
+      "semanticKey": "chili_oil",
+      "ingredientId": 41,
+      "category": "aceites, grasas y vinagres",
+      "file": "chili_oil-v1-generated.png",
+      "candidateStatus": "READY_FOR_REVIEW",
+      "qaNote": "Aceite picante en botella de vidrio sobre fondo blanco."
+    },
+    {
+      "semanticKey": "balsamic_vinegar",
+      "ingredientId": 73,
+      "category": "aceites, grasas y vinagres",
+      "file": "balsamic_vinegar-v1-generated.png",
+      "candidateStatus": "READY_FOR_REVIEW",
+      "qaNote": "Vinagre balsamico en botella de vidrio sobre fondo blanco."
+    },
+    {
+      "semanticKey": "sherry_vinegar",
+      "ingredientId": 74,
+      "category": "aceites, grasas y vinagres",
+      "file": "sherry_vinegar-v1-generated.png",
+      "candidateStatus": "READY_FOR_REVIEW",
+      "qaNote": "Vinagre de jerez en botella de vidrio sobre fondo blanco."
+    }
+  ]
+}

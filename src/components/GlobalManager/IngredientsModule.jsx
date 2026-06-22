@@ -1,1404 +1,91 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import "../../styles/IngredientsModule.css";
 import { Tree } from "react-arborist";
 import api from "../../setupAxios";
 
-
-const INGREDIENTS_LEGACY_BASE = {
-
-  QUESOS: [
-    { name: "Mozzarella", allergens: ["MILK"] },
-    { name: "Arzua", allergens: ["MILK"] },
-    { name: "Cheddar", allergens: ["MILK"] },
-    { name: "Parmesano", allergens: ["MILK"] },
-    { name: "Gorgonzola", allergens: ["MILK"] },
-    { name: "Queso azul", allergens: ["MILK"] },
-    { name: "Burrata", allergens: ["MILK"] },
-    { name: "Ricotta", allergens: ["MILK"] },
-    { name: "Queso de cabra", allergens: ["MILK"] },
-    { name: "Emmental", allergens: ["MILK"] },
-    { name: "Provolone", allergens: ["MILK"] },
-    { name: "Relleno de Mozzarela", allergens: ["MILK"] },
-    { name: "1kg Relleno de Mozzarela", allergens: ["MILK"] }
-  ],
-
-  SALSAS: [
-    { name: "Salsa Tomate", allergens: [] },
-    { name: "Salsa BBQ", allergens: [] },
-    { name: "Salsa Pesto", allergens: ["NUTS"] },
-    { name: "Salsa esparragos", allergens: ["MILK"] },
-    { name: "Salsa picante", allergens: [] },
-    { name: "Salsa de ajo", allergens: ["EGG"] },
-    { name: "Salsa de arándanos", allergens: ["MILK"] },
-    { name: "Salsa miel-mostaza", allergens: ["MUSTARD"] }
-  ],
-
-  CARNES: [
-    { name: "Pepperoni", allergens: [] },
-    { name: "Bacon", allergens: [] },
-    { name: "Pollo", allergens: [] },
-    { name: "Carne Picada", allergens: [] },
-    { name: "Chorizo", allergens: [] },
-    { name: "Salchicha italiana", allergens: [] }
-  ],
-
-  FIAMBRES: [
-    { name: "Jamón cocido (York)", allergens: [] },
-    { name: "Jamón serrano", allergens: [] },
-    { name: "Prosciutto", allergens: [] },
-    { name: "Pavo", allergens: [] },
-    { name: "Salami", allergens: [] },
-    { name: "Mortadela", allergens: ["NUTS"] }
-  ],
-
-  PESCADOS: [
-    { name: "Atún", allergens: ["FISH"] },
-    { name: "Anchoas", allergens: ["FISH"] },
-    { name: "Salmón", allergens: ["FISH"] }
-  ],
-
-  MARISCOS: [
-    { name: "Camarones", allergens: ["SHELLFISH"] },
-    { name: "Langostinos", allergens: ["SHELLFISH"] },
-    { name: "Cangrejo", allergens: ["SHELLFISH"] },
-    { name: "Pulpo", allergens: ["SHELLFISH"] },
-    { name: "Mejillones", allergens: ["SHELLFISH"] }
-  ],
-
-  CREMAS_DULCES: [
-  { name: "Avellana blanca", allergens: ["MILK", "TREE_NUTS", "SOY"] },
-  { name: "Avellana tradicional", allergens: ["MILK", "TREE_NUTS", "SOY"] },
-  { name: "Pistacho", allergens: ["MILK", "TREE_NUTS", "SOY"] },
-  { name: "Lotus Biscoff", allergens: ["WHEAT", "SOY"] },
-  { name: "Dulce de leche", allergens: ["MILK"] },
-  { name: "Leche condensada", allergens: ["MILK"] },
-  { name: "Chocolate blanco", allergens: ["MILK", "SOY"] },
-  { name: "Chocolate con leche", allergens: ["MILK", "SOY"] },
-  { name: "Chocolate oscuro", allergens: ["SOY"] },
-  { name: "Nutella", allergens: ["MILK", "TREE_NUTS", "SOY"] },
-  { name: "Crema de almendras", allergens: ["TREE_NUTS"] },
-  { name: "Crema de maní", allergens: ["PEANUTS"] },
-  { name: "Crema de coco", allergens: ["TREE_NUTS"] },
-  { name: "Crema de vainilla", allergens: ["MILK", "EGGS"] },
-  { name: "Crema pastelera", allergens: ["MILK", "EGGS", "WHEAT"] },
-  { name: "Crema de queso dulce", allergens: ["MILK"] }
-],
-ENDULZANTES: [
-  { name: "Miel", allergens: [] },
-  { name: "Azúcar", allergens: [] },
-  { name: "Azúcar glass", allergens: [] },
-  { name: "Sirope de maple", allergens: [] },
-  { name: "Sirope de agave", allergens: [] },
-  { name: "Caramelo", allergens: ["MILK"] }
-],
-
-  VERDURAS: [
-    { name: "Cebolla", allergens: [] },
-    { name: "Pimiento verde", allergens: [] },
-    { name: "Pimiento rojo", allergens: [] },
-    { name: "Pimiento amarillo", allergens: [] },
-    { name: "Maíz", allergens: [] },
-    { name: "Tomate fresco", allergens: [] },
-    { name: "Rúcula", allergens: [] },
-    { name: "Espinaca", allergens: [] },
-    { name: "Berenjena", allergens: [] },
-    { name: "Calabacín", allergens: [] },
-    { name: "Aceitunas negras", allergens: [] },
-    { name: "Aceitunas verdes", allergens: [] },
-    { name: "Alcachofa", allergens: [] }
-  ],
-
-  SETAS: [
-    { name: "Champiñones", allergens: [] },
-    { name: "Portobello", allergens: [] },
-    { name: "Trufa", allergens: [] }
-  ],
-
-  FRUTAS: [
-    { name: "Piña", allergens: [] },
-    { name: "Higos", allergens: [] },
-    { name: "Manzana", allergens: [] },
-    { name: "Pera", allergens: [] }
-  ],
-
-  ESPECIAS: [
-    { name: "Orégano", allergens: [] },
-    { name: "Chili flakes", allergens: [] },
-    { name: "Ajo", allergens: [] },
-    { name: "Albahaca", allergens: [] }
-  ],
-
-  ACEITES: [
-    { name: "Aceite de oliva", allergens: [] },
-    { name: "Aceite picante", allergens: [] }
-  ],
-
-  EXTRAS: [
-    { name: "Huevo", allergens: ["EGG"] }
-  ]
-
-};
-
-const withAllergens = (names, allergens = []) =>
-  names.map((name) => ({ name, allergens }));
-
-const parseIngredientList = (value) =>
-  value
-    .split("\n")
-    .map((line) => line.trim())
-    .filter(Boolean)
-    .map((line) => {
-      const [name, allergens = ""] = line.split("|");
-      return {
-        name: name.trim(),
-        allergens: allergens
-          .split(",")
-          .map((item) => item.trim())
-          .filter(Boolean),
-      };
-    });
-
-const normalizeAllergen = (allergen) =>
-  String(allergen || "").trim().toUpperCase() === "LACTOSE"
-    ? "MILK"
-    : String(allergen || "").trim().toUpperCase();
-
-const normalizeBaseIngredient = (item) => ({
-  ...item,
-  allergens: [...new Set((item.allergens || []).map(normalizeAllergen).filter(Boolean))],
-});
-
-const normalizeIngredientKey = (name) =>
-  String(name || "")
-    .trim()
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
-
-const CATEGORY_ALIASES = {
-  ACEITES: "ACEITES_GRASAS_VINAGRES",
-  ACEITES_GRASAS_VINAGRES: "ACEITES_GRASAS_VINAGRES",
-  ESPECIAS: "HIERBAS_ESPECIAS",
-  HIERBAS_ESPECIAS: "HIERBAS_ESPECIAS",
-  FIAMBRES: "EMBUTIDOS",
-  EMBUTIDOS: "EMBUTIDOS",
-  MARISCOS: "PESCADOS_Y_MARISCOS",
-  PESCADOS: "PESCADOS_Y_MARISCOS",
-  PESCADOS_Y_MARISCOS: "PESCADOS_Y_MARISCOS",
-  SALSAS_CREMAS: "SALSAS",
-  SALSAS: "SALSAS",
-};
-
-const normalizeCategory = (category) =>
-  String(category || "")
-    .trim()
-    .toUpperCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^A-Z0-9]+/g, "_")
-    .replace(/^_+|_+$/g, "");
-
-const getCanonicalCategory = (category) => {
-  const normalized = normalizeCategory(category);
-  return CATEGORY_ALIASES[normalized] || normalized;
-};
-
-const mergeIngredientBases = (...bases) => {
-  const merged = {};
-  const seen = new Set();
-
-  bases.forEach((base) => {
-    Object.entries(base).forEach(([category, items]) => {
-      const canonicalCategory = getCanonicalCategory(category);
-      if (!merged[canonicalCategory]) merged[canonicalCategory] = [];
-
-      items.map(normalizeBaseIngredient).forEach((item) => {
-        const key = normalizeIngredientKey(item.name);
-        if (!key || seen.has(key)) return;
-
-        seen.add(key);
-        merged[canonicalCategory].push(item);
-      });
-    });
-  });
-
-  return merged;
-};
-
-const INGREDIENTS_EXTENDED_BASE = {
-  QUESOS: [
-    ...withAllergens(
-      [
-      "Aaaruul",
-      "Akkawi",
-      "Asiago",
-      "Ayibe",
-      "Beyaz peynir",
-      "Bocconcini",
-      "Brie",
-      "Bryndza",
-      "Caciocavallo",
-      "Camembert",
-      "Casu marzu",
-      "Catupiry",
-      "Cheddar Ahumado",
-      "Cheddar blanco",
-      "Cheddar extra maduro",
-      "Cheddar fundido",
-      "Cheddar maduro",
-      "Cheddar rojo",
-      "Cheddar Vermont",
-      "Cheddar vintage / extra anejo",
-      "Chhurpi",
-      "Comte",
-      "Cottage",
-      "Cuajo de oveja",
-      "Edam",
-      "Fontina",
-      "Gbejna",
-      "Grana Padano",
-      "Graddost",
-      "Graviera",
-      "Halloumi",
-      "Kachkeis",
-      "Kajmak",
-      "Kasar peyniri",
-      "Kasseri",
-      "Kashkaval",
-      "Kefalotyri",
-      "Kesong puti",
-      "Kurut",
-      "Labneh",
-      "Mascarpone",
-      "Mascarpone vainilla",
-      "Montasio",
-      "Monterey Jack",
-      "Mozzarella ahumada",
-      "Mozzarella de bufala",
-      "Mozzarella toonsbridge",
-      "Mozzarella de vaca",
-      "Nabulsi",
-      "Oscypek / Queso ahumado de oveja",
-      "Paneer",
-      "Parmigiano Reggiano",
-      "Pecorino romano",
-      "Piave Vecchio",
-      "Piton Maido",
-      "Pljevlja / queso de oveja de Pljevlja",
-      "Provel",
-      "Provolone ahumado",
-      "Provolone picante",
-      "Provolone Valpadana AOP",
-      "Queijo coalho",
-      "Queso ardsallagh",
-      "Queso cabrales",
-      "Queso cheddar en polvo",
-      "Queso crema",
-      "Queso de cabra curado",
-      "Queso chanco",
-      "Queso chhena",
-      "Queso Chihuahua",
-      "Queso coolea farmhouse",
-      "Queso costeno",
-      "Queso cotija",
-      "Queso de oveja",
-      "Queso deshidratado",
-      "Queso duro",
-      "Queso duro blando",
-      "Queso duro de oveja",
-      "Queso feta",
-      "Queso fontal",
-      "Queso fresco",
-      "Queso gouda",
-      "Queso gouda ahumado",
-      "Queso guayanes",
-      "Queso de hoja",
-      "Queso hungaro anejo",
-      "Queso Jarlsberg",
-      "Queso llanero",
-      "Queso maasdam",
-      "Queso Mar del Plata",
-      "Queso de Oaxaca",
-      "Queso panela",
-      "Queso paria",
-      "Queso provola",
-      "Queso provola silana",
-      "Queso quark",
-      "Queso raclette",
-      "Queso Romano",
-      "Queso Roumi",
-      "Queso Saint-Maure",
-      "Queso sakura",
-      "Queso sardo",
-      "Queso Stilton",
-      "Queso Stracchino",
-      "Queso suizo",
-      "Queso sulguni",
-      "Queso tasty",
-      "Queso toma",
-      "Queso Tvorog",
-      "Queso uzbek",
-      "Queso Vasterbottenost",
-      "Queso de yak",
-      "Queso yuki",
-      "Reblochon",
-      "Red Leicester",
-      "Regato",
-      "Requeijao cremoso",
-      "Ricotta di pecora",
-      "Ricotta salata",
-      "Roquefort",
-      "Rulo de cabra",
-      "Scamorza",
-      "Scamorza ahumada",
-      "Sirene",
-      "Stracciatella di burrata",
-      "Telemea",
-      "Ube ricotta / ricotta de name morado",
-      ],
-      ["MILK"]
-    ),
-    ...parseIngredientList(`
-Catupiry vegetal
-Mozzarella sin lactosa
-Mozzarella vegetal
-Mozzarisella
-Queso ahumado de granja
-Queso de arroz
-Queso estilo parmesano vegetal
-Queso Vegano
-`),
-  ],
-  PESCADOS_Y_MARISCOS: parseIngredientList(`
-Almejas|SHELLFISH
-Almejas venus|SHELLFISH
-Anchoas|FISH
-Anguilas|FISH
-Arenque ahumado|FISH
-Arenque encurtido|FISH
-Arenque rojo|FISH
-Atun|FISH
-Bacalao salado|FISH
-Bagre|FISH
-Barramundi|FISH
-Bogavante|SHELLFISH
-Bottarga|FISH
-Caballa|FISH
-Calamares|SHELLFISH
-Camarones deshidratados|SHELLFISH
-Camarones nordicos|SHELLFISH
-Cangrejo de rio|SHELLFISH
-Caracola|SHELLFISH
-Caviar|EGG,FISH
-Chambo|FISH
-Cigala islandesa|SHELLFISH
-Erizo de mar|SHELLFISH
-Espadin ahumado|FISH
-Hakarl / Tiburon fermentado|FISH
-Hokkaido uni / Erizo de mar de Hokkaido|SHELLFISH
-Huevas / roe|FISH
-Ikra / Huevas de salmon|FISH
-Kanikama / crab stick|SHELLFISH
-Kapenta|FISH
-Keong khas Banyubiru|SHELLFISH
-Kingfish / Pez rey del Golfo|FISH
-Langosta|SHELLFISH
-Listao|FISH
-Mejillones ahumados|SHELLFISH
-Mentaiko / Huevas de abadejo|FISH
-Ndomba de Silure / Bagre africano|FISH
-Ostiones|SHELLFISH
-Ostras|SHELLFISH
-Pota|SHELLFISH
-Roget al|FISH
-Salmon del pacifico|FISH
-Sardinas|FISH
-Sepia|SHELLFISH
-Scungilli / Caracola|SHELLFISH
-Shirasu|FISH
-Trucha|FISH
-Trucha ahumada|FISH
-Unagi|FISH
-Vieiras|SHELLFISH
-Vieiras Hokkaido|SHELLFISH
-`),
-  CARNES: parseIngredientList(`
-Albondigas
-Alce
-Alitas de pollo
-Avestruz
-Biltong|SULFITES
-Buey
-Buey almizclero
-Bufalo
-Caballo
-Cabra
-Camello
-Canguro
-Caracoles malteses
-Carne de res enlatada
-Carne de cerdo
-Carne de res
-Carne de vacuno
-Cebu
-Cecina
-Cerdo
-Cerdo desmenuzado
-Chicharron de cerdo
-Cocodrilo / caiman
-Codillo de cerdo
-Cordero
-Costillas de cerdo mangalica
-Emu
-Escargots de Bourgogne
-Foca
-Foie gras
-Iguana
-Intestinos de cerdo
-Jabali
-Kudu
-Lardons
-Lengua de res
-Lomo iberico
-Oryx
-Paleta de cerdo cocida
-Pato
-Pato marinado
-Pavo asado
-Pechuga de pollo
-Pernil
-Pollo ahumado
-Pollo a la brasa
-Pollo asado marinado
-Pollo desmenuzado
-Pollo doner kebab
-Pollo en tira
-Pollo frito
-Pork floss / Cerdo deshebrado seco
-Rabo de buey
-Rana toro
-Reno
-Reno ahumado
-Res
-Res ahumada
-Serpiente
-Springbok
-Spam
-Ternera
-Ternera asada
-Ternera blanca
-Udene maso
-Vacuno
-Vacuno desmenuzado
-Venado
-`),
-  EMBUTIDOS: parseIngredientList(`
-Bacon ahumado
-Bacon curado con jarabe de arce
-Boczek / Bacon polaco ahumado
-Boerewors
-Botillo
-Bresaola
-Butifarra
-Cabanossi
-Carnaciori
-Chourico
-Chorizo ahumado
-Chorizo cocido
-Chorizo dulce
-Chorizo espanol
-Chorizo guatemalteco
-Chorizo gubbeen
-Chorizo iberico
-Chorizo mexicano
-Chorizo picante
-Chorizo picante Calabrese
-Chorizo superior
-Chorizo de venado
-Coppa / Capocollo|SULFITES
-Gamonal
-Guanciale|SULFITES
-Jamon ahumado
-Jamon cocido (York)
-Jamon cocido Ahumado (York Ahumado)
-Jamon de Jinhua
-Jamon de pavo
-Jamon Rostello
-Jamon serrano
-Kabanos
-Kazy / Salchicha de caballo
-Kielbasa
-Kolbasz
-Kranjska klobasa
-Kulen
-Lardo|SULFITES
-Linguica
-Linguica calabresa
-Lomo canadiense
-Longganisa / Salchicha dulce filipina
-Longaniza
-Longaniza dominicana
-Lukanka
-Macon
-Merguez
-Mettwurst
-Morcilla
-Mortadela|NUTS
-Nduja
-Njeguski prsut / Jamon ahumado de Njegus
-Pancetta
-Pancetta de cerdo iberico
-Pastirma
-Peameal bacon
-Pepperoni ahumado
-Pepperoni ahumado con jalapenos
-Pepperoni desmenuzado
-Pepperoni dulce
-Pepperoni sin curar
-Pepperoni de venado
-Prosciutto ahumado
-Prosciutto cotto
-Prosciutto di Parma
-Prosciutto di San Daniele
-Red hotdog
-Salami calabrese
-Salami dulce
-Salami duro
-Salami napolitano
-Salami picante
-Salami suave
-Salchicha ahumada
-Salchicha ahumada calabresa
-Salchicha de Frankfurt
-Salchicha italiana con hinojo
-Salchicha de pollo
-Salo
-Sarcive
-Saucisson
-Saucisson piquant
-Speck
-Spianata piccante
-Sobrasada
-Soppressata: salami sin curar|SULFITES
-Soppressata: salchicha curada|SULFITES
-Sucuk / Sujuk|CELERY,MUSTARD,SULFITES
-Ventricina
-Ventricina ahumado
-Wurstel
-`),
-  SETAS: parseIngredientList(`
-Boletus
-Champinones al ajillo
-Champinones blancos
-Champinones cocidos pasteurizados
-Champinones de Paris
-Champinones grillados
-Champinones marinados
-Champinones portobello sazonados
-Champinones salteados
-Champinones shiitake y pleurotus
-Champinones castanos
-Champinones crimini
-Chanterelles
-Cordyceps
-Enoki
-Enoki salteado
-Eryngii
-Eryngii asado
-Hongo de Marayhuaca / Suillus luteus
-Hongos negros
-Huitlacoche
-Hedgehog
-Maitake
-Maitake asado
-Maitake salteado
-Matsutake
-Melena de leon
-Morel
-Morel salteado
-Nameko
-Oreja de madera
-Pholiota cultivada
-Pioppino / Seta de alamo
-Porcini
-Portabellini
-Portabellini asado
-Portobello
-Seta coliflor
-Seta ostra
-Setas salteadas
-Shiitake
-Shimeji
-Shimeji salteado
-Tartufi istriani / trufa de istriani
-Trompeta negra
-Trufa blanca
-Trufa negra
-`),
-  FRUTAS: parseIngredientList(`
-Acerola
-Ackee
-Albaricoque
-Albaricoque seco
-Arandanos
-Arandanos rojos
-Bananas
-Bananas caramelizadas
-Bayas Saskatoon
-Carambola
-Cerezas
-Ciruelas
-Coco
-Datiles
-Datiles en polvo
-Durian
-Durian musangking
-Frambuesas
-Fresas
-Granada
-Granos de granada
-Grosella negra
-Grosella roja
-Guayaba
-Kiwi
-Lychee
-Mandarina
-Mango
-Mango chutney
-Manzana Bramley
-Manzana cocida
-Maracuya
-Melocoton
-Melon
-Moras
-Mosto de uva
-Naranja
-Nectarina
-Papaya
-Pera coreana
-Pina caramelizada
-Pina encurtida
-Pina Maui gold
-Ruibarbo
-Tomate datterino
-Tomate pera
-Uvas
-Uvas pasas|SULFITES
-`),
-  VERDURAS: parseIngredientList(`
-Aceitunas con hueso
-Aceitunas kalamata
-Aceitunas negras a la griega
-Aceitunas negras con hueso
-Aceitunas negras confitadas
-Aceitunas sazonadas
-Aceitunas taggiasche
-Aceitunas verdes a la griega
-Acelga
-Aguacate
-Ajo tierno
-Alcaparras
-Apio|CELERY
-Batata
-Berenjena asada
-Bolas de taro
-Brocoli
-Brotes de bambu
-Calabacin grillado
-Calabaza asada
-Calabaza moscada
-Capsicum
-Cebolla amarilla
-Cebolla asada
-Cebolla caramelizada
-Cebolla crujiente
-Cebolla encurtida
-Cebolla de verdeo
-Cebolla deshidratada
-Cebolla frita
-Cebolla grillada
-Cebolla morada de Tropea
-Cebolla rehogada
-Cebolla roja
-Cebolla roja asada
-Cebolla roja balsamica
-Cebolla roja de Tropea
-Cebolla roja encurtida
-Cebolla sofrita
-Cebolleta
-Cebollino
-Cebollin frito
-Chalote
-Chile habanero
-Chile peri-peri
-Chile rojo
-Chile serrano
-Chirivia
-Choclo
-Chucrut
-Col blanca
-Col de Saboya
-Coles de Bruselas
-Coliflor
-Edamame|SOY
-Esparrago triguero
-Esparrago verde
-Espinaca sazonada
-Fefferoni
-Friarielli marinado
-Friarielli salteado
-Fruta del pan
-Germinado de lino integral
-Germinado de soja|SOY
-Germinado de trigo
-Germinado de trigo integral
-Guisantes
-Guisantes dulces
-Hojas de taro
-Hojas de te fermentadas
-Hren
-Jalapeno
-Jalapeno deshidratado
-Jalapenos marinados
-Kale / col rizada
-Kale / col rizada en polvo
-Konjac
-Kumara / batata maori
-Lechuga
-Loroco
-Maiz Dulce
-Maiz tostado
-Nabo
-Nabo encurtido
-Nabo sueco
-Nopales
-Okra
-Palmito
-Patatas
-Patatas asadas
-Patatas fritas
-Patatas paja
-Peperoncino
-Peperoncino marinado
-Peperoni en vinagre
-Peperoni encurtidos
-Pepinillos
-Pepino
-Pimiento amarillo asado
-Pimiento amarillo grillado
-Pimiento peppadew
-Pimiento poblano
-Pimiento rojo asado
-Pimiento rojo marinado
-Pimiento rojo seco
-Pimiento shishito
-Pimiento verde asado
-Pimientos al vinagre
-Pimientos amarillos marinados
-Pimientos flameados
-Pimientos picantes marinados
-Pimientos del piquillo
-Pimientos verdes dulces marinados
-Pimientos verdes secos
-Puerro
-Rabano
-Raiz de bardana
-Remolacha
-Remolacha encurtida
-Remolacha frita
-Renkon
-Renkon encurtido
-Renkon salteado
-Rocket maldivo
-Roquito
-Rucula
-Scotch bonnet
-Shiso / Perilla
-Taro
-Tomates asados
-Tomates cherry
-Tomates cherry amarillos semisecos
-Tomates cherry del Piennolo del Vesuvio
-Tomates cherry semisecos
-Tomates deshidratados marinados
-Tomates fresco
-Tomates San Marzano
-Tomates secos
-Topinambur
-Yaca verde
-Zanahoria
-`),
-  HIERBAS_ESPECIAS: parseIngredientList(`
-Achiote
-Ajedrea
-Ajo deshidratado
-Ajo en polvo
-Ajo granulado
-Ajo negro
-Albahaca fresca
-Albahaca tailandesa
-Albahaca seca
-Alcaravea
-Anis
-Anis estrellado
-Apio de monte (levistico)|CELERY
-Apio en polvo|CELERY
-Azafran
-Azahar
-Baharat
-Bayas rosas
-Berbere
-Canela
-Cardamomo
-Cayena
-Cebolla en polvo
-Cebolla tostada en polvo
-Chaat masala
-Chile
-Chile en hojuelas
-Chile en polvo
-Chile pimiento
-Chipotle en polvo
-Cilantro
-Cilantro picado
-Clavo de olor
-Comino
-Coriandro
-Curcuma
-Curry
-Dukkah|NUTS
-Enebro
-Eneldo
-Estragon frances
-Estragon ruso
-Fenogreco
-Furikake|FISH,SESAME,SOY
-Garam masala
-Gochugaru
-Hawaij
-Hierba luisa / Lemongrass
-Hierbas provenzales
-Hinojo
-Hojas de curry
-Jalapeno en polvo
-Jengibre
-Laurel
-Lemon myrtle
-Macis
-Mejorana
-Menta
-Menta dulce
-Merken
-Mostaza en polvo|MUSTARD
-Mostaza negra|MUSTARD
-Nuez moscada
-Oregano seco
-Papalo
-Peperoncino en polvo
-Perejil
-Perejil seco
-Pimenton
-Pimenton ahumado
-Pimenton picante / Paprika
-Pimenton picante / Paprika Ahumado
-Pimienta blanca
-Pimienta cayena
-Pimienta de Jamaica
-Pimienta negra
-Pimienta de Sichuan
-Puerro en polvo
-Ras el hanout
-Romero
-Romero seco
-Sal ahumada
-Sal de ajo
-Sal de cebolla
-Salvia
-Semillas de cilantro
-Serpol
-Shichimi togarashi|SESAME
-Sumac
-Tamarindo en polvo
-Tomate Bush
-Tomillo
-Tomillo seco
-Za'atar|SESAME
-Zumo de lima concentrado
-Zumo de limon concentrado
-`),
-  PROTEINA_VEGANA: parseIngredientList(`
-Atun vegano|SOY
-Chorizo vegetal
-Falafel|GLUTEN
-Jackfruit BBQ
-Jackfruit estilo pulled pork
-Jackfruit pepperoni
-Jamon vegano
-Natto|SOY
-Pepperoni de zanahoria
-Pepperoni vegetal
-Pepperoni vegetal de guisantes|SOY
-Proteina de garbanzo
-Proteina de guisante
-Salami vegano
-Salchicha italiana vegetal
-Seitan|GLUTEN
-Seitan ahumado|GLUTEN
-Seitan estilo shawarma|GLUTEN
-Soja texturizada|SOY
-Tempeh|SOY
-Tempeh ahumado|SOY
-Tofu|SOY
-Tofu ahumado|SOY
-Tofu apestoso|SOY
-Tofu de garbanzo birmano
-`),
-  AROMAS_Y_EXTRACTOS: parseIngredientList(`
-Agua de azahar
-Agua de rosas
-Aroma de setas
-Extracto de ajo
-Extracto de cebolla
-Extracto de chile
-Extracto de jengibre
-Extracto de levistico
-Extracto de malta de cebada|GLUTEN
-Extracto de oregano
-Extracto de paprika
-Extracto de pimenton
-Extracto de pimienta blanca
-Extracto de romero
-Extracto de tomillo
-Extracto de vainilla
-Humo de madera de haya
-Humo natural
-`),
-  FRUTOS_SECOS_Y_SEMILLAS: parseIngredientList(`
-Almendra|NUTS
-Altramuz|LUPIN
-Anacardos|NUTS
-Avellana|NUTS
-Avellanas tostadas|NUTS
-Cacahuete / mani|PEANUT
-Nuez|NUTS
-Nuez de macadamia|NUTS
-Pecana|NUTS
-Pinones|NUTS
-Pistacho de Antep|NUTS
-Semillas de acacias tostadas / Wattleseed
-Semillas de calabaza
-Semillas de quinoa roja
-Semillas de alcaravea
-Semillas de comino
-Semillas de hinojo
-Semillas de mostaza|MUSTARD
-Semillas de sesamo|SESAME
-Semilla de mijo
-Semillas de amapola
-Semillas de chia
-Semillas de girasol
-Semillas de lino
-Semillas de lino integral
-Sesamo tostado|SESAME
-`),
-  ENDULZANTES: parseIngredientList(`
-Azucar caramelizado
-Azucar de cana
-Azucar de remolacha
-Azucar demerara
-Azucar glas
-Azucar mascabado
-Azucar moreno
-Creme de marrons / Crema de castanas
-Dextrosa
-Golden syrup
-Melaza
-Miel de acacia
-Sirope de arce
-Sirope de arroz en polvo
-Sirope de azucar invertido
-Sirope de caramelo
-Sirope de datil
-Sirope de glucosa
-Sirope de glucosa polvo
-Sirope de maiz
-Stroop
-`),
-  SALSAS_CREMAS: parseIngredientList(`
-Aderezo de crema agria|MILK
-Adjika
-Ajvar
-Alfredo|MILK
-Alioli|EGG
-Bagoong|SHELLFISH
-Bechamel|MILK,GLUTEN
-Bigilla / Pasta de habas maltesa
-Chikanda
-Chimichurri
-Chipotle
-Chutney
-Crema de arroz basmati al curry
-Crema de aji amarillo
-Crema de calabacin
-Crema fresca|MILK
-Crema de huancaina|MILK
-Crema de leche|MILK
-Crema de miso
-Crema de rocoto|MILK
-Crema de trufa
-Crema dulce de miso|SOY,MILK,WHEAT
-Creme Fraiche|MILK
-Coulis de tomate
-Curry massaman
-Curry verde
-Doenjang mayo|EGG,SOY
-Epityrum
-Ezme
-Garum|FISH
-Guacamole
-Guasacaca
-Glaseado balsamico
-Harissa
-Hogao
-Ketchup
-Kumis|MILK
-Lyutenitsa
-Mango habanero BBQ
-Mayonesa|EGG
-Mayonesa japonesa|EGG
-Miel-mostaza|MUSTARD
-Miel picante
-Miso dulce gratinado
-Miso de garbanzo
-Nga pi / Pasta de pescado fermentado|FISH
-Molokhia
-Mostaza
-Mostaza a la antigua|MUSTARD
-Mostaza Dijon|MUSTARD
-Mostaza inglesa|MUSTARD
-Muhammara|NUTS
-Pebre
-Pesto de albahaca|NUTS
-Pesto de pistacho|NUTS
-Pesto rojo|NUTS
-Picante
-Pico de gallo
-Pure de calabaza
-Pure de chile
-Pure de chile rojo
-Pure de ciruela picante
-Pure de kawakawa
-Pure de pimiento picante
-Ranch|MILK,EGG
-Reduccion de uva
-Relish de jalapeno encurtido
-Rihaakuru|FISH
-Rougaille
-Sahawiq
-Salsa de abulon|SHELLFISH
-Salsa Alabama blanca
-Salsa de alcaparras
-Salsa arrabiata|MILK
-Salsa de batata
-Salsa de bearnesa|MILK,EGG
-Salsa brava|MILK
-Salsa buffalo|MILK
-Salsa de cacahuate|PEANUT
-Salsa de ciruela
-Salsa de champinones|MILK
-Salsa cheddar|MILK
-Salsa de chile guaque
-Salsa de chipotle|MILK
-Salsa cremosa de ajo asado|MILK
-Salsa curry|GLUTEN,MUSTARD
-Salsa datil
-Salsa donair
-Salsa gravy
-Salsa griot
-Salsa gochujang|SESAME,SOY,WHEAT
-Salsa golf|EGG
-Salsa hoisin|SESAME,SOY,WHEAT
-Salsa holandesa|EGG,MILK
-Salsa de hueso
-Salsa K-Ssamjang|SOY
-Salsa laksa|FISH,GLUTEN
-Salsa jerk
-Salsa de miel BBQ|MILK
-Salsa nai miris
-Salsa de paprika
-Salsa peri-peri
-Salsa de pimiento
-Salsa de pescado caramelizada|FISH
-Salsa putanesca
-Salsa de queso|MILK
-Salsa de rabano
-Salsa de ricotta|MILK
-Salsa romesco
-Salsa de soja|SOY
-Salsa macha
-Salsa makhani|MILK
-Salsa mantequilla|MILK
-Salsa marinera
-Salsa mascarpone|MILK
-Salsa de menta
-Salsa de ostras|SHELLFISH
-Salsa picante de pina
-Salsa piri piri
-Salsa de rabo de buey
-Salsa rendang|COCONUT
-Salsa roja mexicana
-Salsa roquefort|MILK
-Salsa de te tailandes|MILK
-Salsa satay
-Salsa sichuan|MILK
-Salsa shito
-Salsa de tamarindo
-Salsa tikka masala|MILK
-Salsa de tomatillo / verde mexicana
-Salsa Tum
-Salsa vindaloo
-Salsa vodka
-Salsa de yogurt|MILK
-Sambal oelek
-Sambal udang|SHELLFISH
-Shubat|MILK
-Smetana / Crema agria|MILK
-Sriracha
-Suya|PEANUT
-Tahini|SESAME
-Tamari|SOY
-Tapenade
-Tapenade de champinones
-Tapenade de trufa
-Teriyaki|SOY,SESAME,WHEAT
-Tinta de calamar|SHELLFISH
-Tkemali
-Tom yum|FISH
-Toum|EGG
-Tzatziki|MILK
-Vinaza roja
-Wasabi
-`),
-  ACEITES_GRASAS_VINAGRES: parseIngredientList(`
-Aceite de albahaca
-Aceite de arroz
-Aceite de ajo
-Aceite de canola
-Aceite de canola alto oleico
-Aceite de canola y oliva
-Aceite de cartamo
-Aceite de cebolleta
-Aceite de chile
-Aceite de coco
-Aceite de colza
-Aceite de colza hidrogenado
-Aceite de girasol
-Aceite de girasol alto oleico
-Aceite de hierbas provenzales
-Aceite de maiz
-Aceite de naranja
-Aceite de oliva virgen
-Aceite de oliva virgen extra
-Aceite de orujo de oliva
-Aceite de palma
-Aceite de perejil y colza
-Aceite de salvado de arroz
-Aceite de semilla de algodon
-Aceite de sesamo|SESAME
-Aceite de soja|SOY
-Aceite de trufa
-Aceite vegetal
-Ghee|MILK
-Grasa de cerdo
-Grasa de karite
-Grasa de pollo
-Grasa de vacuno
-Mantequilla|MILK
-Mantequilla de ajo|MILK
-Vinagre
-Vinagre balsamico
-Vinagre balsamico blanco|SULFITES
-Vinagre balsamico de Modena|SULFITES
-Vinagre de alcohol
-Vinagre de arroz
-Vinagre de brandy
-Vinagre de coco
-Vinagre de frutas
-Vinagre de jerez
-Vinagre de malta|GLUTEN
-Vinagre de manzana
-Vinagre de vino blanco|SULFITES
-Vinagre de vino tinto|SULFITES
-Vinagre destilado
-Vinagre en polvo
-Vinagreta brasilena
-`),
-  TOPPINGS_DULCES: parseIngredientList(`
-Bocadillo de guayaba
-Chebakia|SESAME,GLUTEN
-Chocolate negro
-Cajeta / dulce de leche de cabra|MILK
-Crema de avellanas|NUTS
-Crema de cacahuete|PEANUT
-Crema Speculoos / Biscoff
-Crema de gianduja|MILK,NUTS
-Crema de mascarpone|MILK
-Crema de pistacho|MILK,NUTS
-Dulce de Leche|MILK
-Halva
-Malvavisco
-Manteca de cacao
-Mantequilla de manzana
-Marshmallow|GELATIN
-Mermelada de fresa
-Mermelada de frutos rojos
-Mermelada de mora
-Mermelada / compota de grosella
-Mermelada de tocino
-Melaza de granada
-Mochi
-Mousse de batata
-Omani halwa
-Ricotta dulce|MILK
-Te matcha
-`),
-  OTROS: parseIngredientList(`
-Algas nori
-Algas wakame
-Alubias blancas
-Alubias cannellini
-Alubias rojas
-Arroz
-Arroz integral germinado
-Atun carpaccio
-Avena|GLUTEN
-Cacao sin azucar
-Camaron sakura|SHELLFISH
-Casabe
-Chapulines / grillos tostados
-Chile crispy|SESAME,SOY
-Cigarras
-Clara de huevo|EGG
-Clara de huevo deshidratada|EGG
-Coco rallado
-Coco rallado tostado
-Concentrado de champinones
-Concentrado de remolacha
-Concentrado de tomate
-Copos de coco
-Copos de patata
-Copos de soja|SOY
-Couscous|GLUTEN
-Ensalada de col
-Faina / Tortilla de garbanzos
-Fecula de maiz
-Fecula de mandioca
-Fibra de achicoria
-Fibra de bambu
-Fibra de lino
-Fibra de trigo|GLUTEN
-Fideos de arroz
-Frijoles negros fermentados
-Garbanzo
-Gelatina
-Gelatina de cerdo
-Guisantes de ojo negro
-Gusanos mopani
-Huevo de codorniz|EGG
-Huevo frito|EGG
-Huevo milenario|EGG
-Huevo en polvo|EGG
-Huevo entero deshidratado|EGG
-Injera
-Jengibre encurtido
-Judias rojas
-Jugo de pasas
-Leche de coco
-Leche de patata
-Leche desnatada en polvo|MILK
-Leche entera en polvo|MILK
-Linaza
-Linaza dorada
-Linaza molida
-Marsala
-Nachos
-Nata doble|MILKº
-Oporto rojo|SULFITES
-Pan de pita|GLUTEN
-Pan rallado|GLUTEN
-Panko|GLUTEN
-Papadum triturado|GLUTEN
-Pasta de anchoas
-Pescado blanco en polvo|FISH
-Piel de naranja confitada
-Popcorn / Palomitas de maiz
-Psyllium
-Pure de cebolla
-Pure de ciruela dulce
-Pure de coliflor
-Pure de jengibre
-Pure de lima
-Pure de patata
-Queso crema de ajo|MILK
-Ralladura de limon
-Rusk|GLUTEN
-Sal de camargue
-Sal de guerande
-Salted egg / Huevo de pato salado
-Shiratama
-Suero de leche en polvo|MILK
-Tempura|EGG,GLUTEN
-Tteok
-Vegemite
-Yema de huevo|EGG
-Yema de huevo en polvo|EGG
-`),
-};
-
-const INGREDIENTS_BASE = mergeIngredientBases(
-  INGREDIENTS_LEGACY_BASE,
-  INGREDIENTS_EXTENDED_BASE
-);
-
 const SEMANTIC_LOCALES = ["es", "en", "it", "fr", "pt", "ar", "zh"];
-const CORE_REVIEW_LOCALES = ["es", "en"];
+const CORE_REVIEW_LOCALES = ["es", "en", "it"];
 const SEMANTIC_STATUSES = ["UNREVIEWED", "NEEDS_REVIEW", "REVIEWED", "REJECTED"];
+const IMAGE_REVIEW_STATUSES = ["REVIEWED", "REJECTED", "DEPRECATED"];
+
 const SEMANTIC_AUDIT_FILTERS = [
   { key: "ALL", label: "All" },
   { key: "REVIEWED", label: "Reviewed" },
   { key: "NEEDS_REVIEW", label: "Needs review" },
   { key: "UNREVIEWED", label: "Unreviewed" },
-  { key: "REJECTED", label: "Rejected" },
   { key: "MISSING_KEY", label: "Missing key" },
   { key: "MISSING_CATEGORY", label: "Missing category" },
   { key: "MISSING_TRANSLATIONS", label: "Missing i18n" },
+  { key: "REJECTED", label: "Rejected" },
 ];
+
 const LOCAL_SEMANTIC_FILTERS = [
   { key: "ALL", label: "All" },
+  { key: "UNMAPPED", label: "Unmapped" },
   { key: "MAPPED", label: "Mapped" },
-  { key: "SUGGESTED", label: "Suggested" },
   { key: "AMBIGUOUS", label: "Ambiguous" },
-  { key: "NO_SUGGESTION", label: "No suggestion" },
+  { key: "SUGGESTED", label: "Suggested" },
 ];
-const LEGACY_TO_SEMANTIC_CATEGORY_KEY = {
-  ACEITES_GRASAS_VINAGRES: "oils_fats_vinegars",
-  AROMAS_Y_EXTRACTOS: "other",
-  CARNES: "meats",
-  CREMAS_DULCES: "sweet_creams",
-  EMBUTIDOS: "cured_meats",
-  ENDULZANTES: "sweeteners",
-  EXTRAS: "extras",
-  FRUTAS: "fruits",
-  FRUTOS_SECOS_Y_SEMILLAS: "nuts_seeds",
-  HIERBAS_ESPECIAS: "herbs_spices",
-  OTROS: "other",
-  PESCADOS_Y_MARISCOS: "seafood",
-  PROTEINA_VEGANA: "vegan_protein",
-  QUESOS: "cheeses",
-  SALSAS: "sauces",
-  SETAS: "mushrooms",
-  VERDURAS: "vegetables",
+
+const CATEGORY_LABELS = {
+  ACEITES_GRASAS_VINAGRES: "Aceites, grasas y vinagres",
+  AROMAS_Y_EXTRACTOS: "Aromas y extractos",
+  CARNES: "Carnes",
+  CREMAS_DULCES: "Cremas dulces",
+  EMBUTIDOS: "Embutidos",
+  ENDULZANTES: "Endulzantes",
+  EXTRAS: "Extras",
+  FRUTAS: "Frutas",
+  HIERBAS_ESPECIAS: "Hierbas y especias",
+  OTROS: "Otros",
+  PESCADOS_Y_MARISCOS: "Pescados y mariscos",
+  QUESOS: "Quesos",
+  SALSAS: "Salsas",
+  SETAS: "Setas",
+  VERDURAS: "Verduras",
 };
+
+const normalizeIngredientKey = (value) =>
+  String(value || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "_")
+    .replace(/^_+|_+$/g, "");
+
+const normalizeCategory = (category) =>
+  String(category || "OTROS")
+    .trim()
+    .toUpperCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^A-Z0-9]+/g, "_")
+    .replace(/^_+|_+$/g, "") || "OTROS";
+
+const getCanonicalCategory = (category) => {
+  const normalized = normalizeCategory(category);
+  const aliases = {
+    ACEITES: "ACEITES_GRASAS_VINAGRES",
+    ESPECIAS: "HIERBAS_ESPECIAS",
+    FIAMBRES: "EMBUTIDOS",
+    MARISCOS: "PESCADOS_Y_MARISCOS",
+    PESCADOS: "PESCADOS_Y_MARISCOS",
+    SAUCES: "SALSAS",
+    CHEESE: "QUESOS",
+    VEGETABLE: "VERDURAS",
+    PROTEIN: "CARNES",
+  };
+
+  return aliases[normalized] || normalized;
+};
+
+const getCategoryLabel = (category) =>
+  CATEGORY_LABELS[getCanonicalCategory(category)] || getCanonicalCategory(category);
+
+const getDisplayName = (name) => String(name || "").toUpperCase();
+const getIngredientDisplayName = (ingredient = {}) =>
+  ingredient.displayName || ingredient.name || "";
 
 const buildEmptyTranslations = () =>
   SEMANTIC_LOCALES.map((locale) => ({
@@ -1462,8 +149,7 @@ const parseAliasLines = (value) =>
       };
     });
 
-const getIngredientSemanticStatus = (ingredient = {}) =>
-  ingredient.semanticStatus || "UNREVIEWED";
+const buildCanonicalKeySuggestion = (name) => normalizeIngredientKey(name);
 
 const getSemanticStatusClass = (status) =>
   `status-${String(status || "UNREVIEWED").toLowerCase().replace(/_/g, "-")}`;
@@ -1471,10 +157,11 @@ const getSemanticStatusClass = (status) =>
 const formatSemanticStatus = (status) =>
   String(status || "UNREVIEWED").toLowerCase().replace(/_/g, " ");
 
-const buildCanonicalKeySuggestion = (name) =>
-  normalizeIngredientKey(name)
-    .replace(/[^a-z0-9]+/g, "_")
-    .replace(/^_+|_+$/g, "");
+const getImageStatusClass = (status) =>
+  `image-${String(status || "MISSING").toLowerCase().replace(/_/g, "-")}`;
+
+const formatImageStatus = (status) =>
+  String(status || "MISSING").toLowerCase().replace(/_/g, " ");
 
 const getReviewedTranslationLocales = (translations = []) =>
   new Set(
@@ -1487,67 +174,11 @@ const getReviewedTranslationLocales = (translations = []) =>
       .map((translation) => translation.locale)
   );
 
-const getSemanticDraftValidation = (draft = {}) => {
-  const reviewedLocales = getReviewedTranslationLocales(draft.translations || []);
-  const missingCoreLocales = CORE_REVIEW_LOCALES.filter(
-    (locale) => !reviewedLocales.has(locale)
-  );
-  const missingLocales = SEMANTIC_LOCALES.filter(
-    (locale) => !reviewedLocales.has(locale)
-  );
-  const warnings = [];
-  const criticalIssues = [];
-
-  if (!String(draft.canonicalKey || "").trim()) {
-    warnings.push("Missing global identity key");
-  }
-
-  if (!draft.semanticCategoryId) {
-    warnings.push("Missing semantic category");
-  }
-
-  if (missingCoreLocales.length > 0) {
-    warnings.push(
-      "Missing reviewed core names: " +
-        missingCoreLocales.map((locale) => locale.toUpperCase()).join(", ")
-    );
-  }
-
-  if (missingLocales.length > CORE_REVIEW_LOCALES.length) {
-    warnings.push(
-      "Incomplete language coverage: " +
-        missingLocales.map((locale) => locale.toUpperCase()).join(", ")
-    );
-  }
-
-  if (String(draft.aliasesText || "").trim() === "") {
-    warnings.push("No searchable aliases yet");
-  }
-
-  if (draft.semanticStatus === "REVIEWED") {
-    if (!String(draft.canonicalKey || "").trim()) {
-      criticalIssues.push("REVIEWED requires a global identity key");
-    }
-
-    if (!draft.semanticCategoryId) {
-      criticalIssues.push("REVIEWED requires a semantic category");
-    }
-
-    if (missingCoreLocales.length > 0) {
-      criticalIssues.push(
-        "REVIEWED requires reviewed names in " +
-          missingCoreLocales.map((locale) => locale.toUpperCase()).join(" and ")
-      );
-    }
-  }
-
-  return { criticalIssues, warnings, missingCoreLocales, missingLocales };
-};
+const getIngredientSemanticStatus = (ingredient = {}) =>
+  ingredient.semanticStatus || "UNREVIEWED";
 
 const getIngredientMissingLocales = (ingredient = {}) => {
-  if (getIngredientSemanticStatus(ingredient) === "REJECTED") {
-    return [];
-  }
+  if (getIngredientSemanticStatus(ingredient) === "REJECTED") return [];
 
   const translations = Array.isArray(ingredient.semanticTranslations)
     ? ingredient.semanticTranslations
@@ -1565,9 +196,7 @@ const getIngredientMissingLocales = (ingredient = {}) => {
 };
 
 const getIngredientSemanticGaps = (ingredient = {}) => {
-  if (getIngredientSemanticStatus(ingredient) === "REJECTED") {
-    return [];
-  }
+  if (getIngredientSemanticStatus(ingredient) === "REJECTED") return [];
 
   const gaps = [];
   const missingLocales = getIngredientMissingLocales(ingredient);
@@ -1583,10 +212,9 @@ const getIngredientSemanticGaps = (ingredient = {}) => {
   if (missingLocales.length > 0) {
     const visibleLocales = missingLocales.slice(0, 3).map((locale) => locale.toUpperCase());
     const overflow = missingLocales.length > 3 ? ` +${missingLocales.length - 3}` : "";
-
     gaps.push({
       key: "i18n",
-      label: `I18N ${visibleLocales.join("/").trim()}${overflow}`,
+      label: `I18N ${visibleLocales.join("/")}${overflow}`,
       title: `Missing reviewed translations: ${missingLocales
         .map((locale) => locale.toUpperCase())
         .join(", ")}`,
@@ -1606,10 +234,59 @@ const getIngredientSemanticPriority = (ingredient = {}) => {
   return 100;
 };
 
+const getSemanticDraftValidation = (draft = {}) => {
+  const reviewedLocales = getReviewedTranslationLocales(draft.translations || []);
+  const missingCoreLocales = CORE_REVIEW_LOCALES.filter(
+    (locale) => !reviewedLocales.has(locale)
+  );
+  const missingLocales = SEMANTIC_LOCALES.filter(
+    (locale) => !reviewedLocales.has(locale)
+  );
+  const warnings = [];
+  const criticalIssues = [];
+
+  if (!String(draft.canonicalKey || "").trim()) warnings.push("Missing global identity key");
+  if (!draft.semanticCategoryId) warnings.push("Missing semantic category");
+  if (missingCoreLocales.length > 0) {
+    warnings.push(
+      `Missing reviewed core names: ${missingCoreLocales
+        .map((locale) => locale.toUpperCase())
+        .join(", ")}`
+    );
+  }
+  if (missingLocales.length > CORE_REVIEW_LOCALES.length) {
+    warnings.push(
+      `Incomplete language coverage: ${missingLocales
+        .map((locale) => locale.toUpperCase())
+        .join(", ")}`
+    );
+  }
+  if (String(draft.aliasesText || "").trim() === "") warnings.push("No searchable aliases yet");
+
+  if (draft.semanticStatus === "REVIEWED") {
+    if (!String(draft.canonicalKey || "").trim()) {
+      criticalIssues.push("REVIEWED requires a global identity key");
+    }
+    if (!draft.semanticCategoryId) {
+      criticalIssues.push("REVIEWED requires a semantic category");
+    }
+    if (missingCoreLocales.length > 0) {
+      criticalIssues.push(
+        `REVIEWED requires reviewed names in ${missingCoreLocales
+          .map((locale) => locale.toUpperCase())
+          .join(" and ")}`
+      );
+    }
+  }
+
+  return { criticalIssues, warnings, missingCoreLocales, missingLocales };
+};
+
 export default function IngredientsModule() {
   const [ingredients, setIngredients] = useState([]);
-  const [category, setCategory] = useState("");
-  const [selectedName, setSelectedName] = useState("");
+  const [newIngredientName, setNewIngredientName] = useState("");
+  const [newIngredientCategory, setNewIngredientCategory] = useState("OTROS");
+  const [newIngredientAllergens, setNewIngredientAllergens] = useState("");
   const [loading, setLoading] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
@@ -1627,699 +304,536 @@ export default function IngredientsModule() {
   const [localSemanticLoading, setLocalSemanticLoading] = useState(false);
   const [localSemanticSavingId, setLocalSemanticSavingId] = useState(null);
   const [localSemanticFilter, setLocalSemanticFilter] = useState("ALL");
+  const [imageReviewSavingId, setImageReviewSavingId] = useState(null);
+  const [imageUploadSavingId, setImageUploadSavingId] = useState(null);
 
-const getDisplayName = (name) => (name || "").toUpperCase();
-const getIngredientDisplayName = (ingredient) =>
-  ingredient?.displayName || ingredient?.name || "";
-const normalizeIngredientName = (name) =>
-  normalizeIngredientKey(name);
+  const semanticCatalogIngredients = useMemo(
+    () => ingredients.filter((ingredient) => ingredient.isSystem !== false),
+    [ingredients]
+  );
 
-const loadIngredients = async () => {
+  const loadIngredients = async () => {
     try {
       setLoading(true);
       const res = await api.get("/ingredients");
-      const nextIngredients = Array.isArray(res.data) ? res.data : [];
-      setIngredients(nextIngredients);
-      return nextIngredients;
+      setIngredients(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
       console.error(err);
-      return [];
     } finally {
       setLoading(false);
     }
-};
-const loadSuggestions = async () => {
-  try {
-    setLoadingSuggestions(true);
-    const res = await api.get("/ingredients/suggestions?status=PENDING");
-    setSuggestions(Array.isArray(res.data) ? res.data : []);
-  } catch (err) {
-    console.error(err);
-  } finally {
-    setLoadingSuggestions(false);
-  }
-};
+  };
 
-const loadSemanticCategories = async () => {
-  try {
-    const res = await api.get("/ingredients/semantic-categories");
-    setSemanticCategories(Array.isArray(res.data) ? res.data : []);
-    setSemanticAvailable(true);
-    setSemanticError("");
-  } catch (err) {
-    if (err?.response?.status === 409) {
-      setSemanticAvailable(false);
-      setSemanticError("Semantic migration pending");
-      return;
+  const loadSuggestions = async () => {
+    try {
+      setLoadingSuggestions(true);
+      const res = await api.get("/ingredients/suggestions?status=PENDING");
+      setSuggestions(Array.isArray(res.data) ? res.data : []);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoadingSuggestions(false);
     }
+  };
 
-    console.error(err);
-    setSemanticAvailable(false);
-    setSemanticError("Semantic API unavailable");
-  }
-};
+  const loadSemanticCategories = async () => {
+    try {
+      const res = await api.get("/ingredients/semantic-categories");
+      setSemanticCategories(Array.isArray(res.data) ? res.data : []);
+      setSemanticAvailable(true);
+    } catch (err) {
+      if (err?.response?.status === 409) {
+        setSemanticAvailable(false);
+        setSemanticError("Semantic migration pending");
+        return;
+      }
+      console.error(err);
+    }
+  };
 
-const buildLocalSemanticDrafts = (items = []) =>
-  items.reduce((acc, item) => {
-    acc[item.id] = {
-      globalIngredientId:
-        item.semanticMapping?.globalIngredientId ||
-        item.semanticMapping?.globalIngredient?.id ||
-        "",
-      notes: item.semanticMapping?.notes || "",
-      status: item.semanticMapping?.status || "MAPPED",
-    };
-    return acc;
-  }, {});
+  const buildLocalSemanticDrafts = (items = []) => {
+    const drafts = {};
+    items.forEach((ingredient) => {
+      drafts[ingredient.id] = {
+        globalIngredientId:
+          ingredient.semanticMapping?.globalIngredientId ||
+          ingredient.semanticMapping?.globalIngredient?.id ||
+          ingredient.suggestedMapping?.globalIngredientId ||
+          "",
+        status: ingredient.semanticMapping?.status || "MAPPED",
+        notes: ingredient.semanticMapping?.notes || "",
+      };
+    });
+    return drafts;
+  };
 
-const loadLocalSemanticMappings = async () => {
-  try {
-    setLocalSemanticLoading(true);
-    const res = await api.get("/ingredients/local-semantic-mappings");
-    const localIngredients = Array.isArray(res.data?.localIngredients)
-      ? res.data.localIngredients
-      : [];
-    setLocalSemanticMappings(localIngredients);
-    setLocalSemanticOptions(
-      Array.isArray(res.data?.globalOptions) ? res.data.globalOptions : []
-    );
-    setLocalSemanticDrafts(buildLocalSemanticDrafts(localIngredients));
-  } catch (err) {
-    console.error(err);
-  } finally {
-    setLocalSemanticLoading(false);
-  }
-};
+  const loadLocalSemanticMappings = async () => {
+    try {
+      setLocalSemanticLoading(true);
+      const res = await api.get("/ingredients/local-semantic-mappings");
+      const localIngredients = Array.isArray(res.data?.ingredients)
+        ? res.data.ingredients
+        : [];
+      setLocalSemanticMappings(localIngredients);
+      setLocalSemanticOptions(
+        Array.isArray(res.data?.globalOptions) ? res.data.globalOptions : []
+      );
+      setLocalSemanticDrafts(buildLocalSemanticDrafts(localIngredients));
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLocalSemanticLoading(false);
+    }
+  };
 
-useEffect(() => {
-  loadIngredients();
-  loadSuggestions();
-  loadSemanticCategories();
-  loadLocalSemanticMappings();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-}, []);
+  useEffect(() => {
+    loadIngredients();
+    loadSuggestions();
+    loadSemanticCategories();
+    loadLocalSemanticMappings();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-const handleCreate = async () => {
-    if (!category || !selectedName) return;
+  const handleCreate = async () => {
+    const name = String(newIngredientName || "").trim();
+    const category = getCanonicalCategory(newIngredientCategory);
+    const allergens = String(newIngredientAllergens || "")
+      .split(",")
+      .map((item) => item.trim().toUpperCase())
+      .filter(Boolean);
 
-    const selected = INGREDIENTS_BASE[category].find(
-      (i) => i.name === selectedName
-    );
-
-    if (!selected) return;
+    if (!name || !category) return;
 
     try {
-      await api.post("/ingredients", {
-          name: selected.name,
-          category: getCanonicalCategory(category),
-          allergens: selected.allergens,
-      });
-
-      setSelectedName("");
-      loadIngredients();
+      await api.post("/ingredients", { name, category, allergens });
+      setNewIngredientName("");
+      setNewIngredientAllergens("");
+      await loadIngredients();
     } catch (err) {
       console.error(err);
     }
-};
-const handleApprove = async (id) => {
-  try {
-    await api.patch(`/ingredients/suggestions/${id}/approve`);
+  };
 
-    loadSuggestions();
-  } catch (err) {
-    console.error(err);
-  }
-};
-const handleReject = async (id) => {
-  try {
-    await api.patch(`/ingredients/suggestions/${id}/reject`);
-
-    loadSuggestions();
-  } catch (err) {
-    console.error(err);
-  }
-};
-
-const updateLocalSemanticDraft = (ingredientId, field, value) => {
-  setLocalSemanticDrafts((current) => ({
-    ...current,
-    [ingredientId]: {
-      ...(current[ingredientId] || { status: "MAPPED" }),
-      [field]: value,
-    },
-  }));
-};
-
-const saveLocalSemanticMapping = async (ingredientId) => {
-  const draft = localSemanticDrafts[ingredientId] || {};
-
-  if (!draft.globalIngredientId) return;
-
-  try {
-    setLocalSemanticSavingId(ingredientId);
-    await api.patch(`/ingredients/local-semantic-mappings/${ingredientId}`, {
-      globalIngredientId: draft.globalIngredientId,
-      status: draft.status || "MAPPED",
-      notes: draft.notes || "",
-    });
-    await loadLocalSemanticMappings();
-  } catch (err) {
-    console.error(err);
-  } finally {
-    setLocalSemanticSavingId(null);
-  }
-};
-
-const applyLocalSemanticSuggestion = async (ingredient) => {
-  const suggestion = ingredient?.suggestedMapping;
-
-  if (!ingredient?.id || !suggestion?.globalIngredientId || suggestion?.isAmbiguous) {
-    return;
-  }
-
-  try {
-    setLocalSemanticSavingId(ingredient.id);
-    await api.patch(`/ingredients/local-semantic-mappings/${ingredient.id}`, {
-      globalIngredientId: suggestion.globalIngredientId,
-      status: "MAPPED",
-      source: "SUGGESTED_ACCEPTED",
-      suggestedGlobalIngredientId: suggestion.globalIngredientId,
-      suggestionScore: suggestion.score,
-      suggestionConfidence: suggestion.confidence,
-      suggestionReasons: Array.isArray(suggestion.reasons) ? suggestion.reasons : [],
-      notes: `Accepted suggestion (${suggestion.score}%): ${
-        Array.isArray(suggestion.reasons) ? suggestion.reasons.join(", ") : ""
-      }`,
-    });
-    await loadLocalSemanticMappings();
-  } catch (err) {
-    console.error(err);
-  } finally {
-    setLocalSemanticSavingId(null);
-  }
-};
-
-const deleteLocalSemanticMapping = async (ingredientId) => {
-  try {
-    setLocalSemanticSavingId(ingredientId);
-    await api.delete(`/ingredients/local-semantic-mappings/${ingredientId}`);
-    await loadLocalSemanticMappings();
-  } catch (err) {
-    console.error(err);
-  } finally {
-    setLocalSemanticSavingId(null);
-  }
-};
-
-const handleDeleteIngredient = async (id, name) => {
-  const confirmed = window.confirm(
-    `Delete ${getDisplayName(name)} from the ingredients table?`
-  );
-
-  if (!confirmed) return;
-
-  try {
-    await api.delete(`/ingredients/${id}`);
-
-    loadIngredients();
-  } catch (err) {
-    console.error(err);
-  }
-};
-
-const openSemanticEditor = async (ingredient) => {
-  const ingredientId = ingredient?.idValue || ingredient?.ingredientId || ingredient?.id;
-
-  if (!ingredientId) return;
-
-  setSemanticIngredient(ingredient);
-  setSemanticDraft(buildSemanticDraft(ingredient));
-  setSemanticLoading(true);
-  setSemanticError("");
-
-  try {
-    const res = await api.get(`/ingredients/${ingredientId}/semantics`);
-    const data = res.data || {};
-    setSemanticAvailable(true);
-    setSemanticDraft({
-      canonicalKey: data.canonicalKey || "",
-      semanticStatus: data.semanticStatus || "UNREVIEWED",
-      semanticCategoryId: data.semanticCategoryId || "",
-      translations: mergeSemanticTranslations(data.translations || []),
-      aliasesText: formatAliasLines(data.aliases || []),
-    });
-  } catch (err) {
-    if (err?.response?.status === 409) {
-      setSemanticAvailable(false);
-      setSemanticError("Semantic migration pending");
-      return;
+  const handleApproveSuggestion = async (id) => {
+    try {
+      await api.patch(`/ingredients/suggestions/${id}/approve`);
+      await Promise.all([loadIngredients(), loadSuggestions()]);
+    } catch (err) {
+      console.error(err);
     }
+  };
 
-    console.error(err);
-    setSemanticError("Could not load semantic data");
-  } finally {
-    setSemanticLoading(false);
-  }
-};
+  const handleRejectSuggestion = async (id) => {
+    try {
+      await api.patch(`/ingredients/suggestions/${id}/reject`);
+      await loadSuggestions();
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
-const closeSemanticEditor = () => {
-  setSemanticIngredient(null);
-  setSemanticDraft(buildSemanticDraft());
-  setSemanticLoading(false);
-  setSemanticSaving(false);
-};
+  const handleDeleteIngredient = async (id, name) => {
+    const confirmed = window.confirm(
+      `Delete ${getDisplayName(name)} from the ingredients table?`
+    );
+    if (!confirmed) return;
 
-const updateTranslationDraft = (locale, field, value) => {
-  setSemanticDraft((current) => ({
-    ...current,
-    translations: current.translations.map((translation) =>
-      translation.locale === locale
-        ? { ...translation, [field]: value }
-        : translation
-    ),
-  }));
-};
+    try {
+      await api.delete(`/ingredients/${id}`);
+      await loadIngredients();
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
-const applySuggestedCanonicalKey = () => {
-  if (!semanticIngredient) return;
+  const openSemanticEditor = async (ingredient) => {
+    const ingredientId = ingredient?.idValue || ingredient?.ingredientId || ingredient?.id;
+    if (!ingredientId) return;
 
-  const suggestedKey = buildCanonicalKeySuggestion(semanticIngredient.name);
+    setSemanticIngredient(ingredient);
+    setSemanticDraft(buildSemanticDraft(ingredient));
+    setSemanticLoading(true);
+    setSemanticError("");
 
-  if (!suggestedKey) return;
-
-  setSemanticDraft((current) => ({
-    ...current,
-    canonicalKey: suggestedKey,
-  }));
-};
-
-const applySuggestedSemanticCategory = () => {
-  if (!semanticIngredient) return;
-
-  const legacyCategory = getCanonicalCategory(semanticIngredient.category);
-  const semanticCategoryKey = LEGACY_TO_SEMANTIC_CATEGORY_KEY[legacyCategory];
-  const semanticCategory = semanticCategories.find(
-    (item) => item.canonicalKey === semanticCategoryKey
-  );
-
-  if (!semanticCategory) return;
-
-  setSemanticDraft((current) => ({
-    ...current,
-    semanticCategoryId: semanticCategory.id,
-  }));
-};
-
-const fillSpanishTranslationFromLegacyName = () => {
-  if (!semanticIngredient) return;
-
-  setSemanticDraft((current) => ({
-    ...current,
-    translations: current.translations.map((translation) =>
-      translation.locale === "es"
-        ? {
-            ...translation,
-            name: translation.name || semanticIngredient.name || "",
-            isReviewed: Boolean(translation.name || semanticIngredient.name),
-          }
-        : translation
-    ),
-  }));
-};
-
-const markNamedTranslationsReviewed = () => {
-  setSemanticDraft((current) => ({
-    ...current,
-    translations: current.translations.map((translation) => ({
-      ...translation,
-      isReviewed: String(translation.name || "").trim()
-        ? true
-        : translation.isReviewed,
-    })),
-  }));
-};
-
-const addAliasesFromTranslations = () => {
-  if (!semanticIngredient) return;
-
-  setSemanticDraft((current) => {
-    const existingAliases = parseAliasLines(current.aliasesText);
-    const aliasKey = (alias) =>
-      [
-        normalizeIngredientName(alias.alias),
-        String(alias.locale || "").toLowerCase(),
-        String(alias.country || "").toUpperCase(),
-      ].join("|");
-    const seen = new Set(existingAliases.map(aliasKey));
-    const nextAliases = [...existingAliases];
-
-    const pushAlias = (alias) => {
-      const normalizedAlias = String(alias.alias || "").trim();
-
-      if (!normalizedAlias) return;
-
-      const item = {
-        alias: normalizedAlias,
-        locale: alias.locale || null,
-        country: alias.country || null,
-        searchable: true,
-        displayable: false,
-        isReviewed: true,
-        source: "MANUAL",
-      };
-      const key = aliasKey(item);
-
-      if (seen.has(key)) return;
-
-      seen.add(key);
-      nextAliases.push(item);
-    };
-
-    pushAlias({ alias: semanticIngredient.name, locale: "es" });
-    current.translations.forEach((translation) => {
-      pushAlias({
-        alias: translation.name,
-        locale: translation.locale,
+    try {
+      const res = await api.get(`/ingredients/${ingredientId}/semantics`);
+      const data = res.data || {};
+      setSemanticAvailable(true);
+      setSemanticDraft({
+        canonicalKey: data.canonicalKey || "",
+        semanticStatus: data.semanticStatus || "UNREVIEWED",
+        semanticCategoryId: data.semanticCategoryId || "",
+        translations: mergeSemanticTranslations(data.translations || []),
+        aliasesText: formatAliasLines(data.aliases || []),
       });
-    });
+    } catch (err) {
+      if (err?.response?.status === 409) {
+        setSemanticAvailable(false);
+        setSemanticError("Semantic migration pending");
+        return;
+      }
+      console.error(err);
+      setSemanticError("Could not load semantic data");
+    } finally {
+      setSemanticLoading(false);
+    }
+  };
 
-    return {
+  const closeSemanticEditor = () => {
+    setSemanticIngredient(null);
+    setSemanticDraft(buildSemanticDraft());
+    setSemanticLoading(false);
+    setSemanticSaving(false);
+  };
+
+  const updateTranslationDraft = (locale, field, value) => {
+    setSemanticDraft((current) => ({
       ...current,
-      aliasesText: formatAliasLines(nextAliases),
-    };
-  });
-};
+      translations: current.translations.map((translation) =>
+        translation.locale === locale
+          ? { ...translation, [field]: value }
+          : translation
+      ),
+    }));
+  };
 
-const saveSemanticEditor = async ({ advance = false } = {}) => {
-  if (!semanticIngredient || !semanticAvailable) return;
+  const saveSemanticEditor = async () => {
+    if (!semanticIngredient || !semanticAvailable) return;
 
-  const ingredientId =
-    semanticIngredient.idValue ||
-    semanticIngredient.ingredientId ||
-    semanticIngredient.id;
+    const ingredientId =
+      semanticIngredient.idValue ||
+      semanticIngredient.ingredientId ||
+      semanticIngredient.id;
+    if (!ingredientId) return;
 
-  if (!ingredientId) return;
+    const translations = semanticDraft.translations
+      .map((translation) => ({
+        ...translation,
+        name: String(translation.name || "").trim(),
+        description: String(translation.description || "").trim(),
+      }))
+      .filter((translation) => translation.name);
 
-  const draftValidation = getSemanticDraftValidation(semanticDraft);
+    try {
+      setSemanticSaving(true);
+      await api.patch(`/ingredients/${ingredientId}/semantics`, {
+        canonicalKey: semanticDraft.canonicalKey,
+        semanticStatus: semanticDraft.semanticStatus,
+        semanticCategoryId: semanticDraft.semanticCategoryId || null,
+        translations,
+        aliases: parseAliasLines(semanticDraft.aliasesText),
+      });
+      await loadIngredients();
+      closeSemanticEditor();
+    } catch (err) {
+      console.error(err);
+      setSemanticError(
+        err?.response?.data?.error || "Could not save semantic data"
+      );
+    } finally {
+      setSemanticSaving(false);
+    }
+  };
 
-  if (draftValidation.criticalIssues.length > 0) {
-    setSemanticError(draftValidation.criticalIssues[0]);
-    return;
-  }
+  const updateLocalSemanticDraft = (ingredientId, field, value) => {
+    setLocalSemanticDrafts((current) => ({
+      ...current,
+      [ingredientId]: {
+        ...(current[ingredientId] || { status: "MAPPED" }),
+        [field]: value,
+      },
+    }));
+  };
 
-  const translations = semanticDraft.translations
-    .map((translation) => ({
-      ...translation,
-      name: String(translation.name || "").trim(),
-      description: String(translation.description || "").trim(),
-    }))
-    .filter((translation) => translation.name);
-  const nextAfterCurrent = advance
-    ? semanticWorkQueue.find(
-        (ingredient) => Number(ingredient.id) !== Number(ingredientId)
-      )
-    : null;
+  const saveLocalSemanticMapping = async (ingredientId) => {
+    const draft = localSemanticDrafts[ingredientId] || {};
+    if (!draft.globalIngredientId) return;
 
-  try {
-    setSemanticSaving(true);
-    await api.patch(`/ingredients/${ingredientId}/semantics`, {
-      canonicalKey: semanticDraft.canonicalKey,
-      semanticStatus: semanticDraft.semanticStatus,
-      semanticCategoryId: semanticDraft.semanticCategoryId || null,
-      translations,
-      aliases: parseAliasLines(semanticDraft.aliasesText),
-    });
+    try {
+      setLocalSemanticSavingId(ingredientId);
+      await api.patch(`/ingredients/local-semantic-mappings/${ingredientId}`, {
+        globalIngredientId: draft.globalIngredientId,
+        status: draft.status || "MAPPED",
+        notes: draft.notes || "",
+      });
+      await Promise.all([loadIngredients(), loadLocalSemanticMappings()]);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLocalSemanticSavingId(null);
+    }
+  };
 
-    const updatedIngredients = await loadIngredients();
-    loadLocalSemanticMappings();
-
-    if (advance && nextAfterCurrent) {
-      const nextIngredient =
-        updatedIngredients.find(
-          (ingredient) => Number(ingredient.id) === Number(nextAfterCurrent.id)
-        ) || nextAfterCurrent;
-
-      await openSemanticEditor(nextIngredient);
+  const applyLocalSemanticSuggestion = async (ingredient, suggestion) => {
+    if (!ingredient?.id || !suggestion?.globalIngredientId || suggestion?.isAmbiguous) {
       return;
     }
 
-    closeSemanticEditor();
-  } catch (err) {
-    console.error(err);
-    setSemanticError(
-      err?.response?.data?.error || "Could not save semantic data"
+    updateLocalSemanticDraft(
+      ingredient.id,
+      "globalIngredientId",
+      suggestion.globalIngredientId
     );
-  } finally {
-    setSemanticSaving(false);
-  }
-};
+    updateLocalSemanticDraft(ingredient.id, "status", "SUGGESTED_ACCEPTED");
+    await saveLocalSemanticMapping(ingredient.id);
+  };
 
-const existingIngredientNames = new Set(
-  ingredients.map((ing) => normalizeIngredientName(ing.name))
-);
-
-const semanticCatalogIngredients = ingredients.filter(
-  (ingredient) => ingredient.isSystem !== false
-);
-const localIngredientCount = ingredients.length - semanticCatalogIngredients.length;
-const localMappedCount = localSemanticMappings.filter(
-  (ingredient) => ingredient.semanticMapping
-).length;
-const localUnmappedCount = localSemanticMappings.length - localMappedCount;
-const localSuggestedCount = localSemanticMappings.filter(
-  (ingredient) => !ingredient.semanticMapping && ingredient.suggestedMapping
-).length;
-const localAmbiguousCount = localSemanticMappings.filter(
-  (ingredient) =>
-    !ingredient.semanticMapping && ingredient.suggestedMapping?.isAmbiguous
-).length;
-const localNoSuggestionCount = localSemanticMappings.filter(
-  (ingredient) => !ingredient.semanticMapping && !ingredient.suggestedMapping
-).length;
-const getLocalSemanticFilterCount = (filterKey) => {
-  if (filterKey === "MAPPED") return localMappedCount;
-  if (filterKey === "SUGGESTED") return localSuggestedCount;
-  if (filterKey === "AMBIGUOUS") return localAmbiguousCount;
-  if (filterKey === "NO_SUGGESTION") return localNoSuggestionCount;
-  return localSemanticMappings.length;
-};
-const localIngredientMatchesFilter = (ingredient) => {
-  if (localSemanticFilter === "MAPPED") return Boolean(ingredient.semanticMapping);
-  if (localSemanticFilter === "SUGGESTED") {
-    return Boolean(!ingredient.semanticMapping && ingredient.suggestedMapping);
-  }
-  if (localSemanticFilter === "AMBIGUOUS") {
-    return Boolean(
-      !ingredient.semanticMapping && ingredient.suggestedMapping?.isAmbiguous
-    );
-  }
-  if (localSemanticFilter === "NO_SUGGESTION") {
-    return Boolean(!ingredient.semanticMapping && !ingredient.suggestedMapping);
-  }
-  return true;
-};
-const filteredLocalSemanticMappings = localSemanticMappings.filter(
-  localIngredientMatchesFilter
-);
-
-const availableBaseIngredients = category
-  ? INGREDIENTS_BASE[category].filter(
-      (item) =>
-        !existingIngredientNames.has(
-          normalizeIngredientName(item.name)
-        )
-    ).sort((a, b) =>
-      getDisplayName(a.name).localeCompare(getDisplayName(b.name), "es", {
-        sensitivity: "base",
-      })
-    )
-  : [];
-
-const semanticAudit = semanticCatalogIngredients.reduce(
-  (acc, ingredient) => {
-    const status = getIngredientSemanticStatus(ingredient);
-    const translations = Array.isArray(ingredient.semanticTranslations)
-      ? ingredient.semanticTranslations
-      : [];
-    const missingLocales = getIngredientMissingLocales(ingredient);
-
-    acc.total += 1;
-    acc.statuses[status] = (acc.statuses[status] || 0) + 1;
-    acc.translationCount += Number(ingredient.translationCount || translations.length || 0);
-    acc.aliasCount += Number(
-      ingredient.aliasCount ||
-        (Array.isArray(ingredient.semanticAliases)
-          ? ingredient.semanticAliases.length
-          : 0)
-    );
-
-    if (status !== "REJECTED") {
-      if (!String(ingredient.canonicalKey || "").trim()) acc.missingKey += 1;
-      if (!ingredient.semanticCategoryId) acc.missingCategory += 1;
-      if (missingLocales.length > 0) acc.missingTranslations += 1;
+  const deleteLocalSemanticMapping = async (ingredientId) => {
+    try {
+      setLocalSemanticSavingId(ingredientId);
+      await api.delete(`/ingredients/local-semantic-mappings/${ingredientId}`);
+      await Promise.all([loadIngredients(), loadLocalSemanticMappings()]);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLocalSemanticSavingId(null);
     }
+  };
 
-    SEMANTIC_LOCALES.forEach((locale) => {
-      const hasReviewedTranslation = translations.some(
-        (translation) =>
-          translation.locale === locale &&
-          translation.isReviewed === true &&
-          String(translation.name || "").trim()
+  const updateIngredientImageReview = async (ingredient, imageStatus) => {
+    const ingredientId = ingredient?.ingredientId || ingredient?.id;
+    if (!ingredientId) return;
+
+    try {
+      setImageReviewSavingId(ingredientId);
+      await api.patch(`/ingredients/${ingredientId}/image-review`, {
+        imageStatus,
+        reviewedBy: "global-manager",
+        imagePolicyVersion: "v1",
+      });
+      await loadIngredients();
+    } catch (err) {
+      console.error(err);
+      setSemanticError(
+        err?.response?.data?.error || "Could not update ingredient image review"
+      );
+    } finally {
+      setImageReviewSavingId(null);
+    }
+  };
+
+  const uploadIngredientImageDraft = async (ingredient, file, options = {}) => {
+    const ingredientId = ingredient?.ingredientId || ingredient?.id;
+    if (!ingredientId || !file) return;
+
+    try {
+      setImageUploadSavingId(ingredientId);
+      const payload = new FormData();
+      payload.append("image", file);
+      payload.append("imageSource", options.imageSource || "MANUAL_UPLOAD");
+      payload.append(
+        "imagePrompt",
+        options.imagePrompt ||
+          `White background ingredient identity image for ${getIngredientDisplayName(
+            ingredient
+          )}`
       );
 
-      if (hasReviewedTranslation) acc.localeCoverage[locale] += 1;
-    });
+      await api.patch(`/ingredients/${ingredientId}`, payload, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      await loadIngredients();
+    } catch (err) {
+      console.error(err);
+      setSemanticError(
+        err?.response?.data?.error || "Could not upload ingredient image"
+      );
+    } finally {
+      setImageUploadSavingId(null);
+    }
+  };
 
-    return acc;
-  },
-  {
-    total: 0,
-    statuses: {
-      REVIEWED: 0,
-      NEEDS_REVIEW: 0,
-      UNREVIEWED: 0,
-      REJECTED: 0,
-    },
-    missingKey: 0,
-    missingCategory: 0,
-    missingTranslations: 0,
-    translationCount: 0,
-    aliasCount: 0,
-    localeCoverage: SEMANTIC_LOCALES.reduce((acc, locale) => {
-      acc[locale] = 0;
+  const semanticAudit = semanticCatalogIngredients.reduce(
+    (acc, ingredient) => {
+      const status = getIngredientSemanticStatus(ingredient);
+      acc.total += 1;
+      acc.statuses[status] = (acc.statuses[status] || 0) + 1;
+      acc.translationCount += Number(ingredient.translationCount || 0);
+      acc.aliasCount += Number(ingredient.aliasCount || 0);
+      if (!String(ingredient.canonicalKey || "").trim() && status !== "REJECTED") {
+        acc.missingKey += 1;
+      }
+      if (!ingredient.semanticCategoryId && status !== "REJECTED") {
+        acc.missingCategory += 1;
+      }
+      if (getIngredientMissingLocales(ingredient).length > 0) {
+        acc.missingTranslations += 1;
+      }
+      SEMANTIC_LOCALES.forEach((locale) => {
+        const reviewed = (ingredient.semanticTranslations || []).some(
+          (translation) =>
+            translation.locale === locale &&
+            translation.isReviewed === true &&
+            String(translation.name || "").trim()
+        );
+        if (reviewed) acc.localeCoverage[locale] += 1;
+      });
       return acc;
-    }, {}),
-  }
-);
+    },
+    {
+      total: 0,
+      statuses: {},
+      missingKey: 0,
+      missingCategory: 0,
+      missingTranslations: 0,
+      translationCount: 0,
+      aliasCount: 0,
+      localeCoverage: Object.fromEntries(SEMANTIC_LOCALES.map((locale) => [locale, 0])),
+    }
+  );
 
-const semanticReviewedPercent = semanticAudit.total
-  ? Math.round((semanticAudit.statuses.REVIEWED / semanticAudit.total) * 100)
-  : 0;
+  const semanticReviewedPercent = semanticAudit.total
+    ? Math.round(((semanticAudit.statuses.REVIEWED || 0) / semanticAudit.total) * 100)
+    : 0;
 
-const ingredientMatchesAuditFilter = (ingredient) => {
-  const status = getIngredientSemanticStatus(ingredient);
+  const ingredientMatchesAuditFilter = (ingredient) => {
+    const status = getIngredientSemanticStatus(ingredient);
+    if (semanticAuditFilter === "ALL") return true;
+    if (semanticAuditFilter === "MISSING_KEY") {
+      return status !== "REJECTED" && !String(ingredient.canonicalKey || "").trim();
+    }
+    if (semanticAuditFilter === "MISSING_CATEGORY") {
+      return status !== "REJECTED" && !ingredient.semanticCategoryId;
+    }
+    if (semanticAuditFilter === "MISSING_TRANSLATIONS") {
+      return status !== "REJECTED" && getIngredientMissingLocales(ingredient).length > 0;
+    }
+    return status === semanticAuditFilter;
+  };
 
-  if (semanticAuditFilter === "ALL") return true;
-  if (semanticAuditFilter === "MISSING_KEY") {
-    return status !== "REJECTED" && !String(ingredient.canonicalKey || "").trim();
-  }
-  if (semanticAuditFilter === "MISSING_CATEGORY") {
-    return status !== "REJECTED" && !ingredient.semanticCategoryId;
-  }
-  if (semanticAuditFilter === "MISSING_TRANSLATIONS") {
-    return status !== "REJECTED" && getIngredientMissingLocales(ingredient).length > 0;
-  }
+  const filteredIngredients = semanticCatalogIngredients.filter(ingredientMatchesAuditFilter);
+  const semanticWorkQueue = filteredIngredients
+    .filter((ingredient) => getIngredientSemanticPriority(ingredient) < 100)
+    .sort((a, b) => {
+      const priorityDiff =
+        getIngredientSemanticPriority(a) - getIngredientSemanticPriority(b);
+      if (priorityDiff !== 0) return priorityDiff;
+      return String(getIngredientDisplayName(a)).localeCompare(
+        String(getIngredientDisplayName(b)),
+        "es",
+        { sensitivity: "base" }
+      );
+    });
+  const nextSemanticIssue = semanticWorkQueue[0] || null;
+  const semanticDraftValidation = getSemanticDraftValidation(semanticDraft);
+  const semanticSaveBlocked = semanticDraftValidation.criticalIssues.length > 0;
 
-  return status === semanticAuditFilter;
-};
+  const localMappedCount = localSemanticMappings.filter(
+    (ingredient) => ingredient.semanticMapping?.globalIngredientId
+  ).length;
+  const localUnmappedCount = localSemanticMappings.length - localMappedCount;
+  const localAmbiguousCount = localSemanticMappings.filter(
+    (ingredient) => ingredient.suggestedMapping?.isAmbiguous
+  ).length;
 
-const filteredIngredients = semanticCatalogIngredients.filter(ingredientMatchesAuditFilter);
-const semanticWorkQueue = filteredIngredients
-  .filter((ingredient) => getIngredientSemanticPriority(ingredient) < 100)
-  .sort((a, b) => {
-    const priorityDiff =
-      getIngredientSemanticPriority(a) - getIngredientSemanticPriority(b);
-
-    if (priorityDiff !== 0) return priorityDiff;
-
-    return String(getIngredientDisplayName(a)).localeCompare(
-      String(getIngredientDisplayName(b)),
-      "es",
-      { sensitivity: "base" }
-    );
+  const filteredLocalSemanticMappings = localSemanticMappings.filter((ingredient) => {
+    const mapped = Boolean(ingredient.semanticMapping?.globalIngredientId);
+    const suggested = Boolean(ingredient.suggestedMapping?.globalIngredientId);
+    const ambiguous = Boolean(ingredient.suggestedMapping?.isAmbiguous);
+    if (localSemanticFilter === "UNMAPPED") return !mapped;
+    if (localSemanticFilter === "MAPPED") return mapped;
+    if (localSemanticFilter === "AMBIGUOUS") return ambiguous;
+    if (localSemanticFilter === "SUGGESTED") return suggested;
+    return true;
   });
-const nextSemanticIssue = semanticWorkQueue[0] || null;
-const semanticDraftValidation = getSemanticDraftValidation(semanticDraft);
-const semanticSaveBlocked = semanticDraftValidation.criticalIssues.length > 0;
 
-const treeCategories = Object.keys(INGREDIENTS_BASE).reduce((acc, baseCategory) => {
-  acc[baseCategory] = [];
-  return acc;
-}, {});
+  const getLocalSemanticFilterCount = (filterKey) => {
+    if (filterKey === "UNMAPPED") return localUnmappedCount;
+    if (filterKey === "MAPPED") return localMappedCount;
+    if (filterKey === "AMBIGUOUS") return localAmbiguousCount;
+    if (filterKey === "SUGGESTED") {
+      return localSemanticMappings.filter(
+        (ingredient) => ingredient.suggestedMapping?.globalIngredientId
+      ).length;
+    }
+    return localSemanticMappings.length;
+  };
 
-filteredIngredients.forEach((ing) => {
-  const canonicalCategory = getCanonicalCategory(ing.category);
-  if (!treeCategories[canonicalCategory]) treeCategories[canonicalCategory] = [];
-  treeCategories[canonicalCategory].push(ing);
-});
+  const treeCategories = filteredIngredients.reduce((acc, ingredient) => {
+    const canonicalCategory = getCanonicalCategory(ingredient.category);
+    if (!acc[canonicalCategory]) acc[canonicalCategory] = [];
+    acc[canonicalCategory].push(ingredient);
+    return acc;
+  }, {});
 
-const treeData = Object.entries(treeCategories)
-  .sort(([a], [b]) =>
-    a.localeCompare(b, "es", { sensitivity: "base" })
-  ).map(([category, items]) => ({
-    id: `cat-${category}`, // 🔥 ID SEGURO
-    name: category,
-    children: items
-    .sort((a, b) =>
-        getIngredientDisplayName(a).localeCompare(getIngredientDisplayName(b), "es", { sensitivity: "base" })
-      )
-      .map((i) => ({
-        id: `ing-${i.id}`, // 🔥 ID SEGURO
-        idValue: i.id,
-        ingredientId: i.id,
-        name: i.name,
-        displayName: i.displayName || "",
-        category: i.category,
-        canonicalKey: i.canonicalKey || "",
-        semanticStatus: i.semanticStatus || "UNREVIEWED",
-        semanticCategoryId: i.semanticCategoryId || "",
-        translationCount: i.translationCount || 0,
-        aliasCount: i.aliasCount || 0,
-        semanticTranslations: i.semanticTranslations || [],
-        semanticAliases: i.semanticAliases || [],
-        semanticGaps: getIngredientSemanticGaps(i),
-        allergens: i.allergens || [],
-      })),
-  }));
+  const treeData = Object.entries(treeCategories)
+    .sort(([a], [b]) => getCategoryLabel(a).localeCompare(getCategoryLabel(b), "es"))
+    .map(([category, items]) => ({
+      id: `cat-${category}`,
+      name: getCategoryLabel(category),
+      children: items
+        .sort((a, b) =>
+          getIngredientDisplayName(a).localeCompare(getIngredientDisplayName(b), "es", {
+            sensitivity: "base",
+          })
+        )
+        .map((ingredient) => ({
+          id: `ing-${ingredient.id}`,
+          idValue: ingredient.id,
+          ingredientId: ingredient.id,
+          name: ingredient.name,
+          displayName: ingredient.displayName || ingredient.name,
+          category: ingredient.category,
+          canonicalKey: ingredient.canonicalKey || "",
+          semanticStatus: ingredient.semanticStatus || "UNREVIEWED",
+          semanticCategoryId: ingredient.semanticCategoryId || "",
+          translationCount: ingredient.translationCount || 0,
+          aliasCount: ingredient.aliasCount || 0,
+          semanticTranslations: ingredient.semanticTranslations || [],
+          semanticAliases: ingredient.semanticAliases || [],
+          semanticGaps: getIngredientSemanticGaps(ingredient),
+          allergens: ingredient.allergens || [],
+          image: ingredient.image || "",
+          imageStatus: ingredient.imageStatus || "MISSING",
+          imageSource: ingredient.imageSource || "",
+          imageReviewedAt: ingredient.imageReviewedAt || "",
+          imageReviewedBy: ingredient.imageReviewedBy || "",
+          imageVersion: ingredient.imageVersion || 0,
+          imagePolicyVersion: ingredient.imagePolicyVersion || "",
+        })),
+    }));
+
+  const categoriesForCreate = [
+    ...new Set([
+      ...Object.keys(CATEGORY_LABELS),
+      ...ingredients.map((ingredient) => getCanonicalCategory(ingredient.category)),
+    ]),
+  ].sort((a, b) => getCategoryLabel(a).localeCompare(getCategoryLabel(b), "es"));
 
   return (
     <div>
-      {/* FORM */}
       <div style={{ marginBottom: 20 }}>
-        {/* CATEGORY */}
+        <input
+          value={newIngredientName}
+          onChange={(event) => setNewIngredientName(event.target.value)}
+          placeholder="Ingredient name"
+        />
         <select
-          value={category}
-          onChange={(e) => {
-            setCategory(e.target.value);
-            setSelectedName("");
-          }}
+          value={newIngredientCategory}
+          onChange={(event) => setNewIngredientCategory(event.target.value)}
         >
-          <option value="">Select category</option>
-          {Object.keys(INGREDIENTS_BASE).map((cat) => (
-            <option key={cat} value={cat}>
-              {cat}
+          {categoriesForCreate.map((category) => (
+            <option key={category} value={category}>
+              {getCategoryLabel(category)}
             </option>
           ))}
         </select>
-
-        {/* INGREDIENT */}
-        <select
-          value={selectedName}
-          onChange={(e) => setSelectedName(e.target.value)}
-          style={{ marginLeft: 10 }}
-          disabled={!category}
-        >
-          <option value="">Select ingredient</option>
-          {category &&
-            availableBaseIngredients.map((item) => (
-              <option key={item.name} value={item.name}>
-                {getDisplayName(item.name)}
-              </option>
-            ))}
-        </select>
-
-        <button onClick={handleCreate} style={{ marginLeft: 10 }}>
-          + Create
+        <input
+          value={newIngredientAllergens}
+          onChange={(event) => setNewIngredientAllergens(event.target.value)}
+          placeholder="Allergens, comma separated"
+        />
+        <button type="button" onClick={handleCreate}>
+          Add ingredient
         </button>
       </div>
 
-      <h2>Ingredients</h2>
       <section className="gm-semanticAudit" aria-label="Semantic audit">
         <div className="gm-auditHeader">
           <div>
             <span>Semantic audit</span>
             <strong>
-              {semanticAudit.statuses.REVIEWED}/{semanticAudit.total} reviewed
+              {semanticAudit.statuses.REVIEWED || 0}/{semanticAudit.total} reviewed
             </strong>
           </div>
           <div className="gm-auditProgress" aria-hidden="true">
@@ -2334,11 +848,11 @@ const treeData = Object.entries(treeCategories)
                 ? semanticAudit.total
                 : filter.key === "MISSING_KEY"
                   ? semanticAudit.missingKey
-                : filter.key === "MISSING_CATEGORY"
-                  ? semanticAudit.missingCategory
-                  : filter.key === "MISSING_TRANSLATIONS"
-                    ? semanticAudit.missingTranslations
-                    : semanticAudit.statuses[filter.key] || 0;
+                  : filter.key === "MISSING_CATEGORY"
+                    ? semanticAudit.missingCategory
+                    : filter.key === "MISSING_TRANSLATIONS"
+                      ? semanticAudit.missingTranslations
+                      : semanticAudit.statuses[filter.key] || 0;
 
             return (
               <button
@@ -2357,13 +871,12 @@ const treeData = Object.entries(treeCategories)
         </div>
 
         <div className="gm-auditSecondary">
-          <span>{filteredIngredients.length}/{semanticAudit.total} showing</span>
+          <span>
+            {filteredIngredients.length}/{semanticAudit.total} showing
+          </span>
           <span>{semanticWorkQueue.length} actionable</span>
           <span>{semanticAudit.translationCount} translations</span>
           <span>{semanticAudit.aliasCount} aliases</span>
-          {localIngredientCount > 0 && (
-            <span>{localIngredientCount} local excluded</span>
-          )}
           {semanticAvailable === false && (
             <span className="gm-auditWarning">{semanticError}</span>
           )}
@@ -2380,9 +893,9 @@ const treeData = Object.entries(treeCategories)
           </button>
           <span>
             {nextSemanticIssue
-              ? `${getDisplayName(nextSemanticIssue.name)} · ${getIngredientSemanticGaps(
-                  nextSemanticIssue
-                )
+              ? `${getDisplayName(
+                  getIngredientDisplayName(nextSemanticIssue)
+                )} - ${getIngredientSemanticGaps(nextSemanticIssue)
                   .map((gap) => gap.label)
                   .join(", ")}`
               : "No actionable semantic issues in this view"}
@@ -2398,6 +911,7 @@ const treeData = Object.entries(treeCategories)
           ))}
         </div>
       </section>
+
       <section className="gm-localSemantic" aria-label="Local ingredient mapping">
         <div className="gm-auditHeader">
           <div>
@@ -2419,7 +933,9 @@ const treeData = Object.entries(treeCategories)
 
         <div className="gm-auditSecondary">
           <span>{localSemanticOptions.length} reviewed global options</span>
-          <span>{filteredLocalSemanticMappings.length}/{localSemanticMappings.length} showing</span>
+          <span>
+            {filteredLocalSemanticMappings.length}/{localSemanticMappings.length} showing
+          </span>
           <span>{localUnmappedCount} unmapped local</span>
           <span>{localAmbiguousCount} ambiguous</span>
           {localSemanticLoading && <span>Loading local mappings</span>}
@@ -2470,52 +986,53 @@ const treeData = Object.entries(treeCategories)
             return (
               <div className="gm-localSemanticRow" key={ingredient.id}>
                 <div className="gm-localSemanticInfo">
-                  <strong>{getDisplayName(ingredient.name)}</strong>
-                  <span>
-                    {ingredient.category} · {ingredient.usageCount || 0} uses
-                    {mappedName ? ` · mapped to ${mappedName}` : ""}
-                  </span>
-                  {ingredient.semanticMapping?.source === "SUGGESTED_ACCEPTED" && (
-                    <small>
-                      Accepted suggestion - {ingredient.semanticMapping.suggestionScore}% -{" "}
-                      {ingredient.semanticMapping.suggestionConfidence}
-                    </small>
-                  )}
-                  {!mappedName && suggestedName && (
-                    <small>
-                      Suggested {suggestedName} - {ingredient.suggestedMapping.score}% -{" "}
-                      {ingredient.suggestedMapping.confidence}
-                      {ingredient.suggestedMapping.isAmbiguous ? " - needs review" : ""}
-                    </small>
-                  )}
-                  {!mappedName && suggestionAlternatives.length > 0 && (
+                  <strong>{getIngredientDisplayName(ingredient)}</strong>
+                  <span>{ingredient.category || "No category"}</span>
+                  <small>
+                    {mappedName
+                      ? `Mapped to ${mappedName}`
+                      : suggestedName
+                        ? `Suggested ${suggestedName}`
+                        : "No global identity yet"}
+                  </small>
+                  {suggestionAlternatives.length > 0 && (
                     <div className="gm-localSemanticAlternatives">
-                      <span>Alternatives</span>
-                      {suggestionAlternatives.map((suggestion) => {
-                        const alternativeName =
-                          suggestion.globalIngredient?.displayName ||
-                          suggestion.globalIngredient?.name ||
-                          suggestion.globalIngredient?.canonicalKey ||
-                          "Global ingredient";
+                      <span>Smart alternatives</span>
+                      {suggestionAlternatives.slice(0, 4).map((suggestion) => {
                         const selected =
                           String(draft.globalIngredientId || "") ===
                           String(suggestion.globalIngredientId || "");
+                        const label =
+                          suggestion.globalIngredient?.displayName ||
+                          suggestion.globalIngredient?.name ||
+                          suggestion.globalIngredient?.canonicalKey ||
+                          "Global option";
 
                         return (
                           <button
                             key={`${ingredient.id}-${suggestion.globalIngredientId}`}
                             type="button"
                             className={selected ? "is-selected" : ""}
-                            onClick={() =>
+                            disabled={saving || suggestion.isAmbiguous}
+                            title={
+                              suggestion.isAmbiguous
+                                ? "Ambiguous suggestion must be reviewed manually"
+                                : ""
+                            }
+                            onClick={() => {
                               updateLocalSemanticDraft(
                                 ingredient.id,
                                 "globalIngredientId",
                                 suggestion.globalIngredientId
-                              )
-                            }
-                            disabled={saving || localSemanticLoading}
+                              );
+                              updateLocalSemanticDraft(
+                                ingredient.id,
+                                "status",
+                                "SUGGESTED_ACCEPTED"
+                              );
+                            }}
                           >
-                            {alternativeName} · {suggestion.score}%
+                            {label}
                           </button>
                         );
                       })}
@@ -2525,6 +1042,7 @@ const treeData = Object.entries(treeCategories)
 
                 <select
                   value={draft.globalIngredientId || ""}
+                  disabled={saving}
                   onChange={(event) =>
                     updateLocalSemanticDraft(
                       ingredient.id,
@@ -2532,58 +1050,43 @@ const treeData = Object.entries(treeCategories)
                       event.target.value
                     )
                   }
-                  disabled={saving || localSemanticLoading}
                 >
                   <option value="">Select global identity</option>
                   {localSemanticOptions.map((option) => (
                     <option key={option.id} value={option.id}>
-                      {option.displayName || option.name} · {option.canonicalKey}
+                      {option.displayName || option.name || option.canonicalKey}
                     </option>
                   ))}
                 </select>
 
-                <input
-                  value={draft.notes || ""}
-                  onChange={(event) =>
-                    updateLocalSemanticDraft(
-                      ingredient.id,
-                      "notes",
-                      event.target.value
-                    )
-                  }
-                  placeholder="Internal mapping note"
-                  disabled={saving || localSemanticLoading}
-                />
-
                 <div className="gm-localSemanticActions">
                   <button
                     type="button"
-                    onClick={() => saveLocalSemanticMapping(ingredient.id)}
                     disabled={!draft.globalIngredientId || saving}
+                    onClick={() => saveLocalSemanticMapping(ingredient.id)}
                   >
-                    {saving ? "Saving" : "Map"}
+                    {saving ? "Saving" : "Save"}
                   </button>
                   <button
                     type="button"
-                    onClick={() => applyLocalSemanticSuggestion(ingredient)}
-                    title={
-                      ingredient.suggestedMapping?.isAmbiguous
-                        ? "Review manually before mapping"
-                        : ""
-                    }
                     disabled={
-                      !ingredient.suggestedMapping ||
-                      ingredient.semanticMapping ||
-                      ingredient.suggestedMapping?.isAmbiguous ||
-                      saving
+                      saving ||
+                      !ingredient.suggestedMapping?.globalIngredientId ||
+                      ingredient.suggestedMapping?.isAmbiguous
+                    }
+                    onClick={() =>
+                      applyLocalSemanticSuggestion(
+                        ingredient,
+                        ingredient.suggestedMapping
+                      )
                     }
                   >
-                    {ingredient.suggestedMapping?.isAmbiguous ? "Review" : "Apply"}
+                    Apply
                   </button>
                   <button
                     type="button"
+                    disabled={saving || !ingredient.semanticMapping}
                     onClick={() => deleteLocalSemanticMapping(ingredient.id)}
-                    disabled={!ingredient.semanticMapping || saving}
                   >
                     Clear
                   </button>
@@ -2593,210 +1096,209 @@ const treeData = Object.entries(treeCategories)
           })}
         </div>
       </section>
-      {/* 🔥 SUGGESTIONS */}
-<div
-  style={{
-    marginBottom: 20,
-    padding: 10,
-    border: "1px solid #444",
-    borderRadius: 8,
-    background: "#111",
-  }}
->
-  <strong>Suggestions</strong>
 
-  {loadingSuggestions && <p>Loading...</p>}
-
-  {!loadingSuggestions && suggestions.length === 0 && (
-    <p style={{ opacity: 0.6 }}>No pending</p>
-  )}
-
-  {suggestions.map((s) => (
-    <div
-      key={s.id}
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        marginTop: 6,
-        padding: 6,
-        background: "#222",
-        borderRadius: 6,
-      }}
-    >
-      <span>
-        {s.name} ({s.category})
-      </span>
-
-      <div>
-        <button onClick={() => handleApprove(s.id)}>✔</button>
-        <button onClick={() => handleReject(s.id)}>✖</button>
-      </div>
-    </div>
-  ))}
-</div>
-
-      {/* TREE */}
       {loading ? (
         <p>Loading...</p>
       ) : (
-        <div
-          style={{
-            height: 400,
-            border: "1px solid #333",
-            borderRadius: 10,
-            overflow: "hidden",
-          }}
-        >
-          
         <div className="gm-tree">
-          <Tree
-            data={treeData}
-            openByDefault={false}
-            width="100%"
-            height={400}
-          >
+          <Tree data={treeData} openByDefault height={720} rowHeight={30} width="100%">
             {({ node, style }) => {
               const isCategoryNode = Array.isArray(node.data.children);
               const isIngredientNode = node.isLeaf && !isCategoryNode;
 
               return (
-              <div
-                style={style}
-                className={`gm-node ${isIngredientNode ? "leaf" : "parent"}`}
-                onClick={() => {
-                  if (isCategoryNode || !node.isLeaf) node.toggle();
-                }}
-              >
-                <div className="gm-node-left">
-                  {(isCategoryNode || !node.isLeaf) && (
-                    <span className="gm-arrow">
-                      {node.isOpen ? "▼" : "▶"}
-                    </span>
-                  )}
-
-                  {node.isLeaf && <span className="gm-dot">•</span>}
-
-                  <span className="gm-name">
-                    {isIngredientNode
-                      ? getDisplayName(getIngredientDisplayName(node.data))
-                      : node.data.name}
-                  </span>
-                </div>
-
-                {isIngredientNode && (
-                  <div className="gm-node-right">
-                    {node.data.allergens.length > 0 && (
-                      <div className="gm-allergens">
-                        {node.data.allergens.join(", ")}
-                      </div>
+                <div
+                  style={style}
+                  className={`gm-node ${isIngredientNode ? "leaf" : "parent"}`}
+                  onClick={() => {
+                    if (isCategoryNode || !node.isLeaf) node.toggle();
+                  }}
+                >
+                  <div className="gm-node-left">
+                    {(isCategoryNode || !node.isLeaf) && (
+                      <span className="gm-arrow">{node.isOpen ? "-" : "+"}</span>
                     )}
+                    {node.isLeaf && <span className="gm-dot">-</span>}
+                    <span className="gm-name">
+                      {isIngredientNode
+                        ? getDisplayName(node.data.displayName || node.data.name)
+                        : node.data.name}
+                    </span>
+                  </div>
 
-                    <button
-                      type="button"
-                      className="gm-semanticBtn"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        openSemanticEditor(node.data);
-                      }}
-                    >
-                      Semantics
-                    </button>
+                  {isIngredientNode && (
+                    <div className="gm-node-right">
+                      {node.data.image ? (
+                        <span className="gm-imageThumb">
+                          <img src={node.data.image} alt="" />
+                        </span>
+                      ) : (
+                        <span className="gm-imageThumb gm-imageThumb--empty">IMG</span>
+                      )}
 
-                    {node.data.semanticGaps.length > 0 && (
-                      <div className="gm-semanticGaps">
-                        {node.data.semanticGaps.map((gap) => (
-                          <span key={gap.key} title={gap.title}>
-                            {gap.label}
-                          </span>
+                      {node.data.semanticGaps?.length > 0 && (
+                        <div className="gm-semanticGaps">
+                          {node.data.semanticGaps.map((gap) => (
+                            <span key={gap.key} title={gap.title}>
+                              {gap.label}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+
+                      <span
+                        className={`gm-semanticStatusBadge ${getSemanticStatusClass(
+                          node.data.semanticStatus
+                        )}`}
+                      >
+                        {formatSemanticStatus(node.data.semanticStatus)}
+                      </span>
+
+                      <span
+                        className={`gm-imageStatusBadge ${getImageStatusClass(
+                          node.data.imageStatus
+                        )}`}
+                      >
+                        {formatImageStatus(node.data.imageStatus)}
+                      </span>
+
+                      <button
+                        type="button"
+                        className="gm-semanticBtn"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          openSemanticEditor(node.data);
+                        }}
+                      >
+                        Semantics
+                      </button>
+
+                      <div className="gm-imageActions">
+                        <label
+                          className={`gm-imageUpload ${
+                            Number(imageUploadSavingId) ===
+                            Number(node.data.ingredientId)
+                              ? "is-saving"
+                              : ""
+                          }`}
+                          onClick={(event) => event.stopPropagation()}
+                        >
+                          {Number(imageUploadSavingId) ===
+                          Number(node.data.ingredientId)
+                            ? "Uploading"
+                            : "Upload"}
+                          <input
+                            type="file"
+                            accept="image/*"
+                            disabled={
+                              Number(imageUploadSavingId) ===
+                                Number(node.data.ingredientId) ||
+                              Number(imageReviewSavingId) ===
+                                Number(node.data.ingredientId)
+                            }
+                            onChange={(event) => {
+                              const file = event.target.files?.[0] || null;
+                              event.target.value = "";
+                              uploadIngredientImageDraft(node.data, file);
+                            }}
+                          />
+                        </label>
+
+                        {IMAGE_REVIEW_STATUSES.map((status) => (
+                          <button
+                            key={status}
+                            type="button"
+                            className={
+                              status === "REVIEWED" ? "gm-imageApproveBtn" : ""
+                            }
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              updateIngredientImageReview(node.data, status);
+                            }}
+                            disabled={
+                              !node.data.image ||
+                              node.data.imageStatus === status ||
+                              Number(imageReviewSavingId) ===
+                                Number(node.data.ingredientId)
+                            }
+                          >
+                            {status === "REVIEWED"
+                              ? "Approve"
+                              : status === "REJECTED"
+                                ? "Reject"
+                                : "Deprecate"}
+                          </button>
                         ))}
                       </div>
-                    )}
 
-                    <span
-                      className={`gm-semanticStatusBadge ${getSemanticStatusClass(
-                        node.data.semanticStatus
-                      )}`}
-                    >
-                      {formatSemanticStatus(node.data.semanticStatus)}
-                    </span>
-
-                    <button
-                      type="button"
-                      className="gm-deleteBtn"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDeleteIngredient(
-                          node.data.ingredientId,
-                          getIngredientDisplayName(node.data)
-                        );
-                      }}
-                    >
-                      ×
-                    </button>
-                  </div>
-                )}
-              </div>
+                      <button
+                        type="button"
+                        className="gm-deleteBtn"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          handleDeleteIngredient(
+                            node.data.ingredientId,
+                            getIngredientDisplayName(node.data)
+                          );
+                        }}
+                      >
+                        x
+                      </button>
+                    </div>
+                  )}
+                </div>
               );
             }}
           </Tree>
         </div>
-        </div>
       )}
 
+      <section className="gm-suggestions">
+        <h3>Pending ingredient suggestions</h3>
+        {loadingSuggestions && <p>Loading suggestions...</p>}
+        {!loadingSuggestions && suggestions.length === 0 && <p>No pending suggestions.</p>}
+        {suggestions.map((suggestion) => (
+          <div className="gm-suggestionRow" key={suggestion.id}>
+            <strong>{suggestion.name}</strong>
+            <span>{suggestion.category}</span>
+            <button type="button" onClick={() => handleApproveSuggestion(suggestion.id)}>
+              Approve
+            </button>
+            <button type="button" onClick={() => handleRejectSuggestion(suggestion.id)}>
+              Reject
+            </button>
+          </div>
+        ))}
+      </section>
+
       {semanticIngredient && (
-        <div className="gm-modalOverlay" role="presentation">
-          <div className="gm-semanticModal" role="dialog" aria-modal="true">
+        <div className="gm-modalBackdrop" onClick={closeSemanticEditor}>
+          <div className="gm-semanticModal" onClick={(event) => event.stopPropagation()}>
             <div className="gm-modalHeader">
               <div>
-                <p>Ingredient semantics</p>
+                <span>Ingredient semantics</span>
                 <h3>{getDisplayName(getIngredientDisplayName(semanticIngredient))}</h3>
               </div>
-              <button
-                type="button"
-                className="gm-modalClose"
-                onClick={closeSemanticEditor}
-              >
+              <button type="button" onClick={closeSemanticEditor}>
                 x
               </button>
             </div>
 
             {semanticLoading ? (
-              <p className="gm-semanticNotice">Loading semantic data...</p>
+              <p>Loading semantic data...</p>
             ) : (
               <>
-                {semanticAvailable === false && (
-                  <div className="gm-semanticWarning">
-                    Semantic migration is pending. Current ingredients remain available,
-                    but translations and aliases cannot be saved yet.
+                {semanticError && <div className="gm-semanticError">{semanticError}</div>}
+                {semanticDraftValidation.criticalIssues.length > 0 && (
+                  <div className="gm-semanticError">
+                    {semanticDraftValidation.criticalIssues.join(". ")}
                   </div>
                 )}
-
-                {semanticError && semanticAvailable !== false && (
-                  <div className="gm-semanticWarning">{semanticError}</div>
-                )}
-
-                {(semanticDraftValidation.criticalIssues.length > 0 ||
-                  semanticDraftValidation.warnings.length > 0) && (
-                  <div
-                    className={[
-                      "gm-semanticValidation",
-                      semanticDraftValidation.criticalIssues.length > 0
-                        ? "has-critical"
-                        : "",
-                    ]
-                      .filter(Boolean)
-                      .join(" ")}
-                  >
-                    {semanticDraftValidation.criticalIssues.length > 0 && (
-                      <strong>{semanticDraftValidation.criticalIssues[0]}</strong>
-                    )}
-                    {semanticDraftValidation.warnings.length > 0 && (
-                      <ul>
-                        {semanticDraftValidation.warnings.map((warning) => (
-                          <li key={warning}>{warning}</li>
-                        ))}
-                      </ul>
-                    )}
+                {semanticDraftValidation.warnings.length > 0 && (
+                  <div className="gm-semanticWarnings">
+                    {semanticDraftValidation.warnings.map((warning) => (
+                      <span key={warning}>{warning}</span>
+                    ))}
                   </div>
                 )}
 
@@ -2806,24 +1308,27 @@ const treeData = Object.entries(treeCategories)
                     <input
                       value={semanticDraft.canonicalKey}
                       disabled={!semanticAvailable}
-                      onChange={(e) =>
+                      placeholder={buildCanonicalKeySuggestion(
+                        getIngredientDisplayName(semanticIngredient)
+                      )}
+                      onChange={(event) =>
                         setSemanticDraft((current) => ({
                           ...current,
-                          canonicalKey: e.target.value,
+                          canonicalKey: event.target.value,
                         }))
                       }
                     />
                   </label>
 
                   <label>
-                    Status
+                    Semantic status
                     <select
                       value={semanticDraft.semanticStatus}
                       disabled={!semanticAvailable}
-                      onChange={(e) =>
+                      onChange={(event) =>
                         setSemanticDraft((current) => ({
                           ...current,
-                          semanticStatus: e.target.value,
+                          semanticStatus: event.target.value,
                         }))
                       }
                     >
@@ -2838,108 +1343,72 @@ const treeData = Object.entries(treeCategories)
                   <label>
                     Semantic category
                     <select
-                      value={semanticDraft.semanticCategoryId || ""}
+                      value={semanticDraft.semanticCategoryId}
                       disabled={!semanticAvailable}
-                      onChange={(e) =>
+                      onChange={(event) =>
                         setSemanticDraft((current) => ({
                           ...current,
-                          semanticCategoryId: e.target.value,
+                          semanticCategoryId: event.target.value,
                         }))
                       }
                     >
-                      <option value="">Unassigned</option>
-                      {semanticCategories.map((semanticCategory) => (
-                        <option key={semanticCategory.id} value={semanticCategory.id}>
-                          {semanticCategory.defaultName}
+                      <option value="">Select semantic category</option>
+                      {semanticCategories.map((category) => (
+                        <option key={category.id} value={category.id}>
+                          {category.displayName || category.name || category.key}
                         </option>
                       ))}
                     </select>
                   </label>
                 </div>
 
-                <div className="gm-semanticQuickActions">
-                  <button
-                    type="button"
-                    disabled={!semanticAvailable || !semanticIngredient}
-                    onClick={applySuggestedCanonicalKey}
-                  >
-                    Use suggested key
-                  </button>
-                  <button
-                    type="button"
-                    disabled={!semanticAvailable || !semanticIngredient}
-                    onClick={applySuggestedSemanticCategory}
-                  >
-                    Use legacy category
-                  </button>
-                  <button
-                    type="button"
-                    disabled={!semanticAvailable || !semanticIngredient}
-                    onClick={fillSpanishTranslationFromLegacyName}
-                  >
-                    Fill ES name
-                  </button>
-                  <button
-                    type="button"
-                    disabled={!semanticAvailable}
-                    onClick={markNamedTranslationsReviewed}
-                  >
-                    Review named locales
-                  </button>
-                  <button
-                    type="button"
-                    disabled={!semanticAvailable || !semanticIngredient}
-                    onClick={addAliasesFromTranslations}
-                  >
-                    Build aliases
-                  </button>
-                </div>
-
                 <div className="gm-semanticSection">
-                  <h4>Translations</h4>
-                  <div className="gm-translations">
+                  <h4>Reviewed translations</h4>
+                  <div className="gm-translationGrid">
                     {semanticDraft.translations.map((translation) => (
-                      <div key={translation.locale} className="gm-translationRow">
-                        <span>{translation.locale.toUpperCase()}</span>
+                      <div className="gm-translationCard" key={translation.locale}>
+                        <div>
+                          <strong>{translation.locale.toUpperCase()}</strong>
+                          <label>
+                            <input
+                              type="checkbox"
+                              checked={translation.isReviewed === true}
+                              disabled={!semanticAvailable}
+                              onChange={(event) =>
+                                updateTranslationDraft(
+                                  translation.locale,
+                                  "isReviewed",
+                                  event.target.checked
+                                )
+                              }
+                            />
+                            Reviewed
+                          </label>
+                        </div>
                         <input
-                          value={translation.name}
+                          value={translation.name || ""}
                           disabled={!semanticAvailable}
-                          placeholder="Display name"
-                          onChange={(e) =>
+                          placeholder="Name"
+                          onChange={(event) =>
                             updateTranslationDraft(
                               translation.locale,
                               "name",
-                              e.target.value
+                              event.target.value
                             )
                           }
                         />
-                        <input
+                        <textarea
                           value={translation.description || ""}
                           disabled={!semanticAvailable}
                           placeholder="Description"
-                          onChange={(e) =>
+                          onChange={(event) =>
                             updateTranslationDraft(
                               translation.locale,
                               "description",
-                              e.target.value
+                              event.target.value
                             )
                           }
                         />
-                        <label className="gm-reviewedToggle">
-                          <input
-                            type="checkbox"
-                            checked={translation.isReviewed === true}
-                            disabled={!semanticAvailable}
-                            onChange={(e) =>
-                              updateTranslationDraft(
-                                translation.locale,
-                                "isReviewed",
-                                e.target.checked
-                              )
-                            }
-                          />
-                          Reviewed
-                        </label>
                       </div>
                     ))}
                   </div>
@@ -2951,10 +1420,10 @@ const treeData = Object.entries(treeCategories)
                     value={semanticDraft.aliasesText}
                     disabled={!semanticAvailable}
                     placeholder="One alias per line. Example: garlic | en | US | display"
-                    onChange={(e) =>
+                    onChange={(event) =>
                       setSemanticDraft((current) => ({
                         ...current,
-                        aliasesText: e.target.value,
+                        aliasesText: event.target.value,
                       }))
                     }
                   />
@@ -2966,16 +1435,9 @@ const treeData = Object.entries(treeCategories)
                   </button>
                   <button
                     type="button"
-                    disabled={!semanticAvailable || semanticSaving || semanticSaveBlocked}
-                    onClick={() => saveSemanticEditor({ advance: true })}
-                  >
-                    Save and next
-                  </button>
-                  <button
-                    type="button"
                     className="gm-primaryBtn"
                     disabled={!semanticAvailable || semanticSaving || semanticSaveBlocked}
-                    onClick={() => saveSemanticEditor()}
+                    onClick={saveSemanticEditor}
                   >
                     {semanticSaving ? "Saving..." : "Save semantics"}
                   </button>

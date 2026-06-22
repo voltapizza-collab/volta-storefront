@@ -1,6 +1,6 @@
 /* TREE CONTAINER */
 .gm-tree {
-  height: 400px;
+  height: 720px;
   border: 1px solid #2a2a2a;
   border-radius: 12px;
   overflow: hidden;
@@ -12,7 +12,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 6px 12px;
+  min-height: 30px;
+  padding: 1px 8px;
   cursor: pointer;
   transition: background 0.2s;
 }
@@ -25,16 +26,122 @@
 .gm-node-left {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 5px;
 }
 
 .gm-node-right {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 6px;
   margin-left: auto;
-  min-width: 280px;
+  min-width: 560px;
   justify-content: flex-end;
+}
+
+.gm-imageThumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  overflow: hidden;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.56);
+  font-size: 9px;
+  font-weight: 900;
+}
+
+.gm-imageThumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.gm-imageThumb--empty {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.gm-imageStatusBadge {
+  min-height: 18px;
+  min-width: 68px;
+  padding: 0 6px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.78);
+  background: rgba(255, 255, 255, 0.06);
+  font-size: 9px;
+  font-weight: 900;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.gm-imageStatusBadge.image-reviewed {
+  border-color: rgba(34, 197, 94, 0.42);
+  background: rgba(34, 197, 94, 0.16);
+  color: #86efac;
+}
+
+.gm-imageStatusBadge.image-generated {
+  border-color: rgba(251, 176, 3, 0.48);
+  background: rgba(251, 176, 3, 0.14);
+  color: #fbb003;
+}
+
+.gm-imageStatusBadge.image-rejected,
+.gm-imageStatusBadge.image-deprecated {
+  border-color: rgba(248, 113, 113, 0.42);
+  background: rgba(248, 113, 113, 0.12);
+  color: #fca5a5;
+}
+
+.gm-imageActions {
+  display: inline-flex;
+  gap: 3px;
+  flex: 0 0 auto;
+}
+
+.gm-imageActions button,
+.gm-imageUpload {
+  min-height: 20px;
+  padding: 0 6px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  font-size: 9px;
+  font-weight: 800;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.gm-imageUpload {
+  background: rgba(251, 176, 3, 0.16);
+  color: #fbb003;
+}
+
+.gm-imageUpload input {
+  display: none;
+}
+
+.gm-imageActions .gm-imageApproveBtn {
+  background: rgba(34, 197, 94, 0.18);
+  color: #86efac;
+}
+
+.gm-imageActions button:disabled,
+.gm-imageUpload.is-saving {
+  cursor: not-allowed;
+  opacity: 0.38;
 }
 
 .gm-semanticAudit {
@@ -48,7 +155,8 @@
   color: #f4f4f5;
 }
 
-.gm-localSemantic {
+.gm-localSemantic,
+.gm-suggestions {
   display: grid;
   gap: 12px;
   margin: 0 0 20px;
@@ -71,7 +179,7 @@
 
 .gm-localSemanticRow {
   display: grid;
-  grid-template-columns: minmax(180px, 1.2fr) minmax(180px, 1fr) minmax(160px, 1fr) auto;
+  grid-template-columns: minmax(220px, 1.2fr) minmax(220px, 1fr) auto;
   gap: 8px;
   align-items: center;
   padding: 10px;
@@ -197,6 +305,11 @@
   color: #fff;
 }
 
+.gm-localSemanticActions button:nth-child(2):disabled {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.7);
+}
+
 .gm-localSemanticActions button:disabled {
   cursor: not-allowed;
   opacity: 0.45;
@@ -286,6 +399,65 @@
   font-size: 18px;
 }
 
+.gm-suggestionRow button {
+  min-height: 30px;
+  border: 1px solid rgba(251, 176, 3, 0.32);
+  border-radius: 6px;
+  background: rgba(251, 176, 3, 0.14);
+  color: #ffd36c;
+  font-size: 11px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.gm-suggestionRow button:disabled {
+  cursor: not-allowed;
+  opacity: 0.42;
+}
+
+.gm-suggestions {
+  margin-top: 20px;
+  background: #111;
+}
+
+.gm-suggestions h3 {
+  margin: 0;
+  color: #fff;
+  font-size: 16px;
+}
+
+.gm-suggestions p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.gm-suggestionRow {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) minmax(120px, 0.6fr) auto auto;
+  gap: 8px;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.gm-suggestionRow strong,
+.gm-suggestionRow span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gm-suggestionRow strong {
+  color: #fff;
+}
+
+.gm-suggestionRow span {
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 12px;
+}
+
 .gm-auditSecondary,
 .gm-localeCoverage {
   display: flex;
@@ -355,6 +527,7 @@
 .gm-node.parent {
   color: #fbb003;
   font-weight: 600;
+  min-height: 24px;
 }
 
 /* INGREDIENT */
@@ -374,7 +547,8 @@
 
 /* NAME */
 .gm-name {
-  font-size: 14px;
+  font-size: 11px;
+  line-height: 1.1;
 }
 
 /* ALLERGENS */
@@ -406,13 +580,13 @@
 }
 
 .gm-semanticBtn {
-  height: 24px;
+  height: 20px;
   border: 1px solid rgba(255, 255, 255, 0.14);
   background: rgba(255, 255, 255, 0.06);
   color: rgba(255, 255, 255, 0.82);
-  font-size: 11px;
+  font-size: 9px;
   line-height: 1;
-  padding: 0 10px;
+  padding: 0 7px;
   cursor: pointer;
 }
 
@@ -424,22 +598,22 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  max-width: 220px;
+  max-width: 170px;
   overflow: hidden;
 }
 
 .gm-semanticGaps span {
   display: inline-flex;
   align-items: center;
-  height: 22px;
-  max-width: 110px;
-  padding: 0 7px;
+  height: 18px;
+  max-width: 90px;
+  padding: 0 6px;
   overflow: hidden;
   border: 1px solid rgba(251, 176, 3, 0.26);
   border-radius: 999px;
   background: rgba(251, 176, 3, 0.1);
   color: #ffd36c;
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 700;
   line-height: 1;
   text-overflow: ellipsis;
@@ -451,14 +625,14 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 86px;
-  height: 24px;
-  padding: 0 8px;
+  min-width: 74px;
+  height: 18px;
+  padding: 0 6px;
   border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(255, 255, 255, 0.06);
   color: rgba(255, 255, 255, 0.78);
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 700;
   line-height: 1;
   text-transform: uppercase;
@@ -489,6 +663,17 @@
 }
 
 .gm-modalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px;
+  background: rgba(10, 10, 12, 0.68);
+}
+
+.gm-modalBackdrop {
   position: fixed;
   inset: 0;
   z-index: 1000;

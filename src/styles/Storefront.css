@@ -5831,6 +5831,137 @@
   color: color-mix(in srgb, var(--sf-theme-primary, #4B11B2) 88%, #111);
 }
 
+.sf-cartPaymentPanel {
+  display: grid;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.sf-cartPaymentHead {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.sf-cartPaymentHead span {
+  color: #171717;
+  font-size: 0.82rem;
+  font-weight: 1000;
+}
+
+.sf-cartPaymentHead small {
+  min-width: 0;
+  color: rgba(17, 17, 17, 0.54);
+  font-size: 0.72rem;
+  font-weight: 850;
+  line-height: 1.2;
+  text-align: right;
+}
+
+.sf-cartPaymentToggle {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  padding: 4px;
+  border: 1px solid rgba(75, 17, 178, 0.12);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--sf-theme-primary, #4B11B2) 5%, #ffffff);
+}
+
+.sf-cartPaymentToggle.is-single {
+  grid-template-columns: 1fr;
+}
+
+.sf-cartPaymentOption {
+  min-width: 0;
+  min-height: 48px;
+  display: grid;
+  align-content: center;
+  gap: 2px;
+  border: 1px solid transparent;
+  border-radius: 11px;
+  background: transparent;
+  color: rgba(23, 23, 23, 0.64);
+  cursor: pointer;
+  font: inherit;
+  text-align: center;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    color 160ms ease;
+}
+
+.sf-cartPaymentOption:disabled {
+  cursor: wait;
+}
+
+.sf-cartPaymentOption span {
+  font-size: 0.82rem;
+  font-weight: 1000;
+  line-height: 1.1;
+}
+
+.sf-cartPaymentOption small {
+  overflow: hidden;
+  font-size: 0.68rem;
+  font-weight: 850;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sf-cartPaymentOption.is-active {
+  border-color: color-mix(in srgb, var(--sf-theme-primary, #4B11B2) 24%, #ffffff);
+  background: #ffffff;
+  color: var(--sf-theme-primary, #4B11B2);
+  box-shadow:
+    0 8px 18px rgba(29, 23, 48, 0.08),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.9);
+}
+
+.sf-cartActions--checkout {
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.sf-cartActions--checkout .sf-cartCheckoutBtn {
+  min-height: 52px;
+  border: 0;
+  border-radius: 16px;
+  background: var(--sf-theme-primary, #4B11B2);
+  color: #ffffff;
+  font-size: 0.92rem;
+  box-shadow:
+    0 14px 26px color-mix(in srgb, var(--sf-theme-primary, #4B11B2) 24%, transparent),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.16);
+}
+
+.sf-cartContinueBtn {
+  min-height: 52px;
+  border: 1px solid color-mix(in srgb, var(--brand-2, #ffb61c) 78%, var(--brand-1, #3b008b));
+  border-radius: 16px;
+  background: linear-gradient(135deg, var(--brand-2, #ffb61c), #ffd36e);
+  color: var(--brand-1, #3b008b);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 1000;
+  box-shadow:
+    0 10px 18px color-mix(in srgb, var(--brand-2, #ffb61c) 26%, transparent),
+    inset 0 -2px 0 rgba(59, 0, 139, 0.16);
+}
+
+.sf-cartContinueBtn:hover {
+  background: linear-gradient(135deg, #ffd36e, var(--brand-2, #ffb61c));
+  transform: translateY(-1px);
+}
+
 .sf-cartActions--confirmation .sf-primaryBtn,
 .sf-cartActions--confirmation .sf-secondaryBtn {
   min-height: 48px;

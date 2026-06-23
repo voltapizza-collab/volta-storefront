@@ -1,31 +1,13 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import "../../styles/IngredientsModule.css";
-import { Tree } from "react-arborist";
 import api from "../../setupAxios";
+import ingredientMasterSource from "../../data/ingredientMasterSource.json";
 
 const SEMANTIC_LOCALES = ["es", "en", "it", "fr", "pt", "ar", "zh"];
 const CORE_REVIEW_LOCALES = ["es", "en", "it"];
 const SEMANTIC_STATUSES = ["UNREVIEWED", "NEEDS_REVIEW", "REVIEWED", "REJECTED"];
 const IMAGE_REVIEW_STATUSES = ["REVIEWED", "REJECTED", "DEPRECATED"];
-
-const SEMANTIC_AUDIT_FILTERS = [
-  { key: "ALL", label: "All" },
-  { key: "REVIEWED", label: "Reviewed" },
-  { key: "NEEDS_REVIEW", label: "Needs review" },
-  { key: "UNREVIEWED", label: "Unreviewed" },
-  { key: "MISSING_KEY", label: "Missing key" },
-  { key: "MISSING_CATEGORY", label: "Missing category" },
-  { key: "MISSING_TRANSLATIONS", label: "Missing i18n" },
-  { key: "REJECTED", label: "Rejected" },
-];
-
-const LOCAL_SEMANTIC_FILTERS = [
-  { key: "ALL", label: "All" },
-  { key: "UNMAPPED", label: "Unmapped" },
-  { key: "MAPPED", label: "Mapped" },
-  { key: "AMBIGUOUS", label: "Ambiguous" },
-  { key: "SUGGESTED", label: "Suggested" },
-];
+const IMAGE_BATCH_BASE = "/ingredient-image-candidates/batch-001";
 
 const CATEGORY_LABELS = {
   ACEITES_GRASAS_VINAGRES: "Aceites, grasas y vinagres",
@@ -43,6 +25,24 @@ const CATEGORY_LABELS = {
   SALSAS: "Salsas",
   SETAS: "Setas",
   VERDURAS: "Verduras",
+};
+
+const SEMANTIC_CATEGORY_BY_INGREDIENT_CATEGORY = {
+  ACEITES_GRASAS_VINAGRES: "oils_fats_vinegars",
+  AROMAS_Y_EXTRACTOS: "extras",
+  CARNES: "meats",
+  CREMAS_DULCES: "sweet_creams",
+  EMBUTIDOS: "cured_meats",
+  ENDULZANTES: "sweeteners",
+  EXTRAS: "extras",
+  FRUTAS: "fruits",
+  HIERBAS_ESPECIAS: "herbs_spices",
+  OTROS: "other",
+  PESCADOS_Y_MARISCOS: "seafood",
+  QUESOS: "cheeses",
+  SALSAS: "sauces",
+  SETAS: "mushrooms",
+  VERDURAS: "vegetables",
 };
 
 const normalizeIngredientKey = (value) =>
@@ -84,8 +84,10 @@ const getCategoryLabel = (category) =>
   CATEGORY_LABELS[getCanonicalCategory(category)] || getCanonicalCategory(category);
 
 const getDisplayName = (name) => String(name || "").toUpperCase();
-const getIngredientDisplayName = (ingredient = {}) =>
-  ingredient.displayName || ingredient.name || "";
+const getIngredientDisplayName = (ingredient = {}) => {
+  const safeIngredient = ingredient || {};
+  return safeIngredient.displayName || safeIngredient.name || "";
+};
 
 const buildEmptyTranslations = () =>
   SEMANTIC_LOCALES.map((locale) => ({
@@ -150,6 +152,129 @@ const parseAliasLines = (value) =>
     });
 
 const buildCanonicalKeySuggestion = (name) => normalizeIngredientKey(name);
+
+const TRANSLATION_CONNECTORS = new Set(["de", "del", "la", "las", "el", "los", "y"]);
+
+const TRANSLATION_DIRECT_DRAFTS = {
+  aceite_de_albahaca: {
+    en: "Basil oil",
+    it: "Olio al basilico",
+    fr: "Huile de basilic",
+    pt: "Oleo de manjericao",
+    ar: "زيت الريحان",
+    zh: "罗勒油",
+  },
+};
+
+const TRANSLATION_TERM_DRAFTS = {
+  aceite: {
+    en: "oil",
+    it: "olio",
+    fr: "huile",
+    pt: "oleo",
+    ar: "زيت",
+    zh: "油",
+  },
+  albahaca: {
+    en: "basil",
+    it: "basilico",
+    fr: "basilic",
+    pt: "manjericao",
+    ar: "ريحان",
+    zh: "罗勒",
+  },
+  ajo: {
+    en: "garlic",
+    it: "aglio",
+    fr: "ail",
+    pt: "alho",
+    ar: "ثوم",
+    zh: "大蒜",
+  },
+  bacon: {
+    en: "bacon",
+    it: "bacon",
+    fr: "bacon",
+    pt: "bacon",
+    ar: "لحم مقدد",
+    zh: "培根",
+  },
+  champinones: {
+    en: "button mushrooms",
+    it: "funghi champignon",
+    fr: "champignons de Paris",
+    pt: "cogumelos champignon",
+    ar: "فطر أبيض",
+    zh: "白蘑菇",
+  },
+  chorizo: {
+    en: "chorizo",
+    it: "chorizo",
+    fr: "chorizo",
+    pt: "chourico",
+    ar: "تشوريزو",
+    zh: "西班牙辣香肠",
+  },
+  mozzarella: {
+    en: "mozzarella",
+    it: "mozzarella",
+    fr: "mozzarella",
+    pt: "mucarela",
+    ar: "موزاريلا",
+    zh: "马苏里拉奶酪",
+  },
+  pepperoni: {
+    en: "pepperoni",
+    it: "pepperoni",
+    fr: "pepperoni",
+    pt: "pepperoni",
+    ar: "بيبروني",
+    zh: "意式辣香肠",
+  },
+  salsa: {
+    en: "sauce",
+    it: "salsa",
+    fr: "sauce",
+    pt: "molho",
+    ar: "صلصة",
+    zh: "酱",
+  },
+  tomate: {
+    en: "tomato",
+    it: "pomodoro",
+    fr: "tomate",
+    pt: "tomate",
+    ar: "طماطم",
+    zh: "番茄",
+  },
+};
+
+const formatDraftName = (value, locale) => {
+  const text = String(value || "").trim();
+  if (!text) return "";
+  if (locale === "zh") return text.replace(/\s+/g, "");
+  return text.charAt(0).toUpperCase() + text.slice(1);
+};
+
+const buildTranslationDraftName = (sourceName, locale) => {
+  if (locale === "es") return "";
+
+  const sourceKey = normalizeIngredientKey(sourceName);
+  if (!sourceKey) return "";
+
+  const directDraft = TRANSLATION_DIRECT_DRAFTS[sourceKey]?.[locale];
+  if (directDraft) return directDraft;
+
+  const tokens = sourceKey
+    .split("_")
+    .filter((token) => token && !TRANSLATION_CONNECTORS.has(token));
+  if (tokens.length === 0) return "";
+
+  const translatedTokens = tokens.map((token) => TRANSLATION_TERM_DRAFTS[token]?.[locale]);
+  if (translatedTokens.some((token) => !token)) return "";
+
+  return formatDraftName(translatedTokens.join(locale === "zh" ? "" : " "), locale);
+};
 
 const getSemanticStatusClass = (status) =>
   `status-${String(status || "UNREVIEWED").toLowerCase().replace(/_/g, "-")}`;
@@ -224,14 +349,14 @@ const getIngredientSemanticGaps = (ingredient = {}) => {
   return gaps;
 };
 
-const getIngredientSemanticPriority = (ingredient = {}) => {
-  if (getIngredientSemanticStatus(ingredient) === "REJECTED") return 100;
-  if (!String(ingredient.canonicalKey || "").trim()) return 10;
-  if (!ingredient.semanticCategoryId) return 20;
-  if (getIngredientMissingLocales(ingredient).length > 0) return 30;
-  if (getIngredientSemanticStatus(ingredient) === "NEEDS_REVIEW") return 40;
-  if (getIngredientSemanticStatus(ingredient) === "UNREVIEWED") return 50;
-  return 100;
+const getSemanticReviewButtonClass = (ingredient = {}) => {
+  const status = getIngredientSemanticStatus(ingredient);
+  const hasGaps = getIngredientSemanticGaps(ingredient).length > 0;
+
+  if (status === "REJECTED") return "gm-semanticBtn--rejected";
+  if (status === "REVIEWED" && !hasGaps) return "gm-semanticBtn--reviewed";
+  if (status === "NEEDS_REVIEW" || hasGaps) return "gm-semanticBtn--needsReview";
+  return "gm-semanticBtn--missing";
 };
 
 const getSemanticDraftValidation = (draft = {}) => {
@@ -282,11 +407,16 @@ const getSemanticDraftValidation = (draft = {}) => {
   return { criticalIssues, warnings, missingCoreLocales, missingLocales };
 };
 
+const getIngredientId = (ingredient = {}) =>
+  ingredient.idValue || ingredient.ingredientId || ingredient.id;
+
+const getCandidateUrl = (candidate) => `${IMAGE_BATCH_BASE}/${candidate.file}`;
+
 export default function IngredientsModule() {
   const [ingredients, setIngredients] = useState([]);
-  const [newIngredientName, setNewIngredientName] = useState("");
   const [newIngredientCategory, setNewIngredientCategory] = useState("OTROS");
-  const [newIngredientAllergens, setNewIngredientAllergens] = useState("");
+  const [newIngredientCandidateName, setNewIngredientCandidateName] = useState("");
+  const [creatingIngredient, setCreatingIngredient] = useState(false);
   const [loading, setLoading] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
@@ -297,20 +427,103 @@ export default function IngredientsModule() {
   const [semanticDraft, setSemanticDraft] = useState(buildSemanticDraft());
   const [semanticLoading, setSemanticLoading] = useState(false);
   const [semanticSaving, setSemanticSaving] = useState(false);
-  const [semanticAuditFilter, setSemanticAuditFilter] = useState("ALL");
-  const [localSemanticMappings, setLocalSemanticMappings] = useState([]);
-  const [localSemanticOptions, setLocalSemanticOptions] = useState([]);
-  const [localSemanticDrafts, setLocalSemanticDrafts] = useState({});
-  const [localSemanticLoading, setLocalSemanticLoading] = useState(false);
-  const [localSemanticSavingId, setLocalSemanticSavingId] = useState(null);
-  const [localSemanticFilter, setLocalSemanticFilter] = useState("ALL");
   const [imageReviewSavingId, setImageReviewSavingId] = useState(null);
   const [imageUploadSavingId, setImageUploadSavingId] = useState(null);
+  const [imageCandidates, setImageCandidates] = useState([]);
+  const [imageCandidateError, setImageCandidateError] = useState("");
+  const [applyingCandidateKey, setApplyingCandidateKey] = useState("");
+  const [openCategories, setOpenCategories] = useState(() => new Set());
+  const creatingIngredientRef = useRef(false);
 
   const semanticCatalogIngredients = useMemo(
     () => ingredients.filter((ingredient) => ingredient.isSystem !== false),
     [ingredients]
   );
+
+  const existingIngredientKeys = useMemo(() => {
+    const keys = new Set();
+    semanticCatalogIngredients.forEach((ingredient) => {
+      [
+        ingredient.name,
+        ingredient.displayName,
+        ingredient.canonicalKey,
+        ...(ingredient.semanticTranslations || []).map((translation) => translation.name),
+      ].forEach((value) => {
+        const key = normalizeIngredientKey(value);
+        if (key) keys.add(key);
+      });
+    });
+    return keys;
+  }, [semanticCatalogIngredients]);
+
+  const masterCategories = useMemo(
+    () =>
+      Object.keys(CATEGORY_LABELS).filter((category) =>
+        ingredientMasterSource.some(
+          (candidate) => getCanonicalCategory(candidate.category) === category
+        )
+      ),
+    []
+  );
+
+  const availableMasterCandidates = useMemo(() => {
+    const category = getCanonicalCategory(newIngredientCategory);
+    return ingredientMasterSource
+      .filter((candidate) => getCanonicalCategory(candidate.category) === category)
+      .filter((candidate) => {
+        const candidateKeys = [
+          candidate.canonicalKey,
+          candidate.defaultName,
+          candidate.translations?.es,
+          ...(candidate.aliases || []),
+        ]
+          .map(normalizeIngredientKey)
+          .filter(Boolean);
+        return !candidateKeys.some((key) => existingIngredientKeys.has(key));
+      })
+      .sort((a, b) => String(a.defaultName).localeCompare(String(b.defaultName)));
+  }, [existingIngredientKeys, newIngredientCategory]);
+
+  const groupedIngredients = useMemo(() => {
+    const groups = new Map();
+    semanticCatalogIngredients.forEach((ingredient) => {
+      const category = getCanonicalCategory(ingredient.category);
+      if (!groups.has(category)) groups.set(category, []);
+      groups.get(category).push(ingredient);
+    });
+
+    return [...groups.entries()]
+      .sort(([a], [b]) => getCategoryLabel(a).localeCompare(getCategoryLabel(b)))
+      .map(([category, items]) => ({
+        category,
+        items: items.sort((a, b) =>
+          getIngredientDisplayName(a).localeCompare(getIngredientDisplayName(b))
+        ),
+      }));
+  }, [semanticCatalogIngredients]);
+
+  const candidateMatches = useMemo(() => {
+    return imageCandidates
+      .map((candidate) => {
+        const match = semanticCatalogIngredients.find((ingredient) => {
+          const ingredientKeys = [
+            ingredient.canonicalKey,
+            ingredient.name,
+            ingredient.displayName,
+            ...(ingredient.semanticAliases || []).map((alias) => alias.alias),
+          ].map(normalizeIngredientKey);
+
+          return (
+            (candidate.ingredientId &&
+              Number(candidate.ingredientId) === Number(getIngredientId(ingredient))) ||
+            ingredientKeys.includes(normalizeIngredientKey(candidate.semanticKey))
+          );
+        });
+
+        return { ...candidate, ingredient: match || null };
+      })
+      .filter((candidate) => candidate.ingredient);
+  }, [imageCandidates, semanticCatalogIngredients]);
 
   const loadIngredients = async () => {
     try {
@@ -351,38 +564,19 @@ export default function IngredientsModule() {
     }
   };
 
-  const buildLocalSemanticDrafts = (items = []) => {
-    const drafts = {};
-    items.forEach((ingredient) => {
-      drafts[ingredient.id] = {
-        globalIngredientId:
-          ingredient.semanticMapping?.globalIngredientId ||
-          ingredient.semanticMapping?.globalIngredient?.id ||
-          ingredient.suggestedMapping?.globalIngredientId ||
-          "",
-        status: ingredient.semanticMapping?.status || "MAPPED",
-        notes: ingredient.semanticMapping?.notes || "",
-      };
-    });
-    return drafts;
-  };
-
-  const loadLocalSemanticMappings = async () => {
+  const loadImageCandidates = async () => {
     try {
-      setLocalSemanticLoading(true);
-      const res = await api.get("/ingredients/local-semantic-mappings");
-      const localIngredients = Array.isArray(res.data?.ingredients)
-        ? res.data.ingredients
-        : [];
-      setLocalSemanticMappings(localIngredients);
-      setLocalSemanticOptions(
-        Array.isArray(res.data?.globalOptions) ? res.data.globalOptions : []
-      );
-      setLocalSemanticDrafts(buildLocalSemanticDrafts(localIngredients));
+      setImageCandidateError("");
+      const response = await fetch(`${IMAGE_BATCH_BASE}/manifest.json`, {
+        cache: "no-store",
+      });
+      if (!response.ok) throw new Error("Image candidate manifest unavailable");
+      const manifest = await response.json();
+      setImageCandidates(Array.isArray(manifest.items) ? manifest.items : []);
     } catch (err) {
       console.error(err);
-    } finally {
-      setLocalSemanticLoading(false);
+      setImageCandidateError("Image candidate batch is not available.");
+      setImageCandidates([]);
     }
   };
 
@@ -390,27 +584,118 @@ export default function IngredientsModule() {
     loadIngredients();
     loadSuggestions();
     loadSemanticCategories();
-    loadLocalSemanticMappings();
+    loadImageCandidates();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleCreate = async () => {
-    const name = String(newIngredientName || "").trim();
-    const category = getCanonicalCategory(newIngredientCategory);
-    const allergens = String(newIngredientAllergens || "")
-      .split(",")
-      .map((item) => item.trim().toUpperCase())
-      .filter(Boolean);
+  useEffect(() => {
+    if (!newIngredientCandidateName && availableMasterCandidates.length > 0) {
+      setNewIngredientCandidateName(availableMasterCandidates[0].defaultName);
+    }
+  }, [availableMasterCandidates, newIngredientCandidateName]);
 
-    if (!name || !category) return;
+  const toggleCategory = (category) => {
+    setOpenCategories((current) => {
+      const next = new Set(current);
+      if (next.has(category)) next.delete(category);
+      else next.add(category);
+      return next;
+    });
+  };
+
+  const handleCreate = async () => {
+    if (creatingIngredientRef.current) return;
+
+    const selectedName = String(newIngredientCandidateName || "").trim();
+    const selectedCategory = getCanonicalCategory(newIngredientCategory);
+    const selectedCandidate = ingredientMasterSource.find(
+      (candidate) =>
+        getCanonicalCategory(candidate.category) === selectedCategory &&
+        String(candidate.defaultName || "").trim().toLowerCase() ===
+          selectedName.toLowerCase()
+    );
+
+    if (!selectedCandidate) return;
+
+    let createdIngredient = null;
 
     try {
-      await api.post("/ingredients", { name, category, allergens });
-      setNewIngredientName("");
-      setNewIngredientAllergens("");
+      creatingIngredientRef.current = true;
+      setCreatingIngredient(true);
+      const res = await api.post("/ingredients", {
+        name: selectedCandidate.defaultName,
+        category: selectedCandidate.category,
+        allergens: selectedCandidate.allergens || [],
+      });
+      createdIngredient = res.data;
+      const semanticCategoryKey =
+        selectedCandidate.semanticCategoryKey ||
+        SEMANTIC_CATEGORY_BY_INGREDIENT_CATEGORY[selectedCategory] ||
+        "other";
+      const semanticCategory = semanticCategories.find(
+        (category) => category.canonicalKey === semanticCategoryKey
+      );
+
+      if (createdIngredient?.id && semanticAvailable !== false) {
+        const semanticPayload = {
+          canonicalKey:
+            selectedCandidate.canonicalKey ||
+            buildCanonicalKeySuggestion(createdIngredient.name),
+          semanticStatus: selectedCandidate.semanticStatus || "NEEDS_REVIEW",
+          semanticCategoryId: semanticCategory?.id || null,
+          translations: [
+            {
+              locale: "es",
+              name:
+                selectedCandidate.translations?.es ||
+                selectedCandidate.defaultName,
+              description: "",
+              isReviewed: true,
+            },
+          ],
+          aliases: (selectedCandidate.aliases || [selectedCandidate.defaultName]).map(
+            (alias) => ({
+              alias,
+              locale: "es",
+              country: null,
+              searchable: true,
+              displayable: true,
+              isReviewed: true,
+              source: "MASTER_SOURCE",
+            })
+          ),
+        };
+
+        try {
+          await api.patch(
+            `/ingredients/${createdIngredient.id}/semantics`,
+            semanticPayload
+          );
+        } catch (semanticErr) {
+          await new Promise((resolve) => setTimeout(resolve, 400));
+          await api.patch(
+            `/ingredients/${createdIngredient.id}/semantics`,
+            semanticPayload
+          );
+        }
+      }
+
+      setNewIngredientCandidateName("");
       await loadIngredients();
     } catch (err) {
       console.error(err);
+      setSemanticError(
+        createdIngredient?.id
+          ? `Ingredient was created but semantic setup failed for #${createdIngredient.id}.`
+          : err?.response?.data?.error || "Could not create ingredient from master source"
+      );
+      if (createdIngredient?.id) {
+        setNewIngredientCandidateName("");
+        await loadIngredients();
+      }
+    } finally {
+      creatingIngredientRef.current = false;
+      setCreatingIngredient(false);
     }
   };
 
@@ -447,7 +732,7 @@ export default function IngredientsModule() {
   };
 
   const openSemanticEditor = async (ingredient) => {
-    const ingredientId = ingredient?.idValue || ingredient?.ingredientId || ingredient?.id;
+    const ingredientId = getIngredientId(ingredient);
     if (!ingredientId) return;
 
     setSemanticIngredient(ingredient);
@@ -497,13 +782,39 @@ export default function IngredientsModule() {
     }));
   };
 
+  const applySuggestedTranslationDrafts = () => {
+    setSemanticDraft((current) => {
+      const sourceName =
+        current.translations.find((translation) => translation.locale === "es")?.name ||
+        getIngredientDisplayName(semanticIngredient);
+
+      return {
+        ...current,
+        translations: current.translations.map((translation) => {
+          if (
+            translation.locale === "es" ||
+            String(translation.name || "").trim()
+          ) {
+            return translation;
+          }
+
+          const suggestedName = buildTranslationDraftName(
+            sourceName,
+            translation.locale
+          );
+
+          return suggestedName
+            ? { ...translation, name: suggestedName, isReviewed: false }
+            : translation;
+        }),
+      };
+    });
+  };
+
   const saveSemanticEditor = async () => {
     if (!semanticIngredient || !semanticAvailable) return;
 
-    const ingredientId =
-      semanticIngredient.idValue ||
-      semanticIngredient.ingredientId ||
-      semanticIngredient.id;
+    const ingredientId = getIngredientId(semanticIngredient);
     if (!ingredientId) return;
 
     const translations = semanticDraft.translations
@@ -535,723 +846,303 @@ export default function IngredientsModule() {
     }
   };
 
-  const updateLocalSemanticDraft = (ingredientId, field, value) => {
-    setLocalSemanticDrafts((current) => ({
-      ...current,
-      [ingredientId]: {
-        ...(current[ingredientId] || { status: "MAPPED" }),
-        [field]: value,
-      },
-    }));
-  };
-
-  const saveLocalSemanticMapping = async (ingredientId) => {
-    const draft = localSemanticDrafts[ingredientId] || {};
-    if (!draft.globalIngredientId) return;
-
-    try {
-      setLocalSemanticSavingId(ingredientId);
-      await api.patch(`/ingredients/local-semantic-mappings/${ingredientId}`, {
-        globalIngredientId: draft.globalIngredientId,
-        status: draft.status || "MAPPED",
-        notes: draft.notes || "",
-      });
-      await Promise.all([loadIngredients(), loadLocalSemanticMappings()]);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLocalSemanticSavingId(null);
-    }
-  };
-
-  const applyLocalSemanticSuggestion = async (ingredient, suggestion) => {
-    if (!ingredient?.id || !suggestion?.globalIngredientId || suggestion?.isAmbiguous) {
-      return;
-    }
-
-    updateLocalSemanticDraft(
-      ingredient.id,
-      "globalIngredientId",
-      suggestion.globalIngredientId
-    );
-    updateLocalSemanticDraft(ingredient.id, "status", "SUGGESTED_ACCEPTED");
-    await saveLocalSemanticMapping(ingredient.id);
-  };
-
-  const deleteLocalSemanticMapping = async (ingredientId) => {
-    try {
-      setLocalSemanticSavingId(ingredientId);
-      await api.delete(`/ingredients/local-semantic-mappings/${ingredientId}`);
-      await Promise.all([loadIngredients(), loadLocalSemanticMappings()]);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLocalSemanticSavingId(null);
-    }
-  };
-
   const updateIngredientImageReview = async (ingredient, imageStatus) => {
-    const ingredientId = ingredient?.ingredientId || ingredient?.id;
+    const ingredientId = getIngredientId(ingredient);
     if (!ingredientId) return;
 
     try {
       setImageReviewSavingId(ingredientId);
       await api.patch(`/ingredients/${ingredientId}/image-review`, {
         imageStatus,
-        reviewedBy: "global-manager",
         imagePolicyVersion: "v1",
+        reviewedBy: "global-manager",
       });
       await loadIngredients();
     } catch (err) {
       console.error(err);
-      setSemanticError(
-        err?.response?.data?.error || "Could not update ingredient image review"
-      );
     } finally {
       setImageReviewSavingId(null);
     }
   };
 
-  const uploadIngredientImageDraft = async (ingredient, file, options = {}) => {
-    const ingredientId = ingredient?.ingredientId || ingredient?.id;
+  const uploadIngredientImage = async (ingredient, file) => {
+    const ingredientId = getIngredientId(ingredient);
     if (!ingredientId || !file) return;
+
+    const formData = new FormData();
+    formData.append("image", file);
+    formData.append("imageSource", "MANUAL_UPLOAD");
+    formData.append("imagePolicyVersion", "v1");
 
     try {
       setImageUploadSavingId(ingredientId);
-      const payload = new FormData();
-      payload.append("image", file);
-      payload.append("imageSource", options.imageSource || "MANUAL_UPLOAD");
-      payload.append(
-        "imagePrompt",
-        options.imagePrompt ||
-          `White background ingredient identity image for ${getIngredientDisplayName(
-            ingredient
-          )}`
-      );
-
-      await api.patch(`/ingredients/${ingredientId}`, payload, {
+      await api.patch(`/ingredients/${ingredientId}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       await loadIngredients();
     } catch (err) {
       console.error(err);
-      setSemanticError(
-        err?.response?.data?.error || "Could not upload ingredient image"
-      );
     } finally {
       setImageUploadSavingId(null);
     }
   };
 
-  const semanticAudit = semanticCatalogIngredients.reduce(
-    (acc, ingredient) => {
-      const status = getIngredientSemanticStatus(ingredient);
-      acc.total += 1;
-      acc.statuses[status] = (acc.statuses[status] || 0) + 1;
-      acc.translationCount += Number(ingredient.translationCount || 0);
-      acc.aliasCount += Number(ingredient.aliasCount || 0);
-      if (!String(ingredient.canonicalKey || "").trim() && status !== "REJECTED") {
-        acc.missingKey += 1;
-      }
-      if (!ingredient.semanticCategoryId && status !== "REJECTED") {
-        acc.missingCategory += 1;
-      }
-      if (getIngredientMissingLocales(ingredient).length > 0) {
-        acc.missingTranslations += 1;
-      }
-      SEMANTIC_LOCALES.forEach((locale) => {
-        const reviewed = (ingredient.semanticTranslations || []).some(
-          (translation) =>
-            translation.locale === locale &&
-            translation.isReviewed === true &&
-            String(translation.name || "").trim()
-        );
-        if (reviewed) acc.localeCoverage[locale] += 1;
+  const applyImageCandidate = async (candidate) => {
+    const ingredient = candidate.ingredient;
+    const ingredientId = getIngredientId(ingredient);
+    if (!ingredientId) return;
+
+    const candidateKey = `${ingredientId}:${candidate.file}`;
+    try {
+      setApplyingCandidateKey(candidateKey);
+      const response = await fetch(getCandidateUrl(candidate), { cache: "no-store" });
+      if (!response.ok) throw new Error("Candidate image unavailable");
+      const blob = await response.blob();
+      const file = new File([blob], candidate.file, {
+        type: blob.type || "image/png",
       });
-      return acc;
-    },
-    {
-      total: 0,
-      statuses: {},
-      missingKey: 0,
-      missingCategory: 0,
-      missingTranslations: 0,
-      translationCount: 0,
-      aliasCount: 0,
-      localeCoverage: Object.fromEntries(SEMANTIC_LOCALES.map((locale) => [locale, 0])),
+      const formData = new FormData();
+      formData.append("image", file);
+      formData.append("imageSource", "AI_GENERATED");
+      formData.append("imagePrompt", candidate.qaNote || candidate.semanticKey || "");
+      formData.append("imagePolicyVersion", "v1");
+      await api.patch(`/ingredients/${ingredientId}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      await loadIngredients();
+    } catch (err) {
+      console.error(err);
+      setImageCandidateError("Could not apply this image candidate.");
+    } finally {
+      setApplyingCandidateKey("");
     }
-  );
-
-  const semanticReviewedPercent = semanticAudit.total
-    ? Math.round(((semanticAudit.statuses.REVIEWED || 0) / semanticAudit.total) * 100)
-    : 0;
-
-  const ingredientMatchesAuditFilter = (ingredient) => {
-    const status = getIngredientSemanticStatus(ingredient);
-    if (semanticAuditFilter === "ALL") return true;
-    if (semanticAuditFilter === "MISSING_KEY") {
-      return status !== "REJECTED" && !String(ingredient.canonicalKey || "").trim();
-    }
-    if (semanticAuditFilter === "MISSING_CATEGORY") {
-      return status !== "REJECTED" && !ingredient.semanticCategoryId;
-    }
-    if (semanticAuditFilter === "MISSING_TRANSLATIONS") {
-      return status !== "REJECTED" && getIngredientMissingLocales(ingredient).length > 0;
-    }
-    return status === semanticAuditFilter;
   };
 
-  const filteredIngredients = semanticCatalogIngredients.filter(ingredientMatchesAuditFilter);
-  const semanticWorkQueue = filteredIngredients
-    .filter((ingredient) => getIngredientSemanticPriority(ingredient) < 100)
-    .sort((a, b) => {
-      const priorityDiff =
-        getIngredientSemanticPriority(a) - getIngredientSemanticPriority(b);
-      if (priorityDiff !== 0) return priorityDiff;
-      return String(getIngredientDisplayName(a)).localeCompare(
-        String(getIngredientDisplayName(b)),
-        "es",
-        { sensitivity: "base" }
-      );
-    });
-  const nextSemanticIssue = semanticWorkQueue[0] || null;
   const semanticDraftValidation = getSemanticDraftValidation(semanticDraft);
   const semanticSaveBlocked = semanticDraftValidation.criticalIssues.length > 0;
-
-  const localMappedCount = localSemanticMappings.filter(
-    (ingredient) => ingredient.semanticMapping?.globalIngredientId
-  ).length;
-  const localUnmappedCount = localSemanticMappings.length - localMappedCount;
-  const localAmbiguousCount = localSemanticMappings.filter(
-    (ingredient) => ingredient.suggestedMapping?.isAmbiguous
-  ).length;
-
-  const filteredLocalSemanticMappings = localSemanticMappings.filter((ingredient) => {
-    const mapped = Boolean(ingredient.semanticMapping?.globalIngredientId);
-    const suggested = Boolean(ingredient.suggestedMapping?.globalIngredientId);
-    const ambiguous = Boolean(ingredient.suggestedMapping?.isAmbiguous);
-    if (localSemanticFilter === "UNMAPPED") return !mapped;
-    if (localSemanticFilter === "MAPPED") return mapped;
-    if (localSemanticFilter === "AMBIGUOUS") return ambiguous;
-    if (localSemanticFilter === "SUGGESTED") return suggested;
-    return true;
-  });
-
-  const getLocalSemanticFilterCount = (filterKey) => {
-    if (filterKey === "UNMAPPED") return localUnmappedCount;
-    if (filterKey === "MAPPED") return localMappedCount;
-    if (filterKey === "AMBIGUOUS") return localAmbiguousCount;
-    if (filterKey === "SUGGESTED") {
-      return localSemanticMappings.filter(
-        (ingredient) => ingredient.suggestedMapping?.globalIngredientId
-      ).length;
-    }
-    return localSemanticMappings.length;
-  };
-
-  const treeCategories = filteredIngredients.reduce((acc, ingredient) => {
-    const canonicalCategory = getCanonicalCategory(ingredient.category);
-    if (!acc[canonicalCategory]) acc[canonicalCategory] = [];
-    acc[canonicalCategory].push(ingredient);
-    return acc;
-  }, {});
-
-  const treeData = Object.entries(treeCategories)
-    .sort(([a], [b]) => getCategoryLabel(a).localeCompare(getCategoryLabel(b), "es"))
-    .map(([category, items]) => ({
-      id: `cat-${category}`,
-      name: getCategoryLabel(category),
-      children: items
-        .sort((a, b) =>
-          getIngredientDisplayName(a).localeCompare(getIngredientDisplayName(b), "es", {
-            sensitivity: "base",
-          })
-        )
-        .map((ingredient) => ({
-          id: `ing-${ingredient.id}`,
-          idValue: ingredient.id,
-          ingredientId: ingredient.id,
-          name: ingredient.name,
-          displayName: ingredient.displayName || ingredient.name,
-          category: ingredient.category,
-          canonicalKey: ingredient.canonicalKey || "",
-          semanticStatus: ingredient.semanticStatus || "UNREVIEWED",
-          semanticCategoryId: ingredient.semanticCategoryId || "",
-          translationCount: ingredient.translationCount || 0,
-          aliasCount: ingredient.aliasCount || 0,
-          semanticTranslations: ingredient.semanticTranslations || [],
-          semanticAliases: ingredient.semanticAliases || [],
-          semanticGaps: getIngredientSemanticGaps(ingredient),
-          allergens: ingredient.allergens || [],
-          image: ingredient.image || "",
-          imageStatus: ingredient.imageStatus || "MISSING",
-          imageSource: ingredient.imageSource || "",
-          imageReviewedAt: ingredient.imageReviewedAt || "",
-          imageReviewedBy: ingredient.imageReviewedBy || "",
-          imageVersion: ingredient.imageVersion || 0,
-          imagePolicyVersion: ingredient.imagePolicyVersion || "",
-        })),
-    }));
-
-  const categoriesForCreate = [
-    ...new Set([
-      ...Object.keys(CATEGORY_LABELS),
-      ...ingredients.map((ingredient) => getCanonicalCategory(ingredient.category)),
-    ]),
-  ].sort((a, b) => getCategoryLabel(a).localeCompare(getCategoryLabel(b), "es"));
+  const semanticTranslationSourceName =
+    semanticDraft.translations.find((translation) => translation.locale === "es")
+      ?.name || getIngredientDisplayName(semanticIngredient);
+  const canSuggestTranslationDrafts = semanticDraft.translations.some(
+    (translation) =>
+      translation.locale !== "es" &&
+      !String(translation.name || "").trim() &&
+      buildTranslationDraftName(semanticTranslationSourceName, translation.locale)
+  );
 
   return (
-    <div>
-      <div style={{ marginBottom: 20 }}>
-        <input
-          value={newIngredientName}
-          onChange={(event) => setNewIngredientName(event.target.value)}
-          placeholder="Ingredient name"
-        />
+    <div className="gm-ingredientsModule">
+      <div className="gm-addIngredientPanel">
         <select
           value={newIngredientCategory}
-          onChange={(event) => setNewIngredientCategory(event.target.value)}
+          onChange={(event) => {
+            setNewIngredientCategory(event.target.value);
+            setNewIngredientCandidateName("");
+          }}
         >
-          {categoriesForCreate.map((category) => (
+          {masterCategories.map((category) => (
             <option key={category} value={category}>
               {getCategoryLabel(category)}
             </option>
           ))}
         </select>
-        <input
-          value={newIngredientAllergens}
-          onChange={(event) => setNewIngredientAllergens(event.target.value)}
-          placeholder="Allergens, comma separated"
-        />
-        <button type="button" onClick={handleCreate}>
-          Add ingredient
+        <select
+          value={newIngredientCandidateName}
+          disabled={availableMasterCandidates.length === 0}
+          onChange={(event) => setNewIngredientCandidateName(event.target.value)}
+        >
+          {availableMasterCandidates.length === 0 ? (
+            <option value="">No available master ingredients</option>
+          ) : (
+            availableMasterCandidates.map((candidate) => (
+              <option key={candidate.canonicalKey} value={candidate.defaultName}>
+                {candidate.defaultName}
+              </option>
+            ))
+          )}
+        </select>
+        <button
+          type="button"
+          disabled={
+            creatingIngredient ||
+            !newIngredientCandidateName ||
+            availableMasterCandidates.length === 0
+          }
+          onClick={handleCreate}
+        >
+          {creatingIngredient ? "Adding..." : "Add ingredient"}
         </button>
       </div>
 
-      <section className="gm-semanticAudit" aria-label="Semantic audit">
-        <div className="gm-auditHeader">
-          <div>
-            <span>Semantic audit</span>
-            <strong>
-              {semanticAudit.statuses.REVIEWED || 0}/{semanticAudit.total} reviewed
-            </strong>
-          </div>
-          <div className="gm-auditProgress" aria-hidden="true">
-            <span style={{ width: `${semanticReviewedPercent}%` }} />
-          </div>
-        </div>
+      {semanticError && <div className="gm-semanticError">{semanticError}</div>}
 
-        <div className="gm-auditMetrics">
-          {SEMANTIC_AUDIT_FILTERS.map((filter) => {
-            const value =
-              filter.key === "ALL"
-                ? semanticAudit.total
-                : filter.key === "MISSING_KEY"
-                  ? semanticAudit.missingKey
-                  : filter.key === "MISSING_CATEGORY"
-                    ? semanticAudit.missingCategory
-                    : filter.key === "MISSING_TRANSLATIONS"
-                      ? semanticAudit.missingTranslations
-                      : semanticAudit.statuses[filter.key] || 0;
-
-            return (
-              <button
-                key={filter.key}
-                type="button"
-                className={`gm-auditCard ${
-                  semanticAuditFilter === filter.key ? "is-active" : ""
-                }`}
-                onClick={() => setSemanticAuditFilter(filter.key)}
-              >
-                <span>{filter.label}</span>
-                <strong>{value}</strong>
-              </button>
-            );
-          })}
-        </div>
-
-        <div className="gm-auditSecondary">
-          <span>
-            {filteredIngredients.length}/{semanticAudit.total} showing
-          </span>
-          <span>{semanticWorkQueue.length} actionable</span>
-          <span>{semanticAudit.translationCount} translations</span>
-          <span>{semanticAudit.aliasCount} aliases</span>
-          {semanticAvailable === false && (
-            <span className="gm-auditWarning">{semanticError}</span>
-          )}
-        </div>
-
-        <div className="gm-auditWorkQueue">
-          <button
-            type="button"
-            className="gm-auditAction"
-            disabled={!nextSemanticIssue || semanticAvailable === false}
-            onClick={() => openSemanticEditor(nextSemanticIssue)}
-          >
-            Open next issue
-          </button>
-          <span>
-            {nextSemanticIssue
-              ? `${getDisplayName(
-                  getIngredientDisplayName(nextSemanticIssue)
-                )} - ${getIngredientSemanticGaps(nextSemanticIssue)
-                  .map((gap) => gap.label)
-                  .join(", ")}`
-              : "No actionable semantic issues in this view"}
-          </span>
-        </div>
-
-        <div className="gm-localeCoverage">
-          {SEMANTIC_LOCALES.map((locale) => (
-            <span key={locale}>
-              <strong>{locale.toUpperCase()}</strong>
-              {semanticAudit.localeCoverage[locale]}/{semanticAudit.total}
-            </span>
-          ))}
-        </div>
-      </section>
-
-      <section className="gm-localSemantic" aria-label="Local ingredient mapping">
-        <div className="gm-auditHeader">
-          <div>
-            <span>Local ingredient mapping</span>
-            <strong>
-              {localMappedCount}/{localSemanticMappings.length} mapped
-            </strong>
-          </div>
-          <div className="gm-auditProgress" aria-hidden="true">
-            <span
-              style={{
-                width: localSemanticMappings.length
-                  ? `${Math.round((localMappedCount / localSemanticMappings.length) * 100)}%`
-                  : "0%",
-              }}
-            />
-          </div>
-        </div>
-
-        <div className="gm-auditSecondary">
-          <span>{localSemanticOptions.length} reviewed global options</span>
-          <span>
-            {filteredLocalSemanticMappings.length}/{localSemanticMappings.length} showing
-          </span>
-          <span>{localUnmappedCount} unmapped local</span>
-          <span>{localAmbiguousCount} ambiguous</span>
-          {localSemanticLoading && <span>Loading local mappings</span>}
-        </div>
-
-        <div className="gm-auditMetrics gm-localSemanticMetrics">
-          {LOCAL_SEMANTIC_FILTERS.map((filter) => (
-            <button
-              key={filter.key}
-              type="button"
-              className={`gm-auditCard ${
-                localSemanticFilter === filter.key ? "is-active" : ""
-              }`}
-              onClick={() => setLocalSemanticFilter(filter.key)}
-            >
-              <span>{filter.label}</span>
-              <strong>{getLocalSemanticFilterCount(filter.key)}</strong>
+      {candidateMatches.length > 0 && (
+        <section className="gm-imageCandidatePanel">
+          <div className="gm-imageCandidateHeader">
+            <div>
+              <span>AI image candidates</span>
+              <h3>{candidateMatches.length} candidates</h3>
+            </div>
+            <button type="button" onClick={loadImageCandidates}>
+              Refresh batch
             </button>
-          ))}
-        </div>
-
-        <div className="gm-localSemanticList">
-          {localSemanticMappings.length === 0 && (
-            <p>No local ingredients outside the global catalog.</p>
+          </div>
+          {imageCandidateError && (
+            <div className="gm-semanticWarning">{imageCandidateError}</div>
           )}
-          {localSemanticMappings.length > 0 &&
-            filteredLocalSemanticMappings.length === 0 && (
-              <p>No local ingredients match this filter.</p>
-            )}
+          <div className="gm-imageCandidateGrid">
+            {candidateMatches.map((candidate) => {
+              const ingredient = candidate.ingredient;
+              const candidateKey = `${getIngredientId(ingredient)}:${candidate.file}`;
+              return (
+                <article className="gm-imageCandidateCard" key={candidateKey}>
+                  <img src={getCandidateUrl(candidate)} alt={candidate.semanticKey} />
+                  <strong>{getDisplayName(getIngredientDisplayName(ingredient))}</strong>
+                  <span>{candidate.candidateStatus}</span>
+                  <button
+                    type="button"
+                    disabled={applyingCandidateKey === candidateKey}
+                    onClick={() => applyImageCandidate(candidate)}
+                  >
+                    {applyingCandidateKey === candidateKey
+                      ? "Applying..."
+                      : "Apply as generated"}
+                  </button>
+                </article>
+              );
+            })}
+          </div>
+        </section>
+      )}
 
-          {filteredLocalSemanticMappings.map((ingredient) => {
-            const draft = localSemanticDrafts[ingredient.id] || {};
-            const mappedName =
-              ingredient.semanticMapping?.globalIngredient?.displayName ||
-              ingredient.semanticMapping?.globalIngredient?.name ||
-              "";
-            const suggestedName =
-              ingredient.suggestedMapping?.globalIngredient?.displayName ||
-              ingredient.suggestedMapping?.globalIngredient?.name ||
-              "";
-            const suggestionAlternatives = Array.isArray(
-              ingredient.suggestionAlternatives
-            )
-              ? ingredient.suggestionAlternatives
-              : [];
-            const saving = Number(localSemanticSavingId) === Number(ingredient.id);
-
+      <div className="gm-tree">
+        {loading && <p className="gm-treeEmpty">Loading ingredients...</p>}
+        {!loading &&
+          groupedIngredients.map(({ category, items }) => {
+            const isOpen = openCategories.has(category);
+            const activeCount = items.filter((ingredient) => ingredient.status !== "INACTIVE").length;
             return (
-              <div className="gm-localSemanticRow" key={ingredient.id}>
-                <div className="gm-localSemanticInfo">
-                  <strong>{getIngredientDisplayName(ingredient)}</strong>
-                  <span>{ingredient.category || "No category"}</span>
-                  <small>
-                    {mappedName
-                      ? `Mapped to ${mappedName}`
-                      : suggestedName
-                        ? `Suggested ${suggestedName}`
-                        : "No global identity yet"}
-                  </small>
-                  {suggestionAlternatives.length > 0 && (
-                    <div className="gm-localSemanticAlternatives">
-                      <span>Smart alternatives</span>
-                      {suggestionAlternatives.slice(0, 4).map((suggestion) => {
-                        const selected =
-                          String(draft.globalIngredientId || "") ===
-                          String(suggestion.globalIngredientId || "");
-                        const label =
-                          suggestion.globalIngredient?.displayName ||
-                          suggestion.globalIngredient?.name ||
-                          suggestion.globalIngredient?.canonicalKey ||
-                          "Global option";
-
-                        return (
-                          <button
-                            key={`${ingredient.id}-${suggestion.globalIngredientId}`}
-                            type="button"
-                            className={selected ? "is-selected" : ""}
-                            disabled={saving || suggestion.isAmbiguous}
-                            title={
-                              suggestion.isAmbiguous
-                                ? "Ambiguous suggestion must be reviewed manually"
-                                : ""
-                            }
-                            onClick={() => {
-                              updateLocalSemanticDraft(
-                                ingredient.id,
-                                "globalIngredientId",
-                                suggestion.globalIngredientId
-                              );
-                              updateLocalSemanticDraft(
-                                ingredient.id,
-                                "status",
-                                "SUGGESTED_ACCEPTED"
-                              );
-                            }}
-                          >
-                            {label}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-
-                <select
-                  value={draft.globalIngredientId || ""}
-                  disabled={saving}
-                  onChange={(event) =>
-                    updateLocalSemanticDraft(
-                      ingredient.id,
-                      "globalIngredientId",
-                      event.target.value
-                    )
-                  }
+              <section className="gm-categoryBlock" key={category}>
+                <button
+                  type="button"
+                  className="gm-categoryHeader"
+                  onClick={() => toggleCategory(category)}
                 >
-                  <option value="">Select global identity</option>
-                  {localSemanticOptions.map((option) => (
-                    <option key={option.id} value={option.id}>
-                      {option.displayName || option.name || option.canonicalKey}
-                    </option>
-                  ))}
-                </select>
-
-                <div className="gm-localSemanticActions">
-                  <button
-                    type="button"
-                    disabled={!draft.globalIngredientId || saving}
-                    onClick={() => saveLocalSemanticMapping(ingredient.id)}
-                  >
-                    {saving ? "Saving" : "Save"}
-                  </button>
-                  <button
-                    type="button"
-                    disabled={
-                      saving ||
-                      !ingredient.suggestedMapping?.globalIngredientId ||
-                      ingredient.suggestedMapping?.isAmbiguous
-                    }
-                    onClick={() =>
-                      applyLocalSemanticSuggestion(
-                        ingredient,
-                        ingredient.suggestedMapping
-                      )
-                    }
-                  >
-                    Apply
-                  </button>
-                  <button
-                    type="button"
-                    disabled={saving || !ingredient.semanticMapping}
-                    onClick={() => deleteLocalSemanticMapping(ingredient.id)}
-                  >
-                    Clear
-                  </button>
-                </div>
-              </div>
+                  <span>{isOpen ? "▾" : "▸"}</span>
+                  <strong>{getCategoryLabel(category)}</strong>
+                  <em>
+                    {activeCount} / {items.length}
+                  </em>
+                </button>
+                {isOpen && (
+                  <div className="gm-categoryItems">
+                    {items.map((ingredient) => {
+                      const ingredientId = getIngredientId(ingredient);
+                      const semanticGaps = getIngredientSemanticGaps(ingredient);
+                      return (
+                        <div className="gm-node" key={ingredientId}>
+                          <div className="gm-node-left">
+                            <span className={`gm-imageThumb ${ingredient.image ? "" : "gm-imageThumb--empty"}`}>
+                              {ingredient.image ? (
+                                <img src={ingredient.image} alt={getIngredientDisplayName(ingredient)} />
+                              ) : (
+                                "IMG"
+                              )}
+                            </span>
+                            <span>{getDisplayName(getIngredientDisplayName(ingredient))}</span>
+                          </div>
+                          <div className="gm-node-right">
+                            <span
+                              className={`gm-semanticStatusBadge ${getSemanticStatusClass(
+                                getIngredientSemanticStatus(ingredient)
+                              )}`}
+                            >
+                              {formatSemanticStatus(getIngredientSemanticStatus(ingredient))}
+                            </span>
+                            <span
+                              className={`gm-imageStatusBadge ${getImageStatusClass(
+                                ingredient.imageStatus
+                              )}`}
+                            >
+                              {formatImageStatus(ingredient.imageStatus)}
+                            </span>
+                            <button
+                              type="button"
+                              className={`gm-semanticBtn ${getSemanticReviewButtonClass(
+                                ingredient
+                              )}`}
+                              title={
+                                semanticGaps.length
+                                  ? semanticGaps.map((gap) => gap.title).join(" | ")
+                                  : "Semantic identity reviewed"
+                              }
+                              onClick={() => openSemanticEditor(ingredient)}
+                            >
+                              Semantics
+                            </button>
+                            <label
+                              className={`gm-imageUpload ${
+                                Number(imageUploadSavingId) === Number(ingredientId)
+                                  ? "is-saving"
+                                  : ""
+                              }`}
+                            >
+                              Upload
+                              <input
+                                type="file"
+                                accept="image/*"
+                                onChange={(event) => {
+                                  const file = event.target.files?.[0];
+                                  uploadIngredientImage(ingredient, file);
+                                  event.target.value = "";
+                                }}
+                              />
+                            </label>
+                            <div className="gm-imageActions">
+                              {IMAGE_REVIEW_STATUSES.map((status) => (
+                                <button
+                                  key={status}
+                                  type="button"
+                                  className={
+                                    status === "REVIEWED" ? "gm-imageApproveBtn" : ""
+                                  }
+                                  onClick={() => updateIngredientImageReview(ingredient, status)}
+                                  disabled={
+                                    !ingredient.image ||
+                                    ingredient.imageStatus === status ||
+                                    Number(imageReviewSavingId) === Number(ingredientId)
+                                  }
+                                >
+                                  {status === "REVIEWED"
+                                    ? "Approve"
+                                    : status === "REJECTED"
+                                      ? "Reject"
+                                      : "Deprecate"}
+                                </button>
+                              ))}
+                            </div>
+                            <button
+                              type="button"
+                              className="gm-deleteBtn"
+                              onClick={() =>
+                                handleDeleteIngredient(
+                                  ingredientId,
+                                  getIngredientDisplayName(ingredient)
+                                )
+                              }
+                            >
+                              x
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </section>
             );
           })}
-        </div>
-      </section>
-
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <div className="gm-tree">
-          <Tree data={treeData} openByDefault height={720} rowHeight={30} width="100%">
-            {({ node, style }) => {
-              const isCategoryNode = Array.isArray(node.data.children);
-              const isIngredientNode = node.isLeaf && !isCategoryNode;
-
-              return (
-                <div
-                  style={style}
-                  className={`gm-node ${isIngredientNode ? "leaf" : "parent"}`}
-                  onClick={() => {
-                    if (isCategoryNode || !node.isLeaf) node.toggle();
-                  }}
-                >
-                  <div className="gm-node-left">
-                    {(isCategoryNode || !node.isLeaf) && (
-                      <span className="gm-arrow">{node.isOpen ? "-" : "+"}</span>
-                    )}
-                    {node.isLeaf && <span className="gm-dot">-</span>}
-                    <span className="gm-name">
-                      {isIngredientNode
-                        ? getDisplayName(node.data.displayName || node.data.name)
-                        : node.data.name}
-                    </span>
-                  </div>
-
-                  {isIngredientNode && (
-                    <div className="gm-node-right">
-                      {node.data.image ? (
-                        <span className="gm-imageThumb">
-                          <img src={node.data.image} alt="" />
-                        </span>
-                      ) : (
-                        <span className="gm-imageThumb gm-imageThumb--empty">IMG</span>
-                      )}
-
-                      {node.data.semanticGaps?.length > 0 && (
-                        <div className="gm-semanticGaps">
-                          {node.data.semanticGaps.map((gap) => (
-                            <span key={gap.key} title={gap.title}>
-                              {gap.label}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-
-                      <span
-                        className={`gm-semanticStatusBadge ${getSemanticStatusClass(
-                          node.data.semanticStatus
-                        )}`}
-                      >
-                        {formatSemanticStatus(node.data.semanticStatus)}
-                      </span>
-
-                      <span
-                        className={`gm-imageStatusBadge ${getImageStatusClass(
-                          node.data.imageStatus
-                        )}`}
-                      >
-                        {formatImageStatus(node.data.imageStatus)}
-                      </span>
-
-                      <button
-                        type="button"
-                        className="gm-semanticBtn"
-                        onClick={(event) => {
-                          event.stopPropagation();
-                          openSemanticEditor(node.data);
-                        }}
-                      >
-                        Semantics
-                      </button>
-
-                      <div className="gm-imageActions">
-                        <label
-                          className={`gm-imageUpload ${
-                            Number(imageUploadSavingId) ===
-                            Number(node.data.ingredientId)
-                              ? "is-saving"
-                              : ""
-                          }`}
-                          onClick={(event) => event.stopPropagation()}
-                        >
-                          {Number(imageUploadSavingId) ===
-                          Number(node.data.ingredientId)
-                            ? "Uploading"
-                            : "Upload"}
-                          <input
-                            type="file"
-                            accept="image/*"
-                            disabled={
-                              Number(imageUploadSavingId) ===
-                                Number(node.data.ingredientId) ||
-                              Number(imageReviewSavingId) ===
-                                Number(node.data.ingredientId)
-                            }
-                            onChange={(event) => {
-                              const file = event.target.files?.[0] || null;
-                              event.target.value = "";
-                              uploadIngredientImageDraft(node.data, file);
-                            }}
-                          />
-                        </label>
-
-                        {IMAGE_REVIEW_STATUSES.map((status) => (
-                          <button
-                            key={status}
-                            type="button"
-                            className={
-                              status === "REVIEWED" ? "gm-imageApproveBtn" : ""
-                            }
-                            onClick={(event) => {
-                              event.stopPropagation();
-                              updateIngredientImageReview(node.data, status);
-                            }}
-                            disabled={
-                              !node.data.image ||
-                              node.data.imageStatus === status ||
-                              Number(imageReviewSavingId) ===
-                                Number(node.data.ingredientId)
-                            }
-                          >
-                            {status === "REVIEWED"
-                              ? "Approve"
-                              : status === "REJECTED"
-                                ? "Reject"
-                                : "Deprecate"}
-                          </button>
-                        ))}
-                      </div>
-
-                      <button
-                        type="button"
-                        className="gm-deleteBtn"
-                        onClick={(event) => {
-                          event.stopPropagation();
-                          handleDeleteIngredient(
-                            node.data.ingredientId,
-                            getIngredientDisplayName(node.data)
-                          );
-                        }}
-                      >
-                        x
-                      </button>
-                    </div>
-                  )}
-                </div>
-              );
-            }}
-          </Tree>
-        </div>
-      )}
+      </div>
 
       <section className="gm-suggestions">
         <h3>Pending ingredient suggestions</h3>
@@ -1279,13 +1170,17 @@ export default function IngredientsModule() {
                 <span>Ingredient semantics</span>
                 <h3>{getDisplayName(getIngredientDisplayName(semanticIngredient))}</h3>
               </div>
-              <button type="button" onClick={closeSemanticEditor}>
+              <button
+                type="button"
+                className="gm-modalClose"
+                onClick={closeSemanticEditor}
+              >
                 x
               </button>
             </div>
 
             {semanticLoading ? (
-              <p>Loading semantic data...</p>
+              <p className="gm-semanticNotice">Loading semantic data...</p>
             ) : (
               <>
                 {semanticError && <div className="gm-semanticError">{semanticError}</div>}
@@ -1301,6 +1196,17 @@ export default function IngredientsModule() {
                     ))}
                   </div>
                 )}
+
+                <div className="gm-semanticQuickActions">
+                  <button
+                    type="button"
+                    disabled={!semanticAvailable || !canSuggestTranslationDrafts}
+                    onClick={applySuggestedTranslationDrafts}
+                  >
+                    Suggest missing translations
+                  </button>
+                  <span>Suggestions are drafts and stay unreviewed until approved.</span>
+                </div>
 
                 <div className="gm-semanticGrid">
                   <label>
@@ -1355,7 +1261,7 @@ export default function IngredientsModule() {
                       <option value="">Select semantic category</option>
                       {semanticCategories.map((category) => (
                         <option key={category.id} value={category.id}>
-                          {category.displayName || category.name || category.key}
+                          {category.displayName || category.defaultName || category.name || category.key}
                         </option>
                       ))}
                     </select>
@@ -1367,9 +1273,24 @@ export default function IngredientsModule() {
                   <div className="gm-translationGrid">
                     {semanticDraft.translations.map((translation) => (
                       <div className="gm-translationCard" key={translation.locale}>
-                        <div>
+                        <div className="gm-translationHeader">
                           <strong>{translation.locale.toUpperCase()}</strong>
-                          <label>
+                          <span
+                            className={`gm-translationBadge ${
+                              translation.isReviewed
+                                ? "is-reviewed"
+                                : translation.name
+                                  ? "is-draft"
+                                  : "is-missing"
+                            }`}
+                          >
+                            {translation.isReviewed
+                              ? "Reviewed"
+                              : translation.name
+                                ? "Draft"
+                                : "Missing"}
+                          </span>
+                          <label className="gm-reviewedToggle">
                             <input
                               type="checkbox"
                               checked={translation.isReviewed === true}
@@ -1385,30 +1306,36 @@ export default function IngredientsModule() {
                             Reviewed
                           </label>
                         </div>
-                        <input
-                          value={translation.name || ""}
-                          disabled={!semanticAvailable}
-                          placeholder="Name"
-                          onChange={(event) =>
-                            updateTranslationDraft(
-                              translation.locale,
-                              "name",
-                              event.target.value
-                            )
-                          }
-                        />
-                        <textarea
-                          value={translation.description || ""}
-                          disabled={!semanticAvailable}
-                          placeholder="Description"
-                          onChange={(event) =>
-                            updateTranslationDraft(
-                              translation.locale,
-                              "description",
-                              event.target.value
-                            )
-                          }
-                        />
+                        <label className="gm-translationField">
+                          Name
+                          <input
+                            value={translation.name || ""}
+                            disabled={!semanticAvailable}
+                            placeholder="Name"
+                            onChange={(event) =>
+                              updateTranslationDraft(
+                                translation.locale,
+                                "name",
+                                event.target.value
+                              )
+                            }
+                          />
+                        </label>
+                        <label className="gm-translationField">
+                          Description
+                          <textarea
+                            value={translation.description || ""}
+                            disabled={!semanticAvailable}
+                            placeholder="Description"
+                            onChange={(event) =>
+                              updateTranslationDraft(
+                                translation.locale,
+                                "description",
+                                event.target.value
+                              )
+                            }
+                          />
+                        </label>
                       </div>
                     ))}
                   </div>

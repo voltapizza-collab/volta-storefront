@@ -5027,7 +5027,7 @@ export default function StorePage() {
         id: "card",
         icon: "▰",
         title: "Tarjeta",
-        description: "Pago seguro online.",
+        description: "Pago online con tarjeta o Klarna en Stripe.",
         ready: true,
       },
     ];
@@ -5580,6 +5580,10 @@ export default function StorePage() {
     },
     [startCheckout]
   );
+  const selectedCheckoutPaymentMode =
+    cashPaymentEnabled && checkoutPaymentMode === "cash" ? "cash" : "card";
+  const cartCheckoutLabel =
+    selectedCheckoutPaymentMode === "cash" ? "Confirmar pedido" : "Pagar ahora";
 
   const cartProductSubtotal = useMemo(
     () => {
@@ -8261,32 +8265,66 @@ export default function StorePage() {
                       Faltan {formatMoney(minimumPaymentMissing, partner?.currency || "EUR")}.
                     </div>
                   )}
-                  <div className="sf-cartActions">
+                  <div className="sf-cartPaymentPanel">
+                    <div className="sf-cartPaymentHead">
+                      <span>Metodo de pago</span>
+                      <small>
+                        {selectedCheckoutPaymentMode === "cash"
+                          ? "Efectivo al recibir o recoger"
+                          : "Tarjeta, Link o Klarna en Stripe"}
+                      </small>
+                    </div>
+                    <div
+                      className={`sf-cartPaymentToggle ${cashPaymentEnabled ? "" : "is-single"}`}
+                      role="radiogroup"
+                      aria-label="Metodo de pago"
+                    >
+                      <button
+                        type="button"
+                        className={`sf-cartPaymentOption ${
+                          selectedCheckoutPaymentMode === "card" ? "is-active" : ""
+                        }`}
+                        role="radio"
+                        aria-checked={selectedCheckoutPaymentMode === "card"}
+                        onClick={() => setCheckoutPaymentMode("card")}
+                        disabled={checkoutLoading}
+                      >
+                        <span>Tarjeta</span>
+                        <small>Stripe, Link o Klarna</small>
+                      </button>
+                      {cashPaymentEnabled && (
+                        <button
+                          type="button"
+                          className={`sf-cartPaymentOption ${
+                            selectedCheckoutPaymentMode === "cash" ? "is-active" : ""
+                          }`}
+                          role="radio"
+                          aria-checked={selectedCheckoutPaymentMode === "cash"}
+                          onClick={() => setCheckoutPaymentMode("cash")}
+                          disabled={checkoutLoading}
+                        >
+                          <span>Efectivo</span>
+                          <small>Al recibir o recoger</small>
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                  <div className="sf-cartActions sf-cartActions--checkout">
                     <button
                       type="button"
-                      className="sf-secondaryBtn"
+                      className="sf-primaryBtn sf-cartCheckoutBtn"
+                      onClick={() => startCheckout(selectedCheckoutPaymentMode)}
+                      disabled={checkoutLoading}
+                    >
+                      {checkoutLoading ? "Preparando tu pago..." : cartCheckoutLabel}
+                    </button>
+                    <button
+                      type="button"
+                      className="sf-cartContinueBtn"
                       onClick={() => setCartOpen(false)}
                     >
                       Seguir comprando
                     </button>
-                    <button
-                      type="button"
-                      className="sf-primaryBtn"
-                      onClick={() => startCheckout("card")}
-                      disabled={checkoutLoading}
-                    >
-                      {checkoutLoading ? "Preparando tu pago..." : "Pagar con tarjeta"}
-                    </button>
-                    {cashPaymentEnabled && (
-                      <button
-                        type="button"
-                        className="sf-secondaryBtn sf-cashPaymentBtn"
-                        onClick={() => startCheckout("cash")}
-                        disabled={checkoutLoading}
-                      >
-                        Pagar en efectivo
-                      </button>
-                    )}
                   </div>
                 </div>
               </>

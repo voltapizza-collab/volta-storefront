@@ -21,7 +21,7 @@ const PAYMENT_METHODS = [
     id: "card",
     title: "Tarjeta",
     label: "Administrado por Volta",
-    description: "Stripe queda activo por defecto para el checkout online.",
+    description: "Stripe queda activo por defecto para tarjeta y Klarna en el checkout online.",
     locked: true,
   },
   {
@@ -818,7 +818,7 @@ export default function SettingsPoliciesModule({ partner }) {
                             Tiendas
                           </button>
                         )}
-                        <label className="bo-toggleControl" title={method.locked ? "Tarjeta siempre activa" : method.title}>
+                        <label className="bo-toggleControl" title={method.locked ? `${method.title} siempre activo` : method.title}>
                           <input
                             type="checkbox"
                             checked={checked}

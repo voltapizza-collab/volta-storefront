@@ -97,6 +97,158 @@
       "file": "sherry_vinegar-v1-generated.png",
       "candidateStatus": "READY_FOR_REVIEW",
       "qaNote": "Vinagre de jerez en botella de vidrio sobre fondo blanco."
+    },
+    {
+      "semanticKey": "caramelized_sugar",
+      "ingredientId": 100,
+      "category": "endulzantes",
+      "file": "caramelized_sugar-v1-generated.png",
+      "candidateStatus": "READY_FOR_REVIEW",
+      "qaNote": "Azucar caramelizado en cristales ambar sobre fondo blanco."
+    },
+    {
+      "semanticKey": "powdered_sugar",
+      "ingredientId": 101,
+      "category": "endulzantes",
+      "file": "powdered_sugar-v1-generated.png",
+      "candidateStatus": "READY_FOR_REVIEW",
+      "qaNote": "Azucar glass en polvo blanco sobre fondo blanco."
+    },
+    {
+      "semanticKey": "honey",
+      "ingredientId": 55,
+      "category": "endulzantes",
+      "file": "honey-v1-generated.png",
+      "candidateStatus": "READY_FOR_REVIEW",
+      "qaNote": "Miel dorada aislada sobre fondo blanco."
+    },
+    {
+      "semanticKey": "blueberries",
+      "ingredientId": 108,
+      "category": "frutas",
+      "file": "blueberries-v1-generated.png",
+      "candidateStatus": "READY_FOR_REVIEW",
+      "qaNote": "Arandanos frescos agrupados sobre fondo blanco."
+    },
+    {
+      "semanticKey": "figs",
+      "ingredientId": 14,
+      "category": "frutas",
+      "file": "figs-v1-generated.png",
+      "candidateStatus": "READY_FOR_REVIEW",
+      "qaNote": "Higos enteros y abiertos sobre fondo blanco."
+    },
+    {
+      "semanticKey": "apple",
+      "ingredientId": 15,
+      "category": "frutas",
+      "file": "apple-v1-generated.png",
+      "candidateStatus": "READY_FOR_REVIEW",
+      "qaNote": "Manzana roja con piezas cortadas sobre fondo blanco."
+    },
+    {
+      "semanticKey": "pear",
+      "ingredientId": 16,
+      "category": "frutas",
+      "file": "pear-v1-generated.png",
+      "candidateStatus": "READY_FOR_REVIEW",
+      "qaNote": "Pera verde amarilla con piezas cortadas sobre fondo blanco."
+    },
+    {
+      "semanticKey": "pineapple",
+      "ingredientId": 17,
+      "category": "frutas",
+      "file": "pineapple-v1-generated.png",
+      "candidateStatus": "READY_FOR_REVIEW",
+      "qaNote": "Pina fresca en trozos sobre fondo blanco."
+    },
+    {
+      "semanticKey": "caramelized_pineapple",
+      "ingredientId": 109,
+      "category": "frutas",
+      "file": "caramelized_pineapple-v1-generated.png",
+      "candidateStatus": "READY_FOR_REVIEW",
+      "qaNote": "Pina caramelizada en cubos dorados sobre fondo blanco."
+    },
+    {
+      "semanticKey": "garlic_powder",
+      "ingredientId": 110,
+      "category": "hierbas y especias",
+      "file": "garlic_powder-v1-generated.png",
+      "candidateStatus": "READY_FOR_REVIEW",
+      "qaNote": "Ajo en polvo en monticulo beige sobre fondo blanco."
+    },
+    {
+      "semanticKey": "white_pepper",
+      "ingredientId": 111,
+      "category": "hierbas y especias",
+      "file": "white_pepper-v1-generated.png",
+      "candidateStatus": "READY_FOR_REVIEW",
+      "qaNote": "Pimienta blanca en polvo con granos palidos sobre fondo blanco."
+    },
+    {
+      "semanticKey": "nachos",
+      "ingredientId": 113,
+      "category": "otros",
+      "file": "nachos-v1-generated.png",
+      "candidateStatus": "READY_FOR_REVIEW",
+      "qaNote": "Nachos triangulares de maiz sobre fondo blanco."
+    },
+    {
+      "semanticKey": "anchovies",
+      "ingredientId": 92,
+      "category": "pescados y mariscos",
+      "file": "anchovies-v1-generated.png",
+      "candidateStatus": "READY_FOR_REVIEW",
+      "qaNote": "Filetes de anchoa aislados sobre fondo blanco."
+    },
+    {
+      "semanticKey": "tuna",
+      "ingredientId": 93,
+      "category": "pescados y mariscos",
+      "file": "tuna-v1-generated.png",
+      "candidateStatus": "READY_FOR_REVIEW",
+      "qaNote": "Atun en lascas y trozos sobre fondo blanco."
+    },
+    {
+      "semanticKey": "cod",
+      "ingredientId": 127,
+      "category": "pescados y mariscos",
+      "file": "cod-v1-generated.png",
+      "candidateStatus": "READY_FOR_REVIEW",
+      "qaNote": "Bacalao en trozos blancos sobre fondo blanco."
+    },
+    {
+      "semanticKey": "shrimp",
+      "ingredientId": 94,
+      "category": "pescados y mariscos",
+      "file": "shrimp-v1-generated.png",
+      "candidateStatus": "READY_FOR_REVIEW",
+      "qaNote": "Camarones cocidos pelados sobre fondo blanco."
+    },
+    {
+      "semanticKey": "crab",
+      "ingredientId": 95,
+      "category": "pescados y mariscos",
+      "file": "crab-v1-generated.png",
+      "candidateStatus": "READY_FOR_REVIEW",
+      "qaNote": "Carne de cangrejo en piezas sobre fondo blanco."
+    },
+    {
+      "semanticKey": "octopus",
+      "ingredientId": 10,
+      "category": "pescados y mariscos",
+      "file": "octopus-v1-generated.png",
+      "candidateStatus": "READY_FOR_REVIEW",
+      "qaNote": "Pulpo cocido en rodajas y piezas sobre fondo blanco."
+    },
+    {
+      "semanticKey": "salmon",
+      "ingredientId": 96,
+      "category": "pescados y mariscos",
+      "file": "salmon-v1-generated.png",
+      "candidateStatus": "READY_FOR_REVIEW",
+      "qaNote": "Salmon en cubos y piezas sobre fondo blanco."
     }
   ]
 }

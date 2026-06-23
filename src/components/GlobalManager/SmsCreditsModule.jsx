@@ -11,6 +11,19 @@ const formatUnitPrice = (value, currency = "EUR") => {
   const parsed = Number(String(value || "0").replace(",", "."));
   return `${currency || "EUR"} ${Number.isFinite(parsed) ? parsed.toFixed(4) : "0.0000"}`;
 };
+const CUSTOM_PACKAGE_VALUE = "custom";
+const parseAmountCents = (value) => {
+  if (value == null || value === "") return null;
+  const parsed = Number(String(value).replace(",", "."));
+  if (!Number.isFinite(parsed) || parsed <= 0) return null;
+  return Math.round(parsed * 100);
+};
+const creditsFromAmount = (amount, sellPrice = 0.075) => {
+  const cents = parseAmountCents(amount);
+  const sellPriceUnits = Math.round(Number(sellPrice || 0.075) * 10000);
+  if (cents == null || !sellPriceUnits) return null;
+  return Math.floor((cents * 100) / sellPriceUnits);
+};
 const formatDateTime = (value) => {
   if (!value) return "-";
   const date = new Date(value);
@@ -35,6 +48,7 @@ export default function SmsCreditsModule() {
   const [loading, setLoading] = useState(false);
   const [selectedPartnerId, setSelectedPartnerId] = useState("");
   const [selectedPackageAmount, setSelectedPackageAmount] = useState("10");
+  const [customPackageAmount, setCustomPackageAmount] = useState("10");
   const [message, setMessage] = useState("");
   const [saving, setSaving] = useState(false);
 
@@ -44,16 +58,23 @@ export default function SmsCreditsModule() {
   );
 
   const packages = useMemo(() => data?.packages || [], [data]);
+  const isCustomAmount = selectedPackageAmount === CUSTOM_PACKAGE_VALUE;
   const selectedPackage = useMemo(
-    () => packages.find((item) => String(item.amount) === String(selectedPackageAmount)) || packages[0],
-    [packages, selectedPackageAmount]
+    () => (isCustomAmount ? null : packages.find((item) => String(item.amount) === String(selectedPackageAmount)) || packages[0]),
+    [isCustomAmount, packages, selectedPackageAmount]
   );
   const inventory = data?.providerInventory || {};
   const pricing = data?.pricing || {};
   const providerCostEur = pricing.providerCost || 0.062;
   const marginPerSms = pricing.marginPerSms ?? Number(pricing.sellPrice || 0) - Number(pricing.providerCost || 0);
-  const canSellSelectedPackage =
-    inventory.availableToSell == null || !selectedPackage || selectedPackage.credits <= inventory.availableToSell;
+  const customCredits = isCustomAmount ? creditsFromAmount(customPackageAmount, pricing.sellPrice) : null;
+  const selectedRechargeAmount = isCustomAmount ? Number(parseAmountCents(customPackageAmount) || 0) / 100 : selectedPackage?.amount;
+  const selectedRechargeCredits = isCustomAmount ? customCredits : selectedPackage?.credits;
+  const canSellRecharge =
+    inventory.availableToSell == null || !selectedRechargeCredits || selectedRechargeCredits <= inventory.availableToSell;
+  const canSubmitRecharge = Boolean(
+    selectedPartner && selectedRechargeAmount && selectedRechargeCredits && canSellRecharge
+  );
   const inventoryWarning =
     inventory.availableToSell != null && inventory.availableToSell <= 0 && Number(inventory.committedMessages || 0) > 0;
 
@@ -88,11 +109,23 @@ export default function SmsCreditsModule() {
     }
 
     try {
+      if (!selectedRechargeAmount || !selectedRechargeCredits) {
+        setMessage("Indica un monto valido para la recarga.");
+        return;
+      }
+
       setSaving(true);
-      const response = await api.post(`/api/sms-credits/${selectedPartnerId}/recharge`, {
-        packageAmount: selectedPackage?.amount || Number(selectedPackageAmount),
+      const payload = {
         source: "global_manager",
-      });
+      };
+
+      if (isCustomAmount) {
+        payload.amount = selectedRechargeAmount;
+      } else {
+        payload.packageAmount = selectedPackage?.amount || Number(selectedPackageAmount);
+      }
+
+      const response = await api.post(`/api/sms-credits/${selectedPartnerId}/recharge`, payload);
       setMessage(`Recarga registrada: ${formatNumber(response.data?.credits)} SMS cortos.`);
       await load();
     } catch (error) {
@@ -164,7 +197,7 @@ export default function SmsCreditsModule() {
         </div>
       )}
 
-      <form className="gm-smsRecharge" onSubmit={submit}>
+      <form className={`gm-smsRecharge ${isCustomAmount ? "is-custom" : ""}`} onSubmit={submit}>
         <label>
           <span>Partner</span>
           <select value={selectedPartnerId} onChange={(event) => setSelectedPartnerId(event.target.value)}>
@@ -183,13 +216,28 @@ export default function SmsCreditsModule() {
                 {item.amount} EUR
               </option>
             ))}
+            <option value={CUSTOM_PACKAGE_VALUE}>Otro monto</option>
           </select>
         </label>
+        {isCustomAmount && (
+          <label className="gm-smsCustomAmount">
+            <span>Monto EUR</span>
+            <input
+              type="number"
+              min="0.01"
+              step="0.01"
+              inputMode="decimal"
+              value={customPackageAmount}
+              onChange={(event) => setCustomPackageAmount(event.target.value)}
+              placeholder="12.50"
+            />
+          </label>
+        )}
         <div>
           <span>SMS cortos</span>
-          <strong>{formatNumber(selectedPackage?.credits)}</strong>
+          <strong>{selectedRechargeCredits ? formatNumber(selectedRechargeCredits) : "-"}</strong>
         </div>
-        <button type="submit" disabled={saving || !selectedPartner || !selectedPackage || !canSellSelectedPackage}>
+        <button type="submit" disabled={saving || !canSubmitRecharge}>
           {saving ? "Asignando..." : "Asignar paquete"}
         </button>
       </form>

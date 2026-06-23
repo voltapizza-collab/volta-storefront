@@ -180,6 +180,10 @@
   padding: 16px;
 }
 
+.gm-smsRecharge.is-custom {
+  grid-template-columns: minmax(220px, 1fr) minmax(180px, 0.34fr) minmax(150px, 0.28fr) 160px auto;
+}
+
 .gm-smsRecharge label,
 .gm-smsRecharge div {
   display: grid;

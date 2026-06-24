@@ -6,8 +6,6 @@ import ingredientMasterSource from "../../data/ingredientMasterSource.json";
 const SEMANTIC_LOCALES = ["es", "en", "it", "fr", "pt", "ar", "zh"];
 const CORE_REVIEW_LOCALES = ["es", "en", "it"];
 const SEMANTIC_STATUSES = ["UNREVIEWED", "NEEDS_REVIEW", "REVIEWED", "REJECTED"];
-const IMAGE_REVIEW_STATUSES = ["REVIEWED", "REJECTED", "DEPRECATED"];
-const IMAGE_BATCH_BASE = "/ingredient-image-candidates/batch-001";
 
 const CATEGORY_LABELS = {
   ACEITES_GRASAS_VINAGRES: "Aceites, grasas y vinagres",
@@ -98,7 +96,9 @@ const buildEmptyTranslations = () =>
   }));
 
 const buildSemanticDraft = (ingredient = {}) => ({
-  canonicalKey: ingredient.canonicalKey || "",
+  canonicalKey:
+    ingredient.canonicalKey ||
+    buildCanonicalKeySuggestion(getIngredientDisplayName(ingredient)),
   semanticStatus: ingredient.semanticStatus || "UNREVIEWED",
   semanticCategoryId: ingredient.semanticCategoryId || "",
   translations: buildEmptyTranslations(),
@@ -164,6 +164,14 @@ const TRANSLATION_DIRECT_DRAFTS = {
     ar: "زيت الريحان",
     zh: "罗勒油",
   },
+  aceite_de_chile: {
+    en: "Chili oil",
+    it: "Olio al peperoncino",
+    fr: "Huile pimentee",
+    pt: "Oleo de pimenta",
+    ar: "زيت الفلفل الحار",
+    zh: "辣椒油",
+  },
 };
 
 const TRANSLATION_TERM_DRAFTS = {
@@ -206,6 +214,14 @@ const TRANSLATION_TERM_DRAFTS = {
     pt: "cogumelos champignon",
     ar: "فطر أبيض",
     zh: "白蘑菇",
+  },
+  chile: {
+    en: "chili",
+    it: "peperoncino",
+    fr: "piment",
+    pt: "pimenta",
+    ar: "فلفل حار",
+    zh: "辣椒",
   },
   chorizo: {
     en: "chorizo",
@@ -256,8 +272,15 @@ const formatDraftName = (value, locale) => {
   return text.charAt(0).toUpperCase() + text.slice(1);
 };
 
+const formatSourceDraftName = (value) => {
+  const text = String(value || "").trim().replace(/\s+/g, " ");
+  if (!text) return "";
+  const lowerText = text.toLocaleLowerCase("es-ES");
+  return lowerText.charAt(0).toLocaleUpperCase("es-ES") + lowerText.slice(1);
+};
+
 const buildTranslationDraftName = (sourceName, locale) => {
-  if (locale === "es") return "";
+  if (locale === "es") return formatSourceDraftName(sourceName);
 
   const sourceKey = normalizeIngredientKey(sourceName);
   if (!sourceKey) return "";
@@ -276,18 +299,6 @@ const buildTranslationDraftName = (sourceName, locale) => {
   return formatDraftName(translatedTokens.join(locale === "zh" ? "" : " "), locale);
 };
 
-const getSemanticStatusClass = (status) =>
-  `status-${String(status || "UNREVIEWED").toLowerCase().replace(/_/g, "-")}`;
-
-const formatSemanticStatus = (status) =>
-  String(status || "UNREVIEWED").toLowerCase().replace(/_/g, " ");
-
-const getImageStatusClass = (status) =>
-  `image-${String(status || "MISSING").toLowerCase().replace(/_/g, "-")}`;
-
-const formatImageStatus = (status) =>
-  String(status || "MISSING").toLowerCase().replace(/_/g, " ");
-
 const getReviewedTranslationLocales = (translations = []) =>
   new Set(
     translations
@@ -301,6 +312,43 @@ const getReviewedTranslationLocales = (translations = []) =>
 
 const getIngredientSemanticStatus = (ingredient = {}) =>
   ingredient.semanticStatus || "UNREVIEWED";
+
+const isIngredientActive = (ingredient = {}) =>
+  String(ingredient.status || "ACTIVE").toUpperCase() !== "INACTIVE";
+
+const getIngredientUsageLabel = (ingredient = {}) => {
+  const hasUsageStats =
+    ingredient.usageStoreCount != null ||
+    ingredient.usageStorePercent != null ||
+    ingredient.usageStoreTotal != null ||
+    ingredient.usageProductCount != null;
+
+  if (!hasUsageStats) {
+    return {
+      className: "is-unknown",
+      primary: "Uso global",
+      secondary: "Sin metrica",
+      title: "Usage stats unavailable until the backend serving this page is restarted.",
+    };
+  }
+
+  const count = Number(ingredient.usageStoreCount || 0);
+  const percent = Number(ingredient.usageStorePercent || 0);
+  const total = Number(ingredient.usageStoreTotal || 0);
+  const productCount = Number(ingredient.usageProductCount || 0);
+  const roundedPercent = Number.isFinite(percent) ? Math.round(percent) : 0;
+  const usageClass =
+    roundedPercent >= 60 ? "is-high" : roundedPercent > 0 ? "is-medium" : "is-low";
+
+  return {
+    className: usageClass,
+    primary: "Uso global",
+    secondary: total ? `${count}/${total} tiendas - ${roundedPercent}%` : "Sin tiendas",
+    title: total
+      ? `${count} of ${total} active stores have this ingredient active. Used in ${productCount} active products.`
+      : "No active stores available for usage calculation.",
+  };
+};
 
 const getIngredientMissingLocales = (ingredient = {}) => {
   if (getIngredientSemanticStatus(ingredient) === "REJECTED") return [];
@@ -410,8 +458,6 @@ const getSemanticDraftValidation = (draft = {}) => {
 const getIngredientId = (ingredient = {}) =>
   ingredient.idValue || ingredient.ingredientId || ingredient.id;
 
-const getCandidateUrl = (candidate) => `${IMAGE_BATCH_BASE}/${candidate.file}`;
-
 export default function IngredientsModule() {
   const [ingredients, setIngredients] = useState([]);
   const [newIngredientCategory, setNewIngredientCategory] = useState("OTROS");
@@ -427,11 +473,7 @@ export default function IngredientsModule() {
   const [semanticDraft, setSemanticDraft] = useState(buildSemanticDraft());
   const [semanticLoading, setSemanticLoading] = useState(false);
   const [semanticSaving, setSemanticSaving] = useState(false);
-  const [imageReviewSavingId, setImageReviewSavingId] = useState(null);
   const [imageUploadSavingId, setImageUploadSavingId] = useState(null);
-  const [imageCandidates, setImageCandidates] = useState([]);
-  const [imageCandidateError, setImageCandidateError] = useState("");
-  const [applyingCandidateKey, setApplyingCandidateKey] = useState("");
   const [openCategories, setOpenCategories] = useState(() => new Set());
   const creatingIngredientRef = useRef(false);
 
@@ -463,6 +505,16 @@ export default function IngredientsModule() {
           (candidate) => getCanonicalCategory(candidate.category) === category
         )
       ),
+    []
+  );
+
+  const masterCategoryCounts = useMemo(
+    () =>
+      ingredientMasterSource.reduce((counts, candidate) => {
+        const category = getCanonicalCategory(candidate.category);
+        counts[category] = (counts[category] || 0) + 1;
+        return counts;
+      }, {}),
     []
   );
 
@@ -501,29 +553,6 @@ export default function IngredientsModule() {
         ),
       }));
   }, [semanticCatalogIngredients]);
-
-  const candidateMatches = useMemo(() => {
-    return imageCandidates
-      .map((candidate) => {
-        const match = semanticCatalogIngredients.find((ingredient) => {
-          const ingredientKeys = [
-            ingredient.canonicalKey,
-            ingredient.name,
-            ingredient.displayName,
-            ...(ingredient.semanticAliases || []).map((alias) => alias.alias),
-          ].map(normalizeIngredientKey);
-
-          return (
-            (candidate.ingredientId &&
-              Number(candidate.ingredientId) === Number(getIngredientId(ingredient))) ||
-            ingredientKeys.includes(normalizeIngredientKey(candidate.semanticKey))
-          );
-        });
-
-        return { ...candidate, ingredient: match || null };
-      })
-      .filter((candidate) => candidate.ingredient);
-  }, [imageCandidates, semanticCatalogIngredients]);
 
   const loadIngredients = async () => {
     try {
@@ -564,27 +593,10 @@ export default function IngredientsModule() {
     }
   };
 
-  const loadImageCandidates = async () => {
-    try {
-      setImageCandidateError("");
-      const response = await fetch(`${IMAGE_BATCH_BASE}/manifest.json`, {
-        cache: "no-store",
-      });
-      if (!response.ok) throw new Error("Image candidate manifest unavailable");
-      const manifest = await response.json();
-      setImageCandidates(Array.isArray(manifest.items) ? manifest.items : []);
-    } catch (err) {
-      console.error(err);
-      setImageCandidateError("Image candidate batch is not available.");
-      setImageCandidates([]);
-    }
-  };
-
   useEffect(() => {
     loadIngredients();
     loadSuggestions();
     loadSemanticCategories();
-    loadImageCandidates();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -745,7 +757,9 @@ export default function IngredientsModule() {
       const data = res.data || {};
       setSemanticAvailable(true);
       setSemanticDraft({
-        canonicalKey: data.canonicalKey || "",
+        canonicalKey:
+          data.canonicalKey ||
+          buildCanonicalKeySuggestion(getIngredientDisplayName(data)),
         semanticStatus: data.semanticStatus || "UNREVIEWED",
         semanticCategoryId: data.semanticCategoryId || "",
         translations: mergeSemanticTranslations(data.translations || []),
@@ -787,14 +801,16 @@ export default function IngredientsModule() {
       const sourceName =
         current.translations.find((translation) => translation.locale === "es")?.name ||
         getIngredientDisplayName(semanticIngredient);
+      const suggestedCanonicalKey =
+        current.canonicalKey || buildCanonicalKeySuggestion(sourceName);
 
       return {
         ...current,
+        canonicalKey: suggestedCanonicalKey,
+        semanticStatus:
+          current.semanticStatus === "REJECTED" ? "REJECTED" : "NEEDS_REVIEW",
         translations: current.translations.map((translation) => {
-          if (
-            translation.locale === "es" ||
-            String(translation.name || "").trim()
-          ) {
+          if (String(translation.name || "").trim()) {
             return translation;
           }
 
@@ -846,25 +862,6 @@ export default function IngredientsModule() {
     }
   };
 
-  const updateIngredientImageReview = async (ingredient, imageStatus) => {
-    const ingredientId = getIngredientId(ingredient);
-    if (!ingredientId) return;
-
-    try {
-      setImageReviewSavingId(ingredientId);
-      await api.patch(`/ingredients/${ingredientId}/image-review`, {
-        imageStatus,
-        imagePolicyVersion: "v1",
-        reviewedBy: "global-manager",
-      });
-      await loadIngredients();
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setImageReviewSavingId(null);
-    }
-  };
-
   const uploadIngredientImage = async (ingredient, file) => {
     const ingredientId = getIngredientId(ingredient);
     if (!ingredientId || !file) return;
@@ -887,45 +884,17 @@ export default function IngredientsModule() {
     }
   };
 
-  const applyImageCandidate = async (candidate) => {
-    const ingredient = candidate.ingredient;
-    const ingredientId = getIngredientId(ingredient);
-    if (!ingredientId) return;
-
-    const candidateKey = `${ingredientId}:${candidate.file}`;
-    try {
-      setApplyingCandidateKey(candidateKey);
-      const response = await fetch(getCandidateUrl(candidate), { cache: "no-store" });
-      if (!response.ok) throw new Error("Candidate image unavailable");
-      const blob = await response.blob();
-      const file = new File([blob], candidate.file, {
-        type: blob.type || "image/png",
-      });
-      const formData = new FormData();
-      formData.append("image", file);
-      formData.append("imageSource", "AI_GENERATED");
-      formData.append("imagePrompt", candidate.qaNote || candidate.semanticKey || "");
-      formData.append("imagePolicyVersion", "v1");
-      await api.patch(`/ingredients/${ingredientId}`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      await loadIngredients();
-    } catch (err) {
-      console.error(err);
-      setImageCandidateError("Could not apply this image candidate.");
-    } finally {
-      setApplyingCandidateKey("");
-    }
-  };
-
   const semanticDraftValidation = getSemanticDraftValidation(semanticDraft);
+  const semanticReviewReady =
+    String(semanticDraft.canonicalKey || "").trim() &&
+    semanticDraft.semanticCategoryId &&
+    semanticDraftValidation.missingCoreLocales.length === 0;
   const semanticSaveBlocked = semanticDraftValidation.criticalIssues.length > 0;
   const semanticTranslationSourceName =
     semanticDraft.translations.find((translation) => translation.locale === "es")
       ?.name || getIngredientDisplayName(semanticIngredient);
   const canSuggestTranslationDrafts = semanticDraft.translations.some(
     (translation) =>
-      translation.locale !== "es" &&
       !String(translation.name || "").trim() &&
       buildTranslationDraftName(semanticTranslationSourceName, translation.locale)
   );
@@ -976,51 +945,12 @@ export default function IngredientsModule() {
 
       {semanticError && <div className="gm-semanticError">{semanticError}</div>}
 
-      {candidateMatches.length > 0 && (
-        <section className="gm-imageCandidatePanel">
-          <div className="gm-imageCandidateHeader">
-            <div>
-              <span>AI image candidates</span>
-              <h3>{candidateMatches.length} candidates</h3>
-            </div>
-            <button type="button" onClick={loadImageCandidates}>
-              Refresh batch
-            </button>
-          </div>
-          {imageCandidateError && (
-            <div className="gm-semanticWarning">{imageCandidateError}</div>
-          )}
-          <div className="gm-imageCandidateGrid">
-            {candidateMatches.map((candidate) => {
-              const ingredient = candidate.ingredient;
-              const candidateKey = `${getIngredientId(ingredient)}:${candidate.file}`;
-              return (
-                <article className="gm-imageCandidateCard" key={candidateKey}>
-                  <img src={getCandidateUrl(candidate)} alt={candidate.semanticKey} />
-                  <strong>{getDisplayName(getIngredientDisplayName(ingredient))}</strong>
-                  <span>{candidate.candidateStatus}</span>
-                  <button
-                    type="button"
-                    disabled={applyingCandidateKey === candidateKey}
-                    onClick={() => applyImageCandidate(candidate)}
-                  >
-                    {applyingCandidateKey === candidateKey
-                      ? "Applying..."
-                      : "Apply as generated"}
-                  </button>
-                </article>
-              );
-            })}
-          </div>
-        </section>
-      )}
-
       <div className="gm-tree">
         {loading && <p className="gm-treeEmpty">Loading ingredients...</p>}
         {!loading &&
           groupedIngredients.map(({ category, items }) => {
             const isOpen = openCategories.has(category);
-            const activeCount = items.filter((ingredient) => ingredient.status !== "INACTIVE").length;
+            const masterTotal = masterCategoryCounts[category] || items.length;
             return (
               <section className="gm-categoryBlock" key={category}>
                 <button
@@ -1030,8 +960,8 @@ export default function IngredientsModule() {
                 >
                   <span>{isOpen ? "▾" : "▸"}</span>
                   <strong>{getCategoryLabel(category)}</strong>
-                  <em>
-                    {activeCount} / {items.length}
+                  <em title="Loaded in global catalog / master source universe">
+                    {items.length} / {masterTotal}
                   </em>
                 </button>
                 {isOpen && (
@@ -1039,6 +969,7 @@ export default function IngredientsModule() {
                     {items.map((ingredient) => {
                       const ingredientId = getIngredientId(ingredient);
                       const semanticGaps = getIngredientSemanticGaps(ingredient);
+                      const usage = getIngredientUsageLabel(ingredient);
                       return (
                         <div className="gm-node" key={ingredientId}>
                           <div className="gm-node-left">
@@ -1053,18 +984,18 @@ export default function IngredientsModule() {
                           </div>
                           <div className="gm-node-right">
                             <span
-                              className={`gm-semanticStatusBadge ${getSemanticStatusClass(
-                                getIngredientSemanticStatus(ingredient)
-                              )}`}
+                              className={`gm-availabilityBadge ${
+                                isIngredientActive(ingredient) ? "is-active" : "is-inactive"
+                              }`}
                             >
-                              {formatSemanticStatus(getIngredientSemanticStatus(ingredient))}
+                              {isIngredientActive(ingredient) ? "Activo" : "Inactivo"}
                             </span>
                             <span
-                              className={`gm-imageStatusBadge ${getImageStatusClass(
-                                ingredient.imageStatus
-                              )}`}
+                              className={`gm-usageBadge ${usage.className}`}
+                              title={usage.title}
                             >
-                              {formatImageStatus(ingredient.imageStatus)}
+                              <small>{usage.primary}</small>
+                              <strong>{usage.secondary}</strong>
                             </span>
                             <button
                               type="button"
@@ -1098,29 +1029,6 @@ export default function IngredientsModule() {
                                 }}
                               />
                             </label>
-                            <div className="gm-imageActions">
-                              {IMAGE_REVIEW_STATUSES.map((status) => (
-                                <button
-                                  key={status}
-                                  type="button"
-                                  className={
-                                    status === "REVIEWED" ? "gm-imageApproveBtn" : ""
-                                  }
-                                  onClick={() => updateIngredientImageReview(ingredient, status)}
-                                  disabled={
-                                    !ingredient.image ||
-                                    ingredient.imageStatus === status ||
-                                    Number(imageReviewSavingId) === Number(ingredientId)
-                                  }
-                                >
-                                  {status === "REVIEWED"
-                                    ? "Approve"
-                                    : status === "REJECTED"
-                                      ? "Reject"
-                                      : "Deprecate"}
-                                </button>
-                              ))}
-                            </div>
                             <button
                               type="button"
                               className="gm-deleteBtn"
@@ -1183,177 +1091,192 @@ export default function IngredientsModule() {
               <p className="gm-semanticNotice">Loading semantic data...</p>
             ) : (
               <>
-                {semanticError && <div className="gm-semanticError">{semanticError}</div>}
-                {semanticDraftValidation.criticalIssues.length > 0 && (
-                  <div className="gm-semanticError">
-                    {semanticDraftValidation.criticalIssues.join(". ")}
-                  </div>
-                )}
-                {semanticDraftValidation.warnings.length > 0 && (
-                  <div className="gm-semanticWarnings">
-                    {semanticDraftValidation.warnings.map((warning) => (
-                      <span key={warning}>{warning}</span>
-                    ))}
-                  </div>
-                )}
-
-                <div className="gm-semanticQuickActions">
-                  <button
-                    type="button"
-                    disabled={!semanticAvailable || !canSuggestTranslationDrafts}
-                    onClick={applySuggestedTranslationDrafts}
-                  >
-                    Suggest missing translations
-                  </button>
-                  <span>Suggestions are drafts and stay unreviewed until approved.</span>
-                </div>
-
-                <div className="gm-semanticGrid">
-                  <label>
-                    Canonical key
-                    <input
-                      value={semanticDraft.canonicalKey}
-                      disabled={!semanticAvailable}
-                      placeholder={buildCanonicalKeySuggestion(
-                        getIngredientDisplayName(semanticIngredient)
-                      )}
-                      onChange={(event) =>
-                        setSemanticDraft((current) => ({
-                          ...current,
-                          canonicalKey: event.target.value,
-                        }))
-                      }
-                    />
-                  </label>
-
-                  <label>
-                    Semantic status
-                    <select
-                      value={semanticDraft.semanticStatus}
-                      disabled={!semanticAvailable}
-                      onChange={(event) =>
-                        setSemanticDraft((current) => ({
-                          ...current,
-                          semanticStatus: event.target.value,
-                        }))
-                      }
-                    >
-                      {SEMANTIC_STATUSES.map((status) => (
-                        <option key={status} value={status}>
-                          {status}
-                        </option>
+                <div className="gm-semanticBody">
+                  {semanticError && <div className="gm-semanticError">{semanticError}</div>}
+                  {semanticDraftValidation.criticalIssues.length > 0 && (
+                    <div className="gm-semanticError">
+                      {semanticDraftValidation.criticalIssues.join(". ")}
+                    </div>
+                  )}
+                  {semanticDraftValidation.warnings.length > 0 && (
+                    <div className="gm-semanticWarnings">
+                      {semanticDraftValidation.warnings.map((warning) => (
+                        <span key={warning}>{warning}</span>
                       ))}
-                    </select>
-                  </label>
+                    </div>
+                  )}
 
-                  <label>
-                    Semantic category
-                    <select
-                      value={semanticDraft.semanticCategoryId}
-                      disabled={!semanticAvailable}
-                      onChange={(event) =>
-                        setSemanticDraft((current) => ({
-                          ...current,
-                          semanticCategoryId: event.target.value,
-                        }))
-                      }
-                    >
-                      <option value="">Select semantic category</option>
-                      {semanticCategories.map((category) => (
-                        <option key={category.id} value={category.id}>
-                          {category.displayName || category.defaultName || category.name || category.key}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-                </div>
+                  <div className="gm-semanticGrid">
+                    <label>
+                      Canonical key
+                      <input
+                        value={semanticDraft.canonicalKey}
+                        disabled={!semanticAvailable}
+                        placeholder={buildCanonicalKeySuggestion(
+                          getIngredientDisplayName(semanticIngredient)
+                        )}
+                        onChange={(event) =>
+                          setSemanticDraft((current) => ({
+                            ...current,
+                            canonicalKey: event.target.value,
+                          }))
+                        }
+                      />
+                    </label>
 
-                <div className="gm-semanticSection">
-                  <h4>Reviewed translations</h4>
-                  <div className="gm-translationGrid">
-                    {semanticDraft.translations.map((translation) => (
-                      <div className="gm-translationCard" key={translation.locale}>
-                        <div className="gm-translationHeader">
-                          <strong>{translation.locale.toUpperCase()}</strong>
-                          <span
-                            className={`gm-translationBadge ${
-                              translation.isReviewed
-                                ? "is-reviewed"
-                                : translation.name
-                                  ? "is-draft"
-                                  : "is-missing"
-                            }`}
+                    <label>
+                      Semantic status
+                      <select
+                        value={semanticDraft.semanticStatus}
+                        disabled={!semanticAvailable}
+                        onChange={(event) =>
+                          setSemanticDraft((current) => ({
+                            ...current,
+                            semanticStatus:
+                              event.target.value === "REVIEWED" && !semanticReviewReady
+                                ? "NEEDS_REVIEW"
+                                : event.target.value,
+                          }))
+                        }
+                      >
+                        {SEMANTIC_STATUSES.map((status) => (
+                          <option
+                            key={status}
+                            value={status}
+                            disabled={status === "REVIEWED" && !semanticReviewReady}
                           >
-                            {translation.isReviewed
-                              ? "Reviewed"
-                              : translation.name
-                                ? "Draft"
-                                : "Missing"}
-                          </span>
-                          <label className="gm-reviewedToggle">
+                            {status}
+                          </option>
+                        ))}
+                      </select>
+                      {!semanticReviewReady && (
+                        <span className="gm-fieldHint">
+                          REVIEWED se habilita con key, categoria y ES/EN/IT revisados.
+                        </span>
+                      )}
+                    </label>
+
+                    <label>
+                      Semantic category
+                      <select
+                        value={semanticDraft.semanticCategoryId}
+                        disabled={!semanticAvailable}
+                        onChange={(event) =>
+                          setSemanticDraft((current) => ({
+                            ...current,
+                            semanticCategoryId: event.target.value,
+                          }))
+                        }
+                      >
+                        <option value="">Select semantic category</option>
+                        {semanticCategories.map((category) => (
+                          <option key={category.id} value={category.id}>
+                            {category.displayName || category.defaultName || category.name || category.key}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                  </div>
+
+                  <div className="gm-semanticSection">
+                    <div className="gm-sectionHeader">
+                      <div>
+                        <h4>Traducciones</h4>
+                        <span>Genera borradores; cada idioma se aprueba manualmente.</span>
+                      </div>
+                      <button
+                        type="button"
+                        disabled={!semanticAvailable || !canSuggestTranslationDrafts}
+                        onClick={applySuggestedTranslationDrafts}
+                      >
+                        Generar traducciones
+                      </button>
+                    </div>
+                    <div className="gm-translationGrid">
+                      {semanticDraft.translations.map((translation) => (
+                        <div className="gm-translationCard" key={translation.locale}>
+                          <div className="gm-translationHeader">
+                            <strong>{translation.locale.toUpperCase()}</strong>
+                            <span
+                              className={`gm-translationBadge ${
+                                translation.isReviewed
+                                  ? "is-reviewed"
+                                  : translation.name
+                                    ? "is-draft"
+                                    : "is-missing"
+                              }`}
+                            >
+                              {translation.isReviewed
+                                ? "Reviewed"
+                                : translation.name
+                                  ? "Draft"
+                                  : "Missing"}
+                            </span>
+                            <label className="gm-reviewedToggle">
+                              <input
+                                type="checkbox"
+                                checked={translation.isReviewed === true}
+                                disabled={!semanticAvailable}
+                                onChange={(event) =>
+                                  updateTranslationDraft(
+                                    translation.locale,
+                                    "isReviewed",
+                                    event.target.checked
+                                  )
+                                }
+                              />
+                              Reviewed
+                            </label>
+                          </div>
+                          <label className="gm-translationField">
+                            Name
                             <input
-                              type="checkbox"
-                              checked={translation.isReviewed === true}
+                              value={translation.name || ""}
                               disabled={!semanticAvailable}
+                              placeholder="Name"
                               onChange={(event) =>
                                 updateTranslationDraft(
                                   translation.locale,
-                                  "isReviewed",
-                                  event.target.checked
+                                  "name",
+                                  event.target.value
                                 )
                               }
                             />
-                            Reviewed
+                          </label>
+                          <label className="gm-translationField">
+                            Description
+                            <textarea
+                              value={translation.description || ""}
+                              disabled={!semanticAvailable}
+                              placeholder="Description"
+                              onChange={(event) =>
+                                updateTranslationDraft(
+                                  translation.locale,
+                                  "description",
+                                  event.target.value
+                                )
+                              }
+                            />
                           </label>
                         </div>
-                        <label className="gm-translationField">
-                          Name
-                          <input
-                            value={translation.name || ""}
-                            disabled={!semanticAvailable}
-                            placeholder="Name"
-                            onChange={(event) =>
-                              updateTranslationDraft(
-                                translation.locale,
-                                "name",
-                                event.target.value
-                              )
-                            }
-                          />
-                        </label>
-                        <label className="gm-translationField">
-                          Description
-                          <textarea
-                            value={translation.description || ""}
-                            disabled={!semanticAvailable}
-                            placeholder="Description"
-                            onChange={(event) =>
-                              updateTranslationDraft(
-                                translation.locale,
-                                "description",
-                                event.target.value
-                              )
-                            }
-                          />
-                        </label>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
-                </div>
 
-                <div className="gm-semanticSection">
-                  <h4>Aliases</h4>
-                  <textarea
-                    value={semanticDraft.aliasesText}
-                    disabled={!semanticAvailable}
-                    placeholder="One alias per line. Example: garlic | en | US | display"
-                    onChange={(event) =>
-                      setSemanticDraft((current) => ({
-                        ...current,
-                        aliasesText: event.target.value,
-                      }))
-                    }
-                  />
+                  <div className="gm-semanticSection gm-semanticAliases">
+                    <h4>Aliases</h4>
+                    <textarea
+                      value={semanticDraft.aliasesText}
+                      disabled={!semanticAvailable}
+                      placeholder="One alias per line. Example: garlic | en | US | display"
+                      onChange={(event) =>
+                        setSemanticDraft((current) => ({
+                          ...current,
+                          aliasesText: event.target.value,
+                        }))
+                      }
+                    />
+                  </div>
                 </div>
 
                 <div className="gm-modalActions">

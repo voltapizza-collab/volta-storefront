@@ -313,6 +313,21 @@ const getReviewedTranslationLocales = (translations = []) =>
 const getIngredientSemanticStatus = (ingredient = {}) =>
   ingredient.semanticStatus || "UNREVIEWED";
 
+const OPERATIONAL_NAME_PATTERNS = [
+  {
+    pattern: /\b\d+(?:[.,]\d+)?\s*(kg|g|gr|gramos|l|lt|ml|uds?|unidades)\b/i,
+    reason: "contains package quantity/unit",
+  },
+  {
+    pattern: /\b(pack|bolsa|bote|lata|caja|cubo|tarrina|barra|saco)\b/i,
+    reason: "contains packaging wording",
+  },
+  {
+    pattern: /\b(relleno|bloque|rallado|rallada|rayado|rayada|lonchas|slices|mix|mezcla)\b/i,
+    reason: "looks like an operational format",
+  },
+];
+
 const isIngredientActive = (ingredient = {}) =>
   String(ingredient.status || "ACTIVE").toUpperCase() !== "INACTIVE";
 
@@ -350,6 +365,19 @@ const getIngredientUsageLabel = (ingredient = {}) => {
   };
 };
 
+const getIngredientDeleteBlocker = (ingredient = {}) => {
+  const storeCount = Number(ingredient.usageStoreCount || 0);
+  const productCount = Number(ingredient.usageProductCount || 0);
+
+  if (storeCount > 0 || productCount > 0) {
+    return `Cannot delete: used by ${storeCount} store${
+      storeCount === 1 ? "" : "s"
+    } and ${productCount} active product${productCount === 1 ? "" : "s"}.`;
+  }
+
+  return "";
+};
+
 const getIngredientMissingLocales = (ingredient = {}) => {
   if (getIngredientSemanticStatus(ingredient) === "REJECTED") return [];
 
@@ -369,10 +397,31 @@ const getIngredientMissingLocales = (ingredient = {}) => {
 };
 
 const getIngredientSemanticGaps = (ingredient = {}) => {
-  if (getIngredientSemanticStatus(ingredient) === "REJECTED") return [];
-
   const gaps = [];
+  const status = getIngredientSemanticStatus(ingredient);
+  const usageStoreCount = Number(ingredient.usageStoreCount || 0);
+  const usageProductCount = Number(ingredient.usageProductCount || 0);
+  const isOperationallyActive =
+    isIngredientActive(ingredient) || usageStoreCount > 0 || usageProductCount > 0;
+
+  if (status === "REJECTED") {
+    if (isOperationallyActive) {
+      gaps.push({
+        key: "rejected",
+        label: "Rejected",
+        title: "Rejected semantic identity is still active or used operationally",
+      });
+    }
+    return gaps;
+  }
+
   const missingLocales = getIngredientMissingLocales(ingredient);
+  const nameForReview = [
+    getIngredientDisplayName(ingredient),
+    ingredient.name,
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   if (!String(ingredient.canonicalKey || "").trim()) {
     gaps.push({ key: "key", label: "Key", title: "Missing global identity" });
@@ -394,7 +443,53 @@ const getIngredientSemanticGaps = (ingredient = {}) => {
     });
   }
 
+  const operationalPattern = OPERATIONAL_NAME_PATTERNS.find(({ pattern }) =>
+    pattern.test(nameForReview)
+  );
+  if (operationalPattern) {
+    gaps.push({
+      key: "nameQuality",
+      label: "Name",
+      title: `Operational name needs semantic review: ${operationalPattern.reason}`,
+    });
+  }
+
   return gaps;
+};
+
+const getCategorySemanticSummary = (items = []) => {
+  const issueCounts = new Map();
+  let ingredientCount = 0;
+
+  items.forEach((ingredient) => {
+    const gaps = getIngredientSemanticGaps(ingredient);
+    if (gaps.length === 0) return;
+
+    ingredientCount += 1;
+    gaps.forEach((gap) => {
+      const current = issueCounts.get(gap.key) || {
+        label: gap.label,
+        count: 0,
+      };
+      issueCounts.set(gap.key, {
+        ...current,
+        count: current.count + 1,
+      });
+    });
+  });
+
+  const detail = [...issueCounts.values()]
+    .map((issue) => `${issue.label}: ${issue.count}`)
+    .join(" | ");
+
+  return {
+    ingredientCount,
+    title: ingredientCount
+      ? `${ingredientCount} ingredient${
+          ingredientCount === 1 ? "" : "s"
+        } need semantic adjustment${detail ? ` - ${detail}` : ""}`
+      : "No semantic issues in this category",
+  };
 };
 
 const getSemanticReviewButtonClass = (ingredient = {}) => {
@@ -730,6 +825,7 @@ export default function IngredientsModule() {
   };
 
   const handleDeleteIngredient = async (id, name) => {
+    setSemanticError("");
     const confirmed = window.confirm(
       `Delete ${getDisplayName(name)} from the ingredients table?`
     );
@@ -740,6 +836,9 @@ export default function IngredientsModule() {
       await loadIngredients();
     } catch (err) {
       console.error(err);
+      setSemanticError(
+        err?.response?.data?.error || "Could not delete ingredient"
+      );
     }
   };
 
@@ -951,6 +1050,7 @@ export default function IngredientsModule() {
           groupedIngredients.map(({ category, items }) => {
             const isOpen = openCategories.has(category);
             const masterTotal = masterCategoryCounts[category] || items.length;
+            const semanticSummary = getCategorySemanticSummary(items);
             return (
               <section className="gm-categoryBlock" key={category}>
                 <button
@@ -960,9 +1060,19 @@ export default function IngredientsModule() {
                 >
                   <span>{isOpen ? "▾" : "▸"}</span>
                   <strong>{getCategoryLabel(category)}</strong>
-                  <em title="Loaded in global catalog / master source universe">
-                    {items.length} / {masterTotal}
-                  </em>
+                  <span className="gm-categoryCounters">
+                    {semanticSummary.ingredientCount > 0 && (
+                      <span
+                        className="gm-categoryIssueBadge"
+                        title={semanticSummary.title}
+                      >
+                        {semanticSummary.ingredientCount}
+                      </span>
+                    )}
+                    <em title="Loaded in global catalog / master source universe">
+                      {items.length} / {masterTotal}
+                    </em>
+                  </span>
                 </button>
                 {isOpen && (
                   <div className="gm-categoryItems">
@@ -970,6 +1080,7 @@ export default function IngredientsModule() {
                       const ingredientId = getIngredientId(ingredient);
                       const semanticGaps = getIngredientSemanticGaps(ingredient);
                       const usage = getIngredientUsageLabel(ingredient);
+                      const deleteBlocker = getIngredientDeleteBlocker(ingredient);
                       return (
                         <div className="gm-node" key={ingredientId}>
                           <div className="gm-node-left">
@@ -1032,6 +1143,8 @@ export default function IngredientsModule() {
                             <button
                               type="button"
                               className="gm-deleteBtn"
+                              disabled={Boolean(deleteBlocker)}
+                              title={deleteBlocker || "Delete ingredient"}
                               onClick={() =>
                                 handleDeleteIngredient(
                                   ingredientId,

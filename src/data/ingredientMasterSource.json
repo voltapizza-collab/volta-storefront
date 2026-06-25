@@ -12186,6 +12186,50 @@
     "source": "LEGACY_INGREDIENTS_BASE"
   },
   {
+    "canonicalKey": "mozzarella",
+    "sourceCategory": "QUESOS",
+    "category": "QUESOS",
+    "semanticCategoryKey": "cheeses",
+    "allergens": [
+      "LACTOSE"
+    ],
+    "semanticStatus": "NEEDS_REVIEW",
+    "imageStatus": "MISSING",
+    "source": "LEGACY_INGREDIENTS_BASE",
+    "defaultName": "Mozzarella fresca",
+    "translations": {
+      "es": "Mozzarella fresca"
+    },
+    "aliases": [
+      "Mozzarella fresca",
+      "Mozzarella",
+      "Queso mozzarella",
+      "Fior di latte"
+    ]
+  },
+  {
+    "canonicalKey": "mozzarella_rallada",
+    "sourceCategory": "QUESOS",
+    "category": "QUESOS",
+    "semanticCategoryKey": "cheeses",
+    "allergens": [
+      "LACTOSE"
+    ],
+    "semanticStatus": "NEEDS_REVIEW",
+    "imageStatus": "MISSING",
+    "source": "LEGACY_INGREDIENTS_BASE",
+    "defaultName": "Mozzarella rallada",
+    "translations": {
+      "es": "Mozzarella rallada"
+    },
+    "aliases": [
+      "Mozzarella rallada",
+      "Mozzarella rayada",
+      "Queso mozzarella rallado",
+      "Shredded mozzarella"
+    ]
+  },
+  {
     "canonicalKey": "mozzarella_ahumada",
     "sourceCategory": "QUESOS",
     "category": "QUESOS",

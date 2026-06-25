@@ -2494,6 +2494,8 @@ export default function StorePage() {
   const tabsScrollSettleTimeoutRef = useRef(0);
   const tabsScrollOriginRef = useRef("");
   const ignoreTabsScrollUntilRef = useRef(0);
+  const tabsDragRef = useRef(null);
+  const suppressTabsClickUntilRef = useRef(0);
   const commercialTabClickTimeoutRef = useRef(0);
   const lastCommercialTabClickRef = useRef({ id: "", at: 0 });
   const commercialAutoSwitchAtRef = useRef(0);
@@ -3497,6 +3499,65 @@ export default function StorePage() {
       syncActiveTabFromTabsScroll({ align: true });
     }, 160);
   }, [pauseTabsTicker, syncActiveTabFromTabsScroll]);
+
+  const handleTabsPointerDown = useCallback(
+    (event) => {
+      if (event.pointerType === "mouse" && event.button !== 0) return;
+      if (event.target?.closest?.(".lsf-tab--segment")) return;
+      if (event.target?.closest?.("input, textarea, select")) return;
+
+      const scroller = tabsScrollerRef.current;
+      if (!scroller) return;
+
+      pauseTabsTicker(6200);
+      tabsDragRef.current = {
+        pointerId: event.pointerId,
+        startX: event.clientX,
+        scrollLeft: scroller.scrollLeft,
+        moved: false,
+      };
+      scroller.setPointerCapture?.(event.pointerId);
+      scroller.classList.add("is-dragging");
+    },
+    [pauseTabsTicker]
+  );
+
+  const handleTabsPointerMove = useCallback(
+    (event) => {
+      const drag = tabsDragRef.current;
+      const scroller = tabsScrollerRef.current;
+      if (!drag || !scroller || drag.pointerId !== event.pointerId) return;
+
+      const deltaX = event.clientX - drag.startX;
+      if (Math.abs(deltaX) < 4 && !drag.moved) return;
+
+      drag.moved = true;
+      pauseTabsTicker(6200);
+      scroller.scrollLeft = drag.scrollLeft - deltaX;
+      event.preventDefault();
+    },
+    [pauseTabsTicker]
+  );
+
+  const finishTabsDrag = useCallback((event) => {
+    const drag = tabsDragRef.current;
+    const scroller = tabsScrollerRef.current;
+    if (!drag || drag.pointerId !== event.pointerId) return;
+
+    if (drag.moved) {
+      suppressTabsClickUntilRef.current = performance.now() + 320;
+    }
+
+    tabsDragRef.current = null;
+    scroller?.releasePointerCapture?.(event.pointerId);
+    scroller?.classList.remove("is-dragging");
+  }, []);
+
+  const handleTabsClickCapture = useCallback((event) => {
+    if (performance.now() > suppressTabsClickUntilRef.current) return;
+    event.preventDefault();
+    event.stopPropagation();
+  }, []);
 
   const handleGridPointerDown = useCallback((event) => {
     if (event.pointerType === "mouse" && event.button !== 0) return;
@@ -6950,10 +7011,11 @@ export default function StorePage() {
               ref={tabsScrollerRef}
               role="tablist"
               aria-label="Categorias del menu"
-              onPointerDown={(event) => {
-                if (event.target?.closest?.(".lsf-tab--segment")) return;
-                pauseTabsTicker(6200);
-              }}
+              onClickCapture={handleTabsClickCapture}
+              onPointerDown={handleTabsPointerDown}
+              onPointerMove={handleTabsPointerMove}
+              onPointerUp={finishTabsDrag}
+              onPointerCancel={finishTabsDrag}
               onWheel={() => pauseTabsTicker(6200)}
               onScroll={handleTabsScroll}
             >

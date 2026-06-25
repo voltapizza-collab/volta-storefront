@@ -171,6 +171,36 @@ export default function InventoryModule({ partner, language = "es" }) {
       .replace(/(\..*)\./g, "$1")
       .slice(0, 8);
 
+  const getCategoryPriceSuggestion = (ingredient) => {
+    if (!ingredient) return null;
+
+    const category = getIngredientCategoryGroupKey(ingredient);
+    const prices = ingredients
+      .filter(
+        (candidate) =>
+          candidate.id !== ingredient.id &&
+          getIngredientCategoryGroupKey(candidate) === category
+      )
+      .map((candidate) => Number(candidate.costPrice))
+      .filter((price) => Number.isFinite(price) && price > 0);
+
+    if (!prices.length) return null;
+
+    const average =
+      prices.reduce((total, price) => total + price, 0) / prices.length;
+    return Math.round(average * 100) / 100;
+  };
+
+  const isSuggestedPriceApplied = (suggestedPrice) => {
+    if (!suggestedPrice) return false;
+
+    const currentPrice = Number(String(detailDraft.costPrice).replace(",", "."));
+    return (
+      Number.isFinite(currentPrice) &&
+      Math.abs(currentPrice - suggestedPrice) < 0.005
+    );
+  };
+
   const openIngredientDetail = (ing) => {
     setDetailIngredient(ing);
     setDetailDraft({
@@ -201,6 +231,58 @@ export default function InventoryModule({ partner, language = "es" }) {
       imageFile: file,
       imagePreview: file ? URL.createObjectURL(file) : current.imagePreview,
     }));
+  };
+
+  const applySuggestedPrice = async () => {
+    if (!detailIngredient || !suggestedDetailPrice) return;
+
+    const formattedPrice = suggestedDetailPrice.toFixed(2);
+
+    if (!suggestedDetailPriceApplied) {
+      setDetailDraft((current) => ({
+        ...current,
+        costPrice: formattedPrice,
+      }));
+      return;
+    }
+
+    const category = getIngredientCategoryGroupKey(detailIngredient);
+    const targetIngredients = ingredients.filter(
+      (candidate) => getIngredientCategoryGroupKey(candidate) === category
+    );
+
+    if (!targetIngredients.length) return;
+
+    const confirmed = window.confirm(
+      `Aplicar EUR ${formattedPrice} a ${targetIngredients.length} ingredientes de ${getCategoryDisplayName(category)}?`
+    );
+    if (!confirmed) return;
+
+    try {
+      setSavingOnboardingId(detailIngredient.id);
+
+      for (const ingredient of targetIngredients) {
+        const payload = new FormData();
+        payload.append("costPrice", formattedPrice);
+        payload.append("description", ingredient.description || "");
+
+        await api.patch(`/ingredients/${ingredient.id}`, payload, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+      }
+
+      setDetailDraft((current) => ({
+        ...current,
+        costPrice: formattedPrice,
+      }));
+      setCreateFeedback("");
+      await fetchIngredients();
+    } catch (err) {
+      console.error(err);
+      setCreateFeedback("No se pudo aplicar el precio sugerido a la categoria.");
+    } finally {
+      setSavingOnboardingId(null);
+    }
   };
 
   const saveIngredientDetail = async () => {
@@ -305,6 +387,40 @@ export default function InventoryModule({ partner, language = "es" }) {
     getMappedGlobalIngredient(ingredient) || ingredient;
   const hasGlobalSemanticMapping = (ingredient) =>
     Boolean(getMappedGlobalIngredient(ingredient));
+  const getSemanticPanelState = (ingredient) => {
+    const semanticIngredient = getEffectiveSemanticIngredient(ingredient);
+    const status = semanticIngredient?.semanticStatus || ingredient?.semanticStatus;
+
+    if (hasGlobalSemanticMapping(ingredient)) {
+      return {
+        label: "Mapeado a identidad global",
+        className: "",
+        note: "",
+      };
+    }
+
+    if (status === "REVIEWED") {
+      return {
+        label: "Identidad global",
+        className: "",
+        note: "",
+      };
+    }
+
+    if (status === "REJECTED") {
+      return {
+        label: "Identidad rechazada",
+        className: "is-warning",
+        note: "Revisar o remapear antes de usar como referencia global.",
+      };
+    }
+
+    return {
+      label: "Identidad pendiente",
+      className: "is-warning",
+      note: "Falta completar y revisar la identidad semantica global.",
+    };
+  };
   const getIngredientImage = (ingredient) =>
     ingredient?.image || getMappedGlobalIngredient(ingredient)?.image || "";
   const hasInheritedGlobalImage = (ingredient) =>
@@ -434,15 +550,6 @@ export default function InventoryModule({ partner, language = "es" }) {
     }, []);
   };
 
-  const hasSemanticIdentity = (ingredient) =>
-    Boolean(
-      hasGlobalSemanticMapping(ingredient) ||
-        ingredient?.canonicalKey ||
-        ingredient?.semanticStatus === "REVIEWED" ||
-        getKnownAliases(ingredient).length ||
-        getSemanticTranslations(ingredient).length
-    );
-
   const renderIngredientTile = (ing) => {
     const allergens = getAllergenTags(ing);
     const activePrice = formatIngredientPrice(ing.costPrice);
@@ -546,6 +653,20 @@ export default function InventoryModule({ partner, language = "es" }) {
     Boolean(detailIngredient) &&
     !detailDraft.imagePreview &&
     hasInheritedGlobalImage(detailIngredient);
+  const suggestedDetailPrice = detailIngredient
+    ? getCategoryPriceSuggestion(detailIngredient)
+    : null;
+  const suggestedDetailPriceApplied =
+    isSuggestedPriceApplied(suggestedDetailPrice);
+  const semanticDetailPanelState = detailIngredient
+    ? getSemanticPanelState(detailIngredient)
+    : null;
+  const detailKnownAliases = detailIngredient
+    ? getKnownAliases(detailIngredient)
+    : [];
+  const detailSemanticTranslations = detailIngredient
+    ? getSemanticTranslations(detailIngredient)
+    : [];
 
   return (
     <div className="inv-wrapper">
@@ -630,64 +751,73 @@ export default function InventoryModule({ partner, language = "es" }) {
               <div className="inv-priceModalError">{createFeedback}</div>
             )}
 
-            {hasSemanticIdentity(detailIngredient) && (
-              <div className="inv-semanticPanel">
-                <div>
-                  <span>
-                    {hasGlobalSemanticMapping(detailIngredient)
-                      ? "Mapeado a identidad global"
-                      : "Identidad global"}
-                  </span>
-                  <strong>
-                    {getEffectiveSemanticIngredient(detailIngredient)?.canonicalKey ||
-                      "Pendiente de clave canonica"}
-                  </strong>
-                </div>
-                {hasGlobalSemanticMapping(detailIngredient) && (
-                  <small>
-                    Ingrediente local: {detailIngredient.name}. Identidad global:{" "}
-                    {getMappedGlobalIngredient(detailIngredient)?.displayName ||
-                      getMappedGlobalIngredient(detailIngredient)?.name}
-                  </small>
-                )}
-                {normalizeSearchText(detailIngredient.name) !==
-                  normalizeSearchText(getIngredientDisplayName(detailIngredient)) && (
-                  <small>
-                    Nombre original: {detailIngredient.name}
-                  </small>
-                )}
-                {getKnownAliases(detailIngredient).length > 0 && (
-                  <div className="inv-semanticAliases">
-                    <span>Se puede buscar como</span>
-                    <div className="inv-aliasList">
-                      {getKnownAliases(detailIngredient).map((alias) => (
-                        <span key={`${detailIngredient.id}-semantic-${alias}`}>
-                          {alias}
-                        </span>
-                      ))}
-                    </div>
+            <div
+              className={`inv-semanticPanel ${
+                semanticDetailPanelState?.className || ""
+              }`}
+            >
+              <div>
+                <span>{semanticDetailPanelState?.label}</span>
+                <strong>
+                  {getEffectiveSemanticIngredient(detailIngredient)?.canonicalKey ||
+                    "Pendiente de clave canonica"}
+                </strong>
+              </div>
+              {semanticDetailPanelState?.note && (
+                <small>{semanticDetailPanelState.note}</small>
+              )}
+              {hasGlobalSemanticMapping(detailIngredient) && (
+                <small>
+                  Ingrediente local: {detailIngredient.name}. Identidad global:{" "}
+                  {getMappedGlobalIngredient(detailIngredient)?.displayName ||
+                    getMappedGlobalIngredient(detailIngredient)?.name}
+                </small>
+              )}
+              {normalizeSearchText(detailIngredient.name) !==
+                normalizeSearchText(getIngredientDisplayName(detailIngredient)) && (
+                <small>
+                  Nombre original: {detailIngredient.name}
+                </small>
+              )}
+              <div className="inv-semanticAliases">
+                <span>Se puede buscar como</span>
+                {detailKnownAliases.length > 0 ? (
+                  <div className="inv-aliasList">
+                    {detailKnownAliases.map((alias) => (
+                      <span key={`${detailIngredient.id}-semantic-${alias}`}>
+                        {alias}
+                      </span>
+                    ))}
                   </div>
-                )}
-                {getSemanticTranslations(detailIngredient).length > 0 && (
-                  <div className="inv-semanticTranslations">
-                    <span>Traducciones revisadas</span>
-                    <div>
-                      {getSemanticTranslations(detailIngredient).map((translation) => (
-                        <span
-                          key={`${detailIngredient.id}-translation-${translation.locale}`}
-                        >
-                          <strong>
-                            {languageLabels[translation.locale] ||
-                              translation.locale.toUpperCase()}
-                          </strong>
-                          {translation.name}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
+                ) : (
+                  <small className="inv-semanticEmpty">
+                    Sin aliases revisados
+                  </small>
                 )}
               </div>
-            )}
+              <div className="inv-semanticTranslations">
+                <span>Traducciones revisadas</span>
+                {detailSemanticTranslations.length > 0 ? (
+                  <div>
+                    {detailSemanticTranslations.map((translation) => (
+                      <span
+                        key={`${detailIngredient.id}-translation-${translation.locale}`}
+                      >
+                        <strong>
+                          {languageLabels[translation.locale] ||
+                            translation.locale.toUpperCase()}
+                        </strong>
+                        {translation.name}
+                      </span>
+                    ))}
+                  </div>
+                ) : (
+                  <small className="inv-semanticEmpty">
+                    Sin traducciones revisadas
+                  </small>
+                )}
+              </div>
+            </div>
 
             <div className="inv-detailSection">
               <span>Alérgenos</span>
@@ -738,7 +868,20 @@ export default function InventoryModule({ partner, language = "es" }) {
             </label>
 
             <label className="inv-priceModalField">
-              <span>Precio de armado</span>
+              <span className="inv-priceLabelRow">
+                <span>Precio de armado</span>
+                {suggestedDetailPrice && (
+                  <button
+                    type="button"
+                    onClick={applySuggestedPrice}
+                    disabled={Boolean(savingOnboardingId)}
+                  >
+                    {suggestedDetailPriceApplied
+                      ? "Aplicar a todo"
+                      : `Precio sugerido EUR ${suggestedDetailPrice.toFixed(2)}`}
+                  </button>
+                )}
+              </span>
               <div>
                 <strong>EUR</strong>
                 <input

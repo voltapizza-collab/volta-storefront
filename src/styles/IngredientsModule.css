@@ -249,7 +249,7 @@
 }
 
 .gm-categoryHeader em {
-  min-width: 62px;
+  min-width: 72px;
   min-height: 20px;
   padding: 0 8px;
   border: 1px solid rgba(255, 255, 255, 0.16);
@@ -261,6 +261,29 @@
   font-size: 11px;
   font-style: normal;
   font-weight: 800;
+}
+
+.gm-categoryCounters {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  min-width: 106px;
+}
+
+.gm-categoryIssueBadge {
+  width: 26px;
+  height: 20px;
+  padding: 0 6px;
+  border: 1px solid rgba(251, 176, 3, 0.58);
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(251, 176, 3, 0.18);
+  color: #ffd36c;
+  font-size: 11px;
+  font-weight: 900;
 }
 
 .gm-categoryItems {
@@ -710,6 +733,15 @@
 .gm-deleteBtn:hover {
   background: transparent;
   color: rgba(255, 255, 255, 0.8);
+}
+
+.gm-deleteBtn:disabled {
+  color: rgba(255, 255, 255, 0.18);
+  cursor: not-allowed;
+}
+
+.gm-deleteBtn:disabled:hover {
+  color: rgba(255, 255, 255, 0.18);
 }
 
 .gm-semanticBtn {

@@ -21910,3 +21910,50 @@
     filter: saturate(1.14) brightness(1.05);
   }
 }
+
+@media (min-width: 761px) {
+  .sf-shell--mode-commercial-light .lsf-tabs {
+    position: relative;
+    cursor: grab;
+    mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 18px), transparent 100%);
+    scroll-padding-left: 148px;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-tabs.is-dragging {
+    cursor: grabbing;
+    user-select: none;
+  }
+
+  .sf-shell--mode-commercial-light .lsf-segmentTabs {
+    position: sticky;
+    left: 0;
+    z-index: 12;
+    flex: 0 0 auto;
+    padding-right: 12px;
+    background: linear-gradient(90deg, #fffaf2 0, #fffaf2 calc(100% - 14px), rgba(255, 250, 242, 0));
+    box-shadow: 14px 0 18px rgba(255, 250, 242, 0.94);
+  }
+
+  .sf-shell--mode-commercial-light .lsf-tab--segment.is-active,
+  .sf-shell--mode-commercial-light .lsf-tab--segment:nth-child(2).is-active {
+    border-color: #f06400;
+    background: linear-gradient(180deg, #ff7a18 0%, #d95300 100%);
+    color: #ffffff;
+    box-shadow:
+      0 7px 14px rgba(240, 100, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.42);
+  }
+
+  .sf-shell--mode-commercial-light .lsf-tab--category.is-active {
+    border-color: #7c3aed;
+    background: linear-gradient(135deg, #8b3dff 0%, #5b21d9 100%);
+    color: #ffffff;
+    box-shadow:
+      0 7px 14px rgba(91, 33, 217, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.36);
+  }
+
+  .sf-shell--mode-commercial-light .lsf-categoryTabs {
+    min-width: max-content;
+  }
+}

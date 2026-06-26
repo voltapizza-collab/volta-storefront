@@ -285,6 +285,7 @@ function ContractDocument({ contract, request }) {
         <h5>2. Definiciones</h5>
         <ul>
           <li>"Plataforma": el sitio web, aplicaciones, paneles, herramientas y canales operados por Volta para la gestion comercial y operativa.</li>
+          <li>"Ruta de Acceso StoreGate": enlace, URL, boton, codigo QR o punto de entrada digital que Volta entregue o habilite para que los Clientes accedan al motor de ventas del Comerciante dentro de la Plataforma.</li>
           <li>"Comerciante": la persona fisica o juridica que se adhiere a este contrato y ofrece productos de restauracion a traves de Volta.</li>
           <li>"Cliente": el usuario final que realiza pedidos o interactua con la oferta comercial del Comerciante.</li>
           <li>"Pedido": solicitud de productos realizada por un Cliente y recibida por el Comerciante a traves de la Plataforma.</li>
@@ -320,6 +321,14 @@ function ContractDocument({ contract, request }) {
           ofertas, segmentacion de clientes, gestion de precios, seguimiento de pedidos,
           acciones promocionales y herramientas de administracion asociadas a su actividad
           de restauracion.
+        </p>
+        <p>
+          Cuando Volta entregue o habilite una Ruta de Acceso StoreGate, dicha entrega
+          consistira en facilitar al Comerciante un acceso operativo al motor de ventas
+          dentro de la Plataforma. Salvo pacto escrito especifico, esta entrega no implica
+          que Volta deba integrar, instalar, insertar o conectar botones, enlaces, iframes,
+          scripts u otros elementos en paginas web, redes sociales, aplicaciones, perfiles,
+          marketplaces o canales digitales del Comerciante o de terceros.
         </p>
         <p>
           El Comerciante conserva la direccion de su negocio, la definicion final de su
@@ -361,6 +370,15 @@ function ContractDocument({ contract, request }) {
           proteccion de datos que le resulte aplicable, y no utilizar la Plataforma para fines
           distintos de los autorizados.
         </p>
+        <p>
+          El Comerciante sera responsable de difundir, publicar y mantener visible la Ruta
+          de Acceso StoreGate en sus canales propios o autorizados, incluyendo su pagina
+          web, redes sociales, perfiles digitales, codigos QR, materiales comerciales o
+          comunicaciones con clientes, cuando desee dirigir trafico al motor de ventas
+          habilitado por Volta. La falta de difusion por parte del Comerciante no
+          constituira incumplimiento de Volta ni generara derecho a reclamar volumen
+          minimo de pedidos o resultados economicos.
+        </p>
       </section>
 
       <section>
@@ -370,6 +388,12 @@ function ContractDocument({ contract, request }) {
           razonables para la gestion de su presencia en la Plataforma, sin garantizar volumen
           minimo de pedidos, facturacion, posicionamiento, continuidad absoluta del servicio
           ni resultados economicos.
+        </p>
+        <p>
+          Respecto de la Ruta de Acceso StoreGate, la obligacion de Volta se limitara a
+          habilitar o comunicar al Comerciante una ruta funcional de acceso a la Plataforma,
+          salvo que las partes acuerden expresamente por escrito servicios adicionales de
+          integracion, desarrollo, publicacion, marketing o gestion de canales externos.
         </p>
       </section>
 

@@ -13,8 +13,8 @@ import { CSS } from "@dnd-kit/utilities";
 
 const sizeList = ["S", "M", "L", "XL", "XXL", "ST"];
 const PRODUCT_TAG_OPTIONS = [
-  { value: "spicy", label: "Picante" },
-  { value: "vegan", label: "Vegano" },
+  { value: "spicy", labelKey: "tag.spicy" },
+  { value: "vegan", labelKey: "tag.vegan" },
 ];
 
 function Modal({ open, title, onClose, children }) {
@@ -126,9 +126,158 @@ const toDateTimeLocalValue = (value) => {
   return new Date(date.getTime() - offsetMs).toISOString().slice(0, 16);
 };
 
-export default function PizzaCreator({ partner }) {
+const SUPPORTED_CREATOR_LOCALES = new Set(["en", "es", "it", "fr", "pt"]);
+
+const normalizeCreatorLocale = (value) => {
+  const locale = String(value || "").trim().toLowerCase().slice(0, 2);
+  return SUPPORTED_CREATOR_LOCALES.has(locale) ? locale : "en";
+};
+
+const PC_COPY = {
+  en: {
+    "title.create": "Create product",
+    "title.edit": "Editing product",
+    "section.productData": "Product data",
+    "field.name": "Name",
+    "field.category": "Category",
+    "field.choose": "- choose -",
+    "field.launchAt": "Launch date",
+    "field.availableUntil": "End date",
+    "section.specialNotices": "Special notices",
+    "tag.spicy": "Spicy",
+    "tag.vegan": "Vegan",
+    "section.initialAvailability": "Initial availability",
+    "action.all": "All",
+    "action.none": "None",
+    "state.loadingStores": "Loading stores...",
+    "state.noStores": "No stores configured.",
+    "section.sizesPrices": "Sizes and prices",
+    "section.buildPizza": "Build your pizza",
+    "hint.selectSize": "Select at least one size before setting quantities.",
+    "hint.activeIngredients": "Only active ingredients from this store inventory/onboarding are shown.",
+    "state.loadingIngredients": "Loading ingredients...",
+    "hint.reloadBeforeSave": "Do not save the product until the module is reloaded.",
+    "field.ingredient": "- ingredient -",
+    "allergen.none": "No declared allergen",
+    "action.addIngredient": "+ Add ingredient",
+    "image.current": "Current image",
+    "image.change": "Change image",
+    "image.add": "Add product image",
+    "image.note": "The image will be uploaded to the product visual catalog.",
+    "image.selected": "Selected: {name}",
+    "action.saving": "Saving...",
+    "action.saveProduct": "Save product",
+    "action.cancelEdit": "Cancel edit",
+    "side.categories": "Categories with products",
+    "side.hint": "Business feed order. Empty categories remain available when creating products.",
+    "side.productCount": "{count} products",
+    "state.noProductsYet": "No products created yet.",
+    "state.loadingData": "Loading data...",
+    "modal.drag": "Drag",
+    "modal.productAlt": "Product",
+    "modal.edit": "Edit",
+    "modal.delete": "Delete",
+    "modal.noCategoryProducts": "There are no products in this category.",
+    "alert.waitIngredients": "Wait until ingredients are loaded before changing the recipe.",
+    "alert.duplicateIngredient": "This ingredient is already in the recipe.",
+    "alert.missingPartner": "Missing partner context.",
+    "alert.missingStore": "No active store. Reload Backoffice before saving products.",
+    "alert.missingCategory": "Select a category.",
+    "alert.invalidDate": "End date must be after launch date.",
+    "alert.inventoryLoadError": "The product cannot be saved because ingredients did not load correctly. Reload the module and try again.",
+    "alert.emptyRecipeProtection": "This product already had ingredients and the recipe is now empty. It was not saved to avoid deleting important information.",
+    "alert.updated": "Product updated",
+    "alert.created": "Product created",
+    "alert.deleteConfirm": "Delete product?",
+    "alert.deleteError": "Could not delete",
+  },
+  es: {
+    "title.create": "Crear producto",
+    "title.edit": "Editando producto",
+    "section.productData": "Datos del producto",
+    "field.name": "Nombre",
+    "field.category": "Categoria",
+    "field.choose": "- elegir -",
+    "field.launchAt": "Fecha de lanzamiento",
+    "field.availableUntil": "Fecha de finalizacion",
+    "section.specialNotices": "Avisos especiales",
+    "tag.spicy": "Picante",
+    "tag.vegan": "Vegano",
+    "section.initialAvailability": "Disponibilidad inicial",
+    "action.all": "Todas",
+    "action.none": "Ninguna",
+    "state.loadingStores": "Cargando tiendas...",
+    "state.noStores": "No hay tiendas configuradas.",
+    "section.sizesPrices": "Tamanos y precios",
+    "section.buildPizza": "Arma tu pizza",
+    "hint.selectSize": "Selecciona al menos un tamano para poder poner cantidades.",
+    "hint.activeIngredients": "Solo aparecen ingredientes activos del inventario/onboarding de esta tienda.",
+    "state.loadingIngredients": "Cargando ingredientes...",
+    "hint.reloadBeforeSave": "No guardes el producto hasta recargar el modulo.",
+    "field.ingredient": "- ingrediente -",
+    "allergen.none": "Sin alergeno declarado",
+    "action.addIngredient": "+ Anadir ingrediente",
+    "image.current": "Imagen actual",
+    "image.change": "Cambiar imagen",
+    "image.add": "Agrega la imagen del producto",
+    "image.note": "La imagen se subira al catalogo visual del producto.",
+    "image.selected": "Seleccionado: {name}",
+    "action.saving": "Guardando...",
+    "action.saveProduct": "Guardar producto",
+    "action.cancelEdit": "Cancelar edicion",
+    "side.categories": "Categorias con productos",
+    "side.hint": "Orden del feed del negocio. Las categorias vacias siguen disponibles al crear productos.",
+    "side.productCount": "{count} productos",
+    "state.noProductsYet": "Aun no hay productos creados.",
+    "state.loadingData": "Cargando datos...",
+    "modal.drag": "Arrastrar",
+    "modal.productAlt": "Producto",
+    "modal.edit": "Editar",
+    "modal.delete": "Eliminar",
+    "modal.noCategoryProducts": "No hay productos en esta categoria.",
+    "alert.waitIngredients": "Espera a que carguen los ingredientes antes de modificar la receta.",
+    "alert.duplicateIngredient": "Este ingrediente ya esta en la receta.",
+    "alert.missingPartner": "Missing partner context.",
+    "alert.missingStore": "No hay tienda activa. Recarga el Backoffice antes de guardar productos.",
+    "alert.missingCategory": "Select a category.",
+    "alert.invalidDate": "La fecha de finalizacion debe ser posterior a la fecha de lanzamiento.",
+    "alert.inventoryLoadError": "No se puede guardar el producto porque los ingredientes no cargaron correctamente. Recarga el modulo e intenta de nuevo.",
+    "alert.emptyRecipeProtection": "Este producto ya tenia ingredientes y ahora la receta esta vacia. No se guardo para evitar borrar informacion importante.",
+    "alert.updated": "Producto actualizado",
+    "alert.created": "Producto creado",
+    "alert.deleteConfirm": "Eliminar producto?",
+    "alert.deleteError": "No se pudo eliminar",
+  },
+};
+
+const translateCreator = (locale, key, values = {}) => {
+  const dictionary = PC_COPY[locale] || PC_COPY.en;
+  const template = dictionary[key] || PC_COPY.en[key] || key;
+
+  return template.replace(/\{(\w+)\}/g, (_, name) =>
+    values[name] == null ? "" : String(values[name])
+  );
+};
+
+const getIngredientDisplayName = (ingredient = {}) =>
+  String(
+    ingredient.displayName ||
+      ingredient.semanticMapping?.globalIngredient?.displayName ||
+      ingredient.name ||
+      ""
+  ).trim();
+
+export default function PizzaCreator({ partner, language = "es" }) {
   const partnerId = partner?.partnerId;
   const storeId = partner?.storeId;
+  const activeLocale = useMemo(
+    () => normalizeCreatorLocale(language),
+    [language]
+  );
+  const t = useCallback(
+    (key, values) => translateCreator(activeLocale, key, values),
+    [activeLocale]
+  );
   const [categories, setCategories] = useState([]);
   const [pizzaOrderByCat, setPizzaOrderByCat] = useState({});
   const [form, setForm] = useState(createInitialForm);
@@ -240,7 +389,7 @@ export default function PizzaCreator({ partner }) {
     if (!storeId) {
       setInventory([]);
       setInventoryLoadError(
-        "No hay tienda activa en esta sesion. Vuelve a entrar al Backoffice para cargar el inventario de tienda."
+        t("alert.missingStore")
       );
       setLoadingInventory(false);
       return () => {
@@ -252,7 +401,9 @@ export default function PizzaCreator({ partner }) {
     setInventoryLoadError("");
 
     api
-      .get(`/stores/${storeId}/ingredients`)
+      .get(`/stores/${storeId}/ingredients`, {
+        params: { locale: activeLocale },
+      })
       .then((r) => {
         if (!alive) return;
         const source = Array.isArray(r.data) ? r.data : [];
@@ -265,7 +416,7 @@ export default function PizzaCreator({ partner }) {
         if (!alive) return;
         setInventory([]);
         setInventoryLoadError(
-          "No se pudieron cargar los ingredientes de esta tienda."
+          t("alert.inventoryLoadError")
         );
       })
       .finally(() => {
@@ -275,7 +426,7 @@ export default function PizzaCreator({ partner }) {
     return () => {
       alive = false;
     };
-  }, [storeId]);
+  }, [activeLocale, storeId, t]);
 
   const fetchPizzas = useCallback(async () => {
     if (!partnerId) return;
@@ -477,7 +628,7 @@ export default function PizzaCreator({ partner }) {
 
   const addIngredient = () => {
     if (inventoryLoadError) {
-      alert("Espera a que carguen los ingredientes antes de modificar la receta.");
+      alert(t("alert.waitIngredients"));
       return;
     }
 
@@ -517,7 +668,7 @@ export default function PizzaCreator({ partner }) {
     );
 
     if (alreadySelected) {
-      alert("Este ingrediente ya esta en la receta.");
+      alert(t("alert.duplicateIngredient"));
       return;
     }
 
@@ -526,7 +677,12 @@ export default function PizzaCreator({ partner }) {
 
     setForm((p) => {
       const ing = [...p.ingredients];
-      ing[i] = { ...ing[i], id: row.id, name: row.name };
+      ing[i] = {
+        ...ing[i],
+        id: row.id,
+        name: row.name,
+        displayName: getIngredientDisplayName(row),
+      };
       return { ...p, ingredients: ing };
     });
   };
@@ -558,17 +714,17 @@ export default function PizzaCreator({ partner }) {
     e.preventDefault();
 
     if (!partnerId) {
-      alert("Missing partner context.");
+      alert(t("alert.missingPartner"));
       return;
     }
 
     if (!storeId) {
-      alert("No hay tienda activa. Recarga el Backoffice antes de guardar productos.");
+      alert(t("alert.missingStore"));
       return;
     }
 
     if (!form.categoryId) {
-      alert("Select a category.");
+      alert(t("alert.missingCategory"));
       return;
     }
 
@@ -581,15 +737,13 @@ export default function PizzaCreator({ partner }) {
         !Number.isNaN(endDate.getTime()) &&
         endDate <= launchDate
       ) {
-        alert("La fecha de finalizacion debe ser posterior a la fecha de lanzamiento.");
+        alert(t("alert.invalidDate"));
         return;
       }
     }
 
     if (inventoryLoadError) {
-      alert(
-        "No se puede guardar el producto porque los ingredientes no cargaron correctamente. Recarga el modulo e intenta de nuevo."
-      );
+      alert(t("alert.inventoryLoadError"));
       return;
     }
 
@@ -605,9 +759,7 @@ export default function PizzaCreator({ partner }) {
       originalIngredientIds.length > 0 &&
       ingredientsPayload.length === 0
     ) {
-      alert(
-        "Este producto ya tenia ingredientes y ahora la receta esta vacia. No se guardo para evitar borrar informacion importante."
-      );
+      alert(t("alert.emptyRecipeProtection"));
       return;
     }
 
@@ -647,13 +799,13 @@ export default function PizzaCreator({ partner }) {
         await api.put(`/api/pizzas/${editingPizzaId}`, payload, {
           headers: { "Content-Type": "multipart/form-data" },
         });
-        return "Producto actualizado";
+        return t("alert.updated");
       }
 
       await api.post("/api/pizzas", payload, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      return "Producto creado";
+      return t("alert.created");
     };
 
     const finishSuccessfulSave = (message) => {
@@ -713,14 +865,14 @@ export default function PizzaCreator({ partner }) {
   };
 
   const deletePizza = async (id) => {
-    if (!window.confirm("Eliminar producto?")) return;
+    if (!window.confirm(t("alert.deleteConfirm"))) return;
 
     try {
       await api.delete(`/api/pizzas/${id}`);
       setPizzas((p) => p.filter((x) => x.id !== id));
     } catch (e) {
       console.error(e);
-      alert("No se pudo eliminar");
+      alert(t("alert.deleteError"));
     }
   };
 
@@ -755,15 +907,20 @@ export default function PizzaCreator({ partner }) {
   const sortedInventory = useMemo(
     () =>
       [...inventory].sort((a, b) =>
-        a.name.localeCompare(b.name, "es", { sensitivity: "base" })
+        getIngredientDisplayName(a).localeCompare(
+          getIngredientDisplayName(b),
+          activeLocale,
+          { sensitivity: "base" }
+        )
       ),
-    [inventory]
+    [activeLocale, inventory]
   );
 
   const ingredientOptions = useMemo(() => {
     const missingSelected = form.ingredients
       .map((row) => ({
         id: Number(row.id),
+        displayName: row.displayName || row.name || `#${row.id}`,
         name: row.name || `Ingrediente #${row.id}`,
       }))
       .filter(
@@ -774,9 +931,13 @@ export default function PizzaCreator({ partner }) {
       );
 
     return [...sortedInventory, ...missingSelected].sort((a, b) =>
-      a.name.localeCompare(b.name, "es", { sensitivity: "base" })
+      getIngredientDisplayName(a).localeCompare(
+        getIngredientDisplayName(b),
+        activeLocale,
+        { sensitivity: "base" }
+      )
     );
-  }, [form.ingredients, inventoryById, sortedInventory]);
+  }, [activeLocale, form.ingredients, inventoryById, sortedInventory]);
 
   const selectedIngredientIds = useMemo(
     () =>
@@ -799,28 +960,28 @@ export default function PizzaCreator({ partner }) {
     <>
       <div className="pc-layout">
         <h2 className="pc-title-creator">
-          {editingPizzaId ? "Editando producto" : "Crear producto"}
+          {editingPizzaId ? t("title.edit") : t("title.create")}
         </h2>
 
         <form className="pizza-form" onSubmit={onSubmit}>
           <div className="pc-grid">
             <section className="pc-section">
-              <div className="pc-sectionTitle">Datos del producto</div>
+              <div className="pc-sectionTitle">{t("section.productData")}</div>
 
               <label>
-                Nombre
+                {t("field.name")}
                 <input name="name" value={form.name} onChange={onChange} required />
               </label>
 
               <label>
-                Categoria
+                {t("field.category")}
                 <select
                   name="categoryId"
                   value={form.categoryId}
                   onChange={onCategoryChange}
                   required
                 >
-                  <option value="">- elegir -</option>
+                  <option value="">{t("field.choose")}</option>
                   {selectableCategories.map((c) => (
                     <option key={c.id} value={c.id}>
                       {c.name}
@@ -831,7 +992,7 @@ export default function PizzaCreator({ partner }) {
 
               <div className="pc-dateGrid">
                 <label>
-                  Fecha de lanzamiento
+                  {t("field.launchAt")}
                   <input
                     type="datetime-local"
                     name="launchAt"
@@ -841,7 +1002,7 @@ export default function PizzaCreator({ partner }) {
                 </label>
 
                 <label>
-                  Fecha de finalizacion
+                  {t("field.availableUntil")}
                   <input
                     type="datetime-local"
                     name="availableUntil"
@@ -852,7 +1013,7 @@ export default function PizzaCreator({ partner }) {
               </div>
 
               <div className="pc-block">
-                <div className="pc-subsectionTitle">Avisos especiales</div>
+                <div className="pc-subsectionTitle">{t("section.specialNotices")}</div>
                 <div className="pc-tagGrid">
                   {PRODUCT_TAG_OPTIONS.map((tag) => {
                     const checked = (form.productTags || []).includes(tag.value);
@@ -867,7 +1028,7 @@ export default function PizzaCreator({ partner }) {
                           checked={checked}
                           onChange={() => toggleProductTag(tag.value)}
                         />
-                        <span>{tag.label}</span>
+                        <span>{t(tag.labelKey)}</span>
                       </label>
                     );
                   })}
@@ -876,7 +1037,7 @@ export default function PizzaCreator({ partner }) {
 
               {!editingPizzaId && (
                 <div className="pc-block pc-storeScope">
-                  <div className="pc-sectionTitle">Disponibilidad inicial</div>
+                  <div className="pc-sectionTitle">{t("section.initialAvailability")}</div>
 
                   <div className="pc-storeScopeActions">
                     <button
@@ -884,20 +1045,20 @@ export default function PizzaCreator({ partner }) {
                       onClick={() => setTargetStoreIds(allStoreIds)}
                       disabled={!allStoreIds.length || allStoresSelected}
                     >
-                      Todas
+                      {t("action.all")}
                     </button>
                     <button
                       type="button"
                       onClick={() => setTargetStoreIds([])}
                       disabled={!targetStoreIds.length}
                     >
-                      Ninguna
+                      {t("action.none")}
                     </button>
                   </div>
 
                   <div className="pc-storeScopeList">
                     {loadingStores && (
-                      <div className="pc-hint">Cargando tiendas...</div>
+                      <div className="pc-hint">{t("state.loadingStores")}</div>
                     )}
                     {!loadingStores &&
                       stores.map((store) => {
@@ -917,14 +1078,14 @@ export default function PizzaCreator({ partner }) {
                         );
                       })}
                     {!loadingStores && !stores.length && (
-                      <div className="pc-hint">No hay tiendas configuradas.</div>
+                      <div className="pc-hint">{t("state.noStores")}</div>
                     )}
                   </div>
                 </div>
               )}
 
               <div className="pc-block">
-                <div className="pc-sectionTitle">Tamanos y precios</div>
+                <div className="pc-sectionTitle">{t("section.sizesPrices")}</div>
 
                 <div className="pc-sizesRow">
                   {sizeList.map((sz) => {
@@ -956,23 +1117,23 @@ export default function PizzaCreator({ partner }) {
             </section>
 
             <section className="pc-section">
-              <h3 className="pc-subtitle">Arma tu pizza</h3>
+              <h3 className="pc-subtitle">{t("section.buildPizza")}</h3>
 
               {!selectedSizes.length && (
                 <div className="pc-hint">
-                  Selecciona al menos un tamano para poder poner cantidades.
+                  {t("hint.selectSize")}
                 </div>
               )}
 
               <div className="pc-hint">
-                Solo aparecen ingredientes activos del inventario/onboarding de esta tienda.
+                {t("hint.activeIngredients")}
               </div>
               {loadingInventory && (
-                <div className="pc-hint">Cargando ingredientes...</div>
+                <div className="pc-hint">{t("state.loadingIngredients")}</div>
               )}
               {inventoryLoadError && (
                 <div className="pc-hint pc-hint--error">
-                  {inventoryLoadError} No guardes el producto hasta recargar el modulo.
+                  {inventoryLoadError} {t("hint.reloadBeforeSave")}
                 </div>
               )}
 
@@ -1001,10 +1162,10 @@ export default function PizzaCreator({ partner }) {
                             value={row.id}
                             onChange={(e) => onIngredientSelect(i, e.target.value)}
                           >
-                            <option value="">- ingrediente -</option>
+                            <option value="">{t("field.ingredient")}</option>
                             {rowIngredientOptions.map((item) => (
                               <option key={item.id} value={item.id}>
-                                {item.name}
+                                {getIngredientDisplayName(item)}
                               </option>
                               ))}
                           </select>
@@ -1038,7 +1199,7 @@ export default function PizzaCreator({ partner }) {
                           title={
                             hasAllergens
                               ? ingredientMeta.allergens.join(", ")
-                              : "Sin alergeno declarado"
+                              : t("allergen.none")
                           }
                         >
                           <span className="pc-allergenBadgeLabel">ALG</span>
@@ -1057,7 +1218,7 @@ export default function PizzaCreator({ partner }) {
 
                 <div className="pc-addIngredientBar">
                   <button type="button" onClick={addIngredient}>
-                    + Anadir ingrediente
+                    {t("action.addIngredient")}
                   </button>
                 </div>
               </fieldset>
@@ -1066,8 +1227,8 @@ export default function PizzaCreator({ partner }) {
             <section className="pc-section">
               {existingImage && !form.imageFile && (
                 <div className="pc-imagePreview">
-                  <div className="pc-imageLabel">Imagen actual</div>
-                  <img src={existingImage} alt="actual" className="pc-imageThumb" />
+                  <div className="pc-imageLabel">{t("image.current")}</div>
+                  <img src={existingImage} alt={t("image.current")} className="pc-imageThumb" />
                 </div>
               )}
 
@@ -1080,24 +1241,24 @@ export default function PizzaCreator({ partner }) {
                 />
                 <span className="pc-file-btn">
                   {form.imageFile || existingImage
-                    ? "Cambiar imagen"
-                    : "Agrega la imagen del producto"}
+                    ? t("image.change")
+                    : t("image.add")}
                 </span>
               </label>
 
               <div className="pc-note">
-                La imagen se subira al catalogo visual del producto.
+                {t("image.note")}
               </div>
 
               {form.imageFile && (
                 <div className="pc-fileMeta">
-                  Seleccionado: {form.imageFile.name}
+                  {t("image.selected", { name: form.imageFile.name })}
                 </div>
               )}
             </section>
 
             <button className="save-btn" type="submit" disabled={savingProduct}>
-              {savingProduct ? "Guardando..." : "Guardar producto"}
+              {savingProduct ? t("action.saving") : t("action.saveProduct")}
             </button>
 
             {editingPizzaId && (
@@ -1109,19 +1270,18 @@ export default function PizzaCreator({ partner }) {
                   setExistingImage(null);
                   setOriginalIngredientIds([]);
                   setForm(createInitialForm());
-                }}
-              >
-                Cancelar edicion
+              }}
+            >
+                {t("action.cancelEdit")}
               </button>
             )}
           </div>
         </form>
 
         <aside className="pc-right">
-          <div className="pc-right__title">Categorias con productos</div>
+          <div className="pc-right__title">{t("side.categories")}</div>
           <div className="pc-right__hint">
-            Orden del feed del negocio. Las categorias vacias siguen disponibles
-            al crear productos.
+            {t("side.hint")}
           </div>
 
           <DndContext
@@ -1155,7 +1315,9 @@ export default function PizzaCreator({ partner }) {
                             <span className="pc-catName">{name}</span>
                           </div>
 
-                          <div className="pc-catCount">{count} productos</div>
+                          <div className="pc-catCount">
+                            {t("side.productCount", { count })}
+                          </div>
                         </button>
                       )}
                     </SortableCategory>
@@ -1166,7 +1328,7 @@ export default function PizzaCreator({ partner }) {
                   !loadingPizzas &&
                   productCategoryOrder.length === 0 && (
                     <div className="pc-emptyState">
-                      Aun no hay productos creados.
+                      {t("state.noProductsYet")}
                     </div>
                   )}
               </div>
@@ -1174,7 +1336,7 @@ export default function PizzaCreator({ partner }) {
           </DndContext>
 
           {(loadingCategories || loadingPizzas) && (
-            <div className="pc-sideInfo">Cargando datos...</div>
+            <div className="pc-sideInfo">{t("state.loadingData")}</div>
           )}
         </aside>
       </div>
@@ -1218,13 +1380,13 @@ export default function PizzaCreator({ partner }) {
                     <SortablePizza key={p.id} id={p.id}>
                       {(listeners) => (
                         <div className="pc-modalCard">
-                          <span {...listeners} className="pc-modalDrag" title="Arrastrar">
+                          <span {...listeners} className="pc-modalDrag" title={t("modal.drag")}>
                             |||
                           </span>
 
                           <div className="pc-modalThumb" aria-hidden={!p.image}>
                             {p.image ? (
-                              <img src={p.image} alt={p.name || "Producto"} />
+                              <img src={p.image} alt={p.name || t("modal.productAlt")} />
                             ) : (
                               <span>{String(p.name || "?").trim().slice(0, 1).toUpperCase()}</span>
                             )}
@@ -1261,32 +1423,40 @@ export default function PizzaCreator({ partner }) {
 
                                   return (
                                     <span key={tag} className="pc-productTagBadge">
-                                      {option?.label || tag}
+                                      {option?.labelKey ? t(option.labelKey) : tag}
                                     </span>
                                   );
                                 })}
 
-                              {p.ingredients?.map((ing) => (
-                                <span
-                                  key={ing.id}
-                                  title={ing.name}
-                                  className={`pc-ingredientBadge ${
-                                    ing.status === "INACTIVE" ? "inactive" : ""
-                                  }`}
-                                >
-                                  #{ing.id}
-                                </span>
-                              ))}
+                              {p.ingredients?.map((ing) => {
+                                const visibleIngredient =
+                                  getIngredientDisplayName(inventoryById.get(Number(ing.id))) ||
+                                  ing.displayName ||
+                                  ing.name ||
+                                  `#${ing.id}`;
+
+                                return (
+                                  <span
+                                    key={ing.id}
+                                    title={visibleIngredient}
+                                    className={`pc-ingredientBadge ${
+                                      ing.status === "INACTIVE" ? "inactive" : ""
+                                    }`}
+                                  >
+                                    {visibleIngredient}
+                                  </span>
+                                );
+                              })}
                             </div>
                           </div>
 
                           <div className="pc-modalActions">
                             <button type="button" onClick={() => loadPizzaForEdit(p)}>
-                              Editar
+                              {t("modal.edit")}
                             </button>
 
                             <button type="button" onClick={() => deletePizza(p.id)}>
-                              Eliminar
+                              {t("modal.delete")}
                             </button>
                           </div>
                         </div>
@@ -1297,7 +1467,7 @@ export default function PizzaCreator({ partner }) {
 
                 {openCat && (pizzaOrderByCat[openCat]?.length ?? 0) === 0 && (
                   <div className="pc-emptyState">
-                    No hay productos en esta categoria.
+                    {t("modal.noCategoryProducts")}
                   </div>
                 )}
               </div>

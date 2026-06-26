@@ -5,7 +5,6 @@ import { ReactComponent as PizzaBg } from "../assets/logo/pizza.svg";
 import InventoryModule from "../components/Backoffice/InventoryModule";
 import PizzaCreator from "../components/Backoffice/PizzaCreator";
 import PizzaCreatorExtras from "../components/Backoffice/PizzaCreatorExtras";
-import PizzaCreatorOverview from "../components/Backoffice/PizzaCreatorOverview";
 import SettingsModule from "../components/Backoffice/SettingsModule";
 import SettingsDeliveryModule from "../components/Backoffice/SettingsDeliveryModule";
 import SettingsBrandingModule from "../components/Backoffice/SettingsBrandingModule";
@@ -330,12 +329,30 @@ export default function Backoffice() {
     });
   };
 
-  const isPizzaCreatorOverviewActive = activeModule === "pizzaCreator";
-  const isPizzaCreatorProductsActive = activeModule === "pizzaCreatorProducts";
+  const togglePizzaCreatorSection = () => {
+    setExpandedModules((prev) => {
+      const nextOpen = !prev.pizzaCreator;
+
+      if (nextOpen) {
+        setActiveModule("pizzaCreatorProducts");
+        setActiveModuleGroup("pizzaCreator");
+      } else if (activeModuleGroup === "pizzaCreator") {
+        setActiveModule("inventory");
+        setActiveModuleGroup("inventory");
+      }
+
+      return {
+        ...prev,
+        pizzaCreator: nextOpen,
+      };
+    });
+  };
+
+  const isPizzaCreatorProductsActive =
+    activeModule === "pizzaCreator" || activeModule === "pizzaCreatorProducts";
   const isPizzaCreatorExtrasActive = activeModule === "pizzaCreatorExtras";
   const isPizzaCreatorGroupActive =
     activeModuleGroup === "pizzaCreator" ||
-    isPizzaCreatorOverviewActive ||
     isPizzaCreatorProductsActive ||
     isPizzaCreatorExtrasActive;
   const isSettingsOverviewActive = activeModule === "settings";
@@ -618,7 +635,7 @@ export default function Backoffice() {
                 } ${
                   expandedModules.pizzaCreator ? "open" : ""
                 }`}
-                onClick={() => toggleModuleSection("pizzaCreator", "inventory")}
+                onClick={togglePizzaCreatorSection}
                 type="button"
               >
                 <span>{t("nav.pizzaCreator")}</span>
@@ -995,6 +1012,7 @@ export default function Backoffice() {
               initialPartnerId={String(auth.partnerId)}
               lockPartner
               view="stores"
+              language={language}
             />
           )}
 
@@ -1003,6 +1021,7 @@ export default function Backoffice() {
               initialPartnerId={String(auth.partnerId)}
               lockPartner
               view="locations"
+              language={language}
             />
           )}
 
@@ -1018,26 +1037,12 @@ export default function Backoffice() {
             <CommunicationsPanel partnerId={auth.partnerId} />
           )}
 
-          {activeModule === "pizzaCreator" && auth.partnerId && (
-            <PizzaCreatorOverview
-              partner={auth}
-              onOpenProducts={() => {
-                setExpandedModules((prev) => ({
-                  ...prev,
-                  pizzaCreator: true,
-                }));
-                setActiveModule("pizzaCreatorProducts");
-                setActiveModuleGroup("pizzaCreator");
-              }}
-            />
-          )}
-
-          {activeModule === "pizzaCreatorProducts" && auth.partnerId && (
-            <PizzaCreator partner={auth} />
+          {isPizzaCreatorProductsActive && auth.partnerId && (
+            <PizzaCreator partner={auth} language={language} />
           )}
 
           {activeModule === "pizzaCreatorExtras" && auth.partnerId && (
-            <PizzaCreatorExtras partner={auth} />
+            <PizzaCreatorExtras partner={auth} language={language} />
           )}
 
           {activeModule === "settings" && auth.partnerId && (

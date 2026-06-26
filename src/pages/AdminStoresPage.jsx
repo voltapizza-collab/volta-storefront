@@ -77,11 +77,351 @@ const loadGoogleMaps = (apiKey) =>
 const segmentCards = CUSTOMER_SEGMENTS;
 
 const customerTimeFilters = [
-  { key: "today", label: "Hoy", days: 1 },
-  { key: "7d", label: "7 dias", days: 7 },
-  { key: "30d", label: "30 dias", days: 30 },
-  { key: "all", label: "Historico", days: null },
+  { key: "today", labelKey: "time.today", days: 1 },
+  { key: "7d", labelKey: "time.7d", days: 7 },
+  { key: "30d", labelKey: "time.30d", days: 30 },
+  { key: "all", labelKey: "time.all", days: null },
 ];
+
+const STORE_LOCALES = new Set(["en", "es", "it", "fr", "pt"]);
+
+const normalizeStoreLocale = (value) => {
+  const locale = String(value || "").trim().toLowerCase().slice(0, 2);
+  return STORE_LOCALES.has(locale) ? locale : "en";
+};
+
+const STORE_COPY = {
+  en: {
+    "title.stores": "Stores",
+    "title.locations": "Locations",
+    "subtitle.stores": "Partner store list and operational tools.",
+    "subtitle.locations": "Map, customers, and filters to analyze the territory.",
+    "state.loadingModule": "Loading module...",
+    "error.loadModule": "We could not load the stores module.",
+    "error.filterStores": "We could not filter this partner's stores.",
+    "feedback.selectPartner": "Select a partner before saving the store.",
+    "feedback.storeUpdated": "Store updated.",
+    "feedback.storeCreated": "Store created.",
+    "feedback.storeCreatedWithPin": "Store created. Copy the POS PIN now: it is shown only once.",
+    "feedback.saveStoreError": "We could not save the store.",
+    "feedback.statusError": "We could not change the store status.",
+    "feedback.pinRegenerated": "POS PIN regenerated. Copy it now: it is shown only once.",
+    "feedback.pinNew": "A new recoverable POS PIN was generated for this store.",
+    "feedback.pinError": "We could not regenerate the store POS PIN.",
+    "feedback.pinLoadError": "We could not load the POS PIN.",
+    "feedback.storeDeleted": "Store deleted.",
+    "feedback.deleteStoreError": "We could not delete the store.",
+    "confirm.deleteStore": "Delete store?",
+    "confirm.regeneratePin": "Regenerate POS PIN for {name}? The previous PIN will stop working.",
+    "action.addStore": "Add store",
+    "action.delete": "Delete",
+    "action.edit": "Edit",
+    "action.cancel": "Cancel",
+    "action.close": "Close",
+    "action.saveStore": "Save store",
+    "action.completeCoordinates": "Complete coordinates",
+    "action.generatePin": "Generate PIN",
+    "action.regeneratePin": "Regenerate PIN",
+    "action.generating": "Generating...",
+    "action.showCustomers": "Show customers",
+    "action.hideCustomers": "Hide customers",
+    "section.storesList": "Stores list",
+    "table.del": "Del",
+    "table.edit": "Edit",
+    "table.name": "Name",
+    "table.city": "City",
+    "table.address": "Address",
+    "table.status": "Status",
+    "table.menu": "Menu",
+    "table.report": "Report",
+    "table.hours": "Hours",
+    "table.reservations": "Reservations",
+    "state.noStores": "There are no stores for this partner yet.",
+    "status.active": "Active",
+    "status.inactive": "Inactive",
+    "status.coords": "Set coords",
+    "status.changeTitle": "Change operational status",
+    "status.coordsTitle": "Complete latitude and longitude before activating",
+    "pin.none": "No PIN",
+    "locations.title": "Store locations",
+    "locations.meta": "{count} visible customers - segment and territory filters",
+    "locations.allStores": "All stores",
+    "locations.allPostalCodes": "All postal codes",
+    "locations.noCustomers": "No customers match this filter",
+    "locations.noCustomersPostal": "No customers match this filter in {code}.",
+    "locations.signupFilter": "Signups",
+    "locations.visible": "Visible",
+    "time.today": "Today",
+    "time.7d": "7 days",
+    "time.30d": "30 days",
+    "time.all": "Historical",
+    "coordinates.eyebrow": "Pending setup",
+    "coordinates.title": "Store coordinates missing",
+    "coordinates.body": "To consider {name} active, the store needs latitude and longitude. Complete those fields in the store profile and activate it again.",
+    "coordinates.latitude": "Latitude",
+    "coordinates.longitude": "Longitude",
+    "coordinates.pending": "pending",
+    "pos.user": "User",
+    "pos.loading": "Loading...",
+    "pos.querying": "Checking this store's POS PIN.",
+    "pos.regenerated": "This PIN was just generated because the store had an old non-recoverable credential.",
+    "pos.current": "This is the current POS PIN for this store.",
+    "pos.configured": "The POS PIN is configured.",
+    "pos.missing": "This store does not have a POS PIN configured yet.",
+    "form.addTitle": "Add store",
+    "form.editTitle": "Edit store",
+    "form.storeName": "Store name",
+    "form.address": "Address",
+    "form.latitude": "Latitude",
+    "form.longitude": "Longitude",
+    "form.city": "City",
+    "form.zipCode": "Zip code",
+    "form.email": "Email",
+    "form.phone": "Phone",
+    "form.acceptReservations": "Accept reservations",
+    "form.reservationCapacity": "Reservation capacity (people)",
+    "menu.title": "Store catalog - {name}",
+    "menu.loadError": "We could not load this store's menu availability.",
+    "menu.updateError": "We could not update this pizza availability.",
+    "menu.state": "Status",
+    "menu.saving": "Saving...",
+    "menu.hidden": "Hidden",
+    "menu.available": "Available",
+    "menu.blocked": "Blocked",
+    "hours.title": "Hours - {name}",
+    "hours.loadError": "We could not load the opening hours.",
+    "hours.applyAll": "Apply to all days",
+    "hours.addBlock": "+ Add block",
+    "hours.empty": "No blocks yet.",
+    "hours.open": "Opens",
+    "hours.close": "Closes",
+    "hours.deleteBlock": "Delete block",
+    "hours.saveClose": "Save and close",
+    "day.Monday": "Monday",
+    "day.Tuesday": "Tuesday",
+    "day.Wednesday": "Wednesday",
+    "day.Thursday": "Thursday",
+    "day.Friday": "Friday",
+    "day.Saturday": "Saturday",
+    "day.Sunday": "Sunday",
+    "reservations.title": "Reservations",
+    "reservations.backendMissing": "The reservations backend is not available in Volta yet.",
+    "reservations.updateError": "We could not update the reservation.",
+    "reservations.date": "Date",
+    "reservations.time": "Time",
+    "reservations.customer": "Customer",
+    "reservations.phone": "Phone",
+    "reservations.people": "People",
+    "reservations.actions": "Actions",
+    "reservations.complete": "Complete",
+    "reservations.closed": "Closed",
+    "reservation.pending": "Pending",
+    "reservation.confirmed": "Confirmed",
+    "reservation.completed": "Completed",
+    "reservation.canceled": "Canceled",
+    "report.title": "Report - {name}",
+    "report.loadError": "We could not load this store report.",
+    "report.loading": "Loading report...",
+    "report.totalSales": "Total sales",
+    "report.orders": "Orders",
+    "report.nonCanceled": "Non-canceled orders",
+    "report.averageTicket": "Average ticket",
+    "report.averageOrderValue": "Average value per order",
+    "report.bestHour": "Best hour",
+    "report.bestDay": "Best day",
+    "report.noData": "No data",
+    "report.topChannel": "Top channel",
+    "report.lastSale": "Last sale",
+    "report.currentPulse": "Current store pulse",
+    "report.ordersCount": "{count} orders",
+    "customer.defaultName": "Customer",
+    "customer.noPhone": "No phone",
+    "customer.noPostalCode": "No postal code",
+    "customer.noOrders": "No purchases",
+    "customer.noStoreAverage": "No store average",
+    "customer.aboveAverage": "Above store average",
+    "customer.belowAverage": "Below store average",
+    "customer.averageTicket": "Average ticket",
+    "customer.lastTicket": "Last ticket",
+    "customer.lifetimeValue": "Lifetime value",
+    "customer.daysWithoutOrdering": "Days without ordering",
+    "customer.ordersCount": "{count} orders",
+    "customer.address": "Address",
+    "customer.noAddress": "No registered address",
+    "customer.noEmail": "No email",
+    "customer.notes": "Notes",
+    "customer.createBoost": "Create boost",
+  },
+  es: {
+    "title.stores": "Tiendas",
+    "title.locations": "Ubicaciones",
+    "subtitle.stores": "Lista de tiendas y funciones operativas del partner.",
+    "subtitle.locations": "Mapa, clientes y filtros para analizar el territorio.",
+    "state.loadingModule": "Cargando modulo...",
+    "error.loadModule": "No pudimos cargar el modulo de tiendas.",
+    "error.filterStores": "No pudimos filtrar las tiendas del partner.",
+    "feedback.selectPartner": "Selecciona un partner antes de guardar la tienda.",
+    "feedback.storeUpdated": "Tienda actualizada.",
+    "feedback.storeCreated": "Tienda creada.",
+    "feedback.storeCreatedWithPin": "Tienda creada. Copia el PIN POS ahora: solo se muestra una vez.",
+    "feedback.saveStoreError": "No pudimos guardar la tienda.",
+    "feedback.statusError": "No pudimos cambiar el estado de la tienda.",
+    "feedback.pinRegenerated": "PIN POS regenerado. Copialo ahora: solo se muestra una vez.",
+    "feedback.pinNew": "Se genero un nuevo PIN POS recuperable para esta tienda.",
+    "feedback.pinError": "No pudimos regenerar el PIN POS de la tienda.",
+    "feedback.pinLoadError": "No pudimos cargar el PIN POS.",
+    "feedback.storeDeleted": "Tienda eliminada.",
+    "feedback.deleteStoreError": "No pudimos eliminar la tienda.",
+    "confirm.deleteStore": "Eliminar tienda?",
+    "confirm.regeneratePin": "Regenerar PIN POS para {name}? El PIN anterior dejara de funcionar.",
+    "action.addStore": "Anadir tienda",
+    "action.delete": "Eliminar",
+    "action.edit": "Editar",
+    "action.cancel": "Cancelar",
+    "action.close": "Cerrar",
+    "action.saveStore": "Guardar tienda",
+    "action.completeCoordinates": "Completar coordenadas",
+    "action.generatePin": "Generar PIN",
+    "action.regeneratePin": "Regenerar PIN",
+    "action.generating": "Generando...",
+    "action.showCustomers": "Mostrar clientes",
+    "action.hideCustomers": "Ocultar clientes",
+    "section.storesList": "Lista de tiendas",
+    "table.del": "Del",
+    "table.edit": "Edit",
+    "table.name": "Nombre",
+    "table.city": "Ciudad",
+    "table.address": "Direccion",
+    "table.status": "Estado",
+    "table.menu": "Menu",
+    "table.report": "Reporte",
+    "table.hours": "Horarios",
+    "table.reservations": "Reservas",
+    "state.noStores": "No hay tiendas para este partner todavia.",
+    "status.active": "Activa",
+    "status.inactive": "Inactiva",
+    "status.coords": "Config coords",
+    "status.changeTitle": "Cambiar estado operativo",
+    "status.coordsTitle": "Completa latitud y longitud antes de activar",
+    "pin.none": "Sin PIN",
+    "locations.title": "Ubicaciones de tiendas",
+    "locations.meta": "{count} clientes visibles - filtros de segmento y territorio",
+    "locations.allStores": "Todas las tiendas",
+    "locations.allPostalCodes": "Todos los codigos postales",
+    "locations.noCustomers": "No hay clientes para este filtro",
+    "locations.noCustomersPostal": "No hay clientes para este filtro en {code}.",
+    "locations.signupFilter": "Altas",
+    "locations.visible": "Visibles",
+    "time.today": "Hoy",
+    "time.7d": "7 dias",
+    "time.30d": "30 dias",
+    "time.all": "Historico",
+    "coordinates.eyebrow": "Configuracion pendiente",
+    "coordinates.title": "Faltan coordenadas de la tienda",
+    "coordinates.body": "Para considerar activa la tienda {name}, necesitamos que tenga configuradas latitud y longitud. Completa esos campos en la ficha de la tienda y luego vuelve a activarla.",
+    "coordinates.latitude": "Latitud",
+    "coordinates.longitude": "Longitud",
+    "coordinates.pending": "pendiente",
+    "pos.user": "Usuario",
+    "pos.loading": "Cargando...",
+    "pos.querying": "Consultando el PIN POS de la tienda.",
+    "pos.regenerated": "Este PIN acaba de generarse porque la tienda tenia una credencial antigua no recuperable.",
+    "pos.current": "Este es el PIN POS actual de la tienda.",
+    "pos.configured": "El PIN POS esta configurado.",
+    "pos.missing": "Esta tienda todavia no tiene PIN POS configurado.",
+    "form.addTitle": "Anadir tienda",
+    "form.editTitle": "Editar tienda",
+    "form.storeName": "Nombre de tienda",
+    "form.address": "Direccion",
+    "form.latitude": "Latitud",
+    "form.longitude": "Longitud",
+    "form.city": "Ciudad",
+    "form.zipCode": "Codigo postal",
+    "form.email": "Email",
+    "form.phone": "Telefono",
+    "form.acceptReservations": "Aceptar reservas",
+    "form.reservationCapacity": "Capacidad de reservas (personas)",
+    "menu.title": "Catalogo de tienda - {name}",
+    "menu.loadError": "No pudimos cargar la disponibilidad del menu de esta tienda.",
+    "menu.updateError": "No pudimos actualizar la disponibilidad de esta pizza.",
+    "menu.state": "Estado",
+    "menu.saving": "Guardando...",
+    "menu.hidden": "Oculta",
+    "menu.available": "Disponible",
+    "menu.blocked": "Bloqueada",
+    "hours.title": "Horario - {name}",
+    "hours.loadError": "No pudimos cargar los horarios.",
+    "hours.applyAll": "Aplicar a todos los dias",
+    "hours.addBlock": "+ Anadir bloque",
+    "hours.empty": "Sin bloques todavia.",
+    "hours.open": "Abre",
+    "hours.close": "Cierra",
+    "hours.deleteBlock": "Eliminar bloque",
+    "hours.saveClose": "Guardar y cerrar",
+    "day.Monday": "Lunes",
+    "day.Tuesday": "Martes",
+    "day.Wednesday": "Miercoles",
+    "day.Thursday": "Jueves",
+    "day.Friday": "Viernes",
+    "day.Saturday": "Sabado",
+    "day.Sunday": "Domingo",
+    "reservations.title": "Reservas",
+    "reservations.backendMissing": "El backend de reservas aun no esta disponible en Volta.",
+    "reservations.updateError": "No pudimos actualizar la reserva.",
+    "reservations.date": "Fecha",
+    "reservations.time": "Hora",
+    "reservations.customer": "Cliente",
+    "reservations.phone": "Telefono",
+    "reservations.people": "Personas",
+    "reservations.actions": "Acciones",
+    "reservations.complete": "Completar",
+    "reservations.closed": "Cerrada",
+    "reservation.pending": "Pendiente",
+    "reservation.confirmed": "Confirmada",
+    "reservation.completed": "Completada",
+    "reservation.canceled": "Cancelada",
+    "report.title": "Reporte - {name}",
+    "report.loadError": "No pudimos cargar el reporte de esta tienda.",
+    "report.loading": "Cargando reporte...",
+    "report.totalSales": "Ventas totales",
+    "report.orders": "Pedidos",
+    "report.nonCanceled": "Ordenes no canceladas",
+    "report.averageTicket": "Ticket promedio",
+    "report.averageOrderValue": "Valor medio por pedido",
+    "report.bestHour": "Hora mas vendida",
+    "report.bestDay": "Dia mas vendido",
+    "report.noData": "Sin dato",
+    "report.topChannel": "Canal top",
+    "report.lastSale": "Ultima venta",
+    "report.currentPulse": "Pulso actual de la tienda",
+    "report.ordersCount": "{count} pedidos",
+    "customer.defaultName": "Cliente",
+    "customer.noPhone": "Sin telefono",
+    "customer.noPostalCode": "Sin CP",
+    "customer.noOrders": "Sin compras",
+    "customer.noStoreAverage": "Sin media tienda",
+    "customer.aboveAverage": "Sobre media tienda",
+    "customer.belowAverage": "Bajo media tienda",
+    "customer.averageTicket": "Ticket promedio",
+    "customer.lastTicket": "Ultimo ticket",
+    "customer.lifetimeValue": "Valor acumulado",
+    "customer.daysWithoutOrdering": "Dias sin pedir",
+    "customer.ordersCount": "{count} pedidos",
+    "customer.address": "Direccion",
+    "customer.noAddress": "Sin direccion registrada",
+    "customer.noEmail": "Sin email",
+    "customer.notes": "Observaciones",
+    "customer.createBoost": "Crear boost",
+  },
+};
+
+const translateStore = (locale, key, values = {}) => {
+  const dictionary = STORE_COPY[locale] || STORE_COPY.en;
+  const template = dictionary[key] || STORE_COPY.en[key] || key;
+  return template.replace(/\{(\w+)\}/g, (_, name) =>
+    values[name] == null ? "" : String(values[name])
+  );
+};
 
 const segmentMetaByKey = segmentCards.reduce((acc, segment) => {
   acc[segment.key] = segment;
@@ -201,7 +541,7 @@ const createCustomerPinIcon = (google, customer, isSelected) => {
   };
 };
 
-function MenuAvailabilityModal({ store, onClose }) {
+function MenuAvailabilityModal({ store, onClose, t }) {
   const [rows, setRows] = useState([]);
   const [openCat, setOpenCat] = useState(null);
   const [error, setError] = useState("");
@@ -222,7 +562,7 @@ function MenuAvailabilityModal({ store, onClose }) {
       .catch((requestError) => {
         console.error("MENU AVAILABILITY LOAD ERROR:", requestError);
         setRows([]);
-        setError("No pudimos cargar la disponibilidad del menu de esta tienda.");
+        setError(t("menu.loadError"));
       });
   }, [loadRows, store?.id]);
 
@@ -236,7 +576,7 @@ function MenuAvailabilityModal({ store, onClose }) {
       setError("");
     } catch (requestError) {
       console.error("PIZZA AVAILABILITY ERROR:", requestError);
-      setError("No pudimos actualizar la disponibilidad de esta pizza.");
+      setError(t("menu.updateError"));
     } finally {
       setSavingPizzaId(null);
     }
@@ -246,7 +586,7 @@ function MenuAvailabilityModal({ store, onClose }) {
     const map = {};
 
     rows.forEach((row) => {
-      const category = row?.pizza?.category || "Sin categoria";
+      const category = row?.pizza?.category || "-";
       if (!map[category]) {
         map[category] = [];
       }
@@ -260,7 +600,7 @@ function MenuAvailabilityModal({ store, onClose }) {
     <div className="sc-modalBack" onMouseDown={onClose}>
       <div className="sc-modalBox sc-modalBox--wide" onMouseDown={(event) => event.stopPropagation()}>
         <header className="sc-modalHead">
-          <h3>Catalogo de tienda - {store.storeName}</h3>
+          <h3>{t("menu.title", { name: store.storeName })}</h3>
           <button className="sc-iconBtn" onClick={onClose} type="button">
             x
           </button>
@@ -291,7 +631,7 @@ function MenuAvailabilityModal({ store, onClose }) {
                     <thead>
                       <tr>
                         <th>Pizza</th>
-                        <th className="right">Estado</th>
+                        <th className="right">{t("menu.state")}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -317,12 +657,12 @@ function MenuAvailabilityModal({ store, onClose }) {
                               }
                             >
                               {savingPizzaId === row.pizzaId
-                                ? "Guardando..."
+                                ? t("menu.saving")
                                 : !row.active
-                                  ? "Oculta"
+                                  ? t("menu.hidden")
                                   : row.available
-                                  ? "Disponible"
-                                  : "Bloqueada"}
+                                  ? t("menu.available")
+                                  : t("menu.blocked")}
                             </button>
                           </td>
                         </tr>
@@ -337,7 +677,7 @@ function MenuAvailabilityModal({ store, onClose }) {
 
         <footer className="sc-modalFooter">
           <button className="sc-btn ghost" onClick={onClose} type="button">
-            Cerrar
+            {t("action.close")}
           </button>
         </footer>
       </div>
@@ -345,7 +685,7 @@ function MenuAvailabilityModal({ store, onClose }) {
   );
 }
 
-function StoreHoursModal({ store, onClose }) {
+function StoreHoursModal({ store, onClose, t }) {
   const [rows, setRows] = useState([]);
   const [localRows, setLocalRows] = useState([]);
   const [appliedAllDays, setAppliedAllDays] = useState(false);
@@ -371,16 +711,6 @@ function StoreHoursModal({ store, onClose }) {
     Sunday: 0,
   };
 
-  const dayLabels = {
-    Monday: "Lunes",
-    Tuesday: "Martes",
-    Wednesday: "Miercoles",
-    Thursday: "Jueves",
-    Friday: "Viernes",
-    Saturday: "Sabado",
-    Sunday: "Domingo",
-  };
-
   const hours = [...Array(24)].map((_, index) => index);
   const minutes = [0, 15, 30, 45];
 
@@ -395,7 +725,7 @@ function StoreHoursModal({ store, onClose }) {
       console.error("STORE HOURS LOAD ERROR:", requestError);
       setRows([]);
       setLocalRows([]);
-      setError("No pudimos cargar los horarios.");
+      setError(t("hours.loadError"));
     }
   }, [store?.id]);
 
@@ -506,7 +836,7 @@ function StoreHoursModal({ store, onClose }) {
     <div className="sc-modalBack" onMouseDown={onClose}>
       <div className="sc-modalBox sc-modalBox--wide" onMouseDown={(event) => event.stopPropagation()}>
         <header className="sc-modalHead">
-          <h3>Horario - {store.storeName}</h3>
+          <h3>{t("hours.title", { name: store.storeName })}</h3>
           <button className="sc-iconBtn" onClick={onClose} type="button">
             x
           </button>
@@ -518,7 +848,7 @@ function StoreHoursModal({ store, onClose }) {
             onClick={applyAllDays}
             type="button"
           >
-            Aplicar a todos los dias
+            {t("hours.applyAll")}
           </button>
         </div>
 
@@ -530,14 +860,14 @@ function StoreHoursModal({ store, onClose }) {
             {days.map((day) => (
               <section key={day} className="sc-hoursDay">
                 <div className="sc-hoursDayHead">
-                  <strong>{dayLabels[day] || day}</strong>
+                  <strong>{t(`day.${day}`)}</strong>
                   <button className="table-btn edit" onClick={() => addSlot(day)} type="button">
-                    + Anadir bloque
+                    {t("hours.addBlock")}
                   </button>
                 </div>
 
                 {slotsByDay[day].length === 0 && (
-                  <div className="sc-hoursEmpty">Sin bloques todavia.</div>
+                  <div className="sc-hoursEmpty">{t("hours.empty")}</div>
                 )}
 
                 {slotsByDay[day].map((slot) => {
@@ -549,7 +879,7 @@ function StoreHoursModal({ store, onClose }) {
                   return (
                     <div key={slot.id} className="sc-hoursRow">
                       <div className="sc-hoursTimeGroup">
-                        <span className="sc-hoursTimeLabel">Abre</span>
+                        <span className="sc-hoursTimeLabel">{t("hours.open")}</span>
                         <div className="sc-hoursTimeControls">
                           <select
                             value={openH}
@@ -592,7 +922,7 @@ function StoreHoursModal({ store, onClose }) {
                       <span className="sc-hoursArrow">→</span>
 
                       <div className="sc-hoursTimeGroup">
-                        <span className="sc-hoursTimeLabel">Cierra</span>
+                        <span className="sc-hoursTimeLabel">{t("hours.close")}</span>
                         <div className="sc-hoursTimeControls">
                           <select
                             value={closeH}
@@ -636,7 +966,7 @@ function StoreHoursModal({ store, onClose }) {
                         className="table-btn table-btn-icon danger"
                         onClick={() => removeSlot(slot.id)}
                         type="button"
-                        aria-label="Eliminar bloque"
+                        aria-label={t("hours.deleteBlock")}
                       >
                         x
                       </button>
@@ -651,7 +981,7 @@ function StoreHoursModal({ store, onClose }) {
 
         <footer className="sc-modalFooter">
           <button className="sc-btn ghost" onClick={onClose} type="button">
-            Cancelar
+            {t("action.cancel")}
           </button>
           <button
             className="sc-btn primary"
@@ -661,7 +991,7 @@ function StoreHoursModal({ store, onClose }) {
             }}
             type="button"
           >
-            Guardar y cerrar
+            {t("hours.saveClose")}
           </button>
         </footer>
       </div>
@@ -669,7 +999,7 @@ function StoreHoursModal({ store, onClose }) {
   );
 }
 
-function ReservationsModal({ store, onClose }) {
+function ReservationsModal({ store, onClose, t }) {
   const [rows, setRows] = useState([]);
   const [error, setError] = useState("");
 
@@ -685,7 +1015,7 @@ function ReservationsModal({ store, onClose }) {
       .catch((requestError) => {
         console.error("RESERVATIONS LOAD ERROR:", requestError);
         setRows([]);
-        setError("El backend de reservas aun no esta transplantado en Volta.");
+        setError(t("reservations.backendMissing"));
       });
   }, [store?.id]);
 
@@ -697,16 +1027,16 @@ function ReservationsModal({ store, onClose }) {
       );
     } catch (requestError) {
       console.error("RESERVATION STATUS ERROR:", requestError);
-      setError("No pudimos actualizar la reserva.");
+      setError(t("reservations.updateError"));
     }
   };
 
   const reservationStatusLabel = (status) => {
     const normalized = String(status || "").toLowerCase();
-    if (normalized === "pending") return "Pendiente";
-    if (normalized === "confirmed") return "Confirmada";
-    if (normalized === "complete" || normalized === "completed") return "Completada";
-    if (normalized === "cancel" || normalized === "canceled" || normalized === "cancelled") return "Cancelada";
+    if (normalized === "pending") return t("reservation.pending");
+    if (normalized === "confirmed") return t("reservation.confirmed");
+    if (normalized === "complete" || normalized === "completed") return t("reservation.completed");
+    if (normalized === "cancel" || normalized === "canceled" || normalized === "cancelled") return t("reservation.canceled");
     return status || "-";
   };
 
@@ -715,7 +1045,7 @@ function ReservationsModal({ store, onClose }) {
       <div className="sc-modalBox sc-modalBox--wide sc-reservationsModal" onMouseDown={(event) => event.stopPropagation()}>
         <header className="sc-modalHead">
           <div>
-            <span className="sc-modalEyebrow">Reservas</span>
+            <span className="sc-modalEyebrow">{t("reservations.title")}</span>
             <h3>{store.storeName}</h3>
           </div>
           <button className="sc-iconBtn" onClick={onClose} type="button">
@@ -731,13 +1061,13 @@ function ReservationsModal({ store, onClose }) {
               <table className="store-table sc-reservationsTable">
                 <thead>
                   <tr>
-                    <th>Fecha</th>
-                    <th>Hora</th>
-                    <th>Cliente</th>
-                    <th>Telefono</th>
-                    <th>Personas</th>
-                    <th>Estado</th>
-                    <th className="actions">Acciones</th>
+                    <th>{t("reservations.date")}</th>
+                    <th>{t("reservations.time")}</th>
+                    <th>{t("reservations.customer")}</th>
+                    <th>{t("reservations.phone")}</th>
+                    <th>{t("reservations.people")}</th>
+                    <th>{t("menu.state")}</th>
+                    <th className="actions">{t("reservations.actions")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -788,19 +1118,19 @@ function ReservationsModal({ store, onClose }) {
                                     onClick={() => patchReservationStatus(row.id, "complete")}
                                     type="button"
                                   >
-                                    Completar
+                                    {t("reservations.complete")}
                                   </button>
                                   <button
                                     className="table-btn danger"
                                     onClick={() => patchReservationStatus(row.id, "cancel")}
                                     type="button"
                                   >
-                                    Cancelar
+                                    {t("action.cancel")}
                                   </button>
                                 </>
                               ) : (
                                 <button className="table-btn" disabled type="button">
-                                  Cerrada
+                                  {t("reservations.closed")}
                                 </button>
                               )}
                             </div>
@@ -816,7 +1146,7 @@ function ReservationsModal({ store, onClose }) {
 
         <footer className="sc-modalFooter">
           <button className="sc-btn ghost" onClick={onClose} type="button">
-            Cerrar
+            {t("action.close")}
           </button>
         </footer>
       </div>
@@ -824,7 +1154,7 @@ function ReservationsModal({ store, onClose }) {
   );
 }
 
-function StoreReportModal({ store, onClose }) {
+function StoreReportModal({ store, onClose, t }) {
   const [report, setReport] = useState(null);
   const [error, setError] = useState("");
 
@@ -840,7 +1170,7 @@ function StoreReportModal({ store, onClose }) {
       .catch((requestError) => {
         console.error("STORE REPORT LOAD ERROR:", requestError);
         setReport(null);
-        setError("No pudimos cargar el reporte de esta tienda.");
+        setError(t("report.loadError"));
       });
   }, [store?.id]);
 
@@ -853,28 +1183,28 @@ function StoreReportModal({ store, onClose }) {
   const cards = report
     ? [
         {
-          label: "Ventas totales",
+          label: t("report.totalSales"),
           value: formatMoney(report.kpis?.totalSales),
           meta: report.periodLabel,
         },
         {
-          label: "Pedidos",
+          label: t("report.orders"),
           value: String(report.kpis?.ordersCount || 0),
-          meta: "Ordenes no canceladas",
+          meta: t("report.nonCanceled"),
         },
         {
-          label: "Ticket promedio",
+          label: t("report.averageTicket"),
           value: formatMoney(report.kpis?.averageTicket),
-          meta: "Valor medio por pedido",
+          meta: t("report.averageOrderValue"),
         },
         {
-          label: "Hora mas vendida",
-          value: report.kpis?.bestHour || "Sin dato",
-          meta: `${report.kpis?.bestHourOrders || 0} pedidos`,
+          label: t("report.bestHour"),
+          value: report.kpis?.bestHour || t("report.noData"),
+          meta: t("report.ordersCount", { count: report.kpis?.bestHourOrders || 0 }),
         },
         {
-          label: "Dia mas vendido",
-          value: report.kpis?.bestDay || "Sin dato",
+          label: t("report.bestDay"),
+          value: report.kpis?.bestDay || t("report.noData"),
           meta: formatMoney(report.kpis?.bestDaySales),
         },
       ]
@@ -884,7 +1214,7 @@ function StoreReportModal({ store, onClose }) {
     <div className="sc-modalBack" onMouseDown={onClose}>
       <div className="sc-modalBox sc-modalBox--wide" onMouseDown={(event) => event.stopPropagation()}>
         <header className="sc-modalHead">
-          <h3>Reporte - {store.storeName}</h3>
+          <h3>{t("report.title", { name: store.storeName })}</h3>
           <button className="sc-iconBtn" onClick={onClose} type="button">
             x
           </button>
@@ -894,7 +1224,7 @@ function StoreReportModal({ store, onClose }) {
           {error ? (
             <div className="sc-emptyState">{error}</div>
           ) : !report ? (
-            <div className="sc-emptyState">Cargando reporte...</div>
+            <div className="sc-emptyState">{t("report.loading")}</div>
           ) : (
             <div className="sc-reportWrap">
               <div className="sc-reportGrid">
@@ -909,23 +1239,23 @@ function StoreReportModal({ store, onClose }) {
 
               <div className="sc-reportFooter">
                 <div className="sc-reportFootCard">
-                  <span className="sc-reportLabel">Canal top</span>
+                  <span className="sc-reportLabel">{t("report.topChannel")}</span>
                   <strong className="sc-reportValue sc-reportValue--small">
-                    {report.kpis?.topChannel || "Sin dato"}
+                    {report.kpis?.topChannel || t("report.noData")}
                   </strong>
                   <span className="sc-reportMeta">
-                    {report.kpis?.topChannelCount || 0} pedidos
+                    {t("report.ordersCount", { count: report.kpis?.topChannelCount || 0 })}
                   </span>
                 </div>
 
                 <div className="sc-reportFootCard">
-                  <span className="sc-reportLabel">Ultima venta</span>
+                  <span className="sc-reportLabel">{t("report.lastSale")}</span>
                   <strong className="sc-reportValue sc-reportValue--small">
                     {report.lastSaleAt
                       ? new Date(report.lastSaleAt).toLocaleString("es-ES")
-                      : "Sin dato"}
+                      : t("report.noData")}
                   </strong>
-                  <span className="sc-reportMeta">Pulso actual de la tienda</span>
+                  <span className="sc-reportMeta">{t("report.currentPulse")}</span>
                 </div>
               </div>
             </div>
@@ -934,7 +1264,7 @@ function StoreReportModal({ store, onClose }) {
 
         <footer className="sc-modalFooter">
           <button className="sc-btn ghost" onClick={onClose} type="button">
-            Cerrar
+            {t("action.close")}
           </button>
         </footer>
       </div>
@@ -942,32 +1272,51 @@ function StoreReportModal({ store, onClose }) {
   );
 }
 
-function CustomerProfileModal({ customer, onClose, onBoostCustomer }) {
+function CustomerProfileModal({ customer, onClose, onBoostCustomer, t }) {
   if (!customer) return null;
 
   const daysOff = Number(customer.daysOff || 0);
   const segment = getCustomerSegmentMeta(customer);
-  const daysOffLabel = Number(customer?.orderCount || 0) > 0 ? String(daysOff) : "Sin compras";
+  const getComparisonLabel = () => {
+    if (!Number(customer?.orderCount || 0)) return t("customer.noOrders");
+    const storeAverage = Number(customer?.storeAverageTicket || 0);
+    if (!storeAverage) return t("customer.noStoreAverage");
+    return customer.isAboveStoreAverage
+      ? t("customer.aboveAverage")
+      : t("customer.belowAverage");
+  };
+  const formatCustomerDateTime = (value) => {
+    if (!value) return t("customer.noOrders");
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return t("customer.noOrders");
+    return date.toLocaleString("es-ES", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+  };
+  const daysOffLabel =
+    Number(customer?.orderCount || 0) > 0 ? String(daysOff) : t("customer.noOrders");
   const profileStats = [
     {
-      label: "Ticket promedio",
+      label: t("customer.averageTicket"),
       value: formatCustomerMoney(customer, customer.averageTicket),
-      meta: getTicketComparisonLabel(customer),
+      meta: getComparisonLabel(),
     },
     {
-      label: "Ultimo ticket",
+      label: t("customer.lastTicket"),
       value: formatCustomerMoney(customer, customer.lastTicket),
-      meta: formatDateTime(customer.lastOrderAt),
+      meta: formatCustomerDateTime(customer.lastOrderAt),
     },
     {
-      label: "Valor acumulado",
+      label: t("customer.lifetimeValue"),
       value: formatCustomerMoney(customer, customer.lifetimeValue),
-      meta: `${customer.orderCount || 0} pedidos`,
+      meta: t("customer.ordersCount", { count: customer.orderCount || 0 }),
     },
     {
-      label: "Dias sin pedir",
+      label: t("customer.daysWithoutOrdering"),
       value: daysOffLabel,
-      meta: formatDateTime(customer.lastOrderAt),
+      meta: formatCustomerDateTime(customer.lastOrderAt),
     },
   ];
 
@@ -979,9 +1328,9 @@ function CustomerProfileModal({ customer, onClose, onBoostCustomer }) {
       >
         <header className="sc-modalHead">
           <div>
-            <h3 className="sc-modalTitle">{customer.name || "Cliente"}</h3>
+            <h3 className="sc-modalTitle">{customer.name || t("customer.defaultName")}</h3>
             <p className="sc-customerProfileSub">
-              {customer.phone || "Sin telefono"} - {customer.postalCode || customer.zipCode || "Sin CP"}
+              {customer.phone || t("customer.noPhone")} - {customer.postalCode || customer.zipCode || t("customer.noPostalCode")}
             </p>
           </div>
           <button className="sc-iconBtn" onClick={onClose} type="button">
@@ -998,7 +1347,7 @@ function CustomerProfileModal({ customer, onClose, onBoostCustomer }) {
               {segment.shortLabel}
             </span>
             <span>{customerSegmentLabel(customer.segment)}</span>
-            <span>{getTicketComparisonLabel(customer)}</span>
+            <span>{getComparisonLabel()}</span>
           </div>
 
           <div className="sc-customerProfileGrid">
@@ -1013,16 +1362,16 @@ function CustomerProfileModal({ customer, onClose, onBoostCustomer }) {
 
           <div className="sc-customerProfileInfo">
             <div>
-              <span>Direccion</span>
-              <strong>{customer.address_1 || "Sin direccion registrada"}</strong>
+              <span>{t("customer.address")}</span>
+              <strong>{customer.address_1 || t("customer.noAddress")}</strong>
             </div>
             <div>
               <span>Email</span>
-              <strong>{customer.email || "Sin email"}</strong>
+              <strong>{customer.email || t("customer.noEmail")}</strong>
             </div>
             {customer.observations && (
               <div>
-                <span>Observaciones</span>
+                <span>{t("customer.notes")}</span>
                 <strong>{customer.observations}</strong>
               </div>
             )}
@@ -1031,14 +1380,14 @@ function CustomerProfileModal({ customer, onClose, onBoostCustomer }) {
 
         <footer className="sc-modalFooter">
           <button className="sc-btn ghost" onClick={onClose} type="button">
-            Cerrar
+            {t("action.close")}
           </button>
           <button
             className="sc-btn primary"
             onClick={() => onBoostCustomer?.(customer)}
             type="button"
           >
-            Crear boost
+            {t("customer.createBoost")}
           </button>
         </footer>
       </div>
@@ -1055,6 +1404,7 @@ function MapPanel({
   selectedCustomerId,
   onSelectStore,
   onSelectCustomer,
+  t,
 }) {
   const mapNodeRef = useRef(null);
   const mapRef = useRef(null);
@@ -1145,7 +1495,7 @@ function MapPanel({
 
             return (
               postalCode &&
-              postalCode !== "Sin CP" &&
+              postalCode !== t("customer.noPostalCode") &&
               !hasUsableCoordinates(lat, lng) &&
               !hasUsableCoordinates(territoryLat, territoryLng) &&
               !postalCoordinates[postalCode] &&
@@ -1196,7 +1546,7 @@ function MapPanel({
     return () => {
       cancelled = true;
     };
-  }, [customers, postalCoordinates, showCustomers]);
+  }, [customers, postalCoordinates, showCustomers, t]);
 
   useEffect(() => {
     if (!mapRef.current || String(selectedStoreId) === "all") return;
@@ -1377,8 +1727,9 @@ function MapPanel({
 
         {showCustomers && customers.length === 0 && (
           <div className="sc-mapEmptyOverlay">
-            No hay clientes para este filtro
-            {customerPostalCode !== "all" ? ` en ${customerPostalCode}` : ""}.
+            {customerPostalCode !== "all"
+              ? t("locations.noCustomersPostal", { code: customerPostalCode })
+              : t("locations.noCustomers")}
           </div>
         )}
       </div>
@@ -1390,8 +1741,14 @@ export default function AdminStoresPage({
   initialPartnerId = "",
   lockPartner = false,
   view = "stores",
+  language = "es",
 }) {
   const isLocationsView = view === "locations";
+  const activeLocale = useMemo(() => normalizeStoreLocale(language), [language]);
+  const t = useCallback(
+    (key, values) => translateStore(activeLocale, key, values),
+    [activeLocale]
+  );
   const [partners, setPartners] = useState([]);
   const [selectedPartnerId, setSelectedPartnerId] = useState("");
   const [stores, setStores] = useState([]);
@@ -1466,14 +1823,14 @@ export default function AdminStoresPage({
         setPageError("");
       } catch (requestError) {
         console.error("ADMIN STORES BOOTSTRAP ERROR:", requestError);
-        setPageError("No pudimos cargar el modulo de tiendas.");
+        setPageError(t("error.loadModule"));
       } finally {
         setLoading(false);
       }
     };
 
     bootstrap();
-  }, [initialPartnerId, isLocationsView, loadCustomers, loadPartners, loadStores, selectedPartnerId]);
+  }, [initialPartnerId, isLocationsView, loadCustomers, loadPartners, loadStores, selectedPartnerId, t]);
 
   useEffect(() => {
     if (!initialPartnerId) return;
@@ -1487,9 +1844,9 @@ export default function AdminStoresPage({
       isLocationsView ? loadCustomers(selectedPartnerId) : Promise.resolve(),
     ]).catch((requestError) => {
       console.error("FILTER STORES ERROR:", requestError);
-      setPageError("No pudimos filtrar las tiendas del partner.");
+      setPageError(t("error.filterStores"));
     });
-  }, [isLocationsView, loadCustomers, loadStores, selectedPartnerId]);
+  }, [isLocationsView, loadCustomers, loadStores, selectedPartnerId, t]);
 
   useEffect(() => {
     if (!stores.length) {
@@ -1511,9 +1868,9 @@ export default function AdminStoresPage({
           customer.zipCode ||
           customer.territoryZipCode ||
           extractPostalCode(customer.address_1) ||
-          "Sin CP",
+          t("customer.noPostalCode"),
       })),
-    [customers]
+    [customers, t]
   );
 
   const scopedCustomers = useMemo(() => {
@@ -1640,7 +1997,7 @@ export default function AdminStoresPage({
     event.preventDefault();
 
     if (!selectedPartnerId) {
-      setFeedback("Selecciona un partner antes de guardar la tienda.");
+      setFeedback(t("feedback.selectPartner"));
       return;
     }
 
@@ -1655,7 +2012,7 @@ export default function AdminStoresPage({
     try {
       if (editingStore) {
         await api.patch(`/api/stores/${editingStore}`, payload);
-        setFeedback("Tienda actualizada.");
+        setFeedback(t("feedback.storeUpdated"));
       } else {
         const response = await api.post("/api/stores", payload);
         const credential = response.data?.posCredentials || {};
@@ -1670,9 +2027,9 @@ export default function AdminStoresPage({
             pin: credential.pin,
             configured: true,
           });
-          setFeedback("Tienda creada. Copia el PIN POS ahora: solo se muestra una vez.");
+          setFeedback(t("feedback.storeCreatedWithPin"));
         } else {
-          setFeedback("Tienda creada.");
+          setFeedback(t("feedback.storeCreated"));
         }
       }
 
@@ -1682,7 +2039,7 @@ export default function AdminStoresPage({
       setShowAdd(false);
     } catch (requestError) {
       console.error("SUBMIT STORE ERROR:", requestError);
-      setFeedback(requestError.response?.data?.error || "No pudimos guardar la tienda.");
+      setFeedback(requestError.response?.data?.error || t("feedback.saveStoreError"));
     }
   };
 
@@ -1704,13 +2061,13 @@ export default function AdminStoresPage({
         setCoordinatesModalStore(store);
         return;
       }
-      setFeedback(requestError.response?.data?.message || requestError.response?.data?.error || "No pudimos cambiar el estado de la tienda.");
+      setFeedback(requestError.response?.data?.message || requestError.response?.data?.error || t("feedback.statusError"));
     }
   };
 
   const regeneratePosPin = async (store) => {
     const confirmed = window.confirm(
-      `Regenerar PIN POS para ${store.storeName}? El PIN anterior dejara de funcionar.`
+      t("confirm.regeneratePin", { name: store.storeName })
     );
     if (!confirmed) return;
 
@@ -1730,10 +2087,10 @@ export default function AdminStoresPage({
         configured: true,
       });
       await loadStores(selectedPartnerId);
-      setFeedback("PIN POS regenerado. Copialo ahora: solo se muestra una vez.");
+      setFeedback(t("feedback.pinRegenerated"));
     } catch (requestError) {
       console.error("REGENERATE POS PIN ERROR:", requestError);
-      setFeedback("No pudimos regenerar el PIN POS de la tienda.");
+      setFeedback(t("feedback.pinError"));
     } finally {
       setResettingCredentialId(null);
     }
@@ -1768,7 +2125,7 @@ export default function AdminStoresPage({
       });
       if (response.data?.regenerated) {
         await loadStores(selectedPartnerId);
-        setFeedback("Se genero un nuevo PIN POS recuperable para esta tienda.");
+        setFeedback(t("feedback.pinNew"));
       }
     } catch (requestError) {
       console.error("FETCH POS PIN ERROR:", requestError);
@@ -1778,7 +2135,7 @@ export default function AdminStoresPage({
         pin: "",
         configured: Boolean(store.posCredentialsConfigured),
         loading: false,
-        error: "No pudimos cargar el PIN POS.",
+        error: t("feedback.pinLoadError"),
       });
     } finally {
       setLoadingCredentialId(null);
@@ -1786,15 +2143,15 @@ export default function AdminStoresPage({
   };
 
   const deleteStore = async (id) => {
-    if (!window.confirm("Delete store?")) return;
+    if (!window.confirm(t("confirm.deleteStore"))) return;
 
     try {
       await api.delete(`/api/stores/${id}`);
       setStores((current) => current.filter((store) => store.id !== id));
-      setFeedback("Tienda eliminada.");
+      setFeedback(t("feedback.storeDeleted"));
     } catch (requestError) {
       console.error("DELETE STORE ERROR:", requestError);
-      setFeedback("No pudimos eliminar la tienda.");
+      setFeedback(t("feedback.deleteStoreError"));
     }
   };
 
@@ -1819,8 +2176,8 @@ export default function AdminStoresPage({
     return (
       <div className="sc-page">
         <div className="sc-card">
-          <h2>{isLocationsView ? "Locations" : "Stores"}</h2>
-          <p>Cargando modulo...</p>
+          <h2>{isLocationsView ? t("title.locations") : t("title.stores")}</h2>
+          <p>{t("state.loadingModule")}</p>
         </div>
       </div>
     );
@@ -1831,11 +2188,11 @@ export default function AdminStoresPage({
       <div className={`sc-page ${isLocationsView ? "sc-page--locations" : ""}`}>
         <header className="sc-header">
           <div>
-            <h2>{isLocationsView ? "Locations" : "Stores"}</h2>
+            <h2>{isLocationsView ? t("title.locations") : t("title.stores")}</h2>
             <p className="sc-subtitle">
               {isLocationsView
-                ? "Mapa, clientes y filtros para analizar el territorio."
-                : "Lista de tiendas y funciones operativas del partner."}
+                ? t("subtitle.locations")
+                : t("subtitle.stores")}
             </p>
           </div>
 
@@ -1860,7 +2217,7 @@ export default function AdminStoresPage({
                 type="button"
               >
                 <span className="sc-btnIcon" aria-hidden="true">+</span>
-                <span>Add Stores</span>
+                <span>{t("action.addStore")}</span>
               </button>
             )}
           </div>
@@ -1874,22 +2231,22 @@ export default function AdminStoresPage({
 
         {!isLocationsView && (
         <section className="sc-card">
-          <h3>Stores list</h3>
+          <h3>{t("section.storesList")}</h3>
 
           <table className="store-table">
             <thead>
               <tr>
-                <th>Del</th>
-                <th>Edit</th>
-                <th>Name</th>
-                <th>City</th>
-                <th>Address</th>
-                <th>Status</th>
+                <th>{t("table.del")}</th>
+                <th>{t("table.edit")}</th>
+                <th>{t("table.name")}</th>
+                <th>{t("table.city")}</th>
+                <th>{t("table.address")}</th>
+                <th>{t("table.status")}</th>
                 <th>PIN POS</th>
-                <th>Menu</th>
-                <th>Reporte</th>
-                <th>Hours</th>
-                <th>Reservations</th>
+                <th>{t("table.menu")}</th>
+                <th>{t("table.report")}</th>
+                <th>{t("table.hours")}</th>
+                <th>{t("table.reservations")}</th>
               </tr>
             </thead>
             <tbody>
@@ -1905,8 +2262,8 @@ export default function AdminStoresPage({
                       className="table-btn table-btn-icon danger"
                       onClick={() => deleteStore(store.id)}
                       type="button"
-                      aria-label={`Eliminar ${store.storeName}`}
-                      title={`Eliminar ${store.storeName}`}
+                      aria-label={`${t("action.delete")} ${store.storeName}`}
+                      title={`${t("action.delete")} ${store.storeName}`}
                     >
                       x
                     </button>
@@ -1916,8 +2273,8 @@ export default function AdminStoresPage({
                       className="table-btn table-btn-icon edit"
                       onClick={() => editStore(store)}
                       type="button"
-                      aria-label={`Editar ${store.storeName}`}
-                      title={`Editar ${store.storeName}`}
+                      aria-label={`${t("action.edit")} ${store.storeName}`}
+                      title={`${t("action.edit")} ${store.storeName}`}
                     >
                       ✎
                     </button>
@@ -1934,11 +2291,15 @@ export default function AdminStoresPage({
                       type="button"
                       title={
                         storeHasCoordinates
-                          ? "Cambiar estado operativo"
-                          : "Completa latitud y longitud antes de activar"
+                          ? t("status.changeTitle")
+                          : t("status.coordsTitle")
                       }
                     >
-                      {isOperationalActive ? "Activa" : isCoordinateBlocked ? "Config coords" : "Inactiva"}
+                      {isOperationalActive
+                        ? t("status.active")
+                        : isCoordinateBlocked
+                        ? t("status.coords")
+                        : t("status.inactive")}
                     </button>
                   </td>
                   <td>
@@ -1952,22 +2313,22 @@ export default function AdminStoresPage({
                         ? "..."
                         : store.posCredentialsConfigured
                           ? "******"
-                          : "Sin PIN"}
+                          : t("pin.none")}
                     </button>
                   </td>
                   <td>
                     <button className="table-btn stock" onClick={() => setStockModal(store)} type="button">
-                      Menu
+                      {t("table.menu")}
                     </button>
                   </td>
                   <td>
                     <button className="table-btn report" onClick={() => setReportModal(store)} type="button">
-                      Reporte
+                      {t("table.report")}
                     </button>
                   </td>
                   <td>
                     <button className="table-btn hours" onClick={() => setHoursModal(store)} type="button">
-                      Hours
+                      {t("table.hours")}
                     </button>
                   </td>
                   <td>
@@ -1976,7 +2337,7 @@ export default function AdminStoresPage({
                       onClick={() => setReservationsModal(store)}
                       type="button"
                     >
-                      Reservations
+                      {t("table.reservations")}
                     </button>
                   </td>
                 </tr>
@@ -1986,7 +2347,7 @@ export default function AdminStoresPage({
               {stores.length === 0 && (
                 <tr>
                   <td colSpan="11">
-                    <div className="sc-emptyState">No hay tiendas para este partner todavia.</div>
+                    <div className="sc-emptyState">{t("state.noStores")}</div>
                   </td>
                 </tr>
               )}
@@ -1999,9 +2360,9 @@ export default function AdminStoresPage({
         <section className="sc-card sc-mapCard">
           <div className="sc-cardHead sc-mapHead">
             <div>
-              <h3 className="sc-cardTitle">Store locations</h3>
+              <h3 className="sc-cardTitle">{t("locations.title")}</h3>
               <p className="sc-mapMeta">
-                {visibleCustomers.length} clientes visibles - filtros de segmento y territorio
+                {t("locations.meta", { count: visibleCustomers.length })}
               </p>
             </div>
 
@@ -2011,7 +2372,7 @@ export default function AdminStoresPage({
                 value={selectedMapStoreId}
                 onChange={(event) => setSelectedMapStoreId(event.target.value)}
               >
-                <option value="all">All stores</option>
+                <option value="all">{t("locations.allStores")}</option>
                 {stores.map((store) => (
                   <option key={store.id} value={store.id}>
                     {store.storeName}
@@ -2025,7 +2386,7 @@ export default function AdminStoresPage({
                   value={customerPostalCode}
                   onChange={(event) => setCustomerPostalCode(event.target.value)}
                 >
-                  <option value="all">Todos los codigos postales</option>
+                  <option value="all">{t("locations.allPostalCodes")}</option>
                   {customerPostalCodes.map((postalCode) => (
                     <option key={postalCode} value={postalCode}>
                       {postalCode}
@@ -2039,7 +2400,7 @@ export default function AdminStoresPage({
                 className="sc-btn ghost"
                 onClick={() => setShowCust((previous) => !previous)}
               >
-                {showCust ? "Hide customers" : "Show customers"}
+                {showCust ? t("action.hideCustomers") : t("action.showCustomers")}
               </button>
             </div>
           </div>
@@ -2048,10 +2409,10 @@ export default function AdminStoresPage({
             <div className="sc-mapControls">
               <div
                 className="sc-timeFilters"
-                aria-label="Filtro de alta de clientes"
+                aria-label={t("locations.signupFilter")}
                 style={{ "--sc-time-filter-color": customerFilterColor }}
               >
-                <span>Altas</span>
+                <span>{t("locations.signupFilter")}</span>
                 <div className="sc-timeFilterChips">
                   {customerTimeFilters.map((filter) => (
                     <button
@@ -2062,13 +2423,13 @@ export default function AdminStoresPage({
                       }`}
                       onClick={() => setCustomerTimeFilter(filter.key)}
                     >
-                      {filter.label}
+                      {t(filter.labelKey)}
                     </button>
                   ))}
                 </div>
               </div>
 
-              <div className="sc-territoryModes" aria-label="Filtros de segmento">
+              <div className="sc-territoryModes" aria-label="Segment filters">
                 <button
                   type="button"
                   className={`sc-territoryModeBtn is-segment ${
@@ -2076,7 +2437,7 @@ export default function AdminStoresPage({
                   }`}
                   onClick={() => setCustomerSegmentFilter("all")}
                 >
-                  <span className="sc-territoryLabel">Visibles</span>
+                  <span className="sc-territoryLabel">{t("locations.visible")}</span>
                   <span className="sc-segmentMetric">
                     {customerSegmentStats.total}
                   </span>
@@ -2120,6 +2481,7 @@ export default function AdminStoresPage({
             selectedCustomerId={selectedCustomerId}
             onSelectStore={(storeId) => setSelectedMapStoreId(String(storeId))}
             onSelectCustomer={setSelectedCustomerId}
+            t={t}
           />
         </section>
         )}
@@ -2132,6 +2494,7 @@ export default function AdminStoresPage({
           onBoostCustomer={(customer) => {
             setBoostCustomer(customer);
           }}
+          t={t}
         />
       )}
 
@@ -2152,27 +2515,29 @@ export default function AdminStoresPage({
           >
             <header className="sc-modalHead">
               <div>
-                <span className="sc-modalEyebrow">Configuracion pendiente</span>
-                <h3 className="sc-modalTitle">Faltan coordenadas de la tienda</h3>
+                <span className="sc-modalEyebrow">{t("coordinates.eyebrow")}</span>
+                <h3 className="sc-modalTitle">{t("coordinates.title")}</h3>
               </div>
               <button
                 className="sc-iconBtn"
                 onClick={() => setCoordinatesModalStore(null)}
                 type="button"
-                aria-label="Cerrar aviso de coordenadas"
+                aria-label={t("action.close")}
               >
                 x
               </button>
             </header>
             <div className="sc-modalBody sc-coordinateNotice">
               <p>
-                Para considerar activa la tienda {coordinatesModalStore.storeName}, necesitamos
-                que tenga configuradas latitud y longitud. Completa esos campos en la ficha de
-                la tienda y luego vuelve a activarla.
+                {t("coordinates.body", { name: coordinatesModalStore.storeName })}
               </p>
               <div className="sc-coordinateChecklist">
-                <span>Latitud: {coordinatesModalStore.latitude ?? "pendiente"}</span>
-                <span>Longitud: {coordinatesModalStore.longitude ?? "pendiente"}</span>
+                <span>
+                  {t("coordinates.latitude")}: {coordinatesModalStore.latitude ?? t("coordinates.pending")}
+                </span>
+                <span>
+                  {t("coordinates.longitude")}: {coordinatesModalStore.longitude ?? t("coordinates.pending")}
+                </span>
               </div>
             </div>
             <footer className="sc-modalFooter">
@@ -2181,7 +2546,7 @@ export default function AdminStoresPage({
                 className="sc-btn ghost"
                 onClick={() => setCoordinatesModalStore(null)}
               >
-                Cerrar
+                {t("action.close")}
               </button>
               <button
                 type="button"
@@ -2192,7 +2557,7 @@ export default function AdminStoresPage({
                   editStore(store);
                 }}
               >
-                Completar coordenadas
+                {t("action.completeCoordinates")}
               </button>
             </footer>
           </div>
@@ -2214,38 +2579,38 @@ export default function AdminStoresPage({
                 className="sc-iconBtn"
                 onClick={() => setPosCredentialModal(null)}
                 type="button"
-                aria-label="Cerrar PIN POS"
+                aria-label={t("action.close")}
               >
                 x
               </button>
             </header>
             <div className="sc-modalBody sc-posPinModal">
               <div>
-                <span>Usuario</span>
+                <span>{t("pos.user")}</span>
                 <strong>{posCredentialModal.username || "-"}</strong>
               </div>
               <div>
                 <span>PIN</span>
                 <strong>
                   {posCredentialModal.loading
-                    ? "Cargando..."
+                    ? t("pos.loading")
                     : posCredentialModal.error
                       ? "-"
-                      : posCredentialModal.pin || "Sin PIN"}
+                      : posCredentialModal.pin || t("pin.none")}
                 </strong>
               </div>
               <p>
                 {posCredentialModal.error
                   ? posCredentialModal.error
                   : posCredentialModal.loading
-                    ? "Consultando el PIN POS de la tienda."
+                    ? t("pos.querying")
                     : posCredentialModal.regenerated
-                      ? "Este PIN acaba de generarse porque la tienda tenia una credencial antigua no recuperable."
+                      ? t("pos.regenerated")
                       : posCredentialModal.pin
-                        ? "Este es el PIN POS actual de la tienda."
+                        ? t("pos.current")
                   : posCredentialModal.configured
-                    ? "El PIN POS esta configurado."
-                    : "Esta tienda todavia no tiene PIN POS configurado."}
+                    ? t("pos.configured")
+                    : t("pos.missing")}
               </p>
             </div>
             <footer className="sc-modalFooter">
@@ -2254,7 +2619,7 @@ export default function AdminStoresPage({
                 className="sc-btn ghost"
                 onClick={() => setPosCredentialModal(null)}
               >
-                Cerrar
+                {t("action.close")}
               </button>
               <button
                 type="button"
@@ -2263,10 +2628,10 @@ export default function AdminStoresPage({
                 disabled={resettingCredentialId === posCredentialModal.id}
               >
                 {resettingCredentialId === posCredentialModal.id
-                  ? "Generando..."
+                  ? t("action.generating")
                   : posCredentialModal.configured
-                    ? "Regenerar PIN"
-                    : "Generar PIN"}
+                    ? t("action.regeneratePin")
+                    : t("action.generatePin")}
               </button>
             </footer>
           </div>
@@ -2284,7 +2649,9 @@ export default function AdminStoresPage({
         >
           <div className="sc-modalBox" onMouseDown={(event) => event.stopPropagation()}>
             <header className="sc-modalHead">
-              <h3 className="sc-modalTitle">{editingStore ? "Edit store" : "Add store"}</h3>
+              <h3 className="sc-modalTitle">
+                {editingStore ? t("form.editTitle") : t("form.addTitle")}
+              </h3>
               <button
                 className="sc-iconBtn"
                 onClick={() => {
@@ -2301,7 +2668,7 @@ export default function AdminStoresPage({
             <form onSubmit={submitStore} className="sc-modalBody store-form">
               <div className="sc-grid">
                 <div className="sc-field">
-                  <label className="sc-label">Store name</label>
+                  <label className="sc-label">{t("form.storeName")}</label>
                   <input
                     className="sc-input"
                     value={form.storeName}
@@ -2312,7 +2679,7 @@ export default function AdminStoresPage({
                 </div>
 
                 <div className="sc-field">
-                  <label className="sc-label">Address</label>
+                  <label className="sc-label">{t("form.address")}</label>
                   <input
                     className="sc-input"
                     value={form.address}
@@ -2323,7 +2690,7 @@ export default function AdminStoresPage({
                 </div>
 
                 <div className="sc-field">
-                  <label className="sc-label">Latitude</label>
+                  <label className="sc-label">{t("form.latitude")}</label>
                   <input
                     className="sc-input"
                     value={form.latitude}
@@ -2334,7 +2701,7 @@ export default function AdminStoresPage({
                 </div>
 
                 <div className="sc-field">
-                  <label className="sc-label">Longitude</label>
+                  <label className="sc-label">{t("form.longitude")}</label>
                   <input
                     className="sc-input"
                     value={form.longitude}
@@ -2345,7 +2712,7 @@ export default function AdminStoresPage({
                 </div>
 
                 <div className="sc-field">
-                  <label className="sc-label">City</label>
+                  <label className="sc-label">{t("form.city")}</label>
                   <input
                     className="sc-input"
                     value={form.city}
@@ -2356,7 +2723,7 @@ export default function AdminStoresPage({
                 </div>
 
                 <div className="sc-field">
-                  <label className="sc-label">Zip code</label>
+                  <label className="sc-label">{t("form.zipCode")}</label>
                   <input
                     className="sc-input"
                     value={form.zipCode}
@@ -2367,7 +2734,7 @@ export default function AdminStoresPage({
                 </div>
 
                 <div className="sc-field">
-                  <label className="sc-label">Email</label>
+                  <label className="sc-label">{t("form.email")}</label>
                   <input
                     className="sc-input"
                     value={form.email}
@@ -2378,7 +2745,7 @@ export default function AdminStoresPage({
                 </div>
 
                 <div className="sc-field">
-                  <label className="sc-label">Phone</label>
+                  <label className="sc-label">{t("form.phone")}</label>
                   <input
                     className="sc-input"
                     value={form.tlf}
@@ -2390,7 +2757,7 @@ export default function AdminStoresPage({
               </div>
 
               <div className="sc-field sc-field--toggle">
-                <label className="sc-label">Accept reservations</label>
+                <label className="sc-label">{t("form.acceptReservations")}</label>
                 <button
                   type="button"
                   className={`sc-toggle ${form.acceptsReservations ? "on" : ""}`}
@@ -2407,7 +2774,7 @@ export default function AdminStoresPage({
 
               {form.acceptsReservations && (
                 <div className="sc-field">
-                  <label className="sc-label">Reservation capacity (people)</label>
+                  <label className="sc-label">{t("form.reservationCapacity")}</label>
                   <input
                     type="number"
                     className="sc-input"
@@ -2433,11 +2800,11 @@ export default function AdminStoresPage({
                     setForm(emptyStore);
                   }}
                 >
-                  Cancel
+                  {t("action.cancel")}
                 </button>
 
                 <button type="submit" className="sc-btn primary">
-                  Save store
+                  {t("action.saveStore")}
                 </button>
               </div>
             </form>
@@ -2446,14 +2813,14 @@ export default function AdminStoresPage({
       )}
 
       {stockModal && (
-        <MenuAvailabilityModal store={stockModal} onClose={() => setStockModal(null)} />
+        <MenuAvailabilityModal store={stockModal} onClose={() => setStockModal(null)} t={t} />
       )}
       {reportModal && (
-        <StoreReportModal store={reportModal} onClose={() => setReportModal(null)} />
+        <StoreReportModal store={reportModal} onClose={() => setReportModal(null)} t={t} />
       )}
-      {hoursModal && <StoreHoursModal store={hoursModal} onClose={() => setHoursModal(null)} />}
+      {hoursModal && <StoreHoursModal store={hoursModal} onClose={() => setHoursModal(null)} t={t} />}
       {reservationsModal && (
-        <ReservationsModal store={reservationsModal} onClose={() => setReservationsModal(null)} />
+        <ReservationsModal store={reservationsModal} onClose={() => setReservationsModal(null)} t={t} />
       )}
     </>
   );

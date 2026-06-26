@@ -3304,7 +3304,7 @@ export default function StorePage() {
         pauseTabsTicker(pauseDurationMs);
       }
       tabsScrollOriginRef.current = "";
-      ignoreTabsScrollUntilRef.current = performance.now() + 520;
+      ignoreTabsScrollUntilRef.current = performance.now() + (options.manual ? 1100 : 520);
       alignCategoryTabToZero(tabId);
       setActiveTab(tabId);
     },
@@ -3508,6 +3508,7 @@ export default function StorePage() {
 
       const scroller = tabsScrollerRef.current;
       if (!scroller) return;
+      const categoryTab = event.target?.closest?.(".lsf-tab--category");
 
       pauseTabsTicker(6200);
       tabsDragRef.current = {
@@ -3515,6 +3516,7 @@ export default function StorePage() {
         startX: event.clientX,
         scrollLeft: scroller.scrollLeft,
         moved: false,
+        categoryTabId: categoryTab?.dataset?.tabId || "",
       };
       scroller.setPointerCapture?.(event.pointerId);
       scroller.classList.add("is-dragging");
@@ -3543,15 +3545,22 @@ export default function StorePage() {
     const drag = tabsDragRef.current;
     const scroller = tabsScrollerRef.current;
     if (!drag || drag.pointerId !== event.pointerId) return;
+    const categoryTabId = !drag.moved ? drag.categoryTabId : "";
 
     if (drag.moved) {
       suppressTabsClickUntilRef.current = performance.now() + 320;
+    } else if (categoryTabId) {
+      suppressTabsClickUntilRef.current = performance.now() + 120;
     }
 
     tabsDragRef.current = null;
     scroller?.releasePointerCapture?.(event.pointerId);
     scroller?.classList.remove("is-dragging");
-  }, []);
+
+    if (categoryTabId) {
+      selectCategoryTab(categoryTabId);
+    }
+  }, [selectCategoryTab]);
 
   const handleTabsClickCapture = useCallback((event) => {
     if (performance.now() > suppressTabsClickUntilRef.current) return;
@@ -7066,6 +7075,7 @@ export default function StorePage() {
                     key={tab.id}
                     type="button"
                     data-tab-id={tab.id}
+                    data-active={activeTab === tab.id ? "true" : undefined}
                     className={`lsf-tab lsf-tab--category ${activeTab === tab.id ? "is-active" : ""}`}
                     onClick={() => selectCategoryTab(tab.id)}
                   >

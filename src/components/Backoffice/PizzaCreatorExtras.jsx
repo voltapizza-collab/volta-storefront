@@ -28,9 +28,95 @@ const getPrimaryPrice = (priceBySize, fallbackPrice = 0) => {
   return Number(firstPrice ?? fallbackPrice ?? 0);
 };
 
-export default function PizzaCreatorExtras({ partner }) {
+const SUPPORTED_EXTRAS_LOCALES = new Set(["en", "es", "it", "fr", "pt"]);
+
+const normalizeExtrasLocale = (value) => {
+  const locale = String(value || "").trim().toLowerCase().slice(0, 2);
+  return SUPPORTED_EXTRAS_LOCALES.has(locale) ? locale : "en";
+};
+
+const EXTRAS_COPY = {
+  en: {
+    "title": "Extras",
+    "action.addExtra": "+ Add extra",
+    "state.loading": "Loading extras...",
+    "state.empty": "No extras configured.",
+    "action.edit": "Edit",
+    "action.delete": "Delete",
+    "modal.add": "Add extra",
+    "modal.edit": "Edit extra",
+    "field.ingredient": "Ingredient",
+    "field.select": "- Select -",
+    "field.categories": "Categories",
+    "action.cancel": "Cancel",
+    "action.save": "Save",
+    "action.saving": "Saving...",
+    "delete.title": "Delete",
+    "delete.confirm": "Are you sure you want to remove {name} as an extra?",
+    "delete.deleting": "Deleting...",
+    "alert.selectIngredient": "Select an ingredient",
+    "alert.selectCategory": "Select at least one category",
+    "alert.selectCategoryWithProducts": "Select at least one category with products",
+    "feedback.saveError": "The extra could not be saved.",
+    "feedback.deleteError": "The extra could not be deleted.",
+    "fallback.ingredient": "Ingredient {id}",
+  },
+  es: {
+    "title": "Extras",
+    "action.addExtra": "+ Anadir extra",
+    "state.loading": "Cargando extras...",
+    "state.empty": "No hay extras configurados.",
+    "action.edit": "Editar",
+    "action.delete": "Eliminar",
+    "modal.add": "Anadir extra",
+    "modal.edit": "Editar extra",
+    "field.ingredient": "Ingrediente",
+    "field.select": "- Selecciona -",
+    "field.categories": "Categorias",
+    "action.cancel": "Cancelar",
+    "action.save": "Guardar",
+    "action.saving": "Guardando...",
+    "delete.title": "Eliminar",
+    "delete.confirm": "Seguro que deseas eliminar {name} como extra?",
+    "delete.deleting": "Eliminando...",
+    "alert.selectIngredient": "Selecciona un ingrediente",
+    "alert.selectCategory": "Selecciona al menos una categoria",
+    "alert.selectCategoryWithProducts": "Selecciona al menos una categoria con productos",
+    "feedback.saveError": "No se pudo guardar el extra.",
+    "feedback.deleteError": "No se pudo eliminar el extra.",
+    "fallback.ingredient": "Ingrediente {id}",
+  },
+};
+
+const translateExtras = (locale, key, values = {}) => {
+  const dictionary = EXTRAS_COPY[locale] || EXTRAS_COPY.en;
+  const template = dictionary[key] || EXTRAS_COPY.en[key] || key;
+
+  return template.replace(/\{(\w+)\}/g, (_, name) =>
+    values[name] == null ? "" : String(values[name])
+  );
+};
+
+const getIngredientDisplayName = (ingredient = {}) =>
+  String(
+    ingredient.displayName ||
+      ingredient.semanticMapping?.globalIngredient?.displayName ||
+      ingredient.ingredientName ||
+      ingredient.name ||
+      ""
+  ).trim();
+
+export default function PizzaCreatorExtras({ partner, language = "es" }) {
   const partnerId = partner?.partnerId;
   const storeId = partner?.storeId;
+  const activeLocale = useMemo(
+    () => normalizeExtrasLocale(language),
+    [language]
+  );
+  const t = useCallback(
+    (key, values) => translateExtras(activeLocale, key, values),
+    [activeLocale]
+  );
   const [categories, setCategories] = useState([]);
   const [ingredients, setIngredients] = useState([]);
   const [extras, setExtras] = useState([]);
@@ -45,9 +131,18 @@ export default function PizzaCreatorExtras({ partner }) {
 
   const sortedIngredients = useMemo(() => {
     return [...ingredients].sort((a, b) =>
-      a.name.localeCompare(b.name, "es", { sensitivity: "base" })
+      getIngredientDisplayName(a).localeCompare(
+        getIngredientDisplayName(b),
+        activeLocale,
+        { sensitivity: "base" }
+      )
     );
-  }, [ingredients]);
+  }, [activeLocale, ingredients]);
+
+  const ingredientById = useMemo(
+    () => new Map(ingredients.map((ingredient) => [ingredient.id, ingredient])),
+    [ingredients]
+  );
 
   const ingredientOptions = useMemo(() => {
     if (!editingExtra?.ingredientId) return sortedIngredients;
@@ -61,11 +156,16 @@ export default function PizzaCreatorExtras({ partner }) {
     return [
       {
         id: editingExtra.ingredientId,
-        name: editingExtra.ingredientName || `Ingrediente ${editingExtra.ingredientId}`,
+        displayName:
+          editingExtra.ingredientName ||
+          t("fallback.ingredient", { id: editingExtra.ingredientId }),
+        name:
+          editingExtra.ingredientName ||
+          t("fallback.ingredient", { id: editingExtra.ingredientId }),
       },
       ...sortedIngredients,
     ];
-  }, [editingExtra, sortedIngredients]);
+  }, [editingExtra, sortedIngredients, t]);
 
   const categorySizesById = useMemo(() => {
     const map = new Map();
@@ -121,7 +221,9 @@ export default function PizzaCreatorExtras({ partner }) {
 
       const [catRes, ingRes, extraRes, pizzaRes] = await Promise.all([
         api.get(`/api/partners/${partnerId}/categories`),
-        api.get(`/stores/${storeId}/ingredients`),
+        api.get(`/stores/${storeId}/ingredients`, {
+          params: { locale: activeLocale },
+        }),
         api.get(`/api/ingredient-extras/all?storeId=${storeId}`),
         api.get(`/api/pizzas?partnerId=${partnerId}`),
       ]);
@@ -143,7 +245,7 @@ export default function PizzaCreatorExtras({ partner }) {
     } finally {
       setLoading(false);
     }
-  }, [partnerId, storeId]);
+  }, [activeLocale, partnerId, storeId]);
 
   useEffect(() => {
     loadAll();
@@ -224,12 +326,12 @@ export default function PizzaCreatorExtras({ partner }) {
     if (!storeId) return;
 
     if (!selectedIngredient) {
-      alert("Selecciona un ingrediente");
+      alert(t("alert.selectIngredient"));
       return;
     }
 
     if (!selectedCategories.length) {
-      alert("Selecciona al menos una categoria");
+      alert(t("alert.selectCategory"));
       return;
     }
 
@@ -245,7 +347,7 @@ export default function PizzaCreatorExtras({ partner }) {
         }));
 
       if (!links.length) {
-        alert("Selecciona al menos una categoria con productos");
+        alert(t("alert.selectCategoryWithProducts"));
         return;
       }
 
@@ -259,7 +361,7 @@ export default function PizzaCreatorExtras({ partner }) {
       loadAll();
     } catch (err) {
       console.error(err);
-      setFeedback("No se pudo guardar el extra.");
+      setFeedback(t("feedback.saveError"));
     } finally {
       setSaving(false);
     }
@@ -277,7 +379,7 @@ export default function PizzaCreatorExtras({ partner }) {
       loadAll();
     } catch (err) {
       console.error(err);
-      setFeedback("No se pudo eliminar el extra.");
+      setFeedback(t("feedback.deleteError"));
     } finally {
       setSaving(false);
     }
@@ -288,63 +390,70 @@ export default function PizzaCreatorExtras({ partner }) {
       <div className="pcex-header">
         <div>
           <div className="pcex-kicker">Pizza Creator</div>
-          <h2 className="pcex-title">Extras</h2>
+          <h2 className="pcex-title">{t("title")}</h2>
         </div>
 
         <button type="button" className="pcex-addBtn" onClick={openCreate}>
-          + Anadir extra
+          {t("action.addExtra")}
         </button>
       </div>
 
       <div className="pcex-list">
-        {loading && <div className="pcex-empty">Cargando extras...</div>}
+        {loading && <div className="pcex-empty">{t("state.loading")}</div>}
         {!!feedback && <div className="pcex-error">{feedback}</div>}
 
         {!loading && extras.length === 0 && (
-          <div className="pcex-empty">No hay extras configurados.</div>
+          <div className="pcex-empty">{t("state.empty")}</div>
         )}
 
         {!loading &&
-          extras.map((extra) => (
-            <div key={extra.ingredientId} className="pcex-row">
-              <div>
-                <strong className="pcex-rowTitle">{extra.ingredientName}</strong>
-              </div>
+          extras.map((extra) => {
+            const visibleName =
+              getIngredientDisplayName(ingredientById.get(extra.ingredientId)) ||
+              extra.ingredientName ||
+              t("fallback.ingredient", { id: extra.ingredientId });
 
-              <div className="pcex-actions">
-                <button type="button" onClick={() => openEdit(extra)}>
-                  Editar
-                </button>
-                <button type="button" onClick={() => openDelete(extra)}>
-                  Eliminar
-                </button>
+            return (
+              <div key={extra.ingredientId} className="pcex-row">
+                <div>
+                  <strong className="pcex-rowTitle">{visibleName}</strong>
+                </div>
+
+                <div className="pcex-actions">
+                  <button type="button" onClick={() => openEdit(extra)}>
+                    {t("action.edit")}
+                  </button>
+                  <button type="button" onClick={() => openDelete(extra)}>
+                    {t("action.delete")}
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
       </div>
 
       {(modal === "create" || modal === "edit") && (
         <div className="pcex-modalBackdrop">
           <div className="pcex-modal">
-            <h3>{modal === "create" ? "Anadir extra" : "Editar extra"}</h3>
+            <h3>{modal === "create" ? t("modal.add") : t("modal.edit")}</h3>
 
             <div className="pcex-field">
-              <label>Ingrediente</label>
+              <label>{t("field.ingredient")}</label>
               <select
                 value={selectedIngredient}
                 onChange={(e) => setSelectedIngredient(e.target.value)}
               >
-                <option value="">- Selecciona -</option>
+                <option value="">{t("field.select")}</option>
                 {ingredientOptions.map((ingredient) => (
                   <option key={ingredient.id} value={ingredient.id}>
-                    {ingredient.name}
+                    {getIngredientDisplayName(ingredient)}
                   </option>
                 ))}
               </select>
             </div>
 
             <div className="pcex-field">
-              <label>Categorias</label>
+              <label>{t("field.categories")}</label>
               <div className="pcex-categoryGrid">
                 {selectableCategories.map((category) => {
                   const selected = selectedCategories.find(
@@ -413,10 +522,10 @@ export default function PizzaCreatorExtras({ partner }) {
 
             <div className="pcex-modalActions">
               <button type="button" onClick={closeModal}>
-                Cancelar
+                {t("action.cancel")}
               </button>
               <button type="button" onClick={save} disabled={saving}>
-                {saving ? "Guardando..." : "Guardar"}
+                {saving ? t("action.saving") : t("action.save")}
               </button>
             </div>
           </div>
@@ -426,18 +535,24 @@ export default function PizzaCreatorExtras({ partner }) {
       {modal === "delete" && (
         <div className="pcex-modalBackdrop">
           <div className="pcex-modal pcex-modal--small">
-            <h3>Eliminar</h3>
+            <h3>{t("delete.title")}</h3>
             <p>
-              Seguro que deseas eliminar <strong>{editingExtra?.ingredientName}</strong>{" "}
-              como extra?
+              {t("delete.confirm", {
+                name:
+                  getIngredientDisplayName(
+                    ingredientById.get(editingExtra?.ingredientId)
+                  ) ||
+                  editingExtra?.ingredientName ||
+                  "",
+              })}
             </p>
 
             <div className="pcex-modalActions">
               <button type="button" onClick={closeModal}>
-                Cancelar
+                {t("action.cancel")}
               </button>
               <button type="button" onClick={confirmDelete} disabled={saving}>
-                {saving ? "Eliminando..." : "Eliminar"}
+                {saving ? t("delete.deleting") : t("action.delete")}
               </button>
             </div>
           </div>

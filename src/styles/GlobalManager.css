@@ -1875,7 +1875,7 @@
 }
 
 .gmo-table--movements {
-  min-width: 1080px;
+  min-width: 1180px;
 }
 
 .gmo-table th,
@@ -1951,6 +1951,49 @@
 .gmo-segmentPill--vip {
   background: rgba(255, 45, 111, 0.16);
   color: #a30f45;
+}
+
+.gmo-paymentPill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: rgba(31, 23, 42, 0.08);
+  color: #1f172a;
+  font-size: 12px;
+  font-weight: 950;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.gmo-ticketLine .gmo-paymentPill {
+  margin-top: 0;
+}
+
+.gmo-paymentPill--cash {
+  background: #111;
+  color: #fff;
+}
+
+.gmo-paymentPill--card {
+  background: rgba(59, 0, 139, 0.1);
+  color: #3b008b;
+}
+
+.gmo-paymentPill--paypal {
+  background: rgba(0, 112, 186, 0.14);
+  color: #003087;
+}
+
+.gmo-paymentPill--crypto {
+  background: rgba(247, 147, 26, 0.18);
+  color: #6b3d00;
+}
+
+.gmo-paymentPill--unknown {
+  background: rgba(100, 116, 139, 0.14);
+  color: #475569;
 }
 
 .gmo-items {

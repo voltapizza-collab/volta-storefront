@@ -349,6 +349,7 @@ const buildWindowsPrintTicketHtml = (order) => {
       .item ul { margin: 3px 0 0 0; padding-left: 11px; }
       .item li { margin: 1px 0; }
       .sectionTitle { margin-bottom: 5px; font-size: 10px; font-weight: 900; text-transform: uppercase; }
+      .cashAlert { margin-top: 8px; background: #000; color: #fff; padding: 7px; font-size: 12px; font-weight: 900; text-align: center; }
       .muted { color: #444; }
       .total { margin-top: 9px; padding-top: 8px; border-top: 2px solid #111; font-size: 15px; font-weight: 900; }
     </style>
@@ -373,6 +374,7 @@ const buildWindowsPrintTicketHtml = (order) => {
         <div>Cliente: ${escapeHtml(customer.name || "-")}</div>
         <div>Telefono: ${escapeHtml(customer.phone || "-")}</div>
         <div>Pago: ${escapeHtml(getPaymentLabel(order))}</div>
+        ${isCashPaymentOrder(order) ? `<div class="cashAlert">PENDIENTE DE PAGO EN EFECTIVO</div>` : ""}
         ${showAddress ? `<div>Direccion: ${escapeHtml(customer.address_1)}</div>` : ""}
       </section>
       <section class="block">
@@ -675,9 +677,9 @@ const getCustomerAddress = (order) => {
   return isDeliveryOrder(order) || String(delivery.method || "").toUpperCase() === "COURIER" ? address : "";
 };
 
-const getPaymentLabel = (order) => {
+const getPaymentSignal = (order) => {
   const customerData = order?.customerData || {};
-  const paymentSignal = [
+  return [
     order?.paymentMode,
     order?.paymentStatus,
     order?.paymentMethod,
@@ -688,8 +690,17 @@ const getPaymentLabel = (order) => {
     .filter(Boolean)
     .map((value) => String(value).trim().toLowerCase())
     .join(" ");
+};
 
-  if (paymentSignal.includes("cash") || paymentSignal.includes("efectivo")) return "Efectivo pendiente";
+const isCashPaymentOrder = (order) => {
+  const paymentSignal = getPaymentSignal(order);
+  return paymentSignal.includes("cash") || paymentSignal.includes("efectivo");
+};
+
+const getPaymentLabel = (order) => {
+  const paymentSignal = getPaymentSignal(order);
+
+  if (isCashPaymentOrder(order)) return "Pendiente de pago en efectivo";
   if (paymentSignal.includes("card") || paymentSignal.includes("tarjeta") || paymentSignal.includes("stripe")) {
     return "Tarjeta";
   }
@@ -875,6 +886,7 @@ function TicketPreview({ order }) {
   const schedule = getScheduledOrderState(order);
   const address = getCustomerAddress(order);
   const priority = getOrderPriority(order);
+  const cashPayment = isCashPaymentOrder(order);
 
   return (
     <div className="pos-ticketPreview">
@@ -904,9 +916,10 @@ function TicketPreview({ order }) {
         <strong>{order.customerData?.name || "-"}</strong>
         <small>{order.customerData?.phone || ""}</small>
       </div>
-      <div className="pos-ticketBlock">
+      <div className={`pos-ticketBlock ${cashPayment ? "pos-ticketBlock--cashPayment" : ""}`}>
         <span>Pago</span>
         <strong>{getPaymentLabel(order)}</strong>
+        {cashPayment && <small>Cobrar en caja antes de entregar.</small>}
       </div>
       {address && (
         <div className="pos-ticketBlock">
@@ -1191,6 +1204,7 @@ export default function PosApp() {
   const [message, setMessage] = useState("");
   const [newOrderNotice, setNewOrderNotice] = useState(null);
   const [readyConfirmOrder, setReadyConfirmOrder] = useState(null);
+  const [readyCashReminderOrder, setReadyCashReminderOrder] = useState(null);
   const [readyButtonToast, setReadyButtonToast] = useState(null);
   const [reservations, setReservations] = useState([]);
   const [reservationsOpen, setReservationsOpen] = useState(false);
@@ -2059,6 +2073,7 @@ export default function PosApp() {
       setOrders((current) => current.filter((item) => item.id !== order.id));
       setSelectedOrderId(null);
       setReadyConfirmOrder(null);
+      setReadyCashReminderOrder(null);
       setMessage(
         notification?.ok
           ? `Pedido ${order.code || order.id} marcado como listo. Cliente notificado.`
@@ -2080,6 +2095,23 @@ export default function PosApp() {
     }
 
     setReadyConfirmOrder(order);
+    setReadyCashReminderOrder(null);
+  };
+
+  const confirmReadyRequest = (order) => {
+    if (!order) return;
+
+    if (isCashPaymentOrder(order) && readyCashReminderOrder?.id !== order.id) {
+      setReadyCashReminderOrder(order);
+      return;
+    }
+
+    markReady(order);
+  };
+
+  const closeReadyConfirm = () => {
+    setReadyConfirmOrder(null);
+    setReadyCashReminderOrder(null);
   };
 
   const completeReservation = async () => {
@@ -2476,6 +2508,7 @@ export default function PosApp() {
                   const boosted = isBoostedOrder(order);
                   const vip = isVipOrder(order);
                   const schedule = getScheduledOrderState(order, clockTick);
+                  const cashPayment = isCashPaymentOrder(order);
 
                   return (
                     <button
@@ -2485,6 +2518,8 @@ export default function PosApp() {
                         vip ? "is-vip" : ""
                       } ${schedule.locked ? "is-scheduledLocked" : ""} ${
                         schedule.hasSchedule && !schedule.locked ? "is-scheduledReady" : ""
+                      } ${
+                        cashPayment ? "is-cashPayment" : ""
                       }`}
                       onClick={() => setSelectedOrderId(order.id)}
                     >
@@ -2534,7 +2569,9 @@ export default function PosApp() {
                       <div className="pos-orderSummary">
                         <span>{getOrderType(order)}</span>
                         <span>{formatTime(order.date || order.createdAt)}</span>
-                        <span>{getPaymentLabel(order)}</span>
+                        <span className={cashPayment ? "pos-orderCashPayment" : ""}>
+                          {getPaymentLabel(order)}
+                        </span>
                         <b>{formatMoney(order.total, order.currency || "EUR")}</b>
                       </div>
 
@@ -2809,28 +2846,42 @@ export default function PosApp() {
       )}
 
       {readyConfirmOrder && (
-        <div className="pos-modalBack" onClick={() => setReadyConfirmOrder(null)}>
+        <div className="pos-modalBack" onClick={closeReadyConfirm}>
           <section
-            className="pos-reservationModal pos-readyConfirmModal"
+            className={`pos-reservationModal pos-readyConfirmModal ${
+              readyCashReminderOrder?.id === readyConfirmOrder.id ? "is-cashReminder" : ""
+            }`}
             onClick={(event) => event.stopPropagation()}
           >
             <div className="pos-sectionHead">
               <div>
-                <span>Confirmar Ready</span>
-                <h2>Estas seguro de marcar como listo?</h2>
+                <span>
+                  {readyCashReminderOrder?.id === readyConfirmOrder.id
+                    ? "Pago en efectivo"
+                    : "Confirmar Ready"}
+                </span>
+                <h2>
+                  {readyCashReminderOrder?.id === readyConfirmOrder.id
+                    ? "Recuerda cobrar este pedido"
+                    : "Estas seguro de marcar como listo?"}
+                </h2>
                 <small>{readyConfirmOrder.code || `Pedido ${readyConfirmOrder.id}`}</small>
               </div>
             </div>
 
             <div className="pos-readyConfirmCopy">
-              Se enviara la notificacion respectiva al cliente.
+              {readyCashReminderOrder?.id === readyConfirmOrder.id
+                ? "Recuerda que este pago es en efectivo. Cobra el importe antes de entregar el pedido."
+                : "Se enviara la notificacion respectiva al cliente."}
             </div>
 
             <div className="pos-actionGrid">
-              <button type="button" onClick={() => markReady(readyConfirmOrder)}>
-                Si, marcar listo
+              <button type="button" onClick={() => confirmReadyRequest(readyConfirmOrder)}>
+                {readyCashReminderOrder?.id === readyConfirmOrder.id
+                  ? "Entendido, marcar listo"
+                  : "Si, marcar listo"}
               </button>
-              <button type="button" onClick={() => setReadyConfirmOrder(null)}>
+              <button type="button" onClick={closeReadyConfirm}>
                 Cancelar
               </button>
             </div>

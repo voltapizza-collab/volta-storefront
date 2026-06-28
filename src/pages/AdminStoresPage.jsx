@@ -637,7 +637,20 @@ function MenuAvailabilityModal({ store, onClose, t }) {
                     <tbody>
                       {list.map((row) => (
                         <tr key={row.pizzaId}>
-                          <td className="sc-pizzaNameCell">{row.pizza?.name}</td>
+                          <td className="sc-pizzaNameCell">
+                            <div className="sc-pizzaNameBlock sc-pizzaNameBlock--withThumb">
+                              <span className="sc-pizzaThumb" aria-hidden={!row.pizza?.image}>
+                                {row.pizza?.image ? (
+                                  <img src={row.pizza.image} alt="" />
+                                ) : (
+                                  <span>
+                                    {String(row.pizza?.name || "?").trim().slice(0, 1).toUpperCase()}
+                                  </span>
+                                )}
+                              </span>
+                              <strong>{row.pizza?.name}</strong>
+                            </div>
+                          </td>
                           <td className="right">
                             <button
                               className={`sc-inlineStatusBadge sc-inlineStatusBadge--button ${

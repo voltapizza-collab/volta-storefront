@@ -215,7 +215,9 @@ const getPaymentLabel = (order) => {
     .map((value) => String(value).trim().toLowerCase())
     .join(" ");
 
-  if (paymentSignal.includes("cash") || paymentSignal.includes("efectivo")) return "Efectivo pendiente";
+  if (paymentSignal.includes("cash") || paymentSignal.includes("efectivo")) {
+    return "Pendiente de pago en efectivo";
+  }
   return "Tarjeta";
 };
 

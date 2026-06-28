@@ -186,6 +186,52 @@ const getCustomerSegmentTone = (value) => {
   return segment ? customerSegmentMeta(segment).tone : "";
 };
 
+const normalizePaymentChannel = (sale = {}, customerData = {}) => {
+  const explicitChannel = String(sale.paymentChannel || customerData.paymentChannel || "")
+    .trim()
+    .toLowerCase();
+
+  if (["cash", "card", "paypal", "crypto"].includes(explicitChannel)) return explicitChannel;
+
+  const signal = [
+    sale.paymentMode,
+    sale.paymentMethod,
+    sale.paymentStatus,
+    customerData.paymentMode,
+    customerData.paymentMethod,
+    customerData.paymentStatus,
+    customerData.payment_type,
+  ]
+    .filter(Boolean)
+    .map((value) => String(value).trim().toLowerCase())
+    .join(" ");
+
+  if (signal.includes("cash") || signal.includes("efectivo")) return "cash";
+  if (signal.includes("paypal") || signal.includes("pay pal")) return "paypal";
+  if (
+    signal.includes("crypto") ||
+    signal.includes("cripto") ||
+    signal.includes("bitcoin") ||
+    signal.includes("btc") ||
+    signal.includes("usdt")
+  ) {
+    return "crypto";
+  }
+  if (signal.includes("card") || signal.includes("tarjeta") || signal.includes("stripe")) {
+    return "card";
+  }
+
+  return "unknown";
+};
+
+const paymentChannelLabel = (channel, fallback = "") => {
+  if (channel === "cash") return "Efectivo";
+  if (channel === "card") return "Tarjeta";
+  if (channel === "paypal") return "PayPal";
+  if (channel === "crypto") return "Cripto";
+  return fallback || "Sin canal";
+};
+
 const lineQty = (item) => {
   const qty = Number(item?.quantity ?? item?.qty ?? item?.cantidad ?? 1);
   return Number.isFinite(qty) && qty > 0 ? qty : 1;
@@ -749,6 +795,7 @@ export function OrdersMovementsModule({ partner = null }) {
   const movements = useMemo(() => {
     return (data?.recentSales || []).filter((sale) => sale.status === "PAID").map((sale) => {
       const customerData = asObject(sale.customerData);
+      const paymentChannel = normalizePaymentChannel(sale, customerData);
 
       return {
         ...sale,
@@ -764,6 +811,8 @@ export function OrdersMovementsModule({ partner = null }) {
         ),
         customerSegmentLabel: formatCustomerSegment(customerData.segment),
         customerSegmentTone: getCustomerSegmentTone(customerData.segment),
+        paymentChannel,
+        paymentChannelLabel: paymentChannelLabel(paymentChannel, sale.paymentChannelLabel),
       };
     });
   }, [data?.partner?.name, data?.recentSales]);
@@ -789,6 +838,7 @@ export function OrdersMovementsModule({ partner = null }) {
             sale.customerData?.email,
             sale.customerData?.code,
             sale.code,
+            sale.paymentChannelLabel,
           ]
             .filter(Boolean)
             .join(" ")
@@ -885,6 +935,7 @@ export function OrdersMovementsModule({ partner = null }) {
                 <th>Fecha</th>
                 <th>Partner</th>
                 <th>Tienda</th>
+                <th>Canal de pago</th>
                 <th>Estado</th>
                 <th>Total</th>
                 <th>Detalle</th>
@@ -906,6 +957,11 @@ export function OrdersMovementsModule({ partner = null }) {
                   <td>{sale.partnerLabel}</td>
                   <td>{sale.storeLabel}</td>
                   <td>
+                    <span className={`gmo-paymentPill gmo-paymentPill--${sale.paymentChannel}`}>
+                      {sale.paymentChannelLabel}
+                    </span>
+                  </td>
+                  <td>
                     <span className="gmo-statusPill">{sale.statusLabel}</span>
                   </td>
                   <td>{formatMoney(sale.total, sale.currency || currency)}</td>
@@ -922,7 +978,7 @@ export function OrdersMovementsModule({ partner = null }) {
               ))}
               {!filteredMovements.length && (
                 <tr>
-                  <td colSpan="8">Sin movimientos para los filtros seleccionados.</td>
+                  <td colSpan="9">Sin movimientos para los filtros seleccionados.</td>
                 </tr>
               )}
             </tbody>
@@ -985,6 +1041,16 @@ export function OrdersMovementsModule({ partner = null }) {
               <div className="gmo-ticketLine">
                 <span>Estado</span>
                 <strong>{selectedMovement.statusLabel}</strong>
+              </div>
+              <div className="gmo-ticketLine">
+                <span>Canal de pago</span>
+                <strong>
+                  <span
+                    className={`gmo-paymentPill gmo-paymentPill--${selectedMovement.paymentChannel}`}
+                  >
+                    {selectedMovement.paymentChannelLabel}
+                  </span>
+                </strong>
               </div>
               {selectedMovement.customerData?.address_1 && (
                 <div className="gmo-ticketLine gmo-ticketLine--block">

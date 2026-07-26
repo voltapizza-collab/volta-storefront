@@ -592,6 +592,12 @@ const getLocalDateParts = (date = new Date()) => {
   };
 };
 
+const addLocalDays = (date, days) => {
+  const nextDate = new Date(date);
+  nextDate.setDate(nextDate.getDate() + days);
+  return nextDate;
+};
+
 const CUSTOMER_HELP_EMOJIS = ["🙋", "🙋🏻‍♀️", "🙋🏻‍♂️", "🙋🏽‍♂️", "🙋🏿", "🧕"];
 
 const pickCustomerHelpEmoji = (current = "") => {
@@ -1810,7 +1816,9 @@ export default function PosApp() {
       const store = storeMeta || {};
       const city = String(store.city || session.storeName || "").trim();
       const region = getRegionForCity(city);
-      const { year, isoDate, monthDay } = getLocalDateParts();
+      const today = new Date();
+      const { year, isoDate, monthDay } = getLocalDateParts(today);
+      const tomorrowDateParts = getLocalDateParts(addLocalDays(today, 1));
       const nextItems = [];
 
       setDayInfo((current) => ({ ...current, loading: true }));
@@ -1839,26 +1847,48 @@ export default function PosApp() {
       }
 
       try {
-        const holidaysResponse = await fetch(
-          `https://date.nager.at/api/v3/PublicHolidays/${year}/ES`
+        const holidayYears = [...new Set([year, tomorrowDateParts.year])];
+        const holidayResponses = await Promise.all(
+          holidayYears.map((holidayYear) =>
+            fetch(`https://date.nager.at/api/v3/PublicHolidays/${holidayYear}/ES`)
+          )
         );
-        if (holidaysResponse.ok) {
-          const holidays = await holidaysResponse.json();
-          const todaysHolidays = Array.isArray(holidays)
-            ? holidays.filter((holiday) => {
-                if (holiday?.date !== isoDate) return false;
-                if (!Array.isArray(holiday.counties) || holiday.counties.length === 0) {
-                  return true;
-                }
-                return region?.code ? holiday.counties.includes(region.code) : false;
-              })
-            : [];
+        const holidayPayloads = await Promise.all(
+          holidayResponses
+            .filter((response) => response.ok)
+            .map((response) => response.json())
+        );
+        const holidays = holidayPayloads.flatMap((payload) =>
+          Array.isArray(payload) ? payload : []
+        );
+
+        if (holidays.length) {
+          const matchesRegion = (holiday) => {
+            if (!Array.isArray(holiday.counties) || holiday.counties.length === 0) {
+              return true;
+            }
+            return region?.code ? holiday.counties.includes(region.code) : false;
+          };
+          const todaysHolidays = holidays.filter(
+            (holiday) => holiday?.date === isoDate && matchesRegion(holiday)
+          );
+          const tomorrowsHolidays = holidays.filter(
+            (holiday) => holiday?.date === tomorrowDateParts.isoDate && matchesRegion(holiday)
+          );
 
           if (todaysHolidays.length) {
             nextItems.push({
               key: "holiday",
               label: region?.label ? `Festivo ${region.label}` : "Festivo",
               value: todaysHolidays.map((holiday) => holiday.localName || holiday.name).join(" · "),
+            });
+          }
+          if (tomorrowsHolidays.length) {
+            nextItems.push({
+              key: "holiday-tomorrow",
+              label: region?.label ? `Festivo ${region.label}` : "Festivo",
+              value: tomorrowsHolidays.map((holiday) => holiday.localName || holiday.name).join(" · "),
+              tone: "warning",
             });
           }
         }
@@ -1877,7 +1907,7 @@ export default function PosApp() {
         });
       });
 
-      if (!nextItems.some((item) => item.key === "holiday" || item.key.startsWith("event-"))) {
+      if (!nextItems.some((item) => item.key.startsWith("holiday") || item.key.startsWith("event-"))) {
         nextItems.push({
           key: "no-event",
           label: city || region?.label ? "Local" : "Info",
@@ -2474,7 +2504,10 @@ export default function PosApp() {
                     </span>
                   ) : (
                     dayInfo.items.map((item) => (
-                      <span key={item.key} className="pos-dayInfoChip">
+                      <span
+                        key={item.key}
+                        className={`pos-dayInfoChip ${item.tone ? `pos-dayInfoChip--${item.tone}` : ""}`}
+                      >
                         <em>{item.label}</em>
                         <b>{item.value}</b>
                       </span>

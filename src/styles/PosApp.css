@@ -5,6 +5,7 @@
   --pos-brand-1: var(--brand-1, #3b008b);
   --pos-brand-2: var(--brand-2, #ffb61c);
   --pos-brand-3: var(--brand-3, #6a3df0);
+  --pos-alert-yellow: #ffef00;
   --pos-pink: #f92672;
   --pos-ink: #171717;
   --pos-line: rgba(59, 0, 139, 0.16);
@@ -2186,6 +2187,19 @@
     linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(255, 250, 240, 0.72));
   padding: 8px 9px;
   text-align: left;
+}
+
+.pos-idleClockCard .pos-dayInfoChip--warning {
+  border-color: color-mix(in srgb, var(--pos-alert-yellow) 64%, #111111);
+  background: var(--pos-alert-yellow);
+  box-shadow:
+    0 0 0 2px rgba(255, 239, 0, 0.36),
+    0 12px 24px rgba(255, 239, 0, 0.24);
+}
+
+.pos-idleClockCard .pos-dayInfoChip--warning em,
+.pos-idleClockCard .pos-dayInfoChip--warning b {
+  color: #111111;
 }
 
 .pos-dayInfoChip em {

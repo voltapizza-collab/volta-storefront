@@ -121,7 +121,12 @@ const getDeliveryDestinationTickerLabel = (selection) => {
     cleanDeliveryAddressTickerText(addressLine2) ||
     postalCode;
 
-  return destination ? `Enviamos a ${destination}` : "";
+  return destination ? `Delivery a ${destination}` : "";
+};
+
+const getPickupDestinationTickerLabel = (selection, store) => {
+  const storeName = selection?.storeName || store?.storeName || store?.slug || "tienda";
+  return `Recogida en ${compactTickerText(storeName, 30)}`;
 };
 
 const parseNonNegativeMoney = (value) => {
@@ -2430,6 +2435,8 @@ export default function StorePage() {
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [checkoutProfileOpen, setCheckoutProfileOpen] = useState(false);
   const [paymentMethodModalOpen, setPaymentMethodModalOpen] = useState(false);
+  const [cashConfirmationOpen, setCashConfirmationOpen] = useState(false);
+  const [pendingCashProfile, setPendingCashProfile] = useState(null);
   const [checkoutPaymentMode, setCheckoutPaymentMode] = useState("card");
   const [checkoutProfileForm, setCheckoutProfileForm] = useState({
     name: "",
@@ -2519,6 +2526,7 @@ export default function StorePage() {
       reservationOpen ||
       bootsOpen ||
       couponInfoOpen ||
+      cashConfirmationOpen ||
       (portalReady && !termsAccepted)
   );
 
@@ -5429,8 +5437,9 @@ export default function StorePage() {
     };
   }, [partner?.id, store?.partnerId]);
 
-  const startCheckout = useCallback(async (paymentMode = "card", profileOverride = null) => {
+  const startCheckout = useCallback(async (paymentMode = "card", profileOverride = null, options = {}) => {
     const normalizedPaymentMode = paymentMode === "cash" ? "cash" : "card";
+    const cashConfirmed = Boolean(options?.cashConfirmed);
 
     if (profileOverride?.preventDefault) {
       profileOverride = null;
@@ -5466,6 +5475,8 @@ export default function StorePage() {
 
     if (!basicProfile) {
       setCheckoutPaymentMode(normalizedPaymentMode);
+      setPendingCashProfile(null);
+      setCashConfirmationOpen(false);
       setCheckoutProfileForm((current) => ({
         name: current.name || "",
         phone: normalizeCheckoutPhoneInput(current.phone || repeatPhone),
@@ -5473,6 +5484,17 @@ export default function StorePage() {
       setCheckoutProfileOpen(true);
       setCartOpen(false);
       setCheckoutMessage("");
+      return;
+    }
+
+    if (normalizedPaymentMode === "cash" && !cashConfirmed) {
+      setCheckoutPaymentMode("cash");
+      setPendingCashProfile(basicProfile);
+      setCheckoutProfileOpen(false);
+      setPaymentMethodModalOpen(false);
+      setCartOpen(false);
+      setCheckoutMessage("");
+      setCashConfirmationOpen(true);
       return;
     }
 
@@ -5565,6 +5587,8 @@ export default function StorePage() {
         setSavedCustomerProfile(nextProfile);
         setCheckoutTrackingCode(checkoutData.orderCode);
         setCheckoutProfileOpen(false);
+        setCashConfirmationOpen(false);
+        setPendingCashProfile(null);
         setCheckoutMessage("Pedido confirmado. Pagaras en efectivo al recibir o recoger.");
         setCart([]);
         try {
@@ -5650,6 +5674,18 @@ export default function StorePage() {
     },
     [startCheckout]
   );
+  const confirmCashCheckout = useCallback(() => {
+    startCheckout("cash", pendingCashProfile, { cashConfirmed: true });
+  }, [pendingCashProfile, startCheckout]);
+
+  const changeCashPaymentMethod = useCallback(() => {
+    setCashConfirmationOpen(false);
+    setPendingCashProfile(null);
+    setCheckoutPaymentMode("card");
+    setCheckoutMessage("");
+    setCartOpen(true);
+  }, []);
+
   const selectedCheckoutPaymentMode =
     cashPaymentEnabled && checkoutPaymentMode === "cash" ? "cash" : "card";
   const cartCheckoutLabel =
@@ -6439,23 +6475,64 @@ export default function StorePage() {
 
   const renderStoreInfoTicker = () => {
     const showSelectProductsPrompt = isStorefrontButtonVisible("selectProducts");
+    const serviceMode =
+      String(orderSelection?.serviceMode || "pickup").toLowerCase() === "delivery"
+        ? "delivery"
+        : "pickup";
     const deliveryDestinationLabel = getDeliveryDestinationTickerLabel(orderSelection);
+    const orderModeLabel =
+      serviceMode === "delivery"
+        ? deliveryDestinationLabel || "Delivery activo"
+        : getPickupDestinationTickerLabel(orderSelection, store);
+    const orderModeAria =
+      serviceMode === "delivery"
+        ? orderModeLabel
+        : `Estas ordenando para recoger en ${orderSelection?.storeName || store.storeName}`;
+    const changeModeLabel =
+      serviceMode === "delivery" ? "Cambiar a recogida" : "Cambiar a delivery";
     const tickerLabel = [
       `Bienvenidos a ${partner?.name || store.storeName}`,
       store?.city || "Ciudad",
       store.storeName,
-      deliveryDestinationLabel,
+      orderModeAria,
       showSelectProductsPrompt ? "Selecciona productos" : "",
+      changeModeLabel,
     ].filter(Boolean).join(", ");
 
     return (
-      <span
+      <button
+        type="button"
         className={`sf-engineUtilityPill sf-lsfStoreTicker ${
+          orderModeLabel ? "has-order-mode" : ""
+        } ${
           deliveryDestinationLabel ? "has-delivery-destination" : ""
-        }`}
+        } sf-lsfStoreTicker--${serviceMode}`}
         aria-label={tickerLabel}
-        data-mobile-label={deliveryDestinationLabel || `${store?.city || "Ciudad"} - ${store.storeName}`}
+        data-mobile-label={orderModeLabel || `${store?.city || "Ciudad"} - ${store.storeName}`}
+        title={changeModeLabel}
+        onClick={() =>
+          navigate(`/${partnerSlug}/order`, {
+            state: {
+              orderTrail: "change-service",
+              partnerName: partner?.name || store?.partnerName || store?.storeName,
+              storeName: store?.storeName,
+              currentStoreSlug: storeSlug,
+              currentServiceMode: serviceMode,
+              returnToStorePath: `/${partnerSlug}/${storeSlug}`,
+            },
+          })
+        }
       >
+        <span className={`sf-orderModeStatic sf-orderModeStatic--${serviceMode}`}>
+          <span className="sf-orderModePulse" aria-hidden="true" />
+          <span className="sf-orderModeIcon" aria-hidden="true">
+            {serviceMode === "delivery" ? "D" : "P"}
+          </span>
+          <span className="sf-orderModeCopy">
+            <span>{serviceMode === "delivery" ? "Pedido delivery" : "Pedido pickup"}</span>
+            <strong>{orderModeLabel}</strong>
+          </span>
+        </span>
         <span className="sf-engineUtilityPillTicker">
           <span className="sf-engineUtilityPillTrack">
             <span className="sf-engineUtilityPillLine">
@@ -6473,11 +6550,9 @@ export default function StorePage() {
                 <span>{store.storeName}</span>
               </span>
             </span>
-            {deliveryDestinationLabel && (
-              <span className="sf-engineUtilityPillLine sf-engineUtilityPillLine--delivery">
-                {deliveryDestinationLabel}
-              </span>
-            )}
+            <span className={`sf-engineUtilityPillLine sf-engineUtilityPillLine--mode sf-engineUtilityPillLine--mode-${serviceMode}`}>
+              {orderModeLabel}
+            </span>
             {showSelectProductsPrompt && (
               <span className="sf-engineUtilityPillLine sf-engineUtilityPillLine--select">
                 Selecciona productos
@@ -6485,7 +6560,10 @@ export default function StorePage() {
             )}
           </span>
         </span>
-      </span>
+        <span className="sf-orderModeSwitch" aria-hidden="true">
+          {changeModeLabel}
+        </span>
+      </button>
     );
   };
 
@@ -8401,6 +8479,62 @@ export default function StorePage() {
                 </div>
               </>
             )}
+          </div>
+        </div>
+      )}
+
+      {cashConfirmationOpen && (
+        <div className="sf-modalOverlay sf-cashConfirmOverlay">
+          <div
+            className="sf-modalCard sf-cashConfirmModal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="sf-cashConfirmTitle"
+          >
+            <div className="sf-cashConfirmHero">
+              <span className="sf-cashConfirmMark" aria-hidden="true">EUR</span>
+              <div>
+                <span>Confirmacion final</span>
+                <h3 id="sf-cashConfirmTitle">Este pedido se paga en efectivo</h3>
+              </div>
+            </div>
+
+            <div className="sf-cashConfirmBody">
+              <p>
+                No haremos ningun cobro online. El pedido se enviara a la tienda y
+                pagaras <strong>{formatMoney(cartTotal, partner?.currency || "EUR")}</strong>{" "}
+                en efectivo {String(orderSelection?.serviceMode || "pickup").toLowerCase() === "delivery"
+                  ? "cuando recibas el pedido"
+                  : "cuando recojas el pedido"}.
+              </p>
+              <div className="sf-cashConfirmRoute">
+                <span>{String(orderSelection?.serviceMode || "pickup").toLowerCase() === "delivery" ? "Delivery" : "Pickup"}</span>
+                <strong>
+                  {String(orderSelection?.serviceMode || "pickup").toLowerCase() === "delivery"
+                    ? orderSelection?.deliveryAddress || orderSelection?.deliveryResolution?.formattedAddress || "Direccion confirmada"
+                    : orderSelection?.storeName || store?.storeName || "Tienda seleccionada"}
+                </strong>
+              </div>
+            </div>
+
+            <div className="sf-cashConfirmActions">
+              <button
+                type="button"
+                className="sf-secondaryBtn"
+                onClick={changeCashPaymentMethod}
+                disabled={checkoutLoading}
+              >
+                Cambiar medio de pago
+              </button>
+              <button
+                type="button"
+                className="sf-primaryBtn sf-cashConfirmBtn"
+                onClick={confirmCashCheckout}
+                disabled={checkoutLoading}
+              >
+                {checkoutLoading ? "Enviando pedido..." : "Ordenar y pagar en efectivo"}
+              </button>
+            </div>
           </div>
         </div>
       )}

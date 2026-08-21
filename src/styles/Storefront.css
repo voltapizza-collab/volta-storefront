@@ -6563,6 +6563,153 @@
   font-weight: 1000;
 }
 
+.sf-cashConfirmOverlay {
+  background:
+    radial-gradient(circle at 50% 20%, rgba(255, 191, 45, 0.18), transparent 34%),
+    rgba(17, 17, 17, 0.58);
+}
+
+.sf-cashConfirmModal {
+  width: min(560px, 100%);
+  overflow: hidden;
+}
+
+.sf-cashConfirmHero {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+  margin: -2px -2px 0;
+  padding: 18px;
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, #0f8a47 0%, #16a45a 48%, #ffbf2d 100%);
+  color: #ffffff;
+  overflow: hidden;
+}
+
+.sf-cashConfirmHero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    repeating-linear-gradient(
+      115deg,
+      rgba(255, 255, 255, 0.14) 0 9px,
+      transparent 9px 20px
+    );
+  animation: sfCashConfirmStripes 2.2s linear infinite;
+}
+
+.sf-cashConfirmMark {
+  width: 64px;
+  height: 64px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 8px;
+  background:
+    radial-gradient(circle at 62% 38%, #fff4a6 0 12px, transparent 13px),
+    linear-gradient(135deg, #29c773, #ffcf3f);
+  color: #083619;
+  font-size: 0.78rem;
+  font-weight: 1000;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    0 12px 22px rgba(8, 54, 25, 0.2);
+}
+
+.sf-cashConfirmHero span {
+  display: block;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.74rem;
+  font-weight: 1000;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.sf-cashConfirmHero h3 {
+  margin: 2px 0 0;
+  color: #ffffff;
+  font-size: 1.45rem;
+  line-height: 1.05;
+  text-shadow: 0 1px 0 rgba(8, 54, 25, 0.32);
+}
+
+.sf-cashConfirmBody {
+  display: grid;
+  gap: 12px;
+  padding: 16px 0 4px;
+}
+
+.sf-cashConfirmBody p {
+  margin: 0;
+  color: rgba(17, 17, 17, 0.72);
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1.45;
+}
+
+.sf-cashConfirmBody strong {
+  color: #0f8a47;
+  font-weight: 1000;
+}
+
+.sf-cashConfirmRoute {
+  display: grid;
+  gap: 4px;
+  padding: 12px;
+  border: 1px solid rgba(15, 138, 71, 0.16);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(15, 138, 71, 0.07), rgba(255, 191, 45, 0.08)),
+    #ffffff;
+}
+
+.sf-cashConfirmRoute span {
+  color: #0f8a47;
+  font-size: 0.72rem;
+  font-weight: 1000;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.sf-cashConfirmRoute strong {
+  min-width: 0;
+  color: #171717;
+  font-size: 0.98rem;
+  overflow-wrap: anywhere;
+}
+
+.sf-cashConfirmActions {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 10px;
+  padding-top: 12px;
+}
+
+.sf-cashConfirmActions .sf-primaryBtn,
+.sf-cashConfirmActions .sf-secondaryBtn {
+  min-height: 46px;
+}
+
+.sf-cashConfirmBtn {
+  background:
+    linear-gradient(90deg, #0f8a47, #ffbf2d);
+  color: #083619;
+}
+
+@keyframes sfCashConfirmStripes {
+  0% {
+    transform: translateX(-24px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
 @media (max-width: 560px) {
   .sf-paymentMethodGrid {
     grid-template-columns: 1fr;
@@ -6570,6 +6717,25 @@
 
   .sf-paymentMethodCard {
     min-height: 96px;
+  }
+
+  .sf-cashConfirmHero {
+    grid-template-columns: 54px minmax(0, 1fr);
+    padding: 14px;
+  }
+
+  .sf-cashConfirmMark {
+    width: 50px;
+    height: 50px;
+    font-size: 0.68rem;
+  }
+
+  .sf-cashConfirmHero h3 {
+    font-size: 1.18rem;
+  }
+
+  .sf-cashConfirmActions {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -21989,4 +22155,627 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.38) !important;
   text-shadow: 0 1px 0 rgba(42, 0, 95, 0.28);
   transform: translateY(-1px);
+}
+
+/* Order mode reminder: the store ticker is also the correction control. */
+.sf-lsfStoreTicker {
+  appearance: none;
+  cursor: pointer;
+  gap: 8px;
+  min-width: 0;
+}
+
+.sf-lsfStoreTicker.has-order-mode {
+  padding: 4px 6px;
+  background:
+    linear-gradient(180deg, #ffffff 0%, #fff7e8 100%);
+  border-color: rgba(91, 33, 217, 0.24);
+}
+
+.sf-orderModeStatic {
+  position: relative;
+  isolation: isolate;
+  flex: 1 1 auto;
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  min-height: 32px;
+  padding: 5px 13px 5px 9px;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.32), transparent 26%),
+    linear-gradient(135deg, #ff8a00 0%, #f06400 48%, #b73700 100%);
+  color: #ffffff;
+  font-size: 0.66rem;
+  font-weight: 1000;
+  line-height: 1.05;
+  text-align: left;
+  text-transform: uppercase;
+  overflow: hidden;
+  text-shadow: 0 1px 0 rgba(17, 17, 17, 0.28);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.24),
+    0 5px 12px rgba(240, 100, 0, 0.24);
+}
+
+.sf-orderModeStatic::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(110deg, transparent 0 35%, rgba(255, 255, 255, 0.2) 44%, transparent 54% 100%);
+  transform: translateX(-120%);
+  animation: sfOrderModeSweep 3.8s ease-in-out infinite;
+}
+
+.sf-orderModeStatic--delivery {
+  background:
+    radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.3), transparent 26%),
+    linear-gradient(135deg, #ff8a00 0%, #f06400 48%, #b73700 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 5px 12px rgba(240, 100, 0, 0.24);
+}
+
+.sf-orderModePulse {
+  position: relative;
+  flex: 0 0 auto;
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: #43ff8a;
+  box-shadow:
+    0 0 0 4px rgba(67, 255, 138, 0.14),
+    0 0 12px rgba(67, 255, 138, 0.72);
+}
+
+.sf-orderModePulse::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border-radius: inherit;
+  border: 1px solid rgba(67, 255, 138, 0.48);
+  animation: sfOrderModePulse 1.7s ease-out infinite;
+}
+
+.sf-orderModeCopy {
+  display: grid;
+  gap: 1px;
+  min-width: 0;
+}
+
+.sf-orderModeCopy span {
+  color: rgba(255, 255, 255, 0.74);
+  font-size: 0.48rem;
+  line-height: 1;
+  letter-spacing: 0.08em;
+}
+
+.sf-orderModeCopy strong {
+  min-width: 0;
+  color: #ffffff;
+  font-size: 0.72rem;
+  line-height: 1.05;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sf-lsfStoreTicker .sf-engineUtilityPillTicker {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.sf-lsfStoreTicker.has-order-mode .sf-engineUtilityPillTicker {
+  display: none;
+}
+
+.sf-lsfStoreTicker.has-order-mode .sf-engineUtilityPillTrack {
+  animation-name: sfStoreTicker6;
+  animation-duration: 11.4s;
+}
+
+.sf-lsfStoreTicker.has-order-mode:hover .sf-engineUtilityPillTrack,
+.sf-lsfStoreTicker.has-order-mode:focus-visible .sf-engineUtilityPillTrack {
+  transform: translateY(calc(-5 * var(--sf-lsf-ticker-step, 1.82em)));
+}
+
+.sf-lsfStoreTicker .sf-engineUtilityPillLine--mode {
+  color: #0f766e;
+  text-shadow:
+    0 1px 0 #ffffff,
+    0 0 8px rgba(255, 255, 255, 0.82),
+    0 0 16px rgba(15, 118, 110, 0.24);
+}
+
+.sf-lsfStoreTicker .sf-engineUtilityPillLine--mode-delivery {
+  color: #e11d24;
+  text-shadow:
+    0 1px 0 #ffffff,
+    0 0 8px rgba(255, 255, 255, 0.82),
+    0 0 16px rgba(225, 29, 36, 0.28);
+}
+
+.sf-orderModeSwitch {
+  position: relative;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  max-width: 118px;
+  min-height: 26px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background:
+    linear-gradient(180deg, #262626 0%, #111111 100%);
+  color: #ffffff;
+  font-size: 0.56rem;
+  font-weight: 1000;
+  line-height: 1.05;
+  text-align: center;
+  text-transform: uppercase;
+  white-space: normal;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 4px 10px rgba(17, 17, 17, 0.16);
+}
+
+.sf-orderModeSwitch::after {
+  content: ">";
+  display: inline-grid;
+  place-items: center;
+  width: 13px;
+  height: 13px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  font-size: 0.52rem;
+  line-height: 1;
+  transition: transform 0.18s ease, background 0.18s ease;
+}
+
+.sf-lsfStoreTicker:hover .sf-orderModeSwitch::after,
+.sf-lsfStoreTicker:focus-visible .sf-orderModeSwitch::after {
+  background: rgba(255, 255, 255, 0.26);
+  transform: translateX(2px);
+}
+
+.sf-lsfStoreTicker:focus-visible {
+  outline: 3px solid rgba(32, 191, 255, 0.55);
+  outline-offset: 2px;
+}
+
+@keyframes sfOrderModePulse {
+  0% {
+    opacity: 0.75;
+    transform: scale(0.72);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.45);
+  }
+}
+
+@keyframes sfOrderModeSweep {
+  0%,
+  48% {
+    transform: translateX(-120%);
+  }
+  76%,
+  100% {
+    transform: translateX(120%);
+  }
+}
+
+@media (min-width: 761px) {
+  .sf-shell--mode-commercial-light .sf-storeHeader--desktop .sf-lsfStoreTicker {
+    padding-right: 104px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-storeHeader--desktop .sf-lsfStoreTicker .sf-engineUtilityPillTicker {
+    width: calc(100% - 86px);
+  }
+
+  .sf-shell--mode-commercial-light .sf-storeHeader--desktop .sf-lsfStoreTicker .sf-orderModeSwitch {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .sf-shell--mode-commercial-light .sf-storeHeader--desktop .sf-lsfStoreTicker.has-order-mode .sf-engineUtilityPillLine,
+  .sf-shell--mode-commercial-light .sf-storeHeader--desktop .sf-lsfStoreTicker.has-order-mode .sf-engineUtilityPillLine--select {
+    animation-duration: 12s;
+  }
+
+  .sf-shell--mode-commercial-light .sf-storeHeader--desktop .sf-lsfStoreTicker.has-order-mode .sf-engineUtilityPillLine:nth-child(5) {
+    animation-delay: 8s;
+  }
+
+  .sf-shell--mode-commercial-light .sf-storeHeader--desktop .sf-lsfStoreTicker.has-order-mode .sf-engineUtilityPillLine:nth-child(6) {
+    animation-delay: 10s;
+  }
+}
+
+@media (max-width: 560px) {
+  .sf-lsfMobileHeader .sf-lsfStoreTicker {
+    padding: 3px 5px;
+    gap: 5px;
+  }
+
+  .sf-lsfMobileHeader .sf-orderModeStatic {
+    min-height: 24px;
+    gap: 5px;
+    padding: 3px 7px;
+  }
+
+  .sf-lsfMobileHeader .sf-orderModePulse {
+    width: 7px;
+    height: 7px;
+  }
+
+  .sf-lsfMobileHeader .sf-orderModeCopy span {
+    display: none;
+  }
+
+  .sf-lsfMobileHeader .sf-orderModeCopy strong {
+    font-size: 0.56rem;
+  }
+
+  .sf-lsfMobileHeader .sf-lsfStoreTicker.has-order-mode .sf-engineUtilityPillTrack {
+    animation: sfStoreTicker6 11.4s steps(1, end) infinite;
+  }
+
+  .sf-lsfMobileHeader .sf-orderModeSwitch {
+    max-width: 78px;
+    min-height: 22px;
+    padding: 3px 6px;
+    font-size: 0.48rem;
+  }
+
+  .sf-lsfMobileHeader .sf-orderModeSwitch::after {
+    display: none;
+  }
+}
+
+/* Full-width order mode banner refinement. */
+.sf-lsfStoreTicker.has-order-mode {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  justify-content: stretch;
+  padding: 4px 118px 4px 5px;
+  border: 0 !important;
+  background:
+    radial-gradient(circle at 3% 50%, rgba(255, 255, 255, 0.42), transparent 18%),
+    linear-gradient(90deg, #ffb000 0%, #ff7a00 35%, #f05a00 68%, #b83200 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.32),
+    inset 0 -1px 0 rgba(96, 30, 0, 0.2),
+    0 8px 18px rgba(240, 100, 0, 0.18);
+}
+
+.sf-lsfStoreTicker.has-order-mode::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(110deg, transparent 0 38%, rgba(255, 255, 255, 0.24) 48%, transparent 58% 100%);
+  transform: translateX(-120%);
+  animation: sfOrderModeSweep 4.4s ease-in-out infinite;
+}
+
+.sf-lsfStoreTicker.has-order-mode .sf-orderModeStatic,
+.sf-lsfStoreTicker.has-order-mode .sf-orderModeStatic--delivery {
+  width: 100%;
+  min-height: 30px;
+  padding: 4px 14px 4px 10px;
+  background: transparent;
+  box-shadow: none;
+}
+
+.sf-lsfStoreTicker.has-order-mode .sf-orderModeStatic::after {
+  content: none;
+}
+
+.sf-lsfStoreTicker.has-order-mode .sf-orderModeCopy {
+  width: 100%;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: baseline;
+  column-gap: 10px;
+}
+
+.sf-lsfStoreTicker.has-order-mode .sf-orderModeCopy span {
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.52rem;
+  letter-spacing: 0.1em;
+  text-shadow: 0 1px 1px rgba(96, 30, 0, 0.38);
+}
+
+.sf-lsfStoreTicker.has-order-mode .sf-orderModeCopy strong {
+  color: #ffffff;
+  font-size: 0.78rem;
+  letter-spacing: 0.03em;
+  background:
+    linear-gradient(90deg, #ffffff 0%, #fff6d6 24%, #ffffff 46%, #ffe3a0 60%, #ffffff 78%);
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: sfOrderModeLetterShine 3.2s ease-in-out infinite;
+  filter: drop-shadow(0 1px 0 rgba(72, 20, 0, 0.48));
+}
+
+.sf-lsfStoreTicker.has-order-mode .sf-orderModeSwitch {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  min-width: 104px;
+  max-width: 104px;
+  min-height: 28px;
+  transform: translateY(-50%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background:
+    radial-gradient(circle at 18% 12%, rgba(255, 255, 255, 0.2), transparent 28%),
+    linear-gradient(180deg, #2b2724 0%, #111111 100%);
+}
+
+@keyframes sfOrderModeLetterShine {
+  0%,
+  34% {
+    background-position: 120% 50%;
+  }
+  72%,
+  100% {
+    background-position: -80% 50%;
+  }
+}
+
+@media (min-width: 761px) {
+  .sf-shell--mode-commercial-light .sf-storeHeader--desktop .sf-lsfStoreTicker.has-order-mode {
+    height: 38px;
+    padding: 4px 118px 4px 5px;
+  }
+
+  .sf-shell--mode-commercial-light .sf-storeHeader--desktop .sf-lsfStoreTicker.has-order-mode .sf-orderModeSwitch {
+    right: 5px;
+  }
+}
+
+@media (max-width: 560px) {
+  .sf-lsfMobileHeader .sf-lsfStoreTicker.has-order-mode {
+    padding: 3px 82px 3px 4px;
+  }
+
+  .sf-lsfMobileHeader .sf-lsfStoreTicker.has-order-mode .sf-orderModeStatic {
+    padding: 3px 7px;
+  }
+
+  .sf-lsfMobileHeader .sf-lsfStoreTicker.has-order-mode .sf-orderModeCopy {
+    display: block;
+  }
+
+  .sf-lsfMobileHeader .sf-lsfStoreTicker.has-order-mode .sf-orderModeCopy strong {
+    font-size: 0.58rem;
+  }
+
+  .sf-lsfMobileHeader .sf-lsfStoreTicker.has-order-mode .sf-orderModeSwitch {
+    right: 4px;
+    min-width: 74px;
+    max-width: 74px;
+  }
+}
+
+/* Solid pickup/delivery banner: explicit, animated, and readable. */
+.sf-shell .sf-lsfStoreTicker.has-order-mode,
+.sf-shell--mode-commercial-light .sf-storeHeader--desktop .sf-lsfStoreTicker.has-order-mode,
+.sf-shell--mode-commercial-light .sf-lsfMobileHeader .sf-lsfStoreTicker.has-order-mode {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  justify-content: stretch;
+  min-height: 38px;
+  height: 38px;
+  padding: 4px 116px 4px 6px;
+  border: 0 !important;
+  background: #f06400 !important;
+  color: #ffffff;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    inset 0 -1px 0 rgba(80, 24, 0, 0.22),
+    0 8px 16px rgba(240, 100, 0, 0.18);
+  overflow: hidden;
+}
+
+.sf-shell .sf-lsfStoreTicker.has-order-mode::before,
+.sf-shell--mode-commercial-light .sf-storeHeader--desktop .sf-lsfStoreTicker.has-order-mode::before,
+.sf-shell--mode-commercial-light .sf-lsfMobileHeader .sf-lsfStoreTicker.has-order-mode::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.13) 0 10px,
+      transparent 10px 22px
+    );
+  opacity: 0.42;
+  transform: translateX(-22px);
+  animation: sfOrderModeRoad 1.8s linear infinite;
+}
+
+.sf-shell .sf-lsfStoreTicker.has-order-mode::after,
+.sf-shell--mode-commercial-light .sf-storeHeader--desktop .sf-lsfStoreTicker.has-order-mode::after,
+.sf-shell--mode-commercial-light .sf-lsfMobileHeader .sf-lsfStoreTicker.has-order-mode::after {
+  content: "";
+  position: absolute;
+  left: 48px;
+  right: 122px;
+  bottom: 5px;
+  height: 2px;
+  background:
+    linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.54), transparent);
+  opacity: 0.72;
+}
+
+.sf-shell .sf-lsfStoreTicker.has-order-mode .sf-orderModeStatic,
+.sf-shell .sf-lsfStoreTicker.has-order-mode .sf-orderModeStatic--delivery {
+  width: 100%;
+  min-height: 30px;
+  padding: 3px 8px;
+  gap: 8px;
+  background: transparent;
+  box-shadow: none;
+}
+
+.sf-shell .sf-lsfStoreTicker.has-order-mode .sf-orderModePulse {
+  width: 8px;
+  height: 8px;
+  background: #fff700;
+  box-shadow:
+    0 0 0 4px rgba(255, 247, 0, 0.18),
+    0 0 13px rgba(255, 247, 0, 0.72);
+}
+
+.sf-shell .sf-lsfStoreTicker.has-order-mode .sf-orderModeIcon {
+  flex: 0 0 28px;
+  width: 28px;
+  height: 24px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 1000;
+  line-height: 1;
+  text-shadow: 0 1px 0 rgba(80, 24, 0, 0.36);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 0 0 1px rgba(255, 255, 255, 0.13);
+  animation: sfOrderModeIconBump 1.9s ease-in-out infinite;
+}
+
+.sf-shell .sf-lsfStoreTicker.has-order-mode .sf-orderModeCopy {
+  width: 100%;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: baseline;
+  column-gap: 9px;
+}
+
+.sf-shell .sf-lsfStoreTicker.has-order-mode .sf-orderModeCopy span {
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.54rem;
+  font-weight: 1000;
+  letter-spacing: 0.08em;
+  text-shadow: 0 1px 0 rgba(80, 24, 0, 0.38);
+}
+
+.sf-shell .sf-lsfStoreTicker.has-order-mode .sf-orderModeCopy strong {
+  color: #ffffff;
+  font-size: 0.82rem;
+  font-weight: 1000;
+  letter-spacing: 0.03em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  -webkit-text-fill-color: currentColor;
+  filter: none;
+  text-shadow:
+    0 1px 0 rgba(80, 24, 0, 0.48),
+    0 0 12px rgba(255, 255, 255, 0.32);
+  animation: sfOrderModeTextPop 2.7s ease-in-out infinite;
+}
+
+.sf-shell .sf-lsfStoreTicker.has-order-mode .sf-orderModeSwitch,
+.sf-shell--mode-commercial-light .sf-storeHeader--desktop .sf-lsfStoreTicker.has-order-mode .sf-orderModeSwitch {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  min-width: 104px;
+  max-width: 104px;
+  min-height: 28px;
+  transform: translateY(-50%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: #151515;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 5px 12px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes sfOrderModeRoad {
+  0% {
+    transform: translateX(-22px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes sfOrderModeIconBump {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  42% {
+    transform: translateY(-1px);
+  }
+  58% {
+    transform: translateY(1px);
+  }
+}
+
+@keyframes sfOrderModeTextPop {
+  0%,
+  100% {
+    letter-spacing: 0.03em;
+  }
+  48% {
+    letter-spacing: 0.045em;
+  }
+}
+
+@media (max-width: 560px) {
+  .sf-shell .sf-lsfMobileHeader .sf-lsfStoreTicker.has-order-mode,
+  .sf-shell--mode-commercial-light .sf-lsfMobileHeader .sf-lsfStoreTicker.has-order-mode {
+    padding: 3px 80px 3px 4px;
+  }
+
+  .sf-shell .sf-lsfMobileHeader .sf-lsfStoreTicker.has-order-mode::after {
+    left: 40px;
+    right: 86px;
+  }
+
+  .sf-shell .sf-lsfMobileHeader .sf-lsfStoreTicker.has-order-mode .sf-orderModeIcon {
+    flex-basis: 23px;
+    width: 23px;
+    height: 21px;
+    font-size: 0.68rem;
+  }
+
+  .sf-shell .sf-lsfMobileHeader .sf-lsfStoreTicker.has-order-mode .sf-orderModeCopy {
+    display: block;
+  }
+
+  .sf-shell .sf-lsfMobileHeader .sf-lsfStoreTicker.has-order-mode .sf-orderModeCopy span {
+    display: none;
+  }
+
+  .sf-shell .sf-lsfMobileHeader .sf-lsfStoreTicker.has-order-mode .sf-orderModeCopy strong {
+    font-size: 0.58rem;
+  }
+
+  .sf-shell .sf-lsfMobileHeader .sf-lsfStoreTicker.has-order-mode .sf-orderModeSwitch {
+    right: 4px;
+    min-width: 74px;
+    max-width: 74px;
+    font-size: 0.48rem;
+  }
 }

@@ -121,12 +121,12 @@ const getDeliveryDestinationTickerLabel = (selection) => {
     cleanDeliveryAddressTickerText(addressLine2) ||
     postalCode;
 
-  return destination ? `Delivery a ${destination}` : "";
+  return destination;
 };
 
 const getPickupDestinationTickerLabel = (selection, store) => {
   const storeName = selection?.storeName || store?.storeName || store?.slug || "tienda";
-  return `Recogida en ${compactTickerText(storeName, 30)}`;
+  return compactTickerText(storeName, 30);
 };
 
 const parseNonNegativeMoney = (value) => {
@@ -6482,12 +6482,14 @@ export default function StorePage() {
     const deliveryDestinationLabel = getDeliveryDestinationTickerLabel(orderSelection);
     const orderModeLabel =
       serviceMode === "delivery"
-        ? deliveryDestinationLabel || "Delivery activo"
+        ? deliveryDestinationLabel || "Direccion confirmada"
         : getPickupDestinationTickerLabel(orderSelection, store);
+    const orderModeCaption =
+      serviceMode === "delivery" ? "Enviaremos a:" : "Pedido a recoger:";
     const orderModeAria =
       serviceMode === "delivery"
-        ? orderModeLabel
-        : `Estas ordenando para recoger en ${orderSelection?.storeName || store.storeName}`;
+        ? `${orderModeCaption} ${orderModeLabel}`
+        : `${orderModeCaption} ${orderSelection?.storeName || store.storeName}`;
     const changeModeLabel =
       serviceMode === "delivery" ? "Cambiar a recogida" : "Cambiar a delivery";
     const tickerLabel = [
@@ -6524,13 +6526,11 @@ export default function StorePage() {
         }
       >
         <span className={`sf-orderModeStatic sf-orderModeStatic--${serviceMode}`}>
-          <span className="sf-orderModePulse" aria-hidden="true" />
-          <span className="sf-orderModeIcon" aria-hidden="true">
-            {serviceMode === "delivery" ? "D" : "P"}
-          </span>
-          <span className="sf-orderModeCopy">
-            <span>{serviceMode === "delivery" ? "Pedido delivery" : "Pedido pickup"}</span>
-            <strong>{orderModeLabel}</strong>
+          <span className="sf-orderModeTicker">
+            <span className="sf-orderModeTickerTrack">
+              <span className="sf-orderModeTickerLine">{orderModeCaption}</span>
+              <strong className="sf-orderModeTickerLine">{orderModeLabel}</strong>
+            </span>
           </span>
         </span>
         <span className="sf-engineUtilityPillTicker">
@@ -6561,7 +6561,7 @@ export default function StorePage() {
           </span>
         </span>
         <span className="sf-orderModeSwitch" aria-hidden="true">
-          {changeModeLabel}
+          <span className="sf-orderModeSwitchText">Cambiar</span>
         </span>
       </button>
     );

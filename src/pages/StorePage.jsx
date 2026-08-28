@@ -9881,12 +9881,13 @@ export default function StorePage() {
         }}
         onValidate={async () => {
           const result = await applyCouponCode(couponInfoData?.coupon?.code || couponCode, {
-            openInfo: true,
+            openInfo: false,
             openCartOnValid: true,
           });
-          if (result?.valid) {
+          const closableStatuses = new Set(["empty_cart", "waiting_for_cart"]);
+          if (result?.valid || closableStatuses.has(String(result?.status || "").toLowerCase())) {
             setCouponInfoOpen(false);
-            setCartOpen(true);
+            if (result?.valid) setCartOpen(true);
           }
         }}
       />

@@ -375,6 +375,7 @@ export default function Backoffice() {
     isCustomersCommunicationsActive;
   const isOffersOverviewActive = activeModule === "offers";
   const isOffersCreateActive = activeModule === "offersCreate";
+  const isOffersChannelShiftQrActive = activeModule === "offersChannelShiftQr";
   const isOffersPromosActive = activeModule === "offersPromos";
   const isOffersDirectDiscountsActive = activeModule === "offersDirectDiscounts";
   const isOffersIncentivesActive = activeModule === "offersIncentives";
@@ -382,6 +383,7 @@ export default function Backoffice() {
     activeModuleGroup === "offers" ||
     isOffersOverviewActive ||
     isOffersCreateActive ||
+    isOffersChannelShiftQrActive ||
     isOffersPromosActive ||
     isOffersDirectDiscountsActive ||
     isOffersIncentivesActive;
@@ -820,6 +822,16 @@ export default function Backoffice() {
                       {t("nav.promos")}
                     </button>
                     <button
+                      className={`bo-subbtn ${isOffersChannelShiftQrActive ? "active" : ""}`}
+                      onClick={() => {
+                        setActiveModule("offersChannelShiftQr");
+                        setActiveModuleGroup("offers");
+                      }}
+                      type="button"
+                    >
+                      {t("nav.qrCoupons")}
+                    </button>
+                    <button
                       className={`bo-subbtn ${isOffersDirectDiscountsActive ? "active" : ""}`}
                       onClick={() => {
                         setActiveModule("offersDirectDiscounts");
@@ -1105,6 +1117,10 @@ export default function Backoffice() {
 
           {activeModule === "offersCreate" && auth.partnerId && (
             <CouponsModule partner={auth} initialView="create" />
+          )}
+
+          {activeModule === "offersChannelShiftQr" && auth.partnerId && (
+            <CouponsModule partner={auth} initialView="channelShiftQr" />
           )}
 
           {activeModule === "offersPromos" && auth.partnerId && (

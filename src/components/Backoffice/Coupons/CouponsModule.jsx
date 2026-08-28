@@ -4,6 +4,7 @@ import OfferRedemptions from "./OfferRedemptions";
 import PromosPanel from "./PromosPanel";
 import DirectDiscountsPanel from "./DirectDiscountsPanel";
 import IncentivesPanel from "./IncentivesPanel";
+import ChannelShiftQrPanel from "./ChannelShiftQrPanel";
 import "../../../styles/CouponsModule.css";
 
 export default function CouponsModule({ partner, initialView = "overview" }) {
@@ -23,6 +24,7 @@ export default function CouponsModule({ partner, initialView = "overview" }) {
 
         {activeView === "overview" && <OffersOverview partnerId={partnerId} />}
         {activeView === "create" && <OfferCreatePanel partnerId={partnerId} />}
+        {activeView === "channelShiftQr" && <ChannelShiftQrPanel partnerId={partnerId} />}
         {activeView === "promos" && <PromosPanel partnerId={partnerId} />}
         {activeView === "directDiscounts" && <DirectDiscountsPanel partnerId={partnerId} />}
         {activeView === "incentives" && <IncentivesPanel partnerId={partnerId} />}

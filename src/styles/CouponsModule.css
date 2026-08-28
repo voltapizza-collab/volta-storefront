@@ -700,6 +700,31 @@
   color: rgba(34, 21, 52, 0.76);
 }
 
+.cp-tableActions,
+.cp-qrActionRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.cp-tokenActions {
+  align-items: center;
+  flex-wrap: nowrap;
+  min-width: 260px;
+}
+
+.cp-tokenActions .cp-pill,
+.cp-tokenActions .cp-dangerBtn {
+  white-space: nowrap;
+  padding: 9px 12px;
+}
+
+.cp-urlText {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
 .cp-promosLayout {
   display: grid;
   gap: 16px;
@@ -1280,10 +1305,73 @@
   box-shadow: 0 24px 54px rgba(20, 13, 34, 0.2);
 }
 
+.cp-qrModal {
+  display: grid;
+  gap: 18px;
+  width: min(560px, 100%);
+}
+
+.cp-qrModalHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.cp-qrModalHead p {
+  margin: 6px 0 0;
+  color: rgba(34, 21, 52, 0.66);
+  font-weight: 800;
+}
+
+.cp-qrPreviewBox {
+  display: grid;
+  place-items: center;
+  min-height: 300px;
+  padding: 18px;
+  border-radius: 18px;
+  border: 1px solid rgba(59, 0, 139, 0.1);
+  background: #fff;
+}
+
+.cp-qrPreviewBox span {
+  color: rgba(34, 21, 52, 0.68);
+  font-weight: 800;
+}
+
+.cp-qrPreview {
+  width: min(100%, 320px);
+  aspect-ratio: 1;
+  display: block;
+}
+
+.cp-qrMeta {
+  display: grid;
+  gap: 6px;
+  color: rgba(34, 21, 52, 0.72);
+  font-weight: 800;
+}
+
+.cp-qrMeta strong {
+  color: #23163b;
+}
+
+.cp-qrMeta code {
+  display: block;
+  max-width: 100%;
+  padding: 10px 12px;
+  overflow-wrap: anywhere;
+  border-radius: 12px;
+  background: rgba(59, 0, 139, 0.06);
+  color: #23163b;
+  font: 700 13px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
 @media (max-width: 900px) {
   .cp-head,
   .cp-actions,
-  .cp-incentivesHeader {
+  .cp-incentivesHeader,
+  .cp-qrModalHead {
     flex-direction: column;
     align-items: stretch;
   }

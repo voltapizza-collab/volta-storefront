@@ -1024,6 +1024,30 @@ function CouponInfoModal({ open, onClose, onRemove, onValidate, validating = fal
   const coupon = data.coupon;
   const severity =
     secondsLeft == null ? "ok" : secondsLeft <= 15 * 60 ? "critical" : secondsLeft <= 2 * 60 * 60 ? "warning" : "ok";
+  const readableStatus = {
+    valid: "APLICADO",
+    empty_cart: "LISTO PARA PRODUCTOS",
+    waiting_for_cart: "LISTO PARA PRODUCTOS",
+    no_delivery_fee: "REQUIERE DELIVERY",
+    min_not_met: "MINIMO PENDIENTE",
+    wrong_area: "NO DISPONIBLE AQUI",
+    not_started: "AUN NO ACTIVO",
+    expired: "CADUCADO",
+    used: "USADO",
+    disabled: "DETENIDO",
+    not_found: "NO ENCONTRADO",
+  }[String(data.status || "").toLowerCase()] || String(data.status || "sin_estado").replace(/_/g, " ").toUpperCase();
+  const pendingStatuses = new Set(["empty_cart", "waiting_for_cart", "min_not_met", "no_delivery_fee"]);
+  const statusTone = data.valid ? "is-valid" : pendingStatuses.has(String(data.status || "").toLowerCase()) ? "is-pending" : "is-invalid";
+  const discountPreview = (() => {
+    if (!coupon) return "EUR 0.00";
+    if (data.valid) return `EUR ${num(data.discount).toFixed(2)}`;
+    if (isDeliveryFreeCouponData(coupon)) return "Envio gratis";
+    if (coupon.kind === "AMOUNT") return `EUR ${num(data.discountPotential ?? coupon.amount).toFixed(2)}`;
+    if (coupon.kind === "PERCENT") return `${num(coupon.percent)}%`;
+    return `EUR ${num(data.discountPotential || data.discount).toFixed(2)}`;
+  })();
+  const discountLabel = data.valid ? "Descuento aplicado" : "Descuento aplicable";
 
   return (
     <div className="sf-modalOverlay" onClick={onClose}>
@@ -1039,17 +1063,20 @@ function CouponInfoModal({ open, onClose, onRemove, onValidate, validating = fal
         </div>
 
         <div className="sf-couponInfoBody">
-          <div className={`sf-couponInfoStatus ${data.valid ? "is-valid" : "is-invalid"}`}>
+          <div className={`sf-couponInfoStatus ${statusTone}`}>
             <strong>{data.message || "Revisa el estado del cupon."}</strong>
-            <span>Estado: {data.status || "sin_estado"}</span>
+            <span>Estado: {readableStatus}</span>
           </div>
 
           {coupon ? (
             <>
-              <p><b>Cupon:</b> <code>{coupon.code}</code></p>
+              <div className="sf-couponCodeHero">
+                <span>Codigo del cupon</span>
+                <strong>{coupon.code}</strong>
+              </div>
               {coupon.id && <p><b>Beneficio:</b> {formatCouponBenefit(coupon)}</p>}
               {coupon.expiresAt && <p><b>Caduca:</b> {formatCouponExpiry(coupon.expiresAt)}</p>}
-              <p><b>Descuento aplicado:</b> EUR {num(data.discount).toFixed(2)}</p>
+              <p><b>{discountLabel}:</b> {discountPreview}</p>
 
               {coupon.expiresAt && (
                 <div className={`sf-couponTimer sf-couponTimer--${severity}`} role="status" aria-live="polite">
@@ -1060,10 +1087,10 @@ function CouponInfoModal({ open, onClose, onRemove, onValidate, validating = fal
 
               <h4>Condiciones</h4>
               <ul>
-                <li>Valido por <b>1 uso</b> y <b>no acumulable</b> con otros cupones.</li>
+                <li>Valido por <b>1 cupon por pedido</b> y <b>no acumulable</b> con otros cupones.</li>
                 <li>Se aplica sobre <b>productos</b>, no sobre gastos de envio ni Boost.</li>
                 <li>Debe estar activo, dentro de horario y antes de su caducidad.</li>
-                <li>El cupon se marca como usado al confirmar el pago.</li>
+                <li>El uso se registra al confirmar el pago.</li>
               </ul>
             </>
           ) : (
@@ -5211,20 +5238,6 @@ export default function StorePage() {
       return emptyData;
     }
 
-    if (couponEligibleSubtotal <= 0 && deliveryCheckoutFee <= 0) {
-      const pendingData = {
-        valid: false,
-        status: "waiting_for_cart",
-        message: "Codigo listo. Agrega productos o activa delivery para validar el descuento.",
-        coupon: { code },
-        discount: 0,
-      };
-      setCouponStatus(pendingData.message);
-      setCouponInfoData(pendingData);
-      if (openInfo) setCouponInfoOpen(true);
-      return pendingData;
-    }
-
     try {
       setCouponLoading(true);
       setCouponStatus("Validando cupon...");
@@ -5312,20 +5325,6 @@ export default function StorePage() {
     }
 
     if (!store?.id || !(partner?.id || store?.partnerId)) return;
-
-    if (couponEligibleSubtotal <= 0 && deliveryCheckoutFee <= 0) {
-      const pendingData = {
-        valid: false,
-        status: "waiting_for_cart",
-        message: "Codigo listo. Agrega productos o activa delivery para validar el descuento.",
-        coupon: { code: incomingCoupon },
-        discount: 0,
-      };
-      setCouponStatus(pendingData.message);
-      setCouponInfoData(pendingData);
-      if (shouldOpenCouponInfo) setCouponInfoOpen(true);
-      return;
-    }
 
     const applyKey = `${incomingCoupon}:${store.id}:${couponEligibleSubtotal.toFixed(2)}:${deliveryCheckoutFee.toFixed(2)}`;
     if (autoCouponApplyRef.current === applyKey) return;
@@ -5611,6 +5610,7 @@ export default function StorePage() {
         cash_payment_not_allowed: "Esta tienda no tiene efectivo activo para pedidos online.",
         coupon_not_available: "El cupon ya no esta disponible. Quitalo y valida de nuevo.",
         coupon_not_applicable: "El cupon ya no aplica a este carrito.",
+        coupon_not_stackable: "Solo puedes usar un cupon por pedido.",
         customer_profile_required: "Necesitamos tu nombre y telefono para hacer seguimiento al pedido.",
         custom_build_missing_ingredients:
           "La pizza personalizada no tiene ingredientes guardados. Quitala y vuelve a armarla.",

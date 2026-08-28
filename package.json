@@ -12,6 +12,7 @@
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.14.0",
+    "qrcode": "^1.5.4",
     "react": "^19.2.4",
     "react-arborist": "^3.4.3",
     "react-dom": "^19.2.4",

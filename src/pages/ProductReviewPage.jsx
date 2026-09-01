@@ -5,6 +5,14 @@ import "../styles/ProductReview.css";
 
 const VOTE_LIKE = "LIKE";
 const VOTE_DISLIKE = "DISLIKE";
+const numberFormatter = new Intl.NumberFormat("es-ES");
+
+const formatNumber = (value) => numberFormatter.format(Number(value || 0));
+
+const formatPreviousLikes = (value) => {
+  const likes = Number(value || 0);
+  return `${formatNumber(likes)} ${likes === 1 ? "like previo" : "likes previos"}`;
+};
 
 const getItemLabel = (item) =>
   [item?.quantity && Number(item.quantity) > 1 ? `${item.quantity}x` : "", item?.name, item?.size]
@@ -96,7 +104,13 @@ export default function ProductReviewPage() {
       setReview((current) => ({
         ...(current || {}),
         status: data?.status || "RESPONDED",
-        items: data?.items || current?.items || [],
+        items: (data?.items || current?.items || []).map((item) => {
+          const currentItem = (current?.items || []).find((candidate) => candidate.lineKey === item.lineKey);
+          return {
+            ...item,
+            previousLikes: item.previousLikes ?? currentItem?.previousLikes ?? 0,
+          };
+        }),
       }));
       setMessage("Gracias. Tu valoracion quedo guardada.");
     } catch (saveError) {
@@ -154,7 +168,10 @@ export default function ProductReviewPage() {
                 </div>
                 <div className="pr-itemBody">
                   <strong>{getItemLabel(item)}</strong>
-                  <small>{item.productId ? `Producto #${item.productId}` : "Producto personalizado"}</small>
+                  <div className="pr-itemMeta">
+                    <small>{item.productId ? `Producto #${item.productId}` : "Producto personalizado"}</small>
+                    <span>{formatPreviousLikes(item.previousLikes)}</span>
+                  </div>
                   <div className="pr-voteRow">
                     <button
                       type="button"

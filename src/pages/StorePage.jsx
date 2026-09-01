@@ -129,6 +129,24 @@ const getPickupDestinationTickerLabel = (selection, store) => {
   return compactTickerText(storeName, 30);
 };
 
+const storeAllowsPickup = (store) => store?.pickupEnabled !== false;
+const storeAllowsDelivery = (store) => store?.deliveryEnabled !== false;
+
+const getStoreServiceMode = (store, selection) => {
+  const requestedMode =
+    String(selection?.serviceMode || "").toLowerCase() === "delivery"
+      ? "delivery"
+      : String(selection?.serviceMode || "").toLowerCase() === "pickup"
+        ? "pickup"
+        : "";
+
+  if (requestedMode === "delivery" && storeAllowsDelivery(store)) return "delivery";
+  if (requestedMode === "pickup" && storeAllowsPickup(store)) return "pickup";
+  if (storeAllowsPickup(store)) return "pickup";
+  if (storeAllowsDelivery(store)) return "delivery";
+  return "pickup";
+};
+
 const parseNonNegativeMoney = (value) => {
   const amount = Number(value);
   return Number.isFinite(amount) && amount > 0 ? Math.round(amount * 100) / 100 : 0;
@@ -5107,7 +5125,7 @@ export default function StorePage() {
     [cart]
   );
   const deliveryCheckoutFee = useMemo(() => {
-    const serviceMode = String(orderSelection?.serviceMode || "pickup").toLowerCase();
+    const serviceMode = getStoreServiceMode(store, orderSelection);
     const resolution = orderSelection?.deliveryResolution || {};
 
     if (serviceMode !== "delivery") return 0;
@@ -5120,7 +5138,7 @@ export default function StorePage() {
     }
 
     return parseNonNegativeMoney(partner?.deliveryFeeFixed);
-  }, [orderSelection, partner?.deliveryFeeBase, partner?.deliveryFeeFixed, partner?.deliveryPricingMode]);
+  }, [orderSelection, partner?.deliveryFeeBase, partner?.deliveryFeeFixed, partner?.deliveryPricingMode, store]);
   const paymentPolicySettings = useMemo(
     () => normalizePaymentPolicySettings(partner?.paymentPolicySettings),
     [partner?.paymentPolicySettings]
@@ -5444,6 +5462,8 @@ export default function StorePage() {
       profileOverride = null;
     }
 
+    const serviceMode = getStoreServiceMode(store, orderSelection);
+
     if (normalizedPaymentMode === "cash" && !cashPaymentEnabled) {
       setCheckoutMessage("Esta tienda no tiene efectivo activo para pedidos online.");
       setCartOpen(true);
@@ -5462,6 +5482,15 @@ export default function StorePage() {
           partner?.currency || "EUR"
         )}. Faltan ${formatMoney(minimumPaymentMissing, partner?.currency || "EUR")}.`
       );
+      setCartOpen(true);
+      return;
+    }
+
+    if (
+      serviceMode === "delivery" &&
+      !String(orderSelection?.deliveryAddress || orderSelection?.deliveryResolution?.formattedAddress || "").trim()
+    ) {
+      setCheckoutMessage("Confirma la direccion de entrega antes de pagar.");
       setCartOpen(true);
       return;
     }
@@ -5500,7 +5529,6 @@ export default function StorePage() {
     try {
       setCheckoutLoading(true);
       setCheckoutMessage("");
-      const serviceMode = String(orderSelection?.serviceMode || "pickup").toLowerCase();
       const deliveryResolution = orderSelection?.deliveryResolution || {};
       const deliveryMethod = serviceMode === "delivery" ? "COURIER" : "PICKUP";
       const deliveryCoords = deliveryResolution?.coords || {};
@@ -5608,6 +5636,7 @@ export default function StorePage() {
       const messages = {
         stripe_not_configured: "Stripe no esta configurado para esta tienda.",
         cash_payment_not_allowed: "Esta tienda no tiene efectivo activo para pedidos online.",
+        delivery_method_not_allowed: "Esta tienda no tiene activo ese metodo de entrega.",
         coupon_not_available: "El cupon ya no esta disponible. Quitalo y valida de nuevo.",
         coupon_not_applicable: "El cupon ya no aplica a este carrito.",
         coupon_not_stackable: "Solo puedes usar un cupon por pedido.",
@@ -5648,6 +5677,8 @@ export default function StorePage() {
     savedCustomerProfile,
     store?.id,
     store?.partnerId,
+    store?.pickupEnabled,
+    store?.deliveryEnabled,
   ]);
 
   const handlePrimaryCheckout = useCallback(() => {
@@ -6475,14 +6506,11 @@ export default function StorePage() {
 
   const renderStoreInfoTicker = () => {
     const showSelectProductsPrompt = isStorefrontButtonVisible("selectProducts");
-    const serviceMode =
-      String(orderSelection?.serviceMode || "pickup").toLowerCase() === "delivery"
-        ? "delivery"
-        : "pickup";
+    const serviceMode = getStoreServiceMode(store, orderSelection);
     const deliveryDestinationLabel = getDeliveryDestinationTickerLabel(orderSelection);
     const orderModeLabel =
       serviceMode === "delivery"
-        ? deliveryDestinationLabel || "Direccion confirmada"
+        ? deliveryDestinationLabel || "Direccion pendiente"
         : getPickupDestinationTickerLabel(orderSelection, store);
     const orderModeCaption =
       serviceMode === "delivery" ? "Enviaremos a:" : "Pedido a recoger:";
@@ -6781,6 +6809,12 @@ export default function StorePage() {
     ) : null;
   };
 
+  const explicitOrderMode = String(orderSelection?.serviceMode || "").toLowerCase();
+  const directDeliveryGateRequired =
+    storeAllowsDelivery(store) &&
+    !storeAllowsPickup(store) &&
+    explicitOrderMode !== "delivery";
+
   return (
     <div
       className={`sf-shell sf-shell--mode-${storefrontMode} ${gridFocusMode ? "is-grid-focused" : ""} ${gridFocusTransition} ${
@@ -6803,6 +6837,42 @@ export default function StorePage() {
           : {}),
       }}
     >
+      {directDeliveryGateRequired && (
+        <div className="sf-modalOverlay sf-serviceGateOverlay">
+          <div className="sf-modalCard sf-serviceGateModal">
+            <span>Solo delivery</span>
+            <h3>Esta pizzeria solo hace delivery</h3>
+            <p>Confirma tu direccion para revisar cobertura antes de entrar al menu.</p>
+            <div className="sf-serviceGateActions">
+              <button
+                type="button"
+                className="sf-secondaryBtn"
+                onClick={() => navigate(`/${partnerSlug}`)}
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                className="sf-primaryBtn"
+                onClick={() =>
+                  navigate(`/${partnerSlug}/order`, {
+                    state: {
+                      orderTrail: "delivery-only-store",
+                      partnerName: partner?.name || store?.partnerName || store?.storeName,
+                      storeName: store?.storeName,
+                      currentStoreSlug: storeSlug,
+                      startServiceMode: "delivery",
+                    },
+                  })
+                }
+              >
+                Continuar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {gridFocusSwipePreview && !gridFocusMode && (
         <div className="sf-gridFocusBackPage" aria-hidden="true">
           <div className="lsf-gridFocusSearch">
@@ -8503,14 +8573,14 @@ export default function StorePage() {
               <p>
                 No haremos ningun cobro online. El pedido se enviara a la tienda y
                 pagaras <strong>{formatMoney(cartTotal, partner?.currency || "EUR")}</strong>{" "}
-                en efectivo {String(orderSelection?.serviceMode || "pickup").toLowerCase() === "delivery"
+                en efectivo {getStoreServiceMode(store, orderSelection) === "delivery"
                   ? "cuando recibas el pedido"
                   : "cuando recojas el pedido"}.
               </p>
               <div className="sf-cashConfirmRoute">
-                <span>{String(orderSelection?.serviceMode || "pickup").toLowerCase() === "delivery" ? "Delivery" : "Pickup"}</span>
+                <span>{getStoreServiceMode(store, orderSelection) === "delivery" ? "Delivery" : "Pickup"}</span>
                 <strong>
-                  {String(orderSelection?.serviceMode || "pickup").toLowerCase() === "delivery"
+                  {getStoreServiceMode(store, orderSelection) === "delivery"
                     ? orderSelection?.deliveryAddress || orderSelection?.deliveryResolution?.formattedAddress || "Direccion confirmada"
                     : orderSelection?.storeName || store?.storeName || "Tienda seleccionada"}
                 </strong>

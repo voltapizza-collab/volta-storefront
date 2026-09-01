@@ -67,6 +67,12 @@ const createDemoSession = async () => {
   };
 };
 
+const getExclusiveExpandedModules = (current, openGroup = null) =>
+  Object.keys(current).reduce((result, group) => {
+    result[group] = group === openGroup;
+    return result;
+  }, {});
+
 export default function Backoffice() {
   const initialSmsPaymentStatus = new URLSearchParams(window.location.search).get("sms_payment");
   const [language, setLanguage] = useState(getInitialBackofficeLanguage);
@@ -303,6 +309,7 @@ export default function Backoffice() {
     localStorage.removeItem("volta_backoffice_auth");
     setActiveModule("inventory");
     setActiveModuleGroup("inventory");
+    setExpandedModules((prev) => getExclusiveExpandedModules(prev));
   };
 
   const handleLanguageChange = (value) => {
@@ -322,10 +329,7 @@ export default function Backoffice() {
         setActiveModuleGroup(group);
       }
 
-      return {
-        ...prev,
-        [group]: nextOpen,
-      };
+      return getExclusiveExpandedModules(prev, nextOpen ? group : null);
     });
   };
 
@@ -341,10 +345,7 @@ export default function Backoffice() {
         setActiveModuleGroup("inventory");
       }
 
-      return {
-        ...prev,
-        pizzaCreator: nextOpen,
-      };
+      return getExclusiveExpandedModules(prev, nextOpen ? "pizzaCreator" : null);
     });
   };
 
@@ -625,6 +626,7 @@ export default function Backoffice() {
                 onClick={() => {
                   setActiveModule("inventory");
                   setActiveModuleGroup("inventory");
+                  setExpandedModules((prev) => getExclusiveExpandedModules(prev));
                 }}
                 type="button"
               >
@@ -686,24 +688,7 @@ export default function Backoffice() {
                 } ${
                   expandedModules.stores ? "open" : ""
                 }`}
-                onClick={() => {
-                  setExpandedModules((prev) => {
-                    const nextOpen = !prev.stores;
-
-                    if (!nextOpen && activeModuleGroup === "stores") {
-                      setActiveModule("inventory");
-                      setActiveModuleGroup("inventory");
-                    } else if (nextOpen) {
-                      setActiveModule("stores");
-                      setActiveModuleGroup("stores");
-                    }
-
-                    return {
-                      ...prev,
-                      stores: nextOpen,
-                    };
-                  });
-                }}
+                onClick={() => toggleModuleSection("stores", "inventory")}
                 type="button"
               >
                 <span>{t("nav.stores")}</span>
@@ -1061,34 +1046,22 @@ export default function Backoffice() {
             <SettingsModule
               partner={auth}
               onOpenDelivery={() => {
-                setExpandedModules((prev) => ({
-                  ...prev,
-                  settings: true,
-                }));
+                setExpandedModules((prev) => getExclusiveExpandedModules(prev, "settings"));
                 setActiveModule("settingsDelivery");
                 setActiveModuleGroup("settings");
               }}
               onOpenBranding={() => {
-                setExpandedModules((prev) => ({
-                  ...prev,
-                  settings: true,
-                }));
+                setExpandedModules((prev) => getExclusiveExpandedModules(prev, "settings"));
                 setActiveModule("settingsBranding");
                 setActiveModuleGroup("settings");
               }}
               onOpenPolicies={() => {
-                setExpandedModules((prev) => ({
-                  ...prev,
-                  settings: true,
-                }));
+                setExpandedModules((prev) => getExclusiveExpandedModules(prev, "settings"));
                 setActiveModule("settingsPolicies");
                 setActiveModuleGroup("settings");
               }}
               onOpenTracking={() => {
-                setExpandedModules((prev) => ({
-                  ...prev,
-                  settings: true,
-                }));
+                setExpandedModules((prev) => getExclusiveExpandedModules(prev, "settings"));
                 setActiveModule("settingsTracking");
                 setActiveModuleGroup("settings");
               }}

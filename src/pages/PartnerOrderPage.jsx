@@ -60,6 +60,9 @@ const rememberDeliverySelection = (selection) => {
   }
 };
 
+const storeAllowsPickup = (store) => store?.pickupEnabled !== false;
+const storeAllowsDelivery = (store) => store?.deliveryEnabled !== false;
+
 export default function PartnerOrderPage() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -120,13 +123,29 @@ export default function PartnerOrderPage() {
     return activeStores;
   }, [activeStores]);
 
-  const isStorefrontClosed = activeStores.length === 0;
+  const pickupStores = useMemo(
+    () => stores.filter(storeAllowsPickup),
+    [stores]
+  );
+  const deliveryStores = useMemo(
+    () => stores.filter(storeAllowsDelivery),
+    [stores]
+  );
+  const pickupAvailable = pickupStores.length > 0;
+  const deliveryAvailable = deliveryStores.length > 0;
+  const isStorefrontClosed = !pickupAvailable && !deliveryAvailable;
+  const singleServiceMode =
+    !isStorefrontClosed && pickupAvailable !== deliveryAvailable
+      ? deliveryAvailable
+        ? "delivery"
+        : "pickup"
+      : "";
 
   const selectedStore = useMemo(() => {
     return stores.find((store) => store.slug === selectedStoreSlug) || null;
   }, [stores, selectedStoreSlug]);
 
-  const singleActiveStore = stores.length === 1 ? stores[0] : null;
+  const singlePickupStore = pickupStores.length === 1 ? pickupStores[0] : null;
 
   useEffect(() => {
     if (!isStorefrontClosed) return;
@@ -162,13 +181,14 @@ export default function PartnerOrderPage() {
     () =>
       recentStoreSlugs
         .map((slug) => stores.find((store) => store.slug === slug))
+        .filter(storeAllowsPickup)
         .filter(Boolean),
     [recentStoreSlugs, stores]
   );
 
   const pickupCities = useMemo(() => {
     const seen = new Set();
-    return stores
+    return pickupStores
       .map((store) => String(store.city || "").trim())
       .filter(Boolean)
       .filter((city) => {
@@ -178,7 +198,7 @@ export default function PartnerOrderPage() {
         return true;
       })
       .sort((left, right) => left.localeCompare(right, "es"));
-  }, [stores]);
+  }, [pickupStores]);
 
   useEffect(() => {
     if (!pickupModalOpen || !pickupCities.length) return;
@@ -196,13 +216,13 @@ export default function PartnerOrderPage() {
   const filteredPickupStores = useMemo(() => {
     const cityFilter = normalizeSearchText(pickupCityFilter);
 
-    if (!cityFilter) return stores;
+    if (!cityFilter) return pickupStores;
 
-    return stores.filter((store) => {
+    return pickupStores.filter((store) => {
       const city = normalizeSearchText(store.city);
       return city === cityFilter;
     });
-  }, [pickupCityFilter, stores]);
+  }, [pickupCityFilter, pickupStores]);
 
   const closedCopy = useMemo(() => {
     if (activeStores.length === 0) {
@@ -218,9 +238,39 @@ export default function PartnerOrderPage() {
     };
   }, [activeStores]);
 
-  const pickupReady = !isStorefrontClosed && serviceMode === "pickup" && Boolean(selectedStoreSlug);
+  const singleServiceCopy = useMemo(() => {
+    if (singleServiceMode === "delivery") {
+      return {
+        eyebrow: "Solo delivery",
+        title: "Esta pizzeria solo hace delivery",
+        body: "Confirma tu direccion para revisar cobertura y entrar al menu.",
+        action: "Continuar",
+      };
+    }
+
+    if (singleServiceMode === "pickup") {
+      return {
+        eyebrow: "Solo recogida",
+        title: "Esta pizzeria solo trabaja con recogida",
+        body: "Elige la tienda donde quieres recoger tu pedido.",
+        action: "Continuar",
+      };
+    }
+
+    return null;
+  }, [singleServiceMode]);
+
+  useEffect(() => {
+    if (location.state?.startServiceMode !== "delivery") return;
+    if (singleServiceMode !== "delivery" || serviceMode) return;
+
+    setServiceMode("delivery");
+    setDeliveryModalOpen(true);
+  }, [location.state, serviceMode, singleServiceMode]);
+
+  const pickupReady = pickupAvailable && serviceMode === "pickup" && Boolean(selectedStoreSlug);
   const deliveryReady =
-    !isStorefrontClosed &&
+    deliveryAvailable &&
     serviceMode === "delivery" &&
     Boolean(deliveryAddress.trim()) &&
     Boolean(deliveryResolution?.withinRange) &&
@@ -282,6 +332,24 @@ export default function PartnerOrderPage() {
     },
     [navigate, partner, partnerSlug, rememberPickupStore]
   );
+
+  const continueSingleService = useCallback(() => {
+    if (singleServiceMode === "delivery") {
+      setServiceMode("delivery");
+      setDeliveryModalOpen(true);
+      return;
+    }
+
+    if (singleServiceMode === "pickup") {
+      setServiceMode("pickup");
+      resetDelivery();
+      if (singlePickupStore) {
+        goToPickupStore(singlePickupStore);
+        return;
+      }
+      setPickupModalOpen(true);
+    }
+  }, [goToPickupStore, resetDelivery, singlePickupStore, singleServiceMode]);
 
   useEffect(() => {
     if (!deliveryModalOpen || serviceMode !== "delivery") return undefined;
@@ -477,10 +545,14 @@ export default function PartnerOrderPage() {
             </button>
           </div>
 
-          <div className="sf-entryHeader sf-entryHeader--orderStart">
-            <div className="sf-kicker">Pedido online</div>
-            <span className="sf-orderBrand">{partner.name}</span>
-            {!isStorefrontClosed && <h1 className="sf-entryTitle">Elige como recibirlo</h1>}
+            <div className="sf-entryHeader sf-entryHeader--orderStart">
+              <div className="sf-kicker">Pedido online</div>
+              <span className="sf-orderBrand">{partner.name}</span>
+            {!isStorefrontClosed && (
+              <h1 className="sf-entryTitle">
+                {singleServiceMode ? "Metodo disponible" : "Elige como recibirlo"}
+              </h1>
+            )}
           </div>
 
           {isStorefrontClosed ? (
@@ -502,47 +574,53 @@ export default function PartnerOrderPage() {
             </div>
           ) : (
             <>
-              <div className="sf-serviceSplit">
-                <button
-                  type="button"
-                  className={`sf-serviceCard ${
-                    serviceMode === "pickup" ? "is-active" : ""
-                  }`}
-                  onClick={() => {
-                    setServiceMode("pickup");
-                    resetDelivery();
-                    if (singleActiveStore) {
-                      goToPickupStore(singleActiveStore);
-                      return;
-                    }
-                    setPickupModalOpen(true);
-                  }}
-                >
-                  <span className="sf-serviceMark" aria-hidden="true">01</span>
-                  <span className="sf-serviceEyebrow">Recoger</span>
-                  <strong className="sf-serviceTitle">En tienda</strong>
-                  <span className="sf-serviceBody">
-                    Elige sucursal y pasa directo al menu.
-                  </span>
-                </button>
+              <div className={`sf-serviceSplit ${pickupAvailable !== deliveryAvailable ? "sf-serviceSplit--single" : ""}`}>
+                {pickupAvailable && (
+                  <button
+                    type="button"
+                    className={`sf-serviceCard ${
+                      serviceMode === "pickup" ? "is-active" : ""
+                    }`}
+                    onClick={() => {
+                      setServiceMode("pickup");
+                      resetDelivery();
+                      if (singlePickupStore) {
+                        goToPickupStore(singlePickupStore);
+                        return;
+                      }
+                      setPickupModalOpen(true);
+                    }}
+                  >
+                    <span className="sf-serviceMark" aria-hidden="true">01</span>
+                    <span className="sf-serviceEyebrow">Recoger</span>
+                    <strong className="sf-serviceTitle">En tienda</strong>
+                    <span className="sf-serviceBody">
+                      Elige sucursal y pasa directo al menu.
+                    </span>
+                  </button>
+                )}
 
-                <button
-                  type="button"
-                  className={`sf-serviceCard ${
-                    serviceMode === "delivery" ? "is-active" : ""
-                  }`}
-                  onClick={() => {
-                    setServiceMode("delivery");
-                    setDeliveryModalOpen(true);
-                  }}
-                >
-                  <span className="sf-serviceMark" aria-hidden="true">02</span>
-                  <span className="sf-serviceEyebrow">Domicilio</span>
-                  <strong className="sf-serviceTitle">Enviar a casa</strong>
-                  <span className="sf-serviceBody">
-                    Busca tu direccion con Google y confirma cobertura.
-                  </span>
-                </button>
+                {deliveryAvailable && (
+                  <button
+                    type="button"
+                    className={`sf-serviceCard ${
+                      serviceMode === "delivery" ? "is-active" : ""
+                    }`}
+                    onClick={() => {
+                      setServiceMode("delivery");
+                      setDeliveryModalOpen(true);
+                    }}
+                  >
+                    <span className="sf-serviceMark" aria-hidden="true">
+                      {pickupAvailable ? "02" : "01"}
+                    </span>
+                    <span className="sf-serviceEyebrow">Domicilio</span>
+                    <strong className="sf-serviceTitle">Enviar a casa</strong>
+                    <span className="sf-serviceBody">
+                      Busca tu direccion con Google y confirma cobertura.
+                    </span>
+                  </button>
+                )}
               </div>
 
               {serviceMode === "delivery" && (
@@ -594,6 +672,32 @@ export default function PartnerOrderPage() {
         </section>
       </div>
 
+      {singleServiceCopy && !serviceMode && (
+        <div className="sf-modalOverlay sf-serviceGateOverlay">
+          <div className="sf-modalCard sf-serviceGateModal">
+            <span>{singleServiceCopy.eyebrow}</span>
+            <h3>{singleServiceCopy.title}</h3>
+            <p>{singleServiceCopy.body}</p>
+            <div className="sf-serviceGateActions">
+              <button
+                type="button"
+                className="sf-secondaryBtn"
+                onClick={() => navigate(`/${partnerSlug}`)}
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                className="sf-primaryBtn"
+                onClick={continueSingleService}
+              >
+                {singleServiceCopy.action}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {pickupModalOpen && (
         <div className="sf-modalOverlay" onClick={() => setPickupModalOpen(false)}>
           <div
@@ -620,7 +724,7 @@ export default function PartnerOrderPage() {
                 <span>Ciudades disponibles</span>
                 <div className="sf-pickupCityRow" aria-label="Ciudades disponibles">
                   {pickupCities.map((city) => {
-                    const cityCount = stores.filter(
+                    const cityCount = pickupStores.filter(
                       (store) => normalizeSearchText(store.city) === normalizeSearchText(city)
                     ).length;
 
@@ -768,18 +872,20 @@ export default function PartnerOrderPage() {
               )}
 
               <div className="sf-deliveryModalActions">
-                <button
-                  type="button"
-                  className="sf-secondaryBtn"
-                  onClick={() => {
-                    setServiceMode("pickup");
-                    setDeliveryModalOpen(false);
-                    resetDelivery();
-                  }}
-                  disabled={isResolvingDelivery}
-                >
-                  Recoger
-                </button>
+                {pickupAvailable && (
+                  <button
+                    type="button"
+                    className="sf-secondaryBtn"
+                    onClick={() => {
+                      setServiceMode("pickup");
+                      setDeliveryModalOpen(false);
+                      resetDelivery();
+                    }}
+                    disabled={isResolvingDelivery}
+                  >
+                    Recoger
+                  </button>
+                )}
                 <button
                   type="submit"
                   className="sf-primaryBtn"

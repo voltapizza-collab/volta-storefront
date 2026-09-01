@@ -221,7 +221,7 @@
 
 .rv-spotlightGrid {
   display: grid;
-  grid-template-columns: 1fr minmax(240px, 0.8fr) 1fr;
+  grid-template-columns: 1fr minmax(240px, 0.8fr);
   gap: 14px;
   margin: 18px 0;
 }
@@ -305,6 +305,10 @@
   margin-top: 14px;
 }
 
+.rv-contentGrid-single {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .rv-cardStack {
   display: grid;
   gap: 14px;
@@ -334,6 +338,12 @@
 .rv-activityList {
   display: grid;
   gap: 10px;
+}
+
+.rv-activityList-limited {
+  max-height: 390px;
+  overflow-y: auto;
+  padding-right: 4px;
 }
 
 .rv-personRow,
@@ -375,6 +385,15 @@
 .rv-storeRow strong,
 .rv-activityRow strong {
   color: #1c1230;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rv-reviewedProduct {
+  color: #1c1230;
+  font-size: 13px;
+  font-weight: 900;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

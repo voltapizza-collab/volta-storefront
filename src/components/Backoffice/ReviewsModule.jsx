@@ -30,6 +30,7 @@ const dateFilterOptions = [
   { key: "7d", label: "7 dias", days: 7 },
   { key: "15d", label: "15 dias", days: 15 },
   { key: "month", label: "Ultimo mes", days: 30 },
+  { key: "history", label: "Historico", days: null },
   { key: "custom", label: "Fecha", days: null },
 ];
 
@@ -83,6 +84,10 @@ const getDateRange = (filterKey, customDate) => {
   const today = new Date();
   const filter = dateFilterOptions.find((item) => item.key === filterKey) || dateFilterOptions[3];
 
+  if (filter.key === "history") {
+    return { from: null, to: null, label: "Historico" };
+  }
+
   if (filter.key === "custom") {
     const selected = customDate ? new Date(`${customDate}T00:00:00`) : today;
     if (Number.isNaN(selected.getTime())) {
@@ -114,8 +119,8 @@ export default function ReviewsModule({ partner }) {
 
     const params = new URLSearchParams({ partnerId: String(partnerId) });
     if (storeId) params.set("storeId", storeId);
-    params.set("from", dateRange.from.toISOString());
-    params.set("to", dateRange.to.toISOString());
+    if (dateRange.from) params.set("from", dateRange.from.toISOString());
+    if (dateRange.to) params.set("to", dateRange.to.toISOString());
 
     const { data } = await api.get(`/api/product-reviews/analytics/summary?${params.toString()}`);
     const nextAnalytics = data || emptyAnalytics;
@@ -196,6 +201,14 @@ export default function ReviewsModule({ partner }) {
     return stores.find((store) => String(store.id) === String(storeId))?.storeName || "Tienda";
   }, [storeId, stores]);
   const selectedScope = `${selectedStoreName} - ${dateRange.label}`;
+  const recentInteractions = useMemo(
+    () => (Array.isArray(analytics.recentVotes) ? analytics.recentVotes.slice(0, 5) : []),
+    [analytics.recentVotes]
+  );
+  const topProducts = useMemo(
+    () => (Array.isArray(analytics.topProducts) ? analytics.topProducts.slice(0, 5) : []),
+    [analytics.topProducts]
+  );
 
   return (
     <section className="rv-shell">
@@ -289,75 +302,54 @@ export default function ReviewsModule({ partner }) {
         <div className="rv-contentGrid">
           <article className="rv-card rv-card-large">
             <div className="rv-cardHead">
-              <span>Personas con likes</span>
-              <strong>{formatNumber(analytics.likePeople?.length)}</strong>
+              <span>Ultimas interacciones</span>
+              <strong>{formatNumber(recentInteractions.length)}</strong>
             </div>
-            <div className="rv-list">
-              {(analytics.likePeople || []).map((person) => (
-                <div className="rv-personRow" key={`${person.customerId || person.phone || person.name}-${person.lastLikeAt}`}>
+            <div className="rv-activityList rv-activityList-limited">
+              {recentInteractions.map((vote) => (
+                <div className="rv-activityRow" key={vote.id}>
+                  <span className={`rv-voteBadge ${vote.vote === "LIKE" ? "is-like" : "is-dislike"}`}>
+                    {vote.vote === "LIKE" ? "Like" : "Dislike"}
+                  </span>
                   <div>
-                    <strong>{person.name || "Cliente sin nombre"}</strong>
-                    <span>{formatPhone(person.phone)}</span>
-                  </div>
-                  <div>
-                    <b>{formatNumber(person.likes)}</b>
-                    <small>{formatDateTime(person.lastLikeAt)}</small>
+                    <strong>{vote.customerName || "Cliente sin nombre"}</strong>
+                    <span className="rv-reviewedProduct">{vote.productName}</span>
+                    <small>
+                      {formatPhone(vote.customerPhone)} - {vote.storeName || "Tienda"} - {formatDateTime(vote.createdAt)}
+                    </small>
                   </div>
                 </div>
               ))}
-              {!loading && !analytics.likePeople?.length && (
-                <div className="rv-empty">Sin likes registrados.</div>
+              {!loading && !recentInteractions.length && (
+                <div className="rv-empty">Sin interacciones registradas.</div>
               )}
             </div>
           </article>
 
-          <div className="rv-cardStack">
-            <article className="rv-card">
-              <div className="rv-cardHead">
-                <span>Pizzas mejor valoradas</span>
-                <strong>{formatNumber(analytics.topProducts?.length)}</strong>
-              </div>
-              <div className="rv-productList">
-                {(analytics.topProducts || []).map((product, index) => (
-                  <div className="rv-productRow" key={`${product.productId || "custom"}-${product.productName}`}>
-                    <em className="rv-rankBadge">{index + 1}</em>
-                    <div>
-                      <strong>{product.productName}</strong>
-                      <span>{formatNumber(product.total)} reacciones</span>
-                    </div>
-                    <b>{formatPercent(product.approval)}</b>
+          <article className="rv-card">
+            <div className="rv-cardHead">
+              <span>Pizzas mejor valoradas</span>
+              <strong>{formatNumber(topProducts.length)}</strong>
+            </div>
+            <div className="rv-productList">
+              {topProducts.map((product, index) => (
+                <div className="rv-productRow" key={`${product.productId || "custom"}-${product.productName}`}>
+                  <em className="rv-rankBadge">{index + 1}</em>
+                  <div>
+                    <strong>{product.productName}</strong>
+                    <span>{formatNumber(product.total)} reacciones</span>
                   </div>
-                ))}
-                {!loading && !analytics.topProducts?.length && (
-                  <div className="rv-empty">Sin productos valorados.</div>
-                )}
-              </div>
-            </article>
-
-            <article className="rv-card">
-              <div className="rv-cardHead">
-                <span>Pizzas a revisar</span>
-                <strong>{formatNumber(analytics.productsToReview?.length)}</strong>
-              </div>
-              <div className="rv-productList">
-                {(analytics.productsToReview || []).map((product) => (
-                  <div className="rv-productRow rv-productRow-alert" key={`${product.productId || "custom"}-${product.productName}`}>
-                    <div>
-                      <strong>{product.productName}</strong>
-                      <span>{formatNumber(product.dislikes)} dislikes de {formatNumber(product.total)}</span>
-                    </div>
-                    <b>{formatPercent(product.approval)}</b>
-                  </div>
-                ))}
-                {!loading && !analytics.productsToReview?.length && (
-                  <div className="rv-empty">Sin pizzas con dislikes.</div>
-                )}
-              </div>
-            </article>
-          </div>
+                  <b>{formatPercent(product.approval)}</b>
+                </div>
+              ))}
+              {!loading && !topProducts.length && (
+                <div className="rv-empty">Sin productos valorados.</div>
+              )}
+            </div>
+          </article>
         </div>
 
-        <div className="rv-contentGrid rv-contentGrid-bottom">
+        <div className="rv-contentGrid rv-contentGrid-bottom rv-contentGrid-single">
           <article className="rv-card">
             <div className="rv-cardHead">
               <span>Tiendas</span>
@@ -376,31 +368,6 @@ export default function ReviewsModule({ partner }) {
                   </div>
                 </div>
               ))}
-            </div>
-          </article>
-
-          <article className="rv-card rv-card-large">
-            <div className="rv-cardHead">
-              <span>Actividad reciente</span>
-              <strong>{formatNumber(analytics.recentVotes?.length)}</strong>
-            </div>
-            <div className="rv-activityList">
-              {(analytics.recentVotes || []).map((vote) => (
-                <div className="rv-activityRow" key={vote.id}>
-                  <span className={`rv-voteBadge ${vote.vote === "LIKE" ? "is-like" : "is-dislike"}`}>
-                    {vote.vote === "LIKE" ? "Like" : "Dislike"}
-                  </span>
-                  <div>
-                    <strong>{vote.productName}</strong>
-                    <small>
-                      {vote.customerName} - {vote.storeName || "Tienda"} - {formatDateTime(vote.createdAt)}
-                    </small>
-                  </div>
-                </div>
-              ))}
-              {!loading && !analytics.recentVotes?.length && (
-                <div className="rv-empty">Sin actividad reciente.</div>
-              )}
             </div>
           </article>
         </div>

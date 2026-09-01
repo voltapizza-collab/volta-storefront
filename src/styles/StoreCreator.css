@@ -1281,6 +1281,41 @@
   border: 1px solid rgba(106, 61, 240, 0.08);
 }
 
+.sc-deliveryMethodsGroup {
+  display: grid;
+  gap: 12px;
+  margin: 0 0 14px;
+  padding: 14px 16px 16px;
+  border: 1px solid rgba(106, 61, 240, 0.12);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.sc-deliveryMethodsGroup legend {
+  padding: 0 8px;
+  color: #352150;
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.sc-deliveryMethodsGroup p {
+  margin: 0;
+  color: rgba(53, 33, 80, 0.66);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.sc-deliveryMethodOptions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.sc-deliveryMethodOptions .sc-field--toggle {
+  margin-bottom: 0;
+}
+
 .sc-label {
   font-size: 14px;
   font-weight: 700;
@@ -1315,6 +1350,11 @@
 
 .sc-toggle.on .sc-toggle-knob {
   transform: translateX(28px);
+}
+
+.sc-toggle:disabled {
+  cursor: not-allowed;
+  opacity: 0.72;
 }
 
 .sc-stockSection + .sc-stockSection,
@@ -1437,6 +1477,10 @@
   }
 
   .sc-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sc-deliveryMethodOptions {
     grid-template-columns: 1fr;
   }
 

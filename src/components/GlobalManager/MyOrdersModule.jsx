@@ -75,6 +75,23 @@ const formatDate = (value) => {
   }).format(date);
 };
 
+const formatMovementDateTime = (value) => {
+  if (!value) return "-";
+  const date =
+    typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value)
+      ? new Date(`${value}T00:00:00`)
+      : new Date(value);
+  if (Number.isNaN(date.getTime())) return "-";
+
+  return new Intl.DateTimeFormat("es-ES", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(date);
+};
+
 const parseIsoDateParts = (value) => {
   const [year, month, day] = String(value || "").split("-").map(Number);
   if (!year || !month || !day) return null;
@@ -932,7 +949,7 @@ export function OrdersMovementsModule({ partner = null }) {
               <tr>
                 <th>Codigo</th>
                 <th>Cliente</th>
-                <th>Fecha</th>
+                <th>Fecha y hora</th>
                 <th>Partner</th>
                 <th>Tienda</th>
                 <th>Canal de pago</th>
@@ -953,7 +970,7 @@ export function OrdersMovementsModule({ partner = null }) {
                       <span className="gmo-cellSub">{sale.customerData.phone}</span>
                     )}
                   </td>
-                  <td>{formatDate(sale.date)}</td>
+                  <td>{formatMovementDateTime(sale.date)}</td>
                   <td>{sale.partnerLabel}</td>
                   <td>{sale.storeLabel}</td>
                   <td>
@@ -1035,8 +1052,8 @@ export function OrdersMovementsModule({ partner = null }) {
                 <strong>{selectedMovement.storeLabel}</strong>
               </div>
               <div className="gmo-ticketLine">
-                <span>Fecha</span>
-                <strong>{formatDate(selectedMovement.date)}</strong>
+                <span>Fecha y hora</span>
+                <strong>{formatMovementDateTime(selectedMovement.date)}</strong>
               </div>
               <div className="gmo-ticketLine">
                 <span>Estado</span>

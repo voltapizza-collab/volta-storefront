@@ -134,6 +134,27 @@
   font-weight: 800;
 }
 
+.pr-itemMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.pr-itemMeta span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: #dcfce7;
+  color: #04703c;
+  font-size: 0.72rem;
+  font-weight: 1000;
+  white-space: nowrap;
+}
+
 .pr-voteRow {
   display: flex;
   flex-wrap: wrap;

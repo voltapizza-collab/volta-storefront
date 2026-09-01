@@ -19,6 +19,8 @@ const emptyStore = {
   zipCode: "",
   email: "",
   tlf: "",
+  pickupEnabled: true,
+  deliveryEnabled: true,
   acceptsReservations: false,
   reservationCapacity: "",
 };
@@ -104,6 +106,7 @@ const STORE_COPY = {
     "feedback.storeCreated": "Store created.",
     "feedback.storeCreatedWithPin": "Store created. Copy the POS PIN now: it is shown only once.",
     "feedback.saveStoreError": "We could not save the store.",
+    "feedback.deliveryMethodRequired": "Select at least one delivery method for this store.",
     "feedback.statusError": "We could not change the store status.",
     "feedback.pinRegenerated": "POS PIN regenerated. Copy it now: it is shown only once.",
     "feedback.pinNew": "A new recoverable POS PIN was generated for this store.",
@@ -178,6 +181,10 @@ const STORE_COPY = {
     "form.zipCode": "Zip code",
     "form.email": "Email",
     "form.phone": "Phone",
+    "form.deliveryMethods": "Delivery methods",
+    "form.deliveryMethodsHelp": "Enable one or both options. A store must always keep at least one method active.",
+    "form.pickupEnabled": "Pickup",
+    "form.deliveryEnabled": "Delivery",
     "form.acceptReservations": "Accept reservations",
     "form.reservationCapacity": "Reservation capacity (people)",
     "menu.title": "Store catalog - {name}",
@@ -265,6 +272,7 @@ const STORE_COPY = {
     "feedback.storeCreated": "Tienda creada.",
     "feedback.storeCreatedWithPin": "Tienda creada. Copia el PIN POS ahora: solo se muestra una vez.",
     "feedback.saveStoreError": "No pudimos guardar la tienda.",
+    "feedback.deliveryMethodRequired": "Selecciona al menos un metodo de entrega para esta tienda.",
     "feedback.statusError": "No pudimos cambiar el estado de la tienda.",
     "feedback.pinRegenerated": "PIN POS regenerado. Copialo ahora: solo se muestra una vez.",
     "feedback.pinNew": "Se genero un nuevo PIN POS recuperable para esta tienda.",
@@ -339,6 +347,10 @@ const STORE_COPY = {
     "form.zipCode": "Codigo postal",
     "form.email": "Email",
     "form.phone": "Telefono",
+    "form.deliveryMethods": "Metodos de entrega",
+    "form.deliveryMethodsHelp": "Activa una o ambas opciones. La tienda siempre debe conservar al menos un metodo.",
+    "form.pickupEnabled": "Recogida",
+    "form.deliveryEnabled": "Delivery",
     "form.acceptReservations": "Aceptar reservas",
     "form.reservationCapacity": "Capacidad de reservas (personas)",
     "menu.title": "Catalogo de tienda - {name}",
@@ -2006,6 +2018,17 @@ export default function AdminStoresPage({
     [selectedCustomerId, visibleCustomers]
   );
 
+  const toggleStoreDeliveryMethod = (key) => {
+    setForm((previous) => {
+      const next = {
+        ...previous,
+        [key]: !previous[key],
+      };
+
+      return next.pickupEnabled || next.deliveryEnabled ? next : previous;
+    });
+  };
+
   const submitStore = async (event) => {
     event.preventDefault();
 
@@ -2014,20 +2037,31 @@ export default function AdminStoresPage({
       return;
     }
 
+    if (!form.pickupEnabled && !form.deliveryEnabled) {
+      setFeedback(t("feedback.deliveryMethodRequired"));
+      return;
+    }
+
     const payload = {
       partnerId: Number(selectedPartnerId),
       ...form,
+      pickupEnabled: Boolean(form.pickupEnabled),
+      deliveryEnabled: Boolean(form.deliveryEnabled),
       reservationCapacity: form.acceptsReservations
         ? Number(form.reservationCapacity || 0)
         : null,
     };
 
     try {
+      let savedStore = null;
+
       if (editingStore) {
-        await api.patch(`/api/stores/${editingStore}`, payload);
+        const response = await api.patch(`/api/stores/${editingStore}`, payload);
+        savedStore = response.data || null;
         setFeedback(t("feedback.storeUpdated"));
       } else {
         const response = await api.post("/api/stores", payload);
+        savedStore = response.data || null;
         const credential = response.data?.posCredentials || {};
         if (credential.pin) {
           setPosCredentialModal({
@@ -2046,10 +2080,22 @@ export default function AdminStoresPage({
         }
       }
 
-      await loadStores(selectedPartnerId);
+      if (savedStore?.id) {
+        setStores((current) => {
+          const exists = current.some((store) => store.id === savedStore.id);
+          return exists
+            ? current.map((store) => (store.id === savedStore.id ? savedStore : store))
+            : [savedStore, ...current];
+        });
+      }
+
       setForm(emptyStore);
       setEditingStore(null);
       setShowAdd(false);
+
+      loadStores(selectedPartnerId).catch((error) => {
+        console.error("RELOAD STORES AFTER SAVE ERROR:", error);
+      });
     } catch (requestError) {
       console.error("SUBMIT STORE ERROR:", requestError);
       setFeedback(requestError.response?.data?.error || t("feedback.saveStoreError"));
@@ -2179,11 +2225,16 @@ export default function AdminStoresPage({
       zipCode: store.zipCode || "",
       email: store.email || "",
       tlf: store.tlf || "",
+      pickupEnabled: store.pickupEnabled !== false,
+      deliveryEnabled: store.deliveryEnabled !== false,
       acceptsReservations: Boolean(store.acceptsReservations),
       reservationCapacity: store.reservationCapacity ?? "",
     });
     setShowAdd(true);
   };
+
+  const pickupToggleLocked = form.pickupEnabled && !form.deliveryEnabled;
+  const deliveryToggleLocked = form.deliveryEnabled && !form.pickupEnabled;
 
   if (loading) {
     return (
@@ -2255,6 +2306,7 @@ export default function AdminStoresPage({
                 <th>{t("table.city")}</th>
                 <th>{t("table.address")}</th>
                 <th>{t("table.status")}</th>
+                <th>{t("form.deliveryMethods")}</th>
                 <th>PIN POS</th>
                 <th>{t("table.menu")}</th>
                 <th>{t("table.report")}</th>
@@ -2312,8 +2364,14 @@ export default function AdminStoresPage({
                         ? t("status.active")
                         : isCoordinateBlocked
                         ? t("status.coords")
-                        : t("status.inactive")}
+                      : t("status.inactive")}
                     </button>
+                  </td>
+                  <td>
+                    {[
+                      store.pickupEnabled !== false ? t("form.pickupEnabled") : "",
+                      store.deliveryEnabled !== false ? t("form.deliveryEnabled") : "",
+                    ].filter(Boolean).join(" / ") || "-"}
                   </td>
                   <td>
                     <button
@@ -2359,7 +2417,7 @@ export default function AdminStoresPage({
 
               {stores.length === 0 && (
                 <tr>
-                  <td colSpan="11">
+                  <td colSpan="12">
                     <div className="sc-emptyState">{t("state.noStores")}</div>
                   </td>
                 </tr>
@@ -2768,6 +2826,39 @@ export default function AdminStoresPage({
                   />
                 </div>
               </div>
+
+              <fieldset className="sc-deliveryMethodsGroup">
+                <legend>{t("form.deliveryMethods")}</legend>
+                <p>{t("form.deliveryMethodsHelp")}</p>
+
+                <div className="sc-deliveryMethodOptions">
+                  <div className="sc-field sc-field--toggle">
+                    <label className="sc-label">{t("form.pickupEnabled")}</label>
+                    <button
+                      type="button"
+                      className={`sc-toggle ${form.pickupEnabled ? "on" : ""}`}
+                      onClick={() => toggleStoreDeliveryMethod("pickupEnabled")}
+                      aria-pressed={form.pickupEnabled}
+                      disabled={pickupToggleLocked}
+                    >
+                      <span className="sc-toggle-knob" />
+                    </button>
+                  </div>
+
+                  <div className="sc-field sc-field--toggle">
+                    <label className="sc-label">{t("form.deliveryEnabled")}</label>
+                    <button
+                      type="button"
+                      className={`sc-toggle ${form.deliveryEnabled ? "on" : ""}`}
+                      onClick={() => toggleStoreDeliveryMethod("deliveryEnabled")}
+                      aria-pressed={form.deliveryEnabled}
+                      disabled={deliveryToggleLocked}
+                    >
+                      <span className="sc-toggle-knob" />
+                    </button>
+                  </div>
+                </div>
+              </fieldset>
 
               <div className="sc-field sc-field--toggle">
                 <label className="sc-label">{t("form.acceptReservations")}</label>

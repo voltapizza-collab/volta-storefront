@@ -750,6 +750,18 @@ const renderDirectDiscountBadge = (item) => {
   );
 };
 
+const renderTopDealQuantityBadge = (item) => {
+  const remaining = getTopDealRemainingQuantity(item);
+  if (remaining == null) return null;
+
+  return (
+    <span className="lsf-topDealQuantityBadge" aria-label={`${remaining} Top Deals disponibles`}>
+      <strong>{remaining}</strong>
+      <small>disp.</small>
+    </span>
+  );
+};
+
 const CartPlusIcon = () => (
   <svg className="lsf-card__cartIcon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
     <path
@@ -1547,6 +1559,35 @@ const hasTrendingPolicy = (item) =>
 const hasTopDealPolicy = (item) =>
   Boolean(item?.directDiscount && !hasTrendingPolicy(item));
 
+const getTopDealId = (item) => {
+  const id = Number(item?.directDiscount?.id ?? item?.directDiscountId ?? item?.topDealId);
+  return Number.isInteger(id) && id > 0 ? id : null;
+};
+
+const getTopDealRemainingQuantity = (item) => {
+  if (!hasTopDealPolicy(item)) return null;
+
+  const remaining = Number(item?.directDiscount?.remainingQuantity);
+  return Number.isInteger(remaining) && remaining >= 0 ? remaining : null;
+};
+
+const getPurchaseMaxQty = (item, reservedTopDealQty = 0) => {
+  let max = 12;
+  const rawStock = Number(item?.stock);
+  const remainingTopDealQty = getTopDealRemainingQuantity(item);
+  const reserved = Math.max(0, Number(reservedTopDealQty || 0));
+
+  if (Number.isFinite(rawStock) && rawStock > 0) {
+    max = Math.min(max, rawStock);
+  }
+
+  if (remainingTopDealQty != null) {
+    max = Math.min(max, Math.max(0, remainingTopDealQty - reserved));
+  }
+
+  return Math.max(0, max);
+};
+
 const getFeedDisplaySize = (item) => {
   if (hasTrendingPolicy(item)) {
     return getHighestPricedSize(getTrendingBasePriceBySize(item));
@@ -2069,6 +2110,16 @@ const getCustomIngredientPrice = (ingredient) => {
 const getCartLineQty = (line) => {
   const qty = Number(line?.qty ?? line?.quantity ?? 1);
   return Number.isFinite(qty) && qty > 0 ? qty : 1;
+};
+
+const getTopDealCartQuantity = (cartLines = [], discountId = null) => {
+  const numericDiscountId = Number(discountId);
+  if (!Number.isInteger(numericDiscountId) || numericDiscountId <= 0) return 0;
+
+  return cartLines.reduce(
+    (sum, line) => (getTopDealId(line) === numericDiscountId ? sum + getCartLineQty(line) : sum),
+    0
+  );
 };
 
 const normalizeRepeatPhoneInput = (value) => {
@@ -4226,6 +4277,21 @@ export default function StorePage() {
     () => getAvailableSizes(selectedProduct),
     [selectedProduct]
   );
+  const selectedTopDealId = useMemo(
+    () => getTopDealId(selectedProduct),
+    [selectedProduct]
+  );
+  const selectedTopDealCartQty = useMemo(
+    () => getTopDealCartQuantity(cart, selectedTopDealId),
+    [cart, selectedTopDealId]
+  );
+  const selectedProductMaxQty = useMemo(
+    () => getPurchaseMaxQty(selectedProduct, selectedTopDealCartQty),
+    [selectedProduct, selectedTopDealCartQty]
+  );
+  const selectedTopDealRemainingQty = selectedProduct
+    ? getTopDealRemainingQuantity(selectedProduct)
+    : null;
 
   const selectedBasePrice = selectedProduct
     ? priceForSize(
@@ -4253,7 +4319,7 @@ export default function StorePage() {
   );
   const selectedUnitTotal = selectedBasePrice + selectedExtrasTotal;
   const selectedLineTotal = selectedUnitTotal * Number(productSelection.qty || 1);
-  const productModalReady = Boolean(selectedProduct && productSelection.size);
+  const productModalReady = Boolean(selectedProduct && productSelection.size && selectedProductMaxQty > 0);
   const selectedProductAllergens = useMemo(
     () => getProductAllergens(selectedProduct),
     [selectedProduct]
@@ -4818,6 +4884,20 @@ export default function StorePage() {
     setCustomOpenSection("BASE");
   }, [customModalOpen]);
 
+  useEffect(() => {
+    if (!selectedProduct) return;
+
+    setProductSelection((current) => {
+      const qty = Number(current.qty || 1);
+      if (qty <= selectedProductMaxQty) return current;
+
+      return {
+        ...current,
+        qty: Math.max(1, selectedProductMaxQty),
+      };
+    });
+  }, [selectedProduct, selectedProductMaxQty]);
+
   const openProductModal = (item) => {
     const snapshot = freezeProductSelectionPrice(item);
     const sizes = getAvailableSizes(snapshot);
@@ -4839,6 +4919,8 @@ export default function StorePage() {
 
   const addProductLine = () => {
     if (!selectedProduct || !productSelection.size) return;
+    if (selectedProductMaxQty <= 0) return;
+    const qty = Math.min(Number(productSelection.qty || 1), selectedProductMaxQty);
 
     const trendingPricing = getTrendingPricingSnapshot(
       selectedProduct,
@@ -4852,11 +4934,11 @@ export default function StorePage() {
       categoryId: selectedProduct.categoryId ?? null,
       category: selectedProduct.category,
       size: productSelection.size,
-      qty: Number(productSelection.qty || 1),
+      qty,
       price: selectedBasePrice,
       extras: selectedExtras,
       allergens: selectedPurchaseAllergens,
-      subtotal: selectedLineTotal,
+      subtotal: selectedUnitTotal * qty,
       image: selectedProduct.image || "",
       directDiscount: trendingPricing ? null : selectedProduct.directDiscount || null,
       source: trendingPricing ? "trending" : undefined,
@@ -4864,7 +4946,7 @@ export default function StorePage() {
         ? {
             ...trendingPricing,
             adjustmentTotal: roundMoney(
-              trendingPricing.adjustment * Number(productSelection.qty || 1)
+              trendingPricing.adjustment * qty
             ),
           }
         : null,
@@ -4882,11 +4964,9 @@ export default function StorePage() {
   };
 
   const incProductQty = () => {
-    const rawStock = Number(selectedProduct?.stock);
-    const max = Number.isFinite(rawStock) && rawStock > 1 ? Math.min(12, rawStock) : 12;
     setProductSelection((current) => ({
       ...current,
-      qty: Math.min(max, Number(current.qty || 1) + 1),
+      qty: Math.min(selectedProductMaxQty, Number(current.qty || 1) + 1),
     }));
   };
 
@@ -5703,6 +5783,10 @@ export default function StorePage() {
         coupon_not_available: "El cupon ya no esta disponible. Quitalo y valida de nuevo.",
         coupon_not_applicable: "El cupon ya no aplica a este carrito.",
         coupon_not_stackable: "Solo puedes usar un cupon por pedido.",
+        top_deal_not_available: "Ese Top Deal ya no esta disponible. Quitalo y vuelve a elegirlo.",
+        top_deal_quantity_unavailable: `Quedan ${
+          err.response?.data?.remainingQuantity ?? 0
+        } unidades de ese Top Deal. Ajusta el carrito y vuelve a intentarlo.`,
         customer_profile_required: "Necesitamos tu nombre y telefono para hacer seguimiento al pedido.",
         custom_build_missing_ingredients:
           "La pizza personalizada no tiene ingredientes guardados. Quitala y vuelve a armarla.",
@@ -6438,6 +6522,7 @@ export default function StorePage() {
               )}
             </div>
             {renderDirectDiscountBadge(item, incentiveNowMs)}
+            {renderTopDealQuantityBadge(item)}
             {renderTrendingBadge(item)}
             {renderTrendingKpis(item) || renderCategoryDealCountdown(item)}
             {renderProductTags(item)}
@@ -6502,6 +6587,7 @@ export default function StorePage() {
               </div>
 
               <span className="lsf-topDealBadge">Top Deal</span>
+              {renderTopDealQuantityBadge(item)}
               {renderTrendingBadge(item)}
               {renderTrendingKpis(item) || renderOfferRibbon(countdownLabel, "Termina en:", "deal")}
               {renderProductTags(item)}
@@ -8127,7 +8213,10 @@ export default function StorePage() {
 
                 {hasTopDealPolicy(selectedProduct) && (
                   <div className="sf-directDiscountNotice">
-                    {getDirectDiscountLabel(selectedProduct.directDiscount)}
+                    <strong>{getDirectDiscountLabel(selectedProduct.directDiscount)}</strong>
+                    {selectedTopDealRemainingQty != null && (
+                      <small>{selectedProductMaxQty} disponibles para agregar</small>
+                    )}
                   </div>
                 )}
 
@@ -8163,7 +8252,13 @@ export default function StorePage() {
                       -
                     </button>
                     <strong>{productSelection.qty}</strong>
-                    <button type="button" onClick={incProductQty}>+</button>
+                    <button
+                      type="button"
+                      onClick={incProductQty}
+                      disabled={Number(productSelection.qty || 1) >= selectedProductMaxQty}
+                    >
+                      +
+                    </button>
                   </div>
                 </div>
 
@@ -8252,7 +8347,9 @@ export default function StorePage() {
                     disabled={!productModalReady}
                     onClick={addProductLine}
                   >
-                    {productModalReady
+                    {selectedProduct && productSelection.size && selectedProductMaxQty <= 0
+                      ? "Sin unidades disponibles"
+                      : productModalReady
                       ? `Add to cart - EUR ${selectedLineTotal.toFixed(2)}`
                       : "Selecciona size"}
                   </button>

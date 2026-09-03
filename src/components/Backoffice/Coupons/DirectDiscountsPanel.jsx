@@ -27,6 +27,7 @@ const initialForm = {
   daysActive: [],
   windowStart: "",
   windowEnd: "",
+  usageLimit: "",
   status: "ACTIVE",
 };
 
@@ -56,6 +57,16 @@ const formatDiscount = (discount) =>
   discount.discountType === "PERCENT"
     ? `${Number(discount.value || 0).toFixed(0)}%`
     : `EUR ${Number(discount.value || 0).toFixed(2)}`;
+
+const formatTopDealUsage = (discount) => {
+  const usageLimit = Number(discount?.usageLimit);
+  if (!Number.isInteger(usageLimit) || usageLimit < 0) return "Ilimitado";
+
+  const usedCount = Math.max(0, Number(discount?.usedCount || 0));
+  const remaining = Math.max(0, Number(discount?.remainingQuantity ?? usageLimit - usedCount));
+
+  return `${remaining} disponibles / ${usedCount} usados`;
+};
 
 const isPubliclyLaunched = (pizza) => {
   if (pizza?.status && pizza.status !== "ACTIVE") return false;
@@ -245,6 +256,7 @@ export default function DirectDiscountsPanel({ partnerId }) {
       daysActive,
       windowStart,
       windowEnd,
+      usageLimit: discount.usageLimit == null ? "" : String(discount.usageLimit),
       status: discount.status || "ACTIVE",
     });
   };
@@ -291,6 +303,7 @@ export default function DirectDiscountsPanel({ partnerId }) {
       daysActive: form.isTemporal ? form.daysActive : [],
       windowStart: form.isTemporal ? timeToMinutes(form.windowStart) : "",
       windowEnd: form.isTemporal ? timeToMinutes(form.windowEnd) : "",
+      usageLimit: form.usageLimit === "" ? "" : Number(form.usageLimit),
       status: form.status,
     };
 
@@ -352,6 +365,18 @@ export default function DirectDiscountsPanel({ partnerId }) {
               <option value="PERCENT">Porcentaje</option>
               <option value="FIXED_AMOUNT">Monto fijo</option>
             </select>
+          </label>
+
+          <label className="cp-field">
+            <span>Cantidad disponible</span>
+            <input
+              type="number"
+              min="0"
+              step="1"
+              placeholder="Ilimitado"
+              value={form.usageLimit}
+              onChange={(event) => updateForm("usageLimit", event.target.value)}
+            />
           </label>
         </div>
 
@@ -509,6 +534,7 @@ export default function DirectDiscountsPanel({ partnerId }) {
                 <tr>
                   <th>Nombre</th>
                   <th>Top Deal</th>
+                  <th>Cantidad</th>
                   <th>Productos</th>
                   <th>Tiendas</th>
                   <th>Acciones</th>
@@ -519,6 +545,7 @@ export default function DirectDiscountsPanel({ partnerId }) {
                   <tr key={discount.id}>
                     <td>{discount.title}</td>
                     <td>{formatDiscount(discount)}</td>
+                    <td>{formatTopDealUsage(discount)}</td>
                     <td>
                       {discount.targetType === "PRODUCT"
                         ? `${discount.productIds?.length || 0} productos`
@@ -539,7 +566,7 @@ export default function DirectDiscountsPanel({ partnerId }) {
                 ))}
                 {!discounts.length && (
                   <tr>
-                    <td colSpan="5">No hay Top Deals todavia.</td>
+                    <td colSpan="6">No hay Top Deals todavia.</td>
                   </tr>
                 )}
               </tbody>

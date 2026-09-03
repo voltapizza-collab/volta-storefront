@@ -2031,36 +2031,15 @@ const isRandomSelectionIngredient = (ingredient = {}) => {
   );
 };
 
-const getRandomSelectionCount = (ingredient = {}) => {
-  const canonicalMatch = String(ingredient?.canonicalKey || "").match(
-    /^random_selection_([123])$/
-  );
-  if (canonicalMatch) return Number(canonicalMatch[1]);
-
-  const nameMatch = normalizeIngredientKey(ingredient?.name).match(
-    /^random selection ([123])$/
-  );
-  return nameMatch ? Number(nameMatch[1]) : 0;
-};
-
 const hasRandomSelectionIngredients = (item = {}) =>
   Array.isArray(item?.ingredients) &&
   item.ingredients.some(isRandomSelectionIngredient);
 
 const buildPizzaLine = (item) => {
   if (hasRandomSelectionIngredients(item)) {
-    const parsedCount = item.ingredients.reduce(
-      (total, ingredient) => total + getRandomSelectionCount(ingredient),
-      0
-    );
-    const count =
-      parsedCount ||
-      item.ingredients.filter(isRandomSelectionIngredient).length;
-    const label = count === 1 ? "seleccion sorpresa" : "selecciones sorpresa";
-
     return {
-      line: `Pizza flash con ${count} ${label} segun disponibilidad de cocina.`,
-      closer: "Ingredientes finales variables.",
+      line: "Pizza con ingredientes de random selection.",
+      closer: "",
     };
   }
 
@@ -8234,7 +8213,7 @@ export default function StorePage() {
 
                 {hasRandomSelectionIngredients(selectedProduct) && (
                   <div className="sf-randomSelectionNotice">
-                    Ingredientes sorpresa segun disponibilidad. La cocina define la seleccion final. Si tienes alergias, consulta antes de pedir.
+                    Pizza con ingredientes de random selection. Si tienes alergias, consulta antes de pedir.
                   </div>
                 )}
 

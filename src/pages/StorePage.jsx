@@ -750,14 +750,14 @@ const renderDirectDiscountBadge = (item) => {
   );
 };
 
-const renderTopDealQuantityBadge = (item) => {
+const renderTopDealAvailabilityPill = (item) => {
   const remaining = getTopDealRemainingQuantity(item);
   if (remaining == null) return null;
 
   return (
-    <span className="lsf-topDealQuantityBadge" aria-label={`${remaining} Top Deals disponibles`}>
+    <span className="lsf-topDealAvailabilityPill" aria-label={`${remaining} Top Deals disponibles`}>
       <strong>{remaining}</strong>
-      <small>disp.</small>
+      <span>disp.</span>
     </span>
   );
 };
@@ -6430,6 +6430,8 @@ export default function StorePage() {
   };
 
   const renderProductOfferOverlay = (item, baseSize, { showTrustMeta = false } = {}) => {
+    const availabilityPill = renderTopDealAvailabilityPill(item);
+
     return (
       <div className={`lsf-card__overlay ${showTrustMeta ? "lsf-card__overlay--trust" : ""}`}>
         <div className="lsf-card__ticker">
@@ -6438,11 +6440,18 @@ export default function StorePage() {
           </div>
         </div>
         {showTrustMeta && renderProductApprovalMeta(item)}
-        <div className={`lsf-card__price ${tick ? "is-ticking" : ""}`}>
-          {hasTrendingPolicy(item)
-            ? renderTrendingPrice(item, baseSize, tick)
-            : renderStorefrontPrice(item, baseSize)}
-        </div>
+        {availabilityPill ? (
+          <div className="lsf-card__dealMeta">
+            {renderTopDealPrice(item, baseSize, tick)}
+            {availabilityPill}
+          </div>
+        ) : (
+          <div className={`lsf-card__price ${tick ? "is-ticking" : ""}`}>
+            {hasTrendingPolicy(item)
+              ? renderTrendingPrice(item, baseSize, tick)
+              : renderStorefrontPrice(item, baseSize)}
+          </div>
+        )}
         {showTrustMeta && renderProductGiftAction(item)}
       </div>
     );
@@ -6501,7 +6510,6 @@ export default function StorePage() {
               )}
             </div>
             {renderDirectDiscountBadge(item, incentiveNowMs)}
-            {renderTopDealQuantityBadge(item)}
             {renderTrendingBadge(item)}
             {renderTrendingKpis(item) || renderCategoryDealCountdown(item)}
             {renderProductTags(item)}
@@ -6566,7 +6574,6 @@ export default function StorePage() {
               </div>
 
               <span className="lsf-topDealBadge">Top Deal</span>
-              {renderTopDealQuantityBadge(item)}
               {renderTrendingBadge(item)}
               {renderTrendingKpis(item) || renderOfferRibbon(countdownLabel, "Termina en:", "deal")}
               {renderProductTags(item)}
@@ -6595,7 +6602,10 @@ export default function StorePage() {
                     {item.name}
                   </div>
                 </div>
-                {renderTopDealPrice(item, baseSize, tick)}
+                <div className="lsf-card__dealMeta">
+                  {renderTopDealPrice(item, baseSize, tick)}
+                  {renderTopDealAvailabilityPill(item)}
+                </div>
               </div>
             </div>
 

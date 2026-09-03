@@ -756,6 +756,7 @@ const renderTopDealAvailabilityPill = (item) => {
 
   return (
     <span className="lsf-topDealAvailabilityPill" aria-label={`${remaining} Top Deals disponibles`}>
+      <span>hoy</span>
       <strong>{remaining}</strong>
       <span>disp.</span>
     </span>

@@ -16,7 +16,11 @@ export default function PartnerPage() {
   const isMyCrushLanding = normalizedPartnerSlug === MY_CRUSH_SLUG;
   const partnerSeo = useMemo(() => {
     const seoPartner = isMyCrushLanding
-      ? { name: "MyCrushPizza", slug: MY_CRUSH_SLUG }
+      ? partner || {
+          name: "MyCrushPizza",
+          slug: MY_CRUSH_SLUG,
+          stores: [{ city: "Ourense", active: true }],
+        }
       : partner;
 
     return buildPartnerSeo({ partner: seoPartner, partnerSlug });
@@ -25,7 +29,7 @@ export default function PartnerPage() {
   usePublicSeo(partnerSeo);
 
   useEffect(() => {
-    if (!partnerSlug || isMyCrushLanding) return;
+    if (!partnerSlug) return;
 
     const loadPartner = async () => {
       try {
@@ -33,7 +37,9 @@ export default function PartnerPage() {
         setPartner(data);
       } catch (err) {
         console.error(err);
-        setError("Partner not found");
+        if (!isMyCrushLanding) {
+          setError("Partner not found");
+        }
       }
     };
 

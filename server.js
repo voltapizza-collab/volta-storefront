@@ -61,6 +61,20 @@ const includesText = (source, target) => {
   return Boolean(normalizedSource && normalizedTarget && normalizedSource.includes(normalizedTarget));
 };
 
+const getPartnerPrimaryCity = (partner) => {
+  const stores = Array.isArray(partner?.stores) ? partner.stores : [];
+  const cities = [
+    ...new Set(
+      stores
+        .filter((store) => store?.active !== false)
+        .map((store) => cleanText(store?.city))
+        .filter(Boolean)
+    ),
+  ];
+
+  return cities.length === 1 ? cities[0] : "";
+};
+
 const getApiOrigin = () =>
   cleanText(process.env.VOLTA_API_URL || process.env.REACT_APP_API_URL) || DEFAULT_API_ORIGIN;
 
@@ -116,10 +130,12 @@ const fetchJson = async (apiPath) => {
 
 const buildPartnerSeo = ({ partner, partnerSlug, requestUrl }) => {
   const partnerName = getPartnerName(partner, partnerSlug);
+  const city = getPartnerPrimaryCity(partner);
+  const displayName = city && !includesText(partnerName, city) ? `${partnerName} en ${city}` : partnerName;
   const slug = cleanText(partner?.slug || partnerSlug);
   const canonicalUrl = buildAbsoluteUrl(requestUrl, slug || "/");
-  const title = `${partnerName} | Tienda oficial - Pide pizza ahora`;
-  const description = `Tienda oficial de ${partnerName}. Elige recogida o delivery y pide pizza directamente a la pizzeria.`;
+  const title = `${partnerName} | Tienda oficial${city ? ` en ${city}` : ""}`;
+  const description = `La pizzeria ${displayName}: carta online, pizzas, ofertas, recogida y delivery directo desde su tienda oficial.`;
   const image = cleanText(partner?.brandLogoUrl);
 
   return {
@@ -130,14 +146,14 @@ const buildPartnerSeo = ({ partner, partnerSlug, requestUrl }) => {
     structuredData: {
       "@context": "https://schema.org",
       "@type": "Restaurant",
-      name: partnerName,
+      name: displayName,
       url: canonicalUrl,
       image: image || undefined,
       servesCuisine: "Pizza",
       potentialAction: {
         "@type": "OrderAction",
         target: canonicalUrl,
-        name: `Pide pizza en ${partnerName}`,
+        name: `Pide pizza en ${displayName}`,
       },
     },
   };
@@ -150,7 +166,7 @@ const buildStoreSeo = ({ partner, store, partnerSlug, storeSlug, requestUrl }) =
     .filter(Boolean)
     .join("/");
   const canonicalUrl = buildAbsoluteUrl(requestUrl, slug || "/");
-  const title = `${displayName} | Tienda oficial - Pide pizza ahora`;
+  const title = `${displayName} | Tienda oficial`;
   const city = cleanText(store?.city);
   const storeName = getStoreName(store, storeSlug);
   const deliveryText =
@@ -160,8 +176,8 @@ const buildStoreSeo = ({ partner, store, partnerSlug, storeSlug, requestUrl }) =
         ? "Haz tu pedido a domicilio."
         : "Elige recogida o delivery.";
   const description = city
-    ? `Tienda oficial de ${displayName}: carta online, pizzas y ofertas en ${city}. ${deliveryText}`
-    : `Tienda oficial de ${displayName}: carta online, pizzas y ofertas. ${deliveryText}`;
+    ? `La pizzeria ${displayName}: carta online, pizzas y ofertas en ${city}. ${deliveryText}`
+    : `La pizzeria ${displayName}: carta online, pizzas y ofertas. ${deliveryText}`;
   const image = cleanText(partner?.brandLogoUrl || store?.partner?.brandLogoUrl);
 
   return {
@@ -386,4 +402,3 @@ const server = http.createServer(async (req, res) => {
 server.listen(PORT, () => {
   console.log(`Volta storefront running on port ${PORT}`);
 });
-

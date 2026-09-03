@@ -1,9 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Pizza online">
-  <rect width="64" height="64" rx="14" fill="#fff6df"/>
-  <path d="M18 10c13 1 24 5 34 13L31 56c-6-13-10-28-13-46Z" fill="#ffbf3d" stroke="#8f3d16" stroke-width="3" stroke-linejoin="round"/>
-  <path d="M18 10c13 1 24 5 34 13" fill="none" stroke="#f47b20" stroke-width="7" stroke-linecap="round"/>
-  <circle cx="32" cy="28" r="4" fill="#d62828"/>
-  <circle cx="42" cy="22" r="3.5" fill="#d62828"/>
-  <circle cx="34" cy="42" r="3.5" fill="#d62828"/>
-  <path d="M28 20c2 3 3 7 2 11M40 32c-3 2-6 3-10 3" fill="none" stroke="#fff2a8" stroke-width="3" stroke-linecap="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Volta Pizza">
+  <rect x="3" y="3" width="58" height="58" rx="14" fill="#fff6df"/>
+  <path d="M11 16h13l8 31 8-31h13L40 54H24L11 16Z" fill="#3b008b" stroke="#ffbf2d" stroke-width="3" stroke-linejoin="round"/>
+  <circle cx="39" cy="21" r="8" fill="#ffbf2d" stroke="#3b008b" stroke-width="3"/>
+  <path d="M39 13v16M31 21h16M34 16l10 10M44 16 34 26" fill="none" stroke="#3b008b" stroke-width="1.5" stroke-linecap="round"/>
+  <circle cx="36" cy="19" r="1.2" fill="#3b008b"/>
+  <circle cx="42" cy="24" r="1.2" fill="#3b008b"/>
 </svg>

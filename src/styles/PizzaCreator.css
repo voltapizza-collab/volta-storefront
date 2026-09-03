@@ -544,6 +544,14 @@
   padding: 10px 12px;
 }
 
+.pc-hint--random {
+  color: #263238;
+  background: #eef8f4;
+  border: 1px solid rgba(26, 95, 76, 0.16);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+
 .ingredients-fieldset {
   border: 1px solid rgba(59, 0, 139, 0.1);
   border-radius: 20px;
@@ -578,6 +586,13 @@
   position: relative;
 }
 
+.ing-row--randomSelection {
+  padding: 8px;
+  border: 1px solid rgba(26, 95, 76, 0.22);
+  border-radius: 14px;
+  background: linear-gradient(180deg, #ffffff, #f2fbf7);
+}
+
 .pc-ingredientCell {
   min-width: 0;
   display: grid;
@@ -591,6 +606,23 @@
   gap: 8px;
   min-width: 0;
   align-items: center;
+  position: relative;
+}
+
+.pc-randomSelectionBadge {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 4px 6px;
+  border: none;
+  border-radius: 999px;
+  background: #1a5f4c;
+  color: #ffffff;
+  font-size: 0.62rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  cursor: pointer;
 }
 
 .ing-row select {
@@ -605,6 +637,10 @@
 
 .ing-row select {
   padding: 10px 14px;
+}
+
+.ing-row--randomSelection select {
+  padding-right: 82px;
 }
 
 .pc-sizeQtyGrid {
@@ -698,6 +734,27 @@
 
 .ing-row button:hover {
   transform: translateY(-1px);
+}
+
+.ing-row .pc-randomSelectionBadge,
+.ing-row .pc-randomSelectionBadge:hover {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  width: auto;
+  height: auto;
+  min-width: 0;
+  padding: 4px 6px;
+  border: none;
+  border-radius: 999px;
+  background: #1a5f4c;
+  color: #ffffff;
+  box-shadow: none;
+  font-size: 0.62rem;
+  font-weight: 900;
+  line-height: 1;
+  text-transform: uppercase;
+  transform: translateY(-50%);
 }
 
 .pc-rowAside {
@@ -926,6 +983,10 @@
   box-shadow: 0 30px 60px rgba(59, 0, 139, 0.18);
 }
 
+.pc-modal__panel--small {
+  width: min(420px, 100%);
+}
+
 .pc-modal__head {
   display: flex;
   justify-content: space-between;
@@ -954,6 +1015,34 @@
   padding: 14px;
   overflow: auto;
   max-height: calc(85vh - 70px);
+}
+
+.pc-randomSelectionModal {
+  display: grid;
+  gap: 16px;
+}
+
+.pc-randomSelectionModal label {
+  display: grid;
+  gap: 8px;
+  color: var(--brand-1);
+  font-weight: 900;
+}
+
+.pc-randomSelectionModal select {
+  min-height: 46px;
+  padding: 10px 12px;
+  border: 1px solid rgba(59, 0, 139, 0.14);
+  border-radius: 14px;
+  background: #fff;
+  color: var(--black);
+  font-weight: 900;
+}
+
+.pc-randomSelectionActions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
 }
 
 .pc-modalListWrap {
@@ -1068,6 +1157,12 @@
 
 .pc-ingredientBadge.inactive {
   color: #d83d2f;
+}
+
+.pc-ingredientBadge--random {
+  border-color: rgba(26, 95, 76, 0.28);
+  background: #eef8f4;
+  color: #1a5f4c;
 }
 
 .pc-modalActions {

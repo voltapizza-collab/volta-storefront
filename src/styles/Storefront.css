@@ -5335,6 +5335,17 @@
   transform: rotate(-1deg);
 }
 
+.sf-randomSelectionNotice {
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(26, 95, 76, 0.18);
+  background: #eef8f4;
+  color: #1a5f4c;
+  font-size: 0.86rem;
+  font-weight: 850;
+  line-height: 1.35;
+}
+
 .sf-allergenAlert {
   position: relative;
   display: flex;

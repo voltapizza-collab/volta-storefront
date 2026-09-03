@@ -1,5 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Volta Pizza">
-  <rect width="64" height="64" rx="14" fill="#ffb61c"/>
-  <path d="M14 13h14l8 30 9-30h14L42 53H29L14 13Z" fill="#6a3df0"/>
-  <path d="M18 13h8l8 30 9-30h8" fill="none" stroke="#3b008b" stroke-width="3" stroke-linejoin="round" opacity=".5"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Pizza online">
+  <rect width="64" height="64" rx="14" fill="#fff6df"/>
+  <path d="M18 10c13 1 24 5 34 13L31 56c-6-13-10-28-13-46Z" fill="#ffbf3d" stroke="#8f3d16" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M18 10c13 1 24 5 34 13" fill="none" stroke="#f47b20" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="32" cy="28" r="4" fill="#d62828"/>
+  <circle cx="42" cy="22" r="3.5" fill="#d62828"/>
+  <circle cx="34" cy="42" r="3.5" fill="#d62828"/>
+  <path d="M28 20c2 3 3 7 2 11M40 32c-3 2-6 3-10 3" fill="none" stroke="#fff2a8" stroke-width="3" stroke-linecap="round"/>
 </svg>

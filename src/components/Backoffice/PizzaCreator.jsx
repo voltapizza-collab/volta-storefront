@@ -16,8 +16,9 @@ const PRODUCT_TAG_OPTIONS = [
   { value: "spicy", labelKey: "tag.spicy" },
   { value: "vegan", labelKey: "tag.vegan" },
 ];
+const RANDOM_SELECTION_OPTION_ID = "__random_selection__";
 
-function Modal({ open, title, onClose, children }) {
+function Modal({ open, title, onClose, children, panelClassName = "" }) {
   if (!open) return null;
 
   return ReactDOM.createPortal(
@@ -28,7 +29,7 @@ function Modal({ open, title, onClose, children }) {
       onMouseDown={onClose}
     >
       <div
-        className="pc-modal__panel"
+        className={`pc-modal__panel ${panelClassName}`}
         onMouseDown={(e) => e.stopPropagation()}
       >
         <div className="pc-modal__head">
@@ -127,6 +128,11 @@ const toDateTimeLocalValue = (value) => {
 };
 
 const SUPPORTED_CREATOR_LOCALES = new Set(["en", "es", "it", "fr", "pt"]);
+const RANDOM_SELECTION_CANONICAL_KEYS = new Set([
+  "random_selection_1",
+  "random_selection_2",
+  "random_selection_3",
+]);
 
 const normalizeCreatorLocale = (value) => {
   const locale = String(value || "").trim().toLowerCase().slice(0, 2);
@@ -155,11 +161,16 @@ const PC_COPY = {
     "section.buildPizza": "Build your pizza",
     "hint.selectSize": "Select at least one size before setting quantities.",
     "hint.activeIngredients": "Only active ingredients from this store inventory/onboarding are shown.",
+    "hint.randomSelection": "Random selection placeholders let the store choose the final surplus ingredients during production.",
     "state.loadingIngredients": "Loading ingredients...",
     "hint.reloadBeforeSave": "Do not save the product until the module is reloaded.",
     "field.ingredient": "- ingredient -",
     "allergen.none": "No declared allergen",
     "action.addIngredient": "+ Add ingredient",
+    "modal.randomTitle": "Random selection",
+    "field.randomSelectionCount": "Choose how many random selections this pizza will use",
+    "action.apply": "Apply",
+    "action.cancel": "Cancel",
     "image.current": "Current image",
     "image.change": "Change image",
     "image.add": "Add product image",
@@ -180,6 +191,8 @@ const PC_COPY = {
     "modal.noCategoryProducts": "There are no products in this category.",
     "alert.waitIngredients": "Wait until ingredients are loaded before changing the recipe.",
     "alert.duplicateIngredient": "This ingredient is already in the recipe.",
+    "alert.randomSelectionDuplicate": "Random selection is already in the recipe. Change the quantity on that row.",
+    "alert.randomSelectionUnavailable": "Random selection is not loaded yet. Reload the module and try again.",
     "alert.missingPartner": "Missing partner context.",
     "alert.missingStore": "No active store. Reload Backoffice before saving products.",
     "alert.missingCategory": "Select a category.",
@@ -212,11 +225,16 @@ const PC_COPY = {
     "section.buildPizza": "Arma tu pizza",
     "hint.selectSize": "Selecciona al menos un tamano para poder poner cantidades.",
     "hint.activeIngredients": "Solo aparecen ingredientes activos del inventario/onboarding de esta tienda.",
+    "hint.randomSelection": "Random selection permite que la tienda decida los ingredientes finales de excedente durante produccion.",
     "state.loadingIngredients": "Cargando ingredientes...",
     "hint.reloadBeforeSave": "No guardes el producto hasta recargar el modulo.",
     "field.ingredient": "- ingrediente -",
     "allergen.none": "Sin alergeno declarado",
     "action.addIngredient": "+ Anadir ingrediente",
+    "modal.randomTitle": "Random selection",
+    "field.randomSelectionCount": "Escoge la cantidad de random selection que se usara en esta pizza",
+    "action.apply": "Aplicar",
+    "action.cancel": "Cancelar",
     "image.current": "Imagen actual",
     "image.change": "Cambiar imagen",
     "image.add": "Agrega la imagen del producto",
@@ -237,6 +255,8 @@ const PC_COPY = {
     "modal.noCategoryProducts": "No hay productos en esta categoria.",
     "alert.waitIngredients": "Espera a que carguen los ingredientes antes de modificar la receta.",
     "alert.duplicateIngredient": "Este ingrediente ya esta en la receta.",
+    "alert.randomSelectionDuplicate": "Random selection ya esta en la receta. Cambia la cantidad en esa fila.",
+    "alert.randomSelectionUnavailable": "Random selection aun no esta cargado. Recarga el modulo e intenta de nuevo.",
     "alert.missingPartner": "Missing partner context.",
     "alert.missingStore": "No hay tienda activa. Recarga el Backoffice antes de guardar productos.",
     "alert.missingCategory": "Select a category.",
@@ -259,13 +279,44 @@ const translateCreator = (locale, key, values = {}) => {
   );
 };
 
+const getRandomSelectionCount = (ingredient = {}) => {
+  const match = String(ingredient.canonicalKey || "").match(
+    /^random_selection_([123])$/
+  );
+
+  return match ? Number(match[1]) : 0;
+};
+
 const getIngredientDisplayName = (ingredient = {}) =>
-  String(
+  ingredient.id === RANDOM_SELECTION_OPTION_ID
+    ? ingredient.displayName || "★ Random selection"
+    : isRandomSelectionIngredient(ingredient)
+    ? `★ Random selection ${getRandomSelectionCount(ingredient) || ""}`.trim()
+    : String(
     ingredient.displayName ||
       ingredient.semanticMapping?.globalIngredient?.displayName ||
       ingredient.name ||
       ""
   ).trim();
+
+const isRandomSelectionIngredient = (ingredient = {}) =>
+  RANDOM_SELECTION_CANONICAL_KEYS.has(String(ingredient.canonicalKey || ""));
+
+const isRandomSelectionOption = (ingredient = {}) =>
+  ingredient.id === RANDOM_SELECTION_OPTION_ID || isRandomSelectionIngredient(ingredient);
+
+const compareIngredientOptions = (locale) => (a, b) => {
+  const aRandom = isRandomSelectionOption(a);
+  const bRandom = isRandomSelectionOption(b);
+
+  if (aRandom !== bRandom) return aRandom ? -1 : 1;
+
+  return getIngredientDisplayName(a).localeCompare(
+    getIngredientDisplayName(b),
+    locale,
+    { sensitivity: "base" }
+  );
+};
 
 export default function PizzaCreator({ partner, language = "es" }) {
   const partnerId = partner?.partnerId;
@@ -296,6 +347,7 @@ export default function PizzaCreator({ partner, language = "es" }) {
   const [inventoryLoadError, setInventoryLoadError] = useState("");
   const [savingProduct, setSavingProduct] = useState(false);
   const [originalIngredientIds, setOriginalIngredientIds] = useState([]);
+  const [randomSelectionModal, setRandomSelectionModal] = useState(null);
   const ingredientsListRef = useRef(null);
   const shouldFocusNewIngredientRef = useRef(false);
 
@@ -498,6 +550,7 @@ export default function PizzaCreator({ partner, language = "es" }) {
       ingredients: (pizza.ingredients || []).map((i) => ({
         id: i.id,
         name: i.name,
+        canonicalKey: i.canonicalKey || null,
         qtyBySize: i.qtyBySize || {},
       })),
     });
@@ -653,10 +706,35 @@ export default function PizzaCreator({ partner, language = "es" }) {
   };
 
   const onIngredientSelect = (i, id) => {
+    if (id === RANDOM_SELECTION_OPTION_ID) {
+      const hasRandomSelectionElsewhere = form.ingredients.some(
+        (row, idx) => idx !== i && isRandomSelectionIngredient(row)
+      );
+
+      if (hasRandomSelectionElsewhere) {
+        alert(t("alert.randomSelectionDuplicate"));
+        return;
+      }
+
+      const currentCount =
+        getRandomSelectionCount(form.ingredients[i]) || 1;
+      setRandomSelectionModal({
+        rowIndex: i,
+        count: String(currentCount),
+      });
+      return;
+    }
+
     if (!id) {
       setForm((p) => {
         const ing = [...p.ingredients];
-        ing[i] = { ...ing[i], id: "", name: "" };
+        ing[i] = {
+          ...ing[i],
+          id: "",
+          name: "",
+          canonicalKey: null,
+          displayName: "",
+        };
         return { ...p, ingredients: ing };
       });
       return;
@@ -681,10 +759,38 @@ export default function PizzaCreator({ partner, language = "es" }) {
         ...ing[i],
         id: row.id,
         name: row.name,
+        canonicalKey: row.canonicalKey || null,
         displayName: getIngredientDisplayName(row),
       };
       return { ...p, ingredients: ing };
     });
+  };
+
+  const confirmRandomSelection = () => {
+    const rowIndex = Number(randomSelectionModal?.rowIndex);
+    const count = Number(randomSelectionModal?.count || 1);
+    const row = randomSelectionByCount.get(count);
+
+    if (!row) {
+      alert(t("alert.randomSelectionUnavailable"));
+      return;
+    }
+
+    setForm((p) => {
+      const ing = [...p.ingredients];
+      if (!ing[rowIndex]) return p;
+
+      ing[rowIndex] = {
+        ...ing[rowIndex],
+        id: row.id,
+        name: row.name,
+        canonicalKey: row.canonicalKey || null,
+        displayName: getIngredientDisplayName(row),
+      };
+
+      return { ...p, ingredients: ing };
+    });
+    setRandomSelectionModal(null);
   };
 
   const onQtyChange = (i, sz, val) =>
@@ -904,15 +1010,35 @@ export default function PizzaCreator({ partner, language = "es" }) {
     [inventory]
   );
 
+  const randomSelectionByCount = useMemo(() => {
+    const rows = new Map();
+
+    inventory.forEach((item) => {
+      const count = getRandomSelectionCount(item);
+      if (count) rows.set(count, item);
+    });
+
+    return rows;
+  }, [inventory]);
+
+  const randomSelectionOption = useMemo(() => {
+    const ready = [1, 2, 3].every((count) => randomSelectionByCount.has(count));
+
+    return ready
+      ? {
+          id: RANDOM_SELECTION_OPTION_ID,
+          name: "Random selection",
+          displayName: "★ Random selection",
+          isRandomSelectionVirtual: true,
+        }
+      : null;
+  }, [randomSelectionByCount]);
+
   const sortedInventory = useMemo(
     () =>
-      [...inventory].sort((a, b) =>
-        getIngredientDisplayName(a).localeCompare(
-          getIngredientDisplayName(b),
-          activeLocale,
-          { sensitivity: "base" }
-        )
-      ),
+      [...inventory]
+        .filter((item) => !isRandomSelectionIngredient(item))
+        .sort(compareIngredientOptions(activeLocale)),
     [activeLocale, inventory]
   );
 
@@ -927,17 +1053,24 @@ export default function PizzaCreator({ partner, language = "es" }) {
         (row) =>
           Number.isInteger(row.id) &&
           row.id > 0 &&
+          !isRandomSelectionIngredient(row) &&
           !inventoryById.has(row.id)
       );
 
-    return [...sortedInventory, ...missingSelected].sort((a, b) =>
-      getIngredientDisplayName(a).localeCompare(
-        getIngredientDisplayName(b),
-        activeLocale,
-        { sensitivity: "base" }
-      )
+    const visibleOptions = randomSelectionOption
+      ? [randomSelectionOption, ...sortedInventory, ...missingSelected]
+      : [...sortedInventory, ...missingSelected];
+
+    return visibleOptions.sort(
+      compareIngredientOptions(activeLocale)
     );
-  }, [activeLocale, form.ingredients, inventoryById, sortedInventory]);
+  }, [
+    activeLocale,
+    form.ingredients,
+    inventoryById,
+    randomSelectionOption,
+    sortedInventory,
+  ]);
 
   const selectedIngredientIds = useMemo(
     () =>
@@ -1128,6 +1261,9 @@ export default function PizzaCreator({ partner, language = "es" }) {
               <div className="pc-hint">
                 {t("hint.activeIngredients")}
               </div>
+              <div className="pc-hint pc-hint--random">
+                {t("hint.randomSelection")}
+              </div>
               {loadingInventory && (
                 <div className="pc-hint">{t("state.loadingIngredients")}</div>
               )}
@@ -1142,6 +1278,12 @@ export default function PizzaCreator({ partner, language = "es" }) {
                   {form.ingredients.map((row, i) => {
                     const currentIngredientId = Number(row.id);
                     const ingredientMeta = inventoryById.get(currentIngredientId);
+                    const isRandomSelection =
+                      isRandomSelectionIngredient(ingredientMeta) ||
+                      isRandomSelectionIngredient(row);
+                    const randomSelectionCount =
+                      getRandomSelectionCount(ingredientMeta) ||
+                      getRandomSelectionCount(row);
                     const allergenSummary = getAllergenSummary(
                       ingredientMeta?.allergens
                     );
@@ -1149,17 +1291,38 @@ export default function PizzaCreator({ partner, language = "es" }) {
                       Array.isArray(ingredientMeta?.allergens) &&
                       ingredientMeta.allergens.length > 0;
                     const rowIngredientOptions = ingredientOptions.filter(
-                      (item) =>
-                        item.id === currentIngredientId ||
-                        !selectedIngredientIds.has(item.id)
+                      (item) => {
+                        if (item.id === RANDOM_SELECTION_OPTION_ID) {
+                          const hasRandomSelectionElsewhere = form.ingredients.some(
+                            (ingredient, idx) =>
+                              idx !== i && isRandomSelectionIngredient(ingredient)
+                          );
+
+                          return isRandomSelection || !hasRandomSelectionElsewhere;
+                        }
+
+                        return (
+                          item.id === currentIngredientId ||
+                          !selectedIngredientIds.has(item.id)
+                        );
+                      }
                     );
 
                     return (
-                    <div key={i} className="ing-row">
+                    <div
+                      key={i}
+                      className={`ing-row ${
+                        isRandomSelection ? "ing-row--randomSelection" : ""
+                      }`}
+                    >
                       <div className="pc-ingredientCell">
                         <div className="pc-ingredientPicker">
                           <select
-                            value={row.id}
+                            value={
+                              isRandomSelection
+                                ? RANDOM_SELECTION_OPTION_ID
+                                : row.id
+                            }
                             onChange={(e) => onIngredientSelect(i, e.target.value)}
                           >
                             <option value="">{t("field.ingredient")}</option>
@@ -1169,6 +1332,20 @@ export default function PizzaCreator({ partner, language = "es" }) {
                               </option>
                               ))}
                           </select>
+                          {isRandomSelection && (
+                            <button
+                              type="button"
+                              className="pc-randomSelectionBadge"
+                              onClick={() =>
+                                setRandomSelectionModal({
+                                  rowIndex: i,
+                                  count: String(randomSelectionCount || 1),
+                                })
+                              }
+                            >
+                              {randomSelectionCount || 1} random
+                            </button>
+                          )}
 
                         </div>
                       </div>
@@ -1342,6 +1519,50 @@ export default function PizzaCreator({ partner, language = "es" }) {
       </div>
 
       <Modal
+        open={!!randomSelectionModal}
+        title={t("modal.randomTitle")}
+        onClose={() => setRandomSelectionModal(null)}
+        panelClassName="pc-modal__panel--small"
+      >
+        <div className="pc-randomSelectionModal">
+          <label>
+            {t("field.randomSelectionCount")}
+            <select
+              value={randomSelectionModal?.count || "1"}
+              onChange={(event) =>
+                setRandomSelectionModal((current) =>
+                  current
+                    ? { ...current, count: event.target.value }
+                    : current
+                )
+              }
+            >
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+            </select>
+          </label>
+
+          <div className="pc-randomSelectionActions">
+            <button
+              type="button"
+              className="pc-cancelBtn"
+              onClick={() => setRandomSelectionModal(null)}
+            >
+              {t("action.cancel")}
+            </button>
+            <button
+              type="button"
+              className="save-btn"
+              onClick={confirmRandomSelection}
+            >
+              {t("action.apply")}
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
         open={!!openCat}
         title={
           openCat
@@ -1441,6 +1662,10 @@ export default function PizzaCreator({ partner, language = "es" }) {
                                     title={visibleIngredient}
                                     className={`pc-ingredientBadge ${
                                       ing.status === "INACTIVE" ? "inactive" : ""
+                                    } ${
+                                      isRandomSelectionIngredient(ing)
+                                        ? "pc-ingredientBadge--random"
+                                        : ""
                                     }`}
                                   >
                                     {visibleIngredient}

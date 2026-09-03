@@ -14,6 +14,7 @@ import {
   normalizeStorefrontButtonConfig,
   normalizeStorefrontMode,
 } from "../constants/storefrontButtons";
+import { buildStorefrontSeo, usePublicSeo } from "../utils/seo";
 
 const TRENDING_TAB = "__TRENDING__";
 const TOP_DEAL_TAB = "__TOP_DEAL__";
@@ -38,6 +39,11 @@ const PRODUCT_TAG_LABELS = {
   spicy: "Picante",
   vegan: "Vegano",
 };
+const RANDOM_SELECTION_CANONICAL_KEYS = new Set([
+  "random_selection_1",
+  "random_selection_2",
+  "random_selection_3",
+]);
 const isGridFocusViewport = () =>
   typeof window !== "undefined" && window.innerWidth <= 760;
 
@@ -1965,7 +1971,58 @@ const buildCustomIngredientDetail = (ingredient) => {
   };
 };
 
+const normalizeIngredientKey = (value = "") =>
+  String(value || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+const isRandomSelectionIngredient = (ingredient = {}) => {
+  const canonicalKey = String(ingredient?.canonicalKey || "");
+  if (RANDOM_SELECTION_CANONICAL_KEYS.has(canonicalKey)) return true;
+
+  return /^random selection [123]$/.test(
+    normalizeIngredientKey(ingredient?.name)
+  );
+};
+
+const getRandomSelectionCount = (ingredient = {}) => {
+  const canonicalMatch = String(ingredient?.canonicalKey || "").match(
+    /^random_selection_([123])$/
+  );
+  if (canonicalMatch) return Number(canonicalMatch[1]);
+
+  const nameMatch = normalizeIngredientKey(ingredient?.name).match(
+    /^random selection ([123])$/
+  );
+  return nameMatch ? Number(nameMatch[1]) : 0;
+};
+
+const hasRandomSelectionIngredients = (item = {}) =>
+  Array.isArray(item?.ingredients) &&
+  item.ingredients.some(isRandomSelectionIngredient);
+
 const buildPizzaLine = (item) => {
+  if (hasRandomSelectionIngredients(item)) {
+    const parsedCount = item.ingredients.reduce(
+      (total, ingredient) => total + getRandomSelectionCount(ingredient),
+      0
+    );
+    const count =
+      parsedCount ||
+      item.ingredients.filter(isRandomSelectionIngredient).length;
+    const label = count === 1 ? "seleccion sorpresa" : "selecciones sorpresa";
+
+    return {
+      line: `Pizza flash con ${count} ${label} segun disponibilidad de cocina.`,
+      closer: "Ingredientes finales variables.",
+    };
+  }
+
   const ingredients = Array.isArray(item?.ingredients)
     ? item.ingredients.map((ingredient) => capWords(ingredient?.name)).filter(Boolean)
     : [];
@@ -2574,6 +2631,12 @@ export default function StorePage() {
       cashConfirmationOpen ||
       (portalReady && !termsAccepted)
   );
+  const storefrontSeo = useMemo(
+    () => buildStorefrontSeo({ partner, store, partnerSlug, storeSlug }),
+    [partner, partnerSlug, store, storeSlug]
+  );
+
+  usePublicSeo(storefrontSeo);
 
   const resetMobileInputViewport = useCallback((input, { resetGridStage = false } = {}) => {
     input?.blur?.();
@@ -8079,6 +8142,12 @@ export default function StorePage() {
                     );
                   })()}
                 </div>
+
+                {hasRandomSelectionIngredients(selectedProduct) && (
+                  <div className="sf-randomSelectionNotice">
+                    Ingredientes sorpresa segun disponibilidad. La cocina define la seleccion final. Si tienes alergias, consulta antes de pedir.
+                  </div>
+                )}
 
                 {renderAllergenNotice(selectedPurchaseAllergens)}
                 {renderProductTagNotice(selectedProduct.productTags)}

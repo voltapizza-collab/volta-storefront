@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import myCrushLogo from "../assets/logo/mycrushpizza-say-no-more-transparent.png";
 import api from "../services/api";
 import "../styles/Storefront.css";
+import { buildPartnerSeo, usePublicSeo } from "../utils/seo";
 
 const MY_CRUSH_SLUG = "mycrushpizza";
 
@@ -13,6 +14,15 @@ export default function PartnerPage() {
   const [error, setError] = useState("");
   const normalizedPartnerSlug = String(partnerSlug || "").toLowerCase();
   const isMyCrushLanding = normalizedPartnerSlug === MY_CRUSH_SLUG;
+  const partnerSeo = useMemo(() => {
+    const seoPartner = isMyCrushLanding
+      ? { name: "MyCrushPizza", slug: MY_CRUSH_SLUG }
+      : partner;
+
+    return buildPartnerSeo({ partner: seoPartner, partnerSlug });
+  }, [isMyCrushLanding, partner, partnerSlug]);
+
+  usePublicSeo(partnerSeo);
 
   useEffect(() => {
     if (!partnerSlug || isMyCrushLanding) return;

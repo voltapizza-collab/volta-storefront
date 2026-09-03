@@ -4,6 +4,7 @@ import OrderPortalTransition from "../components/Storefront/OrderPortalTransitio
 import { ReactComponent as PizzaBg } from "../assets/logo/pizza.svg";
 import api from "../services/api";
 import "../styles/Storefront.css";
+import { buildPartnerSeo, usePublicSeo } from "../utils/seo";
 
 const GOOGLE_KEY = process.env.REACT_APP_GOOGLE_KEY || "";
 const GOOGLE_PLACES_SCRIPT_ID = "volta-google-places-script";
@@ -90,6 +91,12 @@ export default function PartnerOrderPage() {
   const addressInputRef = useRef(null);
   const addressLine2InputRef = useRef(null);
   const autocompleteRef = useRef(null);
+  const partnerSeo = useMemo(
+    () => buildPartnerSeo({ partner, partnerSlug }),
+    [partner, partnerSlug]
+  );
+
+  usePublicSeo(partnerSeo);
 
   useEffect(() => {
     setPortalReady(false);

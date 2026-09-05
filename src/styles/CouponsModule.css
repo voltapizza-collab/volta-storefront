@@ -633,6 +633,32 @@
   border: 1px solid rgba(59, 0, 139, 0.08);
 }
 
+.cp-directBuilderHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.cp-todayDealModal {
+  display: grid;
+  gap: 18px;
+  width: min(480px, 100%);
+}
+
+.cp-todayDealCurrent {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  min-height: 32px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(255, 182, 28, 0.18);
+  color: #23163b;
+  font-size: 0.88rem;
+  font-weight: 900;
+}
+
 .cp-gameNest {
   display: grid;
   gap: 12px;
@@ -1371,7 +1397,8 @@
   .cp-head,
   .cp-actions,
   .cp-incentivesHeader,
-  .cp-qrModalHead {
+  .cp-qrModalHead,
+  .cp-directBuilderHead {
     flex-direction: column;
     align-items: stretch;
   }

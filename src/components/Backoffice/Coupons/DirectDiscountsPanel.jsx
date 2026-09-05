@@ -12,7 +12,7 @@ const WEEK_DAYS = [
   { value: "domingo", label: "Dom", number: 0 },
 ];
 
-const initialForm = {
+const createInitialForm = () => ({
   title: "",
   discountType: "PERCENT",
   value: "",
@@ -28,8 +28,67 @@ const initialForm = {
   windowStart: "",
   windowEnd: "",
   usageLimit: "",
+  dailyOverrides: [],
   status: "ACTIVE",
+});
+
+const initialForm = createInitialForm();
+
+const getTodayWeekDay = () =>
+  WEEK_DAYS.find((day) => day.number === new Date().getDay()) || WEEK_DAYS[0];
+
+const getLocalDateKey = (date = new Date()) =>
+  `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(
+    date.getDate()
+  ).padStart(2, "0")}`;
+
+const normalizeDailyOverridesForm = (dailyOverrides) => {
+  const list = Array.isArray(dailyOverrides) ? dailyOverrides : [];
+
+  return list
+    .map((override) => {
+      const usageLimit = Number(override?.usageLimit);
+      if (!Number.isInteger(usageLimit) || usageLimit < 0) return null;
+
+      const date = String(override?.date || "").trim();
+      if (/^\d{4}-\d{2}-\d{2}$/.test(date)) return { date, usageLimit };
+
+      const dayOfWeek = Number(override?.dayOfWeek);
+      if (Number.isInteger(dayOfWeek) && dayOfWeek >= 0 && dayOfWeek <= 6) {
+        return { dayOfWeek, usageLimit };
+      }
+
+      return null;
+    })
+    .filter(Boolean);
 };
+
+const getTodayOverride = (dailyOverrides, reference = new Date()) => {
+  const dateKey = getLocalDateKey(reference);
+  const dayOfWeek = reference.getDay();
+  const overrides = normalizeDailyOverridesForm(dailyOverrides);
+
+  return (
+    overrides.find((override) => override.date === dateKey) ||
+    overrides.find((override) => !override.date && override.dayOfWeek === dayOfWeek) ||
+    null
+  );
+};
+
+const upsertTodayOverride = (dailyOverrides, usageLimit, reference = new Date()) => {
+  const dateKey = getLocalDateKey(reference);
+  const dayOfWeek = reference.getDay();
+  const nextLimit = usageLimit === "" ? null : Number(usageLimit);
+  const rest = normalizeDailyOverridesForm(dailyOverrides).filter(
+    (override) => override.date !== dateKey && !(override.dayOfWeek === dayOfWeek && !override.date)
+  );
+
+  if (!Number.isInteger(nextLimit) || nextLimit < 0) return rest;
+
+  return [...rest, { date: dateKey, usageLimit: nextLimit }];
+};
+
+const buildDailyOverridesPayload = (form) => normalizeDailyOverridesForm(form.dailyOverrides);
 
 const toDateTimeLocalValue = (value) => {
   if (!value) return "";
@@ -53,19 +112,33 @@ const minutesToTime = (value) => {
   return `${String(Math.floor(minutes / 60)).padStart(2, "0")}:${String(minutes % 60).padStart(2, "0")}`;
 };
 
-const formatDiscount = (discount) =>
-  discount.discountType === "PERCENT"
-    ? `${Number(discount.value || 0).toFixed(0)}%`
-    : `EUR ${Number(discount.value || 0).toFixed(2)}`;
+const formatDiscountValue = (discountType, value) =>
+  discountType === "PERCENT"
+    ? `${Number(value || 0).toFixed(0)}%`
+    : `EUR ${Number(value || 0).toFixed(2)}`;
+
+const formatTopDealValue = (discount) => {
+  const baseValue = Number(discount?.baseValue ?? discount?.value ?? 0);
+  const effectiveValue = Number(discount?.effectiveValue ?? baseValue);
+  const current = formatDiscountValue(discount.discountType, effectiveValue);
+
+  if (Number.isFinite(baseValue) && Number.isFinite(effectiveValue) && baseValue !== effectiveValue) {
+    return `${current} hoy / ${formatDiscountValue(discount.discountType, baseValue)} base`;
+  }
+
+  return current;
+};
 
 const formatTopDealUsage = (discount) => {
-  const usageLimit = Number(discount?.usageLimit);
+  const isDaily = discount?.usageLimitScope === "DAILY";
+  const usageLimit = Number(isDaily ? discount?.todayUsageLimit ?? discount?.usageLimit : discount?.usageLimit);
   if (!Number.isInteger(usageLimit) || usageLimit < 0) return "Ilimitado";
 
   const usedCount = Math.max(0, Number(discount?.usedCount || 0));
   const remaining = Math.max(0, Number(discount?.remainingQuantity ?? usageLimit - usedCount));
+  const suffix = isDaily ? " hoy" : "";
 
-  return `${remaining} disponibles / ${usedCount} usados`;
+  return `${remaining} disponibles${suffix} / ${usedCount} usados${suffix}`;
 };
 
 const isPubliclyLaunched = (pizza) => {
@@ -94,6 +167,7 @@ export default function DirectDiscountsPanel({ partnerId }) {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
   const [storesTouched, setStoresTouched] = useState(false);
+  const [todayModal, setTodayModal] = useState(null);
 
   const loadAll = useCallback(async () => {
     if (!partnerId) return;
@@ -222,9 +296,124 @@ export default function DirectDiscountsPanel({ partnerId }) {
   }, [allStoreIds, editingId, storesTouched]);
 
   const resetForm = () => {
-    setForm(initialForm);
+    setForm(createInitialForm());
     setEditingId(null);
     setStoresTouched(false);
+  };
+
+  const getTodayLimitInfo = (source) => {
+    const override = getTodayOverride(source?.dailyOverrides);
+    const fallback = source?.globalUsageLimit ?? source?.usageLimit;
+    const value = override?.usageLimit ?? fallback;
+
+    if (override?.usageLimit != null) {
+      return { value: String(override.usageLimit), source: "today" };
+    }
+
+    if (fallback != null && fallback !== "") {
+      return { value: String(fallback), source: "base" };
+    }
+
+    return { value: "", source: "unlimited" };
+  };
+
+  const formatTodayLimitInfo = (limitInfo) => {
+    if (!limitInfo?.value) return "Hoy: ilimitado";
+
+    const parsed = Number(limitInfo.value);
+    const unitLabel = parsed === 1 ? "disponible" : "disponibles";
+    const suffix = limitInfo.source === "base" ? " base" : "";
+
+    return `Hoy: ${parsed} ${unitLabel}${suffix}`;
+  };
+
+  const openTodayModalForDiscount = (discount) => {
+    const limitInfo = getTodayLimitInfo(discount);
+
+    setTodayModal({
+      discount,
+      title: discount.title || "Top Deal",
+      usageLimit: limitInfo.value,
+      limitSource: limitInfo.source,
+      saving: false,
+      message: "",
+    });
+  };
+
+  const closeTodayModal = () => {
+    if (todayModal?.saving) return;
+    setTodayModal(null);
+  };
+
+  const updateTodayModalLimit = (value) => {
+    setTodayModal((current) =>
+      current ? { ...current, usageLimit: value, limitSource: "today", message: "" } : current
+    );
+  };
+
+  const buildDiscountPayload = (discount, dailyOverrides) => ({
+    partnerId,
+    title: discount.title || "",
+    discountType: discount.discountType || "PERCENT",
+    value: Number(discount.baseValue ?? discount.value ?? 0),
+    targetType: discount.targetType || "CATEGORY",
+    productIds: Array.isArray(discount.productIds) ? discount.productIds : [],
+    categoryIds: Array.isArray(discount.categoryIds) ? discount.categoryIds : [],
+    categoryNames: Array.isArray(discount.categoryNames) ? discount.categoryNames : [],
+    storeIds:
+      Array.isArray(discount.storeIds) && discount.storeIds.length
+        ? discount.storeIds
+        : allStoreIds,
+    activeFrom: discount.activeFrom || "",
+    expiresAt: discount.expiresAt || "",
+    daysActive: Array.isArray(discount.daysActive) ? discount.daysActive : [],
+    windowStart: discount.windowStart == null ? "" : discount.windowStart,
+    windowEnd: discount.windowEnd == null ? "" : discount.windowEnd,
+    usageLimit:
+      (discount.globalUsageLimit ?? discount.usageLimit) == null
+        ? ""
+        : Number(discount.globalUsageLimit ?? discount.usageLimit),
+    dailyOverrides,
+    status: discount.status || "ACTIVE",
+  });
+
+  const saveTodayModal = async () => {
+    if (!todayModal) return;
+
+    const value = String(todayModal.usageLimit ?? "").trim();
+    if (value !== "") {
+      const parsed = Number(value);
+      if (!Number.isInteger(parsed) || parsed < 0) {
+        setTodayModal((current) =>
+          current ? { ...current, message: "Ingresa una cantidad valida para hoy." } : current
+        );
+        return;
+      }
+    }
+
+    const dailyOverrides = upsertTodayOverride(todayModal.discount?.dailyOverrides, value);
+
+    try {
+      setTodayModal((current) => (current ? { ...current, saving: true, message: "" } : current));
+      await api.put(
+        `/api/direct-discounts/${todayModal.discount.id}`,
+        buildDiscountPayload(todayModal.discount, dailyOverrides)
+      );
+      setMessage("Cantidad de hoy actualizada.");
+      setTodayModal(null);
+      loadAll();
+    } catch (error) {
+      console.error(error);
+      setTodayModal((current) =>
+        current
+          ? {
+              ...current,
+              saving: false,
+              message: error.response?.data?.error || "No se pudo guardar la cantidad de hoy.",
+            }
+          : current
+      );
+    }
   };
 
   const editDiscount = (discount) => {
@@ -241,7 +430,7 @@ export default function DirectDiscountsPanel({ partnerId }) {
     setForm({
       title: discount.title || "",
       discountType: discount.discountType || "PERCENT",
-      value: discount.value || "",
+      value: discount.baseValue ?? discount.value ?? "",
       targetType: discount.targetType || "CATEGORY",
       productIds: Array.isArray(discount.productIds) ? discount.productIds : [],
       categoryIds: Array.isArray(discount.categoryIds) ? discount.categoryIds : [],
@@ -256,7 +445,11 @@ export default function DirectDiscountsPanel({ partnerId }) {
       daysActive,
       windowStart,
       windowEnd,
-      usageLimit: discount.usageLimit == null ? "" : String(discount.usageLimit),
+      usageLimit:
+        (discount.globalUsageLimit ?? discount.usageLimit) == null
+          ? ""
+          : String(discount.globalUsageLimit ?? discount.usageLimit),
+      dailyOverrides: normalizeDailyOverridesForm(discount.dailyOverrides),
       status: discount.status || "ACTIVE",
     });
   };
@@ -281,6 +474,7 @@ export default function DirectDiscountsPanel({ partnerId }) {
 
     const hasCategoryTargets = form.categoryIds.length > 0 || form.categoryNames.length > 0;
     const selectedStoreIds = form.storeIds;
+    const dailyOverrides = buildDailyOverridesPayload(form);
 
     if (allStoreIds.length && !selectedStoreIds.length) {
       setMessage("Selecciona al menos una tienda para este Top Deal.");
@@ -304,6 +498,7 @@ export default function DirectDiscountsPanel({ partnerId }) {
       windowStart: form.isTemporal ? timeToMinutes(form.windowStart) : "",
       windowEnd: form.isTemporal ? timeToMinutes(form.windowEnd) : "",
       usageLimit: form.usageLimit === "" ? "" : Number(form.usageLimit),
+      dailyOverrides,
       status: form.status,
     };
 
@@ -329,13 +524,17 @@ export default function DirectDiscountsPanel({ partnerId }) {
   const selectedCategoryCount = form.categoryIds.length + form.categoryNames.length;
   const selectedProductCount = form.productIds.length;
   const targetCount = selectedCategoryCount + selectedProductCount;
+  const today = getTodayWeekDay();
+  const todayDateKey = getLocalDateKey();
 
   return (
     <div className="cp-promosLayout">
       <form className="cp-card cp-form cp-directDiscountBuilder" onSubmit={submit}>
-        <div>
-          <div className="cp-kicker">Top Deals</div>
-          <h3>{editingId ? "Editar Top Deal" : "Crear Top Deal"}</h3>
+        <div className="cp-directBuilderHead">
+          <div>
+            <div className="cp-kicker">Top Deals</div>
+            <h3>{editingId ? "Editar Top Deal" : "Crear Top Deal"}</h3>
+          </div>
         </div>
 
         <div className="cp-formGrid">
@@ -544,7 +743,7 @@ export default function DirectDiscountsPanel({ partnerId }) {
                 {discounts.map((discount) => (
                   <tr key={discount.id}>
                     <td>{discount.title}</td>
-                    <td>{formatDiscount(discount)}</td>
+                    <td>{formatTopDealValue(discount)}</td>
                     <td>{formatTopDealUsage(discount)}</td>
                     <td>
                       {discount.targetType === "PRODUCT"
@@ -554,6 +753,9 @@ export default function DirectDiscountsPanel({ partnerId }) {
                     <td>{discount.storeIds?.length ? `${discount.storeIds.length} tiendas` : "Todas"}</td>
                     <td>
                       <div className="cp-rowActions">
+                        <button type="button" onClick={() => openTodayModalForDiscount(discount)}>
+                          Configurar hoy
+                        </button>
                         <button type="button" onClick={() => editDiscount(discount)}>
                           Editar
                         </button>
@@ -574,6 +776,60 @@ export default function DirectDiscountsPanel({ partnerId }) {
           </div>
         )}
       </section>
+
+      {todayModal && (
+        <div className="cp-modalOverlay" onClick={closeTodayModal}>
+          <div className="cp-modal cp-todayDealModal" onClick={(event) => event.stopPropagation()}>
+            <div className="cp-qrModalHead">
+              <div>
+                <div className="cp-kicker">Top Deal de hoy</div>
+                <h3>Configurar hoy</h3>
+                <p>
+                  {today.label} {todayDateKey} - {todayModal.title}
+                </p>
+              </div>
+              <button type="button" className="cp-tabBtn" onClick={closeTodayModal}>
+                Cerrar
+              </button>
+            </div>
+
+            <label className="cp-field">
+              <span>Cantidad disponible hoy</span>
+              <strong className="cp-todayDealCurrent">
+                {formatTodayLimitInfo({
+                  value: todayModal.usageLimit,
+                  source: todayModal.limitSource,
+                })}
+              </strong>
+              <input
+                autoFocus
+                type="number"
+                min="0"
+                step="1"
+                placeholder="Ilimitado"
+                value={todayModal.usageLimit}
+                onChange={(event) => updateTodayModalLimit(event.target.value)}
+              />
+            </label>
+
+            {todayModal.message && <div className="cp-feedback">{todayModal.message}</div>}
+
+            <div className="cp-actions">
+              <button type="button" className="cp-tabBtn" onClick={closeTodayModal}>
+                Cancelar
+              </button>
+              <button
+                type="button"
+                className="cp-primaryBtn"
+                disabled={todayModal.saving}
+                onClick={saveTodayModal}
+              >
+                {todayModal.saving ? "Guardando..." : "Guardar hoy"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

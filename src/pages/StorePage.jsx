@@ -347,14 +347,7 @@ function buildClosingSnapshot(now, closeHour = 23, closeMinute = 30) {
   };
 }
 
-const SCHEDULE_SLOT_STEP_MINUTES = 15;
-const SCHEDULE_OPEN_OFFSET_MINUTES = 30;
 const SCHEDULE_DAYS_AHEAD = 5;
-const FALLBACK_SCHEDULE_WINDOW = {
-  openTime: 14 * 60,
-  closeTime: 23 * 60 + 30,
-};
-
 function parseStoreTimeToMinutes(value) {
   if (typeof value === "number" && Number.isFinite(value)) {
     return Math.trunc(value);
@@ -380,14 +373,6 @@ function parseStoreTimeToMinutes(value) {
   }
 
   return null;
-}
-
-function clampScheduleMinute(value) {
-  return Math.min(Math.max(value, 0), 24 * 60);
-}
-
-function roundUpToStep(minutes, step = SCHEDULE_SLOT_STEP_MINUTES) {
-  return Math.ceil(minutes / step) * step;
 }
 
 function minutesToHHMM(minutes) {
@@ -433,28 +418,6 @@ function buildScheduleDays(nowDate) {
   });
 }
 
-function formatScheduledOrderLabel(date, nowDate) {
-  if (!date) return "";
-
-  const startOfDate = new Date(date);
-  startOfDate.setHours(0, 0, 0, 0);
-
-  const startOfNow = new Date(nowDate);
-  startOfNow.setHours(0, 0, 0, 0);
-
-  const diffDays = Math.round((startOfDate.getTime() - startOfNow.getTime()) / 86400000);
-  const weekDays = ["dom", "lun", "mar", "mie", "jue", "vie", "sab"];
-  const months = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
-  const dateLabel =
-    diffDays === 0
-      ? "Hoy"
-      : diffDays === 1
-      ? "Manana"
-      : `${weekDays[date.getDay()]} ${date.getDate()} ${months[date.getMonth()]}`;
-
-  return `${dateLabel} ${minutesToHHMM(getMinutesOfDay(date))}`;
-}
-
 function toLocalDateValue(date) {
   if (!date) return "";
 
@@ -463,48 +426,6 @@ function toLocalDateValue(date) {
     String(date.getMonth() + 1).padStart(2, "0"),
     String(date.getDate()).padStart(2, "0"),
   ].join("-");
-}
-
-function getScheduleWindowsForDate(store, date) {
-  const storeHours = Array.isArray(store?.hours) ? store.hours : [];
-  const dayOfWeek = date.getDay();
-  const matchingHours = storeHours.filter((item) => Number(item.dayOfWeek) === dayOfWeek);
-  const sourceHours = matchingHours.length ? matchingHours : [FALLBACK_SCHEDULE_WINDOW];
-
-  return sourceHours
-    .map((item) => {
-      const openTime = parseStoreTimeToMinutes(item.openTime);
-      const closeTime = parseStoreTimeToMinutes(item.closeTime);
-
-      if (openTime == null || closeTime == null) return null;
-
-      const start = clampScheduleMinute(openTime + SCHEDULE_OPEN_OFFSET_MINUTES);
-      const end = clampScheduleMinute(closeTime);
-
-      if (start >= end) return null;
-
-      return { start, end };
-    })
-    .filter(Boolean);
-}
-
-function buildScheduleSlots({ store, selectedDate, nowDate }) {
-  if (!selectedDate) return [];
-
-  const nowMinutes = getMinutesOfDay(nowDate);
-  const isToday = isSameLocalDay(selectedDate, nowDate);
-  const slots = new Set();
-
-  getScheduleWindowsForDate(store, selectedDate).forEach((window) => {
-    const earliestMinute = isToday ? Math.max(window.start, nowMinutes) : window.start;
-    const start = roundUpToStep(earliestMinute);
-
-    for (let minute = start; minute <= window.end; minute += SCHEDULE_SLOT_STEP_MINUTES) {
-      slots.add(minute);
-    }
-  });
-
-  return [...slots].sort((left, right) => left - right);
 }
 
 function isFutureReservationSlot(selectedDate, time, nowDate) {
@@ -2542,6 +2463,10 @@ export default function StorePage() {
   const [activeTab, setActiveTab] = useState("");
   const [scheduleOpen, setScheduleOpen] = useState(false);
   const [scheduledAt, setScheduledAt] = useState(null);
+  const [scheduleDate, setScheduleDate] = useState("");
+  const [availability, setAvailability] = useState(null);
+  const [availabilityError, setAvailabilityError] = useState("");
+  const [pendingScheduleCheckout, setPendingScheduleCheckout] = useState(null);
   const [reservationOpen, setReservationOpen] = useState(false);
   const [reservationDate, setReservationDate] = useState(null);
   const [reservationTime, setReservationTime] = useState("");
@@ -3009,6 +2934,7 @@ export default function StorePage() {
     try {
       const stored = window.localStorage.getItem(cartDraftStorageKey);
       const parsed = stored ? JSON.parse(stored) : null;
+      setScheduledAt(typeof parsed?.scheduledFor === "string" ? parsed.scheduledFor : null);
       if (Array.isArray(parsed?.items) && parsed.items.length) {
         setCart((current) =>
           current.length ? current : parsed.items.map((item, index) => normalizeCartLine(item, index))
@@ -3030,6 +2956,7 @@ export default function StorePage() {
         cartDraftStorageKey,
         JSON.stringify({
           source: "active_cart",
+          scheduledFor: scheduledAt,
           savedAt: new Date().toISOString(),
           items: cart,
         })
@@ -3037,7 +2964,7 @@ export default function StorePage() {
     } catch {
       // Ignore storage failures; checkout can continue without persistence.
     }
-  }, [cart, cartDraftStorageKey]);
+  }, [cart, cartDraftStorageKey, scheduledAt]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -4007,18 +3934,43 @@ export default function StorePage() {
     return countryCode;
   }, [partner?.country]);
   const closingSnapshot = useMemo(() => buildClosingSnapshot(now), [now]);
-  const scheduleDays = useMemo(() => buildScheduleDays(now), [now]);
-  const scheduleSlots = useMemo(
-    () => buildScheduleSlots({ store, selectedDate: scheduledAt, nowDate: now }),
-    [now, scheduledAt, store]
-  );
-  const scheduleSelectedMinutes = scheduledAt ? getMinutesOfDay(scheduledAt) : null;
-  const scheduledAtIsValid =
-    scheduledAt && scheduleSelectedMinutes != null && scheduleSlots.includes(scheduleSelectedMinutes);
+  const refreshAvailability = useCallback(async () => {
+    if (!store?.id) return null;
+    try {
+      const result = await api.get(`/api/checkout/availability/${store.id}`);
+      setAvailability(result);
+      setAvailabilityError("");
+      return result;
+    } catch (error) {
+      setAvailabilityError("No pudimos comprobar los horarios. Vuelve a intentarlo antes de pagar.");
+      throw error;
+    }
+  }, [store?.id]);
+  useEffect(() => {
+    if (!store?.id) return undefined;
+    setAvailability(null);
+    const refresh = () => { refreshAvailability().catch(() => {}); };
+    refresh();
+    const timer = window.setInterval(refresh, 30000);
+    window.addEventListener("focus", refresh);
+    return () => {
+      window.clearInterval(timer);
+      window.removeEventListener("focus", refresh);
+    };
+  }, [store?.id, refreshAvailability]);
+  useEffect(() => {
+    if (scheduleOpen) refreshAvailability().catch(() => {});
+  }, [scheduleOpen, refreshAvailability]);
+  const scheduleDays = availability?.days || [];
+  const scheduleSlots = scheduleDays.find((day) => day.date === scheduleDate)?.slots || [];
+  const scheduledSlot = scheduleDays.flatMap((day) => day.slots).find((slot) => slot.scheduledFor === scheduledAt);
+  const scheduledAtIsValid = Boolean(scheduledSlot && new Date(scheduledAt) > now);
   const scheduledOrderLabel = scheduledAtIsValid
-    ? formatScheduledOrderLabel(scheduledAt, now)
+    ? `Pedido programado: ${new Intl.DateTimeFormat("es-ES", {
+        timeZone: availability.timeZone, day: "numeric", month: "short", hour: "2-digit", minute: "2-digit",
+      }).format(new Date(scheduledAt))} (${availability.timeZone})`
     : "";
-  const reservationDays = scheduleDays;
+  const reservationDays = useMemo(() => buildScheduleDays(now), [now]);
   const reservationDateValue = reservationDate ? toLocalDateValue(reservationDate) : "";
   const visibleReservationAvailability = useMemo(
     () =>
@@ -4065,22 +4017,11 @@ export default function StorePage() {
   }, [reservationDateValue, reservationName, reservationPhone, reservationTime, store?.id]);
 
   useEffect(() => {
-    if (!scheduleOpen || scheduledAt) return;
-
-    const firstAvailableDay = scheduleDays.find((day) =>
-      buildScheduleSlots({ store, selectedDate: day.date, nowDate: now }).length > 0
-    );
-
-    if (firstAvailableDay) {
-      setScheduledAt(new Date(firstAvailableDay.date));
-    }
-  }, [now, scheduleDays, scheduleOpen, scheduledAt, store]);
-
-  useEffect(() => {
-    if (!scheduledAt || scheduledAtIsValid || scheduleSelectedMinutes === 0) return;
-
-    setScheduledAt(null);
-  }, [scheduleSelectedMinutes, scheduledAt, scheduledAtIsValid]);
+    if (!scheduleOpen || scheduleDate) return;
+    const firstDay = availability?.days?.find((day) => day.slots.some((slot) => slot.scheduledFor === scheduledAt))
+      || availability?.days?.find((day) => day.slots.length);
+    if (firstDay) setScheduleDate(firstDay.date);
+  }, [availability, scheduleOpen, scheduleDate, scheduledAt]);
 
   useEffect(() => {
     if (!reservationOpen) return;
@@ -5585,7 +5526,37 @@ export default function StorePage() {
       profileOverride = null;
     }
 
+    let latestAvailability;
+    try {
+      latestAvailability = await refreshAvailability();
+    } catch {
+      setCheckoutMessage("No pudimos comprobar los horarios. Intentalo de nuevo.");
+      setCartOpen(true);
+      return;
+    }
+    if (!latestAvailability?.acceptingOrders) {
+      setCheckoutMessage("La tienda ha cerrado los pedidos online temporalmente.");
+      setCartOpen(true);
+      return;
+    }
+    const validSchedule = latestAvailability.days.some((day) => day.slots.some((slot) => slot.scheduledFor === scheduledAt));
+    if ((latestAvailability.requiresSchedule || scheduledAt) && !validSchedule) {
+      setPendingScheduleCheckout({ mode: normalizedPaymentMode, choosePayment: Boolean(options?.choosePayment) });
+      setCheckoutProfileOpen(false);
+      setCashConfirmationOpen(false);
+      setPaymentMethodModalOpen(false);
+      setCartOpen(false);
+      setScheduleOpen(true);
+      return;
+    }
     const serviceMode = getStoreServiceMode(store, orderSelection);
+
+    if (options?.choosePayment && shouldShowPaymentMethodModal) {
+      setCheckoutMessage("");
+      setCartOpen(false);
+      setPaymentMethodModalOpen(true);
+      return;
+    }
 
     if (normalizedPaymentMode === "cash" && !cashPaymentEnabled) {
       setCheckoutMessage("Esta tienda no tiene efectivo activo para pedidos online.");
@@ -5675,7 +5646,7 @@ export default function StorePage() {
         total: cartTotal,
         currency: partner?.currency || "EUR",
         paymentMode: normalizedPaymentMode,
-        scheduledFor: scheduledAtIsValid ? scheduledAt.toISOString() : null,
+        scheduledFor: scheduledAt || null,
         customer: checkoutProfile,
         delivery: {
           method: deliveryMethod,
@@ -5758,6 +5729,9 @@ export default function StorePage() {
       const errorCode = err.response?.data?.error;
       const messages = {
         stripe_not_configured: "Stripe no esta configurado para esta tienda.",
+        store_closed: "La tienda ha cerrado los pedidos online temporalmente.",
+        schedule_required: "Fuera del horario de servicio debes programar tu pedido.",
+        schedule_invalid: "La fecha ya no esta disponible. Elige otra franja.",
         cash_payment_not_allowed: "Esta tienda no tiene efectivo activo para pedidos online.",
         delivery_method_not_allowed: "Esta tienda no tiene activo ese metodo de entrega.",
         coupon_not_available: "El cupon ya no esta disponible. Quitalo y valida de nuevo.",
@@ -5779,6 +5753,13 @@ export default function StorePage() {
         database_unavailable: "No pudimos conectar con la base de datos. Intentalo de nuevo en unos segundos.",
         checkout_failed: "Stripe no pudo crear la sesion de pago.",
       };
+      if (err.response?.data?.availability) setAvailability(err.response.data.availability);
+      if (["schedule_required", "schedule_invalid"].includes(errorCode)) {
+        setPendingScheduleCheckout({ mode: normalizedPaymentMode });
+        setCheckoutProfileOpen(false);
+        setCashConfirmationOpen(false);
+        setScheduleOpen(true);
+      }
       setCheckoutMessage(messages[errorCode] || "No pudimos iniciar el pago.");
       setCartOpen(true);
     } finally {
@@ -5800,7 +5781,8 @@ export default function StorePage() {
     partner?.id,
     repeatPhone,
     scheduledAt,
-    scheduledAtIsValid,
+    refreshAvailability,
+    shouldShowPaymentMethodModal,
     savedCustomerProfile,
     store?.id,
     store?.partnerId,
@@ -5810,15 +5792,8 @@ export default function StorePage() {
 
   const handlePrimaryCheckout = useCallback(() => {
     const readyMethods = availablePaymentMethods.filter((method) => method.ready);
-    if (shouldShowPaymentMethodModal) {
-      setCheckoutMessage("");
-      setCartOpen(false);
-      setPaymentMethodModalOpen(true);
-      return;
-    }
-
-    startCheckout(readyMethods[0]?.id || "card");
-  }, [availablePaymentMethods, shouldShowPaymentMethodModal, startCheckout]);
+    startCheckout(readyMethods[0]?.id || "card", null, { choosePayment: true });
+  }, [availablePaymentMethods, startCheckout]);
 
   const selectPaymentMethod = useCallback(
     (method) => {
@@ -8685,6 +8660,14 @@ export default function StorePage() {
                       )}
                     </div>
                   </div>
+                  <p role="status">{availability?.acceptingOrders === false
+                    ? "La tienda ha cerrado los pedidos online temporalmente."
+                    : scheduledOrderLabel || (scheduledAt
+                    ? "La fecha programada ya no esta disponible. Elige otra franja."
+                    : availability?.requiresSchedule
+                    ? "Fuera del horario de servicio. Elige fecha y hora para tu pedido programado antes de pagar."
+                    : "Pedido para el servicio actual")}</p>
+                  {availabilityError && <p role="alert">{availabilityError}</p>}
                   <div className="sf-cartActions sf-cartActions--checkout">
                     <button
                       type="button"
@@ -8692,7 +8675,7 @@ export default function StorePage() {
                       onClick={() => startCheckout(selectedCheckoutPaymentMode)}
                       disabled={checkoutLoading}
                     >
-                      {checkoutLoading ? "Preparando tu pago..." : cartCheckoutLabel}
+                      {checkoutLoading ? "Preparando tu pago..." : (availability?.requiresSchedule || scheduledAt) && !scheduledAtIsValid ? "Programar y continuar" : cartCheckoutLabel}
                     </button>
                     <button
                       type="button"
@@ -8726,6 +8709,7 @@ export default function StorePage() {
             </div>
 
             <div className="sf-cashConfirmBody">
+              {scheduledOrderLabel && <p><strong>{scheduledOrderLabel}</strong></p>}
               <p>
                 No haremos ningun cobro online. El pedido se enviara a la tienda y
                 pagaras <strong>{formatMoney(cartTotal, partner?.currency || "EUR")}</strong>{" "}
@@ -9668,122 +9652,52 @@ export default function StorePage() {
       )}
 
       {scheduleOpen && (
-        <div className="sf-modalOverlay" onClick={() => setScheduleOpen(false)}>
-          <div className="sf-modalCard sf-scheduleModal" onClick={(event) => event.stopPropagation()}>
+        <div className="sf-modalOverlay" onClick={() => { setScheduleOpen(false); setPendingScheduleCheckout(null); setCartOpen(true); }}>
+          <div className="sf-modalCard sf-scheduleModal" role="dialog" aria-modal="true" aria-label="Programar pedido" onClick={(event) => event.stopPropagation()}>
             <div className="sf-scheduleHead">
-              <div>
-                <span>Entrega</span>
-                <h3>Programar pedido</h3>
-              </div>
-              <button
-                type="button"
-                className="sf-modalCloseBtn"
-                aria-label="Cerrar programacion"
-                onClick={() => setScheduleOpen(false)}
-              >
-                x
-              </button>
+              <div><span>Entrega o recogida</span><h3>Programar pedido</h3></div>
+              <button type="button" className="sf-modalCloseBtn" aria-label="Cerrar programacion" onClick={() => { setScheduleOpen(false); setPendingScheduleCheckout(null); setCartOpen(true); }}>x</button>
             </div>
-
             <div className="sf-schedule">
+              <p>{availability?.requiresSchedule
+                ? "Estamos fuera del horario de servicio. Tu pedido sera programado: selecciona fecha y hora antes de pagar."
+                : "Selecciona fecha y hora para tu pedido programado."}</p>
+              {availability?.timeZone && <small>Horario de la tienda: {availability.timeZone}</small>}
+              {availabilityError && <p role="alert">{availabilityError} <button type="button" onClick={() => refreshAvailability().catch(() => {})}>Reintentar</button></p>}
+              {!availability && !availabilityError && <p>Cargando horarios...</p>}
+              {availability && !scheduleDays.some((day) => day.slots.length) && <p className="sf-scheduleEmpty">No hay franjas disponibles. Puedes seguir navegando y volver a intentarlo mas tarde.</p>}
               <div className="sf-scheduleSection">
                 <div className="sf-scheduleLabel">Fecha</div>
                 <div className="sf-scheduleDaysGrid">
-                  {scheduleDays.map((day) => {
-                    const daySlots = buildScheduleSlots({
-                      store,
-                      selectedDate: day.date,
-                      nowDate: now,
-                    });
-                    const selected = scheduledAt && isSameLocalDay(scheduledAt, day.date);
-                    const disabled = daySlots.length === 0;
-
-                    return (
-                      <button
-                        type="button"
-                        key={day.date.toISOString()}
-                        className={`sf-scheduleDayChip ${selected ? "is-selected" : ""}`}
-                        onClick={() => {
-                          if (disabled) return;
-
-                          const nextDate = new Date(day.date);
-                          const preferredMinutes = scheduledAt ? getMinutesOfDay(scheduledAt) : null;
-
-                          if (preferredMinutes != null && daySlots.includes(preferredMinutes)) {
-                            nextDate.setHours(
-                              Math.floor(preferredMinutes / 60),
-                              preferredMinutes % 60,
-                              0,
-                              0
-                            );
-                          }
-
-                          setScheduledAt(nextDate);
-                        }}
-                        disabled={disabled}
-                      >
-                        {day.label}
-                      </button>
-                    );
-                  })}
+                  {scheduleDays.map((day, index) => (
+                    <button type="button" key={day.date} className={`sf-scheduleDayChip ${scheduleDate === day.date ? "is-selected" : ""}`}
+                      disabled={!day.slots.length}
+                      onClick={() => { setScheduleDate(day.date); setScheduledAt(null); }}>
+                      {index === 0 ? "Hoy" : index === 1 ? "Mañana" : new Intl.DateTimeFormat("es-ES", { day: "numeric", month: "short", timeZone: "UTC" }).format(new Date(`${day.date}T12:00:00Z`))}
+                    </button>
+                  ))}
                 </div>
               </div>
-
-              {scheduledAt && (
-                <div className="sf-scheduleSection">
-                  <div className="sf-scheduleLabel">Hora</div>
-
-                  {scheduleSlots.length > 0 ? (
-                    <div className="sf-scheduleHoursGrid">
-                      {scheduleSlots.map((minute) => {
-                        const selected = scheduleSelectedMinutes === minute;
-
-                        return (
-                          <button
-                            type="button"
-                            key={minute}
-                            className={`sf-scheduleHourChip ${selected ? "is-selected" : ""}`}
-                            onClick={() => {
-                              const nextDate = new Date(scheduledAt);
-                              nextDate.setHours(Math.floor(minute / 60), minute % 60, 0, 0);
-                              setScheduledAt(nextDate);
-                            }}
-                          >
-                            {minutesToHHMM(minute)}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  ) : (
-                    <div className="sf-scheduleEmpty">
-                      No quedan bloques disponibles para esta fecha.
-                    </div>
-                  )}
+              <div className="sf-scheduleSection">
+                <div className="sf-scheduleLabel">Hora</div>
+                <div className="sf-scheduleHoursGrid">
+                  {scheduleSlots.map((slot) => (
+                    <button type="button" key={slot.scheduledFor} className={`sf-scheduleHourChip ${scheduledAt === slot.scheduledFor ? "is-selected" : ""}`}
+                      onClick={() => setScheduledAt(slot.scheduledFor)}>{slot.time}</button>
+                  ))}
                 </div>
-              )}
-
+              </div>
+              {scheduledOrderLabel && <p role="status">{scheduledOrderLabel}</p>}
               <div className="sf-scheduleFooter">
-                <button
-                  type="button"
-                  className="sf-secondaryBtn"
-                  onClick={() => {
-                    setScheduledAt(null);
-                    setScheduleOpen(false);
-                  }}
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="button"
-                  className="sf-primaryBtn"
-                  onClick={() => {
-                    if (!scheduledAtIsValid) return;
-                    setScheduleOpen(false);
-                  }}
-                  disabled={!scheduledAtIsValid}
-                >
-                  Confirmar
-                </button>
+                <button type="button" className="sf-secondaryBtn" onClick={() => { setScheduleOpen(false); setPendingScheduleCheckout(null); setCartOpen(true); }}>Volver al carrito</button>
+                {!availability?.requiresSchedule && scheduledAt && <button type="button" className="sf-secondaryBtn" onClick={() => setScheduledAt(null)}>Quitar programacion</button>}
+                <button type="button" className="sf-primaryBtn" disabled={!scheduledAtIsValid || Boolean(availabilityError)} onClick={() => {
+                  if (!scheduledAtIsValid) return;
+                  setScheduleOpen(false);
+                  const paymentMode = pendingScheduleCheckout;
+                  setPendingScheduleCheckout(null);
+                  if (paymentMode) startCheckout(paymentMode.mode, null, { choosePayment: paymentMode.choosePayment });
+                }}>Confirmar{pendingScheduleCheckout ? " y continuar" : ""}</button>
               </div>
             </div>
           </div>

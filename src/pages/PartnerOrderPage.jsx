@@ -122,7 +122,7 @@ export default function PartnerOrderPage() {
 
   const activeStores = useMemo(() => {
     return Array.isArray(partner?.stores)
-      ? partner.stores.filter((store) => store?.active !== false)
+      ? partner.stores.filter((store) => store?.active !== false && store?.acceptingOrders !== false)
       : [];
   }, [partner]);
 

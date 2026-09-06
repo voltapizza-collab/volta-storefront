@@ -3,17 +3,17 @@
   "name": "Volta Pizza",
   "icons": [
     {
-      "src": "favicon.png",
+      "src": "favicon.png?v=volta-2p-20260906",
       "sizes": "64x64",
       "type": "image/png"
     },
     {
-      "src": "logo192.png",
+      "src": "logo192.png?v=volta-2p-20260906",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "logo512.png",
+      "src": "logo512.png?v=volta-2p-20260906",
       "type": "image/png",
       "sizes": "512x512"
     }

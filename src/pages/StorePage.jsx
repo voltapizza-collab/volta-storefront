@@ -8701,24 +8701,23 @@ export default function StorePage() {
             aria-labelledby="sf-cashConfirmTitle"
           >
             <div className="sf-cashConfirmHero">
-              <span className="sf-cashConfirmMark" aria-hidden="true">EUR</span>
-              <div>
-                <span>Confirmacion final</span>
-                <h3 id="sf-cashConfirmTitle">Este pedido se paga en efectivo</h3>
-              </div>
+              <h3 id="sf-cashConfirmTitle">Pagar en efectivo</h3>
+              <span>Confirma tu pedido</span>
             </div>
 
             <div className="sf-cashConfirmBody">
-              {scheduledOrderLabel && <p><strong>{scheduledOrderLabel}</strong></p>}
+              <div className="sf-cashConfirmAmount">
+                <span>Total a pagar</span>
+                <strong>{formatMoney(cartTotal, partner?.currency || "EUR")}</strong>
+              </div>
               <p>
-                No haremos ningun cobro online. El pedido se enviara a la tienda y
-                pagaras <strong>{formatMoney(cartTotal, partner?.currency || "EUR")}</strong>{" "}
-                en efectivo {getStoreServiceMode(store, orderSelection) === "delivery"
-                  ? "cuando recibas el pedido"
-                  : "cuando recojas el pedido"}.
+                Pagarás en efectivo {getStoreServiceMode(store, orderSelection) === "delivery"
+                  ? "al recibir tu pedido."
+                  : "al recoger tu pedido."} No se cobra ahora.
               </p>
+              {scheduledOrderLabel && <p className="sf-cashConfirmSchedule">{scheduledOrderLabel}</p>}
               <div className="sf-cashConfirmRoute">
-                <span>{getStoreServiceMode(store, orderSelection) === "delivery" ? "Delivery" : "Pickup"}</span>
+                <span>{getStoreServiceMode(store, orderSelection) === "delivery" ? "Entrega a domicilio" : "Recogida en tienda"}</span>
                 <strong>
                   {getStoreServiceMode(store, orderSelection) === "delivery"
                     ? orderSelection?.deliveryAddress || orderSelection?.deliveryResolution?.formattedAddress || "Direccion confirmada"
@@ -8730,19 +8729,19 @@ export default function StorePage() {
             <div className="sf-cashConfirmActions">
               <button
                 type="button"
-                className="sf-secondaryBtn"
-                onClick={changeCashPaymentMethod}
-                disabled={checkoutLoading}
-              >
-                Cambiar medio de pago
-              </button>
-              <button
-                type="button"
                 className="sf-primaryBtn sf-cashConfirmBtn"
                 onClick={confirmCashCheckout}
                 disabled={checkoutLoading}
               >
-                {checkoutLoading ? "Enviando pedido..." : "Ordenar y pagar en efectivo"}
+                {checkoutLoading ? "Enviando pedido..." : "Confirmar pedido en efectivo"}
+              </button>
+              <button
+                type="button"
+                className="sf-secondaryBtn"
+                onClick={changeCashPaymentMethod}
+                disabled={checkoutLoading}
+              >
+                Cambiar método de pago
               </button>
             </div>
           </div>

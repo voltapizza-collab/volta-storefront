@@ -3559,3 +3559,26 @@
     flex: 0 0 auto;
   }
 }
+
+/* Notices have explicit controls and never cover the header as a toast. */
+.pos-noticeDialog { width: min(400px, calc(100vw - 32px)); max-height: calc(100dvh - 40px); overflow: auto; padding: 20px; border: 1px solid #d8c9f0; border-radius: 18px; background: #fffaf5; color: #291049; box-shadow: 0 18px 60px #18053455; }
+.pos-noticeDialog::backdrop { background: #190b3655; }
+.pos-noticeDialog header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.pos-noticeDialog h2 { margin: 0; font-size: 19px; }
+.pos-noticeDialog header button { width: 44px; height: 44px; border: 0; border-radius: 12px; background: #efe7fb; color: #3b008b; font-size: 28px; cursor: pointer; }
+.pos-noticeDialog p { margin: 18px 0 24px; line-height: 1.5; overflow-wrap: anywhere; }
+.pos-noticeDialog .pos-noticeClose { width: 100%; min-height: 44px; border: 0; border-radius: 12px; background: #3b008b; color: white; font: inherit; font-weight: 700; cursor: pointer; }
+.pos-utilityDock { order: 2; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 10px 18px 8px; flex-shrink: 0; }
+.pos-utilityDock .pos-customerHelpFab, .pos-utilityDock .pos-reservationsFab { position: relative; inset: auto; width: 46px; height: 46px; flex-shrink: 0; }
+.pos-shell > .pos-footer { order: 3; }
+.pos-inventoryFab { display: grid; place-items: center; width: 46px; height: 46px; flex-shrink: 0; padding: 0; border: 1px solid #d8c5f2; border-radius: 50%; color: #4a169c; background: #eee3ff; box-shadow: 0 5px 16px #3b008b18; cursor: pointer; }
+.pos-inventoryFab.active { color: white; background: #541ac0; }
+.pos-inventoryFab { position: relative; transition: background .2s, color .2s, transform .15s; }
+.pos-inventoryFab.has-disabled { color: #713f00; background: #ffdf67; border-color: #edb51e; box-shadow: 0 4px 16px #e6ac2940; }
+.pos-inventoryFab.has-disabled.active { outline: 2px solid #541ac0; outline-offset: 3px; }
+.pos-inventoryFab:active { transform: scale(.93); }
+.pos-inventoryFab:focus-visible { outline: 3px solid #541ac0; outline-offset: 3px; }
+.pos-inventoryCount { position: absolute; top: -6px; right: -7px; min-width: 22px; height: 22px; padding: 0 5px; display: grid; place-items: center; border: 2px solid #fff; border-radius: 20px; background: #d82036; color: #fff; font-size: 11px; line-height: 1; animation: pos-inventoryPop .25s ease-out; }
+@keyframes pos-inventoryPop { from { transform: scale(.7); } to { transform: scale(1); } }
+@media (prefers-reduced-motion: reduce) { .pos-inventoryCount { animation: none; } .pos-inventoryFab { transition: none; } }
+.pos-backToKitchen { min-height: 44px; margin-bottom: 12px; padding: 8px 16px; border: 0; border-radius: 12px; background: #541ac0; color: white; cursor: pointer; }

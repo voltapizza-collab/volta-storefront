@@ -1,4 +1,5 @@
 import axios from "axios";
+import { isNativePos, nativeAdapter } from './pos/nativeBridge';
 
 const getDefaultApiUrl = () => {
   if (typeof window === "undefined") return "http://localhost:8080";
@@ -16,6 +17,7 @@ const baseURL =
   process.env.REACT_APP_API_URL?.trim() || getDefaultApiUrl();
 
 const api = axios.create({
+  ...(isNativePos ? { adapter: nativeAdapter } : {}),
   baseURL,
   headers: {
     "Content-Type": "application/json",

@@ -10,13 +10,16 @@ import { ReactComponent as PizzaBg } from "../assets/logo/pizza.svg";
 import pizzaIcon from "../assets/logo/pizza.svg";
 import EngineBackground from "../components/Backoffice/EngineBackground";
 import { mockPrinter } from "./printers/mockPrinter";
+import { buildOrderLines } from './printers/mockPrinter';
+import { isNativePos, nativeCall } from './nativeBridge';
+import PosNotice, { usePosNotice } from './PosNotice';
 import "../styles/PosApp.css";
 
 const POS_SESSION_KEY = "volta_pos_virtual_session";
 const POS_ACCEPTED_NOTICE_KEY_PREFIX = "volta_pos_accepted_order_notices";
-const POLL_MS = 5000;
+const POLL_MS = isNativePos ? 10000 : 5000;
 const POS_REQUEST_TIMEOUT_MS = 8000;
-const STALE_AFTER_MS = 15_000;
+const STALE_AFTER_MS = isNativePos ? 45_000 : 15_000;
 const OFFLINE_AFTER_MS = 60_000;
 const MAX_ACCEPTED_NOTICE_IDS = 500;
 
@@ -488,10 +491,13 @@ const createTone = (
 ) => {
   const oscillator = ctx.createOscillator();
   const gain = ctx.createGain();
+  // The handheld speaker needs a stronger source signal; do not change Android volume.
+  const peak = Math.max(0.0001, isNativePos ? Math.min(volume * 4, 0.3) : volume);
   oscillator.type = type;
   oscillator.frequency.setValueAtTime(frequency, startAt);
   gain.gain.setValueAtTime(0.0001, startAt);
-  gain.gain.exponentialRampToValueAtTime(Math.max(volume, 0.0001), startAt + attack);
+  gain.gain.exponentialRampToValueAtTime(peak, startAt + attack);
+  if (isNativePos) gain.gain.setValueAtTime(peak, startAt + Math.max(attack, duration * 0.55));
   gain.gain.exponentialRampToValueAtTime(0.0001, startAt + duration);
   oscillator.connect(gain);
   gain.connect(ctx.destination);
@@ -706,7 +712,7 @@ const isCashPaymentOrder = (order) => {
 const getPaymentLabel = (order) => {
   const paymentSignal = getPaymentSignal(order);
 
-  if (isCashPaymentOrder(order)) return "Pendiente de pago en efectivo";
+  if (isCashPaymentOrder(order)) return "Efectivo pendiente";
   if (paymentSignal.includes("card") || paymentSignal.includes("tarjeta") || paymentSignal.includes("stripe")) {
     return "Tarjeta";
   }
@@ -823,7 +829,7 @@ function PosLogin({ onStart }) {
             <PosPizzaMark />
             <PosPizzaMark />
           </div>
-          <span className="pos-kicker">Volta POS Virtual</span>
+          <span className="pos-kicker">{isNativePos ? 'Volta POS' : 'Volta POS Virtual'}</span>
         </div>
 
         <section className="pos-loginFormPanel">
@@ -951,14 +957,13 @@ function TicketPreview({ order }) {
   );
 }
 
-function PosInventory({ session }) {
-  const [ingredients, setIngredients] = useState([]);
+function PosInventory({ session, ingredients, setIngredients }) {
   const [openCategory, setOpenCategory] = useState("");
   const [view, setView] = useState("inventory");
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
   const [savingId, setSavingId] = useState(null);
-  const [message, setMessage] = useState("");
+  const [message, setMessage, dismissMessage] = usePosNotice();
 
   const loadIngredients = useCallback(async () => {
     if (!session?.storeId) return;
@@ -1078,7 +1083,7 @@ function PosInventory({ session }) {
         </div>
       </div>
 
-      {message && <div className="pos-inlineAlert">{message}</div>}
+      <PosNotice message={message} onDismiss={dismissMessage} />
 
       {view === "search" && (
         <div className="pos-invSearchView">
@@ -1190,6 +1195,7 @@ function PosInventory({ session }) {
 
 export default function PosApp() {
   const [session, setSession] = useState(() => {
+    if (isNativePos) return window.__voltaSession || null;
     try {
       return JSON.parse(localStorage.getItem(POS_SESSION_KEY) || "null");
     } catch {
@@ -1198,6 +1204,26 @@ export default function PosApp() {
   });
   const [orders, setOrders] = useState([]);
   const [activePanel, setActivePanel] = useState("orders");
+  const [inventoryItems, setInventoryItems] = useState([]);
+  const disabledIngredientCount = inventoryItems.filter(item => !(item.exists && item.active)).length;
+  useEffect(() => { setInventoryItems([]); }, [session?.storeId]);
+  useEffect(() => {
+    if (!session?.storeId || activePanel === "inventory") return;
+    let cancelled = false;
+    let running = false;
+    const refresh = async () => {
+      if (running) return;
+      running = true;
+      try {
+        const { data } = await api.get(`/api/stores/${session.storeId}/ingredients`, { params: { scope: "menu" } });
+        if (!cancelled && Array.isArray(data)) setInventoryItems(data);
+      } catch (_) { /* Preserve the last confirmed inventory on network failure. */ }
+      finally { running = false; }
+    };
+    refresh();
+    const timer = window.setInterval(refresh, 30000);
+    return () => { cancelled = true; window.clearInterval(timer); };
+  }, [session?.storeId, activePanel]);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
   const [dayOrders, setDayOrders] = useState([]);
   const [dayOrdersKpis, setDayOrdersKpis] = useState(null);
@@ -1207,11 +1233,10 @@ export default function PosApp() {
   const [storeActive, setStoreActive] = useState(true);
   const [savingStore, setSavingStore] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [message, setMessage] = useState("");
+  const [message, setMessage, dismissMessage] = usePosNotice();
   const [newOrderNotice, setNewOrderNotice] = useState(null);
   const [readyConfirmOrder, setReadyConfirmOrder] = useState(null);
   const [readyCashReminderOrder, setReadyCashReminderOrder] = useState(null);
-  const [readyButtonToast, setReadyButtonToast] = useState(null);
   const [reservations, setReservations] = useState([]);
   const [reservationsOpen, setReservationsOpen] = useState(false);
   const [activeCalendarEventId, setActiveCalendarEventId] = useState(null);
@@ -1275,7 +1300,15 @@ export default function PosApp() {
     [orders]
   );
 
-  const printerStatus = mockPrinter.getStatus();
+  const [nativePrinterStatus, setNativePrinterStatus] = useState({ realConnected: false, virtualReady: false, label: 'Conectando SUNMI' });
+  useEffect(() => {
+    if (!isNativePos) return;
+    let mounted = true;
+    const refresh = () => nativeCall('printerStatus').then(status => { if (mounted) setNativePrinterStatus(status); }).catch(() => {});
+    refresh(); const timer = setInterval(refresh, 15000);
+    return () => { mounted = false; clearInterval(timer); };
+  }, []);
+  const printerStatus = isNativePos ? nativePrinterStatus : mockPrinter.getStatus();
   const printerTone = printerStatus.realConnected
     ? "ok"
     : printerStatus.virtualReady
@@ -1299,11 +1332,7 @@ export default function PosApp() {
   const hasVisitors = Number(presence.activeVisitors || 0) > 0;
   const hasCheckoutVisitors = Number(presence.checkoutVisitors || 0) > 0;
   const showVisitorAlert = orders.length === 0 && trustState === "online" && hasCheckoutVisitors;
-  const showModeTabs = activePanel !== "orders" || Boolean(selectedOrder) || orders.length > 0;
   const showOrderUtilityFabs =
-    activePanel === "orders" &&
-    !selectedOrder &&
-    !showVisitorAlert &&
     !reservationsOpen &&
     !customerHelpOpen;
   const shellClassName = [
@@ -1618,7 +1647,6 @@ export default function PosApp() {
 
       if (incoming.length > 0) {
         const primaryIncoming = incomingBoosted[0] || incoming[0];
-        setMessage(`${incoming.length} pedido(s) nuevo(s) en ${session.storeName}.`);
         setNewOrderNotice({
           id: `${primaryIncoming.id}-${Date.now()}`,
           order: primaryIncoming,
@@ -2015,12 +2043,16 @@ export default function PosApp() {
 
   const startSession = (nextSession) => {
     unlockAudioContext();
-    localStorage.setItem(POS_SESSION_KEY, JSON.stringify(nextSession));
+    if (!isNativePos) localStorage.setItem(POS_SESSION_KEY, JSON.stringify(nextSession));
     setSession(nextSession);
-    setMessage("POS virtual emparejado.");
+    setMessage(isNativePos ? "Terminal Volta conectado." : "POS virtual emparejado.");
   };
 
-  const logoutSession = () => {
+  const logoutSession = async () => {
+    if (isNativePos) {
+      try { await nativeCall('logout'); }
+      catch (_) { window.location.reload(); return; }
+    }
     localStorage.removeItem(POS_SESSION_KEY);
     setSession(null);
     setOrders([]);
@@ -2057,6 +2089,13 @@ export default function PosApp() {
 
   const printOrder = async (order) => {
     if (!order) return;
+    if (isNativePos) {
+      try {
+        await nativeCall('print', { orderId: order.id, lines: buildOrderLines(order) });
+        setMessage(`Ticket ${order.code || order.id}: impresión confirmada por SUNMI.`);
+      } catch (_) { setMessage('Impresión sin confirmar. Comprueba papel y ticket antes de repetir.'); }
+      return;
+    }
 
     const openedWindowsPrint = printOrderWithWindowsDialog(order);
 
@@ -2078,14 +2117,7 @@ export default function PosApp() {
   };
 
   const showReadyBlockedToast = () => {
-    const toast = {
-      id: Date.now(),
-      text: "Espera el momento 🧘‍♂️",
-    };
-    setReadyButtonToast(toast);
-    window.setTimeout(() => {
-      setReadyButtonToast((current) => (current?.id === toast.id ? null : current));
-    }, 1800);
+    setMessage("Este pedido está programado. Espera a la hora indicada para marcarlo como listo.");
   };
 
   const markReady = async (order) => {
@@ -2272,7 +2304,7 @@ export default function PosApp() {
     <main className={shellClassName}>
       <header className="pos-topbar">
         <div className="pos-storeIdentity">
-          <span className="pos-kicker">Volta POS Virtual</span>
+          <span className="pos-kicker">{isNativePos ? 'Volta POS' : 'Volta POS Virtual'}</span>
           <h1>{session.storeName}</h1>
           <small>{session.partnerName}</small>
         </div>
@@ -2360,54 +2392,21 @@ export default function PosApp() {
             >
               Probar sonido pedido
             </button>
+            {isNativePos && <button type="button" onClick={async () => {
+              setMenuOpen(false);
+              try {
+                const sample = { code: 'PRUEBA-58MM', storeName: session.storeName, total: 25.50, currency: 'EUR',
+                  delivery: 'DELIVERY', customerData: {name:'Cliente de prueba',phone:'No llamar',address:'Calle de prueba con un nombre largo, numero 123, piso 4'},
+                  products:[{name:'Pizza de prueba con mozzarella y champiñones',quantity:2,size:'Grande',ingredients:[{name:'Extra mozzarella'},{name:'Sin cebolla'}]}] };
+                await nativeCall('printTest',{lines:[...buildOrderLines(sample),'Direccion de prueba: calle larga numero 123, piso 4','Caracteres: á é í ó ú ñ €']});
+                setMessage('Ticket de prueba confirmado por SUNMI. Comprueba que no se cortan palabras ni el total.');
+              } catch (_) { setMessage('No se confirmó la impresión. Comprueba el papel antes de repetir.'); }
+            }}>Probar ticket de 58 mm</button>}
           </div>
         )}
       </header>
 
-      {message && (
-        <button type="button" className="pos-message" onClick={() => setMessage("")}>
-          {message}
-        </button>
-      )}
-
-      {showModeTabs && (
-        <nav className="pos-modeTabs" aria-label="POS section">
-          <button
-            type="button"
-            className={activePanel === "orders" ? "active" : ""}
-            onClick={() => {
-              setSelectedOrderId(null);
-              setActivePanel("orders");
-            }}
-          >
-            Orders
-          </button>
-          <button
-            type="button"
-            className={activePanel === "inventory" ? "active" : ""}
-            onClick={() => setActivePanel("inventory")}
-          >
-            Inventory
-          </button>
-        </nav>
-      )}
-
-      {trustState !== "online" && (
-        <section className={`pos-trustAlert pos-trustAlert--${trustState}`}>
-          <strong>Necesita push manual</strong>
-          <span>
-            Pulsa SYNC para forzar lectura del servidor. Ultima revision correcta:{" "}
-            {syncHealth.lastOkAt ? formatTime(syncHealth.lastOkAt) : "nunca"}.
-          </span>
-          <button
-            type="button"
-            onClick={() => loadOrders({ force: true })}
-            disabled={loadingOrders}
-          >
-            {loadingOrders ? "Sincronizando" : "Push manual"}
-          </button>
-        </section>
-      )}
+      <PosNotice message={message} onDismiss={dismissMessage} />
 
       {activePanel === "orders" && (
       <div
@@ -2449,11 +2448,6 @@ export default function PosApp() {
                       ? `Ready ${selectedOrderSchedule.countdown}`
                       : "Ready"}
                   </button>
-                  {readyButtonToast && selectedOrderSchedule?.locked && (
-                    <span key={readyButtonToast.id} className="pos-readyButtonToast">
-                      {readyButtonToast.text}
-                    </span>
-                  )}
                 </div>
               </div>
             </div>
@@ -2637,7 +2631,8 @@ export default function PosApp() {
 
       {activePanel === "inventory" && (
         <main className="store-pos-panel pos-storePanel">
-          <PosInventory session={session} />
+          <button type="button" className="pos-backToKitchen" onClick={() => { setSelectedOrderId(null); setActivePanel("orders"); }}>← Volver a cocina</button>
+          <PosInventory session={session} ingredients={inventoryItems} setIngredients={setInventoryItems} />
         </main>
       )}
 
@@ -2968,11 +2963,15 @@ export default function PosApp() {
         <div className={`pos-printInline ${printerTone}`}>
           <span />
           {printerLabel}
-          <small>{printerStatus.realConnected ? printerStatus.label : "modo prueba"}</small>
+          <small>{isNativePos || printerStatus.realConnected ? printerStatus.label : "modo prueba"}</small>
         </div>
       </footer>
       {showOrderUtilityFabs && (
-        <>
+        <div className="pos-utilityDock">
+          <button type="button" className={`pos-inventoryFab ${activePanel === "inventory" ? "active" : ""} ${disabledIngredientCount > 0 ? "has-disabled" : ""}`} aria-label={`Inventario: ${disabledIngredientCount} ingredientes desactivados`} title={disabledIngredientCount > 0 ? `${disabledIngredientCount} ingredientes desactivados` : "Inventario: todos disponibles"} aria-pressed={activePanel === "inventory"} onClick={() => { setMenuOpen(false); setActivePanel("inventory"); }}>
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" aria-hidden="true"><path d="M3 13h8v8H3zM13 13h8v8h-8zM8 3h8v8H8zM7 13v3m10-3v3M12 3v3" /></svg>
+            {disabledIngredientCount > 0 && <strong className="pos-inventoryCount" aria-live="polite" key={disabledIngredientCount}>{disabledIngredientCount}</strong>}
+          </button>
       <button
         type="button"
         className={`pos-customerHelpFab ${selectedOrder ? "active" : ""} ${
@@ -3000,7 +2999,7 @@ export default function PosApp() {
         <span aria-hidden="true">📅</span>
         {calendarEvents.length > 0 && <strong>{calendarEvents.length}</strong>}
       </button>
-        </>
+        </div>
       )}
     </main>
   );

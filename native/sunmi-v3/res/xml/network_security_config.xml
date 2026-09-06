@@ -1,0 +1,5 @@
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false" />
+    <!-- USB reverse only. Remove this exception for the public deployment. -->
+    <domain-config cleartextTrafficPermitted="true"><domain>127.0.0.1</domain></domain-config>
+</network-security-config>

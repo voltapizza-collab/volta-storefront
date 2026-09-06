@@ -1,0 +1,46 @@
+/* Preserve the existing POS design within the SUNMI's narrow viewport. */
+html, body, #root { margin: 0; width: 100%; min-height: 100%; }
+*, *::before, *::after { box-sizing: border-box; }
+.pos-loginScreen { overflow-x: clip; }
+.pos-loginLogoMark { max-width: 100%; height: auto; }
+@media (max-width: 480px) {
+  .pos-loginPanel { padding: 24px 20px; }
+  .pos-loginLogoMark { width: 100%; max-width: 100%; }
+  .pos-topbar { display: flex; flex-direction: column; align-items: stretch; padding: 10px 12px; }
+  .pos-storeIdentity { padding-right: 110px; }
+  .pos-topMetrics { position: static; flex-wrap: wrap; overflow-x: visible; }
+}
+@media (max-width: 480px) {
+  .pos-topMetrics { display: grid; grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr) 64px; gap: 4px; }
+  .pos-topActions { gap: 4px; margin: 0; padding-right: 4px; }
+  .pos-topChip { width: 100%; min-width: 0; padding-inline: 6px; gap: 4px; }
+  .pos-logoutPill { padding-inline: 8px; }
+  .pos-chipIcon { transform: scale(.82); }
+  .pos-workspace { padding: 10px; }
+  .pos-footer { flex-wrap: wrap; gap: 4px; font-size: 10px; }
+}
+@media (max-width: 480px) {
+  .pos-empty { padding: 18px 14px; }
+  .pos-empty > strong { font-size: 20px; }
+  .pos-chill { gap: 6px; margin-bottom: 4px; }
+  .pos-chill span { font-size: 50px; }
+  .pos-idleClockCard { padding: 10px; gap: 6px; margin-top: 10px; }
+  .pos-idleClockCard > strong { padding: 10px; font-size: 42px; }
+  .pos-dayInfoGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+  .pos-dayInfoChip { min-width: 0; overflow-wrap: anywhere; }
+}
+@media (max-width: 480px) {
+  .pos-ordersPane { padding: 10px; }
+  .pos-orderList { display: grid; grid-template-columns: minmax(0, 1fr); overflow: visible; padding: 2px; gap: 10px; }
+  .pos-orderCard { width: 100%; min-width: 0; min-height: 0; padding: 10px; gap: 7px; }
+  .pos-orderIdRow > div, .pos-orderCustomerTop > div { min-width: 0; }
+  .pos-orderIdRow strong { font-size: 19px; line-height: 1.15; overflow-wrap: anywhere; }
+  .pos-orderIdRow em { flex-shrink: 0; }
+  .pos-orderCustomerCard { width: 100%; min-width: 0; padding: 9px; }
+  .pos-orderCustomerTop strong, .pos-orderContact, .pos-orderAddress, .pos-items { overflow-wrap: anywhere; }
+  .pos-orderContact { flex-wrap: wrap; gap: 4px; }
+  .pos-orderSummary { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px; }
+  .pos-orderSummary > :nth-child(2), .pos-orderSummary > b { text-align: right; }
+  .pos-orderCashPayment { justify-self: start; white-space: nowrap; font-size: 11px; }
+  .pos-utilityDock { position: sticky; bottom: 0; z-index: 20; background: #f5eff8; border-top: 1px solid #e6dbef; }
+}

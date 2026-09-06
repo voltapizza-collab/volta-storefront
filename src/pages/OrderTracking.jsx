@@ -241,6 +241,12 @@ export default function OrderTracking() {
   }
 
   const currentIndex = stageIndex(data?.stage);
+  const deliveryMode = String(data?.delivery || "").trim().toUpperCase();
+  const isDelivery = ["COURIER", "DELIVERY"].includes(deliveryMode);
+  const isPickup = deliveryMode === "PICKUP";
+  const fulfilmentLabel = isDelivery ? "Entrega a domicilio / Delivery"
+    : isPickup ? "Recogida en tienda / Pickup"
+    : deliveryMode === "LOCAL" ? "Consumo en local" : "Modalidad por confirmar";
   const storePath =
     data?.partnerSlug && data?.storeSlug ? `/${data.partnerSlug}/${data.storeSlug}` : "/";
   const chatMessages = Array.isArray(data?.chatMessages) ? data.chatMessages : [];
@@ -254,6 +260,7 @@ export default function OrderTracking() {
           <p>
             Pedido <b>{data?.code}</b>
           </p>
+          <div className="ot-fulfilment" aria-label="Modalidad del pedido">{fulfilmentLabel}</div>
         </div>
 
         <div className="ot-summary">
@@ -384,16 +391,17 @@ export default function OrderTracking() {
           <h2>
             {data?.stage === "READY"
               ? "Tu pedido ya esta listo"
-              : data?.delivery === "COURIER"
+              : isDelivery
               ? "La tienda prepara la salida"
-              : "Ten a mano tu codigo"}
+              : isPickup ? "Ten a mano tu código" : "Consulta el estado de tu pedido"}
           </h2>
           <p>
             {data?.stage === "READY"
               ? "Puedes volver a la tienda para repetir, guardar favoritos o ver nuevas ofertas."
-              : data?.delivery === "COURIER"
+              : isDelivery
               ? "Cuando este listo, la tienda gestionara la entrega. Revisa este seguimiento si necesitas confirmar el estado."
-              : `Muestra ${data?.code || "tu codigo"} al recoger. Si quieres pedir algo mas, vuelve a la tienda sin perder este seguimiento.`}
+              : isPickup ? `Muestra ${data?.code || "tu código"} al recoger. Si quieres pedir algo más, vuelve a la tienda sin perder este seguimiento.`
+              : "Contacta con la tienda si necesitas confirmar cómo recibir tu pedido."}
           </p>
         </section>
 

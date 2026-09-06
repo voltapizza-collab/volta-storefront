@@ -737,3 +737,6 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Keep fulfilment visible beside the order identity on every status. */
+.ot-head .ot-fulfilment { justify-self: start; max-width: 100%; padding: 8px 11px; border: 1px solid #dcd0ef; border-radius: 10px; background: #f5effc; color: #3b008b; font-size: 14px; font-weight: 800; line-height: 1.35; overflow-wrap: anywhere; }

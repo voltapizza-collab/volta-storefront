@@ -418,7 +418,7 @@
   min-height: 42px;
   border: 0;
   border-radius: 8px;
-  background: var(--pos-pink);
+  background: var(--pos-brand-1);
   color: #fff;
   padding: 0 16px;
   font: inherit;
@@ -432,7 +432,7 @@
   margin-top: 15px;
   padding: 14px;
   border-radius: 12px;
-  background: linear-gradient(135deg, #6a00ff, var(--brand-2, #ffb61c));
+  background: var(--pos-brand-1);
   box-shadow: none;
   color: #fff;
   font-size: 15px;
@@ -553,32 +553,82 @@
 }
 
 .pos-menuPanel {
-  position: absolute;
-  left: 12px;
-  bottom: 44px;
-  z-index: 5;
-  display: grid;
-  gap: 6px;
-  min-width: 160px;
-  border: 1px solid rgba(255, 255, 255, 0.26);
-  border-radius: 8px;
-  background: rgba(23, 23, 23, 0.82);
-  padding: 8px;
-  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.25);
+  position: fixed;
+  inset: 0 0 0 auto;
+  margin: 0;
+  width: min(440px, 100vw);
+  max-width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  max-height: 100vh;
+  max-height: 100dvh;
+  box-sizing: border-box;
+  border: 0;
+  border-left: 1px solid #e4e0d8;
+  border-radius: 0;
+  background: #faf9f6;
+  color: #282630;
+  padding: 0;
+  overflow: hidden;
+  font-family: Inter, system-ui, sans-serif;
+  box-shadow: -12px 0 48px #17132126;
 }
+.pos-menuPanel[open] { display: flex; flex-direction: column; }
+.pos-menuPanel::backdrop { background: #17132166; }
+.pos-menuContent { flex: 1; min-height: 0; overflow-y: auto; padding: 22px 24px; }
+.pos-menuContent h3 { margin: 24px 0 10px; font-size: 11px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: #77737c; }
+.pos-menuMode { border-left: 3px solid #e9bb30; padding: 14px 16px; background: #f2efe7; border-radius: 0 6px 6px 0; }
+.pos-menuMode > small { display: block; color: #726c62; font-size: 12px; }
+.pos-menuMode > strong { display: block; margin-top: 6px; font-size: 19px; font-weight: 600; }
+.pos-menuMode p { margin: 6px 0 0; font-size: 13px; line-height: 1.5; color: #64606a; }
+.pos-menuMode.is-paused { background: #fff4ce; }
+.pos-menuFooter { padding: 16px 24px; border-top: 1px solid #e6e3dc; font-size: 11px; color: #77737c; }
 
 .pos-menuPanel button {
-  min-height: 34px;
-  border: 0;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.12);
-  color: #fff;
+  min-height: 48px;
+  border: 1px solid #e6e3dc;
+  border-radius: 8px;
+  background: #fff;
+  color: #282630;
   font: inherit;
-  font-size: 12px;
-  font-weight: 900;
+  font-size: 15px;
+  font-weight: 500;
   text-align: left;
-  padding: 0 10px;
+  padding: 14px 16px;
   cursor: pointer;
+}
+.pos-menuContent > button { display: grid; gap: 5px; width: 100%; margin-bottom: 8px; }
+.pos-menuContent > button strong { font-size: 15px; font-weight: 600; }
+.pos-menuContent > button small { font-size: 12px; font-weight: 400; color: #77737c; line-height: 1.4; }
+.pos-menuHeading { display: flex; flex-shrink: 0; align-items: center; justify-content: space-between; gap: 12px; padding: 22px 24px 20px; border-top: 4px solid #ffcc33; border-bottom: 1px solid #e6e3dc; background: #fff; }
+.pos-menuHeading small { font-size: 10px; letter-spacing: .12em; color: #77737c; }
+.pos-menuHeading h2 { margin: 6px 0 0; font-size: 20px; font-weight: 600; line-height: 1.25; }
+.pos-menuPanel button:disabled { opacity: .55; cursor: wait; }
+.pos-pauseBanner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; padding: 18px; border-bottom: 1px solid #e6d8ad; border-left: 4px solid #e9bb30; background: #fff4ce; color: #403922; }
+.pos-pauseBanner div { display: grid; gap: 6px; flex: 1 1 230px; }
+.pos-pauseBanner strong { font-size: 20px; font-weight: 600; }
+.pos-pauseBanner span { font-size: 14px; line-height: 1.4; }
+.pos-pauseBanner button { min-height: 48px; padding: 12px 18px; border: 1px solid #cabe98; border-radius: 8px; background: #fffdf6; color: #403922; font: inherit; font-weight: 600; cursor: pointer; }
+.pos-pauseBanner button:disabled { opacity: .6; cursor: wait; }
+.pos-pauseBanner--full { flex: 1; min-height: 360px; box-sizing: border-box; flex-direction: column; flex-wrap: nowrap; justify-content: center; align-items: center; gap: 28px; padding: 40px 24px; border-left: 0; text-align: center; }
+.pos-pauseBanner--full div { flex: 0 0 auto; width: 100%; max-width: 430px; gap: 14px; }
+.pos-pauseBanner--full strong { font-size: clamp(26px, 5vw, 36px); line-height: 1.2; }
+.pos-pauseBanner--full span { font-size: 15px; line-height: 1.6; }
+.pos-pauseBanner--full button { width: 100%; max-width: 300px; min-height: 52px; }
+.pos-pauseBanner { background: #fff3c4; color: #3b008b; border-color: #ffb61c; }
+.pos-pauseBanner button { background: #3b008b; color: #fff; border-color: #3b008b; }
+.pos-pauseBanner--full { background: linear-gradient(155deg, #fff9e8 0%, #fff0b5 65%, #ffe298 100%); }
+.pos-pauseBanner--full strong { color: #3b008b; }
+.pos-shell--paused .pos-topbar { box-shadow: inset 0 -5px 0 #ffdf4f; }
+.pos-menuHeading .pos-menuClose { flex: 0 0 44px; width: 44px; height: 44px; min-height: 44px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 50%; color: #625e69; background: transparent; }
+.pos-menuHeading .pos-menuClose:hover { background: #f2f0ed; color: #282630; }
+.pos-menuContent > h3:first-child { margin-top: 0; }
+.pos-menuPanel button:hover { background: #fffaf0; border-color: #c8bc96; }
+.pos-menuPanel button:focus-visible { outline: 2px solid #817047; outline-offset: 2px; }
+@media (max-width: 480px) {
+  .pos-menuPanel { width: 100vw; border-left: 0; }
+  .pos-menuContent { padding: 18px 20px; }
+  .pos-menuHeading { padding: 18px 20px; }
 }
 
 .pos-storeIdentity {
@@ -1243,7 +1293,8 @@
 
 .pos-sectionHead button {
   min-height: 34px;
-  background: #151515;
+  background: var(--pos-brand-2);
+  color: var(--pos-brand-1);
   padding-inline: 12px;
   font-size: 13px;
 }
@@ -1269,10 +1320,12 @@
 }
 
 .pos-dayOrdersPane {
+  min-height: calc(100vh - 215px);
   min-height: calc(100dvh - 215px);
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
-  align-content: stretch;
+  grid-template-rows: auto;
+  align-content: start;
+  gap: 14px;
 }
 
 .pos-dayOrdersList {
@@ -1297,8 +1350,8 @@
 
 .pos-dayOrderTicket {
   display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 3px 10px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px 10px;
   min-height: 78px;
   border: 1px solid rgba(59, 0, 139, 0.14);
   border-radius: 8px;
@@ -1313,7 +1366,7 @@
 }
 
 .pos-dayOrderTicket span {
-  grid-row: span 2;
+  grid-column: 1 / -1;
   min-width: 48px;
   color: var(--pos-brand-1);
   font-size: 12px;
@@ -1343,12 +1396,35 @@
 }
 
 .pos-dayOrderTicket b {
-  grid-row: span 2;
   align-self: center;
   color: var(--pos-pink);
   font-size: 15px;
   font-weight: 1000;
   white-space: nowrap;
+}
+.pos-dayOrderTicket .pos-dayOrderCustomer,
+.pos-dayOrderTicket .pos-dayOrderMovement { grid-column: 1 / -1; white-space: normal; overflow-wrap: anywhere; }
+.pos-dayOrderTicket .pos-dayOrderCustomer { color: #291049; font-size: 14px; }
+.pos-dayOrderTicket .pos-dayOrderDate { grid-column: 1 / -1; }
+.pos-dayOrderTicket .pos-dayOrderTags { display: flex; flex-wrap: wrap; gap: 6px; }
+.pos-dayOrderTags em { padding: 6px 9px; border-radius: 8px; background: #fff4bf; color: #3b008b; font-size: 12px; font-style: normal; }
+.pos-dayOrderActions { display: flex; flex-wrap: wrap; gap: 8px; }
+.pos-dayOrderActions button { min-height: 44px; }
+.pos-shell--history { height: 100vh; height: 100dvh; overflow: hidden; background: #f7f4ff; }
+.pos-shell--history .pos-workspace--dayOrders { flex: 1; display: flex; padding: 0; min-height: 0; overflow: hidden; }
+.pos-shell--history .pos-dayOrdersPane { flex: 1; display: flex; flex-direction: column; min-height: 0; min-width: 0; padding: 0; border: 0; border-radius: 0; box-shadow: none; background: #faf8ff; gap: 0; overflow: hidden; }
+.pos-dayOrdersPane > .pos-sectionHead { flex-shrink: 0; margin: 0; padding: 24px; background: #3b008b; border-bottom: 4px solid #ffb61c; }
+.pos-dayOrdersPane > .pos-sectionHead h2 { color: #fff; font-size: 23px; }
+.pos-dayOrdersPane > .pos-sectionHead > div > span { color: #ffdf4f; }
+.pos-dayOrdersPane > .pos-sectionHead h2 + small { color: #eee5ff; font-weight: 500; margin-top: 8px; }
+.pos-dayOrdersPane .pos-dayOrderActions button { min-height: 46px; background: #ffcf40; color: #3b008b; border: 1px solid #ffcf40; border-radius: 8px; font-weight: 600; padding: 10px 16px; }
+.pos-dayOrdersPane .pos-dayOrderActions button + button { background: #ffcf40; color: #3b008b; border-color: #ffcf40; }
+.pos-dayOrdersPane .pos-dayOrderActions button:disabled { opacity: .6; }
+.pos-dayOrdersPane .pos-dayOrdersList { flex: 1; min-height: 0; padding: 20px; overflow-y: auto; }
+.pos-dayOrdersPane > .pos-emptySmall { flex: 1; display: grid; place-content: center; margin: 20px; border: 1px dashed #d8cceb; border-radius: 12px; padding: 24px; text-align: center; color: #65557e; background: #fff; }
+@media (max-width: 480px) {
+  .pos-dayOrdersPane > .pos-sectionHead { flex-direction: column; align-items: stretch; gap: 12px; }
+  .pos-dayOrderActions button { flex: 1; }
 }
 
 .pos-dayOrderTicket:hover,
@@ -1685,16 +1761,16 @@
 }
 
 .pos-orderCard.is-cashPayment {
-  border-color: rgba(0, 0, 0, 0.52);
+  border-color: #ffb61c;
   box-shadow:
-    inset 0 0 0 2px rgba(0, 0, 0, 0.82),
-    0 16px 40px rgba(0, 0, 0, 0.14);
+    inset 0 0 0 2px #ffb61c,
+    0 16px 40px rgba(59, 0, 139, 0.12);
 }
 
 .pos-orderCashPayment {
   border-radius: 6px;
-  background: #000;
-  color: #fff;
+  background: #fff3c4;
+  color: #3b008b;
   padding: 5px 7px;
   text-align: center;
 }
@@ -1887,6 +1963,7 @@
 
 .pos-empty--visitors {
   position: relative;
+  min-height: calc(100vh - 214px);
   min-height: calc(100dvh - 214px);
   place-content: center;
   overflow: hidden;
@@ -1895,7 +1972,7 @@
   background:
     radial-gradient(circle at 50% 48%, rgba(255, 255, 255, 0.32), transparent 24%),
     radial-gradient(circle at 50% 48%, rgba(255, 246, 176, 0.48), transparent 42%),
-    linear-gradient(145deg, color-mix(in srgb, var(--pos-brand-2) 82%, #fff) 0%, var(--pos-brand-2) 56%, #d99400 100%);
+    linear-gradient(145deg, #fff68a 0%, #ffef00 56%, #ffd21c 100%);
   color: transparent;
   isolation: isolate;
   animation: posVisitorVoltaGlow 2.2s ease-in-out infinite;
@@ -1949,6 +2026,10 @@
   display: none;
 }
 
+.pos-empty--visitors .pos-checkoutMessage { display: block; color: #291049; font-size: clamp(24px, 5vw, 40px); line-height: 1.2; text-align: center; max-width: 620px; margin: 24px auto 0; }
+.pos-checkoutBanner { position: relative; isolation: isolate; overflow: hidden; flex-shrink: 0; padding: 18px 16px; background: #ffef00; color: #291049; text-align: center; font-size: 22px; font-weight: 800; }
+.pos-checkoutBanner::before { content: ""; position: absolute; z-index: -1; width: 700px; height: 700px; left: 50%; top: 50%; border-radius: 50%; background: repeating-radial-gradient(circle, transparent 0 12%, #ffffff55 12.4% 13.2%, #3b008b22 13.6% 14.2%, transparent 14.8% 21%); animation: posVisitorWaterWaves 2.05s ease-out infinite; }
+
 .pos-empty--visitors span,
 .pos-empty--visitors small {
   display: none;
@@ -1973,6 +2054,7 @@
 }
 
 .pos-visitorSignal span {
+  display: block;
   position: absolute;
   inset: -18px;
   border: 2px solid rgba(255, 255, 255, 0.58);
@@ -2365,17 +2447,17 @@
 }
 
 .pos-ticketBlock--cashPayment {
-  border: 2px solid #000;
+  border: 2px solid #ffb61c;
   border-radius: 8px;
-  background: #000;
-  color: #fff;
+  background: #fff3c4;
+  color: #3b008b;
   padding: 10px;
 }
 
 .pos-ticketBlock--cashPayment span,
 .pos-ticketBlock--cashPayment strong,
 .pos-ticketBlock--cashPayment small {
-  color: #fff;
+  color: #3b008b;
 }
 
 .pos-ticketBlock--cashPayment strong {
@@ -2613,9 +2695,8 @@
   gap: 0;
   border: 3px solid rgba(255, 255, 255, 0.34);
   border-radius: 50%;
-  background:
-    radial-gradient(circle at 36% 25%, #fff8c7 0 18%, #ffb61c 19% 66%, #f92672 100%);
-  color: #3b008b;
+  background: #3b008b;
+  color: #fff;
   font: inherit;
   font-size: 16px;
   font-weight: 1000;
@@ -2641,7 +2722,7 @@
 
 .pos-newOrderAcceptBtn small {
   margin-top: 4px;
-  color: rgba(59, 0, 139, 0.72);
+  color: #fff3c4;
   font-size: 12px;
   font-weight: 1000;
 }
@@ -2914,7 +2995,7 @@
   margin-top: 8px;
   border: 0;
   border-radius: 8px;
-  background: #171717;
+  background: var(--pos-brand-1);
   color: #fff;
   font-weight: 950;
   cursor: pointer;
@@ -3203,21 +3284,21 @@
 }
 
 .pos-readyConfirmCopy {
-  border: 1px solid rgba(249, 38, 114, 0.2);
+  border: 1px solid #edcd73;
   border-radius: 8px;
-  background: #fff0f6;
-  color: #9a174d;
+  background: #fff3c4;
+  color: #3b008b;
   padding: 11px 12px;
   font-size: 13px;
   font-weight: 850;
 }
 
 .pos-readyConfirmModal.is-cashReminder .pos-readyConfirmCopy {
-  border-color: #000;
-  background: #000;
-  color: #fff;
+  border-color: #ffb61c;
+  background: #fff3c4;
+  color: #3b008b;
   font-size: 15px;
-  font-weight: 1000;
+  font-weight: 700;
 }
 
 .pos-storePanel {
@@ -3424,8 +3505,10 @@
   margin-top: 12px;
 }
 
-.pos-actionGrid button:last-child {
-  background: #151515;
+.pos-actionGrid button.pos-button--secondary,
+.pos-noticeDialog button.pos-button--secondary {
+  background: var(--pos-brand-2, #ffb61c);
+  color: var(--pos-brand-1, #3b008b);
 }
 
 .pos-readyButtonWrap {
@@ -3568,6 +3651,15 @@
 .pos-noticeDialog header button { width: 44px; height: 44px; border: 0; border-radius: 12px; background: #efe7fb; color: #3b008b; font-size: 28px; cursor: pointer; }
 .pos-noticeDialog p { margin: 18px 0 24px; line-height: 1.5; overflow-wrap: anywhere; }
 .pos-noticeDialog .pos-noticeClose { width: 100%; min-height: 44px; border: 0; border-radius: 12px; background: #3b008b; color: white; font: inherit; font-weight: 700; cursor: pointer; }
+.pos-logoutActions { display: flex; gap: 12px; }
+.pos-logoutActions button { flex: 1; min-height: 48px; padding: 10px; border: 1px solid #d8c9f0; border-radius: 12px; background: #efe7fb; color: #3b008b; font: inherit; font-weight: 700; cursor: pointer; }
+.pos-logoutActions button:disabled { opacity: .6; cursor: wait; }
+.pos-loginPanel .pos-rememberPin { display: flex; align-items: center; gap: 10px; min-height: 44px; cursor: pointer; }
+.pos-loginPanel .pos-rememberPin input { width: 20px; height: 20px; margin: 0; padding: 0; flex: 0 0 20px; accent-color: #3b008b; }
+.pos-loginPanel .pos-pinHelp { margin: 4px 0 16px; font-size: 12px; text-align: left; }
+@media (prefers-reduced-motion: reduce) {
+  .pos-checkoutBanner::before, .pos-empty--visitors, .pos-empty--visitors::before, .pos-visitorSignal, .pos-visitorSignal span { animation: none; }
+}
 .pos-utilityDock { order: 2; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 10px 18px 8px; flex-shrink: 0; }
 .pos-utilityDock .pos-customerHelpFab, .pos-utilityDock .pos-reservationsFab { position: relative; inset: auto; width: 46px; height: 46px; flex-shrink: 0; }
 .pos-shell > .pos-footer { order: 3; }
@@ -3581,4 +3673,4 @@
 .pos-inventoryCount { position: absolute; top: -6px; right: -7px; min-width: 22px; height: 22px; padding: 0 5px; display: grid; place-items: center; border: 2px solid #fff; border-radius: 20px; background: #d82036; color: #fff; font-size: 11px; line-height: 1; animation: pos-inventoryPop .25s ease-out; }
 @keyframes pos-inventoryPop { from { transform: scale(.7); } to { transform: scale(1); } }
 @media (prefers-reduced-motion: reduce) { .pos-inventoryCount { animation: none; } .pos-inventoryFab { transition: none; } }
-.pos-backToKitchen { min-height: 44px; margin-bottom: 12px; padding: 8px 16px; border: 0; border-radius: 12px; background: #541ac0; color: white; cursor: pointer; }
+.pos-backToKitchen { min-height: 44px; margin-bottom: 12px; padding: 8px 16px; border: 0; border-radius: 12px; background: #ffb61c; color: #3b008b; cursor: pointer; }

@@ -2,7 +2,9 @@ param(
     [string]$Sdk = "$env:LOCALAPPDATA\Android\Sdk",
     [string]$Jdk = 'C:\Program Files\Android\Android Studio\jbr',
     [string]$BuildTools = '36.0.0',
-    [ValidateSet('usb', 'https')][string]$Connection = 'usb'
+    [ValidateSet('usb', 'https')][string]$Connection = 'usb',
+    [string]$VersionName = '0.3.6',
+    [int]$VersionCode = 9
 )
 $ErrorActionPreference = 'Stop'
 Set-Location $PSScriptRoot
@@ -24,9 +26,9 @@ if ($Connection -eq 'https') {
     Set-Content -LiteralPath (Join-Path $variantResources 'xml/network_security_config.xml') -Encoding utf8 -Value '<network-security-config><base-config cleartextTrafficPermitted="false" /></network-security-config>'
 }
 $variantManifest = Join-Path $variantRoot 'AndroidManifest.xml'
-$manifestText = (Get-Content AndroidManifest.xml -Raw).Replace('android:versionCode="2"','android:versionCode="7"').Replace('android:versionName="0.2.0"', "android:versionName=`"0.3.4-$Connection`"")
+$manifestText = (Get-Content AndroidManifest.xml -Raw).Replace('android:versionCode="2"',"android:versionCode=`"$VersionCode`"").Replace('android:versionName="0.2.0"', "android:versionName=`"$VersionName-$Connection`"")
 Set-Content -LiteralPath $variantManifest -Encoding utf8 -Value $manifestText
-$apkOutput = if ($Connection -eq 'https') { 'build\volta-pos-connected-0.3.4.apk' } else { 'build\volta-pos-pilot-0.2.0.apk' }
+$apkOutput = if ($Connection -eq 'https') { "build\volta-pos-connected-$VersionName.apk" } else { "build\volta-pos-pilot-$VersionName.apk" }
 if (!(Test-Path libs\printerx-1.0.20.aar)) {
     Invoke-WebRequest 'https://repo.maven.apache.org/maven2/com/sunmi/printerx/1.0.20/printerx-1.0.20.aar' -OutFile libs\printerx-1.0.20.aar
 }

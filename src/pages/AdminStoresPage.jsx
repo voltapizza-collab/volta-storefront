@@ -165,6 +165,9 @@ const STORE_COPY = {
     "coordinates.longitude": "Longitude",
     "coordinates.pending": "pending",
     "pos.user": "User",
+    "pos.copy": "Copy",
+    "pos.copied": "Copied",
+    "pos.copyError": "Could not copy. Select the value and copy it manually.",
     "pos.loading": "Loading...",
     "pos.querying": "Checking this store's POS PIN.",
     "pos.regenerated": "This PIN was just generated because the store had an old non-recoverable credential.",
@@ -331,6 +334,9 @@ const STORE_COPY = {
     "coordinates.longitude": "Longitud",
     "coordinates.pending": "pendiente",
     "pos.user": "Usuario",
+    "pos.copy": "Copiar",
+    "pos.copied": "Copiado",
+    "pos.copyError": "No se pudo copiar. Selecciona el dato y cópialo manualmente.",
     "pos.loading": "Cargando...",
     "pos.querying": "Consultando el PIN POS de la tienda.",
     "pos.regenerated": "Este PIN acaba de generarse porque la tienda tenia una credencial antigua no recuperable.",
@@ -1762,6 +1768,35 @@ function MapPanel({
   );
 }
 
+function CredentialCopyButton({ value, label, disabled, t }) {
+  const [status, setStatus] = useState("");
+  const timer = useRef(null);
+  useEffect(() => {
+    setStatus("");
+    return () => window.clearTimeout(timer.current);
+  }, [value]);
+  const copy = async () => {
+    window.clearTimeout(timer.current);
+    try {
+      await navigator.clipboard.writeText(String(value));
+      setStatus("copied");
+      timer.current = window.setTimeout(() => setStatus(""), 2000);
+    } catch (_) {
+      setStatus("error");
+    }
+  };
+  return <>
+    <button type="button" className="sc-posCopyBtn" disabled={disabled || !value}
+      aria-label={`${t("pos.copy")} ${label}`} title={`${t("pos.copy")} ${label}`} onClick={copy}>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
+        <rect x="8" y="8" width="12" height="13" rx="2" /><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3" />
+      </svg>
+      <span aria-live="polite">{status === "copied" ? t("pos.copied") : t("pos.copy")}</span>
+    </button>
+    {status === "error" && <small className="sc-posCopyError" role="alert">{t("pos.copyError")}</small>}
+  </>;
+}
+
 export default function AdminStoresPage({
   initialPartnerId = "",
   lockPartner = false,
@@ -2656,11 +2691,12 @@ export default function AdminStoresPage({
               </button>
             </header>
             <div className="sc-modalBody sc-posPinModal">
-              <div>
+              <div className="sc-posCredentialRow">
                 <span>{t("pos.user")}</span>
                 <strong>{posCredentialModal.username || "-"}</strong>
+                <CredentialCopyButton value={posCredentialModal.username} label={t("pos.user")} disabled={posCredentialModal.loading || Boolean(posCredentialModal.error)} t={t} />
               </div>
-              <div>
+              <div className="sc-posCredentialRow">
                 <span>PIN</span>
                 <strong>
                   {posCredentialModal.loading
@@ -2669,6 +2705,7 @@ export default function AdminStoresPage({
                       ? "-"
                       : posCredentialModal.pin || t("pin.none")}
                 </strong>
+                <CredentialCopyButton value={posCredentialModal.pin} label="PIN" disabled={posCredentialModal.loading || Boolean(posCredentialModal.error)} t={t} />
               </div>
               <p>
                 {posCredentialModal.error

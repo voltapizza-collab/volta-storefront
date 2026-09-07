@@ -15,6 +15,7 @@ import {
   normalizeStorefrontMode,
 } from "../constants/storefrontButtons";
 import { buildStorefrontSeo, usePublicSeo } from "../utils/seo";
+import { checkoutPresenceState } from "../utils/checkoutPresence";
 
 const TRENDING_TAB = "__TRENDING__";
 const TOP_DEAL_TAB = "__TOP_DEAL__";
@@ -2494,6 +2495,7 @@ export default function StorePage() {
   const [checkoutProfileOpen, setCheckoutProfileOpen] = useState(false);
   const [paymentMethodModalOpen, setPaymentMethodModalOpen] = useState(false);
   const [cashConfirmationOpen, setCashConfirmationOpen] = useState(false);
+  const checkoutRedirectingRef = useRef(false);
   const [pendingCashProfile, setPendingCashProfile] = useState(null);
   const [checkoutPaymentMode, setCheckoutPaymentMode] = useState("card");
   const [checkoutProfileForm, setCheckoutProfileForm] = useState({
@@ -2822,7 +2824,9 @@ export default function StorePage() {
     const sendPresence = () => {
       if (document.visibilityState === "hidden") return;
 
-      const state = cartOpen || cart.length > 0 ? "cart" : "browsing";
+      const state = checkoutPresenceState({ redirecting: checkoutRedirectingRef.current,
+        loading: checkoutLoading, profileOpen: checkoutProfileOpen, paymentOpen: paymentMethodModalOpen,
+        cashOpen: cashConfirmationOpen, cartOpen, cartCount: cart.length });
       postStorefrontPresence({
         partnerId: partner.id,
         storeId: store.id,
@@ -2838,7 +2842,7 @@ export default function StorePage() {
       window.clearInterval(intervalId);
       document.removeEventListener("visibilitychange", sendPresence);
     };
-  }, [cart.length, cartOpen, partner?.id, store?.id]);
+  }, [cart.length, cartOpen, partner?.id, store?.id, checkoutLoading, checkoutProfileOpen, paymentMethodModalOpen, cashConfirmationOpen]);
 
   useEffect(() => {
     const intervalId = window.setInterval(() => {
@@ -5680,6 +5684,7 @@ export default function StorePage() {
         } catch {
           setSavedCustomerProfile(checkoutProfile);
         }
+        checkoutRedirectingRef.current = true;
         await Promise.race([
           postStorefrontPresence({
             partnerId: partner?.id || store?.partnerId,
@@ -5722,9 +5727,15 @@ export default function StorePage() {
       }
 
       console.warn("[StorePage] checkout session without url", checkoutData);
+      checkoutRedirectingRef.current = false;
+      setCheckoutProfileOpen(false);
+      setCashConfirmationOpen(false);
       setCheckoutMessage("No pudimos abrir el metodo de pago. Intentalo de nuevo.");
       setCartOpen(true);
     } catch (err) {
+      checkoutRedirectingRef.current = false;
+      setCheckoutProfileOpen(false);
+      setCashConfirmationOpen(false);
       console.error(err);
       const errorCode = err.response?.data?.error;
       const messages = {
@@ -8665,7 +8676,9 @@ export default function StorePage() {
                     : scheduledOrderLabel || (scheduledAt
                     ? "La fecha programada ya no esta disponible. Elige otra franja."
                     : availability?.requiresSchedule
-                    ? "Fuera del horario de servicio. Elige fecha y hora para tu pedido programado antes de pagar."
+                    ? availability?.operationsPaused
+                      ? "Servicio inmediato en pausa. Puedes pedir programando fecha y hora."
+                      : "Fuera del horario de servicio. Elige fecha y hora para tu pedido programado antes de pagar."
                     : "Pedido para el servicio actual")}</p>
                   {availabilityError && <p role="alert">{availabilityError}</p>}
                   <div className="sf-cartActions sf-cartActions--checkout">
@@ -9659,7 +9672,9 @@ export default function StorePage() {
             </div>
             <div className="sf-schedule">
               <p>{availability?.requiresSchedule
-                ? "Estamos fuera del horario de servicio. Tu pedido sera programado: selecciona fecha y hora antes de pagar."
+                ? availability?.operationsPaused
+                  ? "El servicio inmediato está en pausa. Puedes comprar seleccionando fecha y hora para tu pedido."
+                  : "Estamos fuera del horario de servicio. Tu pedido sera programado: selecciona fecha y hora antes de pagar."
                 : "Selecciona fecha y hora para tu pedido programado."}</p>
               {availability?.timeZone && <small>Horario de la tienda: {availability.timeZone}</small>}
               {availabilityError && <p role="alert">{availabilityError} <button type="button" onClick={() => refreshAvailability().catch(() => {})}>Reintentar</button></p>}

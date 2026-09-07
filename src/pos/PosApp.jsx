@@ -13,11 +13,22 @@ import { mockPrinter } from "./printers/mockPrinter";
 import { buildOrderLines } from './printers/mockPrinter';
 import { isNativePos, nativeCall } from './nativeBridge';
 import PosNotice, { usePosNotice } from './PosNotice';
+import PosLogoutDialog from './PosLogoutDialog';
+import { shouldShowCheckoutAlert } from '../utils/checkoutPresence';
 import "../styles/PosApp.css";
 
 const POS_SESSION_KEY = "volta_pos_virtual_session";
+const POS_REMEMBERED_LOGIN_KEY = "volta_pos_remembered_login";
+
+function readRememberedLogin() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(POS_REMEMBERED_LOGIN_KEY));
+    if (typeof saved?.username === 'string' && typeof saved?.pin === 'string' && /^\d{6}$/.test(saved.pin)) return saved;
+  } catch (_) { /* Login remains available when storage is unavailable. */ }
+  return null;
+}
 const POS_ACCEPTED_NOTICE_KEY_PREFIX = "volta_pos_accepted_order_notices";
-const POLL_MS = isNativePos ? 10000 : 5000;
+const POLL_MS = 5000;
 const POS_REQUEST_TIMEOUT_MS = 8000;
 const STALE_AFTER_MS = isNativePos ? 45_000 : 15_000;
 const OFFLINE_AFTER_MS = 60_000;
@@ -772,9 +783,29 @@ function PosPizzaMark() {
   );
 }
 
-function PosLogin({ onStart }) {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+export function DayOrderCard({ order, onOpen }) {
+  return (
+    <button type="button" className="pos-dayOrderTicket" onClick={onOpen}>
+      <strong>{order.code || `Pedido ${order.id}`}</strong>
+      <b>{formatMoney(order.total, order.currency || "EUR")}</b>
+      <small className="pos-dayOrderCustomer">{getCustomerName(order)}</small>
+      <small className="pos-dayOrderDate">{formatTime(order.date || order.createdAt)}</small>
+      <small className="pos-dayOrderMovement">{asArray(order.products).map(item => `${lineQty(item)}× ${lineName(item)}`).join(" · ") || "Sin detalle de productos"}</small>
+      <span className="pos-dayOrderTags">
+        <em>Finalizada</em>
+        <em>{isCashPaymentOrder(order) ? "Efectivo" : getPaymentSignal(order).match(/card|tarjeta|stripe/) ? "Tarjeta" : "Pago sin especificar"}</em>
+        <em>{getOrderType(order)}</em>
+      </span>
+    </button>
+  );
+}
+
+export function PosLogin({ onStart }) {
+  const [savedLogin] = useState(readRememberedLogin);
+  const [username, setUsername] = useState(savedLogin?.username || "");
+  const [password, setPassword] = useState(savedLogin?.pin || "");
+  const [rememberPin, setRememberPin] = useState(Boolean(savedLogin));
+  const [storageError, setStorageError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -798,6 +829,11 @@ function PosLogin({ onStart }) {
         setError("Esta cuenta aun no tiene una tienda asociada para usar el POS.");
         return;
       }
+
+      try {
+        if (rememberPin) localStorage.setItem(POS_REMEMBERED_LOGIN_KEY, JSON.stringify({ username: username.trim(), pin: password.trim() }));
+        else localStorage.removeItem(POS_REMEMBERED_LOGIN_KEY);
+      } catch (_) { /* A storage failure must not prevent a successful login. */ }
 
       onStart({
         partnerId: data.partnerId,
@@ -849,11 +885,13 @@ function PosLogin({ onStart }) {
           </div>
 
           <div className="pos-loginField">
+            <label htmlFor="pos-password">PIN de tienda · 6 dígitos</label>
             <div className="pos-passwordInput">
               <input
                 id="pos-password"
                 type={showPassword ? "text" : "password"}
                 aria-label="PIN de tienda"
+                aria-describedby="pos-pin-help"
                 placeholder="PIN de tienda"
                 autoComplete="current-password"
                 inputMode="numeric"
@@ -870,11 +908,29 @@ function PosLogin({ onStart }) {
                 title={showPassword ? "Ocultar PIN" : "Mostrar PIN"}
                 onClick={() => setShowPassword((current) => !current)}
               >
-                {showPassword ? "Hide" : "Show"}
+                {showPassword ? "Ocultar" : "Mostrar"}
               </button>
             </div>
           </div>
 
+          <label className="pos-rememberPin">
+            <input type="checkbox" checked={rememberPin} onChange={event => {
+              const checked = event.target.checked;
+              setStorageError("");
+              if (!checked) {
+                try { localStorage.removeItem(POS_REMEMBERED_LOGIN_KEY); }
+                catch (_) { setStorageError("No se pudo borrar el PIN guardado. Inténtalo de nuevo."); return; }
+                setPassword("");
+                setShowPassword(false);
+              }
+              setRememberPin(checked);
+            }} />
+            Recordar el PIN en este dispositivo
+          </label>
+          <p id="pos-pin-help" className="pos-pinHelp">
+            {rememberPin ? "El usuario y el PIN se guardarán al entrar. Desmarca la opción para olvidarlos." : "Marca la opción para conservar tu usuario y PIN al salir del POS."}
+          </p>
+          {storageError && <div className="pos-loginError" role="alert">{storageError}</div>}
           {error ? <div className="pos-loginError">{error}</div> : null}
 
           <button className="pos-loginSubmit" type="submit" disabled={!canSubmit}>
@@ -1231,10 +1287,29 @@ export default function PosApp() {
   const [dayOrdersError, setDayOrdersError] = useState("");
   const [loadingOrders, setLoadingOrders] = useState(false);
   const [storeActive, setStoreActive] = useState(true);
+  const [operationsPaused, setOperationsPaused] = useState(false);
+  const [savingPause, setSavingPause] = useState(false);
+  const [pauseStateKnown, setPauseStateKnown] = useState(false);
   const [savingStore, setSavingStore] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const menuPanelRef = useRef(null);
+  const menuButtonRef = useRef(null);
+  useEffect(() => {
+    if (!menuOpen) return undefined;
+    const panel = menuPanelRef.current;
+    const previousOverflow = document.body.style.overflow;
+    panel.showModal();
+    document.body.style.overflow = 'hidden';
+    return () => {
+      panel.close();
+      document.body.style.overflow = previousOverflow;
+      menuButtonRef.current?.focus();
+    };
+  }, [menuOpen]);
+  const [logoutOpen, setLogoutOpen] = useState(false);
   const [message, setMessage, dismissMessage] = usePosNotice();
   const [newOrderNotice, setNewOrderNotice] = useState(null);
+  useEffect(() => { if (newOrderNotice) setMenuOpen(false); }, [newOrderNotice]);
   const [readyConfirmOrder, setReadyConfirmOrder] = useState(null);
   const [readyCashReminderOrder, setReadyCashReminderOrder] = useState(null);
   const [reservations, setReservations] = useState([]);
@@ -1330,15 +1405,19 @@ export default function PosApp() {
     ? "stale"
     : "online";
   const hasVisitors = Number(presence.activeVisitors || 0) > 0;
-  const hasCheckoutVisitors = Number(presence.checkoutVisitors || 0) > 0;
-  const showVisitorAlert = orders.length === 0 && trustState === "online" && hasCheckoutVisitors;
+  const showCheckoutAlert = shouldShowCheckoutAlert({ presence, online: trustState === "online", incomingOrder: newOrderNotice, now: clockTick });
+  const showVisitorAlert = orders.length === 0 && showCheckoutAlert;
+  const showPauseScreen = operationsPaused && activePanel === "orders" && orders.length === 0 && !selectedOrder;
   const showOrderUtilityFabs =
+    activePanel !== "dayOrders" &&
     !reservationsOpen &&
     !customerHelpOpen;
   const shellClassName = [
     "pos-shell",
+    activePanel === "dayOrders" ? "pos-shell--history" : "",
+    operationsPaused ? "pos-shell--paused" : "",
     `pos-shell--${trustState}`,
-    showVisitorAlert ? "pos-shell--visitors" : "",
+    showCheckoutAlert ? "pos-shell--visitors" : "",
   ]
     .filter(Boolean)
     .join(" ");
@@ -1799,18 +1878,26 @@ export default function PosApp() {
 
   useEffect(() => {
     if (!session?.storeId) return;
-
-    api
+    let cancelled = false;
+    setPauseStateKnown(false);
+    const refreshStore = () => api
       .get(`/api/stores/${session.storeId}`)
       .then((response) => {
+        if (cancelled) return;
         const store = response?.data || response;
         setStoreMeta(store || null);
         setStoreActive(store?.active !== false);
+        setOperationsPaused(store?.operationsPaused === true);
+        setPauseStateKnown(typeof store?.operationsPaused === "boolean");
       })
       .catch((error) => {
+        if (cancelled) return;
         console.error(error);
-        setMessage("No se pudo leer si la tienda esta abierta.");
+        setPauseStateKnown(false);
       });
+    refreshStore();
+    const timer = window.setInterval(refreshStore, 15000);
+    return () => { cancelled = true; window.clearInterval(timer); };
   }, [session?.storeId]);
 
   useEffect(() => {
@@ -2054,6 +2141,7 @@ export default function PosApp() {
       catch (_) { window.location.reload(); return; }
     }
     localStorage.removeItem(POS_SESSION_KEY);
+    setLogoutOpen(false);
     setSession(null);
     setOrders([]);
     setSelectedOrderId(null);
@@ -2065,6 +2153,20 @@ export default function PosApp() {
       consecutiveFailures: 0,
     });
     setMessage("");
+  };
+
+  const toggleOperationsPause = async () => {
+    if (!session?.storeId || savingPause || !pauseStateKnown) return;
+    setSavingPause(true);
+    setMenuOpen(false);
+    try {
+      const { data } = await api.patch(`/api/stores/${session.storeId}/operations-pause`, { paused: !operationsPaused });
+      setOperationsPaused(data.operationsPaused === true);
+    } catch (_) {
+      setMessage("No se pudo confirmar el cambio de pausa. Comprueba la conexión e inténtalo de nuevo.");
+    } finally {
+      setSavingPause(false);
+    }
   };
 
   const toggleStore = async () => {
@@ -2302,7 +2404,7 @@ export default function PosApp() {
 
   return (
     <main className={shellClassName}>
-      <header className="pos-topbar">
+      {activePanel !== "dayOrders" && <header className="pos-topbar">
         <div className="pos-storeIdentity">
           <span className="pos-kicker">{isNativePos ? 'Volta POS' : 'Volta POS Virtual'}</span>
           <h1>{session.storeName}</h1>
@@ -2311,7 +2413,7 @@ export default function PosApp() {
 
         <div className="app-toggle pos-storeToggle">
           <span className="app-toggle-label">
-            {storeActive ? "Store open" : "Store closed"}
+            {storeActive ? operationsPaused ? "En pausa" : "Store open" : "Store closed"}
           </span>
           <button
             type="button"
@@ -2329,6 +2431,9 @@ export default function PosApp() {
             <button
               type="button"
               className="pos-menuBtn"
+              ref={menuButtonRef}
+              aria-expanded={menuOpen}
+              aria-controls="pos-menu-panel"
               onClick={() => setMenuOpen((current) => !current)}
               aria-label="Menu POS"
               title="Menu"
@@ -2339,9 +2444,9 @@ export default function PosApp() {
             <button
               type="button"
               className="pos-logoutPill"
-              onClick={logoutSession}
+              onClick={() => setLogoutOpen(true)}
             >
-              Logout
+              Salir
             </button>
           </div>
 
@@ -2379,10 +2484,28 @@ export default function PosApp() {
         </div>
 
         {menuOpen && (
-          <div className="pos-menuPanel">
+          <dialog id="pos-menu-panel" className="pos-menuPanel" ref={menuPanelRef} aria-labelledby="pos-menu-title"
+            onCancel={event => { event.preventDefault(); setMenuOpen(false); }}
+            onClick={event => { if (event.target === event.currentTarget) { const bounds = event.currentTarget.getBoundingClientRect(); if (event.clientX < bounds.left || event.clientX > bounds.right) setMenuOpen(false); } }}>
+            <div className="pos-menuHeading"><div><small>VOLTA · POS</small><h2 id="pos-menu-title">Centro de operaciones</h2></div><button className="pos-menuClose" type="button" autoFocus onClick={() => setMenuOpen(false)} aria-label="Cerrar menú" title="Cerrar menú"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" /></svg></button></div>
+            <div className="pos-menuContent">
+            {(!storeActive || (pauseStateKnown && operationsPaused)) && (
+            <section className={`pos-menuMode ${operationsPaused ? 'is-paused' : ''}`} aria-label="Modo de operaciones">
+              <small>{session.storeName}</small>
+              <strong>{!storeActive ? 'Tienda cerrada' : 'Operaciones en pausa'}</strong>
+              <p>{!storeActive ? 'La tienda no acepta nuevas compras.' : 'Nuevas compras solo con fecha y hora programadas.'}</p>
+            </section>
+            )}
+            <h3>Operaciones</h3>
             <button type="button" onClick={openDayOrders}>
-              Ordenes del dia
+              <strong>Operaciones del día</strong><small>Consultar pedidos finalizados y ventas</small>
             </button>
+            <button type="button" onClick={toggleOperationsPause} disabled={savingPause || !pauseStateKnown || !storeActive}>
+              <strong>{savingPause ? "Actualizando pausa…" : operationsPaused ? "Reanudar operaciones" : "Pausar operaciones"}</strong>
+              <small>{operationsPaused ? 'Volver al servicio según el horario habitual' : 'Aceptar solo pedidos programados'}</small>
+            </button>
+            {!pauseStateKnown && <small>Esperando el estado de pausa del servidor.</small>}
+            <h3>Comprobaciones del terminal</h3>
             <button
               type="button"
               onClick={async () => {
@@ -2390,25 +2513,43 @@ export default function PosApp() {
                 setMenuOpen(false);
               }}
             >
-              Probar sonido pedido
+              <strong>Probar sonido</strong><small>Comprobar el aviso de nuevos pedidos</small>
             </button>
-            {isNativePos && <button type="button" onClick={async () => {
+            <button type="button" onClick={async () => {
               setMenuOpen(false);
               try {
                 const sample = { code: 'PRUEBA-58MM', storeName: session.storeName, total: 25.50, currency: 'EUR',
                   delivery: 'DELIVERY', customerData: {name:'Cliente de prueba',phone:'No llamar',address:'Calle de prueba con un nombre largo, numero 123, piso 4'},
                   products:[{name:'Pizza de prueba con mozzarella y champiñones',quantity:2,size:'Grande',ingredients:[{name:'Extra mozzarella'},{name:'Sin cebolla'}]}] };
+                if (!isNativePos) {
+                  await printOrder(sample);
+                  return;
+                }
                 await nativeCall('printTest',{lines:[...buildOrderLines(sample),'Direccion de prueba: calle larga numero 123, piso 4','Caracteres: á é í ó ú ñ €']});
                 setMessage('Ticket de prueba confirmado por SUNMI. Comprueba que no se cortan palabras ni el total.');
               } catch (_) { setMessage('No se confirmó la impresión. Comprueba el papel antes de repetir.'); }
-            }}>Probar ticket de 58 mm</button>}
-          </div>
+            }}><strong>Impresión de prueba</strong><small>Imprimir un ticket de comprobación</small></button>
+            </div>
+            <footer className="pos-menuFooter">{session.storeName} · Volta POS</footer>
+          </dialog>
         )}
-      </header>
+      </header>}
 
       <PosNotice message={message} onDismiss={dismissMessage} />
+      {logoutOpen && <PosLogoutDialog onCancel={() => setLogoutOpen(false)} onConfirm={logoutSession} />}
+      {operationsPaused && activePanel !== "dayOrders" && (
+        <section className={`pos-pauseBanner ${showPauseScreen ? "pos-pauseBanner--full" : ""}`} aria-label="Estado de operaciones">
+          <div role="status"><strong>Operaciones en pausa</strong><span>Solo pedidos programados. Los pedidos aceptados siguen en cocina.</span></div>
+          <button type="button" onClick={toggleOperationsPause} disabled={savingPause || !pauseStateKnown}>
+            {savingPause ? "Reanudando…" : "Reanudar operaciones"}
+          </button>
+        </section>
+      )}
+      {showCheckoutAlert && activePanel !== "dayOrders" && !showPauseScreen && (!showVisitorAlert || activePanel !== "orders") && (
+        <div className="pos-checkoutBanner" role="status">Cliente finalizando pedido</div>
+      )}
 
-      {activePanel === "orders" && (
+      {activePanel === "orders" && !showPauseScreen && (
       <div
         className={`pos-workspace ${
           selectedOrder
@@ -2434,7 +2575,7 @@ export default function PosApp() {
               <TicketPreview order={selectedOrder} />
 
               <div className="pos-actionGrid pos-actionGrid--ticket">
-                <button type="button" onClick={() => printOrder(selectedOrder)}>
+                <button type="button" className="pos-button--secondary" onClick={() => printOrder(selectedOrder)}>
                   Imprimir
                 </button>
                 <div className="pos-readyButtonWrap">
@@ -2463,11 +2604,14 @@ export default function PosApp() {
               )}
             <div className={`pos-empty ${showVisitorAlert ? "pos-empty--visitors" : ""}`}>
               {showVisitorAlert ? (
+                <>
                 <div className="pos-visitorSignal" aria-hidden="true">
                   <span />
                   <span />
                   <span />
                 </div>
+                <strong className="pos-checkoutMessage" role="status">Cliente finalizando pedido</strong>
+                </>
               ) : (
                 <div className="pos-chill">
                   <span>🐒</span>
@@ -2641,44 +2785,37 @@ export default function PosApp() {
           <section className="pos-ordersPane pos-dayOrdersPane">
             <div className="pos-sectionHead">
               <div>
-                <span>Operaciones del dia</span>
-                <h2>Tickets de hoy</h2>
+                <span>Operaciones del día</span>
+                <h2>Operaciones finalizadas</h2>
                 <small>
                   {dayOrdersKpis
                     ? `${dayOrdersKpis.ordersCount || 0} pedidos · ${formatMoney(dayOrdersKpis.revenue, dayOrders[0]?.currency || "EUR")}`
                     : "Resumen de pedidos y ventas"}
                 </small>
               </div>
-              <button type="button" onClick={loadDayOrders} disabled={dayOrdersLoading}>
-                Sync
-              </button>
+              <div className="pos-dayOrderActions">
+                <button type="button" onClick={() => { setSelectedOrderId(null); setActivePanel("orders"); }}>Volver a pedidos</button>
+                <button type="button" onClick={loadDayOrders} disabled={dayOrdersLoading}>{dayOrdersLoading ? "Actualizando…" : "Actualizar"}</button>
+              </div>
             </div>
 
             {dayOrdersError && <div className="pos-emptySmall">{dayOrdersError}</div>}
 
             {dayOrdersLoading && dayOrders.length === 0 ? (
               <div className="pos-emptySmall">Cargando tickets del dia...</div>
-            ) : dayOrders.length === 0 ? (
+            ) : dayOrders.length === 0 && !dayOrdersError ? (
               <div className="pos-emptySmall">Todavia no hay pedidos completados hoy.</div>
             ) : (
               <div className="pos-dayOrdersList" aria-label="Tickets del dia">
                 {dayOrders.map((order) => (
-                  <button
+                  <DayOrderCard
                     key={order.id}
-                    type="button"
-                    className="pos-dayOrderTicket"
-                    onClick={() => {
+                    order={order}
+                    onOpen={() => {
                       setSelectedOrderId(order.id);
                       setActivePanel("orders");
                     }}
-                  >
-                    <span>{formatTime(order.date || order.createdAt)}</span>
-                    <strong>{order.code || `Pedido ${order.id}`}</strong>
-                    <small>
-                      {getCustomerName(order)} · {lineName(asArray(order.products)[0] || {})}
-                    </small>
-                    <b>{formatMoney(order.total, order.currency || "EUR")}</b>
-                  </button>
+                  />
                 ))}
               </div>
             )}
@@ -2760,7 +2897,7 @@ export default function PosApp() {
             )}
 
             <div className="pos-actionGrid">
-              <button type="button" onClick={loadReservations} disabled={loadingReservations}>
+              <button type="button" className="pos-button--secondary" onClick={loadReservations} disabled={loadingReservations}>
                 Sync
               </button>
               <button
@@ -2786,7 +2923,7 @@ export default function PosApp() {
                 <span>Consulta al cliente</span>
                 <h2>Duda de cocina</h2>
               </div>
-              <button type="button" onClick={() => setCustomerHelpOpen(false)}>
+              <button type="button" className="pos-button--secondary" onClick={() => setCustomerHelpOpen(false)}>
                 Cerrar
               </button>
             </div>
@@ -2858,7 +2995,7 @@ export default function PosApp() {
             )}
 
             <div className="pos-actionGrid">
-              <button type="button" onClick={() => setCustomerHelpOpen(false)}>
+              <button type="button" className="pos-button--secondary" onClick={() => setCustomerHelpOpen(false)}>
                 Cancelar
               </button>
               <button
@@ -2909,7 +3046,7 @@ export default function PosApp() {
                   ? "Entendido, marcar listo"
                   : "Si, marcar listo"}
               </button>
-              <button type="button" onClick={closeReadyConfirm}>
+              <button type="button" className="pos-button--secondary" onClick={closeReadyConfirm}>
                 Cancelar
               </button>
             </div>
@@ -2958,14 +3095,14 @@ export default function PosApp() {
         </div>
       )}
 
-      <footer className="pos-footer">
+      {activePanel !== "dayOrders" && <footer className="pos-footer">
         <span>© {new Date().getFullYear()} voltaPizza · POS v01</span>
         <div className={`pos-printInline ${printerTone}`}>
           <span />
           {printerLabel}
           <small>{isNativePos || printerStatus.realConnected ? printerStatus.label : "modo prueba"}</small>
         </div>
-      </footer>
+      </footer>}
       {showOrderUtilityFabs && (
         <div className="pos-utilityDock">
           <button type="button" className={`pos-inventoryFab ${activePanel === "inventory" ? "active" : ""} ${disabledIngredientCount > 0 ? "has-disabled" : ""}`} aria-label={`Inventario: ${disabledIngredientCount} ingredientes desactivados`} title={disabledIngredientCount > 0 ? `${disabledIngredientCount} ingredientes desactivados` : "Inventario: todos disponibles"} aria-pressed={activePanel === "inventory"} onClick={() => { setMenuOpen(false); setActivePanel("inventory"); }}>

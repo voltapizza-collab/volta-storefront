@@ -23,6 +23,6 @@ export default function PosNotice({ message, onDismiss }) {
     onCancel={event => { event.preventDefault(); onDismiss(); }}>
     <header><h2>Aviso de Volta</h2><button type="button" aria-label="Cerrar aviso" onClick={onDismiss}>×</button></header>
     <p>{message}</p>
-    <button type="button" className="pos-noticeClose" onClick={onDismiss}>Cerrar</button>
+    <button type="button" className="pos-noticeClose pos-button--secondary" onClick={onDismiss}>Cerrar</button>
   </dialog>;
 }

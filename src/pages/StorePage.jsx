@@ -6349,7 +6349,7 @@ export default function StorePage() {
             <div className="sf-catalogContext">
               <strong>{gridContext.label}</strong>
               <span>{gridContext.count} {gridContext.count === 1 ? "producto" : "productos"}</span>
-              {!gridFocusMode && <button type="button" className="sf-catalogExpand" onClick={() => setGridFocusMode(true)}>Ampliar ↗</button>}
+              {!gridFocusMode && <button type="button" className="sf-catalogExpand" aria-label="Ampliar vitrina" onClick={() => setGridFocusMode(true)}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M8 3H3v5M16 3h5v5M21 16v5h-5M3 16v5h5" /></svg>Ampliar</button>}
             </div>
             {isProductSearchActive ? (
               baseFilteredMenu.length === 0 ? (

@@ -12,6 +12,10 @@ export default function useCatalogSwipe({ items, activeId, onSelect, enabled = t
   const gesture = useRef(null);
   const suppressClickUntil = useRef(0);
   const wheelGesture = useRef({ lastAt: 0, distance: 0, committed: false });
+  const resetDrag = () => {
+    surfaceRef?.current?.style.removeProperty("--catalog-drag-x");
+    surfaceRef?.current?.removeAttribute("data-dragging");
+  };
 
   useEffect(() => {
     const surface = surfaceRef?.current;
@@ -42,6 +46,7 @@ export default function useCatalogSwipe({ items, activeId, onSelect, enabled = t
 
   return {
     onPointerDownCapture(event) {
+      resetDrag();
       if (event.isPrimary === false) { gesture.current = null; return; }
       suppressClickUntil.current = 0;
       gesture.current = null;
@@ -57,12 +62,18 @@ export default function useCatalogSwipe({ items, activeId, onSelect, enabled = t
       if (dx > 24 && dx > dy * 1.5) {
         current.horizontal = true;
         suppressClickUntil.current = Date.now() + 500;
-        event.currentTarget.setPointerCapture?.(event.pointerId);
+        if (!event.currentTarget.hasPointerCapture?.(event.pointerId)) {
+          event.currentTarget.setPointerCapture?.(event.pointerId);
+        }
+        const offset = Math.max(-120, Math.min(120, (event.clientX - current.x) * 0.55));
+        surfaceRef?.current?.setAttribute("data-dragging", "true");
+        surfaceRef?.current?.style.setProperty("--catalog-drag-x", `${offset}px`);
       }
     },
     onPointerUpCapture(event) {
       const current = gesture.current;
       gesture.current = null;
+      resetDrag();
       if (current?.horizontal) suppressClickUntil.current = Date.now() + 500;
       if (!current || current.id !== event.pointerId || !enabled || activeId !== current.activeId) return;
       const dx = event.clientX - current.x, dy = Math.abs(event.clientY - current.y);
@@ -73,8 +84,15 @@ export default function useCatalogSwipe({ items, activeId, onSelect, enabled = t
       const next = items[index + (dx < 0 ? 1 : -1)];
       if (next) onSelect(next.id);
     },
-    onPointerCancel() { gesture.current = null; },
-    onLostPointerCapture() { gesture.current = null; },
+    onPointerCancel() { gesture.current = null; resetDrag(); },
+    onLostPointerCapture(event) {
+      // Touch starts with implicit capture on the pizza/image. Taking capture
+      // on the stage makes that CHILD emit a bubbling lostpointercapture event.
+      // Only losing the stage's own capture cancels our active gesture.
+      if (event.target !== event.currentTarget) return;
+      gesture.current = null;
+      resetDrag();
+    },
     onDragStart(event) {
       // Native image dragging would cancel the pointer before the swipe threshold.
       if (gesture.current) event.preventDefault();

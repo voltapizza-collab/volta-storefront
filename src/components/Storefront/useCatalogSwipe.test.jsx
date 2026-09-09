@@ -68,6 +68,26 @@ test("native cancellation and multitouch never change category", () => {
   expect(onSelect).not.toHaveBeenCalled();
 });
 
+test("implicit touch capture transferring from a pizza to the stage does not cancel the swipe", () => {
+  const { result, event, onSelect, surface } = setup();
+  result.current.onPointerDownCapture(event(220, 100));
+  result.current.onPointerMoveCapture(event(185, 102));
+  // A real touch browser emits this from the previously captured image.
+  result.current.onLostPointerCapture(event(175, 102));
+  result.current.onPointerMoveCapture(event(120, 102, { target: surface }));
+  result.current.onPointerUpCapture(event(120, 102, { target: surface }));
+  expect(onSelect).toHaveBeenCalledWith(20);
+});
+
+test("losing the stage's own capture cancels the swipe", () => {
+  const { result, event, onSelect, surface } = setup();
+  result.current.onPointerDownCapture(event(220, 100));
+  result.current.onPointerMoveCapture(event(185, 102));
+  result.current.onLostPointerCapture(event(175, 102, { target: surface }));
+  result.current.onPointerUpCapture(event(120, 102));
+  expect(onSelect).not.toHaveBeenCalled();
+});
+
 test("a swipe suppresses the generated click so the product does not flip", () => {
   const { swipe, result } = setup();
   swipe([200, 100], [100, 100]);

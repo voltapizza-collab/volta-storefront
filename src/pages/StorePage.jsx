@@ -3203,6 +3203,27 @@ export default function StorePage() {
     setActiveTab(tabId);
     resetCatalogPosition();
   }, [resetCatalogPosition]);
+  const catalogSearchTriggerRef = useRef(null);
+  const catalogSearchOpen = mobileSearchOpen || Boolean(search);
+  const closeCatalogSearch = useCallback(() => {
+    setMobileSearchOpen(false);
+    window.requestAnimationFrame(() => {
+      const previous = catalogSearchTriggerRef.current;
+      const target = previous?.isConnected && previous.getClientRects().length ? previous
+        : Array.from(catalogRootRef.current?.querySelectorAll('[aria-label="Buscar productos"]') || []).find(button => button.getClientRects().length);
+      target?.focus({ preventScroll: true });
+    });
+  }, []);
+  const toggleCatalogSearch = event => {
+    if (catalogSearchOpen) {
+      setSearch("");
+      closeCatalogSearch();
+      resetCatalogPosition();
+    } else {
+      catalogSearchTriggerRef.current = event.currentTarget;
+      setMobileSearchOpen(true);
+    }
+  };
   const updateCatalogSearch = useCallback(value => {
     setSearch(value);
     resetCatalogPosition();
@@ -6134,7 +6155,7 @@ export default function StorePage() {
             <div className="sf-catalogMobileToolbar">
               {renderStoreInfoTicker(true)}
               {renderCartButtonSafe()}
-              <button type="button" className="sf-catalogSearchToggle" aria-label="Buscar productos" aria-expanded={mobileSearchOpen || Boolean(search)} onClick={() => setMobileSearchOpen(value => !value)}><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" strokeWidth="2" /><path d="m16 16 5 5" stroke="currentColor" strokeWidth="2" /></svg></button>
+              <button type="button" className="sf-catalogSearchToggle" aria-label="Buscar productos" aria-expanded={catalogSearchOpen} onClick={toggleCatalogSearch}><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" strokeWidth="2" /><path d="m16 16 5 5" stroke="currentColor" strokeWidth="2" /></svg></button>
               <CatalogTools>
                   {isStorefrontButtonVisible("halfAndHalf") && <button type="button" onClick={openHalfModal}>Mitad / Mitad</button>}
                   {isStorefrontButtonVisible("customPizza") && <button type="button" onClick={openCustomModal}>Arma tu pizza</button>}
@@ -6143,9 +6164,8 @@ export default function StorePage() {
                   {isStorefrontButtonVisible("call") && phoneHref && <a href={phoneHref}>Llamar a la pizzería</a>}
                 </CatalogTools>
             </div>
-            <div className="sf-catalogMobileSearch">
-              {(mobileSearchOpen || search) && <CatalogSearch value={search} onChange={updateCatalogSearch} onClose={() => setMobileSearchOpen(false)} autoFocus />}
-            </div>
+            {!gridFocusMode && catalogSearchOpen ? <CatalogSearch value={search} onChange={updateCatalogSearch} onClose={closeCatalogSearch} resultCount={baseFilteredMenu.length} autoFocus /> : <>
+
             {hasGridIncentiveBanner && <button type="button" className="sf-catalogIncentive sf-catalogIncentive--mobile" onClick={() => setGridIncentiveOpen(true)}>{gridIncentiveButtonLabel}: {gridIncentiveButtonValue}</button>}
             <div className="sf-lsfMobileHeader">
               <div className="sf-lsfMobileInfo">
@@ -6215,73 +6235,10 @@ export default function StorePage() {
               )}
 
               <div className="sf-lsfSearchCluster">
-                <div className="sf-engineSearchRow sf-engineSearchRow--lsf">
-                  <div className="sf-engineSearchWrap">
-                    <input
-                      className="sf-engineSearch"
-                      type="search"
-                      placeholder="Buscar pizza o ingrediente..."
-                      value={search}
-                      onChange={(event) => updateCatalogSearch(event.target.value)}
-                      onKeyDown={(event) => {
-                        if (event.key === "Enter") {
-                          resetMobileInputViewport(event.currentTarget);
-                        }
-                      }}
-                    />
-                    <button
-                      type="button"
-                      className="sf-imageSearchBtn"
-                      aria-label="Buscar por imagen en construccion"
-                      data-tooltip="En construccion"
-                      onClick={(event) => event.preventDefault()}
-                    >
-                      <svg viewBox="0 0 24 24" aria-hidden="true">
-                        <path
-                          d="M8 4H5.8A1.8 1.8 0 0 0 4 5.8V8M16 4h2.2A1.8 1.8 0 0 1 20 5.8V8M4 16v2.2A1.8 1.8 0 0 0 5.8 20H8M20 16v2.2A1.8 1.8 0 0 1 18.2 20H16"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                        />
-                        <circle
-                          cx="12"
-                          cy="12"
-                          r="3.2"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                        />
-                      </svg>
-                    </button>
-                    <button
-                      type="button"
-                      className="sf-engineSearchBtn"
-                      aria-label="Buscar"
-                      onClick={() => {
-                        resetMobileInputViewport(document.activeElement);
-                      }}
-                    >
-                      <svg viewBox="0 0 24 24" aria-hidden="true">
-                        <circle
-                          cx="11"
-                          cy="11"
-                          r="6.5"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2.2"
-                        />
-                        <path
-                          d="M16 16l4 4"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2.2"
-                          strokeLinecap="round"
-                        />
-                      </svg>
-                    </button>
-                  </div>
-                </div>
+                <button type="button" className="sf-catalogSearchLaunch" aria-label="Buscar productos" aria-expanded={catalogSearchOpen} onClick={toggleCatalogSearch}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" /><path d="m16 16 5 5" /></svg>
+                  Buscar pizza o ingrediente…
+                </button>
 
                 {storefrontMode !== "commercial-light" && isStorefrontButtonVisible("repeatOrder") && (
                   <button
@@ -6328,6 +6285,7 @@ export default function StorePage() {
             />
 
             <CatalogNavigation offers={commercialTabs} categories={categoryTabs} activeId={activeTab} onSelect={selectCategoryTab} />
+            </>}
           </div>
         </section>
 
@@ -6339,11 +6297,12 @@ export default function StorePage() {
               <button type="button" className="sf-catalogExit" onClick={() => setGridFocusMode(false)}>← Volver</button>
               <strong>Vitrina</strong>
               {renderCartButtonSafe()}
-              <button type="button" className="sf-catalogSearchToggle" aria-label="Buscar productos" aria-expanded={mobileSearchOpen || Boolean(search)} onClick={() => setMobileSearchOpen(value => !value)}><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" strokeWidth="2" /><path d="m16 16 5 5" stroke="currentColor" strokeWidth="2" /></svg></button>
+              <button type="button" className="sf-catalogSearchToggle" aria-label="Buscar productos" aria-expanded={catalogSearchOpen} onClick={toggleCatalogSearch}><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" strokeWidth="2" /><path d="m16 16 5 5" stroke="currentColor" strokeWidth="2" /></svg></button>
             </div>
-            {(mobileSearchOpen || search) && <CatalogSearch value={search} onChange={updateCatalogSearch} onClose={() => setMobileSearchOpen(false)} autoFocus />}
-            <CatalogNavigation offers={commercialTabs} categories={categoryTabs} activeId={activeTab} onSelect={selectCategoryTab} />
-            {hasGridIncentiveBanner && <button type="button" className="sf-catalogIncentive" onClick={() => setGridIncentiveOpen(true)}>{gridIncentiveButtonLabel}: {gridIncentiveButtonValue}</button>}
+            {catalogSearchOpen ? <CatalogSearch value={search} onChange={updateCatalogSearch} onClose={closeCatalogSearch} resultCount={baseFilteredMenu.length} autoFocus /> : <>
+              <CatalogNavigation offers={commercialTabs} categories={categoryTabs} activeId={activeTab} onSelect={selectCategoryTab} />
+              {hasGridIncentiveBanner && <button type="button" className="sf-catalogIncentive" onClick={() => setGridIncentiveOpen(true)}>{gridIncentiveButtonLabel}: {gridIncentiveButtonValue}</button>}
+            </>}
           </header>}
           <div ref={gridStageRef} className="sf-engineGridStage sf-engineGridStage--lsf" {...catalogSwipe}>
             <div className="sf-catalogContext">
@@ -6354,8 +6313,8 @@ export default function StorePage() {
             {isProductSearchActive ? (
               baseFilteredMenu.length === 0 ? (
                 <div className="sf-engineEmptyState">
-                  <strong>Busqueda</strong>
-                  <p>No hay productos que coincidan con "{search.trim()}".</p>
+                  <strong>No encontramos esa pizza</strong>
+                  <p>Prueba con otro nombre o ingrediente.</p>
                 </div>
               ) : (
                 <div className="lsf-searchResultsStage">

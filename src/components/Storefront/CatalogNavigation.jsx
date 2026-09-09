@@ -35,15 +35,28 @@ export default function CatalogNavigation({ offers, categories, activeId, onSele
   );
 }
 
-export function CatalogSearch({ value, onChange, onClose, autoFocus = false }) {
+export function CatalogSearch({ value, onChange, onClose, resultCount = 0, autoFocus = false }) {
   const inputRef = useRef(null);
   useEffect(() => { if (autoFocus && inputRef.current?.getClientRects().length) inputRef.current.focus({ preventScroll: true }); }, [autoFocus]);
-  return <form className="sf-catalogSearch" role="search" onSubmit={event => {
+  const close = () => { onChange(""); onClose(); };
+  return <form className="sf-catalogSearch" role="search" aria-label="Buscar en la tienda" onKeyDown={event => {
+    if (event.key === "Escape") { event.preventDefault(); event.stopPropagation(); close(); }
+  }} onSubmit={event => {
     event.preventDefault(); event.currentTarget.querySelector("input")?.blur();
   }}>
-    <input ref={inputRef} type="search" aria-label="Buscar pizza o ingrediente" placeholder="Buscar pizza o ingrediente…"
-      value={value} onChange={event => onChange(event.target.value)} />
-    <button type="button" onClick={() => { onChange(""); onClose(); }}>Cerrar búsqueda</button>
+    <div className="sf-catalogSearch__heading">
+      <strong>¿Qué te apetece?</strong>
+      <button className="sf-catalogSearch__close" type="button" onClick={close} aria-label="Cerrar búsqueda">Cerrar <span aria-hidden="true">×</span></button>
+    </div>
+    <div className="sf-catalogSearch__field">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" /><path d="m16 16 5 5" /></svg>
+      <input ref={inputRef} type="search" aria-label="Buscar pizza o ingrediente" placeholder="Pizza o ingrediente…" autoComplete="off" enterKeyHint="search"
+        value={value} onChange={event => onChange(event.target.value)} />
+      {value && <button className="sf-catalogSearch__clear" type="button" aria-label="Borrar búsqueda" onClick={() => { onChange(""); inputRef.current?.focus(); }}>×</button>}
+    </div>
+    <p className="sf-catalogSearch__hint" role="status" aria-live="polite" aria-atomic="true">{value.trim()
+      ? `${resultCount} ${resultCount === 1 ? "producto encontrado" : "productos encontrados"} en la vitrina`
+      : "Busca por nombre o ingrediente. Tu próxima pizza está abajo."}</p>
   </form>;
 }
 

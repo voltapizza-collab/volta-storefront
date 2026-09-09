@@ -34,6 +34,25 @@ test("closing search clears its filter", () => {
   expect(onClose).toHaveBeenCalledTimes(1);
 });
 
+test("search updates live and announces the result count", () => {
+  const onChange = jest.fn();
+  render(<CatalogSearch value="pollo" resultCount={3} onChange={onChange} onClose={() => {}} />);
+  fireEvent.change(screen.getByRole("searchbox"), { target: { value: "queso" } });
+  expect(onChange).toHaveBeenCalledWith("queso");
+  expect(screen.getByRole("status").textContent).toBe("3 productos encontrados en la vitrina");
+});
+
+test("clear keeps search open, while Escape clears and closes it", () => {
+  const onChange = jest.fn(), onClose = jest.fn();
+  render(<CatalogSearch value="pollo" onChange={onChange} onClose={onClose} />);
+  fireEvent.click(screen.getByRole("button", { name: "Borrar búsqueda" }));
+  expect(onChange).toHaveBeenCalledWith("");
+  expect(onClose).not.toHaveBeenCalled();
+  expect(document.activeElement).toBe(screen.getByRole("searchbox"));
+  fireEvent.keyDown(screen.getByRole("searchbox"), { key: "Escape" });
+  expect(onClose).toHaveBeenCalledTimes(1);
+});
+
 test("Más closes outside or with Escape without selecting an action", () => {
   const action = jest.fn();
   const { container } = render(<CatalogTools><button onClick={action}>Arma tu pizza</button></CatalogTools>);

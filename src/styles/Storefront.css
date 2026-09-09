@@ -8935,94 +8935,6 @@
   box-shadow: 0 4px 10px color-mix(in srgb, var(--sf-theme-accent, #ff2e73) 28%, transparent);
 }
 
-.lsf-tabs {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  overflow-x: auto;
-  padding: 6px 0;
-  margin: 10px 0 0;
-  scroll-behavior: smooth;
-  scroll-padding-inline: 18px;
-  scroll-snap-type: x proximity;
-  scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
-  mask-image: linear-gradient(90deg, transparent 0, #000 18px, #000 calc(100% - 18px), transparent 100%);
-}
-
-.lsf-tabs::-webkit-scrollbar {
-  display: none;
-}
-
-.lsf-segmentTabs,
-.lsf-categoryTabs {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
-}
-
-.lsf-segmentTabs {
-  position: relative;
-  padding: 6px;
-  border: 1px solid rgba(249, 38, 114, 0.2);
-  border-radius: 24px;
-  background:
-    linear-gradient(90deg, rgba(249, 38, 114, 0.1), rgba(255, 122, 0, 0.08)),
-    #ffffff;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.9),
-    0 8px 18px rgba(249, 38, 114, 0.08);
-}
-
-.lsf-segmentTabs::before {
-  content: "";
-  width: 8px;
-  align-self: stretch;
-  border-radius: 999px;
-  background: linear-gradient(180deg, #ff005c, #ff7a00);
-  box-shadow: 0 0 14px rgba(249, 38, 114, 0.32);
-}
-
-.lsf-categoryTabs {
-  padding-left: 12px;
-  border-left: 1px solid rgba(17, 17, 17, 0.12);
-}
-
-.lsf-tab {
-  flex-shrink: 0;
-  white-space: nowrap;
-  scroll-snap-align: center;
-  border: 1px solid #e7e7e7;
-  background: #fff;
-  border-radius: 20px;
-  padding: 8px 12px;
-  color: #111;
-  font-weight: 900;
-  cursor: pointer;
-}
-
-.lsf-tab--segment {
-  border-color: rgba(249, 38, 114, 0.2);
-  background: rgba(255, 255, 255, 0.86);
-}
-
-.lsf-tab--segment.is-active {
-  border-color: #ff005c;
-  background: linear-gradient(135deg, #ff005c 0%, #ff7a00 100%);
-  color: #ffffff;
-  box-shadow:
-    0 8px 18px rgba(249, 38, 114, 0.2),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.38);
-}
-
-.lsf-tab--category.is-active {
-  border-color: var(--sf-theme-accent, #f92672);
-  background: #fff;
-  color: var(--sf-theme-accent, #f92672);
-  box-shadow: inset 0 0 0 1px var(--sf-theme-accent, #f92672);
-}
-
 .lsf-grid-wrap {
   position: relative;
   overflow: hidden;
@@ -10237,7 +10149,7 @@
 }
 
 .lsf-card__approval,
-.lsf-card__gift {
+.lsf-card__buyMessage {
   width: 100%;
   min-width: 0;
   min-height: 15px;
@@ -10253,7 +10165,7 @@
 
 .lsf-card__approval span,
 .lsf-card__approval strong,
-.lsf-card__gift span {
+.lsf-card__buyMessage span {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -10265,21 +10177,21 @@
   font-weight: 950;
 }
 
-.lsf-card__gift {
+.lsf-card__buyMessage {
   justify-content: flex-start;
   padding: 0;
   border: 0;
   background: transparent;
   color: #3b008b;
   font-family: inherit;
-  cursor: pointer;
+  font-size: 11px;
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
 }
 
-.lsf-card__gift:focus-visible {
-  outline: 2px solid rgba(106, 61, 240, 0.5);
-  outline-offset: 2px;
-  border-radius: 6px;
-}
+
 
 .lsf-card__metaIcon {
   width: 12px;
@@ -11137,17 +11049,6 @@
   .sf-incentiveRewardStage strong {
     text-align: left;
     font-size: 0.86rem;
-  }
-
-  .lsf-tabs {
-    gap: 7px;
-    margin-top: 8px;
-    padding: 4px 0 2px;
-  }
-
-  .lsf-tab {
-    padding: 8px 10px;
-    font-size: 0.78rem;
   }
 
   .sf-engineGridStage--lsf {
@@ -12211,112 +12112,6 @@
 
   .sf-incentiveBanner--lsf.is-complete .sf-incentiveRewardDesktopSuffix {
     display: none;
-  }
-
-  .lsf-tabs {
-    position: relative;
-    gap: 10px;
-    margin-top: 6px;
-    padding: 5px 0 3px;
-    overflow-x: auto;
-    mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 24px), transparent 100%);
-    scroll-padding-left: 126px;
-    scroll-snap-type: none;
-  }
-
-  .lsf-segmentTabs {
-    position: sticky;
-    left: 0;
-    z-index: 5;
-    width: 118px;
-    height: 40px;
-    display: grid;
-    grid-auto-flow: row;
-    grid-auto-rows: 40px;
-    align-items: stretch;
-    gap: 0;
-    flex: 0 0 118px;
-    overflow: hidden;
-    padding: 0;
-    border: 1px solid rgba(255, 0, 92, 0.28);
-    border-radius: 999px;
-    background:
-      radial-gradient(circle at 12% 50%, rgba(255, 255, 255, 0.32), transparent 34%),
-      linear-gradient(135deg, #ff005c 0%, #ff7a00 100%);
-    box-shadow:
-      12px 0 18px rgba(255, 250, 241, 0.96),
-      0 10px 22px rgba(249, 38, 114, 0.18),
-      inset 0 1px 0 rgba(255, 255, 255, 0.42);
-  }
-
-  .lsf-segmentTabs::before {
-    display: none;
-  }
-
-  .lsf-categoryTabs {
-    position: relative;
-    z-index: 1;
-    padding-left: 4px;
-    border-left: 0;
-  }
-
-  .lsf-tab {
-    min-height: 38px;
-    padding: 8px 11px;
-    border-radius: 999px;
-    font-size: 0.78rem;
-    scroll-snap-align: none;
-  }
-
-  .lsf-tab--segment {
-    width: 100%;
-    min-height: 40px;
-    height: 40px;
-    padding: 4px 8px;
-    border: 0;
-    border-radius: 0;
-    background: transparent;
-    color: #fff;
-    font-family: "Avenir Next", "Montserrat", "Arial Black", system-ui, sans-serif;
-    font-size: 0.76rem;
-    font-weight: 1000;
-    letter-spacing: 0;
-    line-height: 1.05;
-    text-align: center;
-    text-shadow: 0 1px 1px rgba(58, 10, 0, 0.28);
-    -webkit-text-stroke: 0.25px rgba(255, 255, 255, 0.42);
-    transform: translateY(0);
-    animation: lsfMobileSegmentTicker 8.8s ease-in-out infinite;
-  }
-
-  .lsf-segmentTabs.is-count-2 .lsf-tab--segment {
-    animation-name: lsfMobileSegmentTicker2;
-    animation-duration: 5.8s;
-  }
-
-  .lsf-segmentTabs.is-count-3 .lsf-tab--segment {
-    animation-name: lsfMobileSegmentTicker3;
-    animation-duration: 7.2s;
-  }
-
-  .lsf-segmentTabs:hover .lsf-tab--segment,
-  .lsf-segmentTabs:focus-within .lsf-tab--segment {
-    animation-play-state: paused;
-  }
-
-  .lsf-tab--segment.is-active {
-    border: 0;
-    background: transparent;
-    color: #fff8aa;
-    box-shadow: none;
-    text-shadow:
-      0 1px 1px rgba(58, 10, 0, 0.35),
-      0 0 8px rgba(255, 248, 170, 0.5);
-  }
-
-  .lsf-tab--category {
-    background: rgba(255, 255, 255, 0.92);
-    box-shadow: 0 7px 14px rgba(59, 0, 139, 0.06);
   }
 
   @keyframes lsfMobileSegmentTicker {
@@ -14472,41 +14267,6 @@
   background: #84cc16;
 }
 
-.sf-shell--mode-commercial-light .lsf-tabs {
-  border-bottom: 1px solid var(--sf-commercial-line);
-}
-
-.sf-shell--mode-commercial-light .lsf-tab {
-  border: 1px solid var(--sf-commercial-line);
-  background: #ffffff;
-  color: var(--sf-commercial-muted);
-  box-shadow: 0 4px 12px rgba(23, 21, 31, 0.04);
-}
-
-.sf-shell--mode-commercial-light .lsf-tab--segment:nth-child(2) {
-  border-color: color-mix(in srgb, var(--sf-commercial-deal) 55%, #ffffff);
-  background: #fff7ed;
-  color: #b45309;
-}
-
-.sf-shell--mode-commercial-light .lsf-tab--segment:nth-child(2).is-active,
-.sf-shell--mode-commercial-light .lsf-tab--segment.is-active {
-  background: var(--sf-commercial-ink);
-  border-color: var(--sf-commercial-ink);
-  color: #ffffff;
-}
-
-.sf-shell--mode-commercial-light .lsf-tab--segment:nth-child(2).is-active {
-  background: linear-gradient(135deg, #92400e, var(--sf-commercial-deal));
-  border-color: var(--sf-commercial-deal);
-}
-
-.sf-shell--mode-commercial-light .lsf-tab--category.is-active {
-  border-color: color-mix(in srgb, var(--sf-commercial-accent) 55%, #ffffff);
-  background: #f5f2ff;
-  color: var(--sf-commercial-accent);
-}
-
 .sf-shell--mode-commercial-light .sf-engineGridStage--lsf {
   border: 1px solid var(--sf-commercial-line);
   border-radius: 18px;
@@ -14869,32 +14629,6 @@
       #22c55e 68%,
       #facc15 100%
     );
-}
-
-.sf-shell--mode-commercial-light .lsf-tabs {
-  gap: 8px;
-  border-bottom: 0;
-}
-
-.sf-shell--mode-commercial-light .lsf-tab {
-  border: 1px solid var(--sf-commercial-line);
-  background: #ffffff;
-  color: var(--sf-commercial-ink);
-  box-shadow: 0 5px 12px rgba(29, 23, 48, 0.04);
-}
-
-.sf-shell--mode-commercial-light .lsf-tab--segment.is-active,
-.sf-shell--mode-commercial-light .lsf-tab--category.is-active {
-  border-color: transparent;
-  background: var(--sf-commercial-primary);
-  color: #ffffff;
-}
-
-.sf-shell--mode-commercial-light .lsf-tab--segment:nth-child(2),
-.sf-shell--mode-commercial-light .lsf-tab--segment:nth-child(2).is-active {
-  border-color: transparent;
-  background: #fff4d8;
-  color: #9a6700;
 }
 
 .sf-shell--mode-commercial-light .lsf-card,
@@ -16389,62 +16123,6 @@
     font-size: 0.76rem;
   }
 
-  .sf-shell--mode-commercial-light .lsf-tabs {
-    gap: 6px;
-    margin-top: 3px;
-    padding: 3px 0 2px;
-    mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 18px), transparent 100%);
-  }
-
-  .sf-shell--mode-commercial-light .lsf-segmentTabs {
-    width: auto;
-    height: 34px;
-    min-width: 104px;
-    flex: 0 0 auto;
-    display: inline-flex;
-    gap: 5px;
-    padding: 0;
-    border: 0;
-    border-radius: 0;
-    background: transparent;
-    box-shadow: none;
-    overflow: visible;
-  }
-
-  .sf-shell--mode-commercial-light .lsf-tab,
-  .sf-shell--mode-commercial-light .lsf-tab--segment,
-  .sf-shell--mode-commercial-light .lsf-tab--category {
-    min-height: 34px;
-    height: 34px;
-    padding: 0 10px;
-    border-radius: 999px;
-    font-size: 0.68rem;
-    line-height: 1;
-    animation: none;
-    transform: none;
-    -webkit-text-stroke: 0;
-  }
-
-  .sf-shell--mode-commercial-light .lsf-tab--segment {
-    width: auto;
-    color: var(--sf-commercial-ink);
-    background: #ffffff;
-    border: 1px solid var(--sf-commercial-line);
-    text-shadow: none;
-  }
-
-  .sf-shell--mode-commercial-light .lsf-tab--segment.is-active,
-  .sf-shell--mode-commercial-light .lsf-tab--category.is-active {
-    background: var(--sf-commercial-primary);
-    color: #ffffff;
-    box-shadow: none;
-  }
-
-  .sf-shell--mode-commercial-light .lsf-categoryTabs {
-    padding-left: 0;
-    gap: 6px;
-  }
-
   .sf-shell--mode-commercial-light .sf-engineGridStage--lsf {
     max-height: max(390px, calc(100dvh - 248px - env(safe-area-inset-bottom, 0px)));
     min-height: max(390px, calc(100dvh - 398px - env(safe-area-inset-bottom, 0px)));
@@ -16799,111 +16477,10 @@
   animation: sfRepeatMarkPulse 2.1s ease-in-out infinite;
 }
 
-.sf-shell--mode-commercial-light .lsf-tabs {
-  gap: 8px;
-  border-bottom: 0;
-}
-
-.sf-shell--mode-commercial-light .lsf-segmentTabs {
-  position: relative;
-  isolation: isolate;
-  height: 36px;
-  min-width: max-content;
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  padding: 3px;
-  border: 1px solid #ded9e8;
-  border-radius: 999px;
-  background: #ffffff;
-  box-shadow:
-    0 8px 18px rgba(29, 23, 48, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.95);
-  overflow: hidden;
-}
-
-.sf-shell--mode-commercial-light .lsf-tab--segment {
-  --offer-tone: var(--sf-commercial-primary);
-  position: relative;
-  isolation: isolate;
-  min-height: 28px;
-  height: 28px;
-  padding: 0 11px;
-  border: 1px solid color-mix(in srgb, var(--offer-tone) 30%, #ffffff);
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--offer-tone) 8%, #ffffff);
-  color: var(--offer-tone);
-  box-shadow: none;
-  font-size: 0.64rem;
-  font-weight: 1000;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-  overflow: hidden;
-}
-
-.sf-shell--mode-commercial-light .lsf-tab--offer-trending {
-  --offer-tone: #ff1744;
-  --offer-glow: rgba(255, 23, 68, 0.78);
-}
-
-.sf-shell--mode-commercial-light .lsf-tab--offer-deal {
-  --offer-tone: #ffb000;
-  --offer-glow: rgba(255, 176, 0, 0.78);
-}
-
-.sf-shell--mode-commercial-light .lsf-tab--offer-promo {
-  --offer-tone: #ff6d00;
-  --offer-glow: rgba(255, 109, 0, 0.78);
-}
-
-.sf-shell--mode-commercial-light .lsf-tab--offer-upcoming {
-  --offer-tone: #00b8ff;
-  --offer-glow: rgba(0, 184, 255, 0.78);
-}
-
-.sf-shell--mode-commercial-light .lsf-tab--segment::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--offer-tone) 18%, transparent), transparent);
-  opacity: 0;
-  transform: translateX(-70%);
-}
-
-.sf-shell--mode-commercial-light .lsf-tab--segment:hover::before,
-.sf-shell--mode-commercial-light .lsf-tab--segment:focus-visible::before {
-  opacity: 1;
-  animation: sfOfferTabSweep 0.9s ease-out;
-}
-
-.sf-shell--mode-commercial-light .lsf-tab--segment.is-active,
-.sf-shell--mode-commercial-light .lsf-tab--segment:nth-child(2).is-active {
-  border-color: color-mix(in srgb, var(--offer-tone) 48%, #fff4a8);
-  background: linear-gradient(180deg, #fff8b8 0%, #ffe66b 100%);
-  color: #17142a;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.82),
-    0 6px 14px color-mix(in srgb, var(--offer-tone) 16%, transparent);
-}
-
 @media (max-width: 560px) {
   .sf-shell--mode-commercial-light .sf-lsfStoreTicker .sf-engineUtilityPillLine,
   .sf-shell--mode-commercial-light .sf-lsfStoreTicker .sf-engineUtilityPillLine--select {
     font-size: 0.66rem;
-  }
-
-  .sf-shell--mode-commercial-light .lsf-segmentTabs {
-    height: 34px;
-    gap: 2px;
-    padding: 3px;
-  }
-
-  .sf-shell--mode-commercial-light .lsf-tab--segment {
-    min-height: 28px;
-    height: 28px;
-    padding: 0 9px;
-    font-size: 0.56rem;
   }
 }
 
@@ -17047,164 +16624,6 @@
 .sf-shell--mode-commercial-light .sf-repeatOrderBtn:hover,
 .sf-shell--mode-commercial-light .sf-repeatOrderBtn:focus-visible {
   filter: saturate(1.1) brightness(1.03);
-}
-
-.sf-shell--mode-commercial-light .lsf-segmentTabs {
-  position: sticky;
-  left: 0;
-  z-index: 6;
-  width: 122px;
-  min-width: 122px;
-  flex: 0 0 122px;
-  height: 34px;
-  display: flex;
-  align-items: stretch;
-  padding: 0;
-  border: 1px solid #ded9e8;
-  border-radius: 999px;
-  background: #ffffff;
-  box-shadow:
-    10px 0 16px rgba(247, 247, 251, 0.96),
-    0 8px 18px rgba(29, 23, 48, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.95);
-  overflow: hidden;
-}
-
-.sf-shell--mode-commercial-light .lsf-tab--segment {
-  --offer-glow: rgba(255, 255, 255, 0.62);
-  min-height: 34px;
-  height: 34px;
-  width: 100%;
-  padding: 0 10px;
-  border: 0;
-  border-radius: 0;
-  background:
-    radial-gradient(circle at 14% 20%, rgba(255, 255, 255, 0.32), transparent 28%),
-    linear-gradient(135deg, var(--offer-tone), color-mix(in srgb, var(--offer-tone) 62%, #11142a));
-  color: #ffffff;
-  font-size: 0.68rem;
-  font-weight: 1000;
-  letter-spacing: 0.02em;
-  line-height: 1;
-  text-shadow:
-    0 1px 0 rgba(17, 20, 42, 0.52),
-    0 0 8px var(--offer-glow);
-  transition:
-    background 0.22s ease,
-    box-shadow 0.22s ease,
-    filter 0.18s ease;
-  animation: none;
-}
-
-.sf-shell--mode-commercial-light .lsf-tab--offer-promo {
-  text-shadow:
-    0 1px 0 rgba(124, 45, 18, 0.58),
-    0 0 11px rgba(255, 237, 213, 0.58),
-    0 0 16px rgba(255, 109, 0, 0.36);
-}
-
-.sf-shell--mode-commercial-light .lsf-tab--offer-promo:not(.is-active) {
-  animation: none;
-}
-
-.sf-shell--mode-commercial-light .lsf-segmentTabs.is-count-2 .lsf-tab--segment {
-  animation: none;
-}
-
-.sf-shell--mode-commercial-light .lsf-segmentTabs.is-count-3 .lsf-tab--segment {
-  animation: none;
-}
-
-.sf-shell--mode-commercial-light .lsf-segmentTabs:hover .lsf-tab--segment,
-.sf-shell--mode-commercial-light .lsf-segmentTabs:focus-within .lsf-tab--segment {
-  animation-play-state: paused;
-}
-
-.sf-shell--mode-commercial-light .lsf-tab--segment::before {
-  z-index: 0;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.38), transparent);
-  opacity: 0.32;
-  animation: sfOfferInnerSweep 2.2s ease-in-out infinite;
-}
-
-.sf-shell--mode-commercial-light .lsf-tab--segment.is-active,
-.sf-shell--mode-commercial-light .lsf-tab--segment:nth-child(2).is-active {
-  border: 0;
-  background:
-    radial-gradient(circle at 14% 20%, rgba(255, 255, 255, 0.34), transparent 28%),
-    linear-gradient(135deg, var(--offer-tone), color-mix(in srgb, var(--offer-tone) 62%, #11142a));
-  color: #ffffff;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.56),
-    inset 0 -4px 0 rgba(17, 20, 42, 0.18),
-    0 0 0 2px color-mix(in srgb, var(--offer-tone) 34%, #ffffff),
-    0 0 14px color-mix(in srgb, var(--offer-tone) 42%, transparent);
-  text-shadow:
-    0 1px 0 rgba(17, 20, 42, 0.52),
-    0 0 8px var(--offer-glow);
-}
-
-.sf-shell--mode-commercial-light .lsf-segmentTabs.is-manual .lsf-tab--segment::before {
-  opacity: 0.22;
-  animation: sfOfferManualSweep 1.9s ease-in-out infinite;
-}
-
-.sf-shell--mode-commercial-light .lsf-segmentTabs.is-manual .lsf-tab--segment.is-active::after {
-  content: "";
-  position: absolute;
-  right: 7px;
-  top: 50%;
-  z-index: 2;
-  width: 5px;
-  height: 25px;
-  border-radius: 999px;
-  background: var(--sf-offer-position-track);
-  box-shadow: none;
-  transform: translateY(-50%);
-  animation: none;
-}
-
-.sf-shell--mode-commercial-light .lsf-segmentTabs.is-manual .lsf-tab--segment.is-active {
-  padding: 0 18px 0 12px;
-}
-
-.sf-shell--mode-commercial-light .lsf-segmentTabs.is-manual .lsf-tab--segment.is-active::before {
-  content: none;
-  display: none;
-}
-
-.sf-shell--mode-commercial-light .lsf-segmentTabs.is-manual .lsf-tab--segment.is-active {
-  --sf-offer-position-track:
-    conic-gradient(from 45deg at 50% 2px, transparent 0 25%, #b6ff22 0 50%, transparent 0 100%),
-    linear-gradient(#b6ff22, #b6ff22),
-    conic-gradient(from 225deg at 50% 23px, transparent 0 25%, #b6ff22 0 50%, transparent 0 100%);
-  --sf-offer-position-size: 7px 5px, 6px 11px, 7px 5px;
-  --sf-offer-position-position: 50% 1px, 50% 7px, 50% 20px;
-}
-
-.sf-shell--mode-commercial-light .lsf-segmentTabs.is-manual .lsf-tab--segment.is-active[data-offer-index="0"] {
-  --sf-offer-position-lamp: #b6ff22;
-}
-
-.sf-shell--mode-commercial-light .lsf-segmentTabs.is-manual .lsf-tab--segment.is-active[data-offer-index="1"] {
-  --sf-offer-position-lamp: #b6ff22;
-}
-
-.sf-shell--mode-commercial-light .lsf-segmentTabs.is-manual .lsf-tab--segment.is-active[data-offer-index="2"] {
-  --sf-offer-position-lamp: #b6ff22;
-}
-
-.sf-shell--mode-commercial-light .lsf-segmentTabs.is-manual .lsf-tab--segment.is-active[data-offer-index="3"] {
-  --sf-offer-position-lamp: #b6ff22;
-}
-
-.sf-shell--mode-commercial-light .lsf-segmentTabs.is-auto .lsf-tab--segment.is-active::after {
-  content: none;
-}
-
-.sf-shell--mode-commercial-light .lsf-tab--category {
-  min-height: 34px;
-  height: 34px;
 }
 
 @media (max-width: 560px) {
@@ -17895,11 +17314,6 @@
     height: 10px;
   }
 
-  .sf-shell--mode-commercial-light .sf-lsfSurface.lsf-wrapper.lsf-mobile.is-docked .lsf-tabs {
-    margin-top: 2px;
-    padding: 2px 0 1px;
-  }
-
   .sf-shell--mode-commercial-light .sf-lsfSurface.lsf-wrapper.lsf-mobile.is-docked + .sf-engineCard .sf-engineGridStage--lsf {
     max-height: max(450px, calc(100dvh - 176px - env(safe-area-inset-bottom, 0px)));
   }
@@ -18400,10 +17814,6 @@
     0 10px 14px rgba(29, 23, 48, 0.08);
 }
 
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext {
-  grid-template-columns: auto minmax(0, 1fr) auto auto auto auto;
-}
-
 .sf-shell--mode-commercial-light .lsf-gridContext::before {
   content: "";
   position: absolute;
@@ -18454,22 +17864,6 @@
 .sf-shell--mode-commercial-light .lsf-gridContext--category,
 .sf-shell--mode-commercial-light .lsf-gridContext--search {
   --grid-context-tone: #3b008b;
-}
-
-.sf-shell--mode-commercial-light .lsf-gridContext__exit {
-  position: relative;
-  z-index: 2;
-  min-height: 20px;
-  padding: 0 7px;
-  border: 0;
-  border-radius: 999px;
-  background: #3b008b;
-  color: #ffffff;
-  font-size: 0.55rem;
-  font-weight: 1000;
-  line-height: 1;
-  text-transform: uppercase;
-  white-space: nowrap;
 }
 
 .sf-shell--mode-commercial-light .lsf-gridContext__incentive {
@@ -18545,55 +17939,8 @@
 }
 
 @media (max-width: 760px) {
-  .sf-shell--mode-commercial-light.is-grid-focused {
-    --sf-grid-focus-footer-clearance: calc(74px + env(safe-area-inset-bottom, 0px));
-    --sf-grid-focus-end-space: 8px;
-    padding-top: 0;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused:has(.sf-stickyFooter .sf-engineBottomBtn--pay) {
-    --sf-grid-focus-end-space: 10px;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .sf-lsfSurface {
-    display: none;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .sf-engineCard--lsf {
-    position: fixed;
-    top: env(safe-area-inset-top, 0px);
-    right: 0;
-    bottom: calc(var(--sf-grid-focus-footer-clearance) + 4px);
-    left: 0;
-    z-index: 58;
-    width: min(100vw, 430px);
-    margin: 0 auto;
-    padding: 6px;
-    background: #f7f7fb;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .sf-engineGridStage--lsf {
-    width: 100%;
-    height: 100%;
-    min-height: 100%;
-    max-height: none;
-    padding: 8px 8px 6px;
-    border-radius: 16px 16px 0 0;
-    overflow: auto;
-    overscroll-behavior: contain;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .sf-stickyFooterShell {
-    z-index: 80;
-    background: transparent !important;
-  }
 
   .sf-shell--mode-commercial-light .lsf-gridContext {
-    grid-template-columns: auto minmax(0, 1fr) auto auto;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext {
     grid-template-columns: auto minmax(0, 1fr) auto auto;
   }
 
@@ -18605,154 +17952,8 @@
     font-size: 0.54rem;
   }
 
-  .sf-shell--mode-commercial-light .lsf-gridContext__cart,
-  .sf-shell--mode-commercial-light .lsf-gridContext__exit {
+  .sf-shell--mode-commercial-light .lsf-gridContext__cart {
     min-height: 20px;
-  }
-}
-
-@media (max-width: 760px) {
-  .sf-shell--mode-commercial-light.is-grid-focus-swiping {
-    --sf-grid-swipe-offset-x: 0px;
-    --sf-grid-swipe-lift: 0px;
-    --sf-grid-swipe-scale: 1;
-    --sf-grid-swipe-radius: 18px;
-    --sf-grid-swipe-shadow-y: 0px;
-    --sf-grid-swipe-shadow-blur: 0px;
-    --sf-grid-swipe-backdrop-opacity: 0;
-    overflow-x: hidden;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focus-swiping .sf-gridFocusBackPage {
-    position: fixed;
-    top: env(safe-area-inset-top, 0px);
-    right: 0;
-    bottom: calc(78px + env(safe-area-inset-bottom, 0px));
-    left: 0;
-    z-index: 55;
-    display: grid;
-    grid-template-rows: auto auto 1fr;
-    gap: 10px;
-    width: min(100vw, 430px);
-    margin: 0 auto;
-    padding: 8px 8px 18px;
-    overflow: hidden;
-    pointer-events: none;
-    opacity: var(--sf-grid-swipe-backdrop-opacity, 0);
-    background:
-      linear-gradient(
-        180deg,
-        color-mix(in srgb, #fedb88 18%, #ffffff),
-        color-mix(in srgb, #fbb003 15%, #ffffff)
-      );
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focus-swiping .sf-gridFocusBackPage .lsf-gridFocusSearch {
-    display: block;
-    position: relative;
-    top: auto;
-    margin: 0;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focus-swiping .sf-gridFocusBackPage .lsf-gridContext {
-    margin: 0;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focus-swiping .sf-gridFocusBackPage .lsf-grid-wrap,
-  .sf-shell--mode-commercial-light.is-grid-focus-swiping .sf-gridFocusBackPage .lsf-searchResultsStage {
-    min-height: 0;
-    overflow: hidden;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focus-swiping .sf-gridFocusBackPage .lsf-grid {
-    gap: 12px;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focus-swiping .sf-wrap.sf-menu {
-    position: relative;
-    z-index: 57;
-    transform-origin: 50% 52%;
-    transform:
-      translate3d(var(--sf-grid-swipe-offset-x, 0px), var(--sf-grid-swipe-lift, 0px), 0)
-      scale(var(--sf-grid-swipe-scale, 1));
-    border-radius: var(--sf-grid-swipe-radius, 18px);
-    background: var(--sf-commercial-bg, #f7f7fb);
-    box-shadow:
-      0 var(--sf-grid-swipe-shadow-y, 0px) var(--sf-grid-swipe-shadow-blur, 0px) rgba(29, 23, 48, 0.2);
-    overflow: hidden;
-    transition: none;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focus-swiping .sf-stickyFooterShell {
-    opacity: 0.25;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused.is-grid-focus-entering {
-    --sf-grid-focus-enter-x: 0px;
-    overflow-x: hidden;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused.is-grid-focus-entering.from-left {
-    --sf-grid-focus-enter-x: -24px;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused.is-grid-focus-entering.from-right {
-    --sf-grid-focus-enter-x: 24px;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused.is-grid-focus-entering.from-left::before,
-  .sf-shell--mode-commercial-light.is-grid-focused.is-grid-focus-entering.from-right::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: 57;
-    pointer-events: none;
-    background:
-      linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(247, 247, 251, 0.96)),
-      radial-gradient(circle at 50% 16%, rgba(255, 182, 28, 0.24), transparent 34%),
-      radial-gradient(circle at 50% 82%, rgba(59, 0, 139, 0.14), transparent 38%);
-    animation: sfGridFocusHiddenPageEnter 520ms cubic-bezier(0.2, 0.9, 0.18, 1) both;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused.is-grid-focus-entering.from-bottom .sf-engineCard--lsf {
-    transform-origin: 50% 100%;
-    animation: sfGridFocusTapCardEnter 620ms cubic-bezier(0.18, 1.02, 0.18, 1) both;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused.is-grid-focus-entering.from-left .sf-engineCard--lsf,
-  .sf-shell--mode-commercial-light.is-grid-focused.is-grid-focus-entering.from-right .sf-engineCard--lsf {
-    transform-origin: 50% 52%;
-    animation: sfGridFocusSwipeCardEnter 520ms cubic-bezier(0.2, 0.9, 0.18, 1) both;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused.is-grid-focus-entering.from-bottom .sf-engineGridStage--lsf {
-    animation: sfGridFocusTapStageEnter 620ms cubic-bezier(0.18, 1.02, 0.18, 1) both;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused.is-grid-focus-entering.from-left .sf-engineGridStage--lsf,
-  .sf-shell--mode-commercial-light.is-grid-focused.is-grid-focus-entering.from-right .sf-engineGridStage--lsf {
-    animation: sfGridFocusSwipeStageEnter 520ms cubic-bezier(0.2, 0.9, 0.18, 1) both;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused.is-grid-focus-entering.from-bottom .lsf-gridContext,
-  .sf-shell--mode-commercial-light.is-grid-focused.is-grid-focus-entering.from-bottom .lsf-gridFocusSearch {
-    animation: sfGridFocusHeaderEnter 440ms cubic-bezier(0.2, 0.9, 0.18, 1) both;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused.is-grid-focus-entering.from-bottom .lsf-grid,
-  .sf-shell--mode-commercial-light.is-grid-focused.is-grid-focus-entering.from-bottom .lsf-searchResultsStage {
-    animation: sfGridFocusContentEnter 520ms cubic-bezier(0.2, 0.9, 0.18, 1) both;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused.is-grid-focus-entering.from-left .lsf-gridContext,
-  .sf-shell--mode-commercial-light.is-grid-focused.is-grid-focus-entering.from-right .lsf-gridContext,
-  .sf-shell--mode-commercial-light.is-grid-focused.is-grid-focus-entering.from-left .lsf-gridFocusSearch,
-  .sf-shell--mode-commercial-light.is-grid-focused.is-grid-focus-entering.from-right .lsf-gridFocusSearch,
-  .sf-shell--mode-commercial-light.is-grid-focused.is-grid-focus-entering.from-left .lsf-grid,
-  .sf-shell--mode-commercial-light.is-grid-focused.is-grid-focus-entering.from-right .lsf-grid,
-  .sf-shell--mode-commercial-light.is-grid-focused.is-grid-focus-entering.from-left .lsf-searchResultsStage,
-  .sf-shell--mode-commercial-light.is-grid-focused.is-grid-focus-entering.from-right .lsf-searchResultsStage {
-    animation: sfGridFocusSwipeContentSettle 360ms ease-out both;
   }
 }
 
@@ -18875,17 +18076,6 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .sf-shell--mode-commercial-light.is-grid-focused.is-grid-focus-entering .sf-engineCard--lsf,
-  .sf-shell--mode-commercial-light.is-grid-focused.is-grid-focus-entering .sf-engineGridStage--lsf,
-  .sf-shell--mode-commercial-light.is-grid-focused.is-grid-focus-entering .lsf-gridContext,
-  .sf-shell--mode-commercial-light.is-grid-focused.is-grid-focus-entering .lsf-gridFocusSearch,
-  .sf-shell--mode-commercial-light.is-grid-focused.is-grid-focus-entering .lsf-grid,
-  .sf-shell--mode-commercial-light.is-grid-focused.is-grid-focus-entering .lsf-searchResultsStage {
-    animation: none;
-  }
-}
-
 /* Warm app background trial for commercial light. */
 .sf-shell--mode-commercial-light {
   --sf-commercial-bg: color-mix(in srgb, #fedb88 16%, #ffffff);
@@ -18896,15 +18086,6 @@
       color-mix(in srgb, #fedb88 18%, #ffffff) 0%,
       color-mix(in srgb, #fedb88 16%, #ffffff) 48%,
       color-mix(in srgb, #fbb003 14%, #ffffff) 100%
-    );
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .sf-engineCard--lsf {
-  background:
-    linear-gradient(
-      180deg,
-      color-mix(in srgb, #fedb88 18%, #ffffff),
-      color-mix(in srgb, #fbb003 15%, #ffffff)
     );
 }
 
@@ -19026,13 +18207,6 @@
   font-size: 0.66rem;
 }
 
-.sf-shell--mode-commercial-light .lsf-gridContext__exit {
-  grid-column: 2 / -1;
-  grid-row: 3;
-  width: 100%;
-  justify-self: stretch;
-}
-
 /* Commercial light card back: calmer product details. */
 .sf-shell--mode-commercial-light .lsf-flip__back {
   padding: 10px;
@@ -19118,41 +18292,6 @@
 }
 
 /* Focus-mode search plus Volta-style incentive bar. */
-.sf-shell--mode-commercial-light .lsf-gridFocusSearch {
-  position: sticky;
-  top: 0;
-  z-index: 45;
-  margin: 0 0 6px;
-  padding: 5px 0 6px;
-  background: #ffffff;
-  box-shadow: 0 8px 0 #ffffff;
-}
-
-.sf-shell--mode-commercial-light .lsf-gridFocusSearch .sf-engineSearchWrap {
-  min-height: 34px;
-  border: 1px solid rgba(59, 0, 139, 0.18);
-  border-radius: 999px;
-  background: #ffffff;
-  box-shadow: 0 5px 12px rgba(29, 23, 48, 0.06);
-}
-
-.sf-shell--mode-commercial-light .lsf-gridFocusSearch .sf-engineSearch {
-  min-height: 34px;
-  padding-left: 12px;
-}
-
-.sf-shell--mode-commercial-light .lsf-gridFocusSearch .sf-engineSearchBtn {
-  width: 38px;
-  min-height: 34px;
-  border-left: 1px solid rgba(59, 0, 139, 0.14);
-  border-radius: 0 999px 999px 0;
-  background: #ffffff;
-  color: #17142a;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext {
-  top: 45px;
-}
 
 .sf-shell--mode-commercial-light .lsf-gridContext__incentive {
   position: relative;
@@ -19310,993 +18449,12 @@
 }
 
 /* Focus grid final order: compact actions, full incentive banner, category anchor. */
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext {
-  top: 45px;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  gap: 6px;
-  padding: 6px 8px 8px;
-  border-color: rgba(59, 0, 139, 0.14);
-  background: #ffffff;
-  box-shadow:
-    0 -10px 0 #ffffff,
-    0 9px 0 #ffffff,
-    0 12px 16px rgba(29, 23, 48, 0.08);
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__category {
-  grid-column: 1 / -1;
-  grid-row: 2;
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 6px;
-  width: 100%;
-  min-height: 24px;
-  padding: 0 11px;
-  border-radius: 999px;
-  background: #3b008b;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.18),
-    0 3px 8px rgba(59, 0, 139, 0.16);
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext.has-grid-incentive .lsf-gridContext__category {
-  grid-row: 3;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__category > span,
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__category > strong,
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__category > em {
-  color: #ffffff;
-  line-height: 1;
-  text-shadow: none;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__category > span {
-  font-size: 0.55rem;
-  opacity: 0.9;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__category > strong {
-  min-width: 0;
-  overflow: hidden;
-  font-size: 0.66rem;
-  text-overflow: ellipsis;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__category > em {
-  justify-self: end;
-  font-size: 0.55rem;
-  opacity: 0.92;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__cart {
-  grid-column: 3;
-  grid-row: 1;
-  justify-self: end;
-  min-width: 82px;
-  min-height: 22px;
-  padding: 0 8px;
-  border: 1px solid rgba(59, 0, 139, 0.18);
-  background: #ffffff;
-  color: #3b008b;
-  box-shadow: 0 3px 8px rgba(59, 0, 139, 0.08);
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__cart.is-active {
-  border-color: #3b008b;
-  background: #3b008b;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive.sf-incentiveBanner--lsf {
-  grid-column: 1 / -1;
-  grid-row: 2;
-  justify-self: stretch;
-  display: grid;
-  gap: 6px;
-  width: 100%;
-  max-width: none;
-  min-height: 0;
-  margin: 0;
-  padding: 8px 9px 9px;
-  border: 1px solid color-mix(in srgb, #ffb61c 74%, #3b008b);
-  border-radius: 12px;
-  background:
-    radial-gradient(circle at 92% 10%, rgba(255, 255, 255, 0.5), transparent 28%),
-    linear-gradient(180deg, #fbff00 0%, #f0ec00 62%, #ffb61c 100%);
-  color: #171717;
-  box-shadow:
-    0 4px 0 rgba(166, 150, 0, 0.34),
-    0 10px 18px rgba(255, 239, 0, 0.22),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
-  text-align: left;
-  text-transform: none;
-  white-space: normal;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive.sf-incentiveBanner--lsf::before {
-  display: block;
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  border-radius: inherit;
-  background:
-    repeating-linear-gradient(
-      -35deg,
-      rgba(255, 255, 255, 0.18) 0 8px,
-      transparent 8px 18px
-    );
-  opacity: 0.72;
-  pointer-events: none;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive.sf-incentiveBanner--lsf::after {
-  content: none;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveHead {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 8px;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveCopy {
-  min-width: 0;
-  gap: 4px;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveEyebrow {
-  color: #3b008b;
-  font-size: 0.56rem;
-  font-weight: 1000;
-  letter-spacing: 0.045em;
-  line-height: 1;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.76);
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveMessageTicker {
-  display: block;
-  height: auto;
-  min-height: 0;
-  overflow: hidden;
-  color: #171717;
-  font-size: 0.63rem;
-  font-weight: 1000;
-  line-height: 1.12;
-  text-shadow: none;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveMessageTicker span {
-  display: block;
-  overflow: hidden;
-  color: #171717;
-  font-size: inherit;
-  font-weight: inherit;
-  line-height: inherit;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveMessageTicker span + span {
-  display: none;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveSignal {
-  flex-shrink: 0;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveTimer {
-  min-height: 19px;
-  padding: 0 8px;
-  background: #171717;
-  color: #ffffff;
-  font-size: 0.52rem;
-  font-weight: 1000;
-  line-height: 19px;
-  box-shadow:
-    0 3px 8px rgba(23, 23, 23, 0.16),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.12);
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveProgressTrack {
-  height: 13px;
-  overflow: visible;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.2)),
-    rgba(23, 23, 23, 0.24);
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveProgressFill {
-  background: linear-gradient(90deg, #ff2f74 0%, #6a3df0 48%, #00df8f 100%);
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveProgressStripes,
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveProgressGlow {
-  display: block;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveProgressMarker {
-  min-width: 34px;
-  padding: 2px 6px;
-  font-size: 0.5rem;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveRewardStage {
-  min-height: 34px;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  gap: 6px;
-  padding: 6px 7px;
-  border-radius: 10px;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveRewardStage span,
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveRewardStage strong {
-  font-size: 0.56rem;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__exit {
-  grid-column: 1;
-  grid-row: 1;
-  width: auto;
-  min-width: 82px;
-  min-height: 24px;
-  justify-self: start;
-  background: #3b008b;
-  color: #ffffff;
-}
 
 /* Use the same incentive banner anatomy in focused grid. */
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive.sf-incentiveBanner--lsf {
-  gap: 7px;
-  padding: 8px 9px 9px;
-  border-radius: 14px;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveHead {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  grid-template-areas:
-    "label timer"
-    "message message";
-  align-items: start;
-  column-gap: 7px;
-  row-gap: 6px;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveCopy {
-  display: contents;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveEyebrow {
-  grid-area: label;
-  align-self: center;
-  display: block;
-  color: #3b008b;
-  font-size: 0.58rem;
-  font-weight: 1000;
-  line-height: 1.05;
-  letter-spacing: 0.045em;
-  text-transform: uppercase;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveSignal {
-  grid-area: timer;
-  justify-self: end;
-  display: block;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveTimer {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  width: fit-content;
-  min-height: 20px;
-  padding: 0 8px;
-  border-radius: 999px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.12), transparent),
-    #171717;
-  color: #ffffff;
-  font-size: 0.54rem;
-  font-weight: 1000;
-  line-height: 20px;
-  white-space: nowrap;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveTimer::before {
-  content: "";
-  width: 6px;
-  height: 6px;
-  border-radius: 999px;
-  background: #13e883;
-  box-shadow: 0 0 0 3px rgba(19, 232, 131, 0.16);
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveMessageTicker {
-  grid-area: message;
-  display: flex;
-  width: 100%;
-  min-width: 0;
-  height: auto;
-  min-height: 0;
-  gap: 24px;
-  margin: 0;
-  overflow: hidden;
-  color: #171717;
-  font-size: 0.66rem;
-  font-weight: 1000;
-  line-height: 1.08;
-  text-shadow: none;
-  white-space: nowrap;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveMessageTicker span {
-  display: inline-block;
-  min-width: max-content;
-  overflow: visible;
-  color: #171717;
-  font-size: inherit;
-  font-weight: inherit;
-  line-height: inherit;
-  text-overflow: clip;
-  white-space: nowrap;
-  animation: sfIncentiveMessageMarquee 13s linear infinite;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveMessageTicker span[aria-hidden="true"] {
-  display: inline-block;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveProgress {
-  display: block !important;
-  width: 100%;
-  min-height: 16px;
-  margin-top: 1px;
-  position: relative;
-  z-index: 2;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveProgressTrack {
-  height: 14px;
-  border-radius: 999px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.18)),
-    rgba(23, 23, 23, 0.24);
-  box-shadow:
-    inset 0 0 0 1px rgba(23, 23, 23, 0.16),
-    inset 0 2px 7px rgba(23, 23, 23, 0.2),
-    0 1px 0 rgba(255, 255, 255, 0.42);
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveProgressFill {
-  background: linear-gradient(90deg, #ff2f74 0%, #6a3df0 48%, #00df8f 100%);
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveProgressMarker {
-  min-width: 30px;
-  padding: 2px 5px;
-  background: #ffffff;
-  color: #171717;
-  font-size: 0.56rem;
-  font-weight: 950;
-}
 
 /* Focused grid incentive reuses the exterior progress style, only compacted. */
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveProgressTrack {
-  position: relative;
-  display: block !important;
-  width: 100% !important;
-  height: 16px !important;
-  min-height: 16px !important;
-  overflow: visible !important;
-  border: 0;
-  background: #f0ebfb !important;
-  box-shadow: none !important;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveProgressFill {
-  display: block !important;
-  position: absolute;
-  inset: 0 auto 0 0;
-  min-width: 0;
-  border-radius: inherit;
-  background:
-    linear-gradient(
-      90deg,
-      #6d2df6 0%,
-      #7c3aed 34%,
-      #22c55e 68%,
-      #facc15 100%
-    ) !important;
-  box-shadow: none;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveProgressStripes {
-  display: none !important;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveProgressGlow {
-  display: none !important;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentive .sf-incentiveProgressMarker {
-  min-width: 34px !important;
-  padding: 2px 7px !important;
-  border-radius: 999px;
-  background: #ffffff !important;
-  color: #171717 !important;
-  font-size: 0.56rem !important;
-  transform: translate(-50%, -50%) !important;
-  box-shadow:
-    0 1px 4px rgba(23, 23, 23, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.88);
-}
 
 /* Focus grid compact incentive: no progress bar, just a deliberate detail trigger. */
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext {
-  grid-template-columns: minmax(0, 1fr) auto auto auto auto;
-  grid-auto-rows: 28px;
-  align-items: center;
-  gap: 5px;
-  min-height: 38px;
-  padding: 5px 6px;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext > span:not(.lsf-gridContext__incentive) {
-  display: none;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext > strong {
-  grid-column: 1;
-  grid-row: 1;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext > em {
-  grid-column: 2;
-  grid-row: 1;
-  font-style: normal;
-  white-space: nowrap;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentiveButton {
-  grid-column: 3;
-  grid-row: 1;
-  display: inline-grid;
-  grid-template-rows: auto auto;
-  align-content: center;
-  justify-items: center;
-  min-width: 64px;
-  max-width: 78px;
-  min-height: 28px;
-  padding: 2px 7px;
-  border: 1px solid rgba(59, 0, 139, 0.18);
-  border-radius: 10px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.56), transparent 48%),
-    #fff35c;
-  color: #3b008b;
-  box-shadow:
-    0 2px 0 rgba(59, 0, 139, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.84);
-  line-height: 1;
-  text-align: center;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentiveButton span,
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentiveButton strong {
-  max-width: 100%;
-  overflow: hidden;
-  color: inherit;
-  font-weight: 1000;
-  line-height: 1;
-  text-overflow: ellipsis;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentiveButton span {
-  font-size: 0.44rem;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentiveButton strong {
-  font-size: 0.58rem;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentiveButton.is-ready {
-  border-color: rgba(22, 163, 74, 0.42);
-  background: #16a34a;
-  color: #ffffff;
-  box-shadow:
-    0 2px 0 rgba(9, 94, 44, 0.32),
-    inset 0 1px 0 rgba(255, 255, 255, 0.24);
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__incentiveButton.is-waiting {
-  background: #ffffff;
-  color: #3b008b;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__cart {
-  grid-column: 4;
-  grid-row: 1;
-  min-width: 64px;
-  min-height: 28px;
-  padding: 0 7px;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__exit {
-  grid-column: 5;
-  grid-row: 1;
-  display: grid;
-  width: 28px;
-  min-width: 28px;
-  min-height: 28px;
-  place-items: center;
-  padding: 0;
-  border-radius: 999px;
-  font-size: 0;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__exit::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  display: block;
-  width: 10px;
-  height: 2px;
-  border-radius: 999px;
-  background: #ffffff;
-  transform: translate(-50%, -50%) rotate(45deg);
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__exit::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  display: block;
-  width: 10px;
-  height: 2px;
-  border-radius: 999px;
-  background: #ffffff;
-  transform: translate(-50%, -50%) rotate(-45deg);
-}
-
-@media (max-width: 760px) {
-  .sf-shell--mode-commercial-light.is-grid-focused .sf-engineGridStage--lsf {
-    padding: 6px 6px 10px;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridFocusActions {
-    position: sticky;
-    top: 0;
-    z-index: 52;
-    isolation: isolate;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 88px 30px;
-    grid-auto-rows: 30px;
-    align-items: center;
-    column-gap: 8px;
-    row-gap: 0;
-    margin: 0 0 4px;
-    padding: 2px 2px;
-    border: 0;
-    border-radius: 0;
-    background: #ffffff;
-    box-shadow: none;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridFocusActions::before {
-    content: "";
-    position: absolute;
-    inset: -6px -6px -4px;
-    z-index: -1;
-    background: #ffffff;
-    pointer-events: none;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridFocusActions .lsf-gridContext__incentiveButton {
-    grid-column: 1;
-    grid-row: 1;
-    display: grid;
-    grid-template-columns: 8px minmax(0, 1fr);
-    grid-template-rows: auto auto;
-    align-items: center;
-    justify-content: stretch;
-    column-gap: 5px;
-    row-gap: 1px;
-    min-width: 0;
-    max-width: calc(100% - 2px);
-    width: calc(100% - 2px);
-    height: 28px;
-    min-height: 28px;
-    padding: 2px 8px;
-    border: 1px solid #f0dc9f;
-    border-radius: 999px;
-    background: linear-gradient(180deg, #fffdf6 0%, #fff3c4 100%);
-    color: #3a2b00;
-    box-shadow: none;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridFocusActions .lsf-gridContext__incentiveButton::before {
-    content: "";
-    grid-column: 1;
-    grid-row: 1 / span 2;
-    align-self: center;
-    width: 6px;
-    height: 6px;
-    flex: 0 0 auto;
-    border-radius: 999px;
-    background: #f59e0b;
-    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.14);
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridFocusActions .lsf-gridContext__incentiveButton span,
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridFocusActions .lsf-gridContext__incentiveButton strong {
-    display: block;
-    grid-column: 2;
-    max-width: 100%;
-    overflow: hidden;
-    line-height: 1;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridFocusActions .lsf-gridContext__incentiveButton span {
-    grid-row: 1;
-    color: #6b4b00;
-    font-size: 0.43rem;
-    font-weight: 950;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridFocusActions .lsf-gridContext__incentiveButton strong {
-    grid-row: 2;
-    color: #2e2200;
-    font-size: 0.5rem;
-    font-weight: 1000;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridFocusActions .lsf-gridContext__incentiveButton.is-ready {
-    border-color: rgba(22, 163, 74, 0.28);
-    background: linear-gradient(180deg, #f0fdf4 0%, #dcfce7 100%);
-    color: #14532d;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridFocusActions .lsf-gridContext__incentiveButton.is-ready::before {
-    background: #16a34a;
-    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.14);
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridFocusActions .lsf-gridContext__incentiveButton.is-waiting {
-    border-color: #e9e1f5;
-    background: #ffffff;
-    color: #3b008b;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridFocusActions .lsf-gridContext__incentiveButton.is-waiting::before {
-    background: #7c3aed;
-    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12);
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridFocusActions .lsf-gridFocusCart,
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridFocusActions .lsf-cartbtn.lsf-gridFocusCart {
-    grid-column: 2;
-    grid-row: 1;
-    display: inline-grid;
-    grid-template-columns: 19px 15px minmax(28px, auto);
-    align-items: center;
-    justify-content: center;
-    gap: 3px;
-    width: auto;
-    min-width: 88px;
-    max-width: 88px;
-    height: 28px;
-    min-height: 28px;
-    padding: 0 7px 0 4px;
-    border: 1px solid rgba(59, 0, 139, 0.2);
-    border-radius: 999px;
-    background:
-      linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(249, 246, 255, 0.98)),
-      #ffffff;
-    color: #3b008b;
-    box-shadow:
-      0 2px 6px rgba(59, 0, 139, 0.08),
-      inset 0 1px 0 rgba(255, 255, 255, 0.96);
-    transform: none;
-    animation: none;
-    overflow: hidden;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridFocusActions .lsf-gridFocusCart .lsf-cartbtn__icon {
-    display: grid;
-    width: 20px;
-    height: 20px;
-    min-width: 20px;
-    place-items: center;
-    border-radius: 999px;
-    background:
-      radial-gradient(circle at 32% 22%, rgba(255, 255, 255, 0.94), rgba(255, 255, 255, 0.34) 36%, transparent 37%),
-      linear-gradient(135deg, #ffffff, #fff3c4 58%, #e7d184);
-    color: #17142a;
-    box-shadow:
-      inset 0 -2px 0 rgba(0, 0, 0, 0.1),
-      0 0 0 1px rgba(255, 255, 255, 0.9);
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridFocusActions .lsf-gridFocusCart .lsf-cartbtn__icon svg {
-    width: 13px;
-    height: 13px;
-    fill: currentColor;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridFocusActions .lsf-gridFocusCart .lsf-cartbtn__count {
-    display: grid;
-    width: 16px;
-    min-width: 16px;
-    height: 16px;
-    place-items: center;
-    padding: 0;
-    border: 1px solid rgba(255, 255, 255, 0.9);
-    border-radius: 999px;
-    background:
-      radial-gradient(circle at 32% 22%, rgba(255, 255, 255, 0.34), transparent 34%),
-      linear-gradient(135deg, #6d2df6, #3b008b);
-    color: #ffffff;
-    font-size: 0.52rem;
-    font-weight: 1000;
-    line-height: 1;
-    box-shadow: 0 2px 5px rgba(59, 0, 139, 0.18);
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridFocusActions .lsf-gridFocusCart .lsf-cartbtn__total {
-    display: block;
-    min-width: 0;
-    overflow: hidden;
-    color: #3b008b;
-    font-size: 0.54rem;
-    font-weight: 1000;
-    line-height: 1;
-    letter-spacing: 0;
-    text-shadow: none;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridFocusActions .lsf-gridFocusCart.is-active {
-    border-color: rgba(109, 45, 246, 0.34);
-    background: #fbfaff;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridFocusActions .lsf-gridFocusCart.is-active .lsf-cartbtn__icon {
-    background: #6d2df6;
-    color: #ffffff;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridFocusActions .lsf-gridContext__exit {
-    grid-column: 3;
-    grid-row: 1;
-    display: grid;
-    width: 28px;
-    min-width: 28px;
-    height: 28px;
-    min-height: 28px;
-    place-items: center;
-    padding: 0;
-    border: 1px solid rgba(215, 25, 32, 0.14);
-    border-radius: 999px;
-    background: #e53238;
-    color: #ffffff;
-    box-shadow: 0 2px 7px rgba(215, 25, 32, 0.18);
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridFocusActions .lsf-gridContext__exit::before {
-    width: 11px;
-    height: 2px;
-    transform: translate(-50%, -50%) rotate(45deg);
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridFocusActions .lsf-gridContext__exit::after {
-    width: 11px;
-    height: 2px;
-    transform: translate(-50%, -50%) rotate(-45deg);
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridFocusSearch {
-    position: sticky;
-    top: 34px;
-    z-index: 51;
-    isolation: isolate;
-    margin: 0 0 2px;
-    padding: 0;
-    background: #ffffff;
-    box-shadow: none;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridFocusSearch::before {
-    content: "";
-    position: absolute;
-    inset: -4px -6px -4px;
-    z-index: -1;
-    background: #ffffff;
-    pointer-events: none;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridFocusSearch .sf-engineSearchWrap {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 30px;
-    min-height: 28px;
-    border: 0;
-    border-bottom: 1px solid rgba(23, 20, 42, 0.44);
-    border-radius: 0;
-    background: transparent;
-    box-shadow: none;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridFocusSearch .sf-engineSearch {
-    min-height: 28px;
-    padding: 0 6px 0 1px;
-    border: 0;
-    border-radius: 0;
-    background: transparent;
-    color: #17142a;
-    font-size: 0.61rem;
-    font-weight: 800;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridFocusSearch .sf-engineSearch::placeholder {
-    color: rgba(23, 20, 42, 0.62);
-    opacity: 1;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridFocusSearch .sf-engineSearchBtn {
-    width: 30px;
-    min-height: 28px;
-    border: 0;
-    border-left: 1px solid rgba(23, 20, 42, 0.16);
-    border-radius: 0;
-    background: transparent;
-    color: #17142a;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridFocusSearch .sf-engineSearchBtn svg {
-    width: 18px;
-    height: 18px;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridFocusSearch .sf-engineSearchWrap,
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridFocusSearch .sf-engineSearch,
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridFocusSearch .sf-engineSearchBtn {
-    box-shadow: none;
-    outline: 0;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridFocusSearch .sf-engineSearchWrap::before,
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridFocusSearch .sf-engineSearchWrap::after,
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridFocusSearch .sf-engineSearch::before,
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridFocusSearch .sf-engineSearch::after,
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridFocusSearch .sf-engineSearchBtn::before,
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridFocusSearch .sf-engineSearchBtn::after {
-    content: none;
-    display: none;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridFocusTabs {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    margin: 0 0 4px;
-    padding: 0 0 2px;
-    overflow-x: auto;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridFocusTabs::-webkit-scrollbar {
-    display: none;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridFocusTabs .lsf-tab {
-    min-height: 28px;
-    height: 28px;
-    padding: 0 10px;
-    font-size: 0.58rem;
-    line-height: 1;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridFocusTabs .lsf-tab--segment {
-    width: auto;
-    min-width: max-content;
-    border-radius: 999px;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext {
-    position: sticky;
-    top: 64px !important;
-    z-index: 50;
-    isolation: isolate;
-    display: block;
-    min-height: 0;
-    margin: 0 0 5px;
-    padding: 0;
-    border: 0;
-    background: #ffffff;
-    box-shadow: none;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext::before {
-    content: "";
-    position: absolute;
-    inset: -4px -6px -6px;
-    z-index: -1;
-    background: #ffffff;
-    pointer-events: none;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext::after {
-    content: none;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__category,
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext.has-grid-incentive .lsf-gridContext__category {
-    display: grid;
-    grid-template-columns: max-content minmax(0, 1fr) max-content;
-    align-items: center;
-    gap: 4px;
-    box-sizing: border-box;
-    width: 100%;
-    min-width: 0;
-    min-height: 18px;
-    padding: 0 3px;
-    border-radius: 0;
-    background: #ffffff;
-    border-bottom: 1px solid #f0edf6;
-    overflow: visible;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__category > span {
-    color: #ff6d00;
-    font-size: 0.42rem;
-    white-space: nowrap;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__category > strong {
-    min-width: 0;
-    overflow: hidden;
-    color: #ff6d00;
-    font-size: 0.48rem;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__category > em {
-    justify-self: end;
-    min-width: max-content;
-    color: #ff6d00;
-    font-size: 0.4rem;
-    font-style: normal;
-    white-space: nowrap;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-grid-wrap {
-    position: relative;
-    z-index: 1;
-    margin-top: 0;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-grid-wrap::after {
-    content: "";
-    display: block;
-    height: var(--sf-grid-focus-end-space);
-    grid-column: 1 / -1;
-  }
-}
 
 .sf-incentiveFocusModal {
   width: min(360px, calc(100vw - 28px));
@@ -20627,71 +18785,6 @@
 
   .sf-shell--mode-commercial-light .lsf-segmentTabs__desktop {
     display: contents;
-  }
-
-  .sf-shell--mode-commercial-light .lsf-tabs {
-    gap: 10px;
-  }
-
-  .sf-shell--mode-commercial-light .lsf-segmentTabs {
-    position: relative;
-    left: auto;
-    z-index: 1;
-    width: auto;
-    min-width: max-content;
-    flex: 0 0 auto;
-    height: auto;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 0;
-    border: 0;
-    border-radius: 0;
-    background: transparent;
-    box-shadow: none;
-    overflow: visible;
-  }
-
-  .sf-shell--mode-commercial-light .lsf-segmentTabs::before {
-    content: none;
-  }
-
-  .sf-shell--mode-commercial-light .lsf-tab--segment,
-  .sf-shell--mode-commercial-light .lsf-tab--segment:nth-child(2) {
-    min-width: 92px;
-    width: auto;
-    min-height: 34px;
-    height: 34px;
-    padding: 0 13px;
-    border: 1px solid #ffd7b8;
-    border-radius: 999px;
-    background: linear-gradient(180deg, #fffaf5 0%, #ffffff 100%);
-    color: #f06400;
-    box-shadow: 0 6px 12px rgba(240, 100, 0, 0.07);
-    font-size: 0.66rem;
-    text-shadow: none;
-    animation: none;
-  }
-
-  .sf-shell--mode-commercial-light .lsf-tab--segment::before,
-  .sf-shell--mode-commercial-light .lsf-tab--segment::after {
-    content: none !important;
-    display: none !important;
-  }
-
-  .sf-shell--mode-commercial-light .lsf-tab--segment.is-active,
-  .sf-shell--mode-commercial-light .lsf-tab--segment:nth-child(2).is-active {
-    border-color: #f06400;
-    background: linear-gradient(180deg, #ff7a18 0%, #d95300 100%);
-    color: #ffffff;
-    box-shadow:
-      0 7px 14px rgba(240, 100, 0, 0.18),
-      inset 0 1px 0 rgba(255, 255, 255, 0.42);
-  }
-
-  .sf-shell--mode-commercial-light .lsf-categoryTabs {
-    padding-left: 10px;
-    border-left: 1px solid #eee9f4;
   }
 }
 
@@ -21084,20 +19177,6 @@
   letter-spacing: 0.005em;
 }
 
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__category {
-  min-height: 30px;
-  padding: 0 12px;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__category > span,
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__category > em {
-  font-size: 0.62rem;
-}
-
-.sf-shell--mode-commercial-light.is-grid-focused .lsf-gridContext__category > strong {
-  font-size: 0.84rem;
-}
-
 @media (min-width: 761px) {
   .sf-shell--mode-commercial-light .sf-engineGridStage--lsf {
     min-height: 0;
@@ -21194,33 +19273,6 @@
 }
 
 /* Final offer-position indicator: vertical, fixed, and not overridden by desktop tab cleanup. */
-.sf-shell--mode-commercial-light .lsf-segmentTabs.is-manual .lsf-tab--segment.is-active {
-  padding-left: 28px;
-  padding-right: 12px;
-  --sf-offer-rail: color-mix(in srgb, var(--offer-tone) 40%, #ffffff);
-}
-
-.sf-shell--mode-commercial-light .lsf-segmentTabs.is-manual .lsf-tab--segment.is-active::before {
-  content: "" !important;
-  position: absolute;
-  left: 8px;
-  top: 50%;
-  z-index: 3;
-  display: block !important;
-  width: 14px;
-  height: 28px;
-  border-radius: 999px;
-  background: var(--sf-offer-rail);
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='28' viewBox='0 0 14 28'%3E%3Cpath d='M1.7 8.2 7 2.9l5.3 5.3' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M1.7 19.8 7 25.1l5.3-5.3' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 14px 28px no-repeat;
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='28' viewBox='0 0 14 28'%3E%3Cpath d='M1.7 8.2 7 2.9l5.3 5.3' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M1.7 19.8 7 25.1l5.3-5.3' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 14px 28px no-repeat;
-  opacity: 0.9;
-  transform: translateY(-50%);
-  animation: none;
-  box-shadow: none;
-  filter:
-    drop-shadow(0 1px 0 rgba(255, 255, 255, 0.18))
-    drop-shadow(0 1px 1px color-mix(in srgb, var(--offer-tone) 42%, rgba(0, 0, 0, 0.28)));
-}
 
 @media (min-width: 761px) {
   .sf-shell--mode-commercial-light {
@@ -21259,16 +19311,6 @@
 
   .sf-shell--mode-commercial-light .sf-stickyFooter {
     box-sizing: border-box;
-  }
-
-  .sf-shell--mode-commercial-light .lsf-segmentTabs.is-manual .lsf-tab--segment.is-active {
-    padding: 0 13px;
-  }
-
-  .sf-shell--mode-commercial-light .lsf-segmentTabs.is-manual .lsf-tab--segment.is-active::before,
-  .sf-shell--mode-commercial-light .lsf-segmentTabs.is-manual .lsf-tab--segment.is-active::after {
-    content: none !important;
-    display: none !important;
   }
 }
 
@@ -21462,10 +19504,6 @@
 }
 
 /* Offer tabs and counters: keep mobile arrows, remove side bar, add subtle float. */
-.sf-shell--mode-commercial-light .lsf-segmentTabs.is-manual .lsf-tab--segment.is-active::after {
-  content: none !important;
-  display: none !important;
-}
 
 .sf-shell--mode-commercial-light .lsf-trendingRibbon,
 .sf-shell--mode-commercial-light .lsf-offerRibbon,
@@ -21806,73 +19844,6 @@
 }
 
 /* Mobile-only marketplace color nods for the unified offer button. Desktop keeps its current treatment. */
-@media (max-width: 760px) {
-  .sf-shell--mode-commercial-light .lsf-segmentTabs__mobile .lsf-tab--offer-trending,
-  .sf-shell--mode-commercial-light .lsf-segmentTabs__mobile .lsf-tab--offer-trending.is-active {
-    --offer-tone: #ffd600;
-    --offer-glow: rgba(0, 160, 96, 0.28);
-    background:
-      radial-gradient(circle at 18% 20%, rgba(255, 255, 255, 0.44), transparent 30%),
-      linear-gradient(135deg, #ffe45c 0%, #ffd600 52%, #ffc400 100%) !important;
-    color: #008c45 !important;
-    font-family: "Arial Rounded MT Bold", "Avenir Next", "Segoe UI", Arial, sans-serif;
-    font-weight: 1000;
-    letter-spacing: 0;
-    text-transform: none;
-    text-shadow:
-      0 1px 0 rgba(255, 255, 255, 0.68),
-      0 0 7px rgba(0, 140, 69, 0.16) !important;
-  }
-
-  .sf-shell--mode-commercial-light .lsf-segmentTabs__mobile .lsf-tab--offer-deal,
-  .sf-shell--mode-commercial-light .lsf-segmentTabs__mobile .lsf-tab--offer-deal.is-active {
-    --offer-tone: #ff7900;
-    --offer-glow: rgba(255, 255, 255, 0.42);
-    background:
-      radial-gradient(circle at 16% 20%, rgba(255, 255, 255, 0.34), transparent 28%),
-      linear-gradient(135deg, #ff9d22 0%, #ff7900 54%, #e85d04 100%) !important;
-    color: #ffffff !important;
-    font-family: Impact, Haettenschweiler, "Arial Narrow", "Arial Black", Arial, sans-serif;
-    font-weight: 900;
-    letter-spacing: 0.01em;
-    text-transform: uppercase;
-    text-shadow:
-      0 1px 0 rgba(111, 42, 0, 0.48),
-      0 0 8px rgba(255, 255, 255, 0.28) !important;
-  }
-
-  .sf-shell--mode-commercial-light .lsf-segmentTabs__mobile .lsf-tab--offer-promo,
-  .sf-shell--mode-commercial-light .lsf-segmentTabs__mobile .lsf-tab--offer-promo.is-active {
-    --offer-tone: #06c167;
-    --offer-glow: rgba(0, 0, 0, 0.18);
-    background:
-      radial-gradient(circle at 16% 20%, rgba(255, 255, 255, 0.34), transparent 28%),
-      linear-gradient(135deg, #4ee88f 0%, #06c167 54%, #00a85a 100%) !important;
-    color: #050505 !important;
-    font-family: "Helvetica Neue", Arial, "Segoe UI", sans-serif;
-    font-weight: 1000;
-    letter-spacing: 0;
-    text-transform: none;
-    text-shadow:
-      0 1px 0 rgba(255, 255, 255, 0.28),
-      0 0 7px rgba(0, 0, 0, 0.12) !important;
-  }
-
-  .sf-shell--mode-commercial-light .lsf-segmentTabs.is-manual .lsf-segmentTabs__mobile .lsf-tab--segment.is-active {
-    padding-left: 24px;
-  }
-
-  .sf-shell--mode-commercial-light .lsf-segmentTabs.is-manual .lsf-segmentTabs__mobile .lsf-tab--segment.is-active::before {
-    left: 8px;
-    width: 11px;
-    height: 22px;
-    background: currentColor;
-    opacity: 0.96;
-    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='22' viewBox='0 0 11 22'%3E%3Cpath d='M1.6 7.2 5.5 3.3l3.9 3.9' fill='none' stroke='%23000' stroke-width='2.15' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M1.6 14.8l3.9 3.9 3.9-3.9' fill='none' stroke='%23000' stroke-width='2.15' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 11px 22px no-repeat;
-    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='22' viewBox='0 0 11 22'%3E%3Cpath d='M1.6 7.2 5.5 3.3l3.9 3.9' fill='none' stroke='%23000' stroke-width='2.15' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M1.6 14.8l3.9 3.9 3.9-3.9' fill='none' stroke='%23000' stroke-width='2.15' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 11px 22px no-repeat;
-    filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.18));
-  }
-}
 
 @media (max-width: 760px) {
   .sf-shell--mode-commercial-light .sf-lsfSearchCluster {
@@ -21956,35 +19927,6 @@
     padding-top: 12px;
   }
 
-  .sf-shell--mode-commercial-light:not(.is-grid-focused) .lsf-gridContext {
-    min-height: 18px;
-    margin: 0 0 8px;
-    padding: 1px 10px 2px;
-    border: 0;
-    border-radius: 0;
-    background: transparent;
-    box-shadow: none;
-  }
-
-  .sf-shell--mode-commercial-light:not(.is-grid-focused) .lsf-gridContext::before,
-  .sf-shell--mode-commercial-light:not(.is-grid-focused) .lsf-gridContext::after {
-    content: none;
-  }
-
-  .sf-shell--mode-commercial-light:not(.is-grid-focused) .lsf-gridContext span,
-  .sf-shell--mode-commercial-light:not(.is-grid-focused) .lsf-gridContext em,
-  .sf-shell--mode-commercial-light:not(.is-grid-focused) .lsf-gridContext__category > span,
-  .sf-shell--mode-commercial-light:not(.is-grid-focused) .lsf-gridContext__category > em {
-    font-size: 0.56rem;
-    line-height: 1;
-  }
-
-  .sf-shell--mode-commercial-light:not(.is-grid-focused) .lsf-gridContext strong,
-  .sf-shell--mode-commercial-light:not(.is-grid-focused) .lsf-gridContext__category > strong {
-    font-size: 0.72rem;
-    line-height: 1;
-  }
-
   .sf-shell--mode-commercial-light .lsf-grid,
   .sf-shell--mode-commercial-light .lsf-grid--trending,
   .sf-shell--mode-commercial-light .lsf-grid--promos,
@@ -21998,20 +19940,13 @@
 /* Prevent iOS Safari from auto-zooming the mobile nav search/coupon inputs. */
 @media (max-width: 760px) {
   .sf-shell .sf-lsfActionSearchLine input.sf-engineSearch,
-  .sf-shell .lsf-gridFocusSearch input.sf-engineSearch,
   .sf-shell .sf-couponDock input {
     font-size: 16px !important;
     line-height: 1.15;
   }
 
-  .sf-shell .sf-lsfActionSearchLine input.sf-engineSearch::placeholder,
-  .sf-shell .lsf-gridFocusSearch input.sf-engineSearch::placeholder {
+  .sf-shell .sf-lsfActionSearchLine input.sf-engineSearch::placeholder {
     font-size: 0.68rem;
-    font-weight: 800;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .lsf-gridFocusSearch input.sf-engineSearch::placeholder {
-    font-size: 0.56rem;
     font-weight: 800;
   }
 }
@@ -22021,22 +19956,6 @@
     --sf-mobile-grid-footer-clearance: calc(142px + env(safe-area-inset-bottom, 0px));
     padding-bottom: var(--sf-mobile-grid-footer-clearance);
     scroll-padding-bottom: var(--sf-mobile-grid-footer-clearance);
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused {
-    --sf-grid-focus-end-space: 8px;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused:has(.sf-stickyFooter .sf-engineBottomBtn--pay) {
-    --sf-grid-focus-end-space: 10px;
-  }
-
-  .sf-shell--mode-commercial-light.is-grid-focused .sf-engineGridStage--lsf {
-    height: 100%;
-    min-height: 100%;
-    max-height: none;
-    padding-bottom: var(--sf-grid-focus-end-space);
-    scroll-padding-bottom: var(--sf-grid-focus-end-space);
   }
 }
 
@@ -22108,86 +20027,6 @@
   50% {
     filter: saturate(1.14) brightness(1.05);
   }
-}
-
-@media (min-width: 761px) {
-  .sf-shell--mode-commercial-light .lsf-tabs {
-    position: relative;
-    cursor: grab;
-    mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 18px), transparent 100%);
-    scroll-padding-left: 148px;
-  }
-
-  .sf-shell--mode-commercial-light .lsf-tabs.is-dragging {
-    cursor: grabbing;
-    user-select: none;
-  }
-
-  .sf-shell--mode-commercial-light .lsf-segmentTabs {
-    position: sticky;
-    left: 0;
-    z-index: 12;
-    flex: 0 0 auto;
-    padding-right: 12px;
-    background: linear-gradient(90deg, #fffaf2 0, #fffaf2 calc(100% - 14px), rgba(255, 250, 242, 0));
-    box-shadow: 14px 0 18px rgba(255, 250, 242, 0.94);
-  }
-
-  .sf-shell--mode-commercial-light .lsf-tab--segment.is-active,
-  .sf-shell--mode-commercial-light .lsf-tab--segment:nth-child(2).is-active {
-    border-color: #f06400;
-    background: linear-gradient(180deg, #ff7a18 0%, #d95300 100%);
-    color: #ffffff;
-    box-shadow:
-      0 7px 14px rgba(240, 100, 0, 0.2),
-      inset 0 1px 0 rgba(255, 255, 255, 0.42);
-  }
-
-  .sf-shell--mode-commercial-light .lsf-tab--category.is-active {
-    border-color: #7c3aed;
-    background: linear-gradient(135deg, #8b3dff 0%, #5b21d9 100%);
-    color: #ffffff;
-    box-shadow:
-      0 7px 14px rgba(91, 33, 217, 0.2),
-      inset 0 1px 0 rgba(255, 255, 255, 0.36);
-  }
-
-  .sf-shell--mode-commercial-light .lsf-categoryTabs {
-    min-width: max-content;
-  }
-
-  .sf-shell--mode-commercial-light .lsf-categoryTabs .lsf-tab--category {
-    position: relative;
-    isolation: isolate;
-  }
-
-  .sf-shell--mode-commercial-light .lsf-categoryTabs .lsf-tab--category.is-active {
-    border-color: #5b21d9 !important;
-    background:
-      radial-gradient(circle at 18% 22%, rgba(255, 255, 255, 0.32), transparent 30%),
-      linear-gradient(135deg, #8b3dff 0%, #5b21d9 100%) !important;
-    color: #ffffff !important;
-    box-shadow:
-      0 8px 16px rgba(91, 33, 217, 0.28),
-      inset 0 1px 0 rgba(255, 255, 255, 0.38) !important;
-    text-shadow: 0 1px 0 rgba(42, 0, 95, 0.28);
-    transform: translateY(-1px);
-  }
-
-}
-
-.lsf-tabs .lsf-categoryTabs .lsf-tab.lsf-tab--category.is-active,
-.lsf-tabs .lsf-categoryTabs .lsf-tab.lsf-tab--category[data-active="true"] {
-  border-color: #5b21d9 !important;
-  background:
-    radial-gradient(circle at 18% 22%, rgba(255, 255, 255, 0.32), transparent 30%),
-    linear-gradient(135deg, #8b3dff 0%, #5b21d9 100%) !important;
-  color: #ffffff !important;
-  box-shadow:
-    0 8px 16px rgba(91, 33, 217, 0.28),
-    inset 0 1px 0 rgba(255, 255, 255, 0.38) !important;
-  text-shadow: 0 1px 0 rgba(42, 0, 95, 0.28);
-  transform: translateY(-1px);
 }
 
 /* Order mode reminder: the store ticker is also the correction control. */

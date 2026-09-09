@@ -3,6 +3,10 @@ import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import OrderPortalTransition from "../components/Storefront/OrderPortalTransition";
 import api from "../services/api";
 import "../styles/Storefront.css";
+import "../styles/CatalogLayout.css";
+import CatalogNavigation, { CatalogSearch, CatalogTools } from "../components/Storefront/CatalogNavigation";
+import useCatalogSwipe from "../components/Storefront/useCatalogSwipe";
+import useCatalogFocus from "../components/Storefront/useCatalogFocus";
 import flagEs from "../assets/flags/es.svg";
 import gridWatermarkLogo from "../assets/logo/the pizza sale enganine.png";
 import {
@@ -16,6 +20,8 @@ import {
 } from "../constants/storefrontButtons";
 import { buildStorefrontSeo, usePublicSeo } from "../utils/seo";
 import { checkoutPresenceState } from "../utils/checkoutPresence";
+import { formatCouponValidity } from "../utils/couponValidity";
+import { createCouponValidationController } from "../utils/couponValidation";
 
 const TRENDING_TAB = "__TRENDING__";
 const TOP_DEAL_TAB = "__TOP_DEAL__";
@@ -45,8 +51,6 @@ const RANDOM_SELECTION_CANONICAL_KEYS = new Set([
   "random_selection_2",
   "random_selection_3",
 ]);
-const isGridFocusViewport = () =>
-  typeof window !== "undefined" && window.innerWidth <= 760;
 
 const PayPalLogo = () => (
   <svg
@@ -732,35 +736,6 @@ const LikeIcon = () => (
   </svg>
 );
 
-const GiftShareIcon = () => (
-  <svg className="lsf-card__metaIcon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-    <path
-      d="M4.5 11h15v9h-15zM3.5 7.5h17V11h-17zM12 7.5V20"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <path
-      d="M12 7.5c-1.8-3-5.2-3.1-5.2-.8 0 1.8 2.2 2.2 5.2 2.2 3 0 5.2-.4 5.2-2.2 0-2.3-3.4-2.2-5.2.8Z"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <path
-      d="M16.2 15.7h3.5m0 0-1.3-1.3m1.3 1.3-1.3 1.3"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
-
 const FooterClockIcon = () => (
   <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
     <path
@@ -949,13 +924,11 @@ function IncentiveFocusModal({
   );
 }
 
-function CouponInfoModal({ open, onClose, onRemove, onValidate, validating = false, data }) {
-  const [countdown, setCountdown] = useState("");
+export function CouponInfoModal({ open, onClose, onRemove, onValidate, onChooseProducts, onCart, validating = false, data }) {
   const [secondsLeft, setSecondsLeft] = useState(null);
 
   useEffect(() => {
     if (!open || !data?.coupon?.expiresAt) {
-      setCountdown("");
       setSecondsLeft(null);
       return undefined;
     }
@@ -963,14 +936,7 @@ function CouponInfoModal({ open, onClose, onRemove, onValidate, validating = fal
     const tick = () => {
       const leftMs = Math.max(0, new Date(data.coupon.expiresAt).getTime() - Date.now());
       const nextSeconds = Math.floor(leftMs / 1000);
-      const hours = Math.floor(nextSeconds / 3600);
-      const minutes = Math.floor((nextSeconds % 3600) / 60);
-      const seconds = nextSeconds % 60;
-
-      setSecondsLeft(nextSeconds);
-      setCountdown(
-        `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`
-      );
+      setSecondsLeft(Number.isFinite(nextSeconds) ? nextSeconds : null);
     };
 
     tick();
@@ -987,6 +953,10 @@ function CouponInfoModal({ open, onClose, onRemove, onValidate, validating = fal
     valid: "APLICADO",
     empty_cart: "LISTO PARA PRODUCTOS",
     waiting_for_cart: "LISTO PARA PRODUCTOS",
+    no_eligible_products: "PRODUCTOS NO COMPATIBLES",
+    outside_window: "FUERA DE HORARIO",
+    error: "REINTENTAR",
+    reserved: "PAGO PENDIENTE",
     no_delivery_fee: "REQUIERE DELIVERY",
     min_not_met: "MINIMO PENDIENTE",
     wrong_area: "NO DISPONIBLE AQUI",
@@ -996,7 +966,7 @@ function CouponInfoModal({ open, onClose, onRemove, onValidate, validating = fal
     disabled: "DETENIDO",
     not_found: "NO ENCONTRADO",
   }[String(data.status || "").toLowerCase()] || String(data.status || "sin_estado").replace(/_/g, " ").toUpperCase();
-  const pendingStatuses = new Set(["empty_cart", "waiting_for_cart", "min_not_met", "no_delivery_fee"]);
+  const pendingStatuses = new Set(["empty_cart", "waiting_for_cart", "min_not_met", "no_delivery_fee", "no_eligible_products"]);
   const statusTone = data.valid ? "is-valid" : pendingStatuses.has(String(data.status || "").toLowerCase()) ? "is-pending" : "is-invalid";
   const discountPreview = (() => {
     if (!coupon) return "EUR 0.00";
@@ -1023,7 +993,7 @@ function CouponInfoModal({ open, onClose, onRemove, onValidate, validating = fal
 
         <div className="sf-couponInfoBody">
           <div className={`sf-couponInfoStatus ${statusTone}`}>
-            <strong>{data.message || "Revisa el estado del cupon."}</strong>
+            <strong>{validating ? "Comprobando tu descuento..." : data.message || "Revisa el estado del cupon."}</strong>
             <span>Estado: {readableStatus}</span>
           </div>
 
@@ -1039,17 +1009,19 @@ function CouponInfoModal({ open, onClose, onRemove, onValidate, validating = fal
 
               {coupon.expiresAt && (
                 <div className={`sf-couponTimer sf-couponTimer--${severity}`} role="status" aria-live="polite">
-                  <span>Quedan</span>
-                  <strong>{countdown || "--:--:--"}</strong>
+                  <span>Validez del cupón</span>
+                  <strong>{formatCouponValidity(secondsLeft)}</strong>
                 </div>
               )}
 
               <h4>Condiciones</h4>
               <ul>
                 <li>Valido por <b>1 cupon por pedido</b> y <b>no acumulable</b> con otros cupones.</li>
-                <li>Se aplica sobre <b>productos</b>, no sobre gastos de envio ni Boost.</li>
+                <li>{isDeliveryFreeCouponData(coupon) ? "Elimina los gastos de envío de un pedido con delivery." : "Se aplica a productos sin oferta. No se acumula con Top Deals, Promos, Boost ni recompensas; tampoco descuenta el envío."}</li>
+                {num(coupon.minAmount) > 0 && <li>Mínimo del cupón: <b>EUR {num(coupon.minAmount).toFixed(2)}</b> en productos compatibles, antes del descuento.</li>}
+                <li>El pago mínimo de la tienda se comprueba sobre el total final, después del descuento y con envío.</li>
                 <li>Debe estar activo, dentro de horario y antes de su caducidad.</li>
-                <li>El uso se registra al confirmar el pago.</li>
+                <li>Con tarjeta, el uso se registra al confirmar el pago. En efectivo, al confirmar el pedido.</li>
               </ul>
             </>
           ) : (
@@ -1058,10 +1030,10 @@ function CouponInfoModal({ open, onClose, onRemove, onValidate, validating = fal
         </div>
 
         <div className="sf-cartActions sf-couponInfoActions">
-          <button type="button" className="sf-primaryBtn" onClick={onValidate} disabled={validating}>
-            {validating ? "Validando..." : "Validar cupon"}
+          <button type="button" className="sf-primaryBtn" onClick={data.valid || data.status === "no_delivery_fee" ? onCart : pendingStatuses.has(data.status) ? onChooseProducts : onValidate} disabled={validating}>
+            {validating ? "Validando..." : data.valid || data.status === "no_delivery_fee" ? "Ir al carrito" : pendingStatuses.has(data.status) ? "Elegir productos" : "Reintentar"}
           </button>
-          {(coupon || data.valid) && (
+          {data && (
             <button type="button" className="sf-secondaryBtn" onClick={onRemove}>
               Quitar cupon
             </button>
@@ -1356,18 +1328,18 @@ const renderProductApprovalMeta = (item) => {
   );
 };
 
-const renderProductGiftAction = (item) => {
-  return (
-    <button
-      type="button"
-      className="lsf-card__gift"
-      onClick={(event) => event.stopPropagation()}
-      aria-label={`Haz un regalo con ${item?.name || ""}`.trim()}
-    >
-      <span>Haz un regalo</span>
-      <GiftShareIcon />
-    </button>
-  );
+const PRODUCT_BUY_MESSAGES = [
+  "Hazte un regalo",
+  "Esta es la tuya",
+  "Hoy te lo mereces",
+  "Date un capricho",
+  "Vamos, a por ella",
+];
+
+const renderProductBuyMessage = (item) => {
+  const key = String(item?.pizzaId ?? item?.id ?? item?.name ?? "");
+  const index = Array.from(key).reduce((sum, character) => sum + character.charCodeAt(0), 0) % PRODUCT_BUY_MESSAGES.length;
+  return <span className="lsf-card__buyMessage">{PRODUCT_BUY_MESSAGES[index]}</span>;
 };
 
 const isBeverageProduct = (item) =>
@@ -2455,6 +2427,8 @@ export default function StorePage() {
   const [portalReady, setPortalReady] = useState(false);
   const [search, setSearch] = useState("");
   const [couponCode, setCouponCode] = useState("");
+  const [selectedCouponCode, setSelectedCouponCode] = useState("");
+  const [couponResultKey, setCouponResultKey] = useState("");
   const [couponStatus, setCouponStatus] = useState("");
   const [couponInfoOpen, setCouponInfoOpen] = useState(false);
   const [couponInfoData, setCouponInfoData] = useState(null);
@@ -2548,36 +2522,22 @@ export default function StorePage() {
   const [incentiveNowMs, setIncentiveNowMs] = useState(() => Date.now());
   const [flippedId, setFlippedId] = useState(null);
   const [tick, setTick] = useState(false);
-  const [lsfSurfaceDocked, setLsfSurfaceDocked] = useState(false);
-  const [gridFocusMode, setGridFocusMode] = useState(false);
-  const [gridFocusTransition, setGridFocusTransition] = useState("");
-  const [gridFocusSwipePreview, setGridFocusSwipePreview] = useState(null);
-  const [offerTabsManual, setOfferTabsManual] = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [gridIncentiveOpen, setGridIncentiveOpen] = useState(false);
+  const catalogRootRef = useRef(null);
   const lsfSurfaceRef = useRef(null);
-  const tabsScrollerRef = useRef(null);
-  const tabsAutoPauseUntilRef = useRef(0);
-  const tabsScrollRafRef = useRef(0);
-  const tabsScrollSettleTimeoutRef = useRef(0);
-  const tabsScrollOriginRef = useRef("");
-  const ignoreTabsScrollUntilRef = useRef(0);
-  const tabsDragRef = useRef(null);
-  const suppressTabsClickUntilRef = useRef(0);
-  const commercialTabClickTimeoutRef = useRef(0);
-  const lastCommercialTabClickRef = useRef({ id: "", at: 0 });
-  const commercialAutoSwitchAtRef = useRef(0);
-  const gridSwipeRef = useRef(null);
   const gridStageRef = useRef(null);
-  const gridFocusTransitionTimeoutRef = useRef(0);
   const halfSwipeRef = useRef(null);
-  const suppressGridClickUntilRef = useRef(0);
   const incentiveZeroRefreshRef = useRef(false);
   const dismissedRewardIncentiveIdsRef = useRef(new Set());
-  const autoCouponApplyRef = useRef("");
+  const couponValidationRef = useRef(createCouponValidationController());
+  const couponContextRef = useRef("");
+  const couponUrlRef = useRef("");
   const lsfSurfaceStickySuspended = Boolean(
     productModalOpen ||
       cartOpen ||
       checkoutProfileOpen ||
+      paymentMethodModalOpen ||
       checkoutLoading ||
       halfModalOpen ||
       customModalOpen ||
@@ -2589,6 +2549,10 @@ export default function StorePage() {
       cashConfirmationOpen ||
       (portalReady && !termsAccepted)
   );
+  const [gridFocusMode, setGridFocusMode] = useCatalogFocus({
+    location, navigate, suspended: lsfSurfaceStickySuspended || gridIncentiveOpen,
+    rootRef: catalogRootRef, stageRef: gridStageRef, ready: Boolean(store && portalReady && !error),
+  });
   const storefrontSeo = useMemo(
     () => buildStorefrontSeo({ partner, store, partnerSlug, storeSlug }),
     [partner, partnerSlug, store, storeSlug]
@@ -2596,100 +2560,7 @@ export default function StorePage() {
 
   usePublicSeo(storefrontSeo);
 
-  const resetMobileInputViewport = useCallback((input, { resetGridStage = false } = {}) => {
-    input?.blur?.();
-
-    const settleViewport = () => {
-      if (resetGridStage) {
-        gridStageRef.current?.scrollTo?.({
-          top: 0,
-          left: 0,
-          behavior: "smooth",
-        });
-      }
-      window.scrollTo?.({
-        top: window.scrollY,
-        left: 0,
-        behavior: "auto",
-      });
-    };
-
-    window.requestAnimationFrame(() => {
-      window.requestAnimationFrame(settleViewport);
-    });
-    window.setTimeout(settleViewport, 80);
-    window.setTimeout(settleViewport, 260);
-    window.setTimeout(settleViewport, 520);
-  }, []);
-
-  const submitGridFocusSearch = useCallback(
-    (event) => {
-      event.preventDefault();
-      resetMobileInputViewport(event.currentTarget.querySelector(".sf-engineSearch"), {
-        resetGridStage: true,
-      });
-    },
-    [resetMobileInputViewport]
-  );
-
-  useEffect(() => {
-    let rafId = 0;
-
-    const updateDockedState = () => {
-      rafId = 0;
-      const surface = lsfSurfaceRef.current;
-      if (!surface || window.innerWidth > 760 || lsfSurfaceStickySuspended) {
-        setLsfSurfaceDocked(false);
-        return;
-      }
-
-      const isScrolled = window.scrollY > 16;
-      setLsfSurfaceDocked(isScrolled);
-    };
-
-    const requestUpdate = () => {
-      if (rafId) return;
-      rafId = window.requestAnimationFrame(updateDockedState);
-    };
-
-    requestUpdate();
-    window.addEventListener("scroll", requestUpdate, { passive: true });
-    window.addEventListener("resize", requestUpdate);
-
-    return () => {
-      if (rafId) window.cancelAnimationFrame(rafId);
-      window.removeEventListener("scroll", requestUpdate);
-      window.removeEventListener("resize", requestUpdate);
-    };
-  }, [lsfSurfaceStickySuspended]);
-
-  useEffect(() => {
-    if (portalReady && !termsAccepted) {
-      setGridFocusMode(false);
-      setGridFocusTransition("");
-    }
-  }, [portalReady, termsAccepted]);
-
-  useEffect(() => {
-    const closeDesktopGridFocus = () => {
-      if (isGridFocusViewport()) return;
-      setGridFocusMode(false);
-      setGridFocusTransition("");
-      setGridFocusSwipePreview(null);
-      window.clearTimeout(gridFocusTransitionTimeoutRef.current);
-    };
-
-    closeDesktopGridFocus();
-    window.addEventListener("resize", closeDesktopGridFocus);
-    return () => window.removeEventListener("resize", closeDesktopGridFocus);
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      window.clearTimeout(gridFocusTransitionTimeoutRef.current);
-      window.clearTimeout(commercialTabClickTimeoutRef.current);
-    };
-  }, []);
+  const resetMobileInputViewport = useCallback(input => { input?.blur?.(); }, []);
 
   useEffect(() => {
     try {
@@ -2766,6 +2637,7 @@ export default function StorePage() {
         setTrending(nextTrending);
         setUpcoming(nextUpcoming);
         setPromos(nextPromos);
+        setActiveTab("");
         setStore(menuData?.store || null);
         setPartner(partnerData || null);
         setBoostSettings(menuData?.boostSettings || DEFAULT_BOOST_SETTINGS);
@@ -3169,18 +3041,22 @@ export default function StorePage() {
   );
 
   useEffect(() => {
+    // Wait for the menu: Trending exists before the store data arrives.
+    if (!store) return;
     if (!tabs.length) {
       setActiveTab("");
       return;
     }
 
     const validTabIds = new Set(tabs.map((tab) => tab.id));
-    const defaultTabId = categories[0]?.id || tabs[0].id;
+    const defaultTabId = validTabIds.has(TOP_DEAL_TAB)
+      ? TOP_DEAL_TAB
+      : categories[0]?.id || tabs[0].id;
 
     setActiveTab((current) =>
       validTabIds.has(current) ? current : defaultTabId
     );
-  }, [categories, tabs]);
+  }, [categories, store, tabs]);
 
   const baseFilteredMenu = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -3315,574 +3191,30 @@ export default function StorePage() {
     visibleMenu.length,
   ]);
 
-  const pauseTabsTicker = useCallback((durationMs = 5200) => {
-    tabsAutoPauseUntilRef.current = performance.now() + durationMs;
-  }, []);
-
-  const resumeTabsTicker = useCallback(() => {
-    const nextSwitchAt = performance.now() + 3000;
-    tabsAutoPauseUntilRef.current = 0;
-    commercialAutoSwitchAtRef.current = nextSwitchAt;
-    setOfferTabsManual(false);
-  }, []);
-
-  const getCategoryZeroOffset = useCallback((scroller) => {
-    if (!scroller) return 0;
-
-    const categoryGroup = scroller.querySelector(".lsf-categoryTabs");
-    if (categoryGroup) {
-      const categoryStyles = window.getComputedStyle(categoryGroup);
-      const categoryPaddingLeft =
-        Number.parseFloat(categoryStyles.paddingLeft || "0") || 0;
-      return categoryGroup.offsetLeft + categoryPaddingLeft;
+  const resetCatalogPosition = useCallback(() => {
+    if (gridStageRef.current) gridStageRef.current.scrollTop = 0;
+    if (!gridFocusMode && catalogRootRef.current) {
+      const top = window.scrollY + catalogRootRef.current.getBoundingClientRect().top;
+      if (window.scrollY > top) window.scrollTo({ top: Math.max(0, top), behavior: "auto" });
     }
-
-    const segment = scroller.querySelector(".lsf-segmentTabs");
-    if (!segment) return 0;
-
-    const styles = window.getComputedStyle(scroller);
-    const gap = Number.parseFloat(styles.columnGap || styles.gap || "0") || 0;
-    return segment.offsetWidth + gap;
-  }, []);
-
-  const alignCategoryTabToZero = useCallback(
-    (tabId, behavior = "smooth") => {
-      const scroller = tabsScrollerRef.current;
-      if (!scroller || !tabId) return false;
-
-      const escapedTabId =
-        window.CSS?.escape?.(tabId) || String(tabId).replace(/"/g, '\\"');
-      const activeButton = scroller.querySelector(`[data-tab-id="${escapedTabId}"]`);
-      if (!activeButton?.classList?.contains("lsf-tab--category")) return false;
-
-      const scrollerRect = scroller.getBoundingClientRect();
-      const buttonRect = activeButton.getBoundingClientRect();
-      const buttonLeft =
-        buttonRect.left - scrollerRect.left + scroller.scrollLeft;
-      const nextLeft = Math.max(0, buttonLeft - getCategoryZeroOffset(scroller));
-      scroller.scrollLeft = nextLeft;
-      if (behavior !== "auto") {
-        scroller.scrollTo({
-          left: nextLeft,
-          behavior,
-        });
-      }
-      return true;
-    },
-    [getCategoryZeroOffset]
-  );
-
-  const selectStorefrontTab = useCallback(
-    (tabId, pauseDurationMs = 5200, options = {}) => {
-      if (options.manual) {
-        tabsAutoPauseUntilRef.current = Number.POSITIVE_INFINITY;
-        commercialAutoSwitchAtRef.current = Number.POSITIVE_INFINITY;
-        setOfferTabsManual(true);
-      } else {
-        pauseTabsTicker(pauseDurationMs);
-      }
-      tabsScrollOriginRef.current = "";
-      ignoreTabsScrollUntilRef.current = performance.now() + (options.manual ? 1100 : 520);
-      alignCategoryTabToZero(tabId);
-      setActiveTab(tabId);
-    },
-    [alignCategoryTabToZero, pauseTabsTicker]
-  );
-
-  const selectCategoryTab = useCallback(
-    (tabId) => {
-      window.clearTimeout(commercialTabClickTimeoutRef.current);
-      lastCommercialTabClickRef.current = { id: "", at: 0 };
-      selectStorefrontTab(tabId, 30000, { manual: true });
-    },
-    [selectStorefrontTab]
-  );
-
-  const activateCommercialTab = useCallback(
-    (tabId, pauseDurationMs = 30000) => {
-      selectStorefrontTab(tabId, pauseDurationMs, { manual: true });
-    },
-    [selectStorefrontTab]
-  );
-
-  const selectNextCommercialTab = useCallback(() => {
-    if (!commercialTabs.length) return;
-
-    const currentIndex = commercialTabs.findIndex((tab) => tab.id === activeTab);
-    const nextIndex = currentIndex >= 0
-      ? (currentIndex + 1) % commercialTabs.length
-      : 0;
-
-    activateCommercialTab(commercialTabs[nextIndex].id, 30000);
-  }, [activateCommercialTab, activeTab, commercialTabs]);
-
-  const handleCommercialTabClick = useCallback(
-    (tabId) => {
-      const nowMs = performance.now();
-      const lastClick = lastCommercialTabClickRef.current;
-
-      if (lastClick.id === tabId && nowMs - lastClick.at < 320) {
-        window.clearTimeout(commercialTabClickTimeoutRef.current);
-        lastCommercialTabClickRef.current = { id: "", at: 0 };
-        resumeTabsTicker();
-        return;
-      }
-
-      lastCommercialTabClickRef.current = { id: tabId, at: nowMs };
-      window.clearTimeout(commercialTabClickTimeoutRef.current);
-
-      const wasManual = offerTabsManual;
-
-      commercialTabClickTimeoutRef.current = window.setTimeout(() => {
-        if (!wasManual || !isCommercialTabActive) {
-          activateCommercialTab(tabId, 30000);
-          return;
-        }
-
-        selectNextCommercialTab();
-      }, 230);
-    },
-    [
-      activateCommercialTab,
-      isCommercialTabActive,
-      offerTabsManual,
-      resumeTabsTicker,
-      selectNextCommercialTab,
-    ]
-  );
-
-  const handleCommercialTabDoubleClick = useCallback(
-    (event) => {
-      event.preventDefault();
-      window.clearTimeout(commercialTabClickTimeoutRef.current);
-      lastCommercialTabClickRef.current = { id: "", at: 0 };
-      resumeTabsTicker();
-    },
-    [resumeTabsTicker]
-  );
-
-  const moveStorefrontTab = useCallback(
-    (direction) => {
-      if (isProductSearchActive || tabs.length < 2) return;
-
-      const currentIndex = Math.max(
-        0,
-        tabs.findIndex((tab) => tab.id === activeTab)
-      );
-      const nextIndex = (currentIndex + direction + tabs.length) % tabs.length;
-      selectStorefrontTab(tabs[nextIndex].id, 6400);
-    },
-    [activeTab, isProductSearchActive, selectStorefrontTab, tabs]
-  );
-
-  const openGridFocusMode = useCallback((entry = "tap", direction = 0) => {
-    if (!isGridFocusViewport()) return;
-    window.clearTimeout(gridFocusTransitionTimeoutRef.current);
-    setGridFocusSwipePreview(null);
-    const directionClass =
-      entry === "swipe"
-        ? direction < 0
-          ? "from-right"
-          : "from-left"
-        : "from-bottom";
-    setGridFocusTransition(`is-grid-focus-entering ${directionClass}`);
-    setGridFocusMode(true);
-    setLsfSurfaceDocked(true);
-    gridFocusTransitionTimeoutRef.current = window.setTimeout(() => {
-      setGridFocusTransition("");
-    }, 520);
-  }, []);
-
-  const updateGridFocusSwipePreview = useCallback((deltaX) => {
-    const progress = Math.min(1, Math.abs(deltaX) / 132);
-    const clampedX = Math.max(-220, Math.min(220, deltaX * 0.9));
-    setGridFocusSwipePreview({
-      offsetX: `${Math.round(clampedX)}px`,
-      lift: `${Math.round(progress * -10)}px`,
-      scale: (1 - progress * 0.055).toFixed(3),
-      radius: `${Math.round(18 + progress * 14)}px`,
-      shadowY: `${Math.round(progress * 24)}px`,
-      shadowBlur: `${Math.round(progress * 46)}px`,
-      backdropOpacity: (0.42 + progress * 0.48).toFixed(3),
-      progress: Number(progress.toFixed(3)),
-      directionClass: deltaX < 0 ? "from-right" : "from-left",
-    });
-  }, []);
-
-  const clearGridFocusSwipePreview = useCallback(() => {
-    setGridFocusSwipePreview(null);
-  }, []);
-
-  const syncActiveTabFromTabsScroll = useCallback((options = {}) => {
-    const scroller = tabsScrollerRef.current;
-    if (!scroller || isProductSearchActive || !categoryTabs.length) return;
-    if (isCommercialTabActive) return;
-    const shouldAlign = options.align === true;
-
-    const categoryButtons = Array.from(
-      scroller.querySelectorAll(".lsf-categoryTabs .lsf-tab--category")
-    );
-    if (!categoryButtons.length) return;
-
-    const scrollerRect = scroller.getBoundingClientRect();
-    const markerX = scrollerRect.left + getCategoryZeroOffset(scroller);
-    const visibleButtons = categoryButtons.filter((button) => {
-      const rect = button.getBoundingClientRect();
-      return rect.right > markerX && rect.left < scrollerRect.right;
-    });
-
-    if (!visibleButtons.length) return;
-
-    const markerTolerance = 4;
-    const nextButton =
-      visibleButtons.find(
-        (button) => button.getBoundingClientRect().left >= markerX - markerTolerance
-      ) || visibleButtons[visibleButtons.length - 1];
-
-    const nextTabId = nextButton?.dataset?.tabId;
-    if (!nextTabId) return;
-
-    tabsScrollOriginRef.current = nextTabId;
-    setActiveTab((current) => (current === nextTabId ? current : nextTabId));
-
-    if (shouldAlign) {
-      ignoreTabsScrollUntilRef.current = performance.now() + 520;
-      window.requestAnimationFrame(() => {
-        alignCategoryTabToZero(nextTabId, "auto");
-      });
-    }
-  }, [
-    alignCategoryTabToZero,
-    categoryTabs.length,
-    getCategoryZeroOffset,
-    isCommercialTabActive,
-    isProductSearchActive,
-  ]);
-
-  const handleTabsScroll = useCallback(() => {
-    pauseTabsTicker(6200);
-    if (performance.now() < ignoreTabsScrollUntilRef.current) return;
-
-    if (tabsScrollRafRef.current) {
-      window.cancelAnimationFrame(tabsScrollRafRef.current);
-    }
-
-    tabsScrollRafRef.current = window.requestAnimationFrame(() => {
-      tabsScrollRafRef.current = 0;
-      syncActiveTabFromTabsScroll();
-    });
-
-    window.clearTimeout(tabsScrollSettleTimeoutRef.current);
-    tabsScrollSettleTimeoutRef.current = window.setTimeout(() => {
-      syncActiveTabFromTabsScroll({ align: true });
-    }, 160);
-  }, [pauseTabsTicker, syncActiveTabFromTabsScroll]);
-
-  const handleTabsPointerDown = useCallback(
-    (event) => {
-      if (event.pointerType === "mouse" && event.button !== 0) return;
-      if (event.target?.closest?.(".lsf-tab--segment")) return;
-      if (event.target?.closest?.("input, textarea, select")) return;
-
-      const scroller = tabsScrollerRef.current;
-      if (!scroller) return;
-      const categoryTab = event.target?.closest?.(".lsf-tab--category");
-
-      pauseTabsTicker(6200);
-      tabsDragRef.current = {
-        pointerId: event.pointerId,
-        startX: event.clientX,
-        scrollLeft: scroller.scrollLeft,
-        moved: false,
-        categoryTabId: categoryTab?.dataset?.tabId || "",
-      };
-      scroller.setPointerCapture?.(event.pointerId);
-      scroller.classList.add("is-dragging");
-    },
-    [pauseTabsTicker]
-  );
-
-  const handleTabsPointerMove = useCallback(
-    (event) => {
-      const drag = tabsDragRef.current;
-      const scroller = tabsScrollerRef.current;
-      if (!drag || !scroller || drag.pointerId !== event.pointerId) return;
-
-      const deltaX = event.clientX - drag.startX;
-      if (Math.abs(deltaX) < 4 && !drag.moved) return;
-
-      drag.moved = true;
-      pauseTabsTicker(6200);
-      scroller.scrollLeft = drag.scrollLeft - deltaX;
-      event.preventDefault();
-    },
-    [pauseTabsTicker]
-  );
-
-  const finishTabsDrag = useCallback((event) => {
-    const drag = tabsDragRef.current;
-    const scroller = tabsScrollerRef.current;
-    if (!drag || drag.pointerId !== event.pointerId) return;
-    const categoryTabId = !drag.moved ? drag.categoryTabId : "";
-
-    if (drag.moved) {
-      suppressTabsClickUntilRef.current = performance.now() + 320;
-    } else if (categoryTabId) {
-      suppressTabsClickUntilRef.current = performance.now() + 120;
-    }
-
-    tabsDragRef.current = null;
-    scroller?.releasePointerCapture?.(event.pointerId);
-    scroller?.classList.remove("is-dragging");
-
-    if (categoryTabId) {
-      selectCategoryTab(categoryTabId);
-    }
-  }, [selectCategoryTab]);
-
-  const handleTabsClickCapture = useCallback((event) => {
-    if (performance.now() > suppressTabsClickUntilRef.current) return;
-    event.preventDefault();
-    event.stopPropagation();
-  }, []);
-
-  const handleGridPointerDown = useCallback((event) => {
-    if (event.pointerType === "mouse" && event.button !== 0) return;
-    if (event.target?.closest?.("button, a, input, textarea, select")) return;
-
-    gridSwipeRef.current = {
-      pointerId: event.pointerId,
-      startX: event.clientX,
-      startY: event.clientY,
-      lastX: event.clientX,
-      startedAt: performance.now(),
-      swiping: false,
-    };
-  }, []);
-
-  const handleGridPointerMove = useCallback(
-    (event) => {
-      const gesture = gridSwipeRef.current;
-      if (!gesture || gesture.pointerId !== event.pointerId) return;
-
-      gesture.lastX = event.clientX;
-      const deltaX = event.clientX - gesture.startX;
-      const deltaY = event.clientY - gesture.startY;
-
-      if (Math.abs(deltaX) > 18 && Math.abs(deltaX) > Math.abs(deltaY) * 1.25) {
-        gesture.swiping = true;
-        pauseTabsTicker(6200);
-        if (!gridFocusMode && isGridFocusViewport()) updateGridFocusSwipePreview(deltaX);
-      }
-    },
-    [gridFocusMode, pauseTabsTicker, updateGridFocusSwipePreview]
-  );
-
-  const handleGridPointerEnd = useCallback(
-    (event) => {
-      const gesture = gridSwipeRef.current;
-      if (!gesture || gesture.pointerId !== event.pointerId) return;
-
-      gridSwipeRef.current = null;
-      const deltaX = event.clientX - gesture.startX;
-      const deltaY = event.clientY - gesture.startY;
-      const elapsed = performance.now() - gesture.startedAt;
-      const isHorizontalSwipe =
-        Math.abs(deltaX) >= 48 &&
-        Math.abs(deltaX) > Math.abs(deltaY) * 1.18 &&
-        elapsed < 900;
-
-      clearGridFocusSwipePreview();
-
-      if (!isHorizontalSwipe) {
-        if (gesture.swiping) suppressGridClickUntilRef.current = performance.now() + 180;
-        return;
-      }
-
-      suppressGridClickUntilRef.current = performance.now() + 360;
-      if (gridFocusMode) {
-        moveStorefrontTab(deltaX < 0 ? 1 : -1);
-        return;
-      }
-
-      if (!isGridFocusViewport()) {
-        moveStorefrontTab(deltaX < 0 ? 1 : -1);
-        return;
-      }
-
-      openGridFocusMode("swipe", deltaX);
-    },
-    [clearGridFocusSwipePreview, gridFocusMode, moveStorefrontTab, openGridFocusMode]
-  );
-
-  const handleGridClickCapture = useCallback((event) => {
-    if (performance.now() < suppressGridClickUntilRef.current) {
-      event.preventDefault();
-      event.stopPropagation();
-      return;
-    }
-
-    if (
-      isGridFocusViewport() &&
-      !gridFocusMode &&
-      !event.target?.closest?.("button, a, input, textarea, select")
-    ) {
-      event.preventDefault();
-      event.stopPropagation();
-      openGridFocusMode();
-    }
-  }, [gridFocusMode, openGridFocusMode]);
-
-  const handleGridTouchStart = useCallback((event) => {
-    if (event.target?.closest?.("button, a, input, textarea, select")) return;
-    const touch = event.touches?.[0];
-    if (!touch) return;
-
-    gridSwipeRef.current = {
-      pointerId: "touch",
-      startX: touch.clientX,
-      startY: touch.clientY,
-      lastX: touch.clientX,
-      startedAt: performance.now(),
-      swiping: false,
-    };
-  }, []);
-
-  const handleGridTouchMove = useCallback(
-    (event) => {
-      const gesture = gridSwipeRef.current;
-      const touch = event.touches?.[0];
-      if (!gesture || gesture.pointerId !== "touch" || !touch) return;
-
-      gesture.lastX = touch.clientX;
-      const deltaX = touch.clientX - gesture.startX;
-      const deltaY = touch.clientY - gesture.startY;
-
-      if (Math.abs(deltaX) > 18 && Math.abs(deltaX) > Math.abs(deltaY) * 1.25) {
-        gesture.swiping = true;
-        pauseTabsTicker(6200);
-        if (!gridFocusMode && isGridFocusViewport()) updateGridFocusSwipePreview(deltaX);
-      }
-    },
-    [gridFocusMode, pauseTabsTicker, updateGridFocusSwipePreview]
-  );
-
-  const handleGridTouchEnd = useCallback(
-    (event) => {
-      const gesture = gridSwipeRef.current;
-      const touch = event.changedTouches?.[0];
-      if (!gesture || gesture.pointerId !== "touch" || !touch) return;
-
-      gridSwipeRef.current = null;
-      const deltaX = touch.clientX - gesture.startX;
-      const deltaY = touch.clientY - gesture.startY;
-      const elapsed = performance.now() - gesture.startedAt;
-      const isHorizontalSwipe =
-        Math.abs(deltaX) >= 48 &&
-        Math.abs(deltaX) > Math.abs(deltaY) * 1.18 &&
-        elapsed < 900;
-
-      clearGridFocusSwipePreview();
-
-      if (!isHorizontalSwipe) {
-        if (gesture.swiping) suppressGridClickUntilRef.current = performance.now() + 180;
-        return;
-      }
-
-      suppressGridClickUntilRef.current = performance.now() + 360;
-      if (gridFocusMode) {
-        moveStorefrontTab(deltaX < 0 ? 1 : -1);
-        return;
-      }
-
-      if (!isGridFocusViewport()) {
-        moveStorefrontTab(deltaX < 0 ? 1 : -1);
-        return;
-      }
-
-      openGridFocusMode("swipe", deltaX);
-    },
-    [clearGridFocusSwipePreview, gridFocusMode, moveStorefrontTab, openGridFocusMode]
-  );
-
-  useEffect(() => {
-    const scroller = tabsScrollerRef.current;
-    if (!scroller || tabs.length < 5) return undefined;
-
-    let frame = 0;
-    let lastTimestamp = performance.now();
-    tabsAutoPauseUntilRef.current = performance.now() + 2600;
-
-    const tickTabs = (timestamp) => {
-      const elapsed = Math.min(40, timestamp - lastTimestamp);
-      lastTimestamp = timestamp;
-
-      if (
-        timestamp > tabsAutoPauseUntilRef.current &&
-        document.visibilityState === "visible" &&
-        scroller.scrollWidth > scroller.clientWidth + 4
-      ) {
-        scroller.scrollLeft += elapsed * 0.028;
-        if (scroller.scrollLeft >= scroller.scrollWidth - scroller.clientWidth - 2) {
-          scroller.scrollLeft = 0;
-        }
-      }
-
-      frame = window.requestAnimationFrame(tickTabs);
-    };
-
-    frame = window.requestAnimationFrame(tickTabs);
-    return () => window.cancelAnimationFrame(frame);
-  }, [tabs.length]);
-
-  useEffect(() => {
-    if (gridFocusMode || offerTabsManual || !commercialTabs.length || isProductSearchActive) return undefined;
-
-    let frame = 0;
-
-    const tickCommercialTabs = (timestamp) => {
-      if (
-        document.visibilityState === "visible" &&
-        timestamp >= tabsAutoPauseUntilRef.current &&
-        timestamp >= commercialAutoSwitchAtRef.current
-      ) {
-        const currentIndex = commercialTabs.findIndex((tab) => tab.id === activeTab);
-        const nextIndex = currentIndex >= 0
-          ? (currentIndex + 1) % commercialTabs.length
-          : 0;
-
-        setActiveTab(commercialTabs[nextIndex].id);
-        tabsScrollOriginRef.current = "";
-        commercialAutoSwitchAtRef.current = timestamp + 3000;
-      }
-
-      frame = window.requestAnimationFrame(tickCommercialTabs);
-    };
-
-    frame = window.requestAnimationFrame(tickCommercialTabs);
-    return () => window.cancelAnimationFrame(frame);
-  }, [activeTab, commercialTabs, gridFocusMode, isProductSearchActive, offerTabsManual]);
-
-  useEffect(() => {
-    const scroller = tabsScrollerRef.current;
-    if (!scroller || !activeTab) return;
-
-    tabsScrollOriginRef.current = "";
-
-    ignoreTabsScrollUntilRef.current = performance.now() + 520;
-    if (alignCategoryTabToZero(activeTab)) {
-      return;
-    }
-
-    const escapedActiveTab =
-      window.CSS?.escape?.(activeTab) || String(activeTab).replace(/"/g, '\\"');
-    const activeButton = scroller.querySelector(`[data-tab-id="${escapedActiveTab}"]`);
-    activeButton?.scrollIntoView?.({
-      behavior: "smooth",
-      block: "nearest",
-      inline: "center",
-    });
-  }, [activeTab, alignCategoryTabToZero]);
+  }, [gridFocusMode]);
+  const selectCategoryTab = useCallback(tabId => {
+    setSearch("");
+    setActiveTab(tabId);
+    resetCatalogPosition();
+  }, [resetCatalogPosition]);
+  const updateCatalogSearch = useCallback(value => {
+    setSearch(value);
+    resetCatalogPosition();
+  }, [resetCatalogPosition]);
+  const catalogSwipe = useCatalogSwipe({
+    surfaceRef: gridStageRef,
+    ready: Boolean(store && portalReady),
+    items: tabs,
+    activeId: activeTab,
+    onSelect: selectCategoryTab,
+    enabled: !isProductSearchActive && !lsfSurfaceStickySuspended && !gridIncentiveOpen,
+  });
 
   const reservationEnabled = Boolean(store?.acceptsReservations);
   const storePhone = String(store?.tlf || "").trim();
@@ -5297,202 +4629,93 @@ export default function StorePage() {
       Math.min(99, Math.round((couponDiscountTotal / couponEligibleSubtotal) * 100))
     );
   }, [couponDiscountTotal, couponEligibleSubtotal]);
+  const couponCart = useMemo(() => cart.filter(line => !isCouponCartLine(line)), [cart]);
+  const activeCouponCode = selectedCouponCode || cart.find(isCouponCartLine)?.couponCode || "";
+  const couponContextKey = JSON.stringify([partner?.id || store?.partnerId, store?.id, deliveryCheckoutFee, couponCart]);
+  const currentCouponKey = activeCouponCode ? activeCouponCode + ":" + couponContextKey : "";
+  couponContextRef.current = currentCouponKey;
+  const couponNeedsValidation = Boolean(activeCouponCode && (couponLoading || couponResultKey !== currentCouponKey));
+  const couponBlocksPayment = Boolean(activeCouponCode && (couponNeedsValidation || !couponInfoData?.valid));
+
   const removeCouponFromCart = useCallback(() => {
-    setCart((current) => current.filter((line) => !isCouponCartLine(line)));
+    couponValidationRef.current.invalidate();
+    couponContextRef.current = "";
+    setSelectedCouponCode("");
+    setCouponResultKey("");
+    setCouponLoading(false);
+    setCart(current => current.filter(line => !isCouponCartLine(line)));
     setCouponCode("");
     setCouponStatus("");
     setCouponInfoData(null);
   }, []);
-  const applyCouponCode = useCallback(async (
-    rawCode,
-    { openInfo = true, openCartOnValid = true } = {}
-  ) => {
+  const editCouponCode = value => { removeCouponFromCart(); setCouponCode(value.toUpperCase()); };
+
+  const applyCouponCode = useCallback(async (rawCode, { openInfo = true, openCartOnValid = false, retry = false } = {}) => {
     const code = String(rawCode || "").trim().toUpperCase();
+    if (!code) return null;
+    const key = code + ":" + couponContextKey;
+    setSelectedCouponCode(code);
     setCouponCode(code);
-
-    if (!code) {
-      const emptyData = {
-        valid: false,
-        status: "empty",
-        message: "Escribe un cupon para validarlo.",
-        coupon: null,
-        discount: 0,
-      };
-      setCouponStatus(emptyData.message);
-      setCouponInfoData(emptyData);
-      if (openInfo) setCouponInfoOpen(true);
-      return emptyData;
-    }
-
-    try {
+    couponContextRef.current = key;
+    if (openInfo) setCouponInfoOpen(true);
+    if (retry) couponValidationRef.current.invalidate();
+    return couponValidationRef.current.run(key, async () => {
       setCouponLoading(true);
-      setCouponStatus("Validando cupon...");
-      const response = await api.post("/api/coupons/validate", {
-        partnerId: Number(partner?.id || store?.partnerId),
-        storeId: Number(store?.id),
-        code,
-        subtotal: couponEligibleSubtotal,
-        deliveryFee: deliveryCheckoutFee,
-      });
-      const data = response?.data || response || {};
-
-      setCouponInfoData(data);
-      if (openInfo) setCouponInfoOpen(true);
-      setCouponStatus(data?.message || "Cupon revisado.");
-
-      if (data?.valid && num(data.discount) > 0 && data?.coupon?.code) {
-        const isDeliveryFree = isDeliveryFreeCouponData(data.coupon);
-        const discount = isDeliveryFree
-          ? Math.min(num(data.discount), deliveryCheckoutFee)
-          : Math.min(num(data.discount), couponEligibleSubtotal);
-        autoCouponApplyRef.current = `active:${data.coupon.code}:${store?.id}:${couponEligibleSubtotal.toFixed(2)}:${deliveryCheckoutFee.toFixed(2)}`;
-        const line = {
-          cartLineId: `coupon-${data.coupon.code}`,
-          type: "COUPON",
-          source: "coupon",
-          couponId: data.coupon.id,
-          couponCode: data.coupon.code,
-          name: isDeliveryFree ? `Delivery Free ${data.coupon.code}` : `Cupon ${data.coupon.code}`,
-          category: "Descuento",
-          size: isDeliveryFree ? "Envio gratis" : data.coupon.title || "Oferta",
-          qty: 1,
-          price: -discount,
-          subtotal: -discount,
-          discount,
-          coupon: data.coupon,
-        };
-
-        setCart((current) => [
-          ...current.filter((item) => !isCouponCartLine(item)),
-          line,
-        ]);
-        if (openCartOnValid) setCartOpen(true);
-      } else {
-        setCart((current) => current.filter((item) => !isCouponCartLine(item)));
+      setCouponStatus("Comprobando tu descuento...");
+      try {
+        const response = await api.post("/api/coupons/validate", {
+          partnerId: Number(partner?.id || store?.partnerId), storeId: Number(store?.id),
+          code, cart: couponCart, subtotal: couponEligibleSubtotal, deliveryFee: deliveryCheckoutFee,
+        });
+        return response?.data || response || {};
+      } catch {
+        return { valid: false, status: "error", discount: 0,
+          message: "No pudimos comprobar el descuento. Reintenta o quita el cupón para continuar." };
       }
-
-      return data;
-    } catch (err) {
-      console.error(err);
-      const errorData = {
-        valid: false,
-        status: "error",
-        message: "No pudimos validar el cupon ahora.",
-        coupon: null,
-        discount: 0,
-      };
-      setCouponStatus(errorData.message);
-      setCouponInfoData(errorData);
-      if (openInfo) setCouponInfoOpen(true);
-      return errorData;
-    } finally {
+    }, data => {
       setCouponLoading(false);
-    }
-  }, [couponEligibleSubtotal, deliveryCheckoutFee, partner?.id, store?.id, store?.partnerId]);
+      setCouponResultKey(key);
+      setCouponInfoData(data);
+      setCouponStatus(data.message || "Cupón revisado.");
+      setCart(current => {
+        const products = current.filter(line => !isCouponCartLine(line));
+        if (!data.valid || num(data.discount) <= 0 || !data.coupon?.code) return products;
+        const discount = num(data.discount);
+        return [...products, { cartLineId: "coupon-" + data.coupon.code, type: "COUPON", source: "coupon",
+          couponId: data.coupon.id, couponCode: data.coupon.code, coupon: data.coupon,
+          name: "Cupón " + data.coupon.code, category: "Descuento", size: data.coupon.title || "Oferta",
+          qty: 1, price: -discount, subtotal: -discount, discount }];
+      });
+      if (data.valid && openCartOnValid) setCartOpen(true);
+    }, () => couponContextRef.current === key);
+  }, [couponContextKey, couponCart, couponEligibleSubtotal, deliveryCheckoutFee, partner?.id, store?.id, store?.partnerId]);
 
-  const validateCouponCode = async (event) => {
+  const validateCouponCode = async event => {
     event.preventDefault();
     resetMobileInputViewport(event.currentTarget?.querySelector("input"));
-    await applyCouponCode(couponCode, { openInfo: true, openCartOnValid: true });
+    await applyCouponCode(couponCode, { openInfo: true, retry: true });
   };
-
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    const incomingCoupon = String(params.get("coupon") || "").trim().toUpperCase();
-    const shouldOpenCouponInfo =
-      params.get("openCoupon") === "1" || params.get("couponSource") === "gallery";
-
-    if (!incomingCoupon) return;
-
-    setCouponCode(incomingCoupon);
-
-    if (params.get("openCart") === "1") {
-      setCartOpen(true);
-    }
-
-    if (!store?.id || !(partner?.id || store?.partnerId)) return;
-
-    const applyKey = `${incomingCoupon}:${store.id}:${couponEligibleSubtotal.toFixed(2)}:${deliveryCheckoutFee.toFixed(2)}`;
-    if (autoCouponApplyRef.current === applyKey) return;
-    autoCouponApplyRef.current = applyKey;
-
-    applyCouponCode(incomingCoupon, { openInfo: shouldOpenCouponInfo, openCartOnValid: true });
-  }, [
-    applyCouponCode,
-    couponEligibleSubtotal,
-    deliveryCheckoutFee,
-    location.search,
-    partner?.id,
-    store?.id,
-    store?.partnerId,
-  ]);
+    const code = String(params.get("coupon") || "").trim().toUpperCase();
+    if (!code || !store?.id) return;
+    if (couponUrlRef.current === location.search) return;
+    couponUrlRef.current = location.search;
+    applyCouponCode(code, { openInfo: true });
+  }, [location.search, store?.id, applyCouponCode]);
+  useEffect(() => {
+    if (!activeCouponCode || !store?.id || !(partner?.id || store?.partnerId)) return;
+    applyCouponCode(activeCouponCode, { openInfo: false });
+  }, [activeCouponCode, couponContextKey, applyCouponCode, partner?.id, store?.id, store?.partnerId]);
+  useEffect(() => () => couponValidationRef.current.invalidate(), []);
 
   useEffect(() => {
-    const code = String(couponCode || couponInfoData?.coupon?.code || "").trim().toUpperCase();
-    if (!code || !store?.id || !(partner?.id || store?.partnerId)) return;
-    if (couponEligibleSubtotal <= 0 && deliveryCheckoutFee <= 0) return;
-    if (cart.some(isCouponCartLine)) return;
-
-    const applyKey = `cart:${code}:${store.id}:${couponEligibleSubtotal.toFixed(2)}:${deliveryCheckoutFee.toFixed(2)}`;
-    if (autoCouponApplyRef.current === applyKey) return;
-    autoCouponApplyRef.current = applyKey;
-
-    applyCouponCode(code, { openInfo: false, openCartOnValid: false });
-  }, [
-    applyCouponCode,
-    cart,
-    couponCode,
-    couponEligibleSubtotal,
-    deliveryCheckoutFee,
-    couponInfoData?.coupon?.code,
-    partner?.id,
-    store?.id,
-    store?.partnerId,
-  ]);
-
-  useEffect(() => {
-    const couponLine = cart.find(isCouponCartLine);
-    if (!couponLine || !store?.id || !(partner?.id || store?.partnerId)) return;
-
-    const code = String(couponLine.couponCode || couponCode || couponInfoData?.coupon?.code || "")
-      .trim()
-      .toUpperCase();
-    if (!code) return;
-
-    const isDeliveryFreeLine = isDeliveryFreeCouponData(couponLine.coupon);
-    if (couponEligibleSubtotal <= 0 && (!isDeliveryFreeLine || deliveryCheckoutFee <= 0)) {
-      autoCouponApplyRef.current = "";
-      setCart((current) => current.filter((item) => !isCouponCartLine(item)));
-      const blockedData = {
-        valid: false,
-        status: "no_eligible_products",
-        message: isDeliveryFreeLine
-          ? "El cupon Delivery Free necesita un pedido con envio."
-          : "El cupon no aplica a Promos, Top Deals, Boost ni recompensas.",
-        coupon: couponLine.coupon || { code },
-        discount: 0,
-      };
-      setCouponStatus(blockedData.message);
-      setCouponInfoData(blockedData);
-      return;
-    }
-
-    const applyKey = `active:${code}:${store.id}:${couponEligibleSubtotal.toFixed(2)}:${deliveryCheckoutFee.toFixed(2)}`;
-    if (autoCouponApplyRef.current === applyKey) return;
-    autoCouponApplyRef.current = applyKey;
-
-    applyCouponCode(code, { openInfo: false, openCartOnValid: false });
-  }, [
-    applyCouponCode,
-    cart,
-    couponCode,
-    couponEligibleSubtotal,
-    deliveryCheckoutFee,
-    couponInfoData?.coupon?.code,
-    partner?.id,
-    store?.id,
-    store?.partnerId,
-  ]);
+    if (!activeCouponCode || !couponInfoData?.valid || !couponInfoData.coupon?.expiresAt) return undefined;
+    const delay = new Date(couponInfoData.coupon.expiresAt).getTime() - Date.now();
+    if (!Number.isFinite(delay) || delay > 2147483647) return undefined;
+    const timer = window.setTimeout(() => applyCouponCode(activeCouponCode, { openInfo: false, retry: true }), Math.max(0, delay));
+    return () => window.clearTimeout(timer);
+  }, [activeCouponCode, couponInfoData, applyCouponCode]);
 
   useEffect(() => {
     const partnerId = Number(partner?.id || store?.partnerId);
@@ -5555,6 +4778,17 @@ export default function StorePage() {
     }
     const serviceMode = getStoreServiceMode(store, orderSelection);
 
+    if (couponBlocksPayment || couponContextRef.current !== currentCouponKey) {
+      setCheckoutMessage(couponNeedsValidation ? "Espera mientras comprobamos tu descuento." : "Revisa el cupón o quítalo antes de continuar sin descuento.");
+      setCartOpen(true);
+      return;
+    }
+    if (cartBelowMinimumPayment) {
+      setCheckoutMessage(`El pago mínimo es ${formatMoney(minimumPaymentAmount, partner?.currency || "EUR")}. Faltan ${formatMoney(minimumPaymentMissing, partner?.currency || "EUR")}.`);
+      setCartOpen(true);
+      return;
+    }
+
     if (options?.choosePayment && shouldShowPaymentMethodModal) {
       setCheckoutMessage("");
       setCartOpen(false);
@@ -5570,17 +4804,6 @@ export default function StorePage() {
 
     if (!cartCount || cartTotal <= 0) {
       setCheckoutMessage("Agrega productos al carrito antes de pagar.");
-      return;
-    }
-
-    if (cartBelowMinimumPayment) {
-      setCheckoutMessage(
-        `El pago minimo es ${formatMoney(
-          minimumPaymentAmount,
-          partner?.currency || "EUR"
-        )}. Faltan ${formatMoney(minimumPaymentMissing, partner?.currency || "EUR")}.`
-      );
-      setCartOpen(true);
       return;
     }
 
@@ -5747,6 +4970,8 @@ export default function StorePage() {
         delivery_method_not_allowed: "Esta tienda no tiene activo ese metodo de entrega.",
         coupon_not_available: "El cupon ya no esta disponible. Quitalo y valida de nuevo.",
         coupon_not_applicable: "El cupon ya no aplica a este carrito.",
+        coupon_reserved: "El cupón está reservado en un pago pendiente. Vuelve a ese pago o espera a que caduque.",
+        coupon_changed: "Las condiciones del cupón cambiaron. Valídalo de nuevo.",
         coupon_not_stackable: "Solo puedes usar un cupon por pedido.",
         top_deal_not_available: "Ese Top Deal ya no esta disponible. Quitalo y vuelve a elegirlo.",
         top_deal_quantity_unavailable: `Quedan ${
@@ -5771,6 +4996,11 @@ export default function StorePage() {
         setCashConfirmationOpen(false);
         setScheduleOpen(true);
       }
+      if (String(errorCode || "").startsWith("coupon_")) {
+        const message = err.response?.data?.message || messages[errorCode] || "Revisa el cupón antes de pagar.";
+        setCouponStatus(message);
+        setCouponInfoData(current => ({ ...current, valid: false, status: "error", message }));
+      }
       setCheckoutMessage(messages[errorCode] || "No pudimos iniciar el pago.");
       setCartOpen(true);
     } finally {
@@ -5787,6 +5017,9 @@ export default function StorePage() {
     deliveryCheckoutFee,
     minimumPaymentAmount,
     minimumPaymentMissing,
+    couponBlocksPayment,
+    couponNeedsValidation,
+    currentCouponKey,
     orderSelection,
     partner?.currency,
     partner?.id,
@@ -6005,7 +5238,7 @@ export default function StorePage() {
     ? "Premio listo"
     : activeIncentive
     ? `Faltan ${gridIncentiveRemainingLabel}`
-    : "Proximo incentivo";
+    : `Próximo: ${nextIncentive?.name || "Incentivo"}`;
   const gridIncentiveButtonValue = incentiveUnlocked
     ? incentiveRewardName
     : activeIncentive
@@ -6439,7 +5672,7 @@ export default function StorePage() {
               : renderStorefrontPrice(item, baseSize)}
           </div>
         )}
-        {showTrustMeta && renderProductGiftAction(item)}
+        {showTrustMeta && renderProductBuyMessage(item)}
       </div>
     );
   };
@@ -6629,7 +5862,7 @@ export default function StorePage() {
     );
   }
 
-  const renderStoreInfoTicker = () => {
+  const renderStoreInfoTicker = (compact = false) => {
     const showSelectProductsPrompt = isStorefrontButtonVisible("selectProducts");
     const serviceMode = getStoreServiceMode(store, orderSelection);
     const deliveryDestinationLabel = getDeliveryDestinationTickerLabel(orderSelection);
@@ -6653,6 +5886,11 @@ export default function StorePage() {
       showSelectProductsPrompt ? "Selecciona productos" : "",
       changeModeLabel,
     ].filter(Boolean).join(", ");
+
+    if (compact) return <button type="button" className="sf-catalogStore" aria-label={orderModeAria + ". " + changeModeLabel}
+      onClick={() => navigate(`/${partnerSlug}/order`, { state: { orderTrail: "change-service", partnerName: partner?.name || store?.storeName, storeName: store?.storeName, currentStoreSlug: storeSlug, currentServiceMode: serviceMode, returnToStorePath: `/${partnerSlug}/${storeSlug}` } })}>
+      <strong>{orderModeLabel}</strong><span>{serviceMode === "delivery" ? "Delivery" : "Recogida"} ↗</span>
+    </button>;
 
     return (
       <button
@@ -6804,136 +6042,6 @@ export default function StorePage() {
       </button>
     ) : null;
 
-  const activeCommercialTabIndex = isCommercialTabActive
-    ? Math.max(0, commercialTabs.findIndex((tab) => tab.id === activeTab))
-    : 0;
-  const activeCommercialTab =
-    commercialTabs[activeCommercialTabIndex] || commercialTabs[0] || null;
-
-  const renderGridFocusBackContent = () => {
-    if (isProductSearchActive) {
-      return baseFilteredMenu.length ? (
-        <div className="lsf-searchResultsStage">
-          <div className="lsf-searchResultsHead">
-            <span>Busqueda global</span>
-            <strong>{baseFilteredMenu.length} productos</strong>
-          </div>
-          <div className="lsf-grid-wrap">
-            <div className="lsf-grid lsf-grid--searchResults" role="list">
-              {baseFilteredMenu.map((item) => renderProductCard(item))}
-            </div>
-          </div>
-        </div>
-      ) : null;
-    }
-
-    if (activeTab === TOP_DEAL_TAB) {
-      return filteredTopDeals.length ? (
-        <div className="lsf-grid-wrap">
-          <div className="lsf-grid lsf-grid--topDeals" role="list">
-            {filteredTopDeals.map((item) => renderTopDealCard(item))}
-          </div>
-        </div>
-      ) : null;
-    }
-
-    if (activeTab === PROMOS_TAB) {
-      return filteredPromos.length ? (
-        <div className="lsf-grid-wrap">
-          <div className="lsf-grid lsf-grid--promos" role="list">
-            {filteredPromos.map((promo) => {
-              const promoItems = Array.isArray(promo.items) ? promo.items : [];
-              const promoDiscountPercent = getPromoDiscountPercent(promo, menuCatalog);
-              const promoCountdown = formatOfferCountdown(promo, incentiveNowMs);
-
-              return (
-                <div
-                  key={`grid-focus-back-promo-${promo.id}`}
-                  className="lsf-card lsf-card--promo lsf-flip"
-                  role="listitem"
-                >
-                  <div className="lsf-flip__inner">
-                    <div className="lsf-flip__front">
-                      <div className={`lsf-card__image lsf-promoImage ${promo.image ? "has-image" : ""}`}>
-                        {promo.image ? (
-                          <img src={promo.image} alt={promo.title} />
-                        ) : (
-                          <div className="lsf-card__img is-placeholder">
-                            <span>Promo</span>
-                          </div>
-                        )}
-                      </div>
-                      <span className="lsf-promoBadge">Promo</span>
-                      {promoDiscountPercent > 0 && (
-                        <span className="lsf-topDealDiscountSticker lsf-promoDiscountSticker">
-                          <strong>-{promoDiscountPercent}%</strong>
-                          <small>off</small>
-                        </span>
-                      )}
-                      {renderOfferRibbon(promoCountdown, "Termina en:", "promo")}
-                      <div className="lsf-card__overlay">
-                        <div className="lsf-card__ticker">
-                          <div className={`lsf-card__name ${tick ? "is-ticking" : ""}`}>
-                            {promo.title}
-                          </div>
-                        </div>
-                        {renderPromoPrice(promo, menuCatalog, tick)}
-                      </div>
-                    </div>
-                    <div className="lsf-flip__back">
-                      <div className="lsf-flip-desc lsf-promoFlipDesc">
-                        <div className="lsf-flip-title">Contenido</div>
-                        <div className="lsf-promoFlipList">
-                          {promoItems.length ? (
-                            promoItems.map((item, index) => (
-                              <span key={`grid-focus-back-promo-item-${promo.id}-${item.pizzaId || item.name || index}`}>
-                                {getPromoItemLabel(item)}
-                              </span>
-                            ))
-                          ) : (
-                            <span>Promo activa</span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      ) : null;
-    }
-
-    if (activeTab === TRENDING_TAB) {
-      return filteredTrending.length ? (
-        <div className="lsf-grid-wrap">
-          <div className="lsf-grid lsf-grid--trending" role="list">
-            {filteredTrending.map((item) => renderProductCard(item))}
-          </div>
-        </div>
-      ) : null;
-    }
-
-    if (activeTab === UPCOMING_TAB) {
-      return filteredUpcoming.length ? (
-        <div className="lsf-grid-wrap">
-          <div className="lsf-grid lsf-grid--upcoming" role="list">
-            {filteredUpcoming.map((item) => renderProductCard(item))}
-          </div>
-        </div>
-      ) : null;
-    }
-
-    return visibleMenu.length ? (
-      <div className="lsf-grid-wrap">
-        <div className="lsf-grid" role="list">
-          {visibleMenu.map((item) => renderProductCard(item))}
-        </div>
-      </div>
-    ) : null;
-  };
-
   const explicitOrderMode = String(orderSelection?.serviceMode || "").toLowerCase();
   const directDeliveryGateRequired =
     storeAllowsDelivery(store) &&
@@ -6942,25 +6050,9 @@ export default function StorePage() {
 
   return (
     <div
-      className={`sf-shell sf-shell--mode-${storefrontMode} ${gridFocusMode ? "is-grid-focused" : ""} ${gridFocusTransition} ${
-        gridFocusSwipePreview
-          ? `is-grid-focus-swiping ${gridFocusSwipePreview.directionClass}`
-          : ""
-        }`}
-      style={{
-        ...themeStyle,
-        ...(gridFocusSwipePreview
-          ? {
-              "--sf-grid-swipe-offset-x": gridFocusSwipePreview.offsetX,
-              "--sf-grid-swipe-lift": gridFocusSwipePreview.lift,
-              "--sf-grid-swipe-scale": gridFocusSwipePreview.scale,
-              "--sf-grid-swipe-radius": gridFocusSwipePreview.radius,
-              "--sf-grid-swipe-shadow-y": gridFocusSwipePreview.shadowY,
-              "--sf-grid-swipe-shadow-blur": gridFocusSwipePreview.shadowBlur,
-              "--sf-grid-swipe-backdrop-opacity": gridFocusSwipePreview.backdropOpacity,
-            }
-          : {}),
-      }}
+      ref={catalogRootRef}
+      className={`sf-shell sf-catalog sf-shell--mode-${storefrontMode} ${gridFocusMode ? "is-grid-focused" : ""}`}
+      style={themeStyle}
     >
       {directDeliveryGateRequired && (
         <div className="sf-modalOverlay sf-serviceGateOverlay">
@@ -6998,69 +6090,6 @@ export default function StorePage() {
         </div>
       )}
 
-      {gridFocusSwipePreview && !gridFocusMode && (
-        <div className="sf-gridFocusBackPage" aria-hidden="true">
-          <div className="lsf-gridFocusSearch">
-            <div className="sf-engineSearchWrap">
-              {!search && (
-                <span className="sf-engineSearchTicker" aria-hidden="true">
-                  <span className="sf-engineSearchTickerTrack">
-                    <span>Buscar pizza o ingrediente...</span>
-                  </span>
-                </span>
-              )}
-              <input
-                className="sf-engineSearch"
-                type="search"
-                placeholder=""
-                value={search}
-                readOnly
-                tabIndex={-1}
-              />
-              <button
-                type="button"
-                className="sf-engineSearchBtn"
-                aria-label="Buscar"
-                tabIndex={-1}
-              >
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <circle
-                    cx="11"
-                    cy="11"
-                    r="6.5"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.2"
-                  />
-                  <path
-                    d="M16 16l4 4"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.2"
-                    strokeLinecap="round"
-                  />
-                </svg>
-              </button>
-            </div>
-          </div>
-          <div
-            className={`lsf-gridContext lsf-gridContext--${gridContext.tone} ${
-              hasGridIncentiveBanner ? "has-grid-incentive" : ""
-            }`}
-          >
-            <div className="lsf-gridContext__category">
-              <span>{gridContext.eyebrow}</span>
-              <strong>{gridContext.label}</strong>
-              <em>
-                {gridContext.count === 1
-                  ? "1 producto"
-                  : `${gridContext.count} productos`}
-              </em>
-            </div>
-          </div>
-          {renderGridFocusBackContent()}
-        </div>
-      )}
       <div className="sf-wrap sf-menu">
         <section className="sf-storeHeader sf-storeHeader--desktop">
 
@@ -7099,15 +6128,25 @@ export default function StorePage() {
 
         <section
           ref={lsfSurfaceRef}
-          className={`sf-lsfSurface lsf-wrapper lsf-mobile ${
-            lsfSurfaceStickySuspended
-              ? "is-sticky-suspended"
-              : lsfSurfaceDocked
-                ? "is-docked"
-                : ""
-          }`}
+          className={`sf-lsfSurface lsf-wrapper lsf-mobile ${lsfSurfaceStickySuspended ? "is-sticky-suspended" : ""}`}
         >
           <div className="sf-lsfNavCeiling">
+            <div className="sf-catalogMobileToolbar">
+              {renderStoreInfoTicker(true)}
+              {renderCartButtonSafe()}
+              <button type="button" className="sf-catalogSearchToggle" aria-label="Buscar productos" aria-expanded={mobileSearchOpen || Boolean(search)} onClick={() => setMobileSearchOpen(value => !value)}><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" strokeWidth="2" /><path d="m16 16 5 5" stroke="currentColor" strokeWidth="2" /></svg></button>
+              <CatalogTools>
+                  {isStorefrontButtonVisible("halfAndHalf") && <button type="button" onClick={openHalfModal}>Mitad / Mitad</button>}
+                  {isStorefrontButtonVisible("customPizza") && <button type="button" onClick={openCustomModal}>Arma tu pizza</button>}
+                  {isStorefrontButtonVisible("coupons") && <button type="button" onClick={() => navigate(`/${partnerSlug}/coupons`, { state: { returnToStorePath: `/${partnerSlug}/${storeSlug}` } })}>{hasDeliveryFreeCouponAvailable ? "Cupones · Envío gratis" : "Cupones"}</button>}
+                  {isStorefrontButtonVisible("scheduleOrder") && <button type="button" onClick={() => setScheduleOpen(true)}>Programar pedido</button>}
+                  {isStorefrontButtonVisible("call") && phoneHref && <a href={phoneHref}>Llamar a la pizzería</a>}
+                </CatalogTools>
+            </div>
+            <div className="sf-catalogMobileSearch">
+              {(mobileSearchOpen || search) && <CatalogSearch value={search} onChange={updateCatalogSearch} onClose={() => setMobileSearchOpen(false)} autoFocus />}
+            </div>
+            {hasGridIncentiveBanner && <button type="button" className="sf-catalogIncentive sf-catalogIncentive--mobile" onClick={() => setGridIncentiveOpen(true)}>{gridIncentiveButtonLabel}: {gridIncentiveButtonValue}</button>}
             <div className="sf-lsfMobileHeader">
               <div className="sf-lsfMobileInfo">
                 {renderStoreInfoTicker()}
@@ -7183,7 +6222,7 @@ export default function StorePage() {
                       type="search"
                       placeholder="Buscar pizza o ingrediente..."
                       value={search}
-                      onChange={(event) => setSearch(event.target.value)}
+                      onChange={(event) => updateCatalogSearch(event.target.value)}
                       onKeyDown={(event) => {
                         if (event.key === "Enter") {
                           resetMobileInputViewport(event.currentTarget);
@@ -7288,253 +6327,30 @@ export default function StorePage() {
               percent={incentivePercent}
             />
 
-            <div
-              className="lsf-tabs"
-              ref={tabsScrollerRef}
-              role="tablist"
-              aria-label="Categorias del menu"
-              onClickCapture={handleTabsClickCapture}
-              onPointerDown={handleTabsPointerDown}
-              onPointerMove={handleTabsPointerMove}
-              onPointerUp={finishTabsDrag}
-              onPointerCancel={finishTabsDrag}
-              onWheel={() => pauseTabsTicker(6200)}
-              onScroll={handleTabsScroll}
-            >
-              <div
-                className={`lsf-segmentTabs is-count-${commercialTabs.length} ${
-                  offerTabsManual ? "is-manual" : "is-auto"
-                }`}
-                aria-label="Ofertas destacadas"
-              >
-                <span className="lsf-segmentTabs__mobile">
-                  {activeCommercialTab && (
-                    <button
-                      key={activeCommercialTab.id}
-                      type="button"
-                      data-tab-id={activeCommercialTab.id}
-                      data-offer-index={activeCommercialTabIndex}
-                      className={`lsf-tab lsf-tab--segment lsf-tab--offer-${activeCommercialTab.tone} ${
-                        activeTab === activeCommercialTab.id ? "is-active" : ""
-                      }`}
-                      onClick={() => handleCommercialTabClick(activeCommercialTab.id)}
-                      onDoubleClick={handleCommercialTabDoubleClick}
-                    >
-                      {activeCommercialTab.label}
-                    </button>
-                  )}
-                </span>
-                <span className="lsf-segmentTabs__desktop">
-                  {commercialTabs.map((tab) => (
-                    <button
-                      key={tab.id}
-                      type="button"
-                      data-tab-id={tab.id}
-                      className={`lsf-tab lsf-tab--segment lsf-tab--offer-${tab.tone} ${
-                        activeTab === tab.id ? "is-active" : ""
-                      }`}
-                      onClick={() => handleCommercialTabClick(tab.id)}
-                      onDoubleClick={handleCommercialTabDoubleClick}
-                    >
-                      {tab.label}
-                    </button>
-                  ))}
-                </span>
-              </div>
-
-              <div className="lsf-categoryTabs" aria-label="Categorias">
-                {categoryTabs.map((tab) => (
-                  <button
-                    key={tab.id}
-                    type="button"
-                    data-tab-id={tab.id}
-                    data-active={activeTab === tab.id ? "true" : undefined}
-                    className={`lsf-tab lsf-tab--category ${activeTab === tab.id ? "is-active" : ""}`}
-                    onClick={() => selectCategoryTab(tab.id)}
-                  >
-                    {tab.label}
-                  </button>
-                ))}
-              </div>
-            </div>
+            <CatalogNavigation offers={commercialTabs} categories={categoryTabs} activeId={activeTab} onSelect={selectCategoryTab} />
           </div>
         </section>
 
        
 
-        <section className="sf-engineCard sf-engineCard--lsf">
-          <div
-            ref={gridStageRef}
-            className="sf-engineGridStage sf-engineGridStage--lsf"
-            onPointerDown={handleGridPointerDown}
-            onPointerMove={handleGridPointerMove}
-            onPointerUp={handleGridPointerEnd}
-            onPointerCancel={handleGridPointerEnd}
-            onTouchStart={handleGridTouchStart}
-            onTouchMove={handleGridTouchMove}
-            onTouchEnd={handleGridTouchEnd}
-            onTouchCancel={handleGridTouchEnd}
-            onClickCapture={handleGridClickCapture}
-          >
-            {gridFocusMode && (
-              <>
-                <div className="lsf-gridFocusActions">
-                  {hasGridIncentiveBanner && (
-                    <button
-                      type="button"
-                      className={`lsf-gridContext__incentiveButton ${
-                        incentiveUnlocked ? "is-ready" : activeIncentive ? "is-active" : "is-waiting"
-                      }`}
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        setGridIncentiveOpen(true);
-                      }}
-                      aria-label={incentiveMessage}
-                      title={incentiveMessage}
-                    >
-                      <span>{gridIncentiveButtonLabel}</span>
-                      <strong>{gridIncentiveButtonValue}</strong>
-                    </button>
-                  )}
-                  <button
-                    type="button"
-                    className={`lsf-cartbtn lsf-gridFocusCart ${cartCount > 0 ? "is-active" : ""}`}
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      setCartOpen(true);
-                    }}
-                    aria-label="Abrir carrito"
-                    title="Abrir carrito"
-                  >
-                    <span className="lsf-cartbtn__icon" aria-hidden="true">
-                      <svg viewBox="0 0 64 64" focusable="false">
-                        <path d="M8 9h9.2l5.5 28.2c.8 4.1 4.4 7 8.6 7h17.8c3.9 0 7.4-2.5 8.5-6.3l5.4-18.1c.8-2.7-1.2-5.4-4-5.4H22.4l-1.2-6.1C20.8 6.4 19.2 5 17.3 5H8a4 4 0 0 0 0 8Z" />
-                        <path d="M29 58a6 6 0 1 0 0-12 6 6 0 0 0 0 12Zm22 0a6 6 0 1 0 0-12 6 6 0 0 0 0 12Z" />
-                      </svg>
-                    </span>
-                    <span className="lsf-cartbtn__count">{cartCount}</span>
-                    <span className="lsf-cartbtn__total">{"\u20AC"}{cartTotal.toFixed(2)}</span>
-                  </button>
-                  <button
-                    type="button"
-                    className="lsf-gridContext__exit"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      setGridFocusMode(false);
-                      setLsfSurfaceDocked(window.scrollY > 16);
-                    }}
-                    aria-label="Volver a la vista completa"
-                    title="Vista completa"
-                  >
-                    Ver todo
-                  </button>
-                </div>
-                <div className="lsf-gridFocusSearch">
-                  <form className="sf-engineSearchWrap" onSubmit={submitGridFocusSearch}>
-                    <input
-                      className="sf-engineSearch"
-                      type="search"
-                      placeholder="Buscar pizza o ingrediente..."
-                      value={search}
-                      onChange={(event) => setSearch(event.target.value)}
-                      onKeyDown={(event) => {
-                        if (event.key === "Enter") {
-                          resetMobileInputViewport(event.currentTarget, { resetGridStage: true });
-                        }
-                      }}
-                    />
-                    <button
-                      type="submit"
-                      className="sf-engineSearchBtn"
-                      aria-label="Buscar"
-                    >
-                      <svg viewBox="0 0 24 24" aria-hidden="true">
-                        <circle
-                          cx="11"
-                          cy="11"
-                          r="6.5"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2.2"
-                        />
-                        <path
-                          d="M16 16l4 4"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2.2"
-                          strokeLinecap="round"
-                        />
-                      </svg>
-                    </button>
-                  </form>
-                </div>
-              </>
-            )}
-            <div
-              className={`lsf-gridContext lsf-gridContext--${gridContext.tone} ${
-                gridFocusMode && hasGridIncentiveBanner ? "has-grid-incentive" : ""
-              }`}
-              aria-live="polite"
-            >
-              <div className="lsf-gridContext__category">
-                <span>{gridContext.eyebrow}</span>
-                <strong>{gridContext.label}</strong>
-                <em>
-                  {gridContext.count === 1
-                    ? "1 producto"
-                    : `${gridContext.count} productos`}
-                </em>
-              </div>
-              {false && (
-                <button
-                  type="button"
-                  className={`lsf-gridContext__incentiveButton ${
-                    incentiveUnlocked ? "is-ready" : activeIncentive ? "is-active" : "is-waiting"
-                  }`}
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    setGridIncentiveOpen(true);
-                  }}
-                  aria-label={incentiveMessage}
-                  title={incentiveMessage}
-                >
-                  <span>{gridIncentiveButtonLabel}</span>
-                  <strong>{gridIncentiveButtonValue}</strong>
-                </button>
-              )}
-              {false && (
-                <button
-                  type="button"
-                  className={`lsf-gridContext__cart ${cartCount > 0 ? "is-active" : ""}`}
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    setCartOpen(true);
-                  }}
-                  aria-label="Abrir carrito"
-                  title="Abrir carrito"
-                >
-                  <span aria-hidden="true">🛒</span>
-                  <strong>{cartCount}</strong>
-                  <em>{"\u20AC"}{cartTotal.toFixed(2)}</em>
-                </button>
-              )}
-              {false && (
-                <button
-                  type="button"
-                  className="lsf-gridContext__exit"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    setGridFocusMode(false);
-                    setLsfSurfaceDocked(window.scrollY > 16);
-                  }}
-                  aria-label="Volver a la vista completa"
-                  title="Vista completa"
-                >
-                  Ver todo
-                </button>
-              )}
+        <section className="sf-engineCard sf-engineCard--lsf" aria-label={gridFocusMode ? "Vitrina ampliada" : "Productos"}>
+          {gridFocusMode && <header className="sf-catalogFocusHeader">
+            <div className="sf-catalogFocusToolbar">
+              <button type="button" className="sf-catalogExit" onClick={() => setGridFocusMode(false)}>← Volver</button>
+              <strong>Vitrina</strong>
+              {renderCartButtonSafe()}
+              <button type="button" className="sf-catalogSearchToggle" aria-label="Buscar productos" aria-expanded={mobileSearchOpen || Boolean(search)} onClick={() => setMobileSearchOpen(value => !value)}><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" strokeWidth="2" /><path d="m16 16 5 5" stroke="currentColor" strokeWidth="2" /></svg></button>
             </div>
-
+            {(mobileSearchOpen || search) && <CatalogSearch value={search} onChange={updateCatalogSearch} onClose={() => setMobileSearchOpen(false)} autoFocus />}
+            <CatalogNavigation offers={commercialTabs} categories={categoryTabs} activeId={activeTab} onSelect={selectCategoryTab} />
+            {hasGridIncentiveBanner && <button type="button" className="sf-catalogIncentive" onClick={() => setGridIncentiveOpen(true)}>{gridIncentiveButtonLabel}: {gridIncentiveButtonValue}</button>}
+          </header>}
+          <div ref={gridStageRef} className="sf-engineGridStage sf-engineGridStage--lsf" {...catalogSwipe}>
+            <div className="sf-catalogContext">
+              <strong>{gridContext.label}</strong>
+              <span>{gridContext.count} {gridContext.count === 1 ? "producto" : "productos"}</span>
+              {!gridFocusMode && <button type="button" className="sf-catalogExpand" onClick={() => setGridFocusMode(true)}>Ampliar ↗</button>}
+            </div>
             {isProductSearchActive ? (
               baseFilteredMenu.length === 0 ? (
                 <div className="sf-engineEmptyState">
@@ -7543,10 +6359,6 @@ export default function StorePage() {
                 </div>
               ) : (
                 <div className="lsf-searchResultsStage">
-                  <div className="lsf-searchResultsHead">
-                    <span>Busqueda global</span>
-                    <strong>{baseFilteredMenu.length} productos</strong>
-                  </div>
                   <div className="lsf-grid-wrap">
                     <div className="lsf-grid lsf-grid--searchResults" role="list">
                       {baseFilteredMenu.map((item) => renderProductCard(item))}
@@ -7915,7 +6727,7 @@ export default function StorePage() {
                   onClick={(event) => {
                     if (!couponCode.trim()) return;
                     if (couponLoading) return;
-                    if (event.target.closest("input")) return;
+                    if (event.target.closest("input, button")) return;
                     event.currentTarget.requestSubmit?.();
                   }}
                 >
@@ -7926,8 +6738,7 @@ export default function StorePage() {
                     type="text"
                     value={couponCode}
                     onChange={(event) => {
-                      setCouponCode(event.target.value.toUpperCase());
-                      setCouponStatus("");
+                      editCouponCode(event.target.value);
                     }}
                     onKeyDown={(event) => {
                       if (event.key === "Enter") {
@@ -8064,7 +6875,7 @@ export default function StorePage() {
               onClick={(event) => {
                 if (!couponCode.trim()) return;
                 if (couponLoading) return;
-                if (event.target.closest("input")) return;
+                if (event.target.closest("input, button")) return;
                 event.currentTarget.requestSubmit?.();
               }}
             >
@@ -8073,8 +6884,7 @@ export default function StorePage() {
                 type="text"
                 value={couponCode}
                 onChange={(event) => {
-                  setCouponCode(event.target.value.toUpperCase());
-                  setCouponStatus("");
+                  editCouponCode(event.target.value);
                 }}
                 onKeyDown={(event) => {
                   if (event.key === "Enter") {
@@ -8166,6 +6976,9 @@ export default function StorePage() {
               <div>
                 <span>Producto</span>
                 <h3>{selectedProduct?.name || "Pizza"}</h3>
+                {activeCouponCode && hasTopDealPolicy(selectedProduct) && (
+                  <p>Este producto ya tiene descuento. El cupón se aplicará a los productos sin oferta de tu carrito.</p>
+                )}
               </div>
               <button
                 type="button"
@@ -8627,6 +7440,13 @@ export default function StorePage() {
                       Faltan {formatMoney(minimumPaymentMissing, partner?.currency || "EUR")}.
                     </div>
                   )}
+                  {activeCouponCode && (
+                    <div className="sf-cartMinimumNotice" role="status">
+                      {couponNeedsValidation ? "Comprobando tu descuento..." : couponStatus}
+                      {couponBlocksPayment && !couponNeedsValidation && <button type="button" className="sf-secondaryBtn" onClick={() => applyCouponCode(activeCouponCode, { retry: true })}>Revisar cupón</button>}
+                      <button type="button" className="sf-secondaryBtn" onClick={removeCouponFromCart}>Quitar cupón</button>
+                    </div>
+                  )}
                   <div className="sf-cartPaymentPanel">
                     <div className="sf-cartPaymentHead">
                       <span>Metodo de pago</span>
@@ -8686,9 +7506,9 @@ export default function StorePage() {
                       type="button"
                       className="sf-primaryBtn sf-cartCheckoutBtn"
                       onClick={() => startCheckout(selectedCheckoutPaymentMode)}
-                      disabled={checkoutLoading}
+                      disabled={checkoutLoading || cartBelowMinimumPayment || couponBlocksPayment}
                     >
-                      {checkoutLoading ? "Preparando tu pago..." : (availability?.requiresSchedule || scheduledAt) && !scheduledAtIsValid ? "Programar y continuar" : cartCheckoutLabel}
+                      {couponNeedsValidation ? "Comprobando descuento..." : checkoutLoading ? "Preparando tu pago..." : (availability?.requiresSchedule || scheduledAt) && !scheduledAtIsValid ? "Programar y continuar" : cartCheckoutLabel}
                     </button>
                     <button
                       type="button"
@@ -10029,6 +8849,13 @@ export default function StorePage() {
         data={couponInfoData}
         validating={couponLoading}
         onClose={() => setCouponInfoOpen(false)}
+        onCart={() => { setCouponInfoOpen(false); setCartOpen(true); }}
+        onChooseProducts={() => {
+          setCouponInfoOpen(false);
+          setCartOpen(false);
+          setSearch("");
+          if (categoryTabs[0]) setActiveTab(categoryTabs[0].id);
+        }}
         onRemove={() => {
           removeCouponFromCart();
           setCouponInfoOpen(false);
@@ -10037,6 +8864,7 @@ export default function StorePage() {
           const result = await applyCouponCode(couponInfoData?.coupon?.code || couponCode, {
             openInfo: false,
             openCartOnValid: true,
+            retry: true,
           });
           const closableStatuses = new Set(["empty_cart", "waiting_for_cart"]);
           if (result?.valid || closableStatuses.has(String(result?.status || "").toLowerCase())) {

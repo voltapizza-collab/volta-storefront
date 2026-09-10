@@ -642,18 +642,31 @@ export default function CouponGallery({ partner }) {
   const [zoneModalOpen, setZoneModalOpen] = useState(false);
   const [zoneError, setZoneError] = useState("");
   const [resolvingZone, setResolvingZone] = useState(false);
-  const [fallbackStorePath, setFallbackStorePath] = useState("");
-  const [fallbackStoreId, setFallbackStoreId] = useState(null);
   const [legalAccepted, setLegalAccepted] = useState(false);
 
   const partnerId = partner?.id;
   const storageKey = useMemo(() => buildStorageKey(partner), [partner]);
+  const stateStorePath = location.state?.returnToStorePath;
+  const stateStorePathname = typeof stateStorePath === "string"
+    ? stateStorePath.split(/[?#]/)[0].replace(/\/+$/, "")
+    : "";
+  // The public partner response already includes its stores; the management list also includes inactive ones.
+  const selectedStore = useMemo(() => {
+    const stores = Array.isArray(partner?.stores) ? partner.stores : [];
+    const availableStores = stores.filter(
+      (store) => store?.slug && store.active !== false && store.acceptingOrders !== false
+    );
+    return availableStores.find((store) => `/${partner.slug}/${store.slug}` === stateStorePathname)
+      || availableStores[0]
+      || null;
+  }, [partner?.slug, partner?.stores, stateStorePathname]);
+  const selectedStoreId = selectedStore?.id;
   const returnToStorePath = useMemo(() => {
-    const statePath = location.state?.returnToStorePath;
-    if (typeof statePath === "string" && statePath.startsWith("/")) return statePath;
-    if (fallbackStorePath) return fallbackStorePath;
-    return partner?.slug ? `/${partner.slug}` : "/";
-  }, [fallbackStorePath, location.state, partner?.slug]);
+    if (!partner?.slug) return "/";
+    if (!selectedStore) return `/${partner.slug}/order`;
+    const storePath = `/${partner.slug}/${selectedStore.slug}`;
+    return stateStorePathname === storePath ? stateStorePath : storePath;
+  }, [partner?.slug, selectedStore, stateStorePath, stateStorePathname]);
 
   useEffect(() => {
     try {
@@ -730,40 +743,7 @@ export default function CouponGallery({ partner }) {
   }, [loadContext, partnerId, storageKey]);
 
   useEffect(() => {
-    if (!partnerId || !partner?.slug) return undefined;
-
-    let cancelled = false;
-
-    api
-      .get(`/stores?partnerId=${partnerId}`)
-      .then((response) => {
-        if (cancelled) return;
-        const stores = response?.data;
-        const safeStores = Array.isArray(stores) ? stores : [];
-        const returnPath = String(location.state?.returnToStorePath || "");
-        const returnStoreSlug = returnPath.split("/").filter(Boolean).at(-1);
-        const selectedStore =
-          safeStores.find((store) => store?.slug && store.slug === returnStoreSlug) ||
-          safeStores.find((store) => store?.slug) ||
-          null;
-        setFallbackStorePath(selectedStore ? `/${partner.slug}/${selectedStore.slug}` : "");
-        setFallbackStoreId(selectedStore?.id || null);
-      })
-      .catch((requestError) => {
-        console.error(requestError);
-        if (!cancelled) {
-          setFallbackStorePath("");
-          setFallbackStoreId(null);
-        }
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [location.state, partner?.slug, partnerId]);
-
-  useEffect(() => {
-    if (!partnerId || !fallbackStoreId) return undefined;
+    if (!partnerId || !selectedStoreId) return undefined;
 
     const visitorId = getVisitorId();
     const sendPresence = () => {
@@ -772,7 +752,7 @@ export default function CouponGallery({ partner }) {
       api
         .post("/api/presence/heartbeat", {
           partnerId: Number(partnerId),
-          storeId: Number(fallbackStoreId),
+          storeId: Number(selectedStoreId),
           visitorId,
           state: "browsing",
           path: window.location.pathname,
@@ -790,7 +770,7 @@ export default function CouponGallery({ partner }) {
       window.clearInterval(intervalId);
       document.removeEventListener("visibilitychange", sendPresence);
     };
-  }, [fallbackStoreId, partnerId]);
+  }, [selectedStoreId, partnerId]);
 
   useEffect(() => {
     if (!zipReady || !zipCode) return;

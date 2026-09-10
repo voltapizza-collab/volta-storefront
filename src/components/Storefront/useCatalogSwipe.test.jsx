@@ -27,7 +27,7 @@ function setup(overrides = {}) {
   const surface = document.createElement("div");
   const image = document.createElement("img"); surface.appendChild(image);
   surface.setPointerCapture = jest.fn();
-  const event = (x, y, extra = {}) => ({ clientX: x, clientY: y, pointerId: 1, pointerType: "touch", button: 0, isPrimary: true, target: image, currentTarget: surface, ...extra });
+  const event = (x, y, extra = {}) => ({ clientX: x, clientY: y, pointerId: 1, pointerType: "mouse", button: 0, isPrimary: true, target: image, currentTarget: surface, ...extra });
   const swipe = (from, to) => act(() => {
     hook.result.current.onPointerDownCapture(event(...from));
     hook.result.current.onPointerMoveCapture(event(...to));
@@ -54,7 +54,7 @@ test("vertical scrolling locks the gesture out even if the finger later moves si
   expect(onSelect).not.toHaveBeenCalled();
 });
 
-test("native cancellation and multitouch never change category", () => {
+test("pointer cancellation and a secondary pointer never change category", () => {
   const { result, event, onSelect } = setup();
   act(() => {
     result.current.onPointerDownCapture(event(200, 100));
@@ -68,11 +68,11 @@ test("native cancellation and multitouch never change category", () => {
   expect(onSelect).not.toHaveBeenCalled();
 });
 
-test("implicit touch capture transferring from a pizza to the stage does not cancel the swipe", () => {
+test("capture lost by a child does not cancel the stage's mouse drag", () => {
   const { result, event, onSelect, surface } = setup();
   result.current.onPointerDownCapture(event(220, 100));
   result.current.onPointerMoveCapture(event(185, 102));
-  // A real touch browser emits this from the previously captured image.
+  // Only losing the stage's own capture should cancel its mouse drag.
   result.current.onLostPointerCapture(event(175, 102));
   result.current.onPointerMoveCapture(event(120, 102, { target: surface }));
   result.current.onPointerUpCapture(event(120, 102, { target: surface }));

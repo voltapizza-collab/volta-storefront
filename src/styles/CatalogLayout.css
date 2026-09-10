@@ -49,6 +49,8 @@
 .sf-catalogContext strong { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .sf-catalogContext span { white-space: nowrap; font-size: 11px; }
 .sf-catalog .sf-engineGridStage--lsf { height: auto; min-height: 0; max-height: none; overflow-x: clip; overflow-y: visible; touch-action: pan-y pinch-zoom; }
+/* Clipped card/image wrappers are scroll containers too. Declare the touch policy at every hit target. */
+.sf-catalog .sf-engineGridStage--lsf * { touch-action: pan-y pinch-zoom; }
 .sf-catalog .sf-engineGridStage--lsf .lsf-grid-wrap { contain: layout style; transition: none; }
 .sf-catalog .sf-engineGridStage--lsf .lsf-grid { transition: none; will-change: auto; }
 .sf-catalog .sf-engineGridStage--lsf[data-dragging] .lsf-grid-wrap { will-change: transform; }

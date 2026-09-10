@@ -11,7 +11,7 @@ const adjacent = (items, activeId, direction) => {
   return index < 0 ? null : items[index + direction];
 };
 
-// React commits the category once. Pointer movement only updates the moving layer.
+// React commits the category once. Movement only updates the moving layer.
 export default function useCatalogSwipe({ items, activeId, onSelect, enabled = true, surfaceRef, ready = true }) {
   const gesture = useRef(null);
   const frame = useRef(null);
@@ -20,7 +20,7 @@ export default function useCatalogSwipe({ items, activeId, onSelect, enabled = t
   const reducedMotion = useRef(false);
   const suppressClickUntil = useRef(0);
   const wheelGesture = useRef({ lastAt: 0, distance: 0, committed: false });
-  const selection = useRef({ items, activeId, onSelect });
+  const selection = useRef({ items, activeId, onSelect, enabled, ready });
 
   const clearVisual = useCallback(() => {
     if (frame.current !== null) window.cancelAnimationFrame(frame.current);
@@ -60,8 +60,8 @@ export default function useCatalogSwipe({ items, activeId, onSelect, enabled = t
   }, [clearVisual]);
 
   useLayoutEffect(() => {
-    selection.current = { items, activeId, onSelect };
-  }, [items, activeId, onSelect]);
+    selection.current = { items, activeId, onSelect, enabled, ready };
+  }, [items, activeId, onSelect, enabled, ready]);
 
   useLayoutEffect(() => {
     // An external category change, search or modal cancels an unfinished gesture.
@@ -100,65 +100,129 @@ export default function useCatalogSwipe({ items, activeId, onSelect, enabled = t
     return () => surface.removeEventListener("wheel", onWheel);
   }, [cancelGesture, enabled, ready, surfaceRef]);
 
+  const startGesture = useCallback(event => {
+    const { activeId, enabled, ready } = selection.current;
+    clearVisual();
+    pendingSelection.current = null;
+    gesture.current = null;
+    if (event.isPrimary === false) return;
+    suppressClickUntil.current = 0;
+    if (!enabled || !ready || !["mouse", "touch", "pen"].includes(event.pointerType) || ignoresGesture(event.target)) return;
+    if (event.pointerType === "mouse" && event.button !== 0) return;
+    gesture.current = {
+      id: event.pointerId, pointerType: event.pointerType, x: event.clientX, y: event.clientY, activeId,
+      horizontal: false, offset: 0, samples: [{ x: event.clientX, t: performance.now() }],
+    };
+  }, [clearVisual]);
+
+  const moveGesture = useCallback(event => {
+    const { items, activeId } = selection.current;
+    const current = gesture.current;
+    if (!current || current.id !== event.pointerId) return;
+    const dx = event.clientX - current.x, dy = Math.abs(event.clientY - current.y);
+    if (!current.horizontal) {
+      if (dy > 10 && dy >= Math.abs(dx)) { cancelGesture(); return; }
+      if (Math.abs(dx) <= 10 || Math.abs(dx) <= dy * 1.2) return;
+      current.horizontal = true;
+      surfaceRef?.current?.setAttribute("data-dragging", "true");
+      // Touch events keep their original target for the whole contact, including outside the card.
+      if (event.pointerType !== "touch") event.currentTarget.setPointerCapture?.(event.pointerId);
+    }
+    // Keep the chosen axis even if the finger curves after recognition.
+    suppressClickUntil.current = Date.now() + 500;
+    const now = performance.now();
+    current.samples.push({ x: event.clientX, t: now });
+    while (current.samples.length > 2 && current.samples[1].t < now - 80) current.samples.shift();
+    current.offset = adjacent(items, activeId, dx < 0 ? 1 : -1) ? dx : dx * 0.25;
+    if (frame.current === null) frame.current = window.requestAnimationFrame(() => {
+      frame.current = null;
+      if (gesture.current !== current || reducedMotion.current) return;
+      const content = contentOf(surfaceRef?.current);
+      if (content) content.style.transform = `translateX(${current.offset}px)`;
+    });
+  }, [cancelGesture, surfaceRef]);
+
+  const endGesture = useCallback(event => {
+    const { items, activeId, enabled, ready, onSelect } = selection.current;
+    const current = gesture.current;
+    if (!current || current.id !== event.pointerId) return;
+    if (!current.horizontal || !enabled || !ready || activeId !== current.activeId) { cancelGesture(); return; }
+    suppressClickUntil.current = Date.now() + 500;
+    const dx = event.clientX - current.x;
+    const sample = current.samples[0];
+    const velocity = (event.clientX - sample.x) / Math.max(1, performance.now() - sample.t);
+    const flick = Math.abs(dx) >= 24 && Math.abs(velocity) >= 0.45 && Math.sign(velocity) === Math.sign(dx);
+    const direction = dx < 0 ? 1 : -1;
+    const next = adjacent(items, activeId, direction);
+    if ((!flick && Math.abs(dx) < 50) || !next) { cancelGesture(); return; }
+    gesture.current = null;
+    clearVisual();
+    pendingSelection.current = { id: next.id, direction };
+    onSelect(next.id);
+  }, [cancelGesture, clearVisual]);
+
+  useEffect(() => {
+    const surface = surfaceRef?.current;
+    if (!surface || !ready || !enabled) return undefined;
+    const contactEvent = (event, contact) => ({
+      pointerId: contact.identifier, pointerType: "touch", isPrimary: true,
+      clientX: contact.clientX, clientY: contact.clientY,
+      target: event.target, currentTarget: surface,
+    });
+    const onStart = event => {
+      if (event.touches.length !== 1) { cancelGesture(); return; }
+      startGesture(contactEvent(event, event.touches[0]));
+    };
+    const onMove = event => {
+      const current = gesture.current;
+      if (!current || current.pointerType !== "touch") return;
+      if (event.touches.length !== 1 || !event.cancelable) { cancelGesture(); return; }
+      const contact = event.touches[0];
+      if (contact.identifier !== current.id) { cancelGesture(); return; }
+      moveGesture(contactEvent(event, contact));
+      // This listener must be non-passive: only the recognized horizontal swipe owns the gesture.
+      if (gesture.current?.horizontal) event.preventDefault();
+    };
+    const onEnd = event => {
+      const current = gesture.current;
+      if (!current || current.pointerType !== "touch") return;
+      if (event.touches.length) { cancelGesture(); return; }
+      const contact = Array.from(event.changedTouches).find(touch => touch.identifier === current.id);
+      if (contact) endGesture(contactEvent(event, contact));
+      else cancelGesture();
+    };
+    const onCancel = () => {
+      if (gesture.current?.pointerType === "touch") cancelGesture();
+    };
+    // iPhone can cancel its Pointer Events stream during native scrolling/capture arbitration.
+    // Handle finger input through Touch Events; mouse and pen retain their Pointer Events path.
+    surface.addEventListener("touchstart", onStart, { passive: true, capture: true });
+    surface.addEventListener("touchmove", onMove, { passive: false, capture: true });
+    surface.addEventListener("touchend", onEnd, { passive: true, capture: true });
+    surface.addEventListener("touchcancel", onCancel, { passive: true, capture: true });
+    return () => {
+      surface.removeEventListener("touchstart", onStart, true);
+      surface.removeEventListener("touchmove", onMove, true);
+      surface.removeEventListener("touchend", onEnd, true);
+      surface.removeEventListener("touchcancel", onCancel, true);
+      cancelGesture();
+    };
+  }, [cancelGesture, enabled, endGesture, moveGesture, ready, startGesture, surfaceRef]);
+
   return {
     onPointerDownCapture(event) {
-      clearVisual();
-      pendingSelection.current = null;
-      gesture.current = null;
-      if (event.isPrimary === false) return;
-      suppressClickUntil.current = 0;
-      if (!enabled || !ready || !["mouse", "touch", "pen"].includes(event.pointerType) || ignoresGesture(event.target)) return;
-      if (event.pointerType === "mouse" && event.button !== 0) return;
-      gesture.current = {
-        id: event.pointerId, x: event.clientX, y: event.clientY, activeId,
-        horizontal: false, offset: 0, samples: [{ x: event.clientX, t: performance.now() }],
-      };
+      if (event.pointerType !== "touch") startGesture(event);
     },
     onPointerMoveCapture(event) {
-      const current = gesture.current;
-      if (!current || current.id !== event.pointerId) return;
-      const dx = event.clientX - current.x, dy = Math.abs(event.clientY - current.y);
-      if (!current.horizontal) {
-        if (dy > 10 && dy >= Math.abs(dx)) { cancelGesture(); return; }
-        if (Math.abs(dx) <= 10 || Math.abs(dx) <= dy * 1.2) return;
-        current.horizontal = true;
-        surfaceRef?.current?.setAttribute("data-dragging", "true");
-        event.currentTarget.setPointerCapture?.(event.pointerId);
-      }
-      // Keep the chosen axis even if the finger curves after recognition.
-      suppressClickUntil.current = Date.now() + 500;
-      const now = performance.now();
-      current.samples.push({ x: event.clientX, t: now });
-      while (current.samples.length > 2 && current.samples[1].t < now - 80) current.samples.shift();
-      current.offset = adjacent(items, activeId, dx < 0 ? 1 : -1) ? dx : dx * 0.25;
-      if (frame.current === null) frame.current = window.requestAnimationFrame(() => {
-        frame.current = null;
-        if (gesture.current !== current || reducedMotion.current) return;
-        const content = contentOf(surfaceRef?.current);
-        if (content) content.style.transform = `translateX(${current.offset}px)`;
-      });
+      if (event.pointerType !== "touch") moveGesture(event);
     },
     onPointerUpCapture(event) {
-      const current = gesture.current;
-      if (!current || current.id !== event.pointerId) return;
-      if (!current.horizontal || !enabled || !ready || activeId !== current.activeId) { cancelGesture(); return; }
-      suppressClickUntil.current = Date.now() + 500;
-      const dx = event.clientX - current.x;
-      const sample = current.samples[0];
-      const velocity = (event.clientX - sample.x) / Math.max(1, performance.now() - sample.t);
-      const flick = Math.abs(dx) >= 24 && Math.abs(velocity) >= 0.45 && Math.sign(velocity) === Math.sign(dx);
-      const direction = dx < 0 ? 1 : -1;
-      const next = adjacent(items, activeId, direction);
-      if ((!flick && Math.abs(dx) < 50) || !next) { cancelGesture(); return; }
-      gesture.current = null;
-      clearVisual();
-      pendingSelection.current = { id: next.id, direction };
-      onSelect(next.id);
+      if (event.pointerType !== "touch") endGesture(event);
     },
-    onPointerCancel() { cancelGesture(); },
+    onPointerCancel(event) { if (event?.pointerType !== "touch") cancelGesture(); },
     onLostPointerCapture(event) {
       // Ignore implicit capture transferring from an image, and release after up.
-      if (event.target === event.currentTarget && gesture.current) cancelGesture();
+      if (event.pointerType !== "touch" && event.target === event.currentTarget && gesture.current) cancelGesture();
     },
     onDragStart(event) { if (gesture.current) event.preventDefault(); },
     onClickCapture(event) {

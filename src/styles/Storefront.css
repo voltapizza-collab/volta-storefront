@@ -4437,6 +4437,50 @@
   gap: 12px;
 }
 
+/* Reserve the purchase row outside the scrolling product details at every size. */
+.sf-modalCard.sf-standardProductModal,
+.sf-modalCard.sf-halfModal {
+  box-sizing: border-box;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 0;
+  max-height: min(86vh, 820px);
+  max-height: min(86dvh, 820px);
+  padding: 0;
+  overflow: hidden;
+}
+
+.sf-standardProductModal .sf-cartModalHead {
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid rgba(17, 17, 17, 0.08);
+  background: #fff;
+}
+
+.sf-standardProductModal .sf-productPicker,
+.sf-halfModal .sf-halfPicker {
+  min-height: 0;
+  align-content: start;
+  grid-auto-rows: max-content;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 16px 24px;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.sf-standardProductModal .sf-productPickerActions {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  padding: 12px 24px calc(12px + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid rgba(17, 17, 17, 0.08);
+  background: #fff;
+  box-shadow: 0 -10px 22px rgba(59, 0, 139, 0.08);
+}
+
+.sf-standardProductModal .sf-productPickerActions > button {
+  min-height: 44px;
+}
+
 .sf-promoPickerModal {
   width: min(680px, 100%);
 }
@@ -5766,11 +5810,12 @@
 }
 
 .sf-halfModal .sf-builderStickyActions {
-  position: sticky;
+  position: relative;
+  box-sizing: border-box;
   grid-template-columns: minmax(92px, 0.66fr) minmax(0, 1fr);
   gap: 8px;
   align-self: end;
-  margin: 4px 0 0;
+  margin: 0;
   padding: 8px 10px calc(8px + env(safe-area-inset-bottom));
   border: 1px solid rgba(17, 17, 17, 0.08);
   border-radius: 16px;
@@ -11236,11 +11281,8 @@
   }
 
   .sf-modalCard.sf-standardProductModal {
-    display: grid;
-    grid-template-rows: auto minmax(0, 1fr);
+    max-height: calc(100vh - 20px);
     max-height: calc(100dvh - 20px);
-    padding: 0;
-    overflow: hidden;
     border-radius: 24px 24px 0 0;
   }
 
@@ -11264,14 +11306,8 @@
   }
 
   .sf-standardProductModal .sf-productPicker {
-    min-height: 0;
-    max-height: 100%;
     gap: 8px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding: 10px 14px 0;
-    overscroll-behavior: contain;
-    -webkit-overflow-scrolling: touch;
+    padding: 10px 14px;
   }
 
   .sf-modalCard.sf-customModal {
@@ -11418,13 +11454,11 @@
   }
 
   .sf-halfModal .sf-halfPicker {
-    max-height: calc(100dvh - 126px);
     min-height: 0;
     gap: 10px;
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 10px 14px 0;
-    scroll-snap-type: y proximity;
+    padding: 10px 14px;
     overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
     scrollbar-gutter: stable;
@@ -11515,11 +11549,7 @@
   }
 
   .sf-standardProductModal .sf-extrasList {
-    max-height: min(174px, 28dvh);
-    overflow-y: auto;
     gap: 6px;
-    padding-right: 2px;
-    overscroll-behavior: contain;
   }
 
   .sf-standardProductModal .sf-extraItem {
@@ -11542,21 +11572,12 @@
   }
 
   .sf-standardProductModal .sf-productPickerActions {
-    position: sticky;
-    bottom: 0;
-    z-index: 9;
     grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr);
     gap: 8px;
-    margin: 4px -14px 0;
-    padding: 8px 14px calc(8px + env(safe-area-inset-bottom));
-    border-top: 1px solid rgba(17, 17, 17, 0.08);
-    background:
-      linear-gradient(180deg, rgba(255, 255, 255, 0.82) 0%, #ffffff 28%);
-    box-shadow: 0 -10px 22px rgba(59, 0, 139, 0.08);
+    padding: 8px 14px calc(8px + env(safe-area-inset-bottom, 0px));
   }
 
   .sf-standardProductModal .sf-productPickerActions > button {
-    min-height: 42px;
     padding: 0 10px;
     font-size: 0.78rem;
     line-height: 1.06;
@@ -11627,10 +11648,6 @@
     margin: 0;
   }
 
-  .sf-halfModal .sf-builderStickyActions {
-    position: sticky;
-  }
-
   .sf-customModal .sf-builderStickyActions {
     min-height: 62px;
     padding: 8px 10px calc(8px + env(safe-area-inset-bottom));
@@ -11649,7 +11666,7 @@
   }
 
   .sf-halfModal .sf-builderStickyActions .sf-primaryBtn {
-    min-height: 42px;
+    min-height: 44px;
     padding: 0 12px;
     font-size: 0.76rem;
     line-height: 1.06;

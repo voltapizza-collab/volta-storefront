@@ -7061,28 +7061,30 @@ export default function StorePage() {
                     </div>
                   )}
                 </div>
+              </div>
+            )}
 
-                <div className="sf-productPickerActions">
-                  <button
-                    type="button"
-                    className="sf-secondaryBtn"
-                    onClick={closeProductModal}
-                  >
-                    Continue
-                  </button>
-                  <button
-                    type="button"
-                    className="sf-primaryBtn"
-                    disabled={!productModalReady}
-                    onClick={addProductLine}
-                  >
-                    {selectedProduct && productSelection.size && selectedProductMaxQty <= 0
-                      ? "Sin unidades disponibles"
-                      : productModalReady
-                      ? `Add to cart - EUR ${selectedLineTotal.toFixed(2)}`
-                      : "Selecciona size"}
-                  </button>
-                </div>
+            {selectedProduct && (
+              <div className="sf-productPickerActions">
+                <button
+                  type="button"
+                  className="sf-secondaryBtn"
+                  onClick={closeProductModal}
+                >
+                  Continue
+                </button>
+                <button
+                  type="button"
+                  className="sf-primaryBtn"
+                  disabled={!productModalReady}
+                  onClick={addProductLine}
+                >
+                  {selectedProduct && productSelection.size && selectedProductMaxQty <= 0
+                    ? "Sin unidades disponibles"
+                    : productModalReady
+                    ? `Add to cart - EUR ${selectedLineTotal.toFixed(2)}`
+                    : "Selecciona size"}
+                </button>
               </div>
             )}
           </div>
@@ -7855,23 +7857,25 @@ export default function StorePage() {
                     )}
                   </div>
                 ))}
+              </div>
+            )}
 
-                <div className="sf-productPickerActions sf-builderStickyActions">
-                  <div className="sf-builderTotal">
-                    <span>Total</span>
-                    <strong>EUR {halfGrandTotal.toFixed(2)}</strong>
-                  </div>
-                  <button
-                    type="button"
-                    className="sf-primaryBtn"
-                    disabled={!halfModalReady}
-                    onClick={addHalfLine}
-                  >
-                    {halfModalReady
-                      ? `Add to cart - EUR ${halfGrandTotal.toFixed(2)}`
-                      : "Selecciona size"}
-                  </button>
+            {halfItems.length >= 2 && (
+              <div className="sf-productPickerActions sf-builderStickyActions">
+                <div className="sf-builderTotal">
+                  <span>Total</span>
+                  <strong>EUR {halfGrandTotal.toFixed(2)}</strong>
                 </div>
+                <button
+                  type="button"
+                  className="sf-primaryBtn"
+                  disabled={!halfModalReady}
+                  onClick={addHalfLine}
+                >
+                  {halfModalReady
+                    ? `Add to cart - EUR ${halfGrandTotal.toFixed(2)}`
+                    : "Selecciona size"}
+                </button>
               </div>
             )}
           </div>

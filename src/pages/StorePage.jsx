@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import OrderPortalTransition from "../components/Storefront/OrderPortalTransition";
 import api from "../services/api";
 import "../styles/Storefront.css";
 import "../styles/CatalogLayout.css";
+import "../styles/CatalogDesktop.css";
 import CatalogNavigation, { CatalogSearch, CatalogTools } from "../components/Storefront/CatalogNavigation";
 import useCatalogSwipe from "../components/Storefront/useCatalogSwipe";
 import useCatalogFocus from "../components/Storefront/useCatalogFocus";
@@ -924,8 +925,43 @@ function IncentiveFocusModal({
   );
 }
 
-export function CouponInfoModal({ open, onClose, onRemove, onValidate, onChooseProducts, onCart, validating = false, data }) {
+export function CouponInfoModal({ open, onClose, onRemove, onValidate, onChooseProducts, onCart, validating = false, data: validation, code = "", onCodeChange, onSubmitCode }) {
+  const data = validation || {};
   const [secondsLeft, setSecondsLeft] = useState(null);
+  const dialogId = useId();
+  const modalRef = useRef(null);
+  const closeRef = useRef(onClose);
+  closeRef.current = onClose;
+
+  useEffect(() => {
+    if (!open) return undefined;
+    const opener = document.activeElement;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const initialFocus = modalRef.current?.querySelector("input") || modalRef.current?.querySelector("button");
+    initialFocus?.focus({ preventScroll: true });
+    const keydown = event => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        event.stopPropagation();
+        closeRef.current?.();
+      } else if (event.key === "Tab") {
+        const controls = modalRef.current?.querySelectorAll("button:not(:disabled), input:not(:disabled), a[href]");
+        const first = controls?.[0], last = controls?.[controls.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault(); last?.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault(); first?.focus();
+        }
+      }
+    };
+    document.addEventListener("keydown", keydown);
+    return () => {
+      document.removeEventListener("keydown", keydown);
+      document.body.style.overflow = previousOverflow;
+      if (opener?.isConnected) opener.focus({ preventScroll: true });
+    };
+  }, [open]);
 
   useEffect(() => {
     if (!open || !data?.coupon?.expiresAt) {
@@ -944,7 +980,7 @@ export function CouponInfoModal({ open, onClose, onRemove, onValidate, onChooseP
     return () => window.clearInterval(timer);
   }, [open, data?.coupon?.expiresAt]);
 
-  if (!open || !data) return null;
+  if (!open || (!validation && !onCodeChange)) return null;
 
   const coupon = data.coupon;
   const severity =
@@ -979,22 +1015,37 @@ export function CouponInfoModal({ open, onClose, onRemove, onValidate, onChooseP
   const discountLabel = data.valid ? "Descuento aplicado" : "Descuento aplicable";
 
   return (
-    <div className="sf-modalOverlay" onClick={onClose}>
-      <div className="sf-modalCard sf-couponInfoModal" onClick={(event) => event.stopPropagation()}>
+    <div className="sf-modalOverlay sf-centeredOverlay" onClick={onClose}>
+      <div className="sf-modalCard sf-couponInfoModal" ref={modalRef} role="dialog" aria-modal="true" aria-labelledby={dialogId} onClick={(event) => event.stopPropagation()}>
         <div className="sf-cartModalHead">
           <div>
-            <span>{data.valid ? "Cupon aplicado" : "Validacion de cupon"}</span>
-            <h3>Condiciones de la oferta</h3>
+            <span>{data.valid ? "Cupón aplicado" : "Cupones"}</span>
+            <h3 id={dialogId}>{validation ? "Condiciones de la oferta" : "Introduce tu cupón"}</h3>
           </div>
           <button type="button" className="sf-modalCloseBtn" onClick={onClose} aria-label="Cerrar">
             x
           </button>
         </div>
 
-        <div className="sf-couponInfoBody">
-          <div className={`sf-couponInfoStatus ${statusTone}`}>
+        {onCodeChange && <form className="sf-couponCodeForm" onSubmit={event => {
+          event.preventDefault();
+          if (code.trim() && !validating) onSubmitCode?.(event);
+        }}>
+          <label htmlFor={`${dialogId}-code`}>Código del cupón</label>
+          <div className="sf-couponCodeForm__field">
+            <input id={`${dialogId}-code`} type="text" value={code} onChange={event => onCodeChange(event.target.value)}
+              placeholder="Escribe o pega tu código" autoComplete="off" autoCapitalize="characters" spellCheck={false} enterKeyHint="done" />
+            <button type="submit" className="sf-primaryBtn" disabled={validating || !code.trim()}>
+              {validating ? "Validando…" : "Validar cupón"}
+            </button>
+          </div>
+          {!validation && !validating && <p>Comprueba tu código para ver el descuento y sus condiciones.</p>}
+        </form>}
+
+        {(validation || validating) && <div className="sf-couponInfoBody">
+          <div className={`sf-couponInfoStatus ${validating ? "is-pending" : statusTone}`} role="status" aria-live="polite">
             <strong>{validating ? "Comprobando tu descuento..." : data.message || "Revisa el estado del cupon."}</strong>
-            <span>Estado: {readableStatus}</span>
+            {!validating && <span>Estado: {readableStatus}</span>}
           </div>
 
           {coupon ? (
@@ -1027,9 +1078,9 @@ export function CouponInfoModal({ open, onClose, onRemove, onValidate, onChooseP
           ) : (
             <p>Introduce un codigo valido para ver las condiciones y aplicar el descuento.</p>
           )}
-        </div>
+        </div>}
 
-        <div className="sf-cartActions sf-couponInfoActions">
+        {validation && <div className="sf-cartActions sf-couponInfoActions">
           <button type="button" className="sf-primaryBtn" onClick={data.valid || data.status === "no_delivery_fee" ? onCart : pendingStatuses.has(data.status) ? onChooseProducts : onValidate} disabled={validating}>
             {validating ? "Validando..." : data.valid || data.status === "no_delivery_fee" ? "Ir al carrito" : pendingStatuses.has(data.status) ? "Elegir productos" : "Reintentar"}
           </button>
@@ -1038,7 +1089,7 @@ export function CouponInfoModal({ open, onClose, onRemove, onValidate, onChooseP
               Quitar cupon
             </button>
           )}
-        </div>
+        </div>}
       </div>
     </div>
   );
@@ -2031,6 +2082,23 @@ const getCustomCategoryKey = (item) => {
   return `category-name:${normalizeSearchText(item?.category || "productos")}`;
 };
 
+const buildCatalogCategories = (menu) => {
+  const uniques = new Map();
+  menu.forEach((item) => {
+    if (!item.category) return;
+    const id = getCustomCategoryKey(item);
+    if (!uniques.has(id)) uniques.set(id, {
+      id, name: item.category,
+      position: Number.isFinite(Number(item.categoryPosition)) ? Number(item.categoryPosition) : 999,
+    });
+  });
+  return [...uniques.values()].sort((left, right) =>
+    left.position - right.position || left.name.localeCompare(right.name, "es", { sensitivity: "base" })
+  );
+};
+
+const EMPTY_CATALOG_ITEMS = [];
+
 const getLowestPriceBySize = (items = []) => {
   const result = {};
 
@@ -2413,6 +2481,8 @@ export default function StorePage() {
   }, [location.state, partnerSlug, storeSlug]);
 
   const [menu, setMenu] = useState([]);
+  // Category structure changes with a menu load, not with live price updates.
+  const [categories, setCategories] = useState([]);
   const [trending, setTrending] = useState([]);
   const trendingRef = useRef([]);
   const [upcoming, setUpcoming] = useState([]);
@@ -2487,6 +2557,7 @@ export default function StorePage() {
   });
   const [extrasAvail, setExtrasAvail] = useState([]);
   const [extrasLoading, setExtrasLoading] = useState(false);
+  const [productExtrasOpen, setProductExtrasOpen] = useState(false);
   const [showAllExtras, setShowAllExtras] = useState(false);
   const [halfModalOpen, setHalfModalOpen] = useState(false);
   const [halfAIndex, setHalfAIndex] = useState(0);
@@ -2521,7 +2592,6 @@ export default function StorePage() {
   const [now, setNow] = useState(() => new Date());
   const [incentiveNowMs, setIncentiveNowMs] = useState(() => Date.now());
   const [flippedId, setFlippedId] = useState(null);
-  const [tick, setTick] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [gridIncentiveOpen, setGridIncentiveOpen] = useState(false);
   const catalogRootRef = useRef(null);
@@ -2634,6 +2704,7 @@ export default function StorePage() {
 
         trendingRef.current = nextTrending;
         setMenu(nextMenu);
+        setCategories(buildCatalogCategories(nextMenu));
         setTrending(nextTrending);
         setUpcoming(nextUpcoming);
         setPromos(nextPromos);
@@ -2662,16 +2733,6 @@ export default function StorePage() {
     const intervalId = window.setInterval(() => {
       setNow(new Date());
     }, 60000);
-
-    return () => {
-      window.clearInterval(intervalId);
-    };
-  }, []);
-
-  useEffect(() => {
-    const intervalId = window.setInterval(() => {
-      setIncentiveNowMs(Date.now());
-    }, 5000);
 
     return () => {
       window.clearInterval(intervalId);
@@ -2718,15 +2779,14 @@ export default function StorePage() {
 
   useEffect(() => {
     const intervalId = window.setInterval(() => {
-      setTick(true);
+      // Batch the live clock and pricing in one update; no decorative render 600ms later.
+      setIncentiveNowMs(Date.now());
       const currentTrending = trendingRef.current;
-      const nextTrending = currentTrending.some((item) => item?.trendingPricing)
-        ? withFloatingTrendingPrices(currentTrending)
-        : currentTrending;
+      if (!currentTrending.some((item) => item?.trendingPricing)) return;
+      const nextTrending = withFloatingTrendingPrices(currentTrending);
       trendingRef.current = nextTrending;
       setTrending(nextTrending);
       setMenu((currentMenu) => mergeTrendingIntoMenu(currentMenu, nextTrending));
-      window.setTimeout(() => setTick(false), 600);
     }, TRENDING_PRICE_REFRESH_MS);
 
     return () => {
@@ -2968,33 +3028,6 @@ export default function StorePage() {
     [storefrontButtons]
   );
 
-  const categories = useMemo(() => {
-    const uniques = new Map();
-
-    menu.forEach((item) => {
-      const key = item.categoryId || item.category;
-      if (!key || !item.category) return;
-      if (!uniques.has(key)) {
-        uniques.set(key, {
-          id: getCustomCategoryKey(item),
-          name: item.category,
-          position: Number.isFinite(Number(item.categoryPosition))
-            ? Number(item.categoryPosition)
-            : 999,
-        });
-      }
-    });
-
-    return [...uniques.values()].sort((left, right) => {
-      const byPosition = left.position - right.position;
-      if (byPosition !== 0) return byPosition;
-
-      return left.name.localeCompare(right.name, "es", {
-        sensitivity: "base",
-      });
-    });
-  }, [menu]);
-
   const topDeals = useMemo(
     () => sortTopDealsByDiscount(menu.filter(hasTopDealPolicy)),
     [menu]
@@ -3105,25 +3138,20 @@ export default function StorePage() {
     return filterTrendingItems(trending.length ? trending : fallbackTrending, query);
   }, [fallbackTrending, search, trending]);
 
-  const visibleMenu = useMemo(() => {
-    if (activeTab === PROMOS_TAB || activeTab === UPCOMING_TAB || activeTab === TOP_DEAL_TAB) return [];
-
-    if (activeTab === TRENDING_TAB) {
-      return [];
+  const menuByCategory = useMemo(() => {
+    const groups = new Map();
+    for (const item of baseFilteredMenu) {
+      const id = getCustomCategoryKey(item);
+      if (!groups.has(id)) groups.set(id, []);
+      groups.get(id).push(item);
     }
-
-    return sortFeedItems(
-      baseFilteredMenu.filter((item) => getCustomCategoryKey(item) === activeTab)
-    );
-  }, [activeTab, baseFilteredMenu]);
+    for (const [id, group] of groups) groups.set(id, sortFeedItems(group));
+    return groups;
+  }, [baseFilteredMenu]);
+  const visibleMenu = menuByCategory.get(activeTab) || EMPTY_CATALOG_ITEMS;
 
   const activeTabLabel =
     tabs.find((tab) => tab.id === activeTab)?.label || "Trending";
-  const isCommercialTabActive =
-    activeTab === TRENDING_TAB ||
-    activeTab === TOP_DEAL_TAB ||
-    activeTab === PROMOS_TAB ||
-    activeTab === UPCOMING_TAB;
 
   const gridContext = useMemo(() => {
     const cleanSearch = search.trim();
@@ -3192,11 +3220,12 @@ export default function StorePage() {
   ]);
 
   const resetCatalogPosition = useCallback(() => {
-    if (gridStageRef.current) gridStageRef.current.scrollTop = 0;
-    if (!gridFocusMode && catalogRootRef.current) {
+    // Read geometry before writing scroll positions, and skip it at page top.
+    if (!gridFocusMode && window.scrollY > 0 && catalogRootRef.current) {
       const top = window.scrollY + catalogRootRef.current.getBoundingClientRect().top;
       if (window.scrollY > top) window.scrollTo({ top: Math.max(0, top), behavior: "auto" });
     }
+    if (gridFocusMode && gridStageRef.current?.scrollTop) gridStageRef.current.scrollTop = 0;
   }, [gridFocusMode]);
   const selectCategoryTab = useCallback(tabId => {
     setSearch("");
@@ -3595,6 +3624,9 @@ export default function StorePage() {
     (sum, extra) => sum + num(extra.price),
     0
   );
+  const selectedExtrasLabel = selectedExtras.length
+    ? `${selectedExtras.length} seleccionados · +EUR ${selectedExtrasTotal.toFixed(2)}`
+    : "Opcional";
   const selectedUnitTotal = selectedBasePrice + selectedExtrasTotal;
   const selectedLineTotal = selectedUnitTotal * Number(productSelection.qty || 1);
   const productModalReady = Boolean(selectedProduct && productSelection.size && selectedProductMaxQty > 0);
@@ -4187,6 +4219,7 @@ export default function StorePage() {
       extras: {},
     });
     setShowAllExtras(false);
+    setProductExtrasOpen(false);
     setProductModalOpen(true);
   };
 
@@ -5676,20 +5709,20 @@ export default function StorePage() {
     return (
       <div className={`lsf-card__overlay ${showTrustMeta ? "lsf-card__overlay--trust" : ""}`}>
         <div className="lsf-card__ticker">
-          <div className={`lsf-card__name ${tick ? "is-ticking" : ""}`}>
+          <div className="lsf-card__name">
             {item.name}
           </div>
         </div>
         {showTrustMeta && renderProductApprovalMeta(item)}
         {availabilityPill ? (
           <div className="lsf-card__dealMeta">
-            {renderTopDealPrice(item, baseSize, tick)}
+            {renderTopDealPrice(item, baseSize)}
             {availabilityPill}
           </div>
         ) : (
-          <div className={`lsf-card__price ${tick ? "is-ticking" : ""}`}>
+          <div className="lsf-card__price">
             {hasTrendingPolicy(item)
-              ? renderTrendingPrice(item, baseSize, tick)
+              ? renderTrendingPrice(item, baseSize)
               : renderStorefrontPrice(item, baseSize)}
           </div>
         )}
@@ -5839,12 +5872,12 @@ export default function StorePage() {
 
               <div className="lsf-card__overlay lsf-card__overlay--deal">
                 <div className="lsf-card__ticker">
-                  <div className={`lsf-card__name ${tick ? "is-ticking" : ""}`}>
+                  <div className="lsf-card__name">
                     {item.name}
                   </div>
                 </div>
                 <div className="lsf-card__dealMeta">
-                  {renderTopDealPrice(item, baseSize, tick)}
+                  {renderTopDealPrice(item, baseSize)}
                   {renderTopDealAvailabilityPill(item)}
                 </div>
               </div>
@@ -6069,6 +6102,36 @@ export default function StorePage() {
     !storeAllowsPickup(store) &&
     explicitOrderMode !== "delivery";
 
+  const renderCatalogCouponButton = () => isStorefrontButtonVisible("coupons") && (
+    <button type="button"
+      className={`sf-catalogCoupon ${storefrontMode === "commercial-light" ? "sf-couponEntryBtn" : `sf-offersBtn sf-lsfOfferBtn ${offerVariant.className}`} ${hasDeliveryFreeCouponAvailable ? "has-delivery-free" : ""}`}
+      aria-label={hasDeliveryFreeCouponAvailable ? "Cupones y envío gratis" : "Cupones"}
+      onClick={() => navigate(`/${partnerSlug}/coupons`, { state: { returnToStorePath: `/${partnerSlug}/${storeSlug}` } })}>
+      <span className={storefrontMode === "commercial-light" ? "sf-couponEntryBtn__label" : "sf-offersBtnLabel"}>
+        {hasDeliveryFreeCouponAvailable ? <><span>CUPONES</span><span>ENVÍO GRATIS</span></> : "CUPONES"}
+      </span>
+    </button>
+  );
+
+  const renderCatalogMobilePromotion = () => (
+    <div className="sf-catalogMobilePromotion">
+      {renderCatalogCouponButton()}
+      {hasGridIncentiveBanner && <button type="button" className="sf-catalogIncentive sf-catalogIncentive--mobile" onClick={() => setGridIncentiveOpen(true)}>{gridIncentiveButtonLabel}: {gridIncentiveButtonValue}</button>}
+    </div>
+  );
+
+  const renderCatalogTools = () => <CatalogTools
+    showCoupons={isStorefrontButtonVisible("coupons")}
+    freeDelivery={hasDeliveryFreeCouponAvailable}
+    showCustomPizza={isStorefrontButtonVisible("customPizza")}
+    showHalfAndHalf={isStorefrontButtonVisible("halfAndHalf")}>
+    {isStorefrontButtonVisible("coupons") && <button type="button" onClick={() => navigate(`/${partnerSlug}/coupons`, { state: { returnToStorePath: `/${partnerSlug}/${storeSlug}` } })}>{hasDeliveryFreeCouponAvailable ? "Cupones · Envío gratis" : "Cupones"}</button>}
+    {isStorefrontButtonVisible("halfAndHalf") && <button type="button" onClick={openHalfModal}>Mitad y mitad</button>}
+    {isStorefrontButtonVisible("customPizza") && <button type="button" onClick={openCustomModal}>Arma tu pizza</button>}
+    {isStorefrontButtonVisible("scheduleOrder") && <button type="button" onClick={() => setScheduleOpen(true)}>Programar pedido</button>}
+    {isStorefrontButtonVisible("call") && phoneHref && <a href={phoneHref}>Llamar a la pizzería</a>}
+  </CatalogTools>;
+
   return (
     <div
       ref={catalogRootRef}
@@ -6156,17 +6219,11 @@ export default function StorePage() {
               {renderStoreInfoTicker(true)}
               {renderCartButtonSafe()}
               <button type="button" className="sf-catalogSearchToggle" aria-label="Buscar productos" aria-expanded={catalogSearchOpen} onClick={toggleCatalogSearch}><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" strokeWidth="2" /><path d="m16 16 5 5" stroke="currentColor" strokeWidth="2" /></svg></button>
-              <CatalogTools>
-                  {isStorefrontButtonVisible("halfAndHalf") && <button type="button" onClick={openHalfModal}>Mitad / Mitad</button>}
-                  {isStorefrontButtonVisible("customPizza") && <button type="button" onClick={openCustomModal}>Arma tu pizza</button>}
-                  {isStorefrontButtonVisible("coupons") && <button type="button" onClick={() => navigate(`/${partnerSlug}/coupons`, { state: { returnToStorePath: `/${partnerSlug}/${storeSlug}` } })}>{hasDeliveryFreeCouponAvailable ? "Cupones · Envío gratis" : "Cupones"}</button>}
-                  {isStorefrontButtonVisible("scheduleOrder") && <button type="button" onClick={() => setScheduleOpen(true)}>Programar pedido</button>}
-                  {isStorefrontButtonVisible("call") && phoneHref && <a href={phoneHref}>Llamar a la pizzería</a>}
-                </CatalogTools>
+              {renderCatalogTools()}
             </div>
+            {renderCatalogMobilePromotion()}
             {!gridFocusMode && catalogSearchOpen ? <CatalogSearch value={search} onChange={updateCatalogSearch} onClose={closeCatalogSearch} resultCount={baseFilteredMenu.length} autoFocus /> : <>
 
-            {hasGridIncentiveBanner && <button type="button" className="sf-catalogIncentive sf-catalogIncentive--mobile" onClick={() => setGridIncentiveOpen(true)}>{gridIncentiveButtonLabel}: {gridIncentiveButtonValue}</button>}
             <div className="sf-lsfMobileHeader">
               <div className="sf-lsfMobileInfo">
                 {renderStoreInfoTicker()}
@@ -6180,41 +6237,8 @@ export default function StorePage() {
             </div>
 
             <div className="sf-lsfActionSearchLine">
-              {isStorefrontButtonVisible("coupons") && (
-                <button
-                  type="button"
-                  className={
-                    storefrontMode === "commercial-light"
-                      ? `sf-couponEntryBtn ${hasDeliveryFreeCouponAvailable ? "has-delivery-free" : ""}`
-                      : `sf-offersBtn sf-lsfOfferBtn sf-lsfOfferBtn--mobilePunch ${offerVariant.className} ${
-                          hasDeliveryFreeCouponAvailable ? "has-delivery-free" : ""
-                        }`
-                  }
-                  onClick={() =>
-                    navigate(`/${partnerSlug}/coupons`, {
-                      state: { returnToStorePath: `/${partnerSlug}/${storeSlug}` },
-                    })
-                  }
-                >
-                  <span
-                    className={
-                      storefrontMode === "commercial-light"
-                        ? "sf-couponEntryBtn__label"
-                        : "sf-offersBtnLabel"
-                    }
-                  >
-                    {hasDeliveryFreeCouponAvailable ? (
-                      <>
-                        <span>COUPONS</span>
-                        <span>ENVIO GRATIS</span>
-                      </>
-                    ) : (
-                      offerVariant.label
-                    )}
-                  </span>
-                </button>
-              )}
-
+              {renderCatalogCouponButton()}
+              <div className="sf-catalogBuildActions">
               {isStorefrontButtonVisible("halfAndHalf") && (
                 <button
                   type="button"
@@ -6234,10 +6258,11 @@ export default function StorePage() {
                 </button>
               )}
 
+              </div>
               <div className="sf-lsfSearchCluster">
                 <button type="button" className="sf-catalogSearchLaunch" aria-label="Buscar productos" aria-expanded={catalogSearchOpen} onClick={toggleCatalogSearch}>
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" /><path d="m16 16 5 5" /></svg>
-                  Buscar pizza o ingrediente…
+                  <span>Buscar pizza o ingrediente…</span>
                 </button>
 
                 {storefrontMode !== "commercial-light" && isStorefrontButtonVisible("repeatOrder") && (
@@ -6298,10 +6323,11 @@ export default function StorePage() {
               <strong>Vitrina</strong>
               {renderCartButtonSafe()}
               <button type="button" className="sf-catalogSearchToggle" aria-label="Buscar productos" aria-expanded={catalogSearchOpen} onClick={toggleCatalogSearch}><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" strokeWidth="2" /><path d="m16 16 5 5" stroke="currentColor" strokeWidth="2" /></svg></button>
+              {renderCatalogTools()}
             </div>
+            {renderCatalogMobilePromotion()}
             {catalogSearchOpen ? <CatalogSearch value={search} onChange={updateCatalogSearch} onClose={closeCatalogSearch} resultCount={baseFilteredMenu.length} autoFocus /> : <>
               <CatalogNavigation offers={commercialTabs} categories={categoryTabs} activeId={activeTab} onSelect={selectCategoryTab} />
-              {hasGridIncentiveBanner && <button type="button" className="sf-catalogIncentive" onClick={() => setGridIncentiveOpen(true)}>{gridIncentiveButtonLabel}: {gridIncentiveButtonValue}</button>}
             </>}
           </header>}
           <div ref={gridStageRef} className="sf-engineGridStage sf-engineGridStage--lsf" {...catalogSwipe}>
@@ -6400,11 +6426,11 @@ export default function StorePage() {
 
                               <div className="lsf-card__overlay">
                                 <div className="lsf-card__ticker">
-                                  <div className={`lsf-card__name ${tick ? "is-ticking" : ""}`}>
+                                  <div className="lsf-card__name">
                                     {promo.title}
                                   </div>
                                 </div>
-                                {renderPromoPrice(promo, menuCatalog, tick)}
+                                {renderPromoPrice(promo, menuCatalog)}
                               </div>
                             </div>
 
@@ -6608,21 +6634,18 @@ export default function StorePage() {
       </div>
 
       <div className="sf-stickyFooterShell" style={themeStyle}>
+        {storefrontMode === "commercial-light" && isStorefrontButtonVisible("payNow") && (cartCount > 0 || checkoutLoading) && (
+          <div className="sf-catalogPayRow">
+            <button type="button" className="sf-engineBottomBtn sf-engineBottomBtn--pay"
+              onClick={handlePrimaryCheckout} disabled={cartCount === 0 || checkoutLoading}>
+              <span>{checkoutLoading ? "Estas muy cerca" : "Pay now"}</span>
+              {cartCount > 0 && !checkoutLoading && <small>EUR {cartTotal.toFixed(2)}</small>}
+            </button>
+          </div>
+        )}
         <div className="sf-stickyFooter">
           {storefrontMode === "commercial-light" ? (
             <>
-              {isStorefrontButtonVisible("payNow") && (cartCount > 0 || checkoutLoading) && (
-                <button
-                  type="button"
-                  className="sf-engineBottomBtn sf-engineBottomBtn--pay"
-                  onClick={handlePrimaryCheckout}
-                  disabled={cartCount === 0 || checkoutLoading}
-                >
-                  <span>{checkoutLoading ? "Estas muy cerca" : "Pay now"}</span>
-                  {cartCount > 0 && !checkoutLoading && <small>EUR {cartTotal.toFixed(2)}</small>}
-                </button>
-              )}
-
               {isStorefrontButtonVisible("scheduleOrder") && (
                 <button
                   type="button"
@@ -6678,77 +6701,21 @@ export default function StorePage() {
               )}
 
               {isStorefrontButtonVisible("couponCode") && (
-                <form
-                  className={`sf-couponDock sf-footerNavItem sf-footerNavItem--coupons ${
-                    couponCode.trim() ? "has-code" : ""
-                  }`}
-                  onSubmit={validateCouponCode}
-                  onClick={(event) => {
-                    if (!couponCode.trim()) return;
-                    if (couponLoading) return;
-                    if (event.target.closest("input, button")) return;
-                    event.currentTarget.requestSubmit?.();
-                  }}
+                <button
+                  type="button"
+                  className="sf-footerNavItem sf-footerNavItem--coupons"
+                  aria-label="Cupones: introducir o validar código"
+                  aria-haspopup="dialog"
+                  aria-expanded={couponInfoOpen}
+                  onClick={() => setCouponInfoOpen(true)}
                 >
-                  <span className="sf-couponDockIcon sf-footerNavIcon" aria-hidden="true">
+                  <span className="sf-footerNavIcon" aria-hidden="true">
                     <FooterPercentIcon />
                   </span>
-                  <input
-                    type="text"
-                    value={couponCode}
-                    onChange={(event) => {
-                      editCouponCode(event.target.value);
-                    }}
-                    onKeyDown={(event) => {
-                      if (event.key === "Enter") {
-                        event.preventDefault();
-                        resetMobileInputViewport(event.currentTarget);
-                        event.currentTarget.form?.requestSubmit?.();
-                      }
-                    }}
-                    placeholder="Codigo cupon"
-                    aria-label="Codigo cupon"
-                  />
-                  <button type="submit" disabled={couponLoading || couponCode.trim().length === 0}>
-                    {couponLoading ? "..." : "Validar"}
-                  </button>
-                  <span
-                    className={`sf-couponDockTicker sf-footerNavLabel ${
-                      couponFooterPercent > 0
-                        ? "is-applied"
-                        : hasDeliveryFreeCouponApplied
-                          ? "is-applied"
-                        : couponCode.trim()
-                          ? "is-ready"
-                          : ""
-                    }`}
-                    aria-live="polite"
-                  >
-                    <span>
-                      {hasDeliveryFreeCouponApplied
-                        ? "DELIVERY FREE"
-                        : couponFooterPercent > 0
-                        ? `${couponFooterPercent}% OFF`
-                        : couponCode.trim()
-                          ? "Validar"
-                          : hasDeliveryFreeCouponAvailable
-                            ? "Cupones"
-                          : "Cupones"}
-                    </span>
-                    <span>
-                      {hasDeliveryFreeCouponApplied
-                        ? "Aplicado"
-                        : couponFooterPercent > 0
-                        ? "Aplicado"
-                        : couponCode.trim()
-                          ? "Validar"
-                          : hasDeliveryFreeCouponAvailable
-                            ? "Delivery Free aqui"
-                          : "Aqui"}
-                    </span>
+                  <span className="sf-footerNavLabel">
+                    {hasDeliveryFreeCouponApplied ? "Envío gratis" : couponFooterPercent > 0 ? `${couponFooterPercent}% OFF` : "Cupones"}
                   </span>
-                  {couponStatus && <small>{couponStatus}</small>}
-                </form>
+                </button>
               )}
 
               {isStorefrontButtonVisible("boost") && (
@@ -6928,7 +6895,7 @@ export default function StorePage() {
       {productModalOpen && (
         <div className="sf-modalOverlay" onClick={closeProductModal}>
           <div
-            className="sf-modalCard sf-productModal"
+            className="sf-modalCard sf-productModal sf-standardProductModal"
             onClick={(event) => event.stopPropagation()}
           >
             <div className="sf-cartModalHead">
@@ -7041,13 +7008,27 @@ export default function StorePage() {
                   </div>
                 </div>
 
-                <div className="sf-productPickerRow sf-productPickerRow--stack">
-                  <span>Extras</span>
-                  {extrasLoading ? (
-                    <div className="sf-mutedLine">Cargando extras...</div>
-                  ) : sortedExtras.length === 0 ? (
-                    <div className="sf-mutedLine">No hay extras para esta pizza.</div>
-                  ) : (
+                <div className={`sf-productPickerRow sf-productPickerRow--stack sf-productPickerRow--extras ${productExtrasOpen ? "is-open" : ""}`}>
+                  <button
+                    type="button"
+                    className="sf-extrasToggle"
+                    onClick={() => setProductExtrasOpen((current) => !current)}
+                    disabled={extrasLoading || sortedExtras.length === 0}
+                    aria-expanded={productExtrasOpen}
+                  >
+                    <span className="sf-extrasToggleText">
+                      <strong>Extras</strong>
+                      <small>
+                        {extrasLoading
+                          ? "Cargando..."
+                          : sortedExtras.length
+                          ? selectedExtrasLabel
+                          : "No hay extras disponibles"}
+                      </small>
+                    </span>
+                    <span className="sf-extrasToggleIcon" aria-hidden="true" />
+                  </button>
+                  {productExtrasOpen && sortedExtras.length > 0 && (
                     <div className="sf-extrasList">
                       {visibleExtras.map((extra) => {
                         const checked = Boolean(productSelection.extras[extra.ingredientId]);
@@ -8293,7 +8274,7 @@ export default function StorePage() {
       )}
 
       {repeatOpen && (
-        <div className="sf-modalOverlay" onClick={() => setRepeatOpen(false)}>
+        <div className="sf-modalOverlay sf-repeatOverlay sf-centeredOverlay" onClick={() => setRepeatOpen(false)}>
           <div className="sf-modalCard sf-repeatModal" onClick={(event) => event.stopPropagation()}>
             <h3>Repetir pedido</h3>
             <p>
@@ -8685,7 +8666,7 @@ export default function StorePage() {
       )}
 
       {bootsOpen && (
-        <div className="sf-modalOverlay" onClick={() => setBootsOpen(false)}>
+        <div className="sf-modalOverlay sf-centeredOverlay" onClick={() => setBootsOpen(false)}>
           <div className="sf-modalCard sf-bootsModal" onClick={(event) => event.stopPropagation()}>
             <div className="sf-bootsHero">
               <div className="sf-bootsHeroTop">
@@ -8807,6 +8788,9 @@ export default function StorePage() {
         open={couponInfoOpen}
         data={couponInfoData}
         validating={couponLoading}
+        code={couponCode}
+        onCodeChange={editCouponCode}
+        onSubmitCode={validateCouponCode}
         onClose={() => setCouponInfoOpen(false)}
         onCart={() => { setCouponInfoOpen(false); setCartOpen(true); }}
         onChooseProducts={() => {

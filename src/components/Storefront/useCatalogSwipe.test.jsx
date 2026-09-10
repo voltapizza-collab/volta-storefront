@@ -11,7 +11,7 @@ function GestureSurface({ onGift = () => {}, ready = true }) {
   if (!ready) return <span>Cargando</span>;
   return <div ref={surfaceRef} {...handlers} data-testid="products">
     <output data-testid="category">{activeId}</output>
-    <article className="lsf-card"><button onClick={onGift}>Haz un regalo</button></article>
+    <div className="lsf-grid-wrap"><article className="lsf-card"><button onClick={onGift}>Haz un regalo</button></article></div>
   </div>;
 }
 
@@ -207,4 +207,104 @@ test("trackpad support attaches after the asynchronous store has loaded", () => 
   fireEvent(screen.getByText("Haz un regalo"), event);
   expect(event.defaultPrevented).toBe(true);
   expect(screen.getByTestId("category").textContent).toBe("20");
+});
+
+test("a recognized horizontal gesture follows a curve instead of freezing or cancelling", () => {
+  const { result, event, onSelect } = setup();
+  result.current.onPointerDownCapture(event(200, 100));
+  result.current.onPointerMoveCapture(event(170, 101));
+  result.current.onPointerMoveCapture(event(140, 104));
+  result.current.onPointerMoveCapture(event(125, 140));
+  result.current.onPointerMoveCapture(event(120, 160));
+  result.current.onPointerUpCapture(event(120, 160));
+  expect(onSelect).toHaveBeenCalledWith(20);
+});
+
+test("a short flick selects a category, but the same distance dragged slowly does not", () => {
+  let time = 0;
+  const clock = jest.spyOn(performance, "now").mockImplementation(() => time);
+  try {
+    const { result, event, onSelect } = setup();
+    result.current.onPointerDownCapture(event(200, 100));
+    time = 20;
+    result.current.onPointerMoveCapture(event(180, 101));
+    time = 45;
+    result.current.onPointerMoveCapture(event(165, 102));
+    result.current.onPointerUpCapture(event(165, 102));
+    expect(onSelect).toHaveBeenCalledWith(20);
+    onSelect.mockClear();
+    time = 1000;
+    result.current.onPointerDownCapture(event(200, 100));
+    time = 1200;
+    result.current.onPointerMoveCapture(event(180, 101));
+    time = 1450;
+    result.current.onPointerMoveCapture(event(165, 102));
+    result.current.onPointerUpCapture(event(165, 102));
+    expect(onSelect).not.toHaveBeenCalled();
+  } finally { clock.mockRestore(); }
+});
+
+test("movement follows the finger in one frame and cancellation removes queued movement", () => {
+  const callbacks = new Map();
+  let id = 0;
+  const raf = jest.spyOn(window, "requestAnimationFrame").mockImplementation(cb => { callbacks.set(++id, cb); return id; });
+  const cancel = jest.spyOn(window, "cancelAnimationFrame").mockImplementation(key => callbacks.delete(key));
+  try {
+    render(<GestureSurface />);
+    const surface = screen.getByTestId("products");
+    const wrap = surface.querySelector(".lsf-grid-wrap");
+    dispatchPointer(surface, "pointerdown", 200, 100);
+    dispatchPointer(surface, "pointermove", 186, 101);
+    dispatchPointer(surface, "pointermove", 160, 105);
+    expect(callbacks.size).toBe(1);
+    act(() => { [...callbacks.values()][0](); callbacks.clear(); });
+    expect(wrap.style.transform).toBe("translateX(-40px)");
+    expect(surface.style.getPropertyValue("--catalog-drag-x")).toBe("");
+    dispatchPointer(surface, "pointermove", 120, 160);
+    act(() => { [...callbacks.values()][0](); callbacks.clear(); });
+    expect(wrap.style.transform).toBe("translateX(-80px)");
+    dispatchPointer(surface, "pointermove", 110, 160);
+    dispatchPointer(surface, "pointercancel", 110, 160);
+    expect(callbacks.size).toBe(0);
+    expect(wrap.style.transform).toBe("");
+    expect(surface.hasAttribute("data-dragging")).toBe(false);
+    expect(screen.getByTestId("category").textContent).toBe("10");
+  } finally { raf.mockRestore(); cancel.mockRestore(); }
+});
+
+test("the next category enters from the right after a left swipe and is not cancelled by pointer release", () => {
+  const previous = Element.prototype.animate;
+  const running = { cancel: jest.fn() };
+  Element.prototype.animate = jest.fn(() => running);
+  try {
+    render(<GestureSurface />);
+    const surface = screen.getByTestId("products");
+    dispatchPointer(surface, "pointerdown", 200, 100);
+    dispatchPointer(surface, "pointermove", 100, 102);
+    dispatchPointer(surface, "pointerup", 100, 102);
+    expect(screen.getByTestId("category").textContent).toBe("20");
+    expect(Element.prototype.animate).toHaveBeenLastCalledWith(
+      [{ transform: "translateX(24px)" }, { transform: "translateX(0px)" }],
+      expect.objectContaining({ duration: 140 })
+    );
+    dispatchPointer(surface, "lostpointercapture", 100, 102);
+    expect(running.cancel).not.toHaveBeenCalled();
+    dispatchPointer(surface, "pointerdown", 100, 102);
+    expect(running.cancel).toHaveBeenCalledTimes(1);
+  } finally { Element.prototype.animate = previous; }
+});
+
+test("reduced motion keeps category selection without animating its entry", () => {
+  const previousMedia = window.matchMedia, previousAnimate = Element.prototype.animate;
+  window.matchMedia = () => ({ matches: true });
+  Element.prototype.animate = jest.fn();
+  try {
+    render(<GestureSurface />);
+    const surface = screen.getByTestId("products");
+    dispatchPointer(surface, "pointerdown", 200, 100);
+    dispatchPointer(surface, "pointermove", 100, 102);
+    dispatchPointer(surface, "pointerup", 100, 102);
+    expect(screen.getByTestId("category").textContent).toBe("20");
+    expect(Element.prototype.animate).not.toHaveBeenCalled();
+  } finally { window.matchMedia = previousMedia; Element.prototype.animate = previousAnimate; }
 });

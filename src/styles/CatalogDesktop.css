@@ -1,0 +1,223 @@
+/* The intermediate range uses the compact toolbar with two product columns. */
+@media (min-width: 561px) and (max-width: 760px) {
+  .sf-shell.sf-catalog .lsf-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Desktop catalog uses its own spacing; touch layouts remain in CatalogLayout. */
+@media (min-width: 761px) {
+  .sf-shell.sf-catalog {
+    --sf-lsf-content-width: min(1320px, calc(100vw - 64px));
+    box-sizing: border-box;
+    padding: 20px 0 calc(var(--catalog-footer-height, 72px) + 24px);
+  }
+
+  .sf-shell.sf-catalog .sf-wrap.sf-menu {
+    width: var(--sf-lsf-content-width);
+    max-width: var(--sf-lsf-content-width);
+    gap: 16px;
+  }
+
+  .sf-shell.sf-catalog .sf-storeHeader--desktop {
+    position: relative;
+    top: auto;
+    margin: 0;
+    padding: 10px 14px;
+    border-radius: 18px;
+  }
+
+  .sf-shell.sf-catalog .sf-lsfSurface.lsf-wrapper.lsf-mobile {
+    position: sticky;
+    top: 12px;
+    z-index: 60;
+    margin: 0;
+    padding: 16px 20px;
+    border-radius: 20px;
+    background: #fffefa;
+  }
+
+  .sf-shell.sf-catalog .sf-lsfNavCeiling { display: grid; gap: 12px; padding: 0; }
+
+  /* The search launcher reads as a field and opens the existing live search. */
+  .sf-shell.sf-catalog .sf-lsfActionSearchLine {
+    display: grid;
+    grid-template-columns: auto minmax(220px, 1fr) auto !important;
+    align-items: center;
+    gap: 24px;
+    margin: 0;
+  }
+
+  .sf-shell.sf-catalog .sf-catalogBuildActions { grid-column: 1; grid-row: 1; display: flex; flex-wrap: wrap; gap: 12px; }
+  .sf-shell.sf-catalog .sf-lsfActionSearchLine > .sf-catalogCoupon { grid-column: 3; grid-row: 1; justify-self: end; width: 160px; }
+
+  .sf-shell.sf-catalog .sf-lsfSearchCluster {
+    display: flex !important;
+    grid-column: 2;
+    grid-row: 1;
+    justify-content: center;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    gap: 8px;
+  }
+
+  .sf-shell.sf-catalog .sf-catalogSearchLaunch {
+    margin: 0;
+    box-sizing: border-box;
+    min-width: 0;
+    width: 100%;
+    height: 48px;
+    min-height: 48px;
+    padding: 0 14px;
+    justify-content: flex-start;
+    border-radius: 12px;
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+    white-space: nowrap;
+  }
+
+  .sf-shell.sf-catalog .sf-catalogSearchLaunch svg { flex: 0 0 20px; }
+  .sf-shell.sf-catalog .sf-catalogSearchLaunch > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+  .sf-shell.sf-catalog .sf-catalogSearchLaunch:hover { border-color: #9c70cc; background: #fcf9ff; }
+
+  .sf-shell.sf-catalog .sf-lsfActionSearchLine :is(.lsf-buildmode, .sf-catalogCoupon) {
+    flex: 0 0 auto;
+    width: auto;
+    min-width: 128px;
+    height: 48px;
+    min-height: 48px;
+    padding: 0 18px;
+    margin: 0;
+    border-radius: 12px;
+    font-size: 14px;
+  }
+
+  .sf-shell.sf-catalog .sf-lsfActionSearchLine > .sf-catalogCoupon { width: 160px; }
+
+  .sf-shell.sf-catalog .sf-lsfNavCeiling > .sf-incentiveBanner {
+    margin: 0;
+    padding: 12px 16px;
+    gap: 10px;
+    border-radius: 14px;
+    box-shadow: none;
+  }
+
+  .sf-shell.sf-catalog .sf-catalogNav { align-items: flex-start; gap: 12px; }
+  .sf-shell.sf-catalog .sf-catalogOffers { padding-right: 12px; background: transparent; }
+  .sf-shell.sf-catalog .sf-catalogCategories { flex-wrap: wrap; overflow: visible; gap: 8px; }
+  .sf-shell.sf-catalog .sf-catalogNav button { min-height: 42px; padding: 8px 14px; font-family: Arial, sans-serif; font-size: 13px; }
+  .sf-shell.sf-catalog .sf-catalogNav button:hover:not([aria-pressed="true"]) { background: #f4edfc; border-color: #b693df; }
+
+  .sf-shell.sf-catalog .sf-engineCard--lsf { margin: 0; padding: 0; border-radius: 20px; }
+  .sf-shell.sf-catalog .sf-engineGridStage--lsf { padding: 20px; border-radius: 20px; }
+  .sf-shell.sf-catalog .sf-engineGridStage--lsf::before { opacity: .035; }
+  .sf-shell.sf-catalog .lsf-grid-wrap { min-height: 0; padding-top: 16px; }
+  .sf-shell.sf-catalog .lsf-grid {
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    align-items: stretch;
+    gap: 18px;
+  }
+
+  .sf-shell.sf-catalog .sf-catalogContext { min-height: 44px; gap: 16px; padding: 0 0 14px; border-bottom: 1px solid #eee7f3; }
+  .sf-shell.sf-catalog .sf-catalogContext strong { color: #29143d; font-size: 22px; line-height: 1.25; }
+  .sf-shell.sf-catalog .sf-catalogContext > span { color: #796c83; font-family: Arial, sans-serif; font-size: 13px; }
+  .sf-shell.sf-catalog .sf-catalogExpand { padding: 8px 12px; border: 1px solid #e4d9ed; border-radius: 10px; font-size: 13px; }
+
+  .sf-shell.sf-catalog.sf-shell--mode-commercial-light .lsf-card { box-sizing: border-box; height: 100%; align-self: stretch; border-radius: 18px; box-shadow: 0 5px 16px #28143d0a; }
+  .sf-shell.sf-catalog.sf-shell--mode-commercial-light .lsf-card:hover { border-color: #cbb4e0; }
+  .sf-shell.sf-catalog.sf-shell--mode-commercial-light .lsf-card .lsf-flip__inner { display: grid; height: 100%; }
+  .sf-shell.sf-catalog.sf-shell--mode-commercial-light .lsf-card .lsf-flip__front {
+    position: relative;
+    inset: auto;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    min-height: 304px;
+    padding: 12px;
+    gap: 8px;
+  }
+  .sf-shell.sf-catalog.sf-shell--mode-commercial-light .lsf-card .lsf-card__image { flex: 0 0 176px; height: 176px; width: 100%; border-radius: 12px; }
+  .sf-shell.sf-catalog.sf-shell--mode-commercial-light .lsf-card__image img { transform: none; }
+  .sf-shell.sf-catalog.sf-shell--mode-commercial-light .lsf-card .lsf-card__overlay { flex: 0 0 auto; margin-top: auto; gap: 3px; align-content: end; }
+  .sf-shell.sf-catalog.sf-shell--mode-commercial-light .lsf-card .lsf-card__name { font-size: 16px; line-height: 1.3; }
+  .sf-shell.sf-catalog.sf-shell--mode-commercial-light .lsf-card .lsf-card__approval { font-size: 11px; }
+  .sf-shell.sf-catalog.sf-shell--mode-commercial-light .lsf-card .lsf-card__priceCurrent { font-size: 21px; }
+  .sf-shell.sf-catalog.sf-shell--mode-commercial-light .lsf-card .lsf-card__buyMessage { font-size: 11px; }
+  .sf-shell.sf-catalog.sf-shell--mode-commercial-light .lsf-card .lsf-card__addbtn { width: 40px; height: 40px; min-width: 40px; top: 12px; right: 12px; }
+
+  /* Checkout has its own row above the navigation footer. */
+  .sf-shell.sf-catalog.sf-shell--mode-commercial-light .sf-stickyFooterShell { padding: 0 0 16px; background: transparent; pointer-events: none; flex-direction: column; align-items: center; }
+  .sf-shell.sf-catalog.sf-shell--mode-commercial-light .sf-stickyFooter {
+    display: flex;
+    width: var(--sf-lsf-content-width);
+    max-width: var(--sf-lsf-content-width);
+    min-height: 72px;
+    padding: 8px;
+    gap: 8px;
+    border: 1px solid #e6dcee;
+    border-radius: 18px;
+    background: #fff;
+    box-shadow: 0 8px 36px #2c15421a;
+    pointer-events: auto;
+  }
+  .sf-shell.sf-catalog.sf-shell--mode-commercial-light .sf-stickyFooter::before,
+  .sf-shell.sf-catalog.sf-shell--mode-commercial-light .sf-stickyFooter::after { content: none; }
+  .sf-shell.sf-catalog.sf-shell--mode-commercial-light .sf-stickyFooter > .sf-footerNavItem { flex: 1 1 0; min-width: 0; width: auto; height: 54px; min-height: 54px; }
+  .sf-shell.sf-catalog.sf-shell--mode-commercial-light .sf-stickyFooter .sf-footerNavLabel { font-size: 11px; line-height: 14px; height: 14px; min-height: 14px; }
+  .sf-shell.sf-catalog.sf-shell--mode-commercial-light .sf-stickyFooter .sf-couponDock input { font-size: 12px; }
+  .sf-shell.sf-catalog.sf-shell--mode-commercial-light .sf-catalogPayRow .sf-engineBottomBtn--pay {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    width: 100%;
+    min-width: 0;
+    height: 54px;
+    min-height: 54px;
+    padding: 12px 20px;
+    border-radius: 12px;
+    box-shadow: none;
+  }
+  /* Existing mobile amount/label tickers use !important; show both steadily on desktop. */
+  .sf-shell.sf-catalog.sf-shell--mode-commercial-light .sf-catalogPayRow .sf-engineBottomBtn--pay :is(span, small) {
+    display: block !important;
+    position: static !important;
+    transform: none !important;
+    animation: none !important;
+    opacity: 1 !important;
+    margin: 0;
+    white-space: nowrap;
+  }
+
+  .sf-shell.sf-catalog.is-grid-focused .sf-engineCard--lsf {
+    margin: 0 auto;
+    top: calc(var(--catalog-viewport-top, 0px) + 16px);
+    width: var(--sf-lsf-content-width);
+    max-width: 1320px;
+    height: calc(var(--catalog-viewport-height, 100dvh) - var(--catalog-footer-height, 88px) - 32px);
+    padding: 18px 20px 0;
+    border: 1px solid #e4d9ed;
+    border-radius: 20px;
+    box-shadow: 0 16px 60px #2c154212;
+  }
+  .sf-shell.sf-catalog.is-grid-focused .sf-catalogFocusHeader { gap: 12px; padding-bottom: 12px; }
+  .sf-shell.sf-catalog .sf-catalogFocusHeader .sf-catalogMobilePromotion { display: flex; align-items: center; gap: 20px; }
+  .sf-shell.sf-catalog .sf-catalogFocusHeader .sf-catalogMobilePromotion .sf-catalogCoupon { order: 1; flex: 0 0 160px; width: 160px; min-height: 44px; margin: 0; }
+  .sf-shell.sf-catalog .sf-catalogFocusHeader .sf-catalogMobilePromotion .sf-catalogIncentive { display: block; flex: 1; min-width: 0; width: auto; }
+  .sf-shell.sf-catalog.is-grid-focused .sf-catalogFocusToolbar { gap: 12px; }
+  .sf-shell.sf-catalog.is-grid-focused .sf-catalogFocusToolbar > strong { font-size: 20px; }
+  .sf-shell.sf-catalog.is-grid-focused .sf-engineGridStage--lsf { padding: 12px 0 20px; border: 0; border-radius: 0; scrollbar-gutter: stable; }
+}
+
+@media (min-width: 761px) and (max-width: 1100px) {
+  .sf-shell.sf-catalog { --sf-lsf-content-width: calc(100vw - 40px); }
+  .sf-shell.sf-catalog .sf-lsfSurface.lsf-wrapper.lsf-mobile { padding: 14px; }
+  .sf-shell.sf-catalog .sf-lsfActionSearchLine { gap: 20px; }
+  .sf-shell.sf-catalog .sf-catalogBuildActions { gap: 8px; }
+  .sf-shell.sf-catalog .sf-lsfActionSearchLine :is(.lsf-buildmode, .sf-catalogCoupon) { min-width: 112px; padding: 0 12px; font-size: 13px; }
+  .sf-shell.sf-catalog .sf-catalogNav { gap: 8px; }
+  .sf-shell.sf-catalog .sf-catalogOffers { padding-right: 8px; }
+  .sf-shell.sf-catalog .sf-catalogNav button { padding: 8px 10px; font-size: 12px; }
+  .sf-shell.sf-catalog .lsf-grid { gap: 14px; }
+  .sf-shell.sf-catalog .sf-engineGridStage--lsf { padding: 16px; }
+}

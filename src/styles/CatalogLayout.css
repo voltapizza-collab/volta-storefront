@@ -5,9 +5,15 @@
 .sf-catalogStore strong { font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .sf-catalogStore span { font-size: 10px; white-space: nowrap; }
 .sf-catalog .sf-catalogMobileToolbar,
+.sf-catalog .sf-catalogMobilePromotion,
 .sf-catalog .sf-catalogMobileSearch,
 .sf-catalog .sf-catalogIncentive--mobile,
 .sf-catalog .sf-catalogOfferSelect { display: none; }
+.sf-catalogBuildActions { display: contents; }
+.sf-shell.sf-catalog { padding-bottom: calc(var(--catalog-footer-height, 72px) + 24px); }
+.sf-shell.sf-catalog.sf-shell--mode-commercial-light .sf-stickyFooterShell { display: flex; flex-direction: column; align-items: center; }
+.sf-shell.sf-catalog .sf-catalogPayRow { box-sizing: border-box; width: min(var(--sf-lsf-content-width, 1200px), calc(100% - 16px)); margin: 0 auto 8px; pointer-events: auto; }
+.sf-shell.sf-catalog .sf-catalogPayRow .sf-engineBottomBtn--pay { box-sizing: border-box; width: 100%; margin: 0; }
 .sf-catalogNav { display: flex; gap: 8px; min-width: 0; width: 100%; align-items: center; }
 .sf-catalogOffers { flex: 0 0 auto; background: #fffaf2; border-right: 1px solid #eadff5; padding-right: 8px; }
 .sf-catalogOfferButtons { display: flex; gap: 6px; }
@@ -43,13 +49,15 @@
 .sf-catalogContext strong { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .sf-catalogContext span { white-space: nowrap; font-size: 11px; }
 .sf-catalog .sf-engineGridStage--lsf { height: auto; min-height: 0; max-height: none; overflow-x: clip; overflow-y: visible; touch-action: pan-y pinch-zoom; }
-.sf-catalog .sf-engineGridStage--lsf .lsf-grid-wrap { transform: translateX(var(--catalog-drag-x, 0px)); transition: transform 180ms ease-out; }
-.sf-catalog .sf-engineGridStage--lsf[data-dragging] .lsf-grid-wrap { transition: none; }
+.sf-catalog .sf-engineGridStage--lsf .lsf-grid-wrap { contain: layout style; transition: none; }
+.sf-catalog .sf-engineGridStage--lsf .lsf-grid { transition: none; will-change: auto; }
+.sf-catalog .sf-engineGridStage--lsf[data-dragging] .lsf-grid-wrap { will-change: transform; }
 .sf-catalog .sf-engineGridStage--lsf .lsf-card { -webkit-user-select: none; user-select: none; }
 .sf-catalog .sf-engineGridStage--lsf .lsf-card img { -webkit-user-drag: none; }
 .sf-catalogFocusHeader { display: grid; gap: 6px; min-width: 0; background: #fff; padding-bottom: 6px; }
 .sf-catalogFocusToolbar { display: grid; grid-template-columns: auto minmax(0,1fr) auto 44px; align-items: center; gap: 6px; }
 .sf-catalogFocusToolbar > strong { color: #420080; font-size: 14px; }
+.sf-catalog .sf-catalogFocusToolbar > .sf-catalogTools { display: none; }
 .sf-catalog .sf-catalogFocusToolbar .lsf-cartbtn,
 .sf-catalog .sf-catalogMobileToolbar .lsf-cartbtn { position: static; min-height: 44px; height: 44px; min-width: 0; width: auto; margin: 0; padding: 4px 6px; gap: 3px; }
 .sf-catalog.is-grid-focused .sf-storeHeader--desktop,
@@ -62,12 +70,38 @@
 .sf-catalog :is(.sf-catalogNav, .sf-catalogFocusToolbar, .sf-catalogMobileToolbar, .sf-catalogSearch, .sf-catalogContext) :is(button,select,input,summary):focus-visible { outline: 3px solid #7c22ee; outline-offset: 2px; }
 .sf-catalog .sf-catalogSearch .sf-catalogSearch__field input:focus-visible { outline: none; }
 
+/* The footer opens a full-size coupon field instead of editing inside the navigation. */
+.sf-shell .sf-couponInfoModal { box-sizing: border-box; width: min(560px, 100%); max-height: calc(100dvh - 40px); overscroll-behavior: contain; }
+.sf-couponCodeForm { display: grid; gap: 8px; margin: 0; }
+.sf-couponCodeForm > label { color: #372348; font-size: 13px; font-weight: 700; }
+.sf-couponCodeForm__field { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
+.sf-shell .sf-couponCodeForm input { box-sizing: border-box; width: 100%; min-width: 0; min-height: 48px; border: 1px solid #d3c2e6; border-radius: 12px; padding: 10px 12px; background: #fff; color: #372348; font: 600 16px/1.4 Arial, sans-serif; }
+.sf-shell .sf-couponCodeForm input:focus { outline: 2px solid #7c22ee; outline-offset: 2px; }
+.sf-shell .sf-couponCodeForm button { min-height: 48px; border: 0; border-radius: 12px; padding: 10px 16px; background: #6500d8; color: #fff; font: 700 14px/1.4 Arial, sans-serif; box-shadow: none; }
+.sf-shell .sf-couponCodeForm button:disabled { background: #e8e0f0; color: #776584; cursor: not-allowed; }
+.sf-couponCodeForm > p { margin: 0; color: #71647b; font-size: 13px; line-height: 1.5; }
+.sf-modalOverlay.sf-centeredOverlay { place-items: center; padding: 16px; }
+.sf-centeredOverlay > .sf-modalCard { box-sizing: border-box; max-width: 100%; max-height: calc(100dvh - 32px); margin: 0; overscroll-behavior: contain; }
+.sf-centeredOverlay > .sf-bootsModal { overflow-y: auto; }
+.sf-repeatOverlay .sf-modalCard.sf-repeatModal { box-sizing: border-box; width: min(520px, 100%); max-height: calc(100dvh - 32px); margin: 0; overscroll-behavior: contain; }
+@media (max-width: 480px) {
+  .sf-couponCodeForm__field { grid-template-columns: minmax(0, 1fr); }
+}
+
 @media (max-width: 760px) {
-  .sf-catalog .sf-catalogMobileToolbar { display: grid; grid-template-columns: minmax(0,1fr) auto 44px 44px; align-items: center; gap: 4px; }
+  .sf-shell.sf-catalog .sf-catalogMobilePromotion { display: block; padding: 0; min-width: 0; }
+  .sf-shell.sf-catalog .sf-catalogMobilePromotion:empty { display: none; }
+  .sf-shell.sf-catalog .sf-catalogMobilePromotion .sf-catalogCoupon { display: none; }
+  .sf-shell.sf-catalog .sf-catalogMobilePromotion .sf-catalogIncentive { box-sizing: border-box; min-width: 0; width: 100%; min-height: 30px; white-space: nowrap; text-align: center; font-size: 12px; }
+  .sf-catalog .sf-catalogMobileToolbar { display: grid; grid-template-columns: minmax(0,1fr) auto 44px 104px; align-items: center; gap: 4px; }
+  .sf-catalog .sf-catalogFocusToolbar { grid-template-columns: auto minmax(0,1fr) 44px 104px; }
+  .sf-catalog .sf-catalogFocusToolbar > strong { display: none; }
+  .sf-catalog .sf-catalogFocusToolbar > .sf-catalogTools { display: block; }
   .sf-catalog .sf-catalogMobileSearch { display: block; }
   .sf-catalog .sf-catalogMobileSearch:empty { display: none; }
   .sf-catalog .sf-catalogIncentive--mobile { display: block; }
   .sf-catalog .sf-lsfMobileHeader,
+  .sf-catalog .sf-storeHeader--desktop,
   .sf-catalog .sf-lsfActionSearchLine,
   .sf-catalog .sf-lsfNavCeiling > .sf-incentiveBanner { display: none; }
   .sf-shell.sf-catalog .sf-lsfSurface.lsf-wrapper.lsf-mobile { padding: 6px; margin-top: 0; gap: 4px; border-radius: 14px; top: env(safe-area-inset-top, 0px); }
@@ -88,50 +122,91 @@
     justify-content: center;
     box-sizing: border-box;
     list-style: none;
-    min-height: 44px;
+    min-height: 46px;
+    padding: 0;
     overflow: hidden;
-    border: 2px solid #fa1687;
+    border: 1px solid #ffffffa6;
     border-radius: 12px;
-    background: linear-gradient(135deg, #fff76a, #ffcd26 52%, #ff991c);
-    color: #390062;
+    background: #7900db;
+    color: #fff;
     cursor: pointer;
+    font-family: Arial, sans-serif;
     font-size: 12px;
     font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: .35px;
-    box-shadow: 0 3px 10px #fa168744, inset 0 1px 0 #ffffffb3;
-    animation: sfCatalogMorePulse 3.2s ease-in-out infinite;
+    box-shadow: 0 3px 10px #6900b933, 0 0 0 1px #8c23d51f;
+    transition: transform .18s ease, box-shadow .18s ease;
   }
   .sf-catalogTools summary::after {
     content: "";
     position: absolute;
     inset: 0;
     pointer-events: none;
-    background: linear-gradient(110deg, transparent 25%, #ffffffa6 50%, transparent 75%);
+    background: linear-gradient(110deg, transparent 30%, #ffffff52 50%, transparent 70%);
     transform: translateX(-140%);
-    animation: sfCatalogMoreShine 4.8s ease-in-out infinite;
+    animation: sfCatalogToolsShine 3.2s ease-in-out infinite;
   }
-  .sf-catalogTools[open] summary { background: #6500d8; border-color: #6500d8; color: white; animation: none; }
+  .sf-catalogTools summary:hover { box-shadow: 0 4px 14px #6900b94d, 0 0 0 1px #8c23d52e; }
+  .sf-catalogTools[open] summary { box-shadow: 0 0 0 2px #7900db33; }
   .sf-catalogTools[open] summary::after { display: none; }
-  .sf-catalogTools summary:active { animation: none; transform: scale(.96); }
+  .sf-catalogTools summary:active { transform: scale(.96); }
   .sf-catalogTools summary::-webkit-details-marker { display: none; }
+  .sf-catalogTools__window { display: block; width: 100%; height: 44px; overflow: hidden; }
+  .sf-catalogTools__track { display: block; }
+  .sf-catalogTools__track--2 { animation: sfCatalogToolsTwo 6.4s cubic-bezier(.22,.68,0,1) infinite; }
+  .sf-catalogTools__track--3 { animation: sfCatalogToolsThree 9.6s cubic-bezier(.22,.68,0,1) infinite; }
+  .sf-catalogTools__track--5 { animation: sfCatalogToolsFive 16s cubic-bezier(.22,.68,0,1) infinite; }
+  .sf-catalogTools__track--6 { animation: sfCatalogToolsSix 19.2s cubic-bezier(.22,.68,0,1) infinite; }
+  /* Each slide carries its own color, so the message and background move together. */
+  .sf-catalogTools__label { position: relative; display: flex; align-items: center; gap: 5px; box-sizing: border-box; height: 44px; padding: 5px 16px 5px 7px; letter-spacing: 0; text-align: left; }
+  .sf-catalogTools__label--discover { background: radial-gradient(ellipse at top left, #c000bd, transparent 75%), #6900da; color: #fff; }
+  .sf-catalogTools__label--coupons { background: linear-gradient(120deg, #ffef58, #ffb52e); color: #491743; }
+  .sf-catalogTools__label--delivery { background: linear-gradient(120deg, #9bffd6, #30e6a8); color: #064535; }
+  .sf-catalogTools__label--custom { background: #ff5a00; color: #fff; }
+  .sf-catalogTools__label--halves { background: linear-gradient(120deg, #a4efff, #55c2ff); color: #093857; }
+  .sf-catalogTools__icon { flex: 0 0 15px; width: 15px; height: 18px; }
+  .sf-catalogTools__copy { display: grid; gap: 1px; white-space: nowrap; }
+  .sf-catalogTools__copy > span { font-size: 9px; line-height: 11px; font-weight: 700; letter-spacing: .35px; text-transform: uppercase; }
+  .sf-catalogTools__copy > strong { font: inherit; font-size: 13px; line-height: 15px; font-weight: 900; }
+  .sf-catalogTools__chevron { position: absolute; right: 5px; top: 17px; width: 10px; height: 10px; transition: transform .18s ease; }
+  .sf-catalogTools[open] .sf-catalogTools__chevron { transform: rotate(180deg); }
+  .sf-catalogTools:focus-within .sf-catalogTools__track,
+  .sf-catalogTools:focus-within summary::after { animation-play-state: paused; }
+  .sf-catalogTools[open] .sf-catalogTools__track { animation: none; transform: none; }
+  @keyframes sfCatalogToolsTwo { 0%,44% { transform: translateY(0); } 50%,94% { transform: translateY(-44px); } 100% { transform: translateY(-88px); } }
+  @keyframes sfCatalogToolsThree { 0%,27% { transform: translateY(0); } 33.333%,60.333% { transform: translateY(-44px); } 66.667%,93.667% { transform: translateY(-88px); } 100% { transform: translateY(-132px); } }
+  @keyframes sfCatalogToolsFive {
+    0%,16.2% { transform: translateY(0); }
+    20%,36.2% { transform: translateY(-44px); }
+    40%,56.2% { transform: translateY(-88px); }
+    60%,76.2% { transform: translateY(-132px); }
+    80%,96.2% { transform: translateY(-176px); }
+    100% { transform: translateY(-220px); }
+  }
+  @keyframes sfCatalogToolsSix {
+    0%,13.5% { transform: translateY(0); }
+    16.667%,30.167% { transform: translateY(-44px); }
+    33.333%,46.833% { transform: translateY(-88px); }
+    50%,63.5% { transform: translateY(-132px); }
+    66.667%,80.167% { transform: translateY(-176px); }
+    83.333%,96.833% { transform: translateY(-220px); }
+    100% { transform: translateY(-264px); }
+  }
+  @keyframes sfCatalogToolsShine { 0%,72% { transform: translateX(-140%); } 94%,100% { transform: translateX(140%); } }
   .sf-catalogTools > div { position: absolute; top: calc(100% + 6px); right: 0; z-index: 150; display: grid; min-width: 210px; max-height: 60dvh; overflow-y: auto; border: 1px solid #ddccec; border-radius: 12px; padding: 6px; background: white; box-shadow: 0 8px 28px #27004830; }
   .sf-catalogTools > div :is(button,a) { display: flex; align-items: center; min-height: 44px; padding: 8px 10px; border: 0; background: white; text-align: left; color: #450090; font: inherit; text-decoration: none; cursor: pointer; }
 }
-@keyframes sfCatalogMorePulse {
-  0%, 100% { box-shadow: 0 3px 10px #fa168744, 0 0 0 0 #fa168700, inset 0 1px 0 #ffffffb3; }
-  50% { box-shadow: 0 4px 14px #fa168770, 0 0 0 3px #fa168726, inset 0 1px 0 #ffffffb3; }
-}
-@keyframes sfCatalogMoreShine {
-  0%, 65% { transform: translateX(-140%); }
-  90%, 100% { transform: translateX(140%); }
-}
 @media (prefers-reduced-motion: reduce) {
+  .sf-catalogTools__track { animation: none; }
   .sf-catalog .sf-engineGridStage--lsf .lsf-grid-wrap { transform: none; transition: none; }
   .sf-catalogTools summary, .sf-catalogTools summary::after { animation: none; }
+  .sf-catalogTools summary, .sf-catalogTools__chevron { transition: none; }
   .sf-catalogTools summary::after { display: none; }
 }
 @media (max-width: 360px) {
+  .sf-catalog .sf-catalogMobileToolbar { grid-template-columns: minmax(0,1fr) auto 44px 76px; }
+  .sf-catalog .sf-catalogFocusToolbar { grid-template-columns: auto minmax(0,1fr) 44px 76px; }
+  .sf-catalog :is(.sf-catalogMobileToolbar, .sf-catalogFocusToolbar) :is(.sf-catalogTools__icon, .sf-catalogTools__chevron) { display: none; }
+  .sf-catalog :is(.sf-catalogMobileToolbar, .sf-catalogFocusToolbar) .sf-catalogTools__label { padding-inline: 5px; }
   .sf-catalogFocusToolbar > strong { font-size: 11px; }
   .sf-catalogContext { gap: 4px; font-size: 11px; }
   .sf-catalogContext span { font-size: 10px; }
@@ -141,3 +216,12 @@
 .sf-catalog .sf-engineEmptyState { min-height: 180px; display: flex; flex-direction: column; justify-content: center; gap: 8px; padding: 24px 16px; background: #faf7fd; color: #4c385d; border-radius: 14px; font-family: Arial, sans-serif; }
 .sf-catalog .sf-engineEmptyState strong { margin: 0; font-size: 17px; line-height: 1.3; }
 .sf-catalog .sf-engineEmptyState p { margin: 0; color: #71647b; font-size: 14px; line-height: 1.45; }
+
+/* Keep status text live without repainting shadows/backgrounds while browsing. */
+.sf-shell.sf-catalog .sf-footerRepeatVisual,
+.sf-shell.sf-catalog .sf-footerRepeatVisual .sf-repeatOrderBtn__mark,
+.sf-shell.sf-catalog .lsf-trendingRibbon,
+.sf-shell.sf-catalog .lsf-offerRibbon,
+.sf-shell.sf-catalog .lsf-categoryDealCountdown { animation: none; will-change: auto; }
+.sf-shell.sf-catalog .sf-footerRepeatVisual::before { animation: none; }
+.sf-shell.sf-catalog .sf-footerRepeatVisual::after { animation: none; content: none; }

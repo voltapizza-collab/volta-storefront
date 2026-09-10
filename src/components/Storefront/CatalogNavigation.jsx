@@ -1,11 +1,11 @@
-import { useEffect, useRef } from "react";
+import { memo, useEffect, useRef } from "react";
 
-export default function CatalogNavigation({ offers, categories, activeId, onSelect }) {
+const CatalogNavigation = memo(function CatalogNavigation({ offers, categories, activeId, onSelect }) {
   const scroller = useRef(null);
   useEffect(() => {
     const rail = scroller.current;
     const button = Array.from(rail?.children || []).find(child => child.dataset.categoryId === String(activeId));
-    if (!button) return;
+    if (!button || !rail.getClientRects().length) return;
     const railRect = rail.getBoundingClientRect(), buttonRect = button.getBoundingClientRect();
     if (buttonRect.left < railRect.left || buttonRect.right > railRect.right) {
       rail.scrollTo?.({ left: rail.scrollLeft + buttonRect.left - railRect.left, behavior: "auto" });
@@ -33,7 +33,9 @@ export default function CatalogNavigation({ offers, categories, activeId, onSele
       </div>
     </nav>
   );
-}
+});
+
+export default CatalogNavigation;
 
 export function CatalogSearch({ value, onChange, onClose, resultCount = 0, autoFocus = false }) {
   const inputRef = useRef(null);
@@ -60,8 +62,23 @@ export function CatalogSearch({ value, onChange, onClose, resultCount = 0, autoF
   </form>;
 }
 
-export function CatalogTools({ children }) {
+export function CatalogTools({ children, showCoupons = false, freeDelivery = false, showCustomPizza = false, showHalfAndHalf = false }) {
   const ref = useRef(null);
+  const discover = { theme: "discover", lead: "Descubre", label: "más", icon: "M12 3l2.4 6.6L21 12l-6.6 2.4L12 21l-2.4-6.6L3 12l6.6-2.4Z" };
+  const benefits = [
+    ...(showCoupons ? [{ theme: "coupons", lead: "Tus", label: "cupones", icon: "M4 5h16v5a2 2 0 0 0 0 4v5H4v-5a2 2 0 0 0 0-4ZM14 5v3m0 3v2m0 3v3" }] : []),
+    ...(showCoupons && freeDelivery ? [{ theme: "delivery", lead: "Envío", label: "gratis", icon: "M3 5h11v11H3Zm11 4h4l3 4v3h-7M8 18a2 2 0 1 0-4 0 2 2 0 0 0 4 0Zm12 0a2 2 0 1 0-4 0 2 2 0 0 0 4 0Z" }] : []),
+    ...(showCustomPizza ? [{ theme: "custom", lead: "Arma tu", label: "pizza", icon: "M4 4a21 21 0 0 1 16 16L4 20ZM4 8a16 16 0 0 1 12 12M7 12h.01M8 17h.01M12 16h.01" }] : []),
+    ...(showHalfAndHalf ? [{ theme: "halves", lead: "Mitad y", label: "mitad", icon: "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Zm0 0v18M7 9h.01M7 15h.01M16 12h.01" }] : []),
+  ];
+  // Separate each pair of available benefits with the invitation to open the menu.
+  const messages = [discover];
+  benefits.forEach((benefit, index) => {
+    if (index > 0 && index % 2 === 0) messages.push(discover);
+    messages.push(benefit);
+  });
+  const slides = messages.length > 1 ? [...messages, messages[0]] : messages;
+  const description = `Descubre más${benefits.length ? `: ${benefits.map(({ lead, label }) => `${lead} ${label}`).join(", ")}` : ""}`;
   useEffect(() => {
     const outside = event => { if (ref.current?.open && !ref.current.contains(event.target)) ref.current.open = false; };
     const escape = event => {
@@ -74,7 +91,17 @@ export function CatalogTools({ children }) {
     return () => { document.removeEventListener("pointerdown", outside); document.removeEventListener("keydown", escape); };
   }, []);
   return <details className="sf-catalogTools" ref={ref}>
-    <summary>Más</summary>
+    <summary aria-label={description} title={description}>
+      <span className="sf-catalogTools__window" aria-hidden="true">
+        <span key={messages.map(message => message.theme).join("-")} className={`sf-catalogTools__track sf-catalogTools__track--${messages.length}`}>
+          {slides.map((message, index) => <span className={`sf-catalogTools__label sf-catalogTools__label--${message.theme}`} key={`${message.theme}-${index}`}>
+            <svg className="sf-catalogTools__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d={message.icon} /></svg>
+            <span className="sf-catalogTools__copy"><span>{message.lead}</span><strong>{message.label}</strong></span>
+            <svg className="sf-catalogTools__chevron" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="m3 4.5 3 3 3-3" /></svg>
+          </span>)}
+        </span>
+      </span>
+    </summary>
     <div onClick={event => { if (event.target.closest("button, a")) ref.current.open = false; }}>{children}</div>
   </details>;
 }

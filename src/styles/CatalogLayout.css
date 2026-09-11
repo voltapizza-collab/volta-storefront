@@ -57,11 +57,25 @@
 .sf-catalog .sf-engineGridStage--lsf .lsf-card { -webkit-user-select: none; user-select: none; }
 .sf-catalog .sf-engineGridStage--lsf .lsf-card img { -webkit-user-drag: none; }
 .sf-catalogFocusHeader { display: grid; gap: 6px; min-width: 0; background: #fff; padding-bottom: 6px; }
-.sf-catalogFocusToolbar { display: grid; grid-template-columns: auto minmax(0,1fr) auto 44px; align-items: center; gap: 6px; }
-.sf-catalogFocusToolbar > strong { color: #420080; font-size: 14px; }
-.sf-catalog .sf-catalogFocusToolbar > .sf-catalogTools { display: none; }
+.sf-catalogFocusToolbar { display: grid; grid-template-columns: auto minmax(0,1fr) 56px 44px; align-items: center; gap: 6px; }
+.sf-catalogFocusCategory { position: relative; display: flex; align-items: center; min-width: 0; min-height: 44px; padding: 0 2px; color: #420080; font-family: Arial, sans-serif; border-radius: 12px; }
+.sf-catalogFocusCategory--picker { padding: 0 34px 0 8px; border: 1px solid #b88ae6; background: linear-gradient(135deg, #faf5ff, #f0e4ff); box-shadow: 0 2px 6px #6500d814; }
+.sf-catalogFocusCategory--picker:hover { border-color: #8240c8; background: #eee0ff; }
+.sf-catalogFocusCategory--picker:active { background: #e5d0fc; box-shadow: inset 0 1px 3px #6500d81c; }
+.sf-catalogFocusCategory__copy { display: grid; gap: 3px; min-width: 0; }
+.sf-catalogFocusCategory__copy strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; line-height: 16px; }
+.sf-catalogFocusCategory__copy > span { color: #71647b; font-size: 11px; line-height: 14px; }
+.sf-catalogFocusCategory--picker .sf-catalogFocusCategory__copy > span { color: #6b389b; font-size: 10px; font-weight: 600; }
+.sf-catalogFocusCategory__chevron { position: absolute; right: 5px; top: 50%; transform: translateY(-50%); border-radius: 8px; background: #7025bd; color: #fff; }
+.sf-catalogFocusCategory select { position: absolute; inset: 0; box-sizing: border-box; width: 100%; height: 100%; margin: 0; opacity: 0; font-size: 16px; cursor: pointer; }
+.sf-catalogFocusCategory:focus-within { outline: 3px solid #7c22ee; outline-offset: 2px; }
+.sf-catalog .sf-catalogSwipeHint { position: absolute; z-index: 60; left: 50%; bottom: 12px; transform: translateX(-50%); display: flex; align-items: center; gap: 8px; box-sizing: border-box; width: max-content; max-width: calc(100% - 24px); margin: 0; padding: 8px 12px; border: 1px solid #cba4ed; border-radius: 24px; background: #f3eaff; color: #572481; box-shadow: 0 3px 12px #45009014; font: 600 12px/1.35 Arial, sans-serif; text-align: center; pointer-events: none; }
+.sf-catalogSwipeHint__icon { flex: 0 0 20px; animation: sfCatalogSwipeHintNudge 900ms ease-in-out 1; }
+@keyframes sfCatalogSwipeHintNudge { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 65% { transform: translateX(4px); } }
 .sf-catalog .sf-catalogFocusToolbar .lsf-cartbtn,
 .sf-catalog .sf-catalogMobileToolbar .lsf-cartbtn { position: static; min-height: 44px; height: 44px; min-width: 0; width: auto; margin: 0; padding: 4px 6px; gap: 3px; }
+.sf-shell.sf-catalog .sf-catalogFocusToolbar .lsf-cartbtn { display: flex; justify-content: center; width: 56px; padding: 4px; }
+.sf-shell.sf-catalog .sf-catalogFocusToolbar .lsf-cartbtn__total { display: none; }
 .sf-catalog.is-grid-focused .sf-storeHeader--desktop,
 .sf-catalog.is-grid-focused .sf-lsfSurface { display: none; }
 .sf-catalog.is-grid-focused .sf-engineCard--lsf { position: fixed; inset: var(--catalog-viewport-top, 0px) 0 auto; box-sizing: border-box; width: 100%; max-width: 1200px; height: calc(var(--catalog-viewport-height, 100dvh) - var(--catalog-footer-height, 72px)); min-height: 0; margin: 0 auto; display: grid; grid-template-rows: auto minmax(0,1fr); gap: 0; padding: max(8px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right)) 0 max(8px, env(safe-area-inset-left)); overflow: hidden; border-radius: 0; background: #fff; z-index: 70; }
@@ -96,9 +110,6 @@
   .sf-shell.sf-catalog .sf-catalogMobilePromotion .sf-catalogCoupon { display: none; }
   .sf-shell.sf-catalog .sf-catalogMobilePromotion .sf-catalogIncentive { box-sizing: border-box; min-width: 0; width: 100%; min-height: 30px; white-space: nowrap; text-align: center; font-size: 12px; }
   .sf-catalog .sf-catalogMobileToolbar { display: grid; grid-template-columns: minmax(0,1fr) auto 44px 104px; align-items: center; gap: 4px; }
-  .sf-catalog .sf-catalogFocusToolbar { grid-template-columns: auto minmax(0,1fr) 44px 104px; }
-  .sf-catalog .sf-catalogFocusToolbar > strong { display: none; }
-  .sf-catalog .sf-catalogFocusToolbar > .sf-catalogTools { display: block; }
   .sf-catalog .sf-catalogMobileSearch { display: block; }
   .sf-catalog .sf-catalogMobileSearch:empty { display: none; }
   .sf-catalog .sf-catalogIncentive--mobile { display: block; }
@@ -198,6 +209,7 @@
   .sf-catalogTools > div :is(button,a) { display: flex; align-items: center; min-height: 44px; padding: 8px 10px; border: 0; background: white; text-align: left; color: #450090; font: inherit; text-decoration: none; cursor: pointer; }
 }
 @media (prefers-reduced-motion: reduce) {
+  .sf-catalogSwipeHint__icon { animation: none; }
   .sf-catalogTools__track { animation: none; }
   .sf-catalog .sf-engineGridStage--lsf .lsf-grid-wrap { transform: none; transition: none; }
   .sf-catalogTools summary, .sf-catalogTools summary::after { animation: none; }
@@ -205,11 +217,10 @@
   .sf-catalogTools summary::after { display: none; }
 }
 @media (max-width: 360px) {
+  .sf-catalogFocusCategory__hintDetail { display: none; }
   .sf-catalog .sf-catalogMobileToolbar { grid-template-columns: minmax(0,1fr) auto 44px 76px; }
-  .sf-catalog .sf-catalogFocusToolbar { grid-template-columns: auto minmax(0,1fr) 44px 76px; }
-  .sf-catalog :is(.sf-catalogMobileToolbar, .sf-catalogFocusToolbar) :is(.sf-catalogTools__icon, .sf-catalogTools__chevron) { display: none; }
-  .sf-catalog :is(.sf-catalogMobileToolbar, .sf-catalogFocusToolbar) .sf-catalogTools__label { padding-inline: 5px; }
-  .sf-catalogFocusToolbar > strong { font-size: 11px; }
+  .sf-catalog .sf-catalogMobileToolbar :is(.sf-catalogTools__icon, .sf-catalogTools__chevron) { display: none; }
+  .sf-catalog .sf-catalogMobileToolbar .sf-catalogTools__label { padding-inline: 5px; }
   .sf-catalogContext { gap: 4px; font-size: 11px; }
   .sf-catalogContext span { font-size: 10px; }
 }

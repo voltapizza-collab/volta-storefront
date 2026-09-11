@@ -120,7 +120,6 @@
   .sf-shell.sf-catalog .sf-catalogContext { min-height: 44px; gap: 16px; padding: 0 0 14px; border-bottom: 1px solid #eee7f3; }
   .sf-shell.sf-catalog .sf-catalogContext strong { color: #29143d; font-size: 22px; line-height: 1.25; }
   .sf-shell.sf-catalog .sf-catalogContext > span { color: #796c83; font-family: Arial, sans-serif; font-size: 13px; }
-  .sf-shell.sf-catalog .sf-catalogExpand { padding: 8px 12px; border: 1px solid #e4d9ed; border-radius: 10px; font-size: 13px; }
 
   .sf-shell.sf-catalog.sf-shell--mode-commercial-light .lsf-card { box-sizing: border-box; height: 100%; align-self: stretch; border-radius: 18px; box-shadow: 0 5px 16px #28143d0a; }
   .sf-shell.sf-catalog.sf-shell--mode-commercial-light .lsf-card:hover { border-color: #cbb4e0; }
@@ -189,24 +188,6 @@
     white-space: nowrap;
   }
 
-  .sf-shell.sf-catalog.is-grid-focused .sf-engineCard--lsf {
-    margin: 0 auto;
-    top: calc(var(--catalog-viewport-top, 0px) + 16px);
-    width: var(--sf-lsf-content-width);
-    max-width: 1320px;
-    height: calc(var(--catalog-viewport-height, 100dvh) - var(--catalog-footer-height, 88px) - 32px);
-    padding: 18px 20px 0;
-    border: 1px solid #e4d9ed;
-    border-radius: 20px;
-    box-shadow: 0 16px 60px #2c154212;
-  }
-  .sf-shell.sf-catalog.is-grid-focused .sf-catalogFocusHeader { gap: 12px; padding-bottom: 12px; }
-  .sf-shell.sf-catalog .sf-catalogFocusHeader .sf-catalogMobilePromotion { display: flex; align-items: center; gap: 20px; }
-  .sf-shell.sf-catalog .sf-catalogFocusHeader .sf-catalogMobilePromotion .sf-catalogCoupon { order: 1; flex: 0 0 160px; width: 160px; min-height: 44px; margin: 0; }
-  .sf-shell.sf-catalog .sf-catalogFocusHeader .sf-catalogMobilePromotion .sf-catalogIncentive { display: block; flex: 1; min-width: 0; width: auto; }
-  .sf-shell.sf-catalog.is-grid-focused .sf-catalogFocusToolbar { gap: 12px; }
-  .sf-shell.sf-catalog.is-grid-focused .sf-catalogFocusToolbar > strong { font-size: 20px; }
-  .sf-shell.sf-catalog.is-grid-focused .sf-engineGridStage--lsf { padding: 12px 0 20px; border: 0; border-radius: 0; scrollbar-gutter: stable; }
 }
 
 @media (min-width: 761px) and (max-width: 1100px) {

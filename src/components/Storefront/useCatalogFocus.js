@@ -1,14 +1,39 @@
-import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 
 const FOCUS_HASH = "#vitrina";
+const COMPACT_QUERY = "(max-width: 760px)";
+const isCompactViewport = () => window.matchMedia?.(COMPACT_QUERY).matches ?? window.innerWidth <= 760;
 
 export default function useCatalogFocus({ location, navigate, suspended, rootRef, stageRef, ready }) {
-  const open = location.hash === FOCUS_HASH;
+  const [available, setAvailable] = useState(isCompactViewport);
+  const open = available && location.hash === FOCUS_HASH;
   const closing = useRef(false);
   const stagePosition = useRef(0);
   const openerRef = useRef(null);
+
+  useEffect(() => {
+    const media = window.matchMedia?.(COMPACT_QUERY);
+    const update = () => setAvailable(isCompactViewport());
+    update();
+    if (media) media.addEventListener("change", update);
+    else window.addEventListener("resize", update);
+    return () => {
+      if (media) media.removeEventListener("change", update);
+      else window.removeEventListener("resize", update);
+    };
+  }, []);
+
+  // Replace the focus entry on wide screens; Back must never leave the store on resize.
+  useEffect(() => {
+    if (available || location.hash !== FOCUS_HASH) return;
+    const { catalogFocusEntry, ...state } = location.state || {};
+    navigate({ pathname: location.pathname, search: location.search, hash: "" }, {
+      replace: true, preventScrollReset: true, state,
+    });
+  }, [available, location, navigate]);
+
   const setOpen = useCallback(value => {
-    if (value && !open) {
+    if (value && available && !open) {
       openerRef.current = document.activeElement;
       stagePosition.current = stageRef.current?.scrollTop || 0;
       navigate({ pathname: location.pathname, search: location.search, hash: FOCUS_HASH }, {
@@ -20,7 +45,7 @@ export default function useCatalogFocus({ location, navigate, suspended, rootRef
       if (location.state?.catalogFocusEntry) navigate(-1);
       else navigate({ pathname: location.pathname, search: location.search, hash: "" }, { replace: true, preventScrollReset: true });
     }
-  }, [location, navigate, open, stageRef]);
+  }, [available, location, navigate, open, stageRef]);
 
   useLayoutEffect(() => {
     closing.current = false;
@@ -85,5 +110,5 @@ export default function useCatalogFocus({ location, navigate, suspended, rootRef
       document.removeEventListener("focusout", schedule);
     };
   }, [open, ready, rootRef]);
-  return [open, setOpen];
+  return [open, setOpen, available];
 }

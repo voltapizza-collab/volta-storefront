@@ -4,15 +4,47 @@ import useCatalogFocus from "./useCatalogFocus";
 
 let rootRef, stageRef, navigate;
 beforeEach(() => {
+  window.innerWidth = 393;
   document.body.innerHTML = '<main><button class="sf-catalogExit">Volver</button><div class="stage"></div><footer class="sf-stickyFooterShell"></footer></main>';
   rootRef = { current: document.querySelector("main") };
   stageRef = { current: document.querySelector(".stage") };
   navigate = jest.fn();
   window.scrollTo = jest.fn();
 });
-afterEach(() => { document.body.removeAttribute("style"); });
+afterEach(() => { document.body.removeAttribute("style"); window.innerWidth = 1024; });
 const location = { pathname: "/pizza/store", search: "?coupon=VOLTA", hash: "", state: null };
 const options = (changes = {}) => ({ location, navigate, rootRef, stageRef, ready: true, suspended: false, ...changes });
+
+test("desktop deep links are replaced without locking the page or losing the coupon", () => {
+  window.innerWidth = 1440;
+  const { result } = renderHook(props => useCatalogFocus(props), { initialProps: options({
+    location: { ...location, hash: "#vitrina", state: { catalogFocusEntry: true, fromCoupon: "VOLTA" } },
+  }) });
+  expect(result.current[0]).toBe(false);
+  expect(result.current[2]).toBe(false);
+  expect(document.body.style.position).not.toBe("fixed");
+  expect(navigate).toHaveBeenCalledWith({ pathname: location.pathname, search: "?coupon=VOLTA", hash: "" }, {
+    replace: true, preventScrollReset: true, state: { fromCoupon: "VOLTA" },
+  });
+});
+
+test("crossing into desktop unlocks focus and never navigates Back or reopens it on mobile", () => {
+  const focused = options({ location: { ...location, hash: "#vitrina", state: { catalogFocusEntry: true } } });
+  const { result, rerender } = renderHook(props => useCatalogFocus(props), { initialProps: focused });
+  expect(document.body.style.position).toBe("fixed");
+  act(() => { window.innerWidth = 761; window.dispatchEvent(new Event("resize")); });
+  expect(result.current[0]).toBe(false);
+  expect(document.body.style.position).toBe("");
+  expect(navigate).toHaveBeenCalledWith(expect.objectContaining({ hash: "", search: "?coupon=VOLTA" }), expect.objectContaining({ replace: true }));
+  expect(navigate).not.toHaveBeenCalledWith(-1);
+  navigate.mockClear();
+  act(() => result.current[1](true));
+  expect(navigate).not.toHaveBeenCalled();
+  rerender(options());
+  act(() => { window.innerWidth = 760; window.dispatchEvent(new Event("resize")); });
+  expect(result.current[0]).toBe(false);
+  expect(result.current[2]).toBe(true);
+});
 
 test("open preserves coupon URL; close uses browser history exactly once", () => {
   const { result, rerender } = renderHook(props => useCatalogFocus(props), { initialProps: options() });

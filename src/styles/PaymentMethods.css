@@ -1,0 +1,31 @@
+.sf-modalOverlay.sf-paymentMethodOverlay {
+  grid-template-columns: minmax(0, 1fr);
+  place-items: center;
+  padding: 16px;
+  background: rgba(24, 16, 36, .55);
+}
+
+.sf-paymentMethodOverlay .sf-paymentMethodModal {
+  width: min(480px, 100%);
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
+}
+
+.sf-paymentMethodModal .sf-paymentMethodGrid {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.sf-paymentMethodModal .sf-paymentMethodCard { min-height: 84px; }
+.sf-paymentMethodModal .sf-paymentMethodCard:focus-visible {
+  outline: 3px solid #8034ef;
+  outline-offset: 3px;
+}
+.sf-paymentMethodModal .sf-paymentMethodCard:disabled { cursor: default; }
+.sf-paymentMethodCard--klarna { --payment-accent: #9b315a; --payment-accent-2: #ffb3c7; }
+.sf-paymentMethodCard--klarna .sf-paymentMethodMark {
+  background: #ffb3c7;
+  color: #17142a;
+  box-shadow: none;
+  font-size: 1.5rem;
+}
+.sf-paymentMethodCard--klarna .sf-paymentMethodMark::after { content: none; }

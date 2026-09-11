@@ -5,9 +5,11 @@ import api from "../services/api";
 import "../styles/Storefront.css";
 import "../styles/CatalogLayout.css";
 import "../styles/CatalogDesktop.css";
-import CatalogNavigation, { CatalogSearch, CatalogTools } from "../components/Storefront/CatalogNavigation";
+import CatalogNavigation, { CatalogFocusCategory, CatalogSearch, CatalogTools } from "../components/Storefront/CatalogNavigation";
 import useCatalogSwipe from "../components/Storefront/useCatalogSwipe";
 import useCatalogFocus from "../components/Storefront/useCatalogFocus";
+import CatalogSwipeHint from "../components/Storefront/CatalogSwipeHint";
+import PaymentMethodModal from "../components/Storefront/PaymentMethodModal";
 import flagEs from "../assets/flags/es.svg";
 import gridWatermarkLogo from "../assets/logo/the pizza sale enganine.png";
 import {
@@ -33,7 +35,6 @@ const STOREFRONT_TERMS_VERSION = "2026-05-full-legal-v3";
 const STOREFRONT_TERMS_KEY = `volta_storefront_terms_${STOREFRONT_TERMS_VERSION}`;
 const STOREFRONT_VISITOR_KEY = "volta_storefront_visitor_id";
 const DELIVERY_SELECTION_KEY = "volta_storefront_delivery_selection";
-const CHECKOUT_PRESENCE_SIGNAL_TIMEOUT_MS = 1200;
 const DEFAULT_BOOST_SETTINGS = {
   active: true,
   unitPrice: 0.2,
@@ -2538,6 +2539,9 @@ export default function StorePage() {
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [checkoutProfileOpen, setCheckoutProfileOpen] = useState(false);
   const [paymentMethodModalOpen, setPaymentMethodModalOpen] = useState(false);
+  const [paymentMethodModalPurpose, setPaymentMethodModalPurpose] = useState("checkout");
+  const [onlinePaymentMethods, setOnlinePaymentMethods] = useState(["card"]);
+  const checkoutInFlightRef = useRef(false);
   const [cashConfirmationOpen, setCashConfirmationOpen] = useState(false);
   const checkoutRedirectingRef = useRef(false);
   const [pendingCashProfile, setPendingCashProfile] = useState(null);
@@ -2619,7 +2623,7 @@ export default function StorePage() {
       cashConfirmationOpen ||
       (portalReady && !termsAccepted)
   );
-  const [gridFocusMode, setGridFocusMode] = useCatalogFocus({
+  const [gridFocusMode, setGridFocusMode, canExpandCatalog] = useCatalogFocus({
     location, navigate, suspended: lsfSurfaceStickySuspended || gridIncentiveOpen,
     rootRef: catalogRootRef, stageRef: gridStageRef, ready: Boolean(store && portalReady && !error),
   });
@@ -3324,6 +3328,9 @@ export default function StorePage() {
     if (!store?.id) return null;
     try {
       const result = await api.get(`/api/checkout/availability/${store.id}`);
+      if (Array.isArray(result?.paymentMethods)) {
+        setOnlinePaymentMethods(result.paymentMethods.filter(method => ["card", "klarna"].includes(method)));
+      }
       setAvailability(result);
       setAvailabilityError("");
       return result;
@@ -4604,10 +4611,14 @@ export default function StorePage() {
         id: "card",
         icon: "▰",
         title: "Tarjeta",
-        description: "Pago online con tarjeta o Klarna en Stripe.",
+        description: "Tarjeta de débito o crédito.",
         ready: true,
       },
     ];
+
+    if (onlinePaymentMethods.includes("klarna")) {
+      methods.push({ id: "klarna", icon: "K.", title: "Klarna", description: "Consulta sus opciones de pago.", ready: true });
+    }
 
     if (cashPaymentEnabled) {
       methods.push({
@@ -4624,7 +4635,7 @@ export default function StorePage() {
         id: "paypal",
         icon: <PayPalLogo />,
         title: "PayPal",
-        description: "Medio externo pendiente de conexion.",
+        description: "Próximamente disponible.",
         ready: false,
       });
     }
@@ -4634,20 +4645,26 @@ export default function StorePage() {
         id: "crypto",
         icon: "₿",
         title: "Cartera virtual",
-        description: "Pago con billetera externa pendiente de conexion.",
+        description: "Próximamente disponible.",
         ready: false,
       });
     }
 
     return methods;
-  }, [cashPaymentEnabled, paymentPolicySettings, store?.id]);
-  const shouldShowPaymentMethodModal = availablePaymentMethods.length > 1;
-
-  useEffect(() => {
-    if (!shouldShowPaymentMethodModal && paymentMethodModalOpen) {
-      setPaymentMethodModalOpen(false);
-    }
-  }, [paymentMethodModalOpen, shouldShowPaymentMethodModal]);
+  }, [cashPaymentEnabled, onlinePaymentMethods, paymentPolicySettings, store?.id]);
+  const visiblePaymentMethods = availablePaymentMethods.filter(method => paymentMethodModalPurpose !== "cart" || method.id !== "cash");
+  const openPaymentMethodPicker = useCallback((purpose = "checkout") => {
+    if (checkoutInFlightRef.current || checkoutRedirectingRef.current) return;
+    setPaymentMethodModalPurpose(purpose);
+    setCheckoutMessage("");
+    setCartOpen(false);
+    setPaymentMethodModalOpen(true);
+  }, []);
+  const closePaymentMethodPicker = useCallback(() => {
+    if (checkoutInFlightRef.current) return;
+    setPaymentMethodModalOpen(false);
+    setCartOpen(true);
+  }, []);
 
   const cartSubtotal = useMemo(
     () => cart.reduce((sum, item) => sum + getCartLinePayableTotal(item), 0),
@@ -4800,109 +4817,109 @@ export default function StorePage() {
   }, [partner?.id, store?.partnerId]);
 
   const startCheckout = useCallback(async (paymentMode = "card", profileOverride = null, options = {}) => {
-    const normalizedPaymentMode = paymentMode === "cash" ? "cash" : "card";
-    const cashConfirmed = Boolean(options?.cashConfirmed);
-
-    if (profileOverride?.preventDefault) {
-      profileOverride = null;
+    if (checkoutInFlightRef.current || checkoutRedirectingRef.current) return;
+    if (options?.choosePayment) {
+      openPaymentMethodPicker();
+      return;
     }
-
-    let latestAvailability;
+    checkoutInFlightRef.current = true;
+    setCheckoutLoading(true);
     try {
-      latestAvailability = await refreshAvailability();
-    } catch {
-      setCheckoutMessage("No pudimos comprobar los horarios. Intentalo de nuevo.");
-      setCartOpen(true);
-      return;
-    }
-    if (!latestAvailability?.acceptingOrders) {
-      setCheckoutMessage("La tienda ha cerrado los pedidos online temporalmente.");
-      setCartOpen(true);
-      return;
-    }
-    const validSchedule = latestAvailability.days.some((day) => day.slots.some((slot) => slot.scheduledFor === scheduledAt));
-    if ((latestAvailability.requiresSchedule || scheduledAt) && !validSchedule) {
-      setPendingScheduleCheckout({ mode: normalizedPaymentMode, choosePayment: Boolean(options?.choosePayment) });
-      setCheckoutProfileOpen(false);
-      setCashConfirmationOpen(false);
-      setPaymentMethodModalOpen(false);
-      setCartOpen(false);
-      setScheduleOpen(true);
-      return;
-    }
-    const serviceMode = getStoreServiceMode(store, orderSelection);
+      const selectedPaymentMethod = paymentMode === "klarna" ? "klarna" : paymentMode === "cash" ? "cash" : "card";
+      const normalizedPaymentMode = paymentMode === "cash" ? "cash" : "card";
+      const cashConfirmed = Boolean(options?.cashConfirmed);
 
-    if (couponBlocksPayment || couponContextRef.current !== currentCouponKey) {
-      setCheckoutMessage(couponNeedsValidation ? "Espera mientras comprobamos tu descuento." : "Revisa el cupón o quítalo antes de continuar sin descuento.");
-      setCartOpen(true);
-      return;
-    }
-    if (cartBelowMinimumPayment) {
-      setCheckoutMessage(`El pago mínimo es ${formatMoney(minimumPaymentAmount, partner?.currency || "EUR")}. Faltan ${formatMoney(minimumPaymentMissing, partner?.currency || "EUR")}.`);
-      setCartOpen(true);
-      return;
-    }
+      if (profileOverride?.preventDefault) {
+        profileOverride = null;
+      }
 
-    if (options?.choosePayment && shouldShowPaymentMethodModal) {
-      setCheckoutMessage("");
-      setCartOpen(false);
-      setPaymentMethodModalOpen(true);
-      return;
-    }
+      let latestAvailability;
+      try {
+        latestAvailability = await refreshAvailability();
+      } catch {
+        setCheckoutMessage("No pudimos comprobar los horarios. Intentalo de nuevo.");
+        setCartOpen(true);
+        return;
+      }
+      if (!latestAvailability?.acceptingOrders) {
+        setCheckoutMessage("La tienda ha cerrado los pedidos online temporalmente.");
+        setCartOpen(true);
+        return;
+      }
+      const validSchedule = latestAvailability.days.some((day) => day.slots.some((slot) => slot.scheduledFor === scheduledAt));
+      if ((latestAvailability.requiresSchedule || scheduledAt) && !validSchedule) {
+        setPendingScheduleCheckout({ mode: selectedPaymentMethod });
+        setCheckoutProfileOpen(false);
+        setCashConfirmationOpen(false);
+        setPaymentMethodModalOpen(false);
+        setCartOpen(false);
+        setScheduleOpen(true);
+        return;
+      }
+      const serviceMode = getStoreServiceMode(store, orderSelection);
 
-    if (normalizedPaymentMode === "cash" && !cashPaymentEnabled) {
-      setCheckoutMessage("Esta tienda no tiene efectivo activo para pedidos online.");
-      setCartOpen(true);
-      return;
-    }
+      if (couponBlocksPayment || couponContextRef.current !== currentCouponKey) {
+        setCheckoutMessage(couponNeedsValidation ? "Espera mientras comprobamos tu descuento." : "Revisa el cupón o quítalo antes de continuar sin descuento.");
+        setCartOpen(true);
+        return;
+      }
+      if (cartBelowMinimumPayment) {
+        setCheckoutMessage(`El pago mínimo es ${formatMoney(minimumPaymentAmount, partner?.currency || "EUR")}. Faltan ${formatMoney(minimumPaymentMissing, partner?.currency || "EUR")}.`);
+        setCartOpen(true);
+        return;
+      }
 
-    if (!cartCount || cartTotal <= 0) {
-      setCheckoutMessage("Agrega productos al carrito antes de pagar.");
-      return;
-    }
+      if (normalizedPaymentMode === "cash" && !cashPaymentEnabled) {
+        setCheckoutMessage("Esta tienda no tiene efectivo activo para pedidos online.");
+        setCartOpen(true);
+        return;
+      }
 
-    if (
-      serviceMode === "delivery" &&
-      !String(orderSelection?.deliveryAddress || orderSelection?.deliveryResolution?.formattedAddress || "").trim()
-    ) {
-      setCheckoutMessage("Confirma la direccion de entrega antes de pagar.");
-      setCartOpen(true);
-      return;
-    }
+      if (!cartCount || cartTotal <= 0) {
+        setCheckoutMessage("Agrega productos al carrito antes de pagar.");
+        return;
+      }
 
-    const basicProfile = hasBasicCustomerProfile(profileOverride)
-      ? profileOverride
-      : hasBasicCustomerProfile(savedCustomerProfile)
-      ? savedCustomerProfile
-      : null;
+      if (
+        serviceMode === "delivery" &&
+        !String(orderSelection?.deliveryAddress || orderSelection?.deliveryResolution?.formattedAddress || "").trim()
+      ) {
+        setCheckoutMessage("Confirma la direccion de entrega antes de pagar.");
+        setCartOpen(true);
+        return;
+      }
 
-    if (!basicProfile) {
-      setCheckoutPaymentMode(normalizedPaymentMode);
-      setPendingCashProfile(null);
-      setCashConfirmationOpen(false);
-      setCheckoutProfileForm((current) => ({
-        name: current.name || "",
-        phone: normalizeCheckoutPhoneInput(current.phone || repeatPhone),
-      }));
-      setCheckoutProfileOpen(true);
-      setCartOpen(false);
-      setCheckoutMessage("");
-      return;
-    }
+      const basicProfile = hasBasicCustomerProfile(profileOverride)
+        ? profileOverride
+        : hasBasicCustomerProfile(savedCustomerProfile)
+        ? savedCustomerProfile
+        : null;
 
-    if (normalizedPaymentMode === "cash" && !cashConfirmed) {
-      setCheckoutPaymentMode("cash");
-      setPendingCashProfile(basicProfile);
-      setCheckoutProfileOpen(false);
-      setPaymentMethodModalOpen(false);
-      setCartOpen(false);
-      setCheckoutMessage("");
-      setCashConfirmationOpen(true);
-      return;
-    }
+      if (!basicProfile) {
+        setCheckoutPaymentMode(selectedPaymentMethod);
+        setPendingCashProfile(null);
+        setCashConfirmationOpen(false);
+        setCheckoutProfileForm((current) => ({
+          name: current.name || "",
+          phone: normalizeCheckoutPhoneInput(current.phone || repeatPhone),
+        }));
+        setCheckoutProfileOpen(true);
+        setCartOpen(false);
+        setCheckoutMessage("");
+        return;
+      }
 
-    try {
-      setCheckoutLoading(true);
+      if (normalizedPaymentMode === "cash" && !cashConfirmed) {
+        setCheckoutPaymentMode("cash");
+        setPendingCashProfile(basicProfile);
+        setCheckoutProfileOpen(false);
+        setPaymentMethodModalOpen(false);
+        setCartOpen(false);
+        setCheckoutMessage("");
+        setCashConfirmationOpen(true);
+        return;
+      }
+
       setCheckoutMessage("");
       const deliveryResolution = orderSelection?.deliveryResolution || {};
       const deliveryMethod = serviceMode === "delivery" ? "COURIER" : "PICKUP";
@@ -4927,6 +4944,7 @@ export default function StorePage() {
         total: cartTotal,
         currency: partner?.currency || "EUR",
         paymentMode: normalizedPaymentMode,
+        ...(normalizedPaymentMode === "card" ? { paymentMethod: selectedPaymentMethod } : {}),
         scheduledFor: scheduledAt || null,
         customer: checkoutProfile,
         delivery: {
@@ -4962,14 +4980,11 @@ export default function StorePage() {
           setSavedCustomerProfile(checkoutProfile);
         }
         checkoutRedirectingRef.current = true;
-        await Promise.race([
-          postStorefrontPresence({
+        void postStorefrontPresence({
             partnerId: partner?.id || store?.partnerId,
             storeId: store?.id,
             state: "checkout",
-          }),
-          new Promise((resolve) => window.setTimeout(resolve, CHECKOUT_PRESENCE_SIGNAL_TIMEOUT_MS)),
-        ]);
+          });
         setCheckoutProfileOpen(false);
         window.location.assign(checkoutUrl);
         return;
@@ -5016,7 +5031,8 @@ export default function StorePage() {
       console.error(err);
       const errorCode = err.response?.data?.error;
       const messages = {
-        stripe_not_configured: "Stripe no esta configurado para esta tienda.",
+        stripe_not_configured: "El pago online no está disponible en esta tienda.",
+        payment_method_not_available: "Este método ya no está disponible. Elige otra opción de pago.",
         store_closed: "La tienda ha cerrado los pedidos online temporalmente.",
         schedule_required: "Fuera del horario de servicio debes programar tu pedido.",
         schedule_invalid: "La fecha ya no esta disponible. Elige otra franja.",
@@ -5039,13 +5055,13 @@ export default function StorePage() {
           err.response?.data?.minimumPaymentAmount || minimumPaymentAmount,
           partner?.currency || "EUR"
         )}.`,
-        stripe_session_url_missing: "Stripe creo la sesion sin URL de pago. Intentalo de nuevo.",
+        stripe_session_url_missing: "No pudimos abrir la página de pago. Inténtalo de nuevo.",
         database_unavailable: "No pudimos conectar con la base de datos. Intentalo de nuevo en unos segundos.",
-        checkout_failed: "Stripe no pudo crear la sesion de pago.",
+        checkout_failed: "No pudimos iniciar el pago. Inténtalo de nuevo.",
       };
       if (err.response?.data?.availability) setAvailability(err.response.data.availability);
       if (["schedule_required", "schedule_invalid"].includes(errorCode)) {
-        setPendingScheduleCheckout({ mode: normalizedPaymentMode });
+        setPendingScheduleCheckout({ mode: paymentMode });
         setCheckoutProfileOpen(false);
         setCashConfirmationOpen(false);
         setScheduleOpen(true);
@@ -5058,6 +5074,7 @@ export default function StorePage() {
       setCheckoutMessage(messages[errorCode] || "No pudimos iniciar el pago.");
       setCartOpen(true);
     } finally {
+      checkoutInFlightRef.current = false;
       setCheckoutLoading(false);
     }
   }, [
@@ -5080,7 +5097,7 @@ export default function StorePage() {
     repeatPhone,
     scheduledAt,
     refreshAvailability,
-    shouldShowPaymentMethodModal,
+    openPaymentMethodPicker,
     savedCustomerProfile,
     store?.id,
     store?.partnerId,
@@ -5089,21 +5106,26 @@ export default function StorePage() {
   ]);
 
   const handlePrimaryCheckout = useCallback(() => {
-    const readyMethods = availablePaymentMethods.filter((method) => method.ready);
-    startCheckout(readyMethods[0]?.id || "card", null, { choosePayment: true });
-  }, [availablePaymentMethods, startCheckout]);
+    openPaymentMethodPicker();
+  }, [openPaymentMethodPicker]);
 
   const selectPaymentMethod = useCallback(
     (method) => {
+      if (checkoutInFlightRef.current || checkoutRedirectingRef.current) return;
       if (!method?.ready) {
         setCheckoutMessage(`${method?.title || "Este metodo"} aun no esta conectado.`);
         return;
       }
 
       setPaymentMethodModalOpen(false);
+      setCheckoutPaymentMode(method.id);
+      if (paymentMethodModalPurpose === "cart") {
+        setCartOpen(true);
+        return;
+      }
       startCheckout(method.id);
     },
-    [startCheckout]
+    [paymentMethodModalPurpose, startCheckout]
   );
   const confirmCashCheckout = useCallback(() => {
     startCheckout("cash", pendingCashProfile, { cashConfirmed: true });
@@ -5118,9 +5140,9 @@ export default function StorePage() {
   }, []);
 
   const selectedCheckoutPaymentMode =
-    cashPaymentEnabled && checkoutPaymentMode === "cash" ? "cash" : "card";
+    cashPaymentEnabled && checkoutPaymentMode === "cash" ? "cash" : checkoutPaymentMode === "klarna" ? "klarna" : "card";
   const cartCheckoutLabel =
-    selectedCheckoutPaymentMode === "cash" ? "Confirmar pedido" : "Pagar ahora";
+    selectedCheckoutPaymentMode === "cash" ? "Confirmar pedido" : selectedCheckoutPaymentMode === "klarna" ? "Pagar con Klarna" : "Pagar ahora";
 
   const cartProductSubtotal = useMemo(
     () => {
@@ -6320,22 +6342,22 @@ export default function StorePage() {
           {gridFocusMode && <header className="sf-catalogFocusHeader">
             <div className="sf-catalogFocusToolbar">
               <button type="button" className="sf-catalogExit" onClick={() => setGridFocusMode(false)}>← Volver</button>
-              <strong>Vitrina</strong>
+              <CatalogFocusCategory offers={commercialTabs} categories={categoryTabs} activeId={activeTab} onSelect={selectCategoryTab} resultCount={gridContext.count} searching={isProductSearchActive} />
               {renderCartButtonSafe()}
               <button type="button" className="sf-catalogSearchToggle" aria-label="Buscar productos" aria-expanded={catalogSearchOpen} onClick={toggleCatalogSearch}><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" strokeWidth="2" /><path d="m16 16 5 5" stroke="currentColor" strokeWidth="2" /></svg></button>
-              {renderCatalogTools()}
             </div>
-            {renderCatalogMobilePromotion()}
-            {catalogSearchOpen ? <CatalogSearch value={search} onChange={updateCatalogSearch} onClose={closeCatalogSearch} resultCount={baseFilteredMenu.length} autoFocus /> : <>
-              <CatalogNavigation offers={commercialTabs} categories={categoryTabs} activeId={activeTab} onSelect={selectCategoryTab} />
-            </>}
+            {catalogSearchOpen && <CatalogSearch value={search} onChange={updateCatalogSearch} onClose={closeCatalogSearch} resultCount={baseFilteredMenu.length} autoFocus />}
           </header>}
+          <CatalogSwipeHint
+            active={gridFocusMode && portalReady && !catalogSearchOpen && !lsfSurfaceStickySuspended && !gridIncentiveOpen && tabs.length > 1}
+            categoryId={activeTab}
+          />
           <div ref={gridStageRef} className="sf-engineGridStage sf-engineGridStage--lsf" {...catalogSwipe}>
-            <div className="sf-catalogContext">
+            {!gridFocusMode && <div className="sf-catalogContext">
               <strong>{gridContext.label}</strong>
               <span>{gridContext.count} {gridContext.count === 1 ? "producto" : "productos"}</span>
-              {!gridFocusMode && <button type="button" className="sf-catalogExpand" aria-label="Ampliar vitrina" onClick={() => setGridFocusMode(true)}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M8 3H3v5M16 3h5v5M21 16v5h-5M3 16v5h5" /></svg>Ampliar</button>}
-            </div>
+              {canExpandCatalog && <button type="button" className="sf-catalogExpand" aria-label="Ampliar vitrina" onClick={() => setGridFocusMode(true)}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M8 3H3v5M16 3h5v5M21 16v5h-5M3 16v5h5" /></svg>Ampliar</button>}
+            </div>}
             {isProductSearchActive ? (
               baseFilteredMenu.length === 0 ? (
                 <div className="sf-engineEmptyState">
@@ -7391,30 +7413,32 @@ export default function StorePage() {
                   )}
                   <div className="sf-cartPaymentPanel">
                     <div className="sf-cartPaymentHead">
-                      <span>Metodo de pago</span>
+                      <span>Método de pago</span>
                       <small>
                         {selectedCheckoutPaymentMode === "cash"
                           ? "Efectivo al recibir o recoger"
-                          : "Tarjeta, Link o Klarna en Stripe"}
+                          : selectedCheckoutPaymentMode === "klarna" ? "Klarna" : "Débito o crédito"}
                       </small>
                     </div>
                     <div
                       className={`sf-cartPaymentToggle ${cashPaymentEnabled ? "" : "is-single"}`}
                       role="radiogroup"
-                      aria-label="Metodo de pago"
+                      aria-label="Método de pago"
                     >
                       <button
                         type="button"
                         className={`sf-cartPaymentOption ${
-                          selectedCheckoutPaymentMode === "card" ? "is-active" : ""
+                          selectedCheckoutPaymentMode !== "cash" ? "is-active" : ""
                         }`}
                         role="radio"
-                        aria-checked={selectedCheckoutPaymentMode === "card"}
-                        onClick={() => setCheckoutPaymentMode("card")}
+                        aria-checked={selectedCheckoutPaymentMode !== "cash"}
+                        aria-haspopup="dialog"
+                        data-payment-picker
+                        onClick={() => openPaymentMethodPicker("cart")}
                         disabled={checkoutLoading}
                       >
                         <span>Tarjeta</span>
-                        <small>Stripe, Link o Klarna</small>
+                        <small>Elegir opción ›</small>
                       </button>
                       {cashPaymentEnabled && (
                         <button
@@ -7523,64 +7547,9 @@ export default function StorePage() {
         </div>
       )}
 
-      {paymentMethodModalOpen && shouldShowPaymentMethodModal && (
-        <div
-          className="sf-modalOverlay"
-          onClick={() => !checkoutLoading && setPaymentMethodModalOpen(false)}
-        >
-          <div
-            className="sf-modalCard sf-paymentMethodModal"
-            onClick={(event) => event.stopPropagation()}
-          >
-            <div className="sf-cartModalHead">
-              <div>
-                <span>Metodo de pago</span>
-                <h3>Como quieres pagar?</h3>
-              </div>
-              <button
-                type="button"
-                className="sf-modalCloseBtn"
-                onClick={() => setPaymentMethodModalOpen(false)}
-                disabled={checkoutLoading}
-                aria-label="Cerrar"
-              >
-                x
-              </button>
-            </div>
-
-            <div className="sf-paymentMethodGrid">
-              {availablePaymentMethods.map((method) => (
-                <button
-                  key={method.id}
-                  type="button"
-                  className={`sf-paymentMethodCard sf-paymentMethodCard--${method.id} ${
-                    method.ready ? "is-ready" : "is-disabled"
-                  }`}
-                  onClick={() => selectPaymentMethod(method)}
-                  disabled={checkoutLoading}
-                >
-                  <span className="sf-paymentMethodMark" aria-hidden="true">
-                    {method.icon}
-                  </span>
-                  <span className="sf-paymentMethodCopy">
-                    <strong>{method.title}</strong>
-                    <small>{method.description}</small>
-                  </span>
-                  {!method.ready && <em>Proximamente</em>}
-                </button>
-              ))}
-            </div>
-
-            {checkoutMessage && (
-              <div className="sf-reservationMessage">{checkoutMessage}</div>
-            )}
-
-            <div className="sf-paymentMethodTotal">
-              <span>Total</span>
-              <strong>EUR {cartTotal.toFixed(2)}</strong>
-            </div>
-          </div>
-        </div>
+      {paymentMethodModalOpen && (
+        <PaymentMethodModal methods={visiblePaymentMethods} total={formatMoney(cartTotal, partner?.currency || "EUR")}
+          busy={checkoutLoading} onClose={closePaymentMethodPicker} onSelect={selectPaymentMethod} />
       )}
 
       {checkoutProfileOpen && (

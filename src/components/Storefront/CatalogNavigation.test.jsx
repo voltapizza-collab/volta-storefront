@@ -1,8 +1,31 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import CatalogNavigation, { CatalogSearch, CatalogTools } from "./CatalogNavigation";
+import CatalogNavigation, { CatalogFocusCategory, CatalogSearch, CatalogTools } from "./CatalogNavigation";
 
 const offers = [{ id: "top-deals", label: "Top Deal" }, { id: "promos", label: "Promos" }];
 const categories = [{ id: 10, label: "Deep Dish" }, { id: 20, label: "Bebidas" }];
+
+test("focused category picker preserves IDs and reflects swipe selection without a button rail", () => {
+  const onSelect = jest.fn();
+  const props = { offers, categories, activeId: 10, onSelect, resultCount: 5 };
+  const { rerender } = render(<CatalogFocusCategory {...props} />);
+  const picker = screen.getByRole("combobox", { name: "Cambiar categoría" });
+  fireEvent.change(picker, { target: { value: "20" } });
+  fireEvent.change(picker, { target: { value: "promos" } });
+  expect(onSelect.mock.calls).toEqual([[20], ["promos"]]);
+  rerender(<CatalogFocusCategory {...props} activeId={20} resultCount={1} />);
+  expect(picker.value).toBe("20");
+  expect(screen.getByRole("status").textContent).toBe("Bebidas: 1 producto");
+  expect(screen.queryByRole("navigation")).toBeNull();
+});
+
+test("global search shows results without a misleading category picker", () => {
+  const props = { offers, categories, activeId: 10, onSelect: jest.fn(), resultCount: 3 };
+  const { rerender } = render(<CatalogFocusCategory {...props} searching />);
+  expect(screen.queryByRole("combobox")).toBeNull();
+  expect(screen.getByRole("status").textContent).toBe("Resultados: 3 productos");
+  rerender(<CatalogFocusCategory {...props} />);
+  expect(screen.getByRole("combobox").value).toBe("10");
+});
 
 test("scrolling categories and elapsed time never change the selection", () => {
   jest.useFakeTimers();

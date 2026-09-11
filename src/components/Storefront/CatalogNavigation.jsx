@@ -37,6 +37,30 @@ const CatalogNavigation = memo(function CatalogNavigation({ offers, categories, 
 
 export default CatalogNavigation;
 
+export function CatalogFocusCategory({ offers, categories, activeId, onSelect, resultCount, searching = false }) {
+  const items = [...offers, ...categories];
+  const active = items.find(item => item.id === activeId);
+  const countLabel = `${resultCount} ${resultCount === 1 ? "producto" : "productos"}`;
+  return <div className={`sf-catalogFocusCategory${searching ? "" : " sf-catalogFocusCategory--picker"}`}>
+    <div className="sf-catalogFocusCategory__copy" aria-hidden="true">
+      <strong>{searching ? "Resultados" : active?.label || "Categorías"}</strong>
+      <span>{searching ? countLabel : <>Cambiar<span className="sf-catalogFocusCategory__hintDetail"> categoría</span></>}</span>
+    </div>
+    {!searching && <>
+      <svg className="sf-catalogFocusCategory__chevron" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m7 10 5 5 5-5" /></svg>
+      <select aria-label="Cambiar categoría" title="Desliza para cambiar de categoría o toca para elegir" value={active ? String(activeId) : ""} onChange={event => {
+        const item = items.find(candidate => String(candidate.id) === event.target.value);
+        if (item) onSelect(item.id);
+      }}>
+        {!active && <option value="" disabled>Categorías</option>}
+        {offers.length > 0 && <optgroup label="Ofertas">{offers.map(item => <option key={item.id} value={item.id}>{item.label}</option>)}</optgroup>}
+        {categories.length > 0 && <optgroup label="Categorías">{categories.map(item => <option key={item.id} value={item.id}>{item.label}</option>)}</optgroup>}
+      </select>
+    </>}
+    <span className="sf-catalogSrOnly" role="status" aria-live="polite" aria-atomic="true">{searching ? "Resultados" : active?.label || "Categorías"}: {countLabel}</span>
+  </div>;
+}
+
 export function CatalogSearch({ value, onChange, onClose, resultCount = 0, autoFocus = false }) {
   const inputRef = useRef(null);
   useEffect(() => { if (autoFocus && inputRef.current?.getClientRects().length) inputRef.current.focus({ preventScroll: true }); }, [autoFocus]);

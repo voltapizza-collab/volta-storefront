@@ -4652,7 +4652,9 @@ export default function StorePage() {
 
     return methods;
   }, [cashPaymentEnabled, onlinePaymentMethods, paymentPolicySettings, store?.id]);
-  const visiblePaymentMethods = availablePaymentMethods.filter(method => paymentMethodModalPurpose !== "cart" || method.id !== "cash");
+  const visiblePaymentMethods = availablePaymentMethods.filter(method =>
+    paymentMethodModalPurpose === "cart" ? method.id !== "cash" : method.id !== "klarna"
+  );
   const openPaymentMethodPicker = useCallback((purpose = "checkout") => {
     if (checkoutInFlightRef.current || checkoutRedirectingRef.current) return;
     setPaymentMethodModalPurpose(purpose);

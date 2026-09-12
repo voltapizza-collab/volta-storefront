@@ -6,7 +6,6 @@ import IngredientOnboardingModal, { INGREDIENT_LANGUAGES, IngredientSearchIcon, 
 
 const SEMANTIC_LOCALES = INGREDIENT_LANGUAGES.map(([locale]) => locale);
 const CORE_REVIEW_LOCALES = ["es", "en", "it"];
-const SEMANTIC_STATUSES = ["UNREVIEWED", "NEEDS_REVIEW", "REVIEWED", "REJECTED"];
 
 const CATEGORY_LABELS = {
   ACEITES_GRASAS_VINAGRES: "Aceites, grasas y vinagres",
@@ -84,9 +83,18 @@ const buildSemanticDraft = (ingredient = {}) => ({
     buildCanonicalKeySuggestion(getIngredientDisplayName(ingredient)),
   semanticStatus: ingredient.semanticStatus || "UNREVIEWED",
   semanticCategoryId: ingredient.semanticCategoryId || "",
-  translations: buildEmptyTranslations(),
-  aliasesText: "",
+  translations: mergeSemanticTranslations(getIngredientTranslations(ingredient)),
+  aliasesText: formatAliasLines(ingredient.aliases || ingredient.semanticAliases || []),
 });
+
+const getIngredientTranslations = (ingredient = {}) => {
+  const byLocale = new Map();
+  [ingredient.semanticTranslations, ingredient.translations].forEach((rows) => {
+    if (!Array.isArray(rows)) return;
+    rows.forEach((row) => byLocale.set(row.locale, row));
+  });
+  return [...byLocale.values()];
+};
 
 const mergeSemanticTranslations = (translations = []) => {
   const byLocale = new Map(
@@ -96,6 +104,8 @@ const mergeSemanticTranslations = (translations = []) => {
   return buildEmptyTranslations().map((empty) => ({
     ...empty,
     ...(byLocale.get(empty.locale) || {}),
+    savedName: byLocale.get(empty.locale)?.name || "",
+    savedDescription: byLocale.get(empty.locale)?.description || "",
   }));
 };
 
@@ -136,13 +146,13 @@ const parseAliasLines = (value) =>
 
 const buildCanonicalKeySuggestion = (name) => normalizeIngredientKey(name);
 
-const getReviewedTranslationLocales = (translations = []) =>
+const getCompletedTranslationLocales = (translations = []) =>
   new Set(
     translations
       .filter(
         (translation) =>
-          translation.isReviewed === true &&
-          String(translation.name || "").trim()
+          String(translation.name || "").trim() &&
+          !String(translation.name).includes("\uFFFD")
       )
       .map((translation) => translation.locale)
   );
@@ -216,21 +226,8 @@ const getIngredientDeleteBlocker = (ingredient = {}) => {
 };
 
 const getIngredientMissingLocales = (ingredient = {}) => {
-  if (getIngredientSemanticStatus(ingredient) === "REJECTED") return [];
-
-  const translations = Array.isArray(ingredient.semanticTranslations)
-    ? ingredient.semanticTranslations
-    : [];
-
-  return SEMANTIC_LOCALES.filter(
-    (locale) =>
-      !translations.some(
-        (translation) =>
-          translation.locale === locale &&
-          translation.isReviewed === true &&
-          String(translation.name || "").trim()
-      )
-  );
+  const locales = getCompletedTranslationLocales(getIngredientTranslations(ingredient));
+  return SEMANTIC_LOCALES.filter((locale) => !locales.has(locale));
 };
 
 const getIngredientSemanticGaps = (ingredient = {}) => {
@@ -274,7 +271,7 @@ const getIngredientSemanticGaps = (ingredient = {}) => {
     gaps.push({
       key: "i18n",
       label: `I18N ${visibleLocales.join("/")}${overflow}`,
-      title: `Missing reviewed translations: ${missingLocales
+      title: `Faltan traducciones: ${missingLocales
         .map((locale) => locale.toUpperCase())
         .join(", ")}`,
     });
@@ -283,7 +280,7 @@ const getIngredientSemanticGaps = (ingredient = {}) => {
   const operationalPattern = OPERATIONAL_NAME_PATTERNS.find(({ pattern }) =>
     pattern.test(nameForReview)
   );
-  if (operationalPattern) {
+  if (operationalPattern && status !== "REVIEWED") {
     gaps.push({
       key: "nameQuality",
       label: "Name",
@@ -334,39 +331,39 @@ const getSemanticReviewButtonClass = (ingredient = {}) => {
   const hasGaps = getIngredientSemanticGaps(ingredient).length > 0;
 
   if (status === "REJECTED") return "gm-semanticBtn--rejected";
-  if (status === "REVIEWED" && !hasGaps) return "gm-semanticBtn--reviewed";
-  if (status === "NEEDS_REVIEW" || hasGaps) return "gm-semanticBtn--needsReview";
-  return "gm-semanticBtn--missing";
+  return hasGaps ? "gm-semanticBtn--needsReview" : "gm-semanticBtn--reviewed";
 };
 
 const getSemanticDraftValidation = (draft = {}) => {
-  const reviewedLocales = getReviewedTranslationLocales(draft.translations || []);
+  const completedLocales = getCompletedTranslationLocales(draft.translations || []);
   const missingCoreLocales = CORE_REVIEW_LOCALES.filter(
-    (locale) => !reviewedLocales.has(locale)
+    (locale) => !completedLocales.has(locale)
   );
   const missingLocales = SEMANTIC_LOCALES.filter(
-    (locale) => !reviewedLocales.has(locale)
+    (locale) => !completedLocales.has(locale)
   );
   const warnings = [];
   const criticalIssues = [];
+  if ((draft.translations || []).some((translation) => String(translation.name || "").includes("\uFFFD"))) {
+    criticalIssues.push("Corrige los caracteres dañados antes de confirmar los nombres.");
+  }
 
   if (!String(draft.canonicalKey || "").trim()) warnings.push("Missing global identity key");
   if (!draft.semanticCategoryId) warnings.push("Missing semantic category");
   if (missingCoreLocales.length > 0) {
     warnings.push(
-      `Missing reviewed core names: ${missingCoreLocales
+      `Faltan nombres principales: ${missingCoreLocales
         .map((locale) => locale.toUpperCase())
         .join(", ")}`
     );
   }
-  if (missingLocales.length > CORE_REVIEW_LOCALES.length) {
+  if (missingLocales.length > 0) {
     warnings.push(
-      `Incomplete language coverage: ${missingLocales
+      `Idiomas pendientes: ${missingLocales
         .map((locale) => locale.toUpperCase())
         .join(", ")}`
     );
   }
-  if (String(draft.aliasesText || "").trim() === "") warnings.push("No searchable aliases yet");
 
   if (draft.semanticStatus === "REVIEWED") {
     if (!String(draft.canonicalKey || "").trim()) {
@@ -377,7 +374,7 @@ const getSemanticDraftValidation = (draft = {}) => {
     }
     if (missingCoreLocales.length > 0) {
       criticalIssues.push(
-        `REVIEWED requires reviewed names in ${missingCoreLocales
+        `Completa los nombres en ${missingCoreLocales
           .map((locale) => locale.toUpperCase())
           .join(" and ")}`
       );
@@ -406,9 +403,11 @@ export default function IngredientsModule() {
   const [semanticIngredient, setSemanticIngredient] = useState(null);
   const [semanticDraft, setSemanticDraft] = useState(buildSemanticDraft());
   const [semanticLoading, setSemanticLoading] = useState(false);
+  const [semanticLoaded, setSemanticLoaded] = useState(false);
   const [semanticSaving, setSemanticSaving] = useState(false);
   const [semanticTranslating, setSemanticTranslating] = useState(false);
   const semanticTranslationRef = useRef(null);
+  const semanticLoadRef = useRef(null);
   const [imageUploadSavingId, setImageUploadSavingId] = useState(null);
   const [openCategories, setOpenCategories] = useState(() => new Set());
   const treeRef = useRef(null);
@@ -530,7 +529,7 @@ export default function IngredientsModule() {
     loadIngredients();
     loadSuggestions();
     loadSemanticCategories();
-    return () => semanticTranslationRef.current?.abort();
+    return () => { semanticTranslationRef.current?.abort(); semanticLoadRef.current?.abort(); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -597,6 +596,9 @@ export default function IngredientsModule() {
   };
 
   const openSemanticEditor = async (ingredient) => {
+    semanticLoadRef.current?.abort();
+    const controller = new AbortController();
+    semanticLoadRef.current = controller;
     semanticTranslationRef.current?.abort();
     semanticTranslationRef.current = null;
     setSemanticTranslating(false);
@@ -606,22 +608,18 @@ export default function IngredientsModule() {
     setSemanticIngredient(ingredient);
     setSemanticDraft(buildSemanticDraft(ingredient));
     setSemanticLoading(true);
+    setSemanticLoaded(false);
     setSemanticError("");
 
     try {
-      const res = await api.get(`/ingredients/${ingredientId}/semantics`);
+      const res = await api.get(`/ingredients/${ingredientId}/semantics`, { signal: controller.signal });
+      if (semanticLoadRef.current !== controller) return;
       const data = res.data || {};
       setSemanticAvailable(true);
-      setSemanticDraft({
-        canonicalKey:
-          data.canonicalKey ||
-          buildCanonicalKeySuggestion(getIngredientDisplayName(data)),
-        semanticStatus: data.semanticStatus || "UNREVIEWED",
-        semanticCategoryId: data.semanticCategoryId || "",
-        translations: mergeSemanticTranslations(data.translations || []),
-        aliasesText: formatAliasLines(data.aliases || []),
-      });
+      setSemanticDraft(buildSemanticDraft(data));
+      setSemanticLoaded(true);
     } catch (err) {
+      if (semanticLoadRef.current !== controller || controller.signal.aborted) return;
       if (err?.response?.status === 409) {
         setSemanticAvailable(false);
         setSemanticError("Semantic migration pending");
@@ -630,17 +628,20 @@ export default function IngredientsModule() {
       console.error(err);
       setSemanticError("Could not load semantic data");
     } finally {
-      setSemanticLoading(false);
+      if (semanticLoadRef.current === controller) setSemanticLoading(false);
     }
   };
 
   const closeSemanticEditor = () => {
+    semanticLoadRef.current?.abort();
+    semanticLoadRef.current = null;
     semanticTranslationRef.current?.abort();
     semanticTranslationRef.current = null;
     setSemanticTranslating(false);
     setSemanticIngredient(null);
     setSemanticDraft(buildSemanticDraft());
     setSemanticLoading(false);
+    setSemanticLoaded(false);
     setSemanticSaving(false);
   };
 
@@ -687,28 +688,33 @@ export default function IngredientsModule() {
   };
 
   const saveSemanticEditor = async () => {
-    if (!semanticIngredient || !semanticAvailable) return;
+    if (!semanticIngredient || !semanticAvailable || !semanticLoaded || semanticSaving || semanticTranslating) return;
 
     const ingredientId = getIngredientId(semanticIngredient);
     if (!ingredientId) return;
 
     const translations = semanticDraft.translations
       .map((translation) => ({
-        ...translation,
+        locale: translation.locale,
         name: String(translation.name || "").trim(),
         description: String(translation.description || "").trim(),
+        isReviewed: true,
       }))
       .filter((translation) => translation.name);
 
     try {
       setSemanticSaving(true);
-      await api.patch(`/ingredients/${ingredientId}/semantics`, {
+      const { data } = await api.patch(`/ingredients/${ingredientId}/semantics`, {
         canonicalKey: semanticDraft.canonicalKey,
-        semanticStatus: semanticDraft.semanticStatus,
+        semanticStatus: semanticDraft.semanticStatus === "REJECTED" ? "REJECTED" : semanticReviewReady ? "REVIEWED" : "NEEDS_REVIEW",
         semanticCategoryId: semanticDraft.semanticCategoryId || null,
         translations,
         aliases: parseAliasLines(semanticDraft.aliasesText),
       });
+      setIngredients((current) => current.map((ingredient) => getIngredientId(ingredient) === ingredientId
+        ? { ...ingredient, ...data, semanticTranslations: getIngredientTranslations(data || {}),
+            semanticAliases: data?.aliases || data?.semanticAliases || ingredient.semanticAliases }
+        : ingredient));
       await loadIngredients();
       closeSemanticEditor();
     } catch (err) {
@@ -774,7 +780,7 @@ export default function IngredientsModule() {
       </label>}
       {addedIngredient && <div className="gm-ingredient-added" role="status">
         <span><strong>{addedIngredient.name}</strong> añadido con sus siete idiomas.{addedIngredient.image ? " Foto guardada para revisión." : ` Puedes completar la foto en ${getCategoryLabel(addedIngredient.category)}.`}</span>
-        <button type="button" onClick={() => openSemanticEditor(addedIngredient)}>Revisar traducciones</button>
+        <button type="button" onClick={() => openSemanticEditor(addedIngredient)}>Ver traducciones</button>
         <button type="button" aria-label="Cerrar confirmación" onClick={() => setAddedIngredient(null)}>×</button>
       </div>}
       {onboardingOpen && <IngredientOnboardingModal candidates={masterCandidates}
@@ -850,17 +856,18 @@ export default function IngredientsModule() {
                             </span>
                             <button
                               type="button"
+                              aria-label="Semantics"
                               className={`gm-semanticBtn ${getSemanticReviewButtonClass(
                                 ingredient
                               )}`}
                               title={
                                 semanticGaps.length
                                   ? semanticGaps.map((gap) => gap.title).join(" | ")
-                                  : "Semantic identity reviewed"
+                                  : "Traducciones completas y guardadas. Abrir ficha."
                               }
                               onClick={() => openSemanticEditor(ingredient)}
                             >
-                              Semantics
+                              Semantics · {SEMANTIC_LOCALES.length - getIngredientMissingLocales(ingredient).length}/{SEMANTIC_LOCALES.length}
                             </button>
                             <label
                               className={`gm-imageUpload ${
@@ -946,6 +953,7 @@ export default function IngredientsModule() {
               <>
                 <div className="gm-semanticBody">
                   {semanticError && <div className="gm-semanticError">{semanticError}</div>}
+                  {!semanticLoaded && <button type="button" onClick={() => openSemanticEditor(semanticIngredient)}>Reintentar carga</button>}
                   {semanticDraftValidation.criticalIssues.length > 0 && (
                     <div className="gm-semanticError">
                       {semanticDraftValidation.criticalIssues.join(". ")}
@@ -978,33 +986,23 @@ export default function IngredientsModule() {
                     </label>
 
                     <label>
-                      Semantic status
+                      Identidad del ingrediente
                       <select
-                        value={semanticDraft.semanticStatus}
+                        value={semanticDraft.semanticStatus === "REJECTED" ? "REJECTED" : "ACTIVE"}
                         disabled={!semanticAvailable}
                         onChange={(event) =>
                           setSemanticDraft((current) => ({
                             ...current,
-                            semanticStatus:
-                              event.target.value === "REVIEWED" && !semanticReviewReady
-                                ? "NEEDS_REVIEW"
-                                : event.target.value,
+                            semanticStatus: event.target.value === "REJECTED" ? "REJECTED" : "NEEDS_REVIEW",
                           }))
                         }
                       >
-                        {SEMANTIC_STATUSES.map((status) => (
-                          <option
-                            key={status}
-                            value={status}
-                            disabled={status === "REVIEWED" && !semanticReviewReady}
-                          >
-                            {status}
-                          </option>
-                        ))}
+                        <option value="ACTIVE">Válida</option>
+                        <option value="REJECTED">Rechazada</option>
                       </select>
                       {!semanticReviewReady && (
                         <span className="gm-fieldHint">
-                          REVIEWED se habilita con key, categoria y ES/EN/IT revisados.
+                          Completa la identidad, la categoría y los nombres principales para confirmar la ficha.
                         </span>
                       )}
                     </label>
@@ -1035,11 +1033,11 @@ export default function IngredientsModule() {
                     <div className="gm-sectionHeader">
                       <div>
                         <h4>Traducciones</h4>
-                        <span>Completa ES, EN, IT, FR y PT sin sustituir los nombres existentes.</span>
+                        <span>{SEMANTIC_LOCALES.length - semanticDraftValidation.missingLocales.length}/{SEMANTIC_LOCALES.length} idiomas completos: ES, EN, IT, FR, PT, AR y ZH. Guardar confirma los nombres que ves aquí.</span>
                       </div>
                       <button
                         type="button"
-                        disabled={!semanticAvailable || !canSuggestTranslationDrafts || semanticTranslating || semanticSaving}
+                        disabled={!semanticAvailable || !semanticLoaded || !canSuggestTranslationDrafts || semanticTranslating || semanticSaving}
                         onClick={applySuggestedTranslationDrafts}
                       >
                         {semanticTranslating ? "Traduciendo…" : "Traducir idiomas pendientes"}
@@ -1052,34 +1050,15 @@ export default function IngredientsModule() {
                             <strong>{translation.locale.toUpperCase()}</strong>
                             <span
                               className={`gm-translationBadge ${
-                                translation.isReviewed
-                                  ? "is-reviewed"
-                                  : translation.name
-                                    ? "is-draft"
-                                    : "is-missing"
+                                !String(translation.name || "").trim() ? "is-missing"
+                                  : translation.name !== translation.savedName || (translation.description || "") !== translation.savedDescription
+                                    ? "is-draft" : "is-reviewed"
                               }`}
                             >
-                              {translation.isReviewed
-                                ? "Reviewed"
-                                : translation.name
-                                  ? "Draft"
-                                  : "Missing"}
+                              {!String(translation.name || "").trim() ? "Falta nombre"
+                                : translation.name !== translation.savedName || (translation.description || "") !== translation.savedDescription
+                                  ? "Sin guardar" : "Guardada"}
                             </span>
-                            <label className="gm-reviewedToggle">
-                              <input
-                                type="checkbox"
-                                checked={translation.isReviewed === true}
-                                disabled={!semanticAvailable}
-                                onChange={(event) =>
-                                  updateTranslationDraft(
-                                    translation.locale,
-                                    "isReviewed",
-                                    event.target.checked
-                                  )
-                                }
-                              />
-                              Reviewed
-                            </label>
                           </div>
                           <label className="gm-translationField">
                             Name
@@ -1144,10 +1123,10 @@ export default function IngredientsModule() {
                   <button
                     type="button"
                     className="gm-primaryBtn"
-                    disabled={!semanticAvailable || semanticSaving || semanticSaveBlocked}
+                    disabled={!semanticAvailable || !semanticLoaded || semanticSaving || semanticTranslating || semanticSaveBlocked}
                     onClick={saveSemanticEditor}
                   >
-                    {semanticSaving ? "Saving..." : "Save semantics"}
+                    {semanticSaving ? "Guardando…" : "Guardar y confirmar"}
                   </button>
                 </div>
               </>

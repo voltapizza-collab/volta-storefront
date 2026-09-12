@@ -136,6 +136,7 @@ export default function IngredientOnboardingModal({ candidates, categories, onCl
         allergens: selected.allergens || [],
         aliases: (selected.aliases || []).filter((name) => !name.includes("\uFFFD")),
         translations: INGREDIENT_LANGUAGES.map(([locale]) => ({ locale, name: names[locale].trim() })),
+        confirmTranslations: true,
       };
       let requestBody = payload;
       let config;
@@ -193,7 +194,7 @@ export default function IngredientOnboardingModal({ candidates, categories, onCl
           {selected ? <>
             <span className="gm-onboarding-category-tag">{selected.categoryLabel}</span>
             <h3>Un ingrediente, siete idiomas</h3>
-            <p>El nombre original se guarda en español. Las traducciones quedan disponibles para revisión.</p>
+            <p>Revisa los siete nombres. Al añadir el ingrediente quedan guardados y confirmados en su ficha.</p>
             <div className="gm-onboarding-names">
               {INGREDIENT_LANGUAGES.map(([locale, label]) => <label key={locale}>
                 <span><b>{locale.toUpperCase()}</b> {label}{locale === "es" ? " · Original" : ""}</span>
@@ -249,7 +250,7 @@ export default function IngredientOnboardingModal({ candidates, categories, onCl
           {error && <p className="gm-onboarding-error" role="alert">{error}</p>}
         </section>
       </div>
-      <footer className="gm-onboarding-footer"><p>{photo ? "Se guardarán los idiomas y la foto para revisión." : "Puedes añadir la foto ahora o completar la ficha después."}</p>
+      <footer className="gm-onboarding-footer"><p>{photo ? "Los idiomas quedarán confirmados. La foto se guarda para revisión." : "Al añadir confirmas los nombres. La foto es opcional."}</p>
         <button type="button" className="gm-onboarding-secondary" disabled={saving} onClick={close}>Cancelar</button>
         <button type="button" className="gm-onboarding-primary" disabled={!selected || !complete || saving || translating} onClick={save}>
           {saving ? (photo ? "Guardando con foto…" : "Guardando…") : "Añadir ingrediente"}

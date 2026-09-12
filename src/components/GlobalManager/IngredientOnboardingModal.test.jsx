@@ -47,7 +47,7 @@ test("translates and saves seven languages atomically in the original category",
   expect(screen.getByLabelText("Nombre en chino")).toHaveAttribute("lang", "zh-Hans");
   fireEvent.click(screen.getByRole("button", { name: "Añadir ingrediente" }));
   await waitFor(() => expect(onCreated).toHaveBeenCalledWith(expect.objectContaining({ id: 9 })));
-  expect(api.post).toHaveBeenLastCalledWith("/ingredients/onboarding", expect.objectContaining({ name: "Pollo frito", category: "CARNES", canonicalKey: "pollo_frito", translations }));
+  expect(api.post).toHaveBeenLastCalledWith("/ingredients/onboarding", expect.objectContaining({ name: "Pollo frito", category: "CARNES", canonicalKey: "pollo_frito", translations, confirmTranslations: true }));
   expect(api.patch).not.toHaveBeenCalled();
 });
 
@@ -135,7 +135,7 @@ test("successful onboarding opens the ingredient category and retains its image 
   await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
   expect(await screen.findByText("POLLO FRITO")).toBeVisible();
   expect(screen.getByText("Upload")).toBeVisible();
-  expect(screen.getByRole("button", { name: "Revisar traducciones" })).toBeVisible();
+  expect(screen.getByRole("button", { name: "Ver traducciones" })).toBeVisible();
 });
 
 test("photo selection previews locally and saves the file with the seven languages", async () => {

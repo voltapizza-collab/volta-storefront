@@ -1,10 +1,11 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import api from "../../../setupAxios";
 import "../../../styles/CouponsModule.css";
 
 const formatNumber = (value) => new Intl.NumberFormat("es-ES").format(Number(value || 0));
 
-export default function SmsCreditsPanel({ partnerId }) {
+export default function SmsCreditsPanel({ partnerId, focusRequest = 0 }) {
+  const walletRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const [balance, setBalance] = useState(null);
   const [packages, setPackages] = useState([]);
@@ -23,6 +24,7 @@ export default function SmsCreditsPanel({ partnerId }) {
       setLoading(true);
       const { data } = await api.get(`/api/sms-credits/${partnerId}`);
       setBalance(data?.balance || null);
+      window.dispatchEvent(new Event("volta:sms-balance-changed"));
       setPackages(data?.packages || []);
       setSelectedPackageAmount((current) => current || (data?.packages?.[0] ? String(data.packages[0].amount) : "10"));
     } catch (error) {
@@ -36,6 +38,15 @@ export default function SmsCreditsPanel({ partnerId }) {
   useEffect(() => {
     loadBalance();
   }, [loadBalance]);
+
+  useEffect(() => {
+    if (!focusRequest) return undefined;
+    const frame = window.requestAnimationFrame(() => {
+      walletRef.current?.focus({ preventScroll: true });
+      walletRef.current?.scrollIntoView({ block: "start", behavior: "instant" });
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [focusRequest]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -92,7 +103,7 @@ export default function SmsCreditsPanel({ partnerId }) {
   };
 
   return (
-    <section className="cp-smsWallet">
+    <section className="cp-smsWallet" ref={walletRef} tabIndex={-1} aria-label="Saldo y recarga de SMS">
       <div>
         <div className="cp-kicker">SMS cortos</div>
         <h3>{loading ? "Cargando saldo..." : `${formatNumber(balance?.smsCredits)} disponibles`}</h3>

@@ -2,8 +2,9 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import "../../styles/IngredientsModule.css";
 import api from "../../setupAxios";
 import ingredientMasterSource from "../../data/ingredientMasterSource.json";
+import IngredientOnboardingModal, { INGREDIENT_LANGUAGES, IngredientSearchIcon, matchesIngredientSearch } from "./IngredientOnboardingModal";
 
-const SEMANTIC_LOCALES = ["es", "en", "it", "fr", "pt", "ar", "zh"];
+const SEMANTIC_LOCALES = INGREDIENT_LANGUAGES.map(([locale]) => locale);
 const CORE_REVIEW_LOCALES = ["es", "en", "it"];
 const SEMANTIC_STATUSES = ["UNREVIEWED", "NEEDS_REVIEW", "REVIEWED", "REJECTED"];
 
@@ -23,24 +24,6 @@ const CATEGORY_LABELS = {
   SALSAS: "Salsas",
   SETAS: "Setas",
   VERDURAS: "Verduras",
-};
-
-const SEMANTIC_CATEGORY_BY_INGREDIENT_CATEGORY = {
-  ACEITES_GRASAS_VINAGRES: "oils_fats_vinegars",
-  AROMAS_Y_EXTRACTOS: "extras",
-  CARNES: "meats",
-  CREMAS_DULCES: "sweet_creams",
-  EMBUTIDOS: "cured_meats",
-  ENDULZANTES: "sweeteners",
-  EXTRAS: "extras",
-  FRUTAS: "fruits",
-  HIERBAS_ESPECIAS: "herbs_spices",
-  OTROS: "other",
-  PESCADOS_Y_MARISCOS: "seafood",
-  QUESOS: "cheeses",
-  SALSAS: "sauces",
-  SETAS: "mushrooms",
-  VERDURAS: "vegetables",
 };
 
 const normalizeIngredientKey = (value) =>
@@ -152,152 +135,6 @@ const parseAliasLines = (value) =>
     });
 
 const buildCanonicalKeySuggestion = (name) => normalizeIngredientKey(name);
-
-const TRANSLATION_CONNECTORS = new Set(["de", "del", "la", "las", "el", "los", "y"]);
-
-const TRANSLATION_DIRECT_DRAFTS = {
-  aceite_de_albahaca: {
-    en: "Basil oil",
-    it: "Olio al basilico",
-    fr: "Huile de basilic",
-    pt: "Oleo de manjericao",
-    ar: "زيت الريحان",
-    zh: "罗勒油",
-  },
-  aceite_de_chile: {
-    en: "Chili oil",
-    it: "Olio al peperoncino",
-    fr: "Huile pimentee",
-    pt: "Oleo de pimenta",
-    ar: "زيت الفلفل الحار",
-    zh: "辣椒油",
-  },
-};
-
-const TRANSLATION_TERM_DRAFTS = {
-  aceite: {
-    en: "oil",
-    it: "olio",
-    fr: "huile",
-    pt: "oleo",
-    ar: "زيت",
-    zh: "油",
-  },
-  albahaca: {
-    en: "basil",
-    it: "basilico",
-    fr: "basilic",
-    pt: "manjericao",
-    ar: "ريحان",
-    zh: "罗勒",
-  },
-  ajo: {
-    en: "garlic",
-    it: "aglio",
-    fr: "ail",
-    pt: "alho",
-    ar: "ثوم",
-    zh: "大蒜",
-  },
-  bacon: {
-    en: "bacon",
-    it: "bacon",
-    fr: "bacon",
-    pt: "bacon",
-    ar: "لحم مقدد",
-    zh: "培根",
-  },
-  champinones: {
-    en: "button mushrooms",
-    it: "funghi champignon",
-    fr: "champignons de Paris",
-    pt: "cogumelos champignon",
-    ar: "فطر أبيض",
-    zh: "白蘑菇",
-  },
-  chile: {
-    en: "chili",
-    it: "peperoncino",
-    fr: "piment",
-    pt: "pimenta",
-    ar: "فلفل حار",
-    zh: "辣椒",
-  },
-  chorizo: {
-    en: "chorizo",
-    it: "chorizo",
-    fr: "chorizo",
-    pt: "chourico",
-    ar: "تشوريزو",
-    zh: "西班牙辣香肠",
-  },
-  mozzarella: {
-    en: "mozzarella",
-    it: "mozzarella",
-    fr: "mozzarella",
-    pt: "mucarela",
-    ar: "موزاريلا",
-    zh: "马苏里拉奶酪",
-  },
-  pepperoni: {
-    en: "pepperoni",
-    it: "pepperoni",
-    fr: "pepperoni",
-    pt: "pepperoni",
-    ar: "بيبروني",
-    zh: "意式辣香肠",
-  },
-  salsa: {
-    en: "sauce",
-    it: "salsa",
-    fr: "sauce",
-    pt: "molho",
-    ar: "صلصة",
-    zh: "酱",
-  },
-  tomate: {
-    en: "tomato",
-    it: "pomodoro",
-    fr: "tomate",
-    pt: "tomate",
-    ar: "طماطم",
-    zh: "番茄",
-  },
-};
-
-const formatDraftName = (value, locale) => {
-  const text = String(value || "").trim();
-  if (!text) return "";
-  if (locale === "zh") return text.replace(/\s+/g, "");
-  return text.charAt(0).toUpperCase() + text.slice(1);
-};
-
-const formatSourceDraftName = (value) => {
-  const text = String(value || "").trim().replace(/\s+/g, " ");
-  if (!text) return "";
-  const lowerText = text.toLocaleLowerCase("es-ES");
-  return lowerText.charAt(0).toLocaleUpperCase("es-ES") + lowerText.slice(1);
-};
-
-const buildTranslationDraftName = (sourceName, locale) => {
-  if (locale === "es") return formatSourceDraftName(sourceName);
-
-  const sourceKey = normalizeIngredientKey(sourceName);
-  if (!sourceKey) return "";
-
-  const directDraft = TRANSLATION_DIRECT_DRAFTS[sourceKey]?.[locale];
-  if (directDraft) return directDraft;
-
-  const tokens = sourceKey
-    .split("_")
-    .filter((token) => token && !TRANSLATION_CONNECTORS.has(token));
-  if (tokens.length === 0) return "";
-
-  const translatedTokens = tokens.map((token) => TRANSLATION_TERM_DRAFTS[token]?.[locale]);
-  if (translatedTokens.some((token) => !token)) return "";
-
-  return formatDraftName(translatedTokens.join(locale === "zh" ? "" : " "), locale);
-};
 
 const getReviewedTranslationLocales = (translations = []) =>
   new Set(
@@ -555,9 +392,11 @@ const getIngredientId = (ingredient = {}) =>
 
 export default function IngredientsModule() {
   const [ingredients, setIngredients] = useState([]);
-  const [newIngredientCategory, setNewIngredientCategory] = useState("OTROS");
-  const [newIngredientCandidateName, setNewIngredientCandidateName] = useState("");
-  const [creatingIngredient, setCreatingIngredient] = useState(false);
+  const [onboardingOpen, setOnboardingOpen] = useState(false);
+  const [catalogQuery, setCatalogQuery] = useState("");
+  const [catalogSearchOpen, setCatalogSearchOpen] = useState(false);
+  const [catalogLoaded, setCatalogLoaded] = useState(false);
+  const [addedIngredient, setAddedIngredient] = useState(null);
   const [loading, setLoading] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
@@ -568,9 +407,11 @@ export default function IngredientsModule() {
   const [semanticDraft, setSemanticDraft] = useState(buildSemanticDraft());
   const [semanticLoading, setSemanticLoading] = useState(false);
   const [semanticSaving, setSemanticSaving] = useState(false);
+  const [semanticTranslating, setSemanticTranslating] = useState(false);
+  const semanticTranslationRef = useRef(null);
   const [imageUploadSavingId, setImageUploadSavingId] = useState(null);
   const [openCategories, setOpenCategories] = useState(() => new Set());
-  const creatingIngredientRef = useRef(false);
+  const treeRef = useRef(null);
 
   const semanticCatalogIngredients = useMemo(
     () => ingredients.filter((ingredient) => ingredient.isSystem !== false),
@@ -585,6 +426,7 @@ export default function IngredientsModule() {
         ingredient.displayName,
         ingredient.canonicalKey,
         ...(ingredient.semanticTranslations || []).map((translation) => translation.name),
+        ...(ingredient.semanticAliases || []).map((alias) => alias.alias),
       ].forEach((value) => {
         const key = normalizeIngredientKey(value);
         if (key) keys.add(key);
@@ -613,28 +455,22 @@ export default function IngredientsModule() {
     []
   );
 
-  const availableMasterCandidates = useMemo(() => {
-    const category = getCanonicalCategory(newIngredientCategory);
-    return ingredientMasterSource
-      .filter((candidate) => getCanonicalCategory(candidate.category) === category)
-      .filter((candidate) => {
-        const candidateKeys = [
-          candidate.canonicalKey,
-          candidate.defaultName,
-          candidate.translations?.es,
-          ...(candidate.aliases || []),
-        ]
-          .map(normalizeIngredientKey)
-          .filter(Boolean);
-        return !candidateKeys.some((key) => existingIngredientKeys.has(key));
-      })
-      .sort((a, b) => String(a.defaultName).localeCompare(String(b.defaultName)));
-  }, [existingIngredientKeys, newIngredientCategory]);
+  const masterCandidates = useMemo(() => ingredientMasterSource.map((candidate) => ({
+    ...candidate,
+    category: getCanonicalCategory(candidate.category),
+    categoryLabel: getCategoryLabel(candidate.category),
+    isExisting: [candidate.canonicalKey, candidate.defaultName, candidate.translations?.es,
+      ...(candidate.aliases || [])].map(normalizeIngredientKey)
+      .some((key) => key && existingIngredientKeys.has(key)),
+  })), [existingIngredientKeys]);
 
   const groupedIngredients = useMemo(() => {
     const groups = new Map();
     semanticCatalogIngredients.forEach((ingredient) => {
       const category = getCanonicalCategory(ingredient.category);
+      if (!matchesIngredientSearch([ingredient.name, ingredient.displayName, getCategoryLabel(category),
+        ...(ingredient.semanticTranslations || []).map((item) => item.name),
+        ...(ingredient.semanticAliases || []).map((item) => item.alias)], catalogQuery)) return;
       if (!groups.has(category)) groups.set(category, []);
       groups.get(category).push(ingredient);
     });
@@ -647,15 +483,17 @@ export default function IngredientsModule() {
           getIngredientDisplayName(a).localeCompare(getIngredientDisplayName(b))
         ),
       }));
-  }, [semanticCatalogIngredients]);
+  }, [semanticCatalogIngredients, catalogQuery]);
 
   const loadIngredients = async () => {
     try {
       setLoading(true);
       const res = await api.get("/ingredients");
       setIngredients(Array.isArray(res.data) ? res.data : []);
+      setCatalogLoaded(true);
     } catch (err) {
       console.error(err);
+      setSemanticError("No se pudo actualizar el catálogo. Recarga la página para reintentar.");
     } finally {
       setLoading(false);
     }
@@ -692,14 +530,16 @@ export default function IngredientsModule() {
     loadIngredients();
     loadSuggestions();
     loadSemanticCategories();
+    return () => semanticTranslationRef.current?.abort();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    if (!newIngredientCandidateName && availableMasterCandidates.length > 0) {
-      setNewIngredientCandidateName(availableMasterCandidates[0].defaultName);
+    if (addedIngredient) {
+      treeRef.current?.querySelector(`[data-ingredient-id="${getIngredientId(addedIngredient)}"]`)
+        ?.scrollIntoView?.({ block: "nearest", behavior: "smooth" });
     }
-  }, [availableMasterCandidates, newIngredientCandidateName]);
+  }, [addedIngredient, ingredients]);
 
   const toggleCategory = (category) => {
     setOpenCategories((current) => {
@@ -710,100 +550,14 @@ export default function IngredientsModule() {
     });
   };
 
-  const handleCreate = async () => {
-    if (creatingIngredientRef.current) return;
-
-    const selectedName = String(newIngredientCandidateName || "").trim();
-    const selectedCategory = getCanonicalCategory(newIngredientCategory);
-    const selectedCandidate = ingredientMasterSource.find(
-      (candidate) =>
-        getCanonicalCategory(candidate.category) === selectedCategory &&
-        String(candidate.defaultName || "").trim().toLowerCase() ===
-          selectedName.toLowerCase()
-    );
-
-    if (!selectedCandidate) return;
-
-    let createdIngredient = null;
-
-    try {
-      creatingIngredientRef.current = true;
-      setCreatingIngredient(true);
-      const res = await api.post("/ingredients", {
-        name: selectedCandidate.defaultName,
-        category: selectedCandidate.category,
-        allergens: selectedCandidate.allergens || [],
-      });
-      createdIngredient = res.data;
-      const semanticCategoryKey =
-        selectedCandidate.semanticCategoryKey ||
-        SEMANTIC_CATEGORY_BY_INGREDIENT_CATEGORY[selectedCategory] ||
-        "other";
-      const semanticCategory = semanticCategories.find(
-        (category) => category.canonicalKey === semanticCategoryKey
-      );
-
-      if (createdIngredient?.id && semanticAvailable !== false) {
-        const semanticPayload = {
-          canonicalKey:
-            selectedCandidate.canonicalKey ||
-            buildCanonicalKeySuggestion(createdIngredient.name),
-          semanticStatus: selectedCandidate.semanticStatus || "NEEDS_REVIEW",
-          semanticCategoryId: semanticCategory?.id || null,
-          translations: [
-            {
-              locale: "es",
-              name:
-                selectedCandidate.translations?.es ||
-                selectedCandidate.defaultName,
-              description: "",
-              isReviewed: true,
-            },
-          ],
-          aliases: (selectedCandidate.aliases || [selectedCandidate.defaultName]).map(
-            (alias) => ({
-              alias,
-              locale: "es",
-              country: null,
-              searchable: true,
-              displayable: true,
-              isReviewed: true,
-              source: "MASTER_SOURCE",
-            })
-          ),
-        };
-
-        try {
-          await api.patch(
-            `/ingredients/${createdIngredient.id}/semantics`,
-            semanticPayload
-          );
-        } catch (semanticErr) {
-          await new Promise((resolve) => setTimeout(resolve, 400));
-          await api.patch(
-            `/ingredients/${createdIngredient.id}/semantics`,
-            semanticPayload
-          );
-        }
-      }
-
-      setNewIngredientCandidateName("");
-      await loadIngredients();
-    } catch (err) {
-      console.error(err);
-      setSemanticError(
-        createdIngredient?.id
-          ? `Ingredient was created but semantic setup failed for #${createdIngredient.id}.`
-          : err?.response?.data?.error || "Could not create ingredient from master source"
-      );
-      if (createdIngredient?.id) {
-        setNewIngredientCandidateName("");
-        await loadIngredients();
-      }
-    } finally {
-      creatingIngredientRef.current = false;
-      setCreatingIngredient(false);
-    }
+  const handleIngredientCreated = (ingredient) => {
+    setIngredients((current) => [...current.filter((item) => getIngredientId(item) !== getIngredientId(ingredient)), ingredient]);
+    setAddedIngredient(ingredient);
+    setCatalogQuery("");
+    setOpenCategories((current) => new Set([...current, getCanonicalCategory(ingredient.category)]));
+    setOnboardingOpen(false);
+    setSemanticError("");
+    loadIngredients();
   };
 
   const handleApproveSuggestion = async (id) => {
@@ -843,6 +597,9 @@ export default function IngredientsModule() {
   };
 
   const openSemanticEditor = async (ingredient) => {
+    semanticTranslationRef.current?.abort();
+    semanticTranslationRef.current = null;
+    setSemanticTranslating(false);
     const ingredientId = getIngredientId(ingredient);
     if (!ingredientId) return;
 
@@ -878,6 +635,9 @@ export default function IngredientsModule() {
   };
 
   const closeSemanticEditor = () => {
+    semanticTranslationRef.current?.abort();
+    semanticTranslationRef.current = null;
+    setSemanticTranslating(false);
     setSemanticIngredient(null);
     setSemanticDraft(buildSemanticDraft());
     setSemanticLoading(false);
@@ -885,6 +645,9 @@ export default function IngredientsModule() {
   };
 
   const updateTranslationDraft = (locale, field, value) => {
+    semanticTranslationRef.current?.abort();
+    semanticTranslationRef.current = null;
+    setSemanticTranslating(false);
     setSemanticDraft((current) => ({
       ...current,
       translations: current.translations.map((translation) =>
@@ -895,35 +658,32 @@ export default function IngredientsModule() {
     }));
   };
 
-  const applySuggestedTranslationDrafts = () => {
-    setSemanticDraft((current) => {
-      const sourceName =
-        current.translations.find((translation) => translation.locale === "es")?.name ||
-        getIngredientDisplayName(semanticIngredient);
-      const suggestedCanonicalKey =
-        current.canonicalKey || buildCanonicalKeySuggestion(sourceName);
-
-      return {
-        ...current,
-        canonicalKey: suggestedCanonicalKey,
-        semanticStatus:
-          current.semanticStatus === "REJECTED" ? "REJECTED" : "NEEDS_REVIEW",
-        translations: current.translations.map((translation) => {
-          if (String(translation.name || "").trim()) {
-            return translation;
-          }
-
-          const suggestedName = buildTranslationDraftName(
-            sourceName,
-            translation.locale
-          );
-
-          return suggestedName
-            ? { ...translation, name: suggestedName, isReviewed: false }
-            : translation;
-        }),
-      };
-    });
+  const applySuggestedTranslationDrafts = async () => {
+    if (semanticTranslationRef.current) return;
+    const controller = new AbortController();
+    semanticTranslationRef.current = controller;
+    setSemanticTranslating(true); setSemanticError("");
+    const sourceName = semanticDraft.translations.find((item) => item.locale === "es")?.name || getIngredientDisplayName(semanticIngredient);
+    try {
+      const { data } = await api.post("/ingredients/translate", { name: sourceName,
+        category: getCategoryLabel(semanticIngredient.category) }, { signal: controller.signal, timeout: 30000 });
+      if (semanticTranslationRef.current !== controller) return;
+      const names = new Map((data.translations || []).map((item) => [item.locale, item.name]));
+      if (!SEMANTIC_LOCALES.every((locale) => typeof names.get(locale) === "string" && names.get(locale).trim() && !names.get(locale).includes("\uFFFD"))) {
+        throw new Error("La traducción llegó incompleta. Inténtalo de nuevo.");
+      }
+      setSemanticDraft((current) => ({ ...current,
+        semanticStatus: current.semanticStatus === "REJECTED" ? "REJECTED" : "NEEDS_REVIEW",
+        translations: current.translations.map((item) => !String(item.name || "").trim() && names.has(item.locale)
+          ? { ...item, name: names.get(item.locale), isReviewed: false } : item),
+      }));
+    } catch (err) {
+      if (semanticTranslationRef.current === controller && !controller.signal.aborted) {
+        setSemanticError(err.response?.data?.error || err.message || "No se pudo completar la traducción.");
+      }
+    } finally {
+      if (semanticTranslationRef.current === controller) { semanticTranslationRef.current = null; setSemanticTranslating(false); }
+    }
   };
 
   const saveSemanticEditor = async () => {
@@ -995,60 +755,40 @@ export default function IngredientsModule() {
   const canSuggestTranslationDrafts = semanticDraft.translations.some(
     (translation) =>
       !String(translation.name || "").trim() &&
-      buildTranslationDraftName(semanticTranslationSourceName, translation.locale)
+      SEMANTIC_LOCALES.includes(translation.locale) &&
+      String(semanticTranslationSourceName || "").trim()
   );
 
   return (
     <div className="gm-ingredientsModule">
-      <div className="gm-addIngredientPanel">
-        <select
-          value={newIngredientCategory}
-          onChange={(event) => {
-            setNewIngredientCategory(event.target.value);
-            setNewIngredientCandidateName("");
-          }}
-        >
-          {masterCategories.map((category) => (
-            <option key={category} value={category}>
-              {getCategoryLabel(category)}
-            </option>
-          ))}
-        </select>
-        <select
-          value={newIngredientCandidateName}
-          disabled={availableMasterCandidates.length === 0}
-          onChange={(event) => setNewIngredientCandidateName(event.target.value)}
-        >
-          {availableMasterCandidates.length === 0 ? (
-            <option value="">No available master ingredients</option>
-          ) : (
-            availableMasterCandidates.map((candidate) => (
-              <option key={candidate.canonicalKey} value={candidate.defaultName}>
-                {candidate.defaultName}
-              </option>
-            ))
-          )}
-        </select>
-        <button
-          type="button"
-          disabled={
-            creatingIngredient ||
-            !newIngredientCandidateName ||
-            availableMasterCandidates.length === 0
-          }
-          onClick={handleCreate}
-        >
-          {creatingIngredient ? "Adding..." : "Add ingredient"}
-        </button>
+      <div className="gm-ingredient-toolbar">
+        <div className="gm-ingredient-toolbar-title"><strong>Ingredientes</strong><span>{semanticCatalogIngredients.length} añadidos al catálogo global</span></div>
+        <button type="button" className="gm-ingredient-filter-toggle" aria-expanded={catalogSearchOpen} aria-controls="gm-catalog-filter"
+          onClick={() => { setCatalogSearchOpen(!catalogSearchOpen); setCatalogQuery(""); }}><IngredientSearchIcon />Buscar ya añadidos</button>
+        <button type="button" disabled={loading || !catalogLoaded || semanticAvailable !== true}
+          onClick={() => setOnboardingOpen(true)}>+ Añadir ingrediente</button>
       </div>
+      {catalogSearchOpen && <label className="gm-ingredient-search gm-ingredient-catalog-filter" id="gm-catalog-filter"><IngredientSearchIcon />
+        <input autoFocus aria-label="Buscar ingredientes del catálogo" placeholder="Buscar en los ingredientes ya añadidos…"
+          value={catalogQuery} onChange={(event) => setCatalogQuery(event.target.value)} />
+      </label>}
+      {addedIngredient && <div className="gm-ingredient-added" role="status">
+        <span><strong>{addedIngredient.name}</strong> añadido con sus siete idiomas.{addedIngredient.image ? " Foto guardada para revisión." : ` Puedes completar la foto en ${getCategoryLabel(addedIngredient.category)}.`}</span>
+        <button type="button" onClick={() => openSemanticEditor(addedIngredient)}>Revisar traducciones</button>
+        <button type="button" aria-label="Cerrar confirmación" onClick={() => setAddedIngredient(null)}>×</button>
+      </div>}
+      {onboardingOpen && <IngredientOnboardingModal candidates={masterCandidates}
+        categories={masterCategories.map((key) => ({ key, label: getCategoryLabel(key) }))}
+        onClose={() => setOnboardingOpen(false)} onCreated={handleIngredientCreated} />}
 
       {semanticError && <div className="gm-semanticError">{semanticError}</div>}
 
-      <div className="gm-tree">
+      <div className="gm-tree" ref={treeRef}>
         {loading && <p className="gm-treeEmpty">Loading ingredients...</p>}
+        {!loading && !groupedIngredients.length && <p className="gm-treeEmpty">No hay ingredientes que coincidan con la búsqueda.</p>}
         {!loading &&
           groupedIngredients.map(({ category, items }) => {
-            const isOpen = openCategories.has(category);
+            const isOpen = Boolean(catalogQuery.trim()) || openCategories.has(category);
             const masterTotal = masterCategoryCounts[category] || items.length;
             const semanticSummary = getCategorySemanticSummary(items);
             return (
@@ -1069,8 +809,8 @@ export default function IngredientsModule() {
                         {semanticSummary.ingredientCount}
                       </span>
                     )}
-                    <em title="Loaded in global catalog / master source universe">
-                      {items.length} / {masterTotal}
+                    <em title={catalogQuery.trim() ? "Ingredientes que coinciden con la búsqueda" : "Loaded in global catalog / master source universe"}>
+                      {catalogQuery.trim() ? `${items.length} resultados` : `${items.length} / ${masterTotal}`}
                     </em>
                   </span>
                 </button>
@@ -1082,7 +822,7 @@ export default function IngredientsModule() {
                       const usage = getIngredientUsageLabel(ingredient);
                       const deleteBlocker = getIngredientDeleteBlocker(ingredient);
                       return (
-                        <div className="gm-node" key={ingredientId}>
+                        <div className={`gm-node ${getIngredientId(addedIngredient || {}) === ingredientId ? "is-new" : ""}`} key={ingredientId} data-ingredient-id={ingredientId}>
                           <div className="gm-node-left">
                             <span className={`gm-imageThumb ${ingredient.image ? "" : "gm-imageThumb--empty"}`}>
                               {ingredient.image ? (
@@ -1295,14 +1035,14 @@ export default function IngredientsModule() {
                     <div className="gm-sectionHeader">
                       <div>
                         <h4>Traducciones</h4>
-                        <span>Genera borradores; cada idioma se aprueba manualmente.</span>
+                        <span>Completa ES, EN, IT, FR y PT sin sustituir los nombres existentes.</span>
                       </div>
                       <button
                         type="button"
-                        disabled={!semanticAvailable || !canSuggestTranslationDrafts}
+                        disabled={!semanticAvailable || !canSuggestTranslationDrafts || semanticTranslating || semanticSaving}
                         onClick={applySuggestedTranslationDrafts}
                       >
-                        Generar traducciones
+                        {semanticTranslating ? "Traduciendo…" : "Traducir idiomas pendientes"}
                       </button>
                     </div>
                     <div className="gm-translationGrid">
@@ -1345,6 +1085,9 @@ export default function IngredientsModule() {
                             Name
                             <input
                               value={translation.name || ""}
+                              aria-label={`Nombre ${translation.locale.toUpperCase()}`}
+                              lang={translation.locale === "zh" ? "zh-Hans" : translation.locale}
+                              dir={translation.locale === "ar" ? "rtl" : "ltr"}
                               disabled={!semanticAvailable}
                               placeholder="Name"
                               onChange={(event) =>
@@ -1360,6 +1103,8 @@ export default function IngredientsModule() {
                             Description
                             <textarea
                               value={translation.description || ""}
+                              lang={translation.locale === "zh" ? "zh-Hans" : translation.locale}
+                              dir={translation.locale === "ar" ? "rtl" : "ltr"}
                               disabled={!semanticAvailable}
                               placeholder="Description"
                               onChange={(event) =>

@@ -1,0 +1,91 @@
+.gm-ingredient-toolbar { display:flex; align-items:center; gap:12px; margin-bottom:14px; padding:12px; border:1px solid #ded9e5; border-radius:12px; background:#fff; color:#3b008b; }
+.gm-ingredient-search { display:flex; align-items:center; gap:9px; min-width:0; flex:1; padding:0 12px; border:1px solid #d5c9e8; border-radius:8px; background:#fff; color:#5c3483; }
+.gm-ingredient-search input { width:100%; min-width:0; height:42px; border:0; outline:0; background:transparent; color:#27133a; font:inherit; font-size:14px; }
+.gm-ingredient-search:focus-within { outline:2px solid #7c49b5; outline-offset:2px; }
+.gm-ingredient-toolbar > button { border:0; border-radius:8px; background:#3b008b; color:white; padding:12px 18px; font-weight:700; cursor:pointer; }
+.gm-ingredient-toolbar > button:disabled { opacity:.5; cursor:wait; }
+.gm-ingredient-toolbar-title { display:flex; flex:1; flex-direction:column; gap:4px; padding-left:4px; }
+.gm-ingredient-toolbar-title strong { font-size:17px; }
+.gm-ingredient-toolbar-title span { font-size:11px; color:#756480; }
+.gm-ingredient-toolbar > .gm-ingredient-filter-toggle { display:flex; align-items:center; gap:7px; background:transparent; color:#695775; font-size:12px; font-weight:500; }
+.gm-ingredient-catalog-filter { margin-bottom:12px; }
+.gm-ingredient-added { display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin:0 0 12px; padding:12px 16px; background:#fff0c6; color:#3b008b; border-radius:8px; font-size:14px; }
+.gm-ingredient-added button { color:inherit; background:none; border:0; text-decoration:underline; cursor:pointer; }
+.gm-node.is-new { background:rgba(255,182,28,.18); outline:1px solid #ffb61c; outline-offset:-1px; }
+.gm-onboarding { box-sizing:border-box; width:min(900px, calc(100vw - 32px)); max-width:900px; max-height:calc(100dvh - 32px); padding:0; margin:auto; border:1px solid #ded4e9; border-radius:18px; background:#fffdfa; color:#27133a; box-shadow:0 24px 90px #1e003b55; overflow:auto; font-family:inherit; }
+.gm-onboarding::backdrop { background:rgba(27,9,48,.65); backdrop-filter:blur(3px); }
+.gm-onboarding * { box-sizing:border-box; }
+.gm-onboarding button,.gm-onboarding input,.gm-onboarding select { font-family:inherit; }
+.gm-onboarding button { cursor:pointer; }
+.gm-onboarding button:disabled { cursor:default; opacity:.5; }
+.gm-onboarding button:focus-visible,.gm-onboarding input:focus-visible,.gm-onboarding select:focus-visible { outline:2px solid #8650c5; outline-offset:2px; }
+.gm-onboarding-head { display:flex; justify-content:space-between; align-items:flex-start; gap:14px; padding:24px 26px 20px; background:#ffb61c; color:#3b008b; }
+.gm-onboarding-head span { font-size:10px; letter-spacing:1.5px; font-weight:800; }
+.gm-onboarding-head h2 { margin:7px 0; font-size:25px; line-height:1.2; }
+.gm-onboarding-head p { margin:0; font-size:13px; line-height:1.5; }
+.gm-onboarding-close { width:32px; height:32px; flex-shrink:0; background:transparent; color:#3b008b; border:1px solid #3b008b50; border-radius:50%; font-size:24px; line-height:1; }
+.gm-onboarding-body { display:grid; grid-template-columns:1fr 1fr; min-height:440px; }
+.gm-onboarding-picker { min-width:0; padding:20px; border-right:1px solid #e7deef; }
+.gm-onboarding-category { display:flex; align-items:center; gap:10px; margin-top:12px; font-size:12px; color:#695775; }
+.gm-onboarding-category select { min-width:0; width:100%; height:36px; border:1px solid #ded4e9; border-radius:7px; padding:0 8px; background:#fff; color:#371b4b; }
+.gm-onboarding-count { margin:12px 0 8px; font-size:11px; color:#756480; }
+.gm-onboarding-results { height:300px; overflow-y:auto; overscroll-behavior:contain; padding:2px; scrollbar-width:thin; }
+.gm-onboarding-option { display:flex; width:100%; align-items:center; justify-content:space-between; gap:10px; padding:10px 12px; margin-bottom:5px; text-align:left; border:1px solid transparent; border-radius:8px; background:#f4f0f7; color:#311b43; }
+.gm-onboarding-option strong { display:block; font-size:13px; font-weight:650; overflow-wrap:anywhere; }
+.gm-onboarding-option small { display:block; margin-top:3px; font-size:10px; color:#756480; }
+.gm-onboarding-option:not(:disabled):hover { border-color:#b38bde; }
+.gm-onboarding-option.is-selected { border-color:#3b008b; background:#eee4fa; }
+.gm-onboarding-option-status { font-size:12px; flex-shrink:0; color:#3b008b; }
+.gm-onboarding-more { display:block; width:100%; padding:10px; background:white; border:1px solid #ded4e9; border-radius:7px; color:#3b008b; }
+.gm-onboarding-detail { min-width:0; padding:23px; }
+.gm-onboarding-category-tag { display:inline-block; padding:4px 8px; background:#efe7f8; border-radius:5px; font-size:10px; color:#3b008b; }
+.gm-onboarding-detail h3 { margin:12px 0 6px; font-size:18px; color:#3b008b; }
+.gm-onboarding-detail p,.gm-onboarding-empty { font-size:12px; line-height:1.5; color:#756480; }
+.gm-onboarding-names { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:9px; margin-top:16px; }
+.gm-onboarding-names label:first-child { grid-column:1 / -1; }
+.gm-onboarding-names label > span { display:block; margin-bottom:4px; font-size:11px; color:#756480; }
+.gm-onboarding-names b { margin-right:5px; color:#3b008b; }
+.gm-onboarding-names input { width:100%; height:35px; border:1px solid #ded4e9; border-radius:7px; padding:6px 10px; background:white; color:#27133a; font-size:13px; }
+.gm-onboarding-translate { margin-top:15px; width:100%; padding:10px; border:1px solid #3b008b; border-radius:8px; background:transparent; color:#3b008b; font-size:12px; font-weight:700; }
+.gm-onboarding-detail .gm-onboarding-error { color:#9e2338; background:#ffedf0; padding:10px; border-radius:7px; }
+.gm-onboarding-detail .gm-onboarding-warning { color:#765211; background:#fff0c6; padding:8px; border-radius:7px; }
+.gm-onboarding-detail .gm-onboarding-notice { color:#286749; }
+.gm-onboarding-intro { display:flex; min-height:350px; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
+.gm-onboarding-intro > span { display:grid; place-items:center; width:56px; height:56px; background:#fff0c6; color:#3b008b; border-radius:16px; font-size:30px; }
+.gm-onboarding-footer { position:sticky; bottom:0; display:flex; align-items:center; justify-content:flex-end; gap:10px; padding:16px 22px; border-top:1px solid #e7deef; background:#fffdfa; }
+.gm-onboarding-footer p { margin:0 auto 0 0; font-size:11px; color:#756480; max-width:250px; }
+.gm-onboarding-footer button { padding:11px 16px; border-radius:8px; font-size:12px; font-weight:700; }
+.gm-onboarding-secondary { border:1px solid #ded4e9; background:white; color:#3b008b; }
+.gm-onboarding-primary { border:1px solid #3b008b; background:#3b008b; color:white; }
+.gm-onboarding-photo { display:flex; align-items:center; gap:12px; margin-top:18px; padding:14px; border:1px dashed #bca8d0; border-radius:10px; background:#faf7fd; transition:background .15s,border-color .15s; }
+.gm-onboarding-photo.is-dragging { border-color:#3b008b; background:#eee4fa; outline:2px solid #ffb61c; outline-offset:2px; }
+.gm-onboarding-photo-preview { width:74px; height:74px; display:grid; place-items:center; flex-shrink:0; overflow:hidden; border:1px dashed #bca8d0; border-radius:10px; background:#fff; color:#8d75a3; }
+.gm-onboarding-photo-preview img { width:100%; height:100%; object-fit:contain; }
+.gm-onboarding-photo-controls { min-width:0; }
+.gm-onboarding-photo-controls strong { display:block; color:#3b008b; font-size:12px; }
+.gm-onboarding-photo-controls small { font-size:10px; color:#756480; font-weight:400; margin-left:5px; }
+.gm-onboarding-photo-controls p { margin:5px 0 8px; font-size:10px; }
+.gm-onboarding-photo-upload { position:relative; display:inline-block; border-radius:6px; padding:7px 10px; background:#eee4fa; color:#3b008b; font-size:11px; font-weight:700; cursor:pointer; }
+.gm-onboarding-photo-upload:focus-within { outline:2px solid #8650c5; outline-offset:2px; }
+.gm-onboarding-photo-upload input { position:absolute; inset:0; opacity:0; width:100%; height:100%; cursor:pointer; }
+.gm-onboarding-photo-upload.is-disabled { opacity:.5; cursor:wait; }
+.gm-onboarding-photo-controls button { margin-left:7px; border:0; padding:6px; background:none; color:#756480; font-size:11px; }
+.gm-onboarding-photo-filename { display:block; max-width:240px; margin-top:6px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:#756480; font-size:10px; }
+.gm-onboarding-photo-controls .gm-onboarding-photo-formats { display:block; margin:7px 0 0; font-size:9px; }
+@media(max-width:650px) {
+  .gm-ingredient-toolbar { flex-wrap:wrap; }
+  .gm-ingredient-toolbar .gm-ingredient-search { flex-basis:100%; }
+  .gm-onboarding { width:calc(100vw - 16px); max-height:calc(100dvh - 16px); border-radius:12px; }
+  .gm-onboarding-head { padding:18px; }
+  .gm-onboarding-body { grid-template-columns:1fr; }
+  .gm-onboarding-picker { border-right:0; border-bottom:1px solid #e7deef; padding:16px; }
+  .gm-onboarding-results { height:180px; }
+  .gm-onboarding-detail { padding:18px; }
+  .gm-onboarding-intro { min-height:130px; }
+  .gm-onboarding-footer { flex-wrap:wrap; padding:12px 16px; }
+  .gm-onboarding-footer p { flex-basis:100%; max-width:none; }
+}
+@media(max-width:380px) {
+  .gm-onboarding-names { grid-template-columns:1fr; }
+  .gm-ingredient-toolbar-title { flex-basis:100%; }
+}

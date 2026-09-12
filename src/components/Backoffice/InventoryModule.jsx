@@ -1,5 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import api from "../../setupAxios";
+import InventoryIngredientDialog from "./InventoryIngredientDialog";
+import { ingredientAllergens, formatIngredientMoney } from "./ingredientDetails";
+import { inventoryDetailTranslator, inventoryAllergenLabel } from "../../constants/inventoryDetailTranslations";
 import "../../styles/InventoryModule.css";
 import { DndContext, closestCenter } from "@dnd-kit/core";
 import {
@@ -75,15 +78,9 @@ export default function InventoryModule({ partner, language = "es" }) {
   const [newIngredientCategory, setNewIngredientCategory] = useState("");
   const [createFeedback, setCreateFeedback] = useState("");
   const [detailIngredient, setDetailIngredient] = useState(null);
-  const [detailDraft, setDetailDraft] = useState({
-    costPrice: "",
-    description: "",
-    imageFile: null,
-    imagePreview: "",
-  });
-  const [savingOnboardingId, setSavingOnboardingId] = useState(null);
-
   const storeId = partner?.storeId;
+  const currency = partner?.currency || "EUR";
+  const detailText = inventoryDetailTranslator(language);
   const activeLocale = String(language || "es").trim().toLowerCase();
 
   const fetchIngredients = useCallback(async () => {
@@ -164,13 +161,6 @@ export default function InventoryModule({ partner, language = "es" }) {
     return ingredients.filter((ing) => getIngredientSearchText(ing).includes(q));
   }, [search, ingredients]);
 
-  const normalizePriceInput = (value) =>
-    String(value ?? "")
-      .replace(",", ".")
-      .replace(/[^\d.]/g, "")
-      .replace(/(\..*)\./g, "$1")
-      .slice(0, 8);
-
   const getCategoryPriceSuggestion = (ingredient) => {
     if (!ingredient) return null;
 
@@ -178,7 +168,7 @@ export default function InventoryModule({ partner, language = "es" }) {
     const prices = ingredients
       .filter(
         (candidate) =>
-          candidate.id !== ingredient.id &&
+          candidate.id !== ingredient.id && candidate.exists && candidate.active &&
           getIngredientCategoryGroupKey(candidate) === category
       )
       .map((candidate) => Number(candidate.costPrice))
@@ -191,172 +181,23 @@ export default function InventoryModule({ partner, language = "es" }) {
     return Math.round(average * 100) / 100;
   };
 
-  const isSuggestedPriceApplied = (suggestedPrice) => {
-    if (!suggestedPrice) return false;
-
-    const currentPrice = Number(String(detailDraft.costPrice).replace(",", "."));
-    return (
-      Number.isFinite(currentPrice) &&
-      Math.abs(currentPrice - suggestedPrice) < 0.005
-    );
-  };
-
-  const openIngredientDetail = (ing) => {
-    setDetailIngredient(ing);
-    setDetailDraft({
-      costPrice: ing.costPrice == null ? "" : String(ing.costPrice),
-      description: ing.description || "",
-      imageFile: null,
-      imagePreview: ing.image || "",
+  const openIngredientDetail = (ingredient) => setDetailIngredient(ingredient);
+  const closeIngredientDetail = () => setDetailIngredient(null);
+  const saveIngredientDetail = async (draft) => {
+    const payload = new FormData();
+    payload.append("costPrice", String(draft.costPrice));
+    payload.append("description", draft.description);
+    if (draft.imageFile) payload.append("image", draft.imageFile);
+    await api.patch(`/stores/${storeId}/ingredients/${detailIngredient.id}/details`, payload, {
+      headers: { "Content-Type": "multipart/form-data" },
     });
-    setCreateFeedback("");
+    await fetchIngredients();
   };
-
-  const closeIngredientDetail = () => {
-    if (savingOnboardingId) return;
-    setDetailIngredient(null);
-    setDetailDraft({
-      costPrice: "",
-      description: "",
-      imageFile: null,
-      imagePreview: "",
-    });
-    setCreateFeedback("");
-  };
-
-  const handleDetailImageSelect = (event) => {
-    const file = event.target.files?.[0] || null;
-    setDetailDraft((current) => ({
-      ...current,
-      imageFile: file,
-      imagePreview: file ? URL.createObjectURL(file) : current.imagePreview,
-    }));
-  };
-
-  const applySuggestedPrice = async () => {
-    if (!detailIngredient || !suggestedDetailPrice) return;
-
-    const formattedPrice = suggestedDetailPrice.toFixed(2);
-
-    if (!suggestedDetailPriceApplied) {
-      setDetailDraft((current) => ({
-        ...current,
-        costPrice: formattedPrice,
-      }));
-      return;
-    }
-
-    const category = getIngredientCategoryGroupKey(detailIngredient);
-    const targetIngredients = ingredients.filter(
-      (candidate) => getIngredientCategoryGroupKey(candidate) === category
-    );
-
-    if (!targetIngredients.length) return;
-
-    const confirmed = window.confirm(
-      `Aplicar EUR ${formattedPrice} a ${targetIngredients.length} ingredientes de ${getCategoryDisplayName(category)}?`
-    );
-    if (!confirmed) return;
-
-    try {
-      setSavingOnboardingId(detailIngredient.id);
-
-      for (const ingredient of targetIngredients) {
-        const payload = new FormData();
-        payload.append("costPrice", formattedPrice);
-        payload.append("description", ingredient.description || "");
-
-        await api.patch(`/ingredients/${ingredient.id}`, payload, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
-      }
-
-      setDetailDraft((current) => ({
-        ...current,
-        costPrice: formattedPrice,
-      }));
-      setCreateFeedback("");
-      await fetchIngredients();
-    } catch (err) {
-      console.error(err);
-      setCreateFeedback("No se pudo aplicar el precio sugerido a la categoria.");
-    } finally {
-      setSavingOnboardingId(null);
-    }
-  };
-
-  const saveIngredientDetail = async () => {
-    if (!detailIngredient) return;
-
-    const normalizedValue = String(detailDraft.costPrice)
-      .replace(",", ".")
-      .trim();
-    const costPrice = Number(normalizedValue);
-
-    if (!Number.isFinite(costPrice) || costPrice <= 0) {
-      setCreateFeedback("Ingresa un precio valido para activar el ingrediente.");
-      return;
-    }
-
-    try {
-      const ing = detailIngredient;
-      setSavingOnboardingId(ing.id);
-
-      const payload = new FormData();
-      payload.append("costPrice", String(costPrice));
-      payload.append("description", detailDraft.description || "");
-      if (detailDraft.imageFile) {
-        payload.append("image", detailDraft.imageFile);
-      }
-
-      await api.patch(`/ingredients/${ing.id}`, payload, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-
-      if (!ing.exists) {
-        await api.post(`/stores/${storeId}/ingredients`, {
-          ingredientIds: [ing.id],
-        });
-      } else {
-        await api.patch(`/stores/${storeId}/ingredients/${ing.id}`, {
-          active: true,
-        });
-      }
-
-      closeIngredientDetail();
-      setCreateFeedback("");
-      await fetchIngredients();
-    } catch (err) {
-      console.error(err);
-      setCreateFeedback("No se pudo activar el ingrediente con precio.");
-    } finally {
-      setSavingOnboardingId(null);
-    }
-  };
-
   const deactivateIngredient = async () => {
-    if (!detailIngredient?.id) return;
-
-    try {
-      setSavingOnboardingId(detailIngredient.id);
-      await api.patch(`/stores/${storeId}/ingredients/${detailIngredient.id}`, {
-        active: false,
-      });
-      closeIngredientDetail();
-      await fetchIngredients();
-    } catch (err) {
-      console.error(err);
-      setCreateFeedback("No se pudo desactivar el ingrediente.");
-    } finally {
-      setSavingOnboardingId(null);
-    }
+    await api.patch(`/stores/${storeId}/ingredients/${detailIngredient.id}`, { active: false });
+    await fetchIngredients();
   };
-
-  const formatIngredientPrice = (value) => {
-    const price = Number(value);
-    if (!Number.isFinite(price) || price <= 0) return "";
-    return `EUR ${price.toFixed(2)}`;
-  };
+  const formatIngredientPrice = (value) => formatIngredientMoney(value, activeLocale, currency);
 
   const handleDragEnd = (event) => {
     const { active, over } = event;
@@ -368,14 +209,9 @@ export default function InventoryModule({ partner, language = "es" }) {
     setCategories(arrayMove(categories, oldIndex, newIndex));
   };
 
-  const getAllergenTags = (ing) => {
-    const allergens = Array.isArray(ing.allergens) ? ing.allergens : [];
-
-    if (allergens.length === 0) {
-      return ["NO ALLERGENIC"];
-    }
-
-    return allergens;
+  const getAllergenTags = (ingredient) => {
+    const tags = ingredientAllergens(ingredient);
+    return tags.length ? tags.map((tag) => inventoryAllergenLabel(tag, language)) : [detailText("unknown")];
   };
 
   const getDisplayName = (name) => (name || "").toUpperCase();
@@ -383,63 +219,8 @@ export default function InventoryModule({ partner, language = "es" }) {
     ingredient?.displayName || ingredient?.name || "";
   const getMappedGlobalIngredient = (ingredient) =>
     ingredient?.semanticMapping?.globalIngredient || null;
-  const getEffectiveSemanticIngredient = (ingredient) =>
-    getMappedGlobalIngredient(ingredient) || ingredient;
-  const hasGlobalSemanticMapping = (ingredient) =>
-    Boolean(getMappedGlobalIngredient(ingredient));
-  const getSemanticPanelState = (ingredient) => {
-    const semanticIngredient = getEffectiveSemanticIngredient(ingredient);
-    const status = semanticIngredient?.semanticStatus || ingredient?.semanticStatus;
-
-    if (hasGlobalSemanticMapping(ingredient)) {
-      return {
-        label: "Mapeado a identidad global",
-        className: "",
-        note: "",
-      };
-    }
-
-    if (status === "REVIEWED") {
-      return {
-        label: "Identidad global",
-        className: "",
-        note: "",
-      };
-    }
-
-    if (status === "REJECTED") {
-      return {
-        label: "Identidad rechazada",
-        className: "is-warning",
-        note: "Revisar o remapear antes de usar como referencia global.",
-      };
-    }
-
-    return {
-      label: "Identidad pendiente",
-      className: "is-warning",
-      note: "Falta completar y revisar la identidad semantica global.",
-    };
-  };
   const getIngredientImage = (ingredient) =>
     ingredient?.image || getMappedGlobalIngredient(ingredient)?.image || "";
-  const hasInheritedGlobalImage = (ingredient) =>
-    Boolean(!ingredient?.image && getMappedGlobalIngredient(ingredient)?.image);
-  const getInheritedAllergenTags = (ingredient) => {
-    const globalAllergens = Array.isArray(
-      getMappedGlobalIngredient(ingredient)?.allergens
-    )
-      ? getMappedGlobalIngredient(ingredient).allergens
-      : [];
-    const localAllergens = Array.isArray(ingredient?.allergens)
-      ? ingredient.allergens
-      : [];
-    const localKeys = new Set(localAllergens.map(normalizeSearchText));
-
-    return globalAllergens
-      .filter(Boolean)
-      .filter((tag) => !localKeys.has(normalizeSearchText(tag)));
-  };
   const categoryLabels = {
     ACEITES_GRASAS_VINAGRES: "Aceites, grasas y vinagres",
     AROMAS_Y_EXTRACTOS: "Aromas y extractos",
@@ -491,63 +272,6 @@ export default function InventoryModule({ partner, language = "es" }) {
     if (isIngredientActiveInStore(ingredient)) return "Activo";
     if (isIngredientInactiveInStore(ingredient)) return "Inactivo";
     return "Agregar";
-  };
-
-  const getKnownAliases = (ingredient) =>
-    [
-      ...(Array.isArray(ingredient?.aliases) ? ingredient.aliases : []),
-      ...(Array.isArray(ingredient?.searchAliases)
-        ? ingredient.searchAliases
-        : []),
-      ...(Array.isArray(getMappedGlobalIngredient(ingredient)?.aliases)
-        ? getMappedGlobalIngredient(ingredient).aliases
-        : []),
-      ...(Array.isArray(getMappedGlobalIngredient(ingredient)?.searchAliases)
-        ? getMappedGlobalIngredient(ingredient).searchAliases
-        : []),
-    ]
-      .map((alias) => String(alias || "").trim())
-      .filter(Boolean)
-      .filter(
-        (alias, index, aliases) =>
-          aliases.findIndex(
-            (candidate) =>
-              normalizeSearchText(candidate) === normalizeSearchText(alias)
-          ) === index
-      )
-      .filter(
-        (alias) =>
-          normalizeSearchText(alias) !==
-          normalizeSearchText(getIngredientDisplayName(ingredient))
-      )
-      .slice(0, 8);
-
-  const languageLabels = {
-    es: "ES",
-    en: "EN",
-    it: "IT",
-    fr: "FR",
-    pt: "PT",
-    ar: "AR",
-    zh: "ZH",
-  };
-
-  const getSemanticTranslations = (ingredient) => {
-    const seen = new Set();
-    const semanticIngredient = getEffectiveSemanticIngredient(ingredient);
-
-    return (Array.isArray(semanticIngredient?.semanticTranslations)
-      ? semanticIngredient.semanticTranslations
-      : []
-    ).reduce((result, translation) => {
-      const locale = String(translation?.locale || "").trim().toLowerCase();
-      const name = String(translation?.name || "").trim();
-
-      if (!locale || !name || seen.has(locale)) return result;
-      seen.add(locale);
-      result.push({ locale, name });
-      return result;
-    }, []);
   };
 
   const renderIngredientTile = (ing) => {
@@ -645,29 +369,6 @@ export default function InventoryModule({ partner, language = "es" }) {
     }
   };
 
-  const detailImage =
-    detailDraft.imagePreview ||
-    getMappedGlobalIngredient(detailIngredient)?.image ||
-    "";
-  const detailImageIsInherited =
-    Boolean(detailIngredient) &&
-    !detailDraft.imagePreview &&
-    hasInheritedGlobalImage(detailIngredient);
-  const suggestedDetailPrice = detailIngredient
-    ? getCategoryPriceSuggestion(detailIngredient)
-    : null;
-  const suggestedDetailPriceApplied =
-    isSuggestedPriceApplied(suggestedDetailPrice);
-  const semanticDetailPanelState = detailIngredient
-    ? getSemanticPanelState(detailIngredient)
-    : null;
-  const detailKnownAliases = detailIngredient
-    ? getKnownAliases(detailIngredient)
-    : [];
-  const detailSemanticTranslations = detailIngredient
-    ? getSemanticTranslations(detailIngredient)
-    : [];
-
   return (
     <div className="inv-wrapper">
 
@@ -691,257 +392,10 @@ export default function InventoryModule({ partner, language = "es" }) {
         </button>
       </div>
 
-      {detailIngredient && (
-        <div
-          className="inv-priceModalOverlay"
-          onMouseDown={(e) => {
-            if (e.target === e.currentTarget) closeIngredientDetail();
-          }}
-        >
-          <div
-            className="inv-detailModal"
-            onMouseDown={(e) => e.stopPropagation()}
-          >
-            <div className="inv-detailHero">
-              <label className="inv-detailPhoto">
-                {detailImage ? (
-                  <img src={detailImage} alt="" />
-                ) : (
-                  <span>{getIngredientInitials(getIngredientDisplayName(detailIngredient))}</span>
-                )}
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleDetailImageSelect}
-                  disabled={Boolean(savingOnboardingId)}
-                />
-                <strong>
-                  {detailDraft.imagePreview
-                    ? "Cambiar foto"
-                    : detailImageIsInherited
-                    ? "Subir foto propia"
-                    : "Subir foto"}
-                </strong>
-                {detailImageIsInherited && (
-                  <small>Imagen global heredada</small>
-                )}
-              </label>
-
-              <div className="inv-detailIntro">
-                <h3>{getDisplayName(getIngredientDisplayName(detailIngredient))}</h3>
-                <p>{getIngredientCategoryDisplayName(detailIngredient)}</p>
-                <div className="inv-detailStatus">
-                  <span className={isIngredientActiveInStore(detailIngredient) ? "is-active" : "is-inactive"}>
-                    {isIngredientActiveInStore(detailIngredient) ? "Activo en tienda" : "Pendiente de activar"}
-                  </span>
-                  {detailIngredient.semanticStatus === "REVIEWED" && (
-                    <span className="is-reviewed">Identidad revisada</span>
-                  )}
-                  {hasGlobalSemanticMapping(detailIngredient) && (
-                    <span className="is-reviewed">Mapeado global</span>
-                  )}
-                  {formatIngredientPrice(detailIngredient.costPrice) && (
-                    <strong>{formatIngredientPrice(detailIngredient.costPrice)}</strong>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {createFeedback && (
-              <div className="inv-priceModalError">{createFeedback}</div>
-            )}
-
-            <div
-              className={`inv-semanticPanel ${
-                semanticDetailPanelState?.className || ""
-              }`}
-            >
-              <div>
-                <span>{semanticDetailPanelState?.label}</span>
-                <strong>
-                  {getEffectiveSemanticIngredient(detailIngredient)?.canonicalKey ||
-                    "Pendiente de clave canonica"}
-                </strong>
-              </div>
-              {semanticDetailPanelState?.note && (
-                <small>{semanticDetailPanelState.note}</small>
-              )}
-              {hasGlobalSemanticMapping(detailIngredient) && (
-                <small>
-                  Ingrediente local: {detailIngredient.name}. Identidad global:{" "}
-                  {getMappedGlobalIngredient(detailIngredient)?.displayName ||
-                    getMappedGlobalIngredient(detailIngredient)?.name}
-                </small>
-              )}
-              {normalizeSearchText(detailIngredient.name) !==
-                normalizeSearchText(getIngredientDisplayName(detailIngredient)) && (
-                <small>
-                  Nombre original: {detailIngredient.name}
-                </small>
-              )}
-              <div className="inv-semanticAliases">
-                <span>Se puede buscar como</span>
-                {detailKnownAliases.length > 0 ? (
-                  <div className="inv-aliasList">
-                    {detailKnownAliases.map((alias) => (
-                      <span key={`${detailIngredient.id}-semantic-${alias}`}>
-                        {alias}
-                      </span>
-                    ))}
-                  </div>
-                ) : (
-                  <small className="inv-semanticEmpty">
-                    Sin aliases revisados
-                  </small>
-                )}
-              </div>
-              <div className="inv-semanticTranslations">
-                <span>Traducciones revisadas</span>
-                {detailSemanticTranslations.length > 0 ? (
-                  <div>
-                    {detailSemanticTranslations.map((translation) => (
-                      <span
-                        key={`${detailIngredient.id}-translation-${translation.locale}`}
-                      >
-                        <strong>
-                          {languageLabels[translation.locale] ||
-                            translation.locale.toUpperCase()}
-                        </strong>
-                        {translation.name}
-                      </span>
-                    ))}
-                  </div>
-                ) : (
-                  <small className="inv-semanticEmpty">
-                    Sin traducciones revisadas
-                  </small>
-                )}
-              </div>
-            </div>
-
-            <div className="inv-detailSection">
-              <span>Alérgenos</span>
-              <div className="inv-allergenTags inv-allergenTags--detail">
-                {getAllergenTags(detailIngredient).map((tag) => (
-                  <span
-                    key={`${detailIngredient.id}-${tag}`}
-                    className="inv-allergenTag"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-              {getInheritedAllergenTags(detailIngredient).length > 0 && (
-                <div className="inv-inheritedAllergens">
-                  <span>Alergenos heredados</span>
-                  <div className="inv-allergenTags inv-allergenTags--detail">
-                    {getInheritedAllergenTags(detailIngredient).map((tag) => (
-                      <span
-                        key={`${detailIngredient.id}-inherited-${tag}`}
-                        className="inv-allergenTag inv-allergenTag--inherited"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-              <small>
-                Esta información aparece como referencia operativa para el producto
-                y ayuda a decidir si el ingrediente puede usarse en una receta.
-              </small>
-            </div>
-
-            <label className="inv-detailField">
-              <span>Descripción breve</span>
-              <textarea
-                value={detailDraft.description}
-                placeholder="Ej. Aceite aromatizado para terminar pizzas al salir del horno."
-                onChange={(e) =>
-                  setDetailDraft((current) => ({
-                    ...current,
-                    description: e.target.value.slice(0, 420),
-                  }))
-                }
-                disabled={Boolean(savingOnboardingId)}
-              />
-            </label>
-
-            <label className="inv-priceModalField">
-              <span className="inv-priceLabelRow">
-                <span>Precio de armado</span>
-                {suggestedDetailPrice && (
-                  <button
-                    type="button"
-                    onClick={applySuggestedPrice}
-                    disabled={Boolean(savingOnboardingId)}
-                  >
-                    {suggestedDetailPriceApplied
-                      ? "Aplicar a todo"
-                      : `Precio sugerido EUR ${suggestedDetailPrice.toFixed(2)}`}
-                  </button>
-                )}
-              </span>
-              <div>
-                <strong>EUR</strong>
-                <input
-                  type="text"
-                  inputMode="decimal"
-                  value={detailDraft.costPrice}
-                  placeholder="0.99"
-                  onChange={(e) =>
-                    setDetailDraft((current) => ({
-                      ...current,
-                      costPrice: normalizePriceInput(e.target.value),
-                    }))
-                  }
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      e.preventDefault();
-                      saveIngredientDetail();
-                    }
-                  }}
-                  disabled={Boolean(savingOnboardingId)}
-                />
-              </div>
-              <small>
-                Este precio se usa para el armado de la pizza. No es el precio de venta final al cliente.
-              </small>
-            </label>
-
-            <div className="inv-priceModalActions">
-              <button
-                type="button"
-                onClick={closeIngredientDetail}
-                disabled={Boolean(savingOnboardingId)}
-              >
-                Cancelar
-              </button>
-              {isIngredientActiveInStore(detailIngredient) && (
-                <button
-                  type="button"
-                  className="inv-detailDanger"
-                  onClick={deactivateIngredient}
-                  disabled={Boolean(savingOnboardingId)}
-                >
-                  Desactivar
-                </button>
-              )}
-              <button
-                type="button"
-                onClick={saveIngredientDetail}
-                disabled={Boolean(savingOnboardingId)}
-              >
-                {savingOnboardingId
-                  ? "Guardando..."
-                  : isIngredientActiveInStore(detailIngredient)
-                  ? "Guardar cambios"
-                  : "Guardar y activar"}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {detailIngredient && <InventoryIngredientDialog key={detailIngredient.id}
+        ingredient={detailIngredient} category={getIngredientCategoryDisplayName(detailIngredient)}
+        language={language} currency={currency} suggestedPrice={getCategoryPriceSuggestion(detailIngredient)}
+        onSave={saveIngredientDetail} onDeactivate={deactivateIngredient} onClose={closeIngredientDetail} />}
 
       {/* LIST */}
       {ingredients.length > 0 && (

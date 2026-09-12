@@ -19,6 +19,7 @@ import EngineBackground from "../components/Backoffice/EngineBackground";
 import AppFooter from "../components/Layout/AppFooter";
 import AdminStoresPage from "./AdminStoresPage";
 import ReviewsModule from "../components/Backoffice/ReviewsModule";
+import BackofficeNotifications from "../components/Backoffice/Notifications/BackofficeNotifications";
 import api from "../setupAxios";
 import {
   BACKOFFICE_LANGUAGES,
@@ -73,20 +74,31 @@ const getExclusiveExpandedModules = (current, openGroup = null) =>
     return result;
   }, {});
 
+const noticeModules = {
+  "sms-credits": { module: "customersCommunications", group: "customers" },
+  communications: { module: "customersCommunications", group: "customers" },
+  settings: { module: "settings", group: "settings" },
+  "settings-tracking": { module: "settingsTracking", group: "settings" },
+};
+
 export default function Backoffice() {
-  const initialSmsPaymentStatus = new URLSearchParams(window.location.search).get("sms_payment");
+  const initialParams = new URLSearchParams(window.location.search);
+  const initialSmsPaymentStatus = initialParams.get("sms_payment");
+  const initialNoticeTarget = initialSmsPaymentStatus ? "sms-credits" : initialParams.get("section");
+  const initialNoticeModule = noticeModules[initialNoticeTarget];
+  const [smsFocusRequest, setSmsFocusRequest] = useState(initialNoticeTarget === "sms-credits" ? 1 : 0);
   const [language, setLanguage] = useState(getInitialBackofficeLanguage);
   const [languageMenuOpen, setLanguageMenuOpen] = useState(false);
-  const [activeModule, setActiveModule] = useState(initialSmsPaymentStatus ? "customersCommunications" : "inventory");
-  const [activeModuleGroup, setActiveModuleGroup] = useState(initialSmsPaymentStatus ? "customers" : "inventory");
+  const [activeModule, setActiveModule] = useState(initialNoticeModule?.module || "inventory");
+  const [activeModuleGroup, setActiveModuleGroup] = useState(initialNoticeModule?.group || "inventory");
   const [expandedModules, setExpandedModules] = useState({
     pizzaCreator: false,
-    customers: Boolean(initialSmsPaymentStatus),
+    customers: initialNoticeModule?.group === "customers",
     offers: false,
     myorders: false,
     finance: false,
     stores: false,
-    settings: false,
+    settings: initialNoticeModule?.group === "settings",
   });
   const [auth, setAuth] = useState(readSavedBackofficeAuth);
 
@@ -315,6 +327,15 @@ export default function Backoffice() {
   const handleLanguageChange = (value) => {
     setLanguage(normalizeBackofficeLanguage(value));
     setLanguageMenuOpen(false);
+  };
+
+  const openNoticeDestination = (target) => {
+    const destination = noticeModules[target];
+    if (!destination) return;
+    setActiveModule(destination.module);
+    setActiveModuleGroup(destination.group);
+    setExpandedModules((previous) => getExclusiveExpandedModules(previous, destination.group));
+    if (target === "sms-credits") setSmsFocusRequest((value) => value + 1);
   };
 
   const toggleModuleSection = (group, fallbackModule) => {
@@ -989,6 +1010,8 @@ export default function Backoffice() {
           </div>
         </div>
 
+        <BackofficeNotifications key={auth.partnerId} partnerId={auth.partnerId} language={language} onNavigate={openNoticeDestination} />
+
         <button
           className="bo-logoutBtn"
           onClick={handleLogout}
@@ -1031,7 +1054,7 @@ export default function Backoffice() {
           )}
 
           {activeModule === "customersCommunications" && auth.partnerId && (
-            <CommunicationsPanel partnerId={auth.partnerId} />
+            <CommunicationsPanel partnerId={auth.partnerId} smsFocusRequest={smsFocusRequest} />
           )}
 
           {isPizzaCreatorProductsActive && auth.partnerId && (

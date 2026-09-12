@@ -46,7 +46,7 @@ const defaultPreview = {
   sample: [],
 };
 
-export default function CommunicationsPanel({ partnerId }) {
+export default function CommunicationsPanel({ partnerId, smsFocusRequest = 0 }) {
   const [saving, setSaving] = useState(false);
   const [previewing, setPreviewing] = useState(false);
   const [message, setMessage] = useState("");
@@ -402,7 +402,7 @@ export default function CommunicationsPanel({ partnerId }) {
 
   return (
     <div className="cp-communicationStack">
-      <SmsCreditsPanel partnerId={partnerId} />
+      <SmsCreditsPanel partnerId={partnerId} focusRequest={smsFocusRequest} />
 
       <form className="cp-card cp-form" onSubmit={sendSms}>
         <div className="cp-kicker">Comunicacion</div>

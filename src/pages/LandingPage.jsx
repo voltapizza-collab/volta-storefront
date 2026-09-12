@@ -201,7 +201,7 @@ export default function LandingPage() {
             <span>Backoffice Volta</span>
             <h2>El motor de ventas de pizza.</h2>
             <p>
-              Un back office pensado para que una pizzeria controle pedidos,
+              Un backoffice pensado para que una pizzeria controle pedidos,
               carta, clientes, promociones, stock y locales desde una misma
               consola. Menos pantallas sueltas; mas ritmo comercial.
             </p>

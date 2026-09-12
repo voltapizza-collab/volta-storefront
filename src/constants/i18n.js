@@ -1,3 +1,5 @@
+import { NOTIFICATION_TRANSLATIONS } from "./notificationTranslations";
+
 export const BACKOFFICE_LANGUAGE_STORAGE_KEY = "volta_backoffice_language";
 
 export const BACKOFFICE_LANGUAGES = [
@@ -10,6 +12,7 @@ export const BACKOFFICE_LANGUAGES = [
 
 const BACKOFFICE_TRANSLATIONS = {
   en: {
+    ...NOTIFICATION_TRANSLATIONS.en,
     "app.title": "Volta - Backoffice",
     "auth.title": "Backoffice",
     "auth.subtitle": "Access with your partner account or demo credentials",
@@ -55,6 +58,7 @@ const BACKOFFICE_TRANSLATIONS = {
     "nav.logout": "Logout",
   },
   es: {
+    ...NOTIFICATION_TRANSLATIONS.es,
     "app.title": "Volta - Backoffice",
     "auth.title": "Backoffice",
     "auth.subtitle": "Accede con tu partner o con credenciales demo",
@@ -100,6 +104,7 @@ const BACKOFFICE_TRANSLATIONS = {
     "nav.logout": "Salir",
   },
   it: {
+    ...NOTIFICATION_TRANSLATIONS.it,
     "app.title": "Volta - Backoffice",
     "auth.title": "Backoffice",
     "auth.subtitle": "Accedi con il tuo partner o con credenziali demo",
@@ -145,6 +150,7 @@ const BACKOFFICE_TRANSLATIONS = {
     "nav.logout": "Esci",
   },
   fr: {
+    ...NOTIFICATION_TRANSLATIONS.fr,
     "app.title": "Volta - Backoffice",
     "auth.title": "Backoffice",
     "auth.subtitle": "Connectez-vous avec votre compte partenaire ou demo",
@@ -190,6 +196,7 @@ const BACKOFFICE_TRANSLATIONS = {
     "nav.logout": "Deconnexion",
   },
   pt: {
+    ...NOTIFICATION_TRANSLATIONS.pt,
     "app.title": "Volta - Backoffice",
     "auth.title": "Backoffice",
     "auth.subtitle": "Acesse com seu parceiro ou credenciais demo",
@@ -254,5 +261,6 @@ export const createBackofficeTranslator = (language) => {
   const normalizedLanguage = normalizeBackofficeLanguage(language);
   const dictionary = BACKOFFICE_TRANSLATIONS[normalizedLanguage] || BACKOFFICE_TRANSLATIONS.en;
 
-  return (key) => dictionary[key] || BACKOFFICE_TRANSLATIONS.en[key] || key;
+  return (key, params = {}) => (dictionary[key] || BACKOFFICE_TRANSLATIONS.en[key] || key)
+    .replace(/\{(\w+)\}/g, (placeholder, name) => params[name] == null ? placeholder : String(params[name]));
 };

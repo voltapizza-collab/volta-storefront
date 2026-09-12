@@ -1407,7 +1407,7 @@ export default function PosApp() {
   const hasVisitors = Number(presence.activeVisitors || 0) > 0;
   const showCheckoutAlert = shouldShowCheckoutAlert({ presence, online: trustState === "online", incomingOrder: newOrderNotice, now: clockTick });
   const showVisitorAlert = orders.length === 0 && showCheckoutAlert;
-  const showPauseScreen = operationsPaused && activePanel === "orders" && orders.length === 0 && !selectedOrder;
+  const showPauseScreen = operationsPaused && activePanel === "orders";
   const showOrderUtilityFabs =
     activePanel !== "dayOrders" &&
     !reservationsOpen &&
@@ -2539,7 +2539,7 @@ export default function PosApp() {
       {logoutOpen && <PosLogoutDialog onCancel={() => setLogoutOpen(false)} onConfirm={logoutSession} />}
       {operationsPaused && activePanel !== "dayOrders" && (
         <section className={`pos-pauseBanner ${showPauseScreen ? "pos-pauseBanner--full" : ""}`} aria-label="Estado de operaciones">
-          <div role="status"><strong>Operaciones en pausa</strong><span>Solo pedidos programados. Los pedidos aceptados siguen en cocina.</span></div>
+          <div role="status"><strong>Operaciones en pausa</strong><span>Solo pedidos programados. La cola y los tickets volverán a mostrarse al reanudar.</span></div>
           <button type="button" onClick={toggleOperationsPause} disabled={savingPause || !pauseStateKnown}>
             {savingPause ? "Reanudando…" : "Reanudar operaciones"}
           </button>
@@ -3054,7 +3054,7 @@ export default function PosApp() {
         </div>
       )}
 
-      {newOrderNotice && (
+      {newOrderNotice && !operationsPaused && (
         <div className="pos-newOrderNoticeBack" role="presentation">
           <section
             className="pos-newOrderNotice"

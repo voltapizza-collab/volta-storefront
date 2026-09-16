@@ -149,7 +149,7 @@ public class PosActivity extends Activity {
                 boolean heading = text.equals("VOLTA POS") || text.startsWith("Total:") || text.equals("ENVIO / DELIVERY") || text.equals("RECOGIDA / PICKUP") || text.equals("CONSUMO EN LOCAL") || text.startsWith("MODALIDAD:") || text.startsWith("PROGRAMADO:");
                 if (text.startsWith("---")) line.printText("\n",TextStyle.getStyle().setTextSize(12));
                 for (String row:Receipt58.wrap(text)) {
-                    line.printText(row+"\n",TextStyle.getStyle().setTextSize(24).enableBold(heading));
+                    line.printText(row+"\n",TextStyle.getStyle().setTextSize(24).enableBold(heading || text.equals("  CAMBIOS:") || text.startsWith("  - SIN ")));
                     line.printText("\n",TextStyle.getStyle().setTextSize(6));
                 }
                 if (text.equals("VOLTA POS")) line.printText("\n",TextStyle.getStyle().setTextSize(12));

@@ -3674,3 +3674,6 @@
 @keyframes pos-inventoryPop { from { transform: scale(.7); } to { transform: scale(1); } }
 @media (prefers-reduced-motion: reduce) { .pos-inventoryCount { animation: none; } .pos-inventoryFab { transition: none; } }
 .pos-backToKitchen { min-height: 44px; margin-bottom: 12px; padding: 8px 16px; border: 0; border-radius: 12px; background: #ffb61c; color: #3b008b; cursor: pointer; }
+.pos-itemDetails .pos-ingredientRemoval { font-weight: 900; color: #991b1b; background: #fff1eb; border-left: 3px solid #b6430e; padding: 4px 8px; }
+.pos-itemDetails .pos-changesHeading { list-style: none; font-weight: 900; margin-top: 6px; color: #3b008b; }
+.pos-itemDetails .pos-recipeOriginal { list-style: none; font-weight: 400; color: #6b7280; font-size: 12px; }

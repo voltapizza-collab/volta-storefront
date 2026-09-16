@@ -10,6 +10,8 @@ import useCatalogSwipe from "../components/Storefront/useCatalogSwipe";
 import useCatalogFocus from "../components/Storefront/useCatalogFocus";
 import CatalogSwipeHint from "../components/Storefront/CatalogSwipeHint";
 import PaymentMethodModal from "../components/Storefront/PaymentMethodModal";
+import IngredientRemovalPicker from "../components/Storefront/IngredientRemovalPicker";
+import { getRemovableIngredients, normalizeRemovedIngredients, ingredientRemovalRows, supportsIngredientRemovals } from "../utils/ingredientRemovals";
 import flagEs from "../assets/flags/es.svg";
 import gridWatermarkLogo from "../assets/logo/the pizza sale enganine.png";
 import {
@@ -2194,6 +2196,7 @@ const normalizeCartLine = (line, index = 0) => {
     price,
     extras,
     ingredients,
+    removedIngredients: normalizeRemovedIngredients(line?.removedIngredients),
     allergens: Array.isArray(line?.allergens) ? line.allergens : [],
     subtotal,
     type,
@@ -2558,6 +2561,7 @@ export default function StorePage() {
     size: "",
     qty: 1,
     extras: {},
+    removedIngredients: [],
   });
   const [extrasAvail, setExtrasAvail] = useState([]);
   const [extrasLoading, setExtrasLoading] = useState(false);
@@ -3635,6 +3639,18 @@ export default function StorePage() {
     ? `${selectedExtras.length} seleccionados · +EUR ${selectedExtrasTotal.toFixed(2)}`
     : "Opcional";
   const selectedUnitTotal = selectedBasePrice + selectedExtrasTotal;
+  const removableIngredients = useMemo(() => getRemovableIngredients(selectedProduct, productSelection.size), [selectedProduct, productSelection.size]);
+  const selectedRemovals = useMemo(() => normalizeRemovedIngredients(productSelection.removedIngredients)
+    .filter((item) => removableIngredients.some((option) => option.ingredientId === item.ingredientId)),
+    [productSelection.removedIngredients, removableIngredients]);
+  useEffect(() => {
+    if (!productModalOpen || !productSelection.size) return;
+    setProductSelection((current) => {
+      const previous = current.removedIngredients || [];
+      const next = previous.filter((item) => removableIngredients.some((option) => option.ingredientId === item.ingredientId));
+      return next.length === previous.length ? current : { ...current, removedIngredients: next };
+    });
+  }, [productModalOpen, productSelection.size, removableIngredients]);
   const selectedLineTotal = selectedUnitTotal * Number(productSelection.qty || 1);
   const productModalReady = Boolean(selectedProduct && productSelection.size && selectedProductMaxQty > 0);
   const selectedProductAllergens = useMemo(
@@ -3998,6 +4014,8 @@ export default function StorePage() {
       return;
     }
 
+    let cancelled = false;
+    setExtrasAvail([]);
     const loadExtras = async () => {
       try {
         setExtrasLoading(true);
@@ -4006,16 +4024,18 @@ export default function StorePage() {
           storeId: String(store?.id || ""),
         });
         const data = await api.get(`/api/ingredient-extras?${params.toString()}`);
-        setExtrasAvail(Array.isArray(data) ? data : []);
+        if (!cancelled) setExtrasAvail(Array.isArray(data) ? data : []);
       } catch (err) {
+        if (cancelled) return;
         console.error(err);
         setExtrasAvail([]);
       } finally {
-        setExtrasLoading(false);
+        if (!cancelled) setExtrasLoading(false);
       }
     };
 
     loadExtras();
+    return () => { cancelled = true; };
   }, [productModalOpen, selectedProduct?.categoryId, store?.id]);
 
   useEffect(() => {
@@ -4224,6 +4244,7 @@ export default function StorePage() {
       size: sizes.length === 1 ? sizes[0] : "",
       qty: 1,
       extras: {},
+      removedIngredients: [],
     });
     setShowAllExtras(false);
     setProductExtrasOpen(false);
@@ -4255,6 +4276,7 @@ export default function StorePage() {
       qty,
       price: selectedBasePrice,
       extras: selectedExtras,
+      removedIngredients: selectedRemovals,
       allergens: selectedPurchaseAllergens,
       subtotal: selectedUnitTotal * qty,
       image: selectedProduct.image || "",
@@ -4289,6 +4311,7 @@ export default function StorePage() {
   };
 
   const toggleProductExtra = (ingredientId) => {
+    if (selectedRemovals.some((item) => item.ingredientId === Number(ingredientId))) return;
     setProductSelection((current) => ({
       ...current,
       extras: {
@@ -5052,6 +5075,10 @@ export default function StorePage() {
         customer_profile_required: "Necesitamos tu nombre y telefono para hacer seguimiento al pedido.",
         custom_build_missing_ingredients:
           "La pizza personalizada no tiene ingredientes guardados. Quitala y vuelve a armarla.",
+        invalid_ingredient_removals: "Revisa los ingredientes que has elegido quitar de la pizza.",
+        ingredient_removals_not_supported: "Esta opción solo está disponible para pizzas enteras de carta. Revisa el carrito.",
+        ingredient_removal_unavailable: "La receta ha cambiado. Revisa las retiradas de ingredientes en el carrito antes de pagar.",
+        ingredient_removal_extra_conflict: "Un ingrediente no puede estar como extra y como retirado. Revisa el carrito.",
         amount_too_low: "El importe es demasiado bajo para procesar el pago.",
         minimum_payment_not_met: `El pago minimo es ${formatMoney(
           err.response?.data?.minimumPaymentAmount || minimumPaymentAmount,
@@ -7032,6 +7059,11 @@ export default function StorePage() {
                   </div>
                 </div>
 
+                {supportsIngredientRemovals(selectedProduct) && (
+                  <IngredientRemovalPicker key={selectedProduct.pizzaId} options={removableIngredients}
+                    selected={selectedRemovals} extras={selectedExtras} disabled={!productSelection.size}
+                    onChange={(removedIngredients) => setProductSelection((current) => ({ ...current, removedIngredients }))} />
+                )}
                 <div className={`sf-productPickerRow sf-productPickerRow--stack sf-productPickerRow--extras ${productExtrasOpen ? "is-open" : ""}`}>
                   <button
                     type="button"
@@ -7063,9 +7095,12 @@ export default function StorePage() {
                             <input
                               type="checkbox"
                               checked={checked}
+                              disabled={selectedRemovals.some((item) => item.ingredientId === Number(extra.ingredientId))}
                               onChange={() => toggleProductExtra(extra.ingredientId)}
                             />
-                            <span>{extra.name || extra.ingredientName}</span>
+                            <span>{extra.name || extra.ingredientName}
+                              {selectedRemovals.some((item) => item.ingredientId === Number(extra.ingredientId)) && <small>Marcado para quitar</small>}
+                            </span>
                             <strong>+EUR {price.toFixed(2)}</strong>
                           </label>
                         );
@@ -7336,6 +7371,14 @@ export default function StorePage() {
                         )}
                         {line.trendingPricing && (
                           <small>{formatTrendingAdjustmentLabel(line.trendingPricing)}</small>
+                        )}
+                        {line.removedIngredients?.length > 0 && <small className="sf-removedIngredients">{ingredientRemovalRows(line).join(" · ")}</small>}
+                        {(supportsIngredientRemovals(line) || line.removedIngredients?.length > 0) && (
+                          <IngredientRemovalPicker
+                            options={getRemovableIngredients([...menu, ...trending].find((product) => Number(product.pizzaId) === Number(line.pizzaId)), line.size)}
+                            selected={line.removedIngredients} extras={line.extras}
+                            onChange={(removedIngredients) => setCart((current) => current.map((item, itemIndex) =>
+                              itemIndex === index ? { ...item, removedIngredients } : item))} />
                         )}
                         {line.ingredients?.length > 0 && (
                           <small>
@@ -8314,6 +8357,7 @@ export default function StorePage() {
                         {preview.map((line, lineIndex) => (
                           <em key={line.cartLineId || lineIndex}>
                             {line.qty}x {line.name}
+                            {line.removedIngredients?.length > 0 && ` · ${ingredientRemovalRows(line).join(" · ")}`}
                           </em>
                         ))}
                         {lines.length > preview.length && (
@@ -8339,6 +8383,7 @@ export default function StorePage() {
                           {line.extras?.length > 0
                             ? ` · Extra ${line.extras.map((extra) => extra.name).join(", ")}`
                             : ""}
+                          {line.removedIngredients?.length > 0 && ` · ${ingredientRemovalRows(line).join(" · ")}`}
                         </small>
                       </div>
                       <em>{formatMoney(line.subtotal, repeatDraft.currency)}</em>

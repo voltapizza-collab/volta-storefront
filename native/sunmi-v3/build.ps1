@@ -3,8 +3,8 @@ param(
     [string]$Jdk = 'C:\Program Files\Android\Android Studio\jbr',
     [string]$BuildTools = '36.0.0',
     [ValidateSet('usb', 'https')][string]$Connection = 'usb',
-    [string]$VersionName = '0.3.6',
-    [int]$VersionCode = 9
+    [string]$VersionName = '0.3.8',
+    [int]$VersionCode = 11
 )
 $ErrorActionPreference = 'Stop'
 Set-Location $PSScriptRoot

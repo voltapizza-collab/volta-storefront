@@ -7,11 +7,13 @@ Reutiliza el POS existente de React dentro del APK: pantalla de usuario/PIN, coc
 ## Compilar e instalar
 
 1. En `volta-storefront`, ejecutar `node scripts/build-native-pos.cjs`.
-2. Para conexión directa, ejecutar `./build.ps1 -Connection https` e instalar `build/volta-pos-connected-0.3.4.apk` con `adb install -r`.
+2. Para conexión directa, ejecutar `./build.ps1 -Connection https` e instalar `build/volta-pos-connected-0.3.8.apk` con `adb install -r`.
 3. Esta variante usa `https://api.voltapizza.com`, prohíbe HTTP y deshabilita la depuración WebView. Requiere las rutas `/api/pos` publicadas con `POS_IDENTITY_ENABLED=true`.
 4. Para el piloto local, ejecutar `./build.ps1 -Connection usb` e instalar `build/volta-pos-pilot-0.2.0.apk`. Solo esta variante requiere `volta-backend/scripts/posPilotServer.js` y `adb reverse tcp:8091 tcp:8091`.
 
 El terminal ya registrado conserva su identidad y sesión al actualizar. El registro de nuevas unidades sigue usando la pantalla administrativa `SessionActivity`; la distribución definitiva aún debe completar ese flujo. El acceso de tienda requiere solo usuario y PIN.
+
+La versión 0.3.8 muestra `CAMBIOS:` bajo cada pizza con retiradas o extras, y `Receta original` para pizzas de carta sin modificaciones. El ticket imprime en negrita el título y las retiradas `SIN ...`. La opción del menú `Impresión de prueba` compara dos pizzas iguales, una modificada y otra con receta original, sin crear una venta.
 
 La interfaz se empaqueta bajo `build/packaged/assets/pos`. El origen virtual `https://pos.volta.invalid` se resuelve dentro de Android y no contacta con un sitio externo. Los cambios de CSS de `native.css` solo afectan al Sunmi.
 

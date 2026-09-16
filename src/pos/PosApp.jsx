@@ -16,6 +16,8 @@ import PosNotice, { usePosNotice } from './PosNotice';
 import PosLogoutDialog from './PosLogoutDialog';
 import { shouldShowCheckoutAlert } from '../utils/checkoutPresence';
 import "../styles/PosApp.css";
+import { ingredientRemovalRows } from "../utils/ingredientRemovals";
+import { getLineChangeRows } from './orderLineChanges';
 
 const POS_SESSION_KEY = "volta_pos_virtual_session";
 const POS_REMEMBERED_LOGIN_KEY = "volta_pos_remembered_login";
@@ -245,14 +247,6 @@ const formatIngredientQuantity = (value) => {
   return value ? String(value) : "";
 };
 
-const formatExtraSide = (value) => {
-  const raw = String(value || "").toUpperCase();
-  if (raw === "A" || raw === "LEFT") return "Mitad A";
-  if (raw === "B" || raw === "RIGHT") return "Mitad B";
-  if (raw === "FULL" || raw === "ALL") return "Entera";
-  return value ? String(value) : "";
-};
-
 const getIngredientDetails = (item) => {
   const directIngredients = asArray(item?.ingredients);
   const detailIngredients = directIngredients.length
@@ -295,16 +289,6 @@ const getLineDetailRows = (item) => {
     rows.push("Personalizacion sin ingredientes guardados");
   }
 
-  asArray(item?.extras)
-    .map((extra) => {
-      const name = extra?.label || extra?.name || extra?.code || extra;
-      if (!name) return "";
-      const side = formatExtraSide(extra?.side || extra?.placement);
-      return side ? `Extra ${side}: ${name}` : `Extra: ${name}`;
-    })
-    .filter(Boolean)
-    .forEach((extra) => rows.push(extra));
-
   if (isCustomBuildLine(item)) {
     const baseName =
       customMeta.baseProductName ||
@@ -317,7 +301,7 @@ const getLineDetailRows = (item) => {
     }
   }
 
-  return rows;
+  return [...rows, ...getLineChangeRows(item)];
 };
 
 const escapeHtml = (value) =>
@@ -328,7 +312,7 @@ const escapeHtml = (value) =>
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
 
-const buildWindowsPrintTicketHtml = (order) => {
+export const buildWindowsPrintTicketHtml = (order) => {
   const items = asArray(order?.products);
   const customer = order?.customerData || {};
   const orderCode = order?.code || order?.id || "-";
@@ -362,6 +346,9 @@ const buildWindowsPrintTicketHtml = (order) => {
       .item strong { display: block; font-size: 12px; }
       .item ul { margin: 3px 0 0 0; padding-left: 11px; }
       .item li { margin: 1px 0; }
+      .item li.removal { font-weight: 900; font-size: 13px; border: 1px solid #111; padding: 3px; }
+      .item li.changesHeading { list-style: none; font-weight: 900; margin-top: 5px; }
+      .item li.recipeOriginal { list-style: none; font-weight: 400; }
       .sectionTitle { margin-bottom: 5px; font-size: 10px; font-weight: 900; text-transform: uppercase; }
       .cashAlert { margin-top: 8px; background: #000; color: #fff; padding: 7px; font-size: 12px; font-weight: 900; text-align: center; }
       .muted { color: #444; }
@@ -408,7 +395,7 @@ const buildWindowsPrintTicketHtml = (order) => {
                     note ? `<span class="muted">${escapeHtml(note)}</span>` : ""
                   }${
                     detailRows.length
-                      ? `<ul>${detailRows.map((detail) => `<li>${escapeHtml(detail)}</li>`).join("")}</ul>`
+                      ? `<ul>${detailRows.map((detail) => `<li${ingredientRemovalRows(item).includes(detail) ? ' class="removal"' : detail === 'CAMBIOS:' ? ' class="changesHeading"' : detail === 'Receta original' ? ' class="recipeOriginal"' : ''}>${escapeHtml(detail)}</li>`).join("")}</ul>`
                       : ""
                   }</div>`;
                 })
@@ -739,7 +726,7 @@ const formatElapsed = (value) => {
   return `hace ${Math.floor(seconds / 60)}m`;
 };
 
-function OrderItems({ order }) {
+export function OrderItems({ order }) {
   const products = asArray(order?.products);
 
   if (!products.length) {
@@ -762,7 +749,8 @@ function OrderItems({ order }) {
             {detailRows.length > 0 && (
               <ul className="pos-itemDetails">
                 {detailRows.map((detail, detailIndex) => (
-                  <li key={`${order.id}-${index}-${detailIndex}`}>{detail}</li>
+                  <li className={ingredientRemovalRows(item).includes(detail) ? "pos-ingredientRemoval" : detail === 'CAMBIOS:' ? 'pos-changesHeading' : detail === 'Receta original' ? 'pos-recipeOriginal' : undefined}
+                    key={`${order.id}-${index}-${detailIndex}`}>{detail}</li>
                 ))}
               </ul>
             )}
@@ -2520,13 +2508,17 @@ export default function PosApp() {
               try {
                 const sample = { code: 'PRUEBA-58MM', storeName: session.storeName, total: 25.50, currency: 'EUR',
                   delivery: 'DELIVERY', customerData: {name:'Cliente de prueba',phone:'No llamar',address:'Calle de prueba con un nombre largo, numero 123, piso 4'},
-                  products:[{name:'Pizza de prueba con mozzarella y champiñones',quantity:2,size:'Grande',ingredients:[{name:'Extra mozzarella'},{name:'Sin cebolla'}]}] };
+                  products:[
+                    {pizzaId:1,name:'Pizza de prueba con mozzarella y champiñones',quantity:1,size:'Grande',
+                      removedIngredients:[{ingredientId:10,name:'Cebolla'},{ingredientId:11,name:'Champiñones frescos laminados'}],extras:[{name:'Mozzarella'}]},
+                    {pizzaId:1,name:'Pizza de prueba con mozzarella y champiñones',quantity:1,size:'Grande'},
+                  ] };
                 if (!isNativePos) {
                   await printOrder(sample);
                   return;
                 }
                 await nativeCall('printTest',{lines:[...buildOrderLines(sample),'Direccion de prueba: calle larga numero 123, piso 4','Caracteres: á é í ó ú ñ €']});
-                setMessage('Ticket de prueba confirmado por SUNMI. Comprueba que no se cortan palabras ni el total.');
+                setMessage('Ticket de prueba confirmado por SUNMI. Comprueba CAMBIOS, las retiradas en negrita y Receta original en la segunda pizza.');
               } catch (_) { setMessage('No se confirmó la impresión. Comprueba el papel antes de repetir.'); }
             }}><strong>Impresión de prueba</strong><small>Imprimir un ticket de comprobación</small></button>
             </div>

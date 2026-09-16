@@ -1,3 +1,4 @@
+import { getLineChangeRows } from '../orderLineChanges';
 const PRINT_LOG_KEY = "volta_pos_virtual_print_log";
 
 const parseLog = () => {
@@ -78,14 +79,6 @@ const formatIngredientQuantity = (value) => {
   return value ? String(value) : "";
 };
 
-const formatExtraSide = (value) => {
-  const raw = String(value || "").toUpperCase();
-  if (raw === "A" || raw === "LEFT") return "Mitad A";
-  if (raw === "B" || raw === "RIGHT") return "Mitad B";
-  if (raw === "FULL" || raw === "ALL") return "Entera";
-  return value ? String(value) : "";
-};
-
 const readArray = (value) => {
   if (Array.isArray(value)) return value;
   if (typeof value !== "string") return [];
@@ -138,16 +131,6 @@ const getLineDetailRows = (item) => {
     rows.push("Personalizacion sin ingredientes guardados");
   }
 
-  readArray(item?.extras)
-    .map((extra) => {
-      const name = extra?.label || extra?.name || extra?.code || extra;
-      if (!name) return "";
-      const side = formatExtraSide(extra?.side || extra?.placement);
-      return side ? `Extra ${side}: ${name}` : `Extra: ${name}`;
-    })
-    .filter(Boolean)
-    .forEach((extra) => rows.push(extra));
-
   if (isCustomBuildLine(item)) {
     const baseName =
       customMeta.baseProductName ||
@@ -160,7 +143,7 @@ const getLineDetailRows = (item) => {
     }
   }
 
-  return rows;
+  return [...rows, ...getLineChangeRows(item)];
 };
 
 const getScheduledFor = (order) =>
@@ -298,7 +281,7 @@ export function buildOrderLines(order) {
         const size = item?.size || item?.selectedSize || "";
         return [
           `${lineQty(item)} x ${lineName(item)} ${size}${isIncentiveRewardLine(item) ? " [REGALO]" : ""}`.trim(),
-          ...getLineDetailRows(item).map((detail) => `  - ${detail}`),
+          ...getLineDetailRows(item).map((detail) => detail === 'CAMBIOS:' || detail === 'Receta original' ? `  ${detail}` : `  - ${detail}`),
         ];
       }),
       "------------------------------",

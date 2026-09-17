@@ -1,0 +1,4437 @@
+{
+  "schemaVersion": 1,
+  "batchId": "2026-09-17-01",
+  "date": "2026-09-17",
+  "status": "EDITORIAL_REVIEW",
+  "targetTotal": 3000,
+  "policy": "Solo identidades diferentes en las 14 categorías existentes. Alias y traducciones no cuentan como ingredientes nuevos. No se genera ninguna traducción de interfaz.",
+  "allergenPolicy": "Valores iniciales con el vocabulario existente de Volta. No equivalen a una declaración de ausencia de alérgenos ni a validación de una formulación o producto concreto. Se conserva NEEDS_REVIEW.",
+  "sources": {
+    "FDC": {
+      "title": "USDA FoodData Central — SR Legacy",
+      "url": "https://fdc.nal.usda.gov/download-datasets/",
+      "dataset": "FoodData_Central_sr_legacy_food_csv_2018-04",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://fdc.nal.usda.gov/api-guide/"
+    },
+    "BOE": {
+      "title": "Secretaría General de Pesca — denominaciones comerciales 2026",
+      "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2026-12598"
+    },
+    "MERCASA": {
+      "title": "Mercasa — Quesos de España",
+      "url": "https://www.mercasa.es/publicaciones/alimentacion-en-espana/leche-y-productos-lacteos/quesos/"
+    },
+    "MADRID": {
+      "title": "Comunidad de Madrid — Setas frescas silvestres comercializables",
+      "url": "https://www.comunidad.madrid/salud/setas-frescas-silvestres-comercializables"
+    },
+    "NIELSEN": {
+      "title": "Nielsen-Massey — extractos, pastas y vainas",
+      "url": "https://nielsenmassey.com/vanillas-and-flavors/"
+    },
+    "SOSA": {
+      "title": "Sosa Ingredients — Azúcares técnicos",
+      "url": "https://www.sosa.cat/categoria-producto/azucares-tecnicos/"
+    },
+    "SPICEHOUSE": {
+      "title": "The Spice House — catálogo de especias",
+      "url": "https://www.thespicehouse.com/collections/all"
+    }
+  },
+  "records": [
+    {
+      "canonicalKey": "aceite_de_aguacate",
+      "defaultName": "Aceite de aguacate",
+      "category": "ACEITES_GRASAS_VINAGRES",
+      "aliases": [
+        "Aceite de aguacate",
+        "Aceite de palta"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "173573",
+        "sourceName": "Oil, avocado",
+        "url": "https://fdc.nal.usda.gov/food-details/173573/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "aceite_de_pepita_de_uva",
+      "defaultName": "Aceite de pepita de uva",
+      "category": "ACEITES_GRASAS_VINAGRES",
+      "aliases": [
+        "Aceite de pepita de uva",
+        "Aceite de semilla de uva"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171028",
+        "sourceName": "Oil, grapeseed",
+        "url": "https://fdc.nal.usda.gov/food-details/171028/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "aceite_de_nuez",
+      "defaultName": "Aceite de nuez",
+      "category": "ACEITES_GRASAS_VINAGRES",
+      "aliases": [
+        "Aceite de nuez"
+      ],
+      "allergens": [
+        "NUTS"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171030",
+        "sourceName": "Oil, walnut",
+        "url": "https://fdc.nal.usda.gov/food-details/171030/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "aceite_de_almendra",
+      "defaultName": "Aceite de almendra",
+      "category": "ACEITES_GRASAS_VINAGRES",
+      "aliases": [
+        "Aceite de almendra"
+      ],
+      "allergens": [
+        "NUTS"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171031",
+        "sourceName": "Oil, almond",
+        "url": "https://fdc.nal.usda.gov/food-details/171031/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "aceite_de_avellana",
+      "defaultName": "Aceite de avellana",
+      "category": "ACEITES_GRASAS_VINAGRES",
+      "aliases": [
+        "Aceite de avellana"
+      ],
+      "allergens": [
+        "NUTS"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171427",
+        "sourceName": "Oil, hazelnut",
+        "url": "https://fdc.nal.usda.gov/food-details/171427/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "aceite_de_cacahuete",
+      "defaultName": "Aceite de cacahuete",
+      "category": "ACEITES_GRASAS_VINAGRES",
+      "aliases": [
+        "Aceite de cacahuete",
+        "Aceite de maní",
+        "Aceite de cacahuate"
+      ],
+      "allergens": [
+        "PEANUT"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171410",
+        "sourceName": "Oil, peanut, salad or cooking",
+        "url": "https://fdc.nal.usda.gov/food-details/171410/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "aceite_de_lino",
+      "defaultName": "Aceite de lino",
+      "category": "ACEITES_GRASAS_VINAGRES",
+      "aliases": [
+        "Aceite de lino",
+        "Aceite de linaza"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "167702",
+        "sourceName": "Oil, flaxseed, cold pressed",
+        "url": "https://fdc.nal.usda.gov/food-details/167702/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "aceite_de_mostaza",
+      "defaultName": "Aceite de mostaza",
+      "category": "ACEITES_GRASAS_VINAGRES",
+      "aliases": [
+        "Aceite de mostaza"
+      ],
+      "allergens": [
+        "MUSTARD"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172337",
+        "sourceName": "Oil, mustard",
+        "url": "https://fdc.nal.usda.gov/food-details/172337/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "aceite_de_semilla_de_amapola",
+      "defaultName": "Aceite de semilla de amapola",
+      "category": "ACEITES_GRASAS_VINAGRES",
+      "aliases": [
+        "Aceite de semilla de amapola"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171423",
+        "sourceName": "Oil, poppyseed",
+        "url": "https://fdc.nal.usda.gov/food-details/171423/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "grasa_de_oca",
+      "defaultName": "Grasa de oca",
+      "category": "ACEITES_GRASAS_VINAGRES",
+      "aliases": [
+        "Grasa de oca",
+        "Grasa de ganso"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "173572",
+        "sourceName": "Fat, goose",
+        "url": "https://fdc.nal.usda.gov/food-details/173572/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "limon",
+      "defaultName": "Limón",
+      "category": "FRUTAS",
+      "aliases": [
+        "Limón"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "167746",
+        "sourceName": "Lemons, raw, without peel",
+        "url": "https://fdc.nal.usda.gov/food-details/167746/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "lima",
+      "defaultName": "Lima",
+      "category": "FRUTAS",
+      "aliases": [
+        "Lima"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "168155",
+        "sourceName": "Limes, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/168155/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "pomelo",
+      "defaultName": "Pomelo",
+      "category": "FRUTAS",
+      "aliases": [
+        "Pomelo",
+        "Toronja"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "173033",
+        "sourceName": "Grapefruit, raw, pink and red and white, all areas",
+        "url": "https://fdc.nal.usda.gov/food-details/173033/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "pummelo",
+      "defaultName": "Pummelo",
+      "category": "FRUTAS",
+      "aliases": [
+        "Pummelo",
+        "Pomelo chino"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "167754",
+        "sourceName": "Pummelo, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/167754/nutrients"
+      },
+      "identityReason": "Cítrico pummelo documentado aparte del grapefruit (pomelo); no se añade Toronja como alias de ambos."
+    },
+    {
+      "canonicalKey": "kumquat",
+      "defaultName": "Kumquat",
+      "category": "FRUTAS",
+      "aliases": [
+        "Kumquat",
+        "Naranja enana"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "168154",
+        "sourceName": "Kumquats, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/168154/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "nispero",
+      "defaultName": "Níspero",
+      "category": "FRUTAS",
+      "aliases": [
+        "Níspero"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169908",
+        "sourceName": "Loquats, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/169908/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "membrillo",
+      "defaultName": "Membrillo",
+      "category": "FRUTAS",
+      "aliases": [
+        "Membrillo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "168163",
+        "sourceName": "Quinces, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/168163/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "caqui",
+      "defaultName": "Caqui",
+      "category": "FRUTAS",
+      "aliases": [
+        "Caqui",
+        "Kaki"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169941",
+        "sourceName": "Persimmons, japanese, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/169941/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "sandia",
+      "defaultName": "Sandía",
+      "category": "FRUTAS",
+      "aliases": [
+        "Sandía"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "167765",
+        "sourceName": "Watermelon, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/167765/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "guanabana",
+      "defaultName": "Guanábana",
+      "category": "FRUTAS",
+      "aliases": [
+        "Guanábana"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "167761",
+        "sourceName": "Soursop, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/167761/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "zapote_chico",
+      "defaultName": "Zapote chico",
+      "category": "FRUTAS",
+      "aliases": [
+        "Zapote chico",
+        "Chicozapote"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "167759",
+        "sourceName": "Sapodilla, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/167759/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "anon",
+      "defaultName": "Anón",
+      "category": "FRUTAS",
+      "aliases": [
+        "Anón"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "168175",
+        "sourceName": "Sugar-apples, (sweetsop), raw",
+        "url": "https://fdc.nal.usda.gov/food-details/168175/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "grosella_espinosa",
+      "defaultName": "Grosella espinosa",
+      "category": "FRUTAS",
+      "aliases": [
+        "Grosella espinosa",
+        "Uva espina"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "173030",
+        "sourceName": "Gooseberries, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/173030/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "uchuva",
+      "defaultName": "Uchuva",
+      "category": "FRUTAS",
+      "aliases": [
+        "Uchuva",
+        "Aguaymanto",
+        "Alquequenje peruano"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "173043",
+        "sourceName": "Groundcherries, (cape-gooseberries or poha), raw",
+        "url": "https://fdc.nal.usda.gov/food-details/173043/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "bayas_de_sauco",
+      "defaultName": "Bayas de saúco",
+      "category": "FRUTAS",
+      "aliases": [
+        "Bayas de saúco"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171727",
+        "sourceName": "Elderberries, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/171727/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "tamarindo",
+      "defaultName": "Tamarindo",
+      "category": "FRUTAS",
+      "aliases": [
+        "Tamarindo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "167763",
+        "sourceName": "Tamarinds, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/167763/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "guayaba_fresa",
+      "defaultName": "Guayaba fresa",
+      "category": "FRUTAS",
+      "aliases": [
+        "Guayaba fresa"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "173045",
+        "sourceName": "Guavas, strawberry, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/173045/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "guinda",
+      "defaultName": "Guinda",
+      "category": "FRUTAS",
+      "aliases": [
+        "Guinda",
+        "Cereza ácida"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "173954",
+        "sourceName": "Cherries, sour, red, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/173954/nutrients"
+      },
+      "identityReason": "Cereza ácida documentada como sour cherry (FDC 173954); se conserva diferenciada de la ficha genérica Cerezas. El enlace amplio de la taxonomía de descubrimiento no demuestra sinonimia exacta."
+    },
+    {
+      "canonicalKey": "datil_medjool",
+      "defaultName": "Dátil Medjool",
+      "category": "FRUTAS",
+      "aliases": [
+        "Dátil Medjool"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "168191",
+        "sourceName": "Dates, medjool",
+        "url": "https://fdc.nal.usda.gov/food-details/168191/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "datil_deglet_nour",
+      "defaultName": "Dátil Deglet Nour",
+      "category": "FRUTAS",
+      "aliases": [
+        "Dátil Deglet Nour"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171726",
+        "sourceName": "Dates, deglet noor",
+        "url": "https://fdc.nal.usda.gov/food-details/171726/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "berros",
+      "defaultName": "Berros",
+      "category": "VERDURAS",
+      "aliases": [
+        "Berros"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "170068",
+        "sourceName": "Watercress, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/170068/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "escarola",
+      "defaultName": "Escarola",
+      "category": "VERDURAS",
+      "aliases": [
+        "Escarola"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "168412",
+        "sourceName": "Endive, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/168412/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "endibia",
+      "defaultName": "Endibia",
+      "category": "VERDURAS",
+      "aliases": [
+        "Endibia",
+        "Endivia"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "170404",
+        "sourceName": "Chicory, witloof, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/170404/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "achicoria_de_hoja",
+      "defaultName": "Achicoria de hoja",
+      "category": "VERDURAS",
+      "aliases": [
+        "Achicoria de hoja"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169992",
+        "sourceName": "Chicory greens, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/169992/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "radicchio",
+      "defaultName": "Radicchio",
+      "category": "VERDURAS",
+      "aliases": [
+        "Radicchio",
+        "Achicoria roja"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "168564",
+        "sourceName": "Radicchio, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/168564/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "col_lombarda",
+      "defaultName": "Col lombarda",
+      "category": "VERDURAS",
+      "aliases": [
+        "Col lombarda",
+        "Repollo morado",
+        "Col morada"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169977",
+        "sourceName": "Cabbage, red, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/169977/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "col_china_napa",
+      "defaultName": "Col china napa",
+      "category": "VERDURAS",
+      "aliases": [
+        "Col china napa",
+        "Col de Pekín",
+        "Repollo napa"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169979",
+        "sourceName": "Cabbage, chinese (pe-tsai), raw",
+        "url": "https://fdc.nal.usda.gov/food-details/169979/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "pak_choi",
+      "defaultName": "Pak choi",
+      "category": "VERDURAS",
+      "aliases": [
+        "Pak choi",
+        "Bok choy"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "170390",
+        "sourceName": "Cabbage, chinese (pak-choi), raw",
+        "url": "https://fdc.nal.usda.gov/food-details/170390/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "colirrabano",
+      "defaultName": "Colirrábano",
+      "category": "VERDURAS",
+      "aliases": [
+        "Colirrábano",
+        "Kohlrabi"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "168424",
+        "sourceName": "Kohlrabi, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/168424/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "apionabo",
+      "defaultName": "Apionabo",
+      "category": "VERDURAS",
+      "aliases": [
+        "Apionabo",
+        "Apio nabo"
+      ],
+      "allergens": [
+        "CELERY"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "170400",
+        "sourceName": "Celeriac, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/170400/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "cardo",
+      "defaultName": "Cardo",
+      "category": "VERDURAS",
+      "aliases": [
+        "Cardo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169981",
+        "sourceName": "Cardoon, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/169981/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "chayote",
+      "defaultName": "Chayote",
+      "category": "VERDURAS",
+      "aliases": [
+        "Chayote",
+        "Güisquil"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "170402",
+        "sourceName": "Chayote, fruit, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/170402/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "yuca",
+      "defaultName": "Yuca",
+      "category": "VERDURAS",
+      "aliases": [
+        "Yuca",
+        "Mandioca"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169985",
+        "sourceName": "Cassava, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/169985/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "jicama",
+      "defaultName": "Jícama",
+      "category": "VERDURAS",
+      "aliases": [
+        "Jícama"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "170073",
+        "sourceName": "Yambean (jicama), raw",
+        "url": "https://fdc.nal.usda.gov/food-details/170073/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "name",
+      "defaultName": "Ñame",
+      "category": "VERDURAS",
+      "aliases": [
+        "Ñame"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "170071",
+        "sourceName": "Yam, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/170071/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "salsifi",
+      "defaultName": "Salsifí",
+      "category": "VERDURAS",
+      "aliases": [
+        "Salsifí"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169277",
+        "sourceName": "Salsify, (vegetable oyster), raw",
+        "url": "https://fdc.nal.usda.gov/food-details/169277/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "verdolaga",
+      "defaultName": "Verdolaga",
+      "category": "VERDURAS",
+      "aliases": [
+        "Verdolaga"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169274",
+        "sourceName": "Purslane, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/169274/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "hojas_de_mostaza",
+      "defaultName": "Hojas de mostaza",
+      "category": "VERDURAS",
+      "aliases": [
+        "Hojas de mostaza"
+      ],
+      "allergens": [
+        "MUSTARD"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169256",
+        "sourceName": "Mustard greens, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/169256/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "hojas_de_diente_de_leon",
+      "defaultName": "Hojas de diente de león",
+      "category": "VERDURAS",
+      "aliases": [
+        "Hojas de diente de león"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169226",
+        "sourceName": "Dandelion greens, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/169226/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "grelos",
+      "defaultName": "Grelos",
+      "category": "VERDURAS",
+      "aliases": [
+        "Grelos",
+        "Hojas de nabo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "170061",
+        "sourceName": "Turnip greens, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/170061/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "hojas_de_amaranto",
+      "defaultName": "Hojas de amaranto",
+      "category": "VERDURAS",
+      "aliases": [
+        "Hojas de amaranto"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "168385",
+        "sourceName": "Amaranth leaves, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/168385/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "hojas_de_batata",
+      "defaultName": "Hojas de batata",
+      "category": "VERDURAS",
+      "aliases": [
+        "Hojas de batata",
+        "Hojas de camote"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169303",
+        "sourceName": "Sweet potato leaves, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/169303/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "hojas_de_parra",
+      "defaultName": "Hojas de parra",
+      "category": "VERDURAS",
+      "aliases": [
+        "Hojas de parra",
+        "Hojas de vid"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "168575",
+        "sourceName": "Grape leaves, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/168575/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "flor_de_calabaza",
+      "defaultName": "Flor de calabaza",
+      "category": "VERDURAS",
+      "aliases": [
+        "Flor de calabaza"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169270",
+        "sourceName": "Pumpkin flowers, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/169270/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "habas_tiernas",
+      "defaultName": "Habas tiernas",
+      "category": "VERDURAS",
+      "aliases": [
+        "Habas tiernas",
+        "Habas frescas"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "170377",
+        "sourceName": "Broadbeans, immature seeds, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/170377/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "judias_verdes",
+      "defaultName": "Judías verdes",
+      "category": "VERDURAS",
+      "aliases": [
+        "Judías verdes",
+        "Ejotes",
+        "Chauchas",
+        "Vainitas"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169961",
+        "sourceName": "Beans, snap, green, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/169961/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "judias_amarillas",
+      "defaultName": "Judías amarillas",
+      "category": "VERDURAS",
+      "aliases": [
+        "Judías amarillas"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169320",
+        "sourceName": "Beans, snap, yellow, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/169320/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "judia_de_metro",
+      "defaultName": "Judía de metro",
+      "category": "VERDURAS",
+      "aliases": [
+        "Judía de metro",
+        "Judía espárrago"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169222",
+        "sourceName": "Yardlong bean, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/169222/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "germinados_de_lenteja",
+      "defaultName": "Germinados de lenteja",
+      "category": "VERDURAS",
+      "aliases": [
+        "Germinados de lenteja"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "168427",
+        "sourceName": "Lentils, sprouted, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/168427/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "bulbo_de_hinojo",
+      "defaultName": "Bulbo de hinojo",
+      "category": "VERDURAS",
+      "aliases": [
+        "Bulbo de hinojo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169385",
+        "sourceName": "Fennel, bulb, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/169385/nutrients"
+      },
+      "identityReason": "Bulbo empleado como hortaliza; distinto de las semillas de hinojo y de la hierba."
+    },
+    {
+      "canonicalKey": "lechuga_romana",
+      "defaultName": "Lechuga romana",
+      "category": "VERDURAS",
+      "aliases": [
+        "Lechuga romana"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169247",
+        "sourceName": "Lettuce, cos or romaine, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/169247/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "lechuga_iceberg",
+      "defaultName": "Lechuga iceberg",
+      "category": "VERDURAS",
+      "aliases": [
+        "Lechuga iceberg"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169248",
+        "sourceName": "Lettuce, iceberg (includes crisphead types), raw",
+        "url": "https://fdc.nal.usda.gov/food-details/169248/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "lechuga_mantecosa",
+      "defaultName": "Lechuga mantecosa",
+      "category": "VERDURAS",
+      "aliases": [
+        "Lechuga mantecosa"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "168429",
+        "sourceName": "Lettuce, butterhead (includes boston and bibb types), raw",
+        "url": "https://fdc.nal.usda.gov/food-details/168429/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "lechuga_de_hoja_roja",
+      "defaultName": "Lechuga de hoja roja",
+      "category": "VERDURAS",
+      "aliases": [
+        "Lechuga de hoja roja"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "168431",
+        "sourceName": "Lettuce, red leaf, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/168431/nutrients"
+      },
+      "identityReason": "Tipo de lechuga identificado por hoja roja en FDC 168431; no es una traducción de la ficha genérica Lechuga. Comparte familia, pero especifica un tipo culinario."
+    },
+    {
+      "canonicalKey": "calabaza_espagueti",
+      "defaultName": "Calabaza espagueti",
+      "category": "VERDURAS",
+      "aliases": [
+        "Calabaza espagueti"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169298",
+        "sourceName": "Squash, winter, spaghetti, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/169298/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "calabaza_bellota",
+      "defaultName": "Calabaza bellota",
+      "category": "VERDURAS",
+      "aliases": [
+        "Calabaza bellota"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "168472",
+        "sourceName": "Squash, winter, acorn, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/168472/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "calabaza_patisson",
+      "defaultName": "Calabaza patisson",
+      "category": "VERDURAS",
+      "aliases": [
+        "Calabaza patisson",
+        "Calabaza bonetera"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169289",
+        "sourceName": "Squash, summer, scallop, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/169289/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "calabaza_hubbard",
+      "defaultName": "Calabaza Hubbard",
+      "category": "VERDURAS",
+      "aliases": [
+        "Calabaza Hubbard"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "168475",
+        "sourceName": "Squash, winter, hubbard, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/168475/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "brocoli_chino",
+      "defaultName": "Brócoli chino",
+      "category": "VERDURAS",
+      "aliases": [
+        "Brócoli chino",
+        "Gai lan"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169404",
+        "sourceName": "Broccoli, chinese, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/169404/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "platano_macho_verde",
+      "defaultName": "Plátano macho verde",
+      "category": "VERDURAS",
+      "aliases": [
+        "Plátano macho verde",
+        "Plátano verde de cocinar"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "168215",
+        "sourceName": "Plantains, green, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/168215/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "platano_macho_maduro",
+      "defaultName": "Plátano macho maduro",
+      "category": "VERDURAS",
+      "aliases": [
+        "Plátano macho maduro",
+        "Plátano maduro de cocinar"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169130",
+        "sourceName": "Plantains, yellow, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/169130/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "lentejas",
+      "defaultName": "Lentejas",
+      "category": "OTROS",
+      "aliases": [
+        "Lentejas"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172420",
+        "sourceName": "Lentils, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/172420/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "lentejas_rojas",
+      "defaultName": "Lentejas rojas",
+      "category": "OTROS",
+      "aliases": [
+        "Lentejas rojas"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "174284",
+        "sourceName": "Lentils, pink or red, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/174284/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "judias_azuki",
+      "defaultName": "Judías azuki",
+      "category": "OTROS",
+      "aliases": [
+        "Judías azuki",
+        "Alubias azuki",
+        "Frijoles adzuki"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "173727",
+        "sourceName": "Beans, adzuki, mature seeds, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/173727/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "frijoles_negros",
+      "defaultName": "Frijoles negros",
+      "category": "OTROS",
+      "aliases": [
+        "Frijoles negros",
+        "Alubias negras",
+        "Porotos negros"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "173734",
+        "sourceName": "Beans, black, mature seeds, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/173734/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "alubias_pintas",
+      "defaultName": "Alubias pintas",
+      "category": "OTROS",
+      "aliases": [
+        "Alubias pintas",
+        "Frijoles pintos"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "175199",
+        "sourceName": "Beans, pinto, mature seeds, raw (Includes foods for USDA's Food Distribution Program)",
+        "url": "https://fdc.nal.usda.gov/food-details/175199/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "judias_mungo",
+      "defaultName": "Judías mungo",
+      "category": "OTROS",
+      "aliases": [
+        "Judías mungo",
+        "Frijoles mungo",
+        "Judías mung"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "174256",
+        "sourceName": "Mung beans, mature seeds, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/174256/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "guisantes_partidos",
+      "defaultName": "Guisantes partidos",
+      "category": "OTROS",
+      "aliases": [
+        "Guisantes partidos",
+        "Arvejas partidas"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172428",
+        "sourceName": "Peas, green, split, mature seeds, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/172428/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "habas_secas",
+      "defaultName": "Habas secas",
+      "category": "OTROS",
+      "aliases": [
+        "Habas secas"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "175205",
+        "sourceName": "Broadbeans (fava beans), mature seeds, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/175205/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "quinoa",
+      "defaultName": "Quinoa",
+      "category": "OTROS",
+      "aliases": [
+        "Quinoa",
+        "Quinua"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "168874",
+        "sourceName": "Quinoa, uncooked",
+        "url": "https://fdc.nal.usda.gov/food-details/168874/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "amaranto_en_grano",
+      "defaultName": "Amaranto en grano",
+      "category": "OTROS",
+      "aliases": [
+        "Amaranto en grano"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "170682",
+        "sourceName": "Amaranth grain, uncooked",
+        "url": "https://fdc.nal.usda.gov/food-details/170682/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "trigo_sarraceno",
+      "defaultName": "Trigo sarraceno",
+      "category": "OTROS",
+      "aliases": [
+        "Trigo sarraceno",
+        "Alforfón"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "170286",
+        "sourceName": "Buckwheat",
+        "url": "https://fdc.nal.usda.gov/food-details/170286/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "bulgur",
+      "defaultName": "Bulgur",
+      "category": "OTROS",
+      "aliases": [
+        "Bulgur"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "170688",
+        "sourceName": "Bulgur, dry",
+        "url": "https://fdc.nal.usda.gov/food-details/170688/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "cebada_perlada",
+      "defaultName": "Cebada perlada",
+      "category": "OTROS",
+      "aliases": [
+        "Cebada perlada"
+      ],
+      "allergens": [
+        "GLUTEN"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "170284",
+        "sourceName": "Barley, pearled, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/170284/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "centeno_en_grano",
+      "defaultName": "Centeno en grano",
+      "category": "OTROS",
+      "aliases": [
+        "Centeno en grano"
+      ],
+      "allergens": [
+        "GLUTEN"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "168884",
+        "sourceName": "Rye grain",
+        "url": "https://fdc.nal.usda.gov/food-details/168884/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "sorgo_en_grano",
+      "defaultName": "Sorgo en grano",
+      "category": "OTROS",
+      "aliases": [
+        "Sorgo en grano"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169716",
+        "sourceName": "Sorghum grain",
+        "url": "https://fdc.nal.usda.gov/food-details/169716/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "teff_en_grano",
+      "defaultName": "Teff en grano",
+      "category": "OTROS",
+      "aliases": [
+        "Teff en grano"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169747",
+        "sourceName": "Teff, uncooked",
+        "url": "https://fdc.nal.usda.gov/food-details/169747/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "arroz_salvaje",
+      "defaultName": "Arroz salvaje",
+      "category": "OTROS",
+      "aliases": [
+        "Arroz salvaje"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169726",
+        "sourceName": "Wild rice, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/169726/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "harina_de_arroz",
+      "defaultName": "Harina de arroz",
+      "category": "OTROS",
+      "aliases": [
+        "Harina de arroz"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169714",
+        "sourceName": "Rice flour, white, unenriched",
+        "url": "https://fdc.nal.usda.gov/food-details/169714/nutrients"
+      },
+      "identityReason": "Arroz molido; no duplica el grano de arroz ni una crema de arroz preparada."
+    },
+    {
+      "canonicalKey": "harina_de_arroz_integral",
+      "defaultName": "Harina de arroz integral",
+      "category": "OTROS",
+      "aliases": [
+        "Harina de arroz integral"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "168898",
+        "sourceName": "Rice flour, brown",
+        "url": "https://fdc.nal.usda.gov/food-details/168898/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "harina_de_garbanzo",
+      "defaultName": "Harina de garbanzo",
+      "category": "OTROS",
+      "aliases": [
+        "Harina de garbanzo",
+        "Besan"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "174288",
+        "sourceName": "Chickpea flour (besan)",
+        "url": "https://fdc.nal.usda.gov/food-details/174288/nutrients"
+      },
+      "identityReason": "Garbanzo molido; distinto del garbanzo entero y del tofu de garbanzo birmano."
+    },
+    {
+      "canonicalKey": "harina_de_trigo_sarraceno",
+      "defaultName": "Harina de trigo sarraceno",
+      "category": "OTROS",
+      "aliases": [
+        "Harina de trigo sarraceno",
+        "Harina de alforfón"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "170687",
+        "sourceName": "Buckwheat flour, whole-groat",
+        "url": "https://fdc.nal.usda.gov/food-details/170687/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "harina_de_centeno_oscura",
+      "defaultName": "Harina de centeno oscura",
+      "category": "OTROS",
+      "aliases": [
+        "Harina de centeno oscura"
+      ],
+      "allergens": [
+        "GLUTEN"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "168885",
+        "sourceName": "Rye flour, dark",
+        "url": "https://fdc.nal.usda.gov/food-details/168885/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "harina_de_avena",
+      "defaultName": "Harina de avena",
+      "category": "OTROS",
+      "aliases": [
+        "Harina de avena"
+      ],
+      "allergens": [
+        "GLUTEN"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169741",
+        "sourceName": "Oat flour, partially debranned",
+        "url": "https://fdc.nal.usda.gov/food-details/169741/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "harina_de_cebada",
+      "defaultName": "Harina de cebada",
+      "category": "OTROS",
+      "aliases": [
+        "Harina de cebada"
+      ],
+      "allergens": [
+        "GLUTEN"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169739",
+        "sourceName": "Barley flour or meal",
+        "url": "https://fdc.nal.usda.gov/food-details/169739/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "harina_de_mijo",
+      "defaultName": "Harina de mijo",
+      "category": "OTROS",
+      "aliases": [
+        "Harina de mijo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172023",
+        "sourceName": "Millet flour",
+        "url": "https://fdc.nal.usda.gov/food-details/172023/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "harina_integral_de_sorgo",
+      "defaultName": "Harina integral de sorgo",
+      "category": "OTROS",
+      "aliases": [
+        "Harina integral de sorgo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "168943",
+        "sourceName": "Sorghum flour, whole-grain",
+        "url": "https://fdc.nal.usda.gov/food-details/168943/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "harina_de_soja",
+      "defaultName": "Harina de soja",
+      "category": "OTROS",
+      "aliases": [
+        "Harina de soja"
+      ],
+      "allergens": [
+        "SOY"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "174273",
+        "sourceName": "Soy flour, full-fat, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/174273/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "salvado_de_avena",
+      "defaultName": "Salvado de avena",
+      "category": "OTROS",
+      "aliases": [
+        "Salvado de avena"
+      ],
+      "allergens": [
+        "GLUTEN"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "168872",
+        "sourceName": "Oat bran, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/168872/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "perlas_de_tapioca",
+      "defaultName": "Perlas de tapioca",
+      "category": "OTROS",
+      "aliases": [
+        "Perlas de tapioca"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169717",
+        "sourceName": "Tapioca, pearl, dry",
+        "url": "https://fdc.nal.usda.gov/food-details/169717/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "nueces_de_brasil",
+      "defaultName": "Nueces de Brasil",
+      "category": "OTROS",
+      "aliases": [
+        "Nueces de Brasil",
+        "Coquitos de Brasil",
+        "Castañas de Brasil"
+      ],
+      "allergens": [
+        "NUTS"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "170569",
+        "sourceName": "Nuts, brazilnuts, dried, unblanched",
+        "url": "https://fdc.nal.usda.gov/food-details/170569/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "castana_europea",
+      "defaultName": "Castaña europea",
+      "category": "OTROS",
+      "aliases": [
+        "Castaña europea"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "170575",
+        "sourceName": "Nuts, chestnuts, european, raw, peeled",
+        "url": "https://fdc.nal.usda.gov/food-details/170575/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "semillas_de_canamo_peladas",
+      "defaultName": "Semillas de cáñamo peladas",
+      "category": "OTROS",
+      "aliases": [
+        "Semillas de cáñamo peladas",
+        "Corazones de cáñamo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "170148",
+        "sourceName": "Seeds, hemp seed, hulled",
+        "url": "https://fdc.nal.usda.gov/food-details/170148/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "levadura_fresca_de_panaderia",
+      "defaultName": "Levadura fresca de panadería",
+      "category": "OTROS",
+      "aliases": [
+        "Levadura fresca de panadería",
+        "Levadura prensada"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "175042",
+        "sourceName": "Leavening agents, yeast, baker's, compressed",
+        "url": "https://fdc.nal.usda.gov/food-details/175042/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "levadura_seca_de_panaderia",
+      "defaultName": "Levadura seca de panadería",
+      "category": "OTROS",
+      "aliases": [
+        "Levadura seca de panadería"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "175043",
+        "sourceName": "Leavening agents, yeast, baker's, active dry",
+        "url": "https://fdc.nal.usda.gov/food-details/175043/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "bicarbonato_sodico_alimentario",
+      "defaultName": "Bicarbonato sódico alimentario",
+      "category": "OTROS",
+      "aliases": [
+        "Bicarbonato sódico alimentario",
+        "Bicarbonato de sodio alimentario"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "175040",
+        "sourceName": "Leavening agents, baking soda",
+        "url": "https://fdc.nal.usda.gov/food-details/175040/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "cremor_tartaro",
+      "defaultName": "Cremor tártaro",
+      "category": "OTROS",
+      "aliases": [
+        "Cremor tártaro"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "175041",
+        "sourceName": "Leavening agents, cream of tartar",
+        "url": "https://fdc.nal.usda.gov/food-details/175041/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "leche_entera",
+      "defaultName": "Leche entera",
+      "category": "OTROS",
+      "aliases": [
+        "Leche entera"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172217",
+        "sourceName": "Milk, whole, 3.25% milkfat, without added vitamin A and vitamin D",
+        "url": "https://fdc.nal.usda.gov/food-details/172217/nutrients"
+      },
+      "identityReason": "Leche líquida; distinta de la leche entera en polvo."
+    },
+    {
+      "canonicalKey": "leche_de_cabra",
+      "defaultName": "Leche de cabra",
+      "category": "OTROS",
+      "aliases": [
+        "Leche de cabra"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171278",
+        "sourceName": "Milk, goat, fluid, with added vitamin D",
+        "url": "https://fdc.nal.usda.gov/food-details/171278/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "leche_de_oveja",
+      "defaultName": "Leche de oveja",
+      "category": "OTROS",
+      "aliases": [
+        "Leche de oveja"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "170882",
+        "sourceName": "Milk, sheep, fluid",
+        "url": "https://fdc.nal.usda.gov/food-details/170882/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "yogur_natural",
+      "defaultName": "Yogur natural",
+      "category": "OTROS",
+      "aliases": [
+        "Yogur natural"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171284",
+        "sourceName": "Yogurt, plain, whole milk",
+        "url": "https://fdc.nal.usda.gov/food-details/171284/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "yogur_griego_natural",
+      "defaultName": "Yogur griego natural",
+      "category": "OTROS",
+      "aliases": [
+        "Yogur griego natural"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171304",
+        "sourceName": "Yogurt, Greek, plain, whole milk",
+        "url": "https://fdc.nal.usda.gov/food-details/171304/nutrients"
+      },
+      "identityReason": "Yogur concentrado tipo griego, documentado aparte del yogur natural sin concentrar."
+    },
+    {
+      "canonicalKey": "suero_de_mantequilla_fermentado",
+      "defaultName": "Suero de mantequilla fermentado",
+      "category": "OTROS",
+      "aliases": [
+        "Suero de mantequilla fermentado",
+        "Buttermilk"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172225",
+        "sourceName": "Milk, buttermilk, fluid, whole",
+        "url": "https://fdc.nal.usda.gov/food-details/172225/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "conejo",
+      "defaultName": "Conejo",
+      "category": "CARNES",
+      "aliases": [
+        "Conejo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172521",
+        "sourceName": "Game meat, rabbit, domesticated, composite of cuts, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/172521/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "codorniz",
+      "defaultName": "Codorniz",
+      "category": "CARNES",
+      "aliases": [
+        "Codorniz"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172419",
+        "sourceName": "Quail, meat only, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/172419/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "faisan",
+      "defaultName": "Faisán",
+      "category": "CARNES",
+      "aliases": [
+        "Faisán"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "174473",
+        "sourceName": "Pheasant, raw, meat only",
+        "url": "https://fdc.nal.usda.gov/food-details/174473/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "oca",
+      "defaultName": "Oca",
+      "category": "CARNES",
+      "aliases": [
+        "Oca",
+        "Ganso"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172413",
+        "sourceName": "Goose, domesticated, meat only, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/172413/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "bisonte",
+      "defaultName": "Bisonte",
+      "category": "CARNES",
+      "aliases": [
+        "Bisonte"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "173851",
+        "sourceName": "Game meat, bison, separable lean only, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/173851/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "contramuslo_de_pollo",
+      "defaultName": "Contramuslo de pollo",
+      "category": "CARNES",
+      "aliases": [
+        "Contramuslo de pollo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172385",
+        "sourceName": "Chicken, broilers or fryers, thigh, meat and skin, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/172385/nutrients"
+      },
+      "identityReason": "Corte del muslo superior (thigh) documentado por USDA; se distingue del jamoncito (drumstick), pechuga y alita."
+    },
+    {
+      "canonicalKey": "jamoncito_de_pollo",
+      "defaultName": "Jamoncito de pollo",
+      "category": "CARNES",
+      "aliases": [
+        "Jamoncito de pollo",
+        "Pierna inferior de pollo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172373",
+        "sourceName": "Chicken, broilers or fryers, drumstick, meat and skin, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/172373/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "higado_de_pollo",
+      "defaultName": "Hígado de pollo",
+      "category": "CARNES",
+      "aliases": [
+        "Hígado de pollo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171060",
+        "sourceName": "Chicken, liver, all classes, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/171060/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "mollejas_de_pollo",
+      "defaultName": "Mollejas de pollo",
+      "category": "CARNES",
+      "aliases": [
+        "Mollejas de pollo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171456",
+        "sourceName": "Chicken, gizzard, all classes, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/171456/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "corazones_de_pollo",
+      "defaultName": "Corazones de pollo",
+      "category": "CARNES",
+      "aliases": [
+        "Corazones de pollo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171458",
+        "sourceName": "Chicken, heart, all classes, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/171458/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "higado_de_pato",
+      "defaultName": "Hígado de pato",
+      "category": "CARNES",
+      "aliases": [
+        "Hígado de pato"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "174467",
+        "sourceName": "Duck, domesticated, liver, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/174467/nutrients"
+      },
+      "identityReason": "Víscera genérica de pato, sin indicar engorde; no equivale a foie gras."
+    },
+    {
+      "canonicalKey": "higado_de_oca",
+      "defaultName": "Hígado de oca",
+      "category": "CARNES",
+      "aliases": [
+        "Hígado de oca"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172415",
+        "sourceName": "Goose, liver, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/172415/nutrients"
+      },
+      "identityReason": "Víscera genérica de oca, sin indicar engorde; no equivale a foie gras."
+    },
+    {
+      "canonicalKey": "higado_de_vacuno",
+      "defaultName": "Hígado de vacuno",
+      "category": "CARNES",
+      "aliases": [
+        "Hígado de vacuno",
+        "Hígado de res"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169451",
+        "sourceName": "Beef, variety meats and by-products, liver, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/169451/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "rinones_de_vacuno",
+      "defaultName": "Riñones de vacuno",
+      "category": "CARNES",
+      "aliases": [
+        "Riñones de vacuno",
+        "Riñones de res"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169449",
+        "sourceName": "Beef, variety meats and by-products, kidneys, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/169449/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "corazon_de_vacuno",
+      "defaultName": "Corazón de vacuno",
+      "category": "CARNES",
+      "aliases": [
+        "Corazón de vacuno",
+        "Corazón de res"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "168625",
+        "sourceName": "Beef, variety meats and by-products, heart, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/168625/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "callos_de_vacuno",
+      "defaultName": "Callos de vacuno",
+      "category": "CARNES",
+      "aliases": [
+        "Callos de vacuno",
+        "Callos de res",
+        "Mondongo de vacuno"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "170599",
+        "sourceName": "Beef, variety meats and by-products, tripe, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/170599/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "higado_de_cerdo",
+      "defaultName": "Hígado de cerdo",
+      "category": "CARNES",
+      "aliases": [
+        "Hígado de cerdo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "167862",
+        "sourceName": "Pork, fresh, variety meats and by-products, liver, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/167862/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "rinones_de_cerdo",
+      "defaultName": "Riñones de cerdo",
+      "category": "CARNES",
+      "aliases": [
+        "Riñones de cerdo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "168270",
+        "sourceName": "Pork, fresh, variety meats and by-products, kidneys, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/168270/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "lengua_de_cerdo",
+      "defaultName": "Lengua de cerdo",
+      "category": "CARNES",
+      "aliases": [
+        "Lengua de cerdo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "168275",
+        "sourceName": "Pork, fresh, variety meats and by-products, tongue, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/168275/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "oreja_de_cerdo",
+      "defaultName": "Oreja de cerdo",
+      "category": "CARNES",
+      "aliases": [
+        "Oreja de cerdo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "167857",
+        "sourceName": "Pork, fresh, variety meats and by-products, ears, frozen, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/167857/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "manitas_de_cerdo",
+      "defaultName": "Manitas de cerdo",
+      "category": "CARNES",
+      "aliases": [
+        "Manitas de cerdo",
+        "Patas de cerdo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "167859",
+        "sourceName": "Pork, fresh, variety meats and by-products, feet, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/167859/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "papada_de_cerdo",
+      "defaultName": "Papada de cerdo",
+      "category": "CARNES",
+      "aliases": [
+        "Papada de cerdo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "168269",
+        "sourceName": "Pork, fresh, variety meats and by-products, jowl, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/168269/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "rabo_de_cerdo",
+      "defaultName": "Rabo de cerdo",
+      "category": "CARNES",
+      "aliases": [
+        "Rabo de cerdo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "168291",
+        "sourceName": "Pork, fresh, variety meats and by-products, tail, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/168291/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "bratwurst",
+      "defaultName": "Bratwurst",
+      "category": "EMBUTIDOS",
+      "aliases": [
+        "Bratwurst"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171622",
+        "sourceName": "Bratwurst, pork, beef, link",
+        "url": "https://fdc.nal.usda.gov/food-details/171622/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "knackwurst",
+      "defaultName": "Knackwurst",
+      "category": "EMBUTIDOS",
+      "aliases": [
+        "Knackwurst",
+        "Knockwurst"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "173867",
+        "sourceName": "Knackwurst, knockwurst, pork, beef",
+        "url": "https://fdc.nal.usda.gov/food-details/173867/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "leberwurst",
+      "defaultName": "Leberwurst",
+      "category": "EMBUTIDOS",
+      "aliases": [
+        "Leberwurst",
+        "Paté embutido de hígado de cerdo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "173870",
+        "sourceName": "Liver sausage, liverwurst, pork",
+        "url": "https://fdc.nal.usda.gov/food-details/173870/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "braunschweiger",
+      "defaultName": "Braunschweiger",
+      "category": "EMBUTIDOS",
+      "aliases": [
+        "Braunschweiger"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171621",
+        "sourceName": "Braunschweiger (a liver sausage), pork",
+        "url": "https://fdc.nal.usda.gov/food-details/171621/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "beerwurst",
+      "defaultName": "Beerwurst",
+      "category": "EMBUTIDOS",
+      "aliases": [
+        "Beerwurst"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171616",
+        "sourceName": "Beerwurst, beer salami, pork",
+        "url": "https://fdc.nal.usda.gov/food-details/171616/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "cervelat_de_turingia",
+      "defaultName": "Cervelat de Turingia",
+      "category": "EMBUTIDOS",
+      "aliases": [
+        "Cervelat de Turingia",
+        "Thüringer Cervelat"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172940",
+        "sourceName": "Thuringer, cervelat, summer sausage, beef, pork",
+        "url": "https://fdc.nal.usda.gov/food-details/172940/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "cabeza_de_cerdo_en_fiambre",
+      "defaultName": "Cabeza de cerdo en fiambre",
+      "category": "EMBUTIDOS",
+      "aliases": [
+        "Cabeza de cerdo en fiambre",
+        "Queso de cabeza de cerdo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171630",
+        "sourceName": "Headcheese, pork",
+        "url": "https://fdc.nal.usda.gov/food-details/171630/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "pastrami_de_pavo",
+      "defaultName": "Pastrami de pavo",
+      "category": "EMBUTIDOS",
+      "aliases": [
+        "Pastrami de pavo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172927",
+        "sourceName": "Pastrami, turkey",
+        "url": "https://fdc.nal.usda.gov/food-details/172927/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "salchicha_de_pavo_fresca",
+      "defaultName": "Salchicha de pavo fresca",
+      "category": "EMBUTIDOS",
+      "aliases": [
+        "Salchicha de pavo fresca"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "174617",
+        "sourceName": "Sausage, turkey, fresh, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/174617/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "chocolate_blanco",
+      "defaultName": "Chocolate blanco",
+      "category": "CREMAS_DULCES",
+      "aliases": [
+        "Chocolate blanco"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "167571",
+        "sourceName": "Candies, white chocolate",
+        "url": "https://fdc.nal.usda.gov/food-details/167571/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "pasta_de_almendra_azucarada",
+      "defaultName": "Pasta de almendra azucarada",
+      "category": "CREMAS_DULCES",
+      "aliases": [
+        "Pasta de almendra azucarada"
+      ],
+      "allergens": [
+        "NUTS"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "170160",
+        "sourceName": "Nuts, almond paste",
+        "url": "https://fdc.nal.usda.gov/food-details/170160/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "crema_de_malvavisco",
+      "defaultName": "Crema de malvavisco",
+      "category": "CREMAS_DULCES",
+      "aliases": [
+        "Crema de malvavisco"
+      ],
+      "allergens": [
+        "EGG"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169664",
+        "sourceName": "Toppings, marshmallow cream",
+        "url": "https://fdc.nal.usda.gov/food-details/169664/nutrients"
+      },
+      "identityReason": "Crema untable de malvavisco; presentación diferente de la golosina sólida Malvavisco."
+    },
+    {
+      "canonicalKey": "cobertura_dulce_de_fresa",
+      "defaultName": "Cobertura dulce de fresa",
+      "category": "CREMAS_DULCES",
+      "aliases": [
+        "Cobertura dulce de fresa"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "168758",
+        "sourceName": "Toppings, strawberry",
+        "url": "https://fdc.nal.usda.gov/food-details/168758/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "sirope_de_chocolate",
+      "defaultName": "Sirope de chocolate",
+      "category": "CREMAS_DULCES",
+      "aliases": [
+        "Sirope de chocolate"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "174117",
+        "sourceName": "Beverages, chocolate syrup",
+        "url": "https://fdc.nal.usda.gov/food-details/174117/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "azucar_de_arce",
+      "defaultName": "Azúcar de arce",
+      "category": "ENDULZANTES",
+      "aliases": [
+        "Azúcar de arce"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169658",
+        "sourceName": "Sugars, maple",
+        "url": "https://fdc.nal.usda.gov/food-details/169658/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "sirope_de_sorgo",
+      "defaultName": "Sirope de sorgo",
+      "category": "ENDULZANTES",
+      "aliases": [
+        "Sirope de sorgo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169662",
+        "sourceName": "Syrups, sorghum",
+        "url": "https://fdc.nal.usda.gov/food-details/169662/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "sirope_de_malta",
+      "defaultName": "Sirope de malta",
+      "category": "ENDULZANTES",
+      "aliases": [
+        "Sirope de malta"
+      ],
+      "allergens": [
+        "GLUTEN"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169660",
+        "sourceName": "Syrups, malt",
+        "url": "https://fdc.nal.usda.gov/food-details/169660/nutrients"
+      },
+      "identityReason": "Endulzante de malta; distinto del extracto aromático de malta de cebada."
+    },
+    {
+      "canonicalKey": "granadina",
+      "defaultName": "Granadina",
+      "category": "ENDULZANTES",
+      "aliases": [
+        "Granadina"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "168088",
+        "sourceName": "Syrups, grenadine",
+        "url": "https://fdc.nal.usda.gov/food-details/168088/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "fructosa",
+      "defaultName": "Fructosa",
+      "category": "ENDULZANTES",
+      "aliases": [
+        "Fructosa"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169896",
+        "sourceName": "Sweeteners, tabletop, fructose, dry, powder",
+        "url": "https://fdc.nal.usda.gov/food-details/169896/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "trehalosa",
+      "defaultName": "Trehalosa",
+      "category": "ENDULZANTES",
+      "aliases": [
+        "Trehalosa"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA",
+        "recordId": "TREHALOSA",
+        "sourceName": "TREHALOSA",
+        "url": "https://www.sosa.cat/categoria-producto/azucares-tecnicos/"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "isomalt",
+      "defaultName": "Isomalt",
+      "category": "ENDULZANTES",
+      "aliases": [
+        "Isomalt"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA",
+        "recordId": "ISOMALT REFINADO",
+        "sourceName": "ISOMALT REFINADO",
+        "url": "https://www.sosa.cat/categoria-producto/azucares-tecnicos/"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "maltitol",
+      "defaultName": "Maltitol",
+      "category": "ENDULZANTES",
+      "aliases": [
+        "Maltitol"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA",
+        "recordId": "MALTITOL",
+        "sourceName": "MALTITOL",
+        "url": "https://www.sosa.cat/categoria-producto/azucares-tecnicos/"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "xilitol",
+      "defaultName": "Xilitol",
+      "category": "ENDULZANTES",
+      "aliases": [
+        "Xilitol"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA",
+        "recordId": "XILITOL",
+        "sourceName": "XILITOL",
+        "url": "https://www.sosa.cat/categoria-producto/azucares-tecnicos/"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "sorbitol",
+      "defaultName": "Sorbitol",
+      "category": "ENDULZANTES",
+      "aliases": [
+        "Sorbitol"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA",
+        "recordId": "SORBITOL GRANULADO",
+        "sourceName": "SORBITOL GRANULADO",
+        "url": "https://www.sosa.cat/categoria-producto/azucares-tecnicos/"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "manitol",
+      "defaultName": "Manitol",
+      "category": "ENDULZANTES",
+      "aliases": [
+        "Manitol"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA",
+        "recordId": "MANITOL",
+        "sourceName": "MANITOL",
+        "url": "https://www.sosa.cat/categoria-producto/azucares-tecnicos/"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "hummus",
+      "defaultName": "Hummus",
+      "category": "SALSAS",
+      "aliases": [
+        "Hummus",
+        "Puré de garbanzos con tahini"
+      ],
+      "allergens": [
+        "SESAME"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172454",
+        "sourceName": "Hummus, home prepared",
+        "url": "https://fdc.nal.usda.gov/food-details/172454/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "miso_de_soja",
+      "defaultName": "Miso de soja",
+      "category": "SALSAS",
+      "aliases": [
+        "Miso de soja"
+      ],
+      "allergens": [
+        "SOY"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172442",
+        "sourceName": "Miso",
+        "url": "https://fdc.nal.usda.gov/food-details/172442/nutrients"
+      },
+      "identityReason": "Pasta fermentada de soja; no equivale al miso de garbanzo ni a una crema elaborada de miso."
+    },
+    {
+      "canonicalKey": "salsa_de_pescado",
+      "defaultName": "Salsa de pescado",
+      "category": "SALSAS",
+      "aliases": [
+        "Salsa de pescado"
+      ],
+      "allergens": [
+        "FISH"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "174531",
+        "sourceName": "Sauce, fish, ready-to-serve",
+        "url": "https://fdc.nal.usda.gov/food-details/174531/nutrients"
+      },
+      "identityReason": "Condimento fermentado documentado; no duplica la salsa de pescado caramelizada ni una pasta de anchoas."
+    },
+    {
+      "canonicalKey": "salsa_worcestershire",
+      "defaultName": "Salsa Worcestershire",
+      "category": "SALSAS",
+      "aliases": [
+        "Salsa Worcestershire",
+        "Salsa inglesa"
+      ],
+      "allergens": [
+        "FISH"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171610",
+        "sourceName": "Sauce, worcestershire",
+        "url": "https://fdc.nal.usda.gov/food-details/171610/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "aderezo_cesar",
+      "defaultName": "Aderezo César",
+      "category": "SALSAS",
+      "aliases": [
+        "Aderezo César"
+      ],
+      "allergens": [
+        "EGG",
+        "LACTOSE",
+        "FISH"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169055",
+        "sourceName": "Salad dressing, caesar dressing, regular",
+        "url": "https://fdc.nal.usda.gov/food-details/169055/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "aderezo_frances",
+      "defaultName": "Aderezo francés",
+      "category": "SALSAS",
+      "aliases": [
+        "Aderezo francés"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171414",
+        "sourceName": "Salad dressing, french dressing, commercial, regular",
+        "url": "https://fdc.nal.usda.gov/food-details/171414/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "gruyere",
+      "defaultName": "Gruyère",
+      "category": "QUESOS",
+      "aliases": [
+        "Gruyère"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171242",
+        "sourceName": "Cheese, gruyere",
+        "url": "https://fdc.nal.usda.gov/food-details/171242/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "limburger",
+      "defaultName": "Limburger",
+      "category": "QUESOS",
+      "aliases": [
+        "Limburger"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171243",
+        "sourceName": "Cheese, limburger",
+        "url": "https://fdc.nal.usda.gov/food-details/171243/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "muenster",
+      "defaultName": "Muenster",
+      "category": "QUESOS",
+      "aliases": [
+        "Muenster"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171245",
+        "sourceName": "Cheese, muenster",
+        "url": "https://fdc.nal.usda.gov/food-details/171245/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "neufchatel",
+      "defaultName": "Neufchâtel",
+      "category": "QUESOS",
+      "aliases": [
+        "Neufchâtel"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171246",
+        "sourceName": "Cheese, neufchatel",
+        "url": "https://fdc.nal.usda.gov/food-details/171246/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "port_salut",
+      "defaultName": "Port-Salut",
+      "category": "QUESOS",
+      "aliases": [
+        "Port-Salut"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "170849",
+        "sourceName": "Cheese, port de salut",
+        "url": "https://fdc.nal.usda.gov/food-details/170849/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "tilsit",
+      "defaultName": "Tilsit",
+      "category": "QUESOS",
+      "aliases": [
+        "Tilsit"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "170852",
+        "sourceName": "Cheese, tilsit",
+        "url": "https://fdc.nal.usda.gov/food-details/170852/nutrients"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "afuega_l_pitu",
+      "defaultName": "Afuega’l Pitu",
+      "category": "QUESOS",
+      "aliases": [
+        "Afuega’l Pitu"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MERCASA",
+        "recordId": "Afuega’l Pitu",
+        "sourceName": "Afuega’l Pitu",
+        "url": "https://www.mercasa.es/publicaciones/alimentacion-en-espana/leche-y-productos-lacteos/quesos/"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "queso_casin",
+      "defaultName": "Queso Casín",
+      "category": "QUESOS",
+      "aliases": [
+        "Queso Casín"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MERCASA",
+        "recordId": "Queso Casín",
+        "sourceName": "Queso Casín",
+        "url": "https://www.mercasa.es/publicaciones/alimentacion-en-espana/leche-y-productos-lacteos/quesos/"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "queso_los_beyos",
+      "defaultName": "Queso Los Beyos",
+      "category": "QUESOS",
+      "aliases": [
+        "Queso Los Beyos"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MERCASA",
+        "recordId": "Queso Los Beyos",
+        "sourceName": "Queso Los Beyos",
+        "url": "https://www.mercasa.es/publicaciones/alimentacion-en-espana/leche-y-productos-lacteos/quesos/"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "mahon_menorca",
+      "defaultName": "Mahón-Menorca",
+      "category": "QUESOS",
+      "aliases": [
+        "Mahón-Menorca"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MERCASA",
+        "recordId": "Mahón-Menorca",
+        "sourceName": "Mahón-Menorca",
+        "url": "https://www.mercasa.es/publicaciones/alimentacion-en-espana/leche-y-productos-lacteos/quesos/"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "queso_majorero",
+      "defaultName": "Queso Majorero",
+      "category": "QUESOS",
+      "aliases": [
+        "Queso Majorero"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MERCASA",
+        "recordId": "Queso Majorero",
+        "sourceName": "Queso Majorero",
+        "url": "https://www.mercasa.es/publicaciones/alimentacion-en-espana/leche-y-productos-lacteos/quesos/"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "queso_palmero",
+      "defaultName": "Queso Palmero",
+      "category": "QUESOS",
+      "aliases": [
+        "Queso Palmero"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MERCASA",
+        "recordId": "Queso Palmero",
+        "sourceName": "Queso Palmero",
+        "url": "https://www.mercasa.es/publicaciones/alimentacion-en-espana/leche-y-productos-lacteos/quesos/"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "picon_bejes_tresviso",
+      "defaultName": "Picón Bejes-Tresviso",
+      "category": "QUESOS",
+      "aliases": [
+        "Picón Bejes-Tresviso"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MERCASA",
+        "recordId": "Picón Bejes-Tresviso",
+        "sourceName": "Picón Bejes-Tresviso",
+        "url": "https://www.mercasa.es/publicaciones/alimentacion-en-espana/leche-y-productos-lacteos/quesos/"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "queso_nata_de_cantabria",
+      "defaultName": "Queso Nata de Cantabria",
+      "category": "QUESOS",
+      "aliases": [
+        "Queso Nata de Cantabria"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MERCASA",
+        "recordId": "Queso Nata de Cantabria",
+        "sourceName": "Queso Nata de Cantabria",
+        "url": "https://www.mercasa.es/publicaciones/alimentacion-en-espana/leche-y-productos-lacteos/quesos/"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "quesucos_de_liebana",
+      "defaultName": "Quesucos de Liébana",
+      "category": "QUESOS",
+      "aliases": [
+        "Quesucos de Liébana"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MERCASA",
+        "recordId": "Quesucos de Liébana",
+        "sourceName": "Quesucos de Liébana",
+        "url": "https://www.mercasa.es/publicaciones/alimentacion-en-espana/leche-y-productos-lacteos/quesos/"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "queso_manchego",
+      "defaultName": "Queso Manchego",
+      "category": "QUESOS",
+      "aliases": [
+        "Queso Manchego"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MERCASA",
+        "recordId": "Queso Manchego",
+        "sourceName": "Queso Manchego",
+        "url": "https://www.mercasa.es/publicaciones/alimentacion-en-espana/leche-y-productos-lacteos/quesos/"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "queso_zamorano",
+      "defaultName": "Queso Zamorano",
+      "category": "QUESOS",
+      "aliases": [
+        "Queso Zamorano"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MERCASA",
+        "recordId": "Queso Zamorano",
+        "sourceName": "Queso Zamorano",
+        "url": "https://www.mercasa.es/publicaciones/alimentacion-en-espana/leche-y-productos-lacteos/quesos/"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "queso_de_burgos",
+      "defaultName": "Queso de Burgos",
+      "category": "QUESOS",
+      "aliases": [
+        "Queso de Burgos"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MERCASA",
+        "recordId": "Queso de Burgos",
+        "sourceName": "Queso de Burgos",
+        "url": "https://www.mercasa.es/publicaciones/alimentacion-en-espana/leche-y-productos-lacteos/quesos/"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "queso_de_valdeon",
+      "defaultName": "Queso de Valdeón",
+      "category": "QUESOS",
+      "aliases": [
+        "Queso de Valdeón"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MERCASA",
+        "recordId": "Queso de Valdeón",
+        "sourceName": "Queso de Valdeón",
+        "url": "https://www.mercasa.es/publicaciones/alimentacion-en-espana/leche-y-productos-lacteos/quesos/"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "queso_de_l_alt_urgell_y_la_cerdanya",
+      "defaultName": "Queso de l’Alt Urgell y la Cerdanya",
+      "category": "QUESOS",
+      "aliases": [
+        "Queso de l’Alt Urgell y la Cerdanya"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MERCASA",
+        "recordId": "Queso de l’Alt Urgell y la Cerdanya",
+        "sourceName": "Queso de l’Alt Urgell y la Cerdanya",
+        "url": "https://www.mercasa.es/publicaciones/alimentacion-en-espana/leche-y-productos-lacteos/quesos/"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "queso_blanquet",
+      "defaultName": "Queso Blanquet",
+      "category": "QUESOS",
+      "aliases": [
+        "Queso Blanquet"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MERCASA",
+        "recordId": "Queso Blanquet",
+        "sourceName": "Queso Blanquet",
+        "url": "https://www.mercasa.es/publicaciones/alimentacion-en-espana/leche-y-productos-lacteos/quesos/"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "queso_de_cassoleta",
+      "defaultName": "Queso de Cassoleta",
+      "category": "QUESOS",
+      "aliases": [
+        "Queso de Cassoleta"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MERCASA",
+        "recordId": "Queso de Cassoleta",
+        "sourceName": "Queso de Cassoleta",
+        "url": "https://www.mercasa.es/publicaciones/alimentacion-en-espana/leche-y-productos-lacteos/quesos/"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "queso_de_servilleta",
+      "defaultName": "Queso de Servilleta",
+      "category": "QUESOS",
+      "aliases": [
+        "Queso de Servilleta"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MERCASA",
+        "recordId": "Queso de Servilleta",
+        "sourceName": "Queso de Servilleta",
+        "url": "https://www.mercasa.es/publicaciones/alimentacion-en-espana/leche-y-productos-lacteos/quesos/"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "queso_de_la_nucia",
+      "defaultName": "Queso de la Nucía",
+      "category": "QUESOS",
+      "aliases": [
+        "Queso de la Nucía"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MERCASA",
+        "recordId": "Queso de la Nucía",
+        "sourceName": "Queso de la Nucía",
+        "url": "https://www.mercasa.es/publicaciones/alimentacion-en-espana/leche-y-productos-lacteos/quesos/"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "queso_tronchon",
+      "defaultName": "Queso Tronchón",
+      "category": "QUESOS",
+      "aliases": [
+        "Queso Tronchón"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MERCASA",
+        "recordId": "Queso Tronchón",
+        "sourceName": "Queso Tronchón",
+        "url": "https://www.mercasa.es/publicaciones/alimentacion-en-espana/leche-y-productos-lacteos/quesos/"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "queso_de_la_serena",
+      "defaultName": "Queso de la Serena",
+      "category": "QUESOS",
+      "aliases": [
+        "Queso de la Serena"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MERCASA",
+        "recordId": "Queso de la Serena",
+        "sourceName": "Queso de la Serena",
+        "url": "https://www.mercasa.es/publicaciones/alimentacion-en-espana/leche-y-productos-lacteos/quesos/"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "queso_ibores",
+      "defaultName": "Queso Ibores",
+      "category": "QUESOS",
+      "aliases": [
+        "Queso Ibores"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MERCASA",
+        "recordId": "Queso Ibores",
+        "sourceName": "Queso Ibores",
+        "url": "https://www.mercasa.es/publicaciones/alimentacion-en-espana/leche-y-productos-lacteos/quesos/"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "torta_del_casar",
+      "defaultName": "Torta del Casar",
+      "category": "QUESOS",
+      "aliases": [
+        "Torta del Casar"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MERCASA",
+        "recordId": "Torta del Casar",
+        "sourceName": "Torta del Casar",
+        "url": "https://www.mercasa.es/publicaciones/alimentacion-en-espana/leche-y-productos-lacteos/quesos/"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "queso_tetilla",
+      "defaultName": "Queso Tetilla",
+      "category": "QUESOS",
+      "aliases": [
+        "Queso Tetilla"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MERCASA",
+        "recordId": "Queso Tetilla",
+        "sourceName": "Queso Tetilla",
+        "url": "https://www.mercasa.es/publicaciones/alimentacion-en-espana/leche-y-productos-lacteos/quesos/"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "queso_cebreiro",
+      "defaultName": "Queso Cebreiro",
+      "category": "QUESOS",
+      "aliases": [
+        "Queso Cebreiro"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MERCASA",
+        "recordId": "Queso Cebreiro",
+        "sourceName": "Queso Cebreiro",
+        "url": "https://www.mercasa.es/publicaciones/alimentacion-en-espana/leche-y-productos-lacteos/quesos/"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "san_simon_da_costa",
+      "defaultName": "San Simón da Costa",
+      "category": "QUESOS",
+      "aliases": [
+        "San Simón da Costa"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MERCASA",
+        "recordId": "San Simón da Costa",
+        "sourceName": "San Simón da Costa",
+        "url": "https://www.mercasa.es/publicaciones/alimentacion-en-espana/leche-y-productos-lacteos/quesos/"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "arzua_ulloa",
+      "defaultName": "Arzúa-Ulloa",
+      "category": "QUESOS",
+      "aliases": [
+        "Arzúa-Ulloa"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MERCASA",
+        "recordId": "Arzúa-Ulloa",
+        "sourceName": "Arzúa-Ulloa",
+        "url": "https://www.mercasa.es/publicaciones/alimentacion-en-espana/leche-y-productos-lacteos/quesos/"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "queso_camerano",
+      "defaultName": "Queso Camerano",
+      "category": "QUESOS",
+      "aliases": [
+        "Queso Camerano"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MERCASA",
+        "recordId": "Queso Camerano",
+        "sourceName": "Queso Camerano",
+        "url": "https://www.mercasa.es/publicaciones/alimentacion-en-espana/leche-y-productos-lacteos/quesos/"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "queso_de_murcia",
+      "defaultName": "Queso de Murcia",
+      "category": "QUESOS",
+      "aliases": [
+        "Queso de Murcia"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MERCASA",
+        "recordId": "Queso de Murcia",
+        "sourceName": "Queso de Murcia",
+        "url": "https://www.mercasa.es/publicaciones/alimentacion-en-espana/leche-y-productos-lacteos/quesos/"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "queso_de_murcia_al_vino",
+      "defaultName": "Queso de Murcia al vino",
+      "category": "QUESOS",
+      "aliases": [
+        "Queso de Murcia al vino"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MERCASA",
+        "recordId": "Queso de Murcia al vino",
+        "sourceName": "Queso de Murcia al vino",
+        "url": "https://www.mercasa.es/publicaciones/alimentacion-en-espana/leche-y-productos-lacteos/quesos/"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "idiazabal",
+      "defaultName": "Idiazábal",
+      "category": "QUESOS",
+      "aliases": [
+        "Idiazábal"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MERCASA",
+        "recordId": "Idiazábal",
+        "sourceName": "Idiazábal",
+        "url": "https://www.mercasa.es/publicaciones/alimentacion-en-espana/leche-y-productos-lacteos/quesos/"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "roncal",
+      "defaultName": "Roncal",
+      "category": "QUESOS",
+      "aliases": [
+        "Roncal"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MERCASA",
+        "recordId": "Roncal",
+        "sourceName": "Roncal",
+        "url": "https://www.mercasa.es/publicaciones/alimentacion-en-espana/leche-y-productos-lacteos/quesos/"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "abadejo",
+      "defaultName": "Abadejo",
+      "category": "PESCADOS_Y_MARISCOS",
+      "aliases": [
+        "Abadejo"
+      ],
+      "allergens": [
+        "FISH"
+      ],
+      "evidence": {
+        "sourceId": "BOE",
+        "recordId": "POL",
+        "sourceName": "Abadejo",
+        "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2026-12598"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación.",
+      "scientificName": "Pollachius pollachius"
+    },
+    {
+      "canonicalKey": "abadejo_de_alaska",
+      "defaultName": "Abadejo de Alaska",
+      "category": "PESCADOS_Y_MARISCOS",
+      "aliases": [
+        "Abadejo de Alaska",
+        "Colín de Alaska"
+      ],
+      "allergens": [
+        "FISH"
+      ],
+      "evidence": {
+        "sourceId": "BOE",
+        "recordId": "ALK",
+        "sourceName": "Abadejo de Alaska o colín de Alaska",
+        "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2026-12598"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación.",
+      "scientificName": "Gadus chalcogrammus"
+    },
+    {
+      "canonicalKey": "almeja_babosa",
+      "defaultName": "Almeja babosa",
+      "category": "PESCADOS_Y_MARISCOS",
+      "aliases": [
+        "Almeja babosa",
+        "Chocha"
+      ],
+      "allergens": [
+        "SHELLFISH"
+      ],
+      "evidence": {
+        "sourceId": "BOE",
+        "recordId": "VUC",
+        "sourceName": "Almeja o Almeja babosa o chocha",
+        "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2026-12598"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación.",
+      "scientificName": "Venerupis corrugata"
+    },
+    {
+      "canonicalKey": "almeja_fina",
+      "defaultName": "Almeja fina",
+      "category": "PESCADOS_Y_MARISCOS",
+      "aliases": [
+        "Almeja fina"
+      ],
+      "allergens": [
+        "SHELLFISH"
+      ],
+      "evidence": {
+        "sourceId": "BOE",
+        "recordId": "CTG",
+        "sourceName": "Almeja o Almeja fina",
+        "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2026-12598"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación.",
+      "scientificName": "Ruditapes decussatus"
+    },
+    {
+      "canonicalKey": "almeja_japonesa",
+      "defaultName": "Almeja japonesa",
+      "category": "PESCADOS_Y_MARISCOS",
+      "aliases": [
+        "Almeja japonesa"
+      ],
+      "allergens": [
+        "SHELLFISH"
+      ],
+      "evidence": {
+        "sourceId": "BOE",
+        "recordId": "CLJ",
+        "sourceName": "Almeja o Almeja japonesa",
+        "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2026-12598"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación.",
+      "scientificName": "Ruditapes philippinarum"
+    },
+    {
+      "canonicalKey": "bacalao_fresco",
+      "defaultName": "Bacalao fresco",
+      "category": "PESCADOS_Y_MARISCOS",
+      "aliases": [
+        "Bacalao fresco"
+      ],
+      "allergens": [
+        "FISH"
+      ],
+      "evidence": {
+        "sourceId": "BOE",
+        "recordId": "COD",
+        "sourceName": "Bacalao",
+        "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2026-12598"
+      },
+      "identityReason": "Gadus morhua sin salar; la ficha existente Bacalao salado describe otra preparación.",
+      "scientificName": "Gadus morhua"
+    },
+    {
+      "canonicalKey": "berberecho",
+      "defaultName": "Berberecho",
+      "category": "PESCADOS_Y_MARISCOS",
+      "aliases": [
+        "Berberecho"
+      ],
+      "allergens": [
+        "SHELLFISH"
+      ],
+      "evidence": {
+        "sourceId": "BOE",
+        "recordId": "COC",
+        "sourceName": "Berberecho",
+        "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2026-12598"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación.",
+      "scientificName": "Cerastoderma edule"
+    },
+    {
+      "canonicalKey": "besugo",
+      "defaultName": "Besugo",
+      "category": "PESCADOS_Y_MARISCOS",
+      "aliases": [
+        "Besugo"
+      ],
+      "allergens": [
+        "FISH"
+      ],
+      "evidence": {
+        "sourceId": "BOE",
+        "recordId": "SBR",
+        "sourceName": "Besugo",
+        "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2026-12598"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación.",
+      "scientificName": "Pagellus bogaraveo"
+    },
+    {
+      "canonicalKey": "bigaro",
+      "defaultName": "Bígaro",
+      "category": "PESCADOS_Y_MARISCOS",
+      "aliases": [
+        "Bígaro"
+      ],
+      "allergens": [
+        "SHELLFISH"
+      ],
+      "evidence": {
+        "sourceId": "BOE",
+        "recordId": "PEE",
+        "sourceName": "Bígaro",
+        "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2026-12598"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación.",
+      "scientificName": "Littorina littorea"
+    },
+    {
+      "canonicalKey": "bonito_atlantico",
+      "defaultName": "Bonito atlántico",
+      "category": "PESCADOS_Y_MARISCOS",
+      "aliases": [
+        "Bonito atlántico"
+      ],
+      "allergens": [
+        "FISH"
+      ],
+      "evidence": {
+        "sourceId": "BOE",
+        "recordId": "BON",
+        "sourceName": "Bonito",
+        "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2026-12598"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación.",
+      "scientificName": "Sarda sarda"
+    },
+    {
+      "canonicalKey": "brotola_de_roca",
+      "defaultName": "Brótola de roca",
+      "category": "PESCADOS_Y_MARISCOS",
+      "aliases": [
+        "Brótola de roca"
+      ],
+      "allergens": [
+        "FISH"
+      ],
+      "evidence": {
+        "sourceId": "BOE",
+        "recordId": "FOR",
+        "sourceName": "Brótola de roca",
+        "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2026-12598"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación.",
+      "scientificName": "Phycis phycis"
+    },
+    {
+      "canonicalKey": "buey_de_mar",
+      "defaultName": "Buey de mar",
+      "category": "PESCADOS_Y_MARISCOS",
+      "aliases": [
+        "Buey de mar"
+      ],
+      "allergens": [
+        "SHELLFISH"
+      ],
+      "evidence": {
+        "sourceId": "BOE",
+        "recordId": "CRE",
+        "sourceName": "Buey de mar",
+        "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2026-12598"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación.",
+      "scientificName": "Cancer pagurus"
+    },
+    {
+      "canonicalKey": "cabracho",
+      "defaultName": "Cabracho",
+      "category": "PESCADOS_Y_MARISCOS",
+      "aliases": [
+        "Cabracho"
+      ],
+      "allergens": [
+        "FISH"
+      ],
+      "evidence": {
+        "sourceId": "BOE",
+        "recordId": "RSE",
+        "sourceName": "Cabracho",
+        "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2026-12598"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación.",
+      "scientificName": "Scorpaena scrofa"
+    },
+    {
+      "canonicalKey": "congrio",
+      "defaultName": "Congrio",
+      "category": "PESCADOS_Y_MARISCOS",
+      "aliases": [
+        "Congrio"
+      ],
+      "allergens": [
+        "FISH"
+      ],
+      "evidence": {
+        "sourceId": "BOE",
+        "recordId": "COE",
+        "sourceName": "Congrio",
+        "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2026-12598"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación.",
+      "scientificName": "Conger conger"
+    },
+    {
+      "canonicalKey": "corvina",
+      "defaultName": "Corvina",
+      "category": "PESCADOS_Y_MARISCOS",
+      "aliases": [
+        "Corvina"
+      ],
+      "allergens": [
+        "FISH"
+      ],
+      "evidence": {
+        "sourceId": "BOE",
+        "recordId": "MGR",
+        "sourceName": "Corvina",
+        "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2026-12598"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación.",
+      "scientificName": "Argyrosomus regius"
+    },
+    {
+      "canonicalKey": "dorada",
+      "defaultName": "Dorada",
+      "category": "PESCADOS_Y_MARISCOS",
+      "aliases": [
+        "Dorada"
+      ],
+      "allergens": [
+        "FISH"
+      ],
+      "evidence": {
+        "sourceId": "BOE",
+        "recordId": "SBG",
+        "sourceName": "Dorada",
+        "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2026-12598"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación.",
+      "scientificName": "Sparus aurata"
+    },
+    {
+      "canonicalKey": "escupina",
+      "defaultName": "Escupiña",
+      "category": "PESCADOS_Y_MARISCOS",
+      "aliases": [
+        "Escupiña",
+        "Escupiña grabada"
+      ],
+      "allergens": [
+        "SHELLFISH"
+      ],
+      "evidence": {
+        "sourceId": "BOE",
+        "recordId": "VEV",
+        "sourceName": "Escupiña o escupiña grabada",
+        "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2026-12598"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación.",
+      "scientificName": "Venus verrucosa"
+    },
+    {
+      "canonicalKey": "faneca",
+      "defaultName": "Faneca",
+      "category": "PESCADOS_Y_MARISCOS",
+      "aliases": [
+        "Faneca"
+      ],
+      "allergens": [
+        "FISH"
+      ],
+      "evidence": {
+        "sourceId": "BOE",
+        "recordId": "BIB",
+        "sourceName": "Faneca",
+        "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2026-12598"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación.",
+      "scientificName": "Trisopterus luscus"
+    },
+    {
+      "canonicalKey": "lubina",
+      "defaultName": "Lubina",
+      "category": "PESCADOS_Y_MARISCOS",
+      "aliases": [
+        "Lubina",
+        "Róbalo"
+      ],
+      "allergens": [
+        "FISH"
+      ],
+      "evidence": {
+        "sourceId": "BOE",
+        "recordId": "BSS",
+        "sourceName": "Lubina o róbalo",
+        "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2026-12598"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación.",
+      "scientificName": "Dicentrarchus labrax"
+    },
+    {
+      "canonicalKey": "merluza_europea",
+      "defaultName": "Merluza europea",
+      "category": "PESCADOS_Y_MARISCOS",
+      "aliases": [
+        "Merluza europea"
+      ],
+      "allergens": [
+        "FISH"
+      ],
+      "evidence": {
+        "sourceId": "BOE",
+        "recordId": "HKE",
+        "sourceName": "Merluza o merluza/pescadilla europea **",
+        "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2026-12598"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación.",
+      "scientificName": "Merluccius merluccius"
+    },
+    {
+      "canonicalKey": "necora",
+      "defaultName": "Nécora",
+      "category": "PESCADOS_Y_MARISCOS",
+      "aliases": [
+        "Nécora"
+      ],
+      "allergens": [
+        "SHELLFISH"
+      ],
+      "evidence": {
+        "sourceId": "BOE",
+        "recordId": "LIO",
+        "sourceName": "Nécora",
+        "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2026-12598"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación.",
+      "scientificName": "Necora puber"
+    },
+    {
+      "canonicalKey": "pez_espada",
+      "defaultName": "Pez espada",
+      "category": "PESCADOS_Y_MARISCOS",
+      "aliases": [
+        "Pez espada",
+        "Emperador"
+      ],
+      "allergens": [
+        "FISH"
+      ],
+      "evidence": {
+        "sourceId": "BOE",
+        "recordId": "SWO",
+        "sourceName": "Pez espada o emperador",
+        "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2026-12598"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación.",
+      "scientificName": "Xiphias gladius"
+    },
+    {
+      "canonicalKey": "rodaballo",
+      "defaultName": "Rodaballo",
+      "category": "PESCADOS_Y_MARISCOS",
+      "aliases": [
+        "Rodaballo"
+      ],
+      "allergens": [
+        "FISH"
+      ],
+      "evidence": {
+        "sourceId": "BOE",
+        "recordId": "TUR",
+        "sourceName": "Rodaballo",
+        "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2026-12598"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación.",
+      "scientificName": "Scophthalmus maximus"
+    },
+    {
+      "canonicalKey": "salmonete_de_fango",
+      "defaultName": "Salmonete de fango",
+      "category": "PESCADOS_Y_MARISCOS",
+      "aliases": [
+        "Salmonete de fango"
+      ],
+      "allergens": [
+        "FISH"
+      ],
+      "evidence": {
+        "sourceId": "BOE",
+        "recordId": "MUT",
+        "sourceName": "Salmonete de fango",
+        "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2026-12598"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación.",
+      "scientificName": "Mullus barbatus"
+    },
+    {
+      "canonicalKey": "salmonete_de_roca",
+      "defaultName": "Salmonete de roca",
+      "category": "PESCADOS_Y_MARISCOS",
+      "aliases": [
+        "Salmonete de roca"
+      ],
+      "allergens": [
+        "FISH"
+      ],
+      "evidence": {
+        "sourceId": "BOE",
+        "recordId": "MUR",
+        "sourceName": "Salmonete de roca",
+        "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2026-12598"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación.",
+      "scientificName": "Mullus surmuletus"
+    },
+    {
+      "canonicalKey": "solla",
+      "defaultName": "Solla",
+      "category": "PESCADOS_Y_MARISCOS",
+      "aliases": [
+        "Solla",
+        "Platija nórdica"
+      ],
+      "allergens": [
+        "FISH"
+      ],
+      "evidence": {
+        "sourceId": "BOE",
+        "recordId": "PLE",
+        "sourceName": "Solla o platija nórdica",
+        "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2026-12598"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación.",
+      "scientificName": "Pleuronectes platessa"
+    },
+    {
+      "canonicalKey": "zamburina",
+      "defaultName": "Zamburiña",
+      "category": "PESCADOS_Y_MARISCOS",
+      "aliases": [
+        "Zamburiña"
+      ],
+      "allergens": [
+        "SHELLFISH"
+      ],
+      "evidence": {
+        "sourceId": "BOE",
+        "recordId": "VSC",
+        "sourceName": "Zamburiña",
+        "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2026-12598"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación.",
+      "scientificName": "Mimachlamys varia"
+    },
+    {
+      "canonicalKey": "niscalo",
+      "defaultName": "Níscalo",
+      "category": "SETAS",
+      "aliases": [
+        "Níscalo",
+        "Rovellón"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MADRID",
+        "recordId": "Lactarius deliciosus",
+        "sourceName": "Lactarius deliciosus",
+        "url": "https://www.comunidad.madrid/salud/setas-frescas-silvestres-comercializables"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación.",
+      "scientificName": "Lactarius deliciosus"
+    },
+    {
+      "canonicalKey": "senderuela",
+      "defaultName": "Senderuela",
+      "category": "SETAS",
+      "aliases": [
+        "Senderuela",
+        "Seta de carrerilla"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MADRID",
+        "recordId": "Marasmius oreades",
+        "sourceName": "Marasmius oreades",
+        "url": "https://www.comunidad.madrid/salud/setas-frescas-silvestres-comercializables"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación.",
+      "scientificName": "Marasmius oreades"
+    },
+    {
+      "canonicalKey": "pie_azul",
+      "defaultName": "Pie azul",
+      "category": "SETAS",
+      "aliases": [
+        "Pie azul",
+        "Seta de pie azul"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MADRID",
+        "recordId": "Lepista nuda",
+        "sourceName": "Lepista nuda",
+        "url": "https://www.comunidad.madrid/salud/setas-frescas-silvestres-comercializables"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación.",
+      "scientificName": "Lepista nuda"
+    },
+    {
+      "canonicalKey": "pie_violeta",
+      "defaultName": "Pie violeta",
+      "category": "SETAS",
+      "aliases": [
+        "Pie violeta",
+        "Seta de pie violeta"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MADRID",
+        "recordId": "Lepista personata",
+        "sourceName": "Lepista personata",
+        "url": "https://www.comunidad.madrid/salud/setas-frescas-silvestres-comercializables"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación.",
+      "scientificName": "Lepista personata"
+    },
+    {
+      "canonicalKey": "seta_de_san_jorge",
+      "defaultName": "Seta de San Jorge",
+      "category": "SETAS",
+      "aliases": [
+        "Seta de San Jorge",
+        "Perrechico"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MADRID",
+        "recordId": "Calocybe gambosa",
+        "sourceName": "Calocybe gambosa",
+        "url": "https://www.comunidad.madrid/salud/setas-frescas-silvestres-comercializables"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación.",
+      "scientificName": "Calocybe gambosa"
+    },
+    {
+      "canonicalKey": "parasol",
+      "defaultName": "Parasol",
+      "category": "SETAS",
+      "aliases": [
+        "Parasol",
+        "Galamperna"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MADRID",
+        "recordId": "Macrolepiota procera",
+        "sourceName": "Macrolepiota procera",
+        "url": "https://www.comunidad.madrid/salud/setas-frescas-silvestres-comercializables"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación.",
+      "scientificName": "Macrolepiota procera"
+    },
+    {
+      "canonicalKey": "gurumelo",
+      "defaultName": "Gurumelo",
+      "category": "SETAS",
+      "aliases": [
+        "Gurumelo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MADRID",
+        "recordId": "Amanita ponderosa",
+        "sourceName": "Amanita ponderosa",
+        "url": "https://www.comunidad.madrid/salud/setas-frescas-silvestres-comercializables"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación.",
+      "scientificName": "Amanita ponderosa"
+    },
+    {
+      "canonicalKey": "seta_de_marzo",
+      "defaultName": "Seta de marzo",
+      "category": "SETAS",
+      "aliases": [
+        "Seta de marzo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MADRID",
+        "recordId": "Hygrophorus marzuolus",
+        "sourceName": "Hygrophorus marzuolus",
+        "url": "https://www.comunidad.madrid/salud/setas-frescas-silvestres-comercializables"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación.",
+      "scientificName": "Hygrophorus marzuolus"
+    },
+    {
+      "canonicalKey": "llanega_blanca",
+      "defaultName": "Llanega blanca",
+      "category": "SETAS",
+      "aliases": [
+        "Llanega blanca"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MADRID",
+        "recordId": "Hygrophorus penarius",
+        "sourceName": "Hygrophorus penarius",
+        "url": "https://www.comunidad.madrid/salud/setas-frescas-silvestres-comercializables"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación.",
+      "scientificName": "Hygrophorus penarius"
+    },
+    {
+      "canonicalKey": "seta_cardenal",
+      "defaultName": "Seta cardenal",
+      "category": "SETAS",
+      "aliases": [
+        "Seta cardenal"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MADRID",
+        "recordId": "Hygrophorus russula",
+        "sourceName": "Hygrophorus russula",
+        "url": "https://www.comunidad.madrid/salud/setas-frescas-silvestres-comercializables"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación.",
+      "scientificName": "Hygrophorus russula"
+    },
+    {
+      "canonicalKey": "seta_de_brezo",
+      "defaultName": "Seta de brezo",
+      "category": "SETAS",
+      "aliases": [
+        "Seta de brezo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MADRID",
+        "recordId": "Lepista panaeolus",
+        "sourceName": "Lepista panaeolus",
+        "url": "https://www.comunidad.madrid/salud/setas-frescas-silvestres-comercializables"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación.",
+      "scientificName": "Lepista panaeolus"
+    },
+    {
+      "canonicalKey": "champinon_silvestre",
+      "defaultName": "Champiñón silvestre",
+      "category": "SETAS",
+      "aliases": [
+        "Champiñón silvestre"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MADRID",
+        "recordId": "Agaricus campestris",
+        "sourceName": "Agaricus campestris",
+        "url": "https://www.comunidad.madrid/salud/setas-frescas-silvestres-comercializables"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación.",
+      "scientificName": "Agaricus campestris"
+    },
+    {
+      "canonicalKey": "extracto_de_almendra",
+      "defaultName": "Extracto de almendra",
+      "category": "AROMAS_Y_EXTRACTOS",
+      "aliases": [
+        "Extracto de almendra"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "NIELSEN",
+        "recordId": "Pure Almond Extract",
+        "sourceName": "Pure Almond Extract",
+        "url": "https://nielsenmassey.com/vanillas-and-flavors/"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "extracto_de_chocolate",
+      "defaultName": "Extracto de chocolate",
+      "category": "AROMAS_Y_EXTRACTOS",
+      "aliases": [
+        "Extracto de chocolate"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "NIELSEN",
+        "recordId": "Pure Chocolate Extract",
+        "sourceName": "Pure Chocolate Extract",
+        "url": "https://nielsenmassey.com/vanillas-and-flavors/"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "extracto_de_cafe",
+      "defaultName": "Extracto de café",
+      "category": "AROMAS_Y_EXTRACTOS",
+      "aliases": [
+        "Extracto de café"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "NIELSEN",
+        "recordId": "Pure Coffee Extract",
+        "sourceName": "Pure Coffee Extract",
+        "url": "https://nielsenmassey.com/vanillas-and-flavors/"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "extracto_de_limon",
+      "defaultName": "Extracto de limón",
+      "category": "AROMAS_Y_EXTRACTOS",
+      "aliases": [
+        "Extracto de limón"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "NIELSEN",
+        "recordId": "Pure Lemon Extract",
+        "sourceName": "Pure Lemon Extract",
+        "url": "https://nielsenmassey.com/vanillas-and-flavors/"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "extracto_de_naranja",
+      "defaultName": "Extracto de naranja",
+      "category": "AROMAS_Y_EXTRACTOS",
+      "aliases": [
+        "Extracto de naranja"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "NIELSEN",
+        "recordId": "Pure Orange Extract",
+        "sourceName": "Pure Orange Extract",
+        "url": "https://nielsenmassey.com/vanillas-and-flavors/"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "extracto_de_menta_piperita",
+      "defaultName": "Extracto de menta piperita",
+      "category": "AROMAS_Y_EXTRACTOS",
+      "aliases": [
+        "Extracto de menta piperita"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "NIELSEN",
+        "recordId": "Pure Peppermint Extract",
+        "sourceName": "Pure Peppermint Extract",
+        "url": "https://nielsenmassey.com/vanillas-and-flavors/"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "pasta_de_vainilla",
+      "defaultName": "Pasta de vainilla",
+      "category": "AROMAS_Y_EXTRACTOS",
+      "aliases": [
+        "Pasta de vainilla"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "NIELSEN",
+        "recordId": "Pure Vanilla Bean Paste",
+        "sourceName": "Pure Vanilla Bean Paste",
+        "url": "https://nielsenmassey.com/vanillas-and-flavors/"
+      },
+      "identityReason": "Pasta con semillas de vainilla; preparación distinta del extracto líquido y de la vaina entera."
+    },
+    {
+      "canonicalKey": "vainilla_en_vaina",
+      "defaultName": "Vainilla en vaina",
+      "category": "HIERBAS_ESPECIAS",
+      "aliases": [
+        "Vainilla en vaina",
+        "Vainas de vainilla"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "NIELSEN",
+        "recordId": "Gourmet Vanilla Beans",
+        "sourceName": "Gourmet Vanilla Beans",
+        "url": "https://nielsenmassey.com/vanillas-and-flavors/"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "cardamomo_negro",
+      "defaultName": "Cardamomo negro",
+      "category": "HIERBAS_ESPECIAS",
+      "aliases": [
+        "Cardamomo negro"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SPICEHOUSE",
+        "recordId": "Black Cardamom Pods",
+        "sourceName": "Black Cardamom Pods",
+        "url": "https://www.thespicehouse.com/collections/all"
+      },
+      "identityReason": "Materia prima, corte, especie o preparación documentada; nombre español editorial sin crear fichas por traducción, marca, tamaño de envase o certificación."
+    },
+    {
+      "canonicalKey": "semillas_de_apio",
+      "defaultName": "Semillas de apio",
+      "category": "HIERBAS_ESPECIAS",
+      "aliases": [
+        "Semillas de apio"
+      ],
+      "allergens": [
+        "CELERY"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "170920",
+        "sourceName": "Spices, celery seed",
+        "url": "https://fdc.nal.usda.gov/food-details/170920/nutrients"
+      },
+      "identityReason": "Semillas; distintas del apio, del apionabo y del apio en polvo."
+    },
+    {
+      "canonicalKey": "semillas_de_eneldo",
+      "defaultName": "Semillas de eneldo",
+      "category": "HIERBAS_ESPECIAS",
+      "aliases": [
+        "Semillas de eneldo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "170925",
+        "sourceName": "Spices, dill seed",
+        "url": "https://fdc.nal.usda.gov/food-details/170925/nutrients"
+      },
+      "identityReason": "Semillas; se distinguen de la hierba aromática Eneldo."
+    }
+  ],
+  "collisionReview": {
+    "method": "Comparación exacta normalizada, singular/plural y alertas de sinonimia de una taxonomía de descubrimiento. Las alertas se resuelven editorialmente; nunca se importa esa taxonomía a la lista.",
+    "resolved": [
+      {
+        "canonicalKey": "guinda",
+        "existingKey": "cerezas",
+        "decision": "Cereza ácida documentada como sour cherry (FDC 173954); se conserva diferenciada de la ficha genérica Cerezas. El enlace amplio de la taxonomía de descubrimiento no demuestra sinonimia exacta."
+      },
+      {
+        "canonicalKey": "lechuga_de_hoja_roja",
+        "existingKey": "lechuga",
+        "decision": "Tipo de lechuga identificado por hoja roja en FDC 168431; no es una traducción de la ficha genérica Lechuga. Comparte familia, pero especifica un tipo culinario."
+      }
+    ]
+  }
+}

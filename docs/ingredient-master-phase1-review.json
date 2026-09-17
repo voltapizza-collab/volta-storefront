@@ -1,0 +1,634 @@
+{
+  "date": "2026-09-16",
+  "policy": "Conservar todas las claves y categorías. La coincidencia de nombre no autoriza una fusión de identidades o una migración de ingredientes ya usados.",
+  "confirmedDuplicateGroups": [
+    {
+      "entries": [
+        {
+          "canonicalKey": "champi_ones_blancos",
+          "name": "Champiñones blancos"
+        },
+        {
+          "canonicalKey": "champi_nes_blancos",
+          "name": "Champiñones blancos"
+        }
+      ],
+      "reason": "Mismo nombre tras reparar la codificación; conservar las dos claves hasta revisar referencias y preparar una consolidación."
+    }
+  ],
+  "possibleEquivalentGroups": [
+    {
+      "entries": [
+        {
+          "canonicalKey": "aceite_de_canola",
+          "name": "Aceite de canola"
+        },
+        {
+          "canonicalKey": "aceite_de_colza",
+          "name": "Aceite de colza"
+        }
+      ],
+      "reason": "Canola y colza: comprobar si la ficha distingue una variedad o composición específica."
+    },
+    {
+      "entries": [
+        {
+          "canonicalKey": "extracto_de_paprika",
+          "name": "Extracto de paprika"
+        },
+        {
+          "canonicalKey": "extracto_de_piment_n",
+          "name": "Extracto de pimentón"
+        }
+      ],
+      "reason": "Paprika y pimentón: comprobar variedad y composición del extracto."
+    },
+    {
+      "entries": [
+        {
+          "canonicalKey": "carne_molida_de_res",
+          "name": "Carne molida de res"
+        },
+        {
+          "canonicalKey": "carne_molida_de_vacuno",
+          "name": "Carne molida de vacuno"
+        }
+      ],
+      "reason": "Res y vacuno: posible sinonimia regional de la misma carne molida."
+    },
+    {
+      "entries": [
+        {
+          "canonicalKey": "res",
+          "name": "Res"
+        },
+        {
+          "canonicalKey": "vacuno",
+          "name": "Vacuno"
+        }
+      ],
+      "reason": "Res y vacuno: posible sinonimia regional; no confundir con ternera o buey."
+    },
+    {
+      "entries": [
+        {
+          "canonicalKey": "cayena",
+          "name": "Cayena"
+        },
+        {
+          "canonicalKey": "pimienta_cayena",
+          "name": "Pimienta cayena"
+        }
+      ],
+      "reason": "Cayena y pimienta cayena: confirmar forma del ingrediente."
+    },
+    {
+      "entries": [
+        {
+          "canonicalKey": "cilantro",
+          "name": "Cilantro"
+        },
+        {
+          "canonicalKey": "coriandro",
+          "name": "Coriandro"
+        },
+        {
+          "canonicalKey": "semillas_de_cilantro",
+          "name": "Semillas de cilantro"
+        }
+      ],
+      "reason": "Cilantro, coriandro y semillas de cilantro: distinguir hoja y semilla antes de consolidar."
+    },
+    {
+      "entries": [
+        {
+          "canonicalKey": "alubias_rojas",
+          "name": "Alubias rojas"
+        },
+        {
+          "canonicalKey": "jud_as_rojas",
+          "name": "Judías rojas"
+        }
+      ],
+      "reason": "Alubias rojas y judías rojas: confirmar variedad."
+    },
+    {
+      "entries": [
+        {
+          "canonicalKey": "linaza",
+          "name": "Linaza"
+        },
+        {
+          "canonicalKey": "semillas_de_lino",
+          "name": "Semillas de lino"
+        }
+      ],
+      "reason": "Linaza y semillas de lino: confirmar que no hay preparación distinta."
+    },
+    {
+      "entries": [
+        {
+          "canonicalKey": "ostiones",
+          "name": "Ostiones"
+        },
+        {
+          "canonicalKey": "ostras",
+          "name": "Ostras"
+        }
+      ],
+      "reason": "Ostiones y ostras: pueden designar especies distintas según el país."
+    },
+    {
+      "entries": [
+        {
+          "canonicalKey": "caracola",
+          "name": "Caracola"
+        },
+        {
+          "canonicalKey": "scungilli_caracola",
+          "name": "Scungilli / caracola"
+        }
+      ],
+      "reason": "Caracola y scungilli: confirmar especie; el nombre común es amplio."
+    },
+    {
+      "entries": [
+        {
+          "canonicalKey": "crema_fresca",
+          "name": "Crema fresca"
+        },
+        {
+          "canonicalKey": "cr_me_fra_che",
+          "name": "Crème fraîche"
+        }
+      ],
+      "reason": "Crema fresca y crème fraîche: confirmar si la primera es fermentada."
+    },
+    {
+      "entries": [
+        {
+          "canonicalKey": "chipotle",
+          "name": "Chipotle"
+        },
+        {
+          "canonicalKey": "salsa_de_chipotle",
+          "name": "Salsa de chipotle"
+        }
+      ],
+      "reason": "Chipotle figura en salsas: puede ser el chile o una salsa de composición distinta."
+    },
+    {
+      "entries": [
+        {
+          "canonicalKey": "salsa_peri_peri",
+          "name": "Salsa peri-peri"
+        },
+        {
+          "canonicalKey": "salsa_piri_piri",
+          "name": "Salsa piri piri"
+        }
+      ],
+      "reason": "Peri-peri y piri piri: posible variante de nombre; confirmar receta."
+    },
+    {
+      "entries": [
+        {
+          "canonicalKey": "salsa_tum",
+          "name": "Salsa Tum"
+        },
+        {
+          "canonicalKey": "toum",
+          "name": "Toum"
+        }
+      ],
+      "reason": "Tum y toum: comprobar si ambas fichas representan la misma salsa de ajo."
+    },
+    {
+      "entries": [
+        {
+          "canonicalKey": "champi_ones_blancos",
+          "name": "Champiñones blancos"
+        },
+        {
+          "canonicalKey": "champi_ones_de_par_s",
+          "name": "Champiñones de París"
+        }
+      ],
+      "reason": "Champiñones blancos y de París: confirmar variedad y presentación."
+    },
+    {
+      "entries": [
+        {
+          "canonicalKey": "boletus",
+          "name": "Boletus"
+        },
+        {
+          "canonicalKey": "porcini",
+          "name": "Porcini"
+        }
+      ],
+      "reason": "Boletus y porcini: comprobar alcance taxonómico antes de fusionar."
+    },
+    {
+      "entries": [
+        {
+          "canonicalKey": "champi_nes_crimini",
+          "name": "Champiñones crimini"
+        },
+        {
+          "canonicalKey": "portabellini",
+          "name": "Portabellini"
+        }
+      ],
+      "reason": "Crimini y portabellini: confirmar variedad, madurez y tamaño."
+    },
+    {
+      "entries": [
+        {
+          "canonicalKey": "cebolla_morada_de_tropea",
+          "name": "Cebolla morada de Tropea"
+        },
+        {
+          "canonicalKey": "cebolla_roja_de_tropea",
+          "name": "Cebolla roja de Tropea"
+        }
+      ],
+      "reason": "Cebolla morada y roja de Tropea: posible sinonimia regional."
+    },
+    {
+      "entries": [
+        {
+          "canonicalKey": "cebolla_de_verdeo",
+          "name": "Cebolla de verdeo"
+        },
+        {
+          "canonicalKey": "cebolleta",
+          "name": "Cebolleta"
+        }
+      ],
+      "reason": "Cebolla de verdeo y cebolleta: pueden designar variedades o madurez distintas."
+    },
+    {
+      "entries": [
+        {
+          "canonicalKey": "choclo",
+          "name": "Choclo"
+        },
+        {
+          "canonicalKey": "ma_z",
+          "name": "Maíz"
+        }
+      ],
+      "reason": "Choclo y maíz: comprobar madurez, variedad y presentación."
+    },
+    {
+      "entries": [
+        {
+          "canonicalKey": "esp_rrago_triguero",
+          "name": "Espárrago triguero"
+        },
+        {
+          "canonicalKey": "esp_rrago_verde",
+          "name": "Espárrago verde"
+        }
+      ],
+      "reason": "Espárrago triguero y verde: puede haber distinción entre silvestre y cultivado."
+    },
+    {
+      "entries": [
+        {
+          "canonicalKey": "peperoncino_marinado",
+          "name": "Peperoncino marinado"
+        },
+        {
+          "canonicalKey": "peperoni_en_vinagre",
+          "name": "Peperoni en vinagre"
+        },
+        {
+          "canonicalKey": "peperoni_encurtidos",
+          "name": "Peperoni encurtidos"
+        },
+        {
+          "canonicalKey": "pimientos_al_vinagre",
+          "name": "Pimientos al vinagre"
+        }
+      ],
+      "reason": "Peperoncino, peperoni y pimientos: distinguir especie/picante y marinado frente a encurtido en vinagre."
+    }
+  ],
+  "semanticReview": [
+    {
+      "entries": [
+        {
+          "canonicalKey": "cocodrilo_caim_n",
+          "name": "Cocodrilo / caimán"
+        }
+      ],
+      "reason": "Cocodrilo y caimán aparecen combinados; no asumir que son un ingrediente único."
+    },
+    {
+      "entries": [
+        {
+          "canonicalKey": "hierba_luisa_lemongrass",
+          "name": "Hierba luisa / lemongrass"
+        }
+      ],
+      "reason": "Hierba luisa y lemongrass pueden designar plantas distintas según la región."
+    },
+    {
+      "entries": [
+        {
+          "canonicalKey": "chapulines_grillos_tostados",
+          "name": "Chapulines / grillos tostados"
+        }
+      ],
+      "reason": "Chapulines y grillos no son intercambiables por defecto."
+    },
+    {
+      "entries": [
+        {
+          "canonicalKey": "queso_duro_blando",
+          "name": "Queso duro blando"
+        }
+      ],
+      "reason": "Queso duro blando es una denominación contradictoria; requiere fuente original."
+    },
+    {
+      "entries": [
+        {
+          "canonicalKey": "soppressata_salami_sin_curar",
+          "name": "Soppressata: salami sin curar"
+        },
+        {
+          "canonicalKey": "soppressata_salchicha_curada",
+          "name": "Soppressata: salchicha curada"
+        }
+      ],
+      "reason": "Soppressata sin curar/curada: comprobar producto y descripción."
+    },
+    {
+      "entries": [
+        {
+          "canonicalKey": "queso_saint_maure",
+          "name": "Queso Saint-Maure"
+        }
+      ],
+      "reason": "Saint-Maure: confirmar si se refiere a Sainte-Maure u otro nombre comercial antes de renombrar."
+    },
+    {
+      "entries": [
+        {
+          "canonicalKey": "gamonal",
+          "name": "Gamonal"
+        },
+        {
+          "canonicalKey": "red_hotdog",
+          "name": "Red hotdog"
+        },
+        {
+          "canonicalKey": "tomate_bush",
+          "name": "Tomate Bush"
+        },
+        {
+          "canonicalKey": "keong_khas_banyubiru",
+          "name": "Keong khas Banyubiru"
+        },
+        {
+          "canonicalKey": "kingfish_pez_rey_del_golfo",
+          "name": "Kingfish / pez rey del Golfo"
+        },
+        {
+          "canonicalKey": "piton_ma_do",
+          "name": "Piton Maïdo"
+        },
+        {
+          "canonicalKey": "pljevlja_queso_de_oveja_de_pljevlja",
+          "name": "Pljevlja / queso de oveja de Pljevlja"
+        },
+        {
+          "canonicalKey": "queso_tasty",
+          "name": "Queso tasty"
+        },
+        {
+          "canonicalKey": "queso_yuki",
+          "name": "Queso yuki"
+        },
+        {
+          "canonicalKey": "picante",
+          "name": "Picante"
+        },
+        {
+          "canonicalKey": "salsa_de_hueso",
+          "name": "Salsa de hueso"
+        },
+        {
+          "canonicalKey": "salsa_k_ssamjang",
+          "name": "Salsa K-Ssamjang"
+        },
+        {
+          "canonicalKey": "vinaza_roja",
+          "name": "Vinaza roja"
+        },
+        {
+          "canonicalKey": "rocket_maldivo",
+          "name": "Rocket maldivo"
+        }
+      ],
+      "reason": "Denominaciones genéricas, comerciales o regionales: necesitan fuente y definición; la corrección de escritura no valida identidad o composición."
+    }
+  ],
+  "categoryReview": [
+    {
+      "entries": [
+        {
+          "canonicalKey": "caracoles_malteses",
+          "name": "Caracoles malteses"
+        },
+        {
+          "canonicalKey": "escargots_de_bourgogne",
+          "name": "Escargots de Bourgogne"
+        }
+      ],
+      "reason": "Caracoles en carnes: revisar el criterio de categoría de moluscos."
+    },
+    {
+      "entries": [
+        {
+          "canonicalKey": "shubat",
+          "name": "Shubat"
+        }
+      ],
+      "reason": "Shubat está en cremas dulces; comprobar categoría de lácteo fermentado."
+    },
+    {
+      "entries": [
+        {
+          "canonicalKey": "mermelada_de_tocino",
+          "name": "Mermelada de tocino"
+        }
+      ],
+      "reason": "Mermelada de tocino está en frutas."
+    },
+    {
+      "entries": [
+        {
+          "canonicalKey": "at_n_vegano",
+          "name": "Atún vegano"
+        },
+        {
+          "canonicalKey": "chorizo_vegetal",
+          "name": "Chorizo vegetal"
+        },
+        {
+          "canonicalKey": "falafel",
+          "name": "Falafel"
+        },
+        {
+          "canonicalKey": "jackfruit_bbq",
+          "name": "Yaca a la barbacoa"
+        },
+        {
+          "canonicalKey": "jackfruit_estilo_pulled_pork",
+          "name": "Yaca estilo pulled pork"
+        },
+        {
+          "canonicalKey": "jackfruit_pepperoni",
+          "name": "Pepperoni de yaca"
+        },
+        {
+          "canonicalKey": "jam_n_vegano",
+          "name": "Jamón vegano"
+        },
+        {
+          "canonicalKey": "natto",
+          "name": "Natto"
+        },
+        {
+          "canonicalKey": "pepperoni_de_zanahoria",
+          "name": "Pepperoni de zanahoria"
+        },
+        {
+          "canonicalKey": "pepperoni_vegetal",
+          "name": "Pepperoni vegetal"
+        },
+        {
+          "canonicalKey": "pepperoni_vegetal_de_guisantes",
+          "name": "Pepperoni vegetal de guisantes"
+        },
+        {
+          "canonicalKey": "prote_na_de_garbanzo",
+          "name": "Proteína de garbanzo"
+        },
+        {
+          "canonicalKey": "prote_na_de_guisante",
+          "name": "Proteína de guisante"
+        },
+        {
+          "canonicalKey": "salami_vegano",
+          "name": "Salami vegano"
+        },
+        {
+          "canonicalKey": "salchicha_italiana_vegetal",
+          "name": "Salchicha italiana vegetal"
+        },
+        {
+          "canonicalKey": "seit_n",
+          "name": "Seitán"
+        },
+        {
+          "canonicalKey": "seit_n_ahumado",
+          "name": "Seitán ahumado"
+        },
+        {
+          "canonicalKey": "seit_n_estilo_shawarma",
+          "name": "Seitán estilo shawarma"
+        },
+        {
+          "canonicalKey": "soja_texturizada",
+          "name": "Soja texturizada"
+        },
+        {
+          "canonicalKey": "tempeh",
+          "name": "Tempeh"
+        },
+        {
+          "canonicalKey": "tempeh_ahumado",
+          "name": "Tempeh ahumado"
+        },
+        {
+          "canonicalKey": "tofu",
+          "name": "Tofu"
+        },
+        {
+          "canonicalKey": "tofu_ahumado",
+          "name": "Tofu ahumado"
+        },
+        {
+          "canonicalKey": "tofu_apestoso",
+          "name": "Tofu apestoso"
+        },
+        {
+          "canonicalKey": "tofu_de_garbanzo_birmano",
+          "name": "Tofu de garbanzo birmano"
+        }
+      ],
+      "reason": "Proteínas vegetales y preparados están en hierbas/especias; definir categoría en la fase de taxonomía."
+    },
+    {
+      "entries": [
+        {
+          "canonicalKey": "at_n_carpaccio",
+          "name": "Carpaccio de atún"
+        },
+        {
+          "canonicalKey": "camar_n_sakura",
+          "name": "Camarón sakura"
+        },
+        {
+          "canonicalKey": "pasta_de_anchoas",
+          "name": "Pasta de anchoas"
+        },
+        {
+          "canonicalKey": "pescado_blanco_en_polvo",
+          "name": "Pescado blanco en polvo"
+        }
+      ],
+      "reason": "Preparados de pescado y marisco están en otros."
+    },
+    {
+      "entries": [
+        {
+          "canonicalKey": "queso_crema_de_ajo",
+          "name": "Queso crema de ajo"
+        }
+      ],
+      "reason": "Queso crema de ajo está en otros."
+    },
+    {
+      "entries": [
+        {
+          "canonicalKey": "cuajo_de_oveja",
+          "name": "Cuajo de oveja"
+        }
+      ],
+      "reason": "Cuajo de oveja está en quesos; es un ingrediente para elaborar queso."
+    },
+    {
+      "entries": [
+        {
+          "canonicalKey": "tomate_datterino",
+          "name": "Tomate datterino"
+        },
+        {
+          "canonicalKey": "tomate_pera",
+          "name": "Tomate pera"
+        },
+        {
+          "canonicalKey": "fruta_del_pan",
+          "name": "Fruta del pan"
+        }
+      ],
+      "reason": "Tomates en frutas y fruta del pan en verduras: fijar si el criterio es botánico o culinario."
+    }
+  ]
+}

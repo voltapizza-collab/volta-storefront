@@ -1,0 +1,128 @@
+{
+  "date": "2026-09-17",
+  "target": 3000,
+  "targetReached": true,
+  "activeValidated": 3014,
+  "originalRecordsUnchanged": 1612,
+  "addedDuringContinuousWork": 1402,
+  "addedSinceIdentityCleanup": 1910,
+  "categories": 14,
+  "byCategory": {
+    "ACEITES_GRASAS_VINAGRES": 77,
+    "AROMAS_Y_EXTRACTOS": 57,
+    "CARNES": 127,
+    "OTROS": 331,
+    "CREMAS_DULCES": 37,
+    "EMBUTIDOS": 128,
+    "ENDULZANTES": 67,
+    "FRUTAS": 275,
+    "SALSAS": 157,
+    "VERDURAS": 292,
+    "HIERBAS_ESPECIAS": 110,
+    "PESCADOS_Y_MARISCOS": 856,
+    "QUESOS": 438,
+    "SETAS": 62
+  },
+  "newCategories": 0,
+  "pendingBlocked": 25,
+  "historicalRedirectsPreserved": 11,
+  "backendAcceptsEntireMaster": true,
+  "historicalBaselineHashesVerified": 7,
+  "uniqueSourceIdentities": 1910,
+  "sourceRecordsComparedAgainstDownloads": 1674,
+  "scientificNamesCrossChecked": 835,
+  "provenanceCounts": {
+    "FDC": 396,
+    "SOSA": 73,
+    "MERCASA": 31,
+    "BOE": 807,
+    "MADRID": 17,
+    "NIELSEN": 8,
+    "SPICEHOUSE": 3,
+    "KIKKOMAN": 1,
+    "FR_AGRI": 38,
+    "DGADR": 4,
+    "MASAF_CHEESE": 41,
+    "MASAF_MEAT": 20,
+    "PAT_2024": 471
+  },
+  "batches": [
+    {
+      "number": "01",
+      "batchId": "2026-09-17-01",
+      "added": 254,
+      "totalAfter": 1358,
+      "additionalAliases": 83,
+      "baselineHashVerified": true
+    },
+    {
+      "number": "02",
+      "batchId": "2026-09-17-02",
+      "added": 254,
+      "totalAfter": 1612,
+      "additionalAliases": 46,
+      "baselineHashVerified": true
+    },
+    {
+      "number": "03",
+      "batchId": "2026-09-17-03",
+      "added": 362,
+      "totalAfter": 1974,
+      "additionalAliases": 0,
+      "baselineHashVerified": true
+    },
+    {
+      "number": "04",
+      "batchId": "2026-09-17-04",
+      "added": 235,
+      "totalAfter": 2209,
+      "additionalAliases": 6,
+      "baselineHashVerified": true
+    },
+    {
+      "number": "05",
+      "batchId": "2026-09-17-05",
+      "added": 250,
+      "totalAfter": 2459,
+      "additionalAliases": 1,
+      "baselineHashVerified": true
+    },
+    {
+      "number": "06",
+      "batchId": "2026-09-17-06",
+      "added": 388,
+      "totalAfter": 2847,
+      "additionalAliases": 0,
+      "baselineHashVerified": true
+    },
+    {
+      "number": "07",
+      "batchId": "2026-09-17-07",
+      "added": 167,
+      "totalAfter": 3014,
+      "additionalAliases": 15,
+      "baselineHashVerified": true
+    }
+  ],
+  "generatedTranslations": 0,
+  "databaseWrites": 0,
+  "publication": "LOCAL_ONLY",
+  "verification": {
+    "multiBatchRegressionTests": {
+      "passed": 7,
+      "failed": 0
+    },
+    "frontendTests": {
+      "passed": 18,
+      "failed": 0
+    },
+    "productionBuild": "PASSED",
+    "productionBuildDetails": {
+      "result": "Compiled successfully",
+      "mainGzip": "430.76 kB",
+      "increaseFromPreviousBuild": "40.7 kB",
+      "warning": "Browserslist: caniuse-lite has not been updated for 6 months; compilation completed successfully."
+    }
+  },
+  "limitation": "El control de identidades no equivale a aprobación de formulaciones, alérgenos, imágenes ni traducciones. Las fichas genéricas anteriores se conservan; las variedades o preparaciones documentadas pueden coexistir con ellas."
+}

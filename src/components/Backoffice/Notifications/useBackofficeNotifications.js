@@ -5,18 +5,34 @@ import { notificationFromSmsBalance } from "./notificationContent";
 export const NOTIFICATIONS_REFRESH_MS = 60000;
 export const notificationKey = (notice) => `${notice.id}:${notice.revision}`;
 const storageKey = (partnerId) => `volta_backoffice_notices_read_v1:${partnerId}`;
+const historyKey = (partnerId) => `volta_backoffice_notices_history_v1:${partnerId}`;
+const memory = new Map();
+function loadSaved(key, fallback = []) {
+  try {
+    const saved = JSON.parse(localStorage.getItem(key) || '[]');
+    return [...(Array.isArray(saved) ? saved : fallback), ...(memory.get(key) || [])];
+  } catch { return memory.get(key) || fallback; }
+}
+function saveLocal(key, value) {
+  try {
+    const serialized = JSON.stringify(value);
+    if (localStorage.getItem(key) !== serialized) localStorage.setItem(key, serialized);
+    memory.delete(key);
+  } catch { memory.set(key, value); /* Preserve across mounts in this session. */ }
+}
 
 function readReceipts(partnerId) {
-  try {
-    const saved = JSON.parse(localStorage.getItem(storageKey(partnerId)) || "[]");
-    return Array.isArray(saved) ? saved.filter((key) => typeof key === "string") : [];
-  } catch { return []; }
+  return [...new Set([...loadSaved(storageKey(partnerId)).filter(key => typeof key === 'string'),
+    ...readHistory(partnerId).map(notificationKey)])];
 }
+const readHistory = partnerId => loadSaved(historyKey(partnerId)).filter(item => item && typeof item.id === 'string' && item.revision != null && !item.requiresAction);
+const mergeHistory = (...groups) => [...new Map(groups.flat().map(item => [notificationKey(item), item])).values()];
 
 // The parent keys the notification center by partner ID, isolating requests and receipts.
 export default function useBackofficeNotifications(partnerId) {
   const [notifications, setNotifications] = useState([]);
   const [read, setRead] = useState(() => readReceipts(partnerId));
+  const [history, setHistory] = useState(() => readHistory(partnerId));
   const [error, setError] = useState(false);
   const [updatesUnavailable, setUpdatesUnavailable] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -89,23 +105,38 @@ export default function useBackofficeNotifications(partnerId) {
 
   useEffect(() => {
     const syncRead = (event) => {
-      if (!event.key || event.key === storageKey(partnerId)) setRead(readReceipts(partnerId));
+      if (!event.key || event.key === storageKey(partnerId)) setRead(previous => [...new Set([...previous, ...readReceipts(partnerId)])]);
+      if (!event.key || event.key === historyKey(partnerId)) setHistory(previous => mergeHistory(previous, readHistory(partnerId)));
     };
     window.addEventListener("storage", syncRead);
     return () => window.removeEventListener("storage", syncRead);
   }, [partnerId]);
 
-  const markRead = useCallback((notice) => {
-    if (notice.requiresAction) return;
-    setRead((previous) => {
-      const next = [...new Set([...readReceipts(partnerId), ...previous, notificationKey(notice)])].slice(-500);
-      try { localStorage.setItem(storageKey(partnerId), JSON.stringify(next)); } catch { /* Keep in memory. */ }
+  // Keep the content of read releases even after they leave the current feed.
+  // Also migrate receipts written before the history view existed.
+  useEffect(() => {
+    const receipts = [...new Set([...readReceipts(partnerId), ...read])];
+    if (receipts.length) saveLocal(storageKey(partnerId), receipts);
+    setHistory(previous => {
+      const next = mergeHistory(readHistory(partnerId), previous, notifications.filter(item => !item.requiresAction && receipts.includes(notificationKey(item))));
+      if (JSON.stringify(next) === JSON.stringify(previous)) return previous;
+      saveLocal(historyKey(partnerId), next);
       return next;
     });
-  }, [partnerId]);
+  }, [notifications, read, partnerId]);
+
+  const markRead = useCallback((notice) => {
+    if (notice.requiresAction) return;
+    const next = [...new Set([...readReceipts(partnerId), ...read, notificationKey(notice)])];
+    const original = notifications.find(item => notificationKey(item) === notificationKey(notice)) || notice;
+    const saved = mergeHistory(history, readHistory(partnerId), [original]);
+    saveLocal(storageKey(partnerId), next);
+    saveLocal(historyKey(partnerId), saved);
+    setRead(next); setHistory(saved);
+  }, [partnerId, read, history, notifications]);
 
   return {
-    notifications, read, error, updatesUnavailable, loading, markRead,
+    notifications, read, history, error, updatesUnavailable, loading, markRead,
     refresh: () => { setLoading(true); setRetry((value) => value + 1); },
   };
 }

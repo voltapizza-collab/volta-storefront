@@ -9851,6 +9851,52 @@
   background: linear-gradient(135deg, #15803d, #65a30d);
 }
 
+.lsf-productTag--vegetarian { background: #0f766e; }
+.lsf-productTag--gluten_free { background: #76510b; }
+.lsf-productTag--kosher { background: #314f85; }
+.lsf-productTag--halal { background: #85436f; }
+.sf-productTagNotice__chip--vegetarian { background: #d9f3ed; color: #0f625c; }
+.sf-productTagNotice__chip--gluten_free { background: #fff0cb; color: #644408; }
+.sf-productTagNotice__chip--kosher { background: #e8effb; color: #314f85; }
+.sf-productTagNotice__chip--halal { background: #f6e6f0; color: #77395f; }
+
+/* Each full-width line carries its colour through the same fixed-size pill. */
+.lsf-productTags .lsf-productTag.lsf-noticeBadge {
+  display: block;
+  background: transparent;
+  box-sizing: border-box;
+  height: 22px;
+  min-height: 22px;
+  max-width: 100%;
+  padding: 0;
+  line-height: 20px;
+}
+.lsf-noticeTrack { display: block; text-align: center; }
+.lsf-noticeLine {
+  display: block;
+  box-sizing: border-box;
+  height: 20px;
+  padding: 0 8px;
+  line-height: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.lsf-noticeTrack--2 { animation: lsf-notices-2 6s infinite; }
+.lsf-noticeTrack--3 { animation: lsf-notices-3 9s infinite; }
+.lsf-noticeTrack--4 { animation: lsf-notices-4 12s infinite; }
+.lsf-noticeTrack--5 { animation: lsf-notices-5 15s infinite; }
+.lsf-noticeTrack--6 { animation: lsf-notices-6 18s infinite; }
+.lsf-card:hover .lsf-noticeTrack, .lsf-card:focus-within .lsf-noticeTrack { animation-play-state: paused; }
+@keyframes lsf-notices-2 { 0%, 43% { transform: translateY(0); } 50%, 93% { transform: translateY(-33.333333%); } 100% { transform: translateY(-66.666667%); } }
+@keyframes lsf-notices-3 { 0%, 28% { transform: translateY(0); } 33.333%, 61% { transform: translateY(-25%); } 66.667%, 94% { transform: translateY(-50%); } 100% { transform: translateY(-75%); } }
+@keyframes lsf-notices-4 { 0%, 20% { transform: translateY(0); } 25%, 45% { transform: translateY(-20%); } 50%, 70% { transform: translateY(-40%); } 75%, 95% { transform: translateY(-60%); } 100% { transform: translateY(-80%); } }
+@keyframes lsf-notices-5 { 0%, 16% { transform: translateY(0); } 20%, 36% { transform: translateY(-16.666667%); } 40%, 56% { transform: translateY(-33.333333%); } 60%, 76% { transform: translateY(-50%); } 80%, 96% { transform: translateY(-66.666667%); } 100% { transform: translateY(-83.333333%); } }
+@keyframes lsf-notices-6 { 0%, 13.333% { transform: translateY(0); } 16.667%, 30% { transform: translateY(-14.285714%); } 33.333%, 46.667% { transform: translateY(-28.571429%); } 50%, 63.333% { transform: translateY(-42.857143%); } 66.667%, 80% { transform: translateY(-57.142857%); } 83.333%, 96.667% { transform: translateY(-71.428571%); } 100% { transform: translateY(-85.714286%); } }
+@media (prefers-reduced-motion: reduce) {
+  /* Keep every notice and its colour available, without a sliding transition. */
+  .lsf-noticeTrack { animation-timing-function: steps(1, end); }
+}
+
 @media (max-width: 760px) {
   .lsf-productTags {
     top: 8px;
@@ -19152,6 +19198,10 @@
     border-width: 1px;
     font-size: 0.46rem;
     box-shadow: 0 5px 10px rgba(17, 17, 17, 0.14);
+  }
+
+  .sf-shell--mode-commercial-light .lsf-noticeLine {
+    padding-inline: 4px;
   }
 
   .sf-shell--mode-commercial-light .lsf-trendingRibbon,

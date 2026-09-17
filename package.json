@@ -28,7 +28,8 @@
     "dev": "node --max-old-space-size=4096 ./node_modules/react-scripts/bin/react-scripts.js start",
     "start": "npm run build && node server.js",
     "serve": "node server.js",
-    "prebuild": "node scripts/disable-react-scripts-cache.cjs",
+    "prebuild": "node scripts/validate-ingredient-master.cjs && node scripts/disable-react-scripts-cache.cjs",
+    "check:ingredients": "node scripts/validate-ingredient-master.cjs",
     "build": "node --max-old-space-size=4096 ./node_modules/react-scripts/bin/react-scripts.js build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

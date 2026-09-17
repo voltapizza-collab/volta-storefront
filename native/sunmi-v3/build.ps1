@@ -3,8 +3,8 @@ param(
     [string]$Jdk = 'C:\Program Files\Android\Android Studio\jbr',
     [string]$BuildTools = '36.0.0',
     [ValidateSet('usb', 'https')][string]$Connection = 'usb',
-    [string]$VersionName = '0.3.8',
-    [int]$VersionCode = 11
+    [string]$VersionName = '0.3.9',
+    [int]$VersionCode = 12
 )
 $ErrorActionPreference = 'Stop'
 Set-Location $PSScriptRoot
@@ -21,7 +21,7 @@ New-Item -ItemType Directory -Force -Path $variantClasses,$variantResources | Ou
 Copy-Item -Path res\* -Destination $variantResources -Recurse -Force
 $serverUrl = if ($Connection -eq 'https') { 'https://api.voltapizza.com' } else { 'http://127.0.0.1:8091' }
 $configSource = Join-Path $variantRoot 'ConnectionConfig.java'
-Set-Content -LiteralPath $configSource -Encoding utf8 -Value "package com.volta.poslab; public final class ConnectionConfig { public static final String SERVER_URL = `"$serverUrl`"; }"
+[System.IO.File]::WriteAllText($configSource, "package com.volta.poslab; public final class ConnectionConfig { public static final String SERVER_URL = `"$serverUrl`"; }", (New-Object System.Text.UTF8Encoding($false)))
 if ($Connection -eq 'https') {
     Set-Content -LiteralPath (Join-Path $variantResources 'xml/network_security_config.xml') -Encoding utf8 -Value '<network-security-config><base-config cleartextTrafficPermitted="false" /></network-security-config>'
 }

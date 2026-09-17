@@ -3,6 +3,31 @@
   .sf-shell.sf-catalog .lsf-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
+@media (min-width: 561px) {
+  /* Keep special notices on the photo, in the same corner as on mobile. */
+  .sf-shell.sf-catalog.sf-shell--mode-commercial-light .lsf-card .lsf-productTags {
+    position: absolute;
+    top: 22px;
+    left: 22px;
+    right: 64px;
+    grid-row: auto;
+    grid-column: auto;
+    align-self: start;
+    justify-self: auto;
+    min-height: 0;
+    max-width: none;
+    flex-wrap: nowrap;
+  }
+
+  /* Grid and flex cards share the image's right edge for offer countdowns. */
+  .sf-shell.sf-catalog.sf-shell--mode-commercial-light .lsf-card :is(.lsf-offerRibbon, .lsf-categoryDealCountdown) {
+    align-self: flex-end;
+    justify-self: end;
+    margin-left: auto;
+    margin-right: 0;
+  }
+}
+
 /* Desktop catalog uses its own spacing; touch layouts remain in CatalogLayout. */
 @media (min-width: 761px) {
   .sf-shell.sf-catalog {

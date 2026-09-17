@@ -632,7 +632,7 @@ export default function InventoryModule({ partner, language = "es" }) {
                         <span className="inv-tileMeta">
                           <span>{getAllergenTags(ing)[0]}</span>
                           <strong>
-                            {isIngredientActiveInStore(ing) ? "Activo" : "Agregar"}
+                            {getIngredientStatusLabel(ing)}
                           </strong>
                         </span>
                       </button>

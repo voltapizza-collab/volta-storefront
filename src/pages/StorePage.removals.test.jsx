@@ -44,6 +44,21 @@ async function openProduct() {
 }
 const cartDraft = () => JSON.parse(localStorage.getItem(draftKey)).items;
 
+test('all six special notices reach the card and the product detail without truncation', async () => {
+  const previousGet = api.get.getMockImplementation();
+  api.get.mockImplementation(async path => {
+    const result = await previousGet(path);
+    return path.endsWith('/menu') ? { ...result, menu: [{ ...product, productTags: ['spicy','vegan','vegetarian','gluten_free','kosher','halal'] }] } : result;
+  });
+  render(<StorePage />);
+  const buy = (await screen.findAllByRole('button', { name: 'Comprar Barbacoa' }))[0];
+  expect(screen.getAllByRole('note', { name: 'Picante, Vegano, Vegetariano, Sin gluten, Kosher, Halal' }).length).toBeGreaterThan(0);
+  await act(async () => fireEvent.click(buy));
+  const modal = within(document.querySelector('.sf-standardProductModal'));
+  const notices = within(modal.getByRole('note', { name: 'Avisos especiales' }));
+  for (const label of ['Picante','Vegano','Vegetariano','Sin gluten','Kosher','Halal']) expect(notices.getByText(label)).toBeVisible();
+});
+
 test("repeating an order preserves its removals in the preview and the new cart", async () => {
   const previousGet = api.get.getMockImplementation();
   api.get.mockImplementation(async (path) => path.includes("/repeat/recent") ? { orders: [{ cartDraft: {

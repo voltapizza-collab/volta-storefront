@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import api from "../../setupAxios";
+import ProductNoticeSelector from "./ProductNoticeSelector";
+import { productNoticeLabels } from "../../constants/productNotices";
 import "../../styles/PizzaCreator.css";
 import { DndContext, closestCenter } from "@dnd-kit/core";
 import {
@@ -12,10 +14,6 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 
 const sizeList = ["S", "M", "L", "XL", "XXL", "ST"];
-const PRODUCT_TAG_OPTIONS = [
-  { value: "spicy", labelKey: "tag.spicy" },
-  { value: "vegan", labelKey: "tag.vegan" },
-];
 const RANDOM_SELECTION_OPTION_ID = "__random_selection__";
 
 function Modal({ open, title, onClose, children, panelClassName = "" }) {
@@ -611,18 +609,6 @@ export default function PizzaCreator({ partner, language = "es" }) {
   const onChange = (e) =>
     setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
 
-  const toggleProductTag = (tagValue) => {
-    setForm((current) => {
-      const currentTags = Array.isArray(current.productTags)
-        ? current.productTags
-        : [];
-      const productTags = currentTags.includes(tagValue)
-        ? currentTags.filter((tag) => tag !== tagValue)
-        : [...currentTags, tagValue];
-
-      return { ...current, productTags };
-    });
-  };
 
   const onCategoryChange = (e) => {
     const selectedId = e.target.value;
@@ -1145,28 +1131,8 @@ export default function PizzaCreator({ partner, language = "es" }) {
                 </label>
               </div>
 
-              <div className="pc-block">
-                <div className="pc-subsectionTitle">{t("section.specialNotices")}</div>
-                <div className="pc-tagGrid">
-                  {PRODUCT_TAG_OPTIONS.map((tag) => {
-                    const checked = (form.productTags || []).includes(tag.value);
-
-                    return (
-                      <label
-                        key={tag.value}
-                        className={`pc-tagOption ${checked ? "is-active" : ""}`}
-                      >
-                        <input
-                          type="checkbox"
-                          checked={checked}
-                          onChange={() => toggleProductTag(tag.value)}
-                        />
-                        <span>{t(tag.labelKey)}</span>
-                      </label>
-                    );
-                  })}
-                </div>
-              </div>
+              <ProductNoticeSelector value={form.productTags} language={language}
+                onChange={productTags => setForm(current => ({ ...current, productTags }))} />
 
               {!editingPizzaId && (
                 <div className="pc-block pc-storeScope">
@@ -1638,13 +1604,11 @@ export default function PizzaCreator({ partner, language = "es" }) {
 
                               {Array.isArray(p.productTags) &&
                                 p.productTags.map((tag) => {
-                                  const option = PRODUCT_TAG_OPTIONS.find(
-                                    (item) => item.value === tag
-                                  );
+                                  const label = productNoticeLabels(language)[tag];
 
                                   return (
                                     <span key={tag} className="pc-productTagBadge">
-                                      {option?.labelKey ? t(option.labelKey) : tag}
+                                      {label || tag}
                                     </span>
                                   );
                                 })}

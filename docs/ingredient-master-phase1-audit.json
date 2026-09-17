@@ -1,0 +1,5966 @@
+{
+  "schemaVersion": 1,
+  "phase": 1,
+  "date": "2026-09-16",
+  "sourceFile": "src/data/ingredientMasterSource.json",
+  "baselineCommit": "da0a8792ac888832c25a6c8838b0d6a8be409974",
+  "baselineSha256": "cf317589e5e84b16ffa00348ca3fb1c5fb9963dbc041822ecce15a56a54e8ba4",
+  "summary": {
+    "rows": 1140,
+    "categories": 14,
+    "semanticCategories": 14,
+    "changedRows": 264,
+    "changedNames": 263,
+    "replacementCharacterNamesBefore": 185,
+    "controlCharacterNamesBefore": 1,
+    "damagedNamesAfter": 0,
+    "preservedCanonicalKeys": true,
+    "preservedCategories": true,
+    "preservedAllergensAndReviewStates": true
+  },
+  "exactDuplicateGroups": [
+    {
+      "normalizedName": "champinones blancos",
+      "canonicalKeys": [
+        "champi_ones_blancos",
+        "champi_nes_blancos"
+      ],
+      "names": [
+        "Champiñones blancos",
+        "Champiñones blancos"
+      ]
+    }
+  ],
+  "changes": [
+    {
+      "canonicalKey": "aceite_de_c_rtamo",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Aceite de c�rtamo",
+        "translations": {
+          "es": "Aceite de c�rtamo"
+        },
+        "aliases": [
+          "Aceite de c�rtamo"
+        ]
+      },
+      "after": {
+        "defaultName": "Aceite de cártamo",
+        "translations": {
+          "es": "Aceite de cártamo"
+        },
+        "aliases": [
+          "Aceite de cártamo"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "aceite_de_ma_z",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Aceite de ma�z",
+        "translations": {
+          "es": "Aceite de ma�z"
+        },
+        "aliases": [
+          "Aceite de ma�z"
+        ]
+      },
+      "after": {
+        "defaultName": "Aceite de maíz",
+        "translations": {
+          "es": "Aceite de maíz"
+        },
+        "aliases": [
+          "Aceite de maíz"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "aceite_de_semilla_de_algod_n",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Aceite de semilla de algod�n",
+        "translations": {
+          "es": "Aceite de semilla de algod�n"
+        },
+        "aliases": [
+          "Aceite de semilla de algod�n"
+        ]
+      },
+      "after": {
+        "defaultName": "Aceite de semilla de algodón",
+        "translations": {
+          "es": "Aceite de semilla de algodón"
+        },
+        "aliases": [
+          "Aceite de semilla de algodón"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "aceite_de_s_samo",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Aceite de s�samo",
+        "translations": {
+          "es": "Aceite de s�samo"
+        },
+        "aliases": [
+          "Aceite de s�samo"
+        ]
+      },
+      "after": {
+        "defaultName": "Aceite de sésamo",
+        "translations": {
+          "es": "Aceite de sésamo"
+        },
+        "aliases": [
+          "Aceite de sésamo"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "grasa_de_karit",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Grasa de karit�",
+        "translations": {
+          "es": "Grasa de karit�"
+        },
+        "aliases": [
+          "Grasa de karit�"
+        ]
+      },
+      "after": {
+        "defaultName": "Grasa de karité",
+        "translations": {
+          "es": "Grasa de karité"
+        },
+        "aliases": [
+          "Grasa de karité"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "vinagre_bals_mico",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Vinagre bals�mico",
+        "translations": {
+          "es": "Vinagre bals�mico"
+        },
+        "aliases": [
+          "Vinagre bals�mico"
+        ]
+      },
+      "after": {
+        "defaultName": "Vinagre balsámico",
+        "translations": {
+          "es": "Vinagre balsámico"
+        },
+        "aliases": [
+          "Vinagre balsámico"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "vinagre_bals_mico_blanco",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Vinagre bals�mico blanco",
+        "translations": {
+          "es": "Vinagre bals�mico blanco"
+        },
+        "aliases": [
+          "Vinagre bals�mico blanco"
+        ]
+      },
+      "after": {
+        "defaultName": "Vinagre balsámico blanco",
+        "translations": {
+          "es": "Vinagre balsámico blanco"
+        },
+        "aliases": [
+          "Vinagre balsámico blanco"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "vinagre_bals_mico_de_m_dena",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Vinagre bals�mico de M�dena",
+        "translations": {
+          "es": "Vinagre bals�mico de M�dena"
+        },
+        "aliases": [
+          "Vinagre bals�mico de M�dena"
+        ]
+      },
+      "after": {
+        "defaultName": "Vinagre balsámico de Módena",
+        "translations": {
+          "es": "Vinagre balsámico de Módena"
+        },
+        "aliases": [
+          "Vinagre balsámico de Módena"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "vinagreta_brasile_a",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Vinagreta brasile�a",
+        "translations": {
+          "es": "Vinagreta brasile�a"
+        },
+        "aliases": [
+          "Vinagreta brasile�a"
+        ]
+      },
+      "after": {
+        "defaultName": "Vinagreta brasileña",
+        "translations": {
+          "es": "Vinagreta brasileña"
+        },
+        "aliases": [
+          "Vinagreta brasileña"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "extracto_de_lev_stico",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Extracto de lev�stico",
+        "translations": {
+          "es": "Extracto de lev�stico"
+        },
+        "aliases": [
+          "Extracto de lev�stico"
+        ]
+      },
+      "after": {
+        "defaultName": "Extracto de levístico",
+        "translations": {
+          "es": "Extracto de levístico"
+        },
+        "aliases": [
+          "Extracto de levístico"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "extracto_de_oregano",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Extracto de oregano",
+        "translations": {
+          "es": "Extracto de oregano"
+        },
+        "aliases": [
+          "Extracto de oregano"
+        ]
+      },
+      "after": {
+        "defaultName": "Extracto de orégano",
+        "translations": {
+          "es": "Extracto de orégano"
+        },
+        "aliases": [
+          "Extracto de orégano"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "extracto_de_piment_n",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Extracto de piment�n",
+        "translations": {
+          "es": "Extracto de piment�n"
+        },
+        "aliases": [
+          "Extracto de piment�n"
+        ]
+      },
+      "after": {
+        "defaultName": "Extracto de pimentón",
+        "translations": {
+          "es": "Extracto de pimentón"
+        },
+        "aliases": [
+          "Extracto de pimentón"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "alb_ndigas",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Alb�ndigas",
+        "translations": {
+          "es": "Alb�ndigas"
+        },
+        "aliases": [
+          "Alb�ndigas"
+        ]
+      },
+      "after": {
+        "defaultName": "Albóndigas",
+        "translations": {
+          "es": "Albóndigas"
+        },
+        "aliases": [
+          "Albóndigas"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "b_falo",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "B�falo",
+        "translations": {
+          "es": "B�falo"
+        },
+        "aliases": [
+          "B�falo"
+        ]
+      },
+      "after": {
+        "defaultName": "Búfalo",
+        "translations": {
+          "es": "Búfalo"
+        },
+        "aliases": [
+          "Búfalo"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "ceb",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Ceb�",
+        "translations": {
+          "es": "Ceb�"
+        },
+        "aliases": [
+          "Ceb�"
+        ]
+      },
+      "after": {
+        "defaultName": "Cebú",
+        "translations": {
+          "es": "Cebú"
+        },
+        "aliases": [
+          "Cebú"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "chicharr_n_de_cerdo",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Chicharr�n de cerdo",
+        "translations": {
+          "es": "Chicharr�n de cerdo"
+        },
+        "aliases": [
+          "Chicharr�n de cerdo"
+        ]
+      },
+      "after": {
+        "defaultName": "Chicharrón de cerdo",
+        "translations": {
+          "es": "Chicharrón de cerdo"
+        },
+        "aliases": [
+          "Chicharrón de cerdo"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "cocodrilo_caim_n",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Cocodrilo / caim�n",
+        "translations": {
+          "es": "Cocodrilo / caim�n"
+        },
+        "aliases": [
+          "Cocodrilo / caim�n"
+        ]
+      },
+      "after": {
+        "defaultName": "Cocodrilo / caimán",
+        "translations": {
+          "es": "Cocodrilo / caimán"
+        },
+        "aliases": [
+          "Cocodrilo / caimán"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "em",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Em�",
+        "translations": {
+          "es": "Em�"
+        },
+        "aliases": [
+          "Em�"
+        ]
+      },
+      "after": {
+        "defaultName": "Emú",
+        "translations": {
+          "es": "Emú"
+        },
+        "aliases": [
+          "Emú"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "jabal",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Jabal�",
+        "translations": {
+          "es": "Jabal�"
+        },
+        "aliases": [
+          "Jabal�"
+        ]
+      },
+      "after": {
+        "defaultName": "Jabalí",
+        "translations": {
+          "es": "Jabalí"
+        },
+        "aliases": [
+          "Jabalí"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "kudu",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Kudu",
+        "translations": {
+          "es": "Kudu"
+        },
+        "aliases": [
+          "Kudu"
+        ]
+      },
+      "after": {
+        "defaultName": "Kudú",
+        "translations": {
+          "es": "Kudú"
+        },
+        "aliases": [
+          "Kudú"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "lomo_ib_rico",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Lomo ib�rico",
+        "translations": {
+          "es": "Lomo ib�rico"
+        },
+        "aliases": [
+          "Lomo ib�rico"
+        ]
+      },
+      "after": {
+        "defaultName": "Lomo ibérico",
+        "translations": {
+          "es": "Lomo ibérico"
+        },
+        "aliases": [
+          "Lomo ibérico"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "pollo_d_ner_kebab",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Pollo d�ner kebab",
+        "translations": {
+          "es": "Pollo d�ner kebab"
+        },
+        "aliases": [
+          "Pollo d�ner kebab"
+        ]
+      },
+      "after": {
+        "defaultName": "Pollo döner kebab",
+        "translations": {
+          "es": "Pollo döner kebab"
+        },
+        "aliases": [
+          "Pollo döner kebab"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "pollo_en_tira",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Pollo en tira",
+        "translations": {
+          "es": "Pollo en tira"
+        },
+        "aliases": [
+          "Pollo en tira"
+        ]
+      },
+      "after": {
+        "defaultName": "Pollo en tiras",
+        "translations": {
+          "es": "Pollo en tiras"
+        },
+        "aliases": [
+          "Pollo en tiras"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "pork_floss_cerdo_deshebrado_seco",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Pork floss / Cerdo deshebrado seco",
+        "translations": {
+          "es": "Pork floss / Cerdo deshebrado seco"
+        },
+        "aliases": [
+          "Pork floss / Cerdo deshebrado seco"
+        ]
+      },
+      "after": {
+        "defaultName": "Pork floss / cerdo deshebrado seco",
+        "translations": {
+          "es": "Pork floss / cerdo deshebrado seco"
+        },
+        "aliases": [
+          "Pork floss / cerdo deshebrado seco"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "den_m_so",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "�den� m�so",
+        "translations": {
+          "es": "�den� m�so"
+        },
+        "aliases": [
+          "�den� m�so"
+        ]
+      },
+      "after": {
+        "defaultName": "Údené mäso",
+        "translations": {
+          "es": "Údené mäso"
+        },
+        "aliases": [
+          "Údené mäso"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "crema_speculoos_biscoff",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Crema Speculoos / Biscoff",
+        "translations": {
+          "es": "Crema Speculoos / Biscoff"
+        },
+        "aliases": [
+          "Crema Speculoos / Biscoff"
+        ]
+      },
+      "after": {
+        "defaultName": "Crema de speculoos / Biscoff",
+        "translations": {
+          "es": "Crema de speculoos / Biscoff"
+        },
+        "aliases": [
+          "Crema de speculoos / Biscoff"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "dulce_de_leche",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Dulce de Leche",
+        "translations": {
+          "es": "Dulce de Leche"
+        },
+        "aliases": [
+          "Dulce de Leche"
+        ]
+      },
+      "after": {
+        "defaultName": "Dulce de leche",
+        "translations": {
+          "es": "Dulce de leche"
+        },
+        "aliases": [
+          "Dulce de leche"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "marshmallow",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Marshmallow",
+        "translations": {
+          "es": "Marshmallow"
+        },
+        "aliases": [
+          "Marshmallow"
+        ]
+      },
+      "after": {
+        "defaultName": "Malvavisco",
+        "translations": {
+          "es": "Malvavisco"
+        },
+        "aliases": [
+          "Malvavisco",
+          "Marshmallow",
+          "Nube de azúcar"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "salsa_mascarpone",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Salsa mascarpone",
+        "translations": {
+          "es": "Salsa mascarpone"
+        },
+        "aliases": [
+          "Salsa mascarpone"
+        ]
+      },
+      "after": {
+        "defaultName": "Salsa de mascarpone",
+        "translations": {
+          "es": "Salsa de mascarpone"
+        },
+        "aliases": [
+          "Salsa de mascarpone"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "smetana_crema_agria",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Smetana / Crema agria",
+        "translations": {
+          "es": "Smetana / Crema agria"
+        },
+        "aliases": [
+          "Smetana / Crema agria"
+        ]
+      },
+      "after": {
+        "defaultName": "Smetana / crema agria",
+        "translations": {
+          "es": "Smetana / crema agria"
+        },
+        "aliases": [
+          "Smetana / crema agria"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "t_matcha",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "T� matcha",
+        "translations": {
+          "es": "T� matcha"
+        },
+        "aliases": [
+          "T� matcha"
+        ]
+      },
+      "after": {
+        "defaultName": "Té matcha",
+        "translations": {
+          "es": "Té matcha"
+        },
+        "aliases": [
+          "Té matcha"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "boczek_bacon_polaco_ahumado",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Boczek / Bacon polaco ahumado",
+        "translations": {
+          "es": "Boczek / Bacon polaco ahumado"
+        },
+        "aliases": [
+          "Boczek / Bacon polaco ahumado"
+        ]
+      },
+      "after": {
+        "defaultName": "Boczek / bacon polaco ahumado",
+        "translations": {
+          "es": "Boczek / bacon polaco ahumado"
+        },
+        "aliases": [
+          "Boczek / bacon polaco ahumado"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "chorizo_espa_ol",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Chorizo espa�ol",
+        "translations": {
+          "es": "Chorizo espa�ol"
+        },
+        "aliases": [
+          "Chorizo espa�ol"
+        ]
+      },
+      "after": {
+        "defaultName": "Chorizo español",
+        "translations": {
+          "es": "Chorizo español"
+        },
+        "aliases": [
+          "Chorizo español"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "chorizo_gubbeen",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Chorizo gubbeen",
+        "translations": {
+          "es": "Chorizo gubbeen"
+        },
+        "aliases": [
+          "Chorizo gubbeen"
+        ]
+      },
+      "after": {
+        "defaultName": "Chorizo Gubbeen",
+        "translations": {
+          "es": "Chorizo Gubbeen"
+        },
+        "aliases": [
+          "Chorizo Gubbeen"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "chorizo_ib_rico",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Chorizo ib�rico",
+        "translations": {
+          "es": "Chorizo ib�rico"
+        },
+        "aliases": [
+          "Chorizo ib�rico"
+        ]
+      },
+      "after": {
+        "defaultName": "Chorizo ibérico",
+        "translations": {
+          "es": "Chorizo ibérico"
+        },
+        "aliases": [
+          "Chorizo ibérico"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "chorizo_picante_calabrese",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Chorizo picante Calabrese",
+        "translations": {
+          "es": "Chorizo picante Calabrese"
+        },
+        "aliases": [
+          "Chorizo picante Calabrese"
+        ]
+      },
+      "after": {
+        "defaultName": "Chorizo picante calabrese",
+        "translations": {
+          "es": "Chorizo picante calabrese"
+        },
+        "aliases": [
+          "Chorizo picante calabrese"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "chouri_o",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Chouri�o",
+        "translations": {
+          "es": "Chouri�o"
+        },
+        "aliases": [
+          "Chouri�o"
+        ]
+      },
+      "after": {
+        "defaultName": "Chouriço",
+        "translations": {
+          "es": "Chouriço"
+        },
+        "aliases": [
+          "Chouriço"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "c_rn_ciori",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "C�rn\u0003ciori",
+        "translations": {
+          "es": "C�rn\u0003ciori"
+        },
+        "aliases": [
+          "C�rn\u0003ciori"
+        ]
+      },
+      "after": {
+        "defaultName": "Cârnăciori",
+        "translations": {
+          "es": "Cârnăciori"
+        },
+        "aliases": [
+          "Cârnăciori"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "jam_n_ahumado",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Jam�n ahumado",
+        "translations": {
+          "es": "Jam�n ahumado"
+        },
+        "aliases": [
+          "Jam�n ahumado"
+        ]
+      },
+      "after": {
+        "defaultName": "Jamón ahumado",
+        "translations": {
+          "es": "Jamón ahumado"
+        },
+        "aliases": [
+          "Jamón ahumado"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "jam_n_cocido_york",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Jam�n cocido (York)",
+        "translations": {
+          "es": "Jam�n cocido (York)"
+        },
+        "aliases": [
+          "Jam�n cocido (York)"
+        ]
+      },
+      "after": {
+        "defaultName": "Jamón cocido (York)",
+        "translations": {
+          "es": "Jamón cocido (York)"
+        },
+        "aliases": [
+          "Jamón cocido (York)"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "jam_n_cocido_ahumado_york_ahumado",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Jam�n cocido Ahumado (York Ahumado)",
+        "translations": {
+          "es": "Jam�n cocido Ahumado (York Ahumado)"
+        },
+        "aliases": [
+          "Jam�n cocido Ahumado (York Ahumado)"
+        ]
+      },
+      "after": {
+        "defaultName": "Jamón cocido ahumado (York ahumado)",
+        "translations": {
+          "es": "Jamón cocido ahumado (York ahumado)"
+        },
+        "aliases": [
+          "Jamón cocido ahumado (York ahumado)"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "jam_n_de_jinhua",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Jam�n de Jinhua",
+        "translations": {
+          "es": "Jam�n de Jinhua"
+        },
+        "aliases": [
+          "Jam�n de Jinhua"
+        ]
+      },
+      "after": {
+        "defaultName": "Jamón de Jinhua",
+        "translations": {
+          "es": "Jamón de Jinhua"
+        },
+        "aliases": [
+          "Jamón de Jinhua"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "jam_n_de_pavo",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Jam�n de pavo",
+        "translations": {
+          "es": "Jam�n de pavo"
+        },
+        "aliases": [
+          "Jam�n de pavo"
+        ]
+      },
+      "after": {
+        "defaultName": "Jamón de pavo",
+        "translations": {
+          "es": "Jamón de pavo"
+        },
+        "aliases": [
+          "Jamón de pavo"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "jam_n_rostello",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Jam�n Rostello",
+        "translations": {
+          "es": "Jam�n Rostello"
+        },
+        "aliases": [
+          "Jam�n Rostello"
+        ]
+      },
+      "after": {
+        "defaultName": "Jamón Rostello",
+        "translations": {
+          "es": "Jamón Rostello"
+        },
+        "aliases": [
+          "Jamón Rostello"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "jam_n_serrano",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Jam�n serrano",
+        "translations": {
+          "es": "Jam�n serrano"
+        },
+        "aliases": [
+          "Jam�n serrano"
+        ]
+      },
+      "after": {
+        "defaultName": "Jamón serrano",
+        "translations": {
+          "es": "Jamón serrano"
+        },
+        "aliases": [
+          "Jamón serrano"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "kazy_salchicha_de_caballo",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Kazy / Salchicha de caballo",
+        "translations": {
+          "es": "Kazy / Salchicha de caballo"
+        },
+        "aliases": [
+          "Kazy / Salchicha de caballo"
+        ]
+      },
+      "after": {
+        "defaultName": "Kazy / salchicha de caballo",
+        "translations": {
+          "es": "Kazy / salchicha de caballo"
+        },
+        "aliases": [
+          "Kazy / salchicha de caballo"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "kielbasa",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Kielbasa",
+        "translations": {
+          "es": "Kielbasa"
+        },
+        "aliases": [
+          "Kielbasa"
+        ]
+      },
+      "after": {
+        "defaultName": "Kiełbasa",
+        "translations": {
+          "es": "Kiełbasa"
+        },
+        "aliases": [
+          "Kiełbasa",
+          "Kielbasa"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "kolb_sz",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "kolb�sz",
+        "translations": {
+          "es": "kolb�sz"
+        },
+        "aliases": [
+          "kolb�sz"
+        ]
+      },
+      "after": {
+        "defaultName": "Kolbász",
+        "translations": {
+          "es": "Kolbász"
+        },
+        "aliases": [
+          "Kolbász"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "lingui_a",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Lingui�a",
+        "translations": {
+          "es": "Lingui�a"
+        },
+        "aliases": [
+          "Lingui�a"
+        ]
+      },
+      "after": {
+        "defaultName": "Linguiça",
+        "translations": {
+          "es": "Linguiça"
+        },
+        "aliases": [
+          "Linguiça"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "lingui_a_calabresa",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Lingui�a calabresa",
+        "translations": {
+          "es": "Lingui�a calabresa"
+        },
+        "aliases": [
+          "Lingui�a calabresa"
+        ]
+      },
+      "after": {
+        "defaultName": "Linguiça calabresa",
+        "translations": {
+          "es": "Linguiça calabresa"
+        },
+        "aliases": [
+          "Linguiça calabresa"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "longganisa_salchicha_dulce_filipina",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Longganisa / Salchicha dulce filipina",
+        "translations": {
+          "es": "Longganisa / Salchicha dulce filipina"
+        },
+        "aliases": [
+          "Longganisa / Salchicha dulce filipina"
+        ]
+      },
+      "after": {
+        "defaultName": "Longganisa / salchicha dulce filipina",
+        "translations": {
+          "es": "Longganisa / salchicha dulce filipina"
+        },
+        "aliases": [
+          "Longganisa / salchicha dulce filipina"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "njeguaki_praut_jam_n_ahumado_de_njegua",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Njeguaki praut / Jam�n ahumado de Njegua",
+        "translations": {
+          "es": "Njeguaki praut / Jam�n ahumado de Njegua"
+        },
+        "aliases": [
+          "Njeguaki praut / Jam�n ahumado de Njegua"
+        ]
+      },
+      "after": {
+        "defaultName": "Njeguški pršut / jamón ahumado de Njeguši",
+        "translations": {
+          "es": "Njeguški pršut / jamón ahumado de Njeguši"
+        },
+        "aliases": [
+          "Njeguški pršut / jamón ahumado de Njeguši"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "pancetta_de_cerdo_ib_rico",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Pancetta de cerdo ib�rico",
+        "translations": {
+          "es": "Pancetta de cerdo ib�rico"
+        },
+        "aliases": [
+          "Pancetta de cerdo ib�rico"
+        ]
+      },
+      "after": {
+        "defaultName": "Pancetta de cerdo ibérico",
+        "translations": {
+          "es": "Pancetta de cerdo ibérico"
+        },
+        "aliases": [
+          "Pancetta de cerdo ibérico"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "past1rma",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Past1rma",
+        "translations": {
+          "es": "Past1rma"
+        },
+        "aliases": [
+          "Past1rma"
+        ]
+      },
+      "after": {
+        "defaultName": "Pastırma",
+        "translations": {
+          "es": "Pastırma"
+        },
+        "aliases": [
+          "Pastırma",
+          "Pastirma"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "pepperoni_ahumado_con_jalape_os",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Pepperoni ahumado con jalape�os",
+        "translations": {
+          "es": "Pepperoni ahumado con jalape�os"
+        },
+        "aliases": [
+          "Pepperoni ahumado con jalape�os"
+        ]
+      },
+      "after": {
+        "defaultName": "Pepperoni ahumado con jalapeños",
+        "translations": {
+          "es": "Pepperoni ahumado con jalapeños"
+        },
+        "aliases": [
+          "Pepperoni ahumado con jalapeños"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "ventricina_ahumado",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Ventricina ahumado",
+        "translations": {
+          "es": "Ventricina ahumado"
+        },
+        "aliases": [
+          "Ventricina ahumado"
+        ]
+      },
+      "after": {
+        "defaultName": "Ventricina ahumada",
+        "translations": {
+          "es": "Ventricina ahumada"
+        },
+        "aliases": [
+          "Ventricina ahumada"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "w_rstel",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "W�rstel",
+        "translations": {
+          "es": "W�rstel"
+        },
+        "aliases": [
+          "W�rstel"
+        ]
+      },
+      "after": {
+        "defaultName": "Würstel",
+        "translations": {
+          "es": "Würstel"
+        },
+        "aliases": [
+          "Würstel"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "az_car",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Az�car",
+        "translations": {
+          "es": "Az�car"
+        },
+        "aliases": [
+          "Az�car"
+        ]
+      },
+      "after": {
+        "defaultName": "Azúcar",
+        "translations": {
+          "es": "Azúcar"
+        },
+        "aliases": [
+          "Azúcar"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "az_car_caramelizado",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Az�car caramelizado",
+        "translations": {
+          "es": "Az�car caramelizado"
+        },
+        "aliases": [
+          "Az�car caramelizado"
+        ]
+      },
+      "after": {
+        "defaultName": "Azúcar caramelizado",
+        "translations": {
+          "es": "Azúcar caramelizado"
+        },
+        "aliases": [
+          "Azúcar caramelizado"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "az_car_de_ca_a",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Az�car de ca�a",
+        "translations": {
+          "es": "Az�car de ca�a"
+        },
+        "aliases": [
+          "Az�car de ca�a"
+        ]
+      },
+      "after": {
+        "defaultName": "Azúcar de caña",
+        "translations": {
+          "es": "Azúcar de caña"
+        },
+        "aliases": [
+          "Azúcar de caña"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "az_car_de_remolacha",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Az�car de remolacha",
+        "translations": {
+          "es": "Az�car de remolacha"
+        },
+        "aliases": [
+          "Az�car de remolacha"
+        ]
+      },
+      "after": {
+        "defaultName": "Azúcar de remolacha",
+        "translations": {
+          "es": "Azúcar de remolacha"
+        },
+        "aliases": [
+          "Azúcar de remolacha"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "az_car_demerara",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Az�car demerara",
+        "translations": {
+          "es": "Az�car demerara"
+        },
+        "aliases": [
+          "Az�car demerara"
+        ]
+      },
+      "after": {
+        "defaultName": "Azúcar demerara",
+        "translations": {
+          "es": "Azúcar demerara"
+        },
+        "aliases": [
+          "Azúcar demerara"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "az_car_glas",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Az�car glas",
+        "translations": {
+          "es": "Az�car glas"
+        },
+        "aliases": [
+          "Az�car glas"
+        ]
+      },
+      "after": {
+        "defaultName": "Azúcar glas",
+        "translations": {
+          "es": "Azúcar glas"
+        },
+        "aliases": [
+          "Azúcar glas"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "az_car_mascabado",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Az�car mascabado",
+        "translations": {
+          "es": "Az�car mascabado"
+        },
+        "aliases": [
+          "Az�car mascabado"
+        ]
+      },
+      "after": {
+        "defaultName": "Azúcar mascabado",
+        "translations": {
+          "es": "Azúcar mascabado"
+        },
+        "aliases": [
+          "Azúcar mascabado"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "az_car_moreno",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Az�car moreno",
+        "translations": {
+          "es": "Az�car moreno"
+        },
+        "aliases": [
+          "Az�car moreno"
+        ]
+      },
+      "after": {
+        "defaultName": "Azúcar moreno",
+        "translations": {
+          "es": "Azúcar moreno"
+        },
+        "aliases": [
+          "Azúcar moreno"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "cr_me_de_marrons_crema_de_casta_as",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Cr�me de marrons / Crema de casta�as",
+        "translations": {
+          "es": "Cr�me de marrons / Crema de casta�as"
+        },
+        "aliases": [
+          "Cr�me de marrons / Crema de casta�as"
+        ]
+      },
+      "after": {
+        "defaultName": "Crème de marrons / crema de castañas",
+        "translations": {
+          "es": "Crème de marrons / crema de castañas"
+        },
+        "aliases": [
+          "Crème de marrons / crema de castañas"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "golden_syrup",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Golden syrup",
+        "translations": {
+          "es": "Golden syrup"
+        },
+        "aliases": [
+          "Golden syrup"
+        ]
+      },
+      "after": {
+        "defaultName": "Sirope dorado",
+        "translations": {
+          "es": "Sirope dorado"
+        },
+        "aliases": [
+          "Sirope dorado",
+          "Golden syrup"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "sirope_de_az_car_invertido",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Sirope de az�car invertido",
+        "translations": {
+          "es": "Sirope de az�car invertido"
+        },
+        "aliases": [
+          "Sirope de az�car invertido"
+        ]
+      },
+      "after": {
+        "defaultName": "Sirope de azúcar invertido",
+        "translations": {
+          "es": "Sirope de azúcar invertido"
+        },
+        "aliases": [
+          "Sirope de azúcar invertido"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "sirope_de_d_til",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Sirope de d�til",
+        "translations": {
+          "es": "Sirope de d�til"
+        },
+        "aliases": [
+          "Sirope de d�til"
+        ]
+      },
+      "after": {
+        "defaultName": "Sirope de dátil",
+        "translations": {
+          "es": "Sirope de dátil"
+        },
+        "aliases": [
+          "Sirope de dátil"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "sirope_de_glucosa_polvo",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Sirope de glucosa polvo",
+        "translations": {
+          "es": "Sirope de glucosa polvo"
+        },
+        "aliases": [
+          "Sirope de glucosa polvo"
+        ]
+      },
+      "after": {
+        "defaultName": "Sirope de glucosa en polvo",
+        "translations": {
+          "es": "Sirope de glucosa en polvo"
+        },
+        "aliases": [
+          "Sirope de glucosa en polvo"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "sirope_de_ma_z",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Sirope de ma�z",
+        "translations": {
+          "es": "Sirope de ma�z"
+        },
+        "aliases": [
+          "Sirope de ma�z"
+        ]
+      },
+      "after": {
+        "defaultName": "Sirope de maíz",
+        "translations": {
+          "es": "Sirope de maíz"
+        },
+        "aliases": [
+          "Sirope de maíz"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "ar_ndanos",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Ar�ndanos",
+        "translations": {
+          "es": "Ar�ndanos"
+        },
+        "aliases": [
+          "Ar�ndanos"
+        ]
+      },
+      "after": {
+        "defaultName": "Arándanos",
+        "translations": {
+          "es": "Arándanos"
+        },
+        "aliases": [
+          "Arándanos"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "ar_ndanos_rojos",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Ar�ndanos rojos",
+        "translations": {
+          "es": "Ar�ndanos rojos"
+        },
+        "aliases": [
+          "Ar�ndanos rojos"
+        ]
+      },
+      "after": {
+        "defaultName": "Arándanos rojos",
+        "translations": {
+          "es": "Arándanos rojos"
+        },
+        "aliases": [
+          "Arándanos rojos"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "bayas_saskatoon",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Bayas Saskatoon",
+        "translations": {
+          "es": "Bayas Saskatoon"
+        },
+        "aliases": [
+          "Bayas Saskatoon"
+        ]
+      },
+      "after": {
+        "defaultName": "Bayas saskatoon",
+        "translations": {
+          "es": "Bayas saskatoon"
+        },
+        "aliases": [
+          "Bayas saskatoon"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "durian",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Durian",
+        "translations": {
+          "es": "Durian"
+        },
+        "aliases": [
+          "Durian"
+        ]
+      },
+      "after": {
+        "defaultName": "Durián",
+        "translations": {
+          "es": "Durián"
+        },
+        "aliases": [
+          "Durián"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "durian_musangking",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Durian musangking",
+        "translations": {
+          "es": "Durian musangking"
+        },
+        "aliases": [
+          "Durian musangking"
+        ]
+      },
+      "after": {
+        "defaultName": "Durián Musang King",
+        "translations": {
+          "es": "Durián Musang King"
+        },
+        "aliases": [
+          "Durián Musang King"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "d_tiles",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "D�tiles",
+        "translations": {
+          "es": "D�tiles"
+        },
+        "aliases": [
+          "D�tiles"
+        ]
+      },
+      "after": {
+        "defaultName": "Dátiles",
+        "translations": {
+          "es": "Dátiles"
+        },
+        "aliases": [
+          "Dátiles"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "d_tiles_en_polvo",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "D�tiles en polvo",
+        "translations": {
+          "es": "D�tiles en polvo"
+        },
+        "aliases": [
+          "D�tiles en polvo"
+        ]
+      },
+      "after": {
+        "defaultName": "Dátiles en polvo",
+        "translations": {
+          "es": "Dátiles en polvo"
+        },
+        "aliases": [
+          "Dátiles en polvo"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "lychee",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Lychee",
+        "translations": {
+          "es": "Lychee"
+        },
+        "aliases": [
+          "Lychee"
+        ]
+      },
+      "after": {
+        "defaultName": "Lichi",
+        "translations": {
+          "es": "Lichi"
+        },
+        "aliases": [
+          "Lichi",
+          "Lychee"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "mango_chutney",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Mango chutney",
+        "translations": {
+          "es": "Mango chutney"
+        },
+        "aliases": [
+          "Mango chutney"
+        ]
+      },
+      "after": {
+        "defaultName": "Chutney de mango",
+        "translations": {
+          "es": "Chutney de mango"
+        },
+        "aliases": [
+          "Chutney de mango",
+          "Mango chutney"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "maracuy",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Maracuy�",
+        "translations": {
+          "es": "Maracuy�"
+        },
+        "aliases": [
+          "Maracuy�"
+        ]
+      },
+      "after": {
+        "defaultName": "Maracuyá",
+        "translations": {
+          "es": "Maracuyá"
+        },
+        "aliases": [
+          "Maracuyá"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "melocot_n",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Melocot�n",
+        "translations": {
+          "es": "Melocot�n"
+        },
+        "aliases": [
+          "Melocot�n"
+        ]
+      },
+      "after": {
+        "defaultName": "Melocotón",
+        "translations": {
+          "es": "Melocotón"
+        },
+        "aliases": [
+          "Melocotón"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "mel_n",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Mel�n",
+        "translations": {
+          "es": "Mel�n"
+        },
+        "aliases": [
+          "Mel�n"
+        ]
+      },
+      "after": {
+        "defaultName": "Melón",
+        "translations": {
+          "es": "Melón"
+        },
+        "aliases": [
+          "Melón"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "pi_a",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Pi�a",
+        "translations": {
+          "es": "Pi�a"
+        },
+        "aliases": [
+          "Pi�a"
+        ]
+      },
+      "after": {
+        "defaultName": "Piña",
+        "translations": {
+          "es": "Piña"
+        },
+        "aliases": [
+          "Piña"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "pi_a_caramelizada",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Pi�a caramelizada",
+        "translations": {
+          "es": "Pi�a caramelizada"
+        },
+        "aliases": [
+          "Pi�a caramelizada"
+        ]
+      },
+      "after": {
+        "defaultName": "Piña caramelizada",
+        "translations": {
+          "es": "Piña caramelizada"
+        },
+        "aliases": [
+          "Piña caramelizada"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "pi_a_encurtida",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Pi�a encurtida",
+        "translations": {
+          "es": "Pi�a encurtida"
+        },
+        "aliases": [
+          "Pi�a encurtida"
+        ]
+      },
+      "after": {
+        "defaultName": "Piña encurtida",
+        "translations": {
+          "es": "Piña encurtida"
+        },
+        "aliases": [
+          "Piña encurtida"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "pi_a_maui_gold",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Pi�a Maui gold",
+        "translations": {
+          "es": "Pi�a Maui gold"
+        },
+        "aliases": [
+          "Pi�a Maui gold"
+        ]
+      },
+      "after": {
+        "defaultName": "Piña Maui Gold",
+        "translations": {
+          "es": "Piña Maui Gold"
+        },
+        "aliases": [
+          "Piña Maui Gold"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "an_s",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "An�s",
+        "translations": {
+          "es": "An�s"
+        },
+        "aliases": [
+          "An�s"
+        ]
+      },
+      "after": {
+        "defaultName": "Anís",
+        "translations": {
+          "es": "Anís"
+        },
+        "aliases": [
+          "Anís"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "an_s_estrellado",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "An�s estrellado",
+        "translations": {
+          "es": "An�s estrellado"
+        },
+        "aliases": [
+          "An�s estrellado"
+        ]
+      },
+      "after": {
+        "defaultName": "Anís estrellado",
+        "translations": {
+          "es": "Anís estrellado"
+        },
+        "aliases": [
+          "Anís estrellado"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "apio_de_monte_lev_stico",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Apio de monte (lev�stico)",
+        "translations": {
+          "es": "Apio de monte (lev�stico)"
+        },
+        "aliases": [
+          "Apio de monte (lev�stico)"
+        ]
+      },
+      "after": {
+        "defaultName": "Apio de monte (levístico)",
+        "translations": {
+          "es": "Apio de monte (levístico)"
+        },
+        "aliases": [
+          "Apio de monte (levístico)"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "at_n_vegano",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "At�n vegano",
+        "translations": {
+          "es": "At�n vegano"
+        },
+        "aliases": [
+          "At�n vegano"
+        ]
+      },
+      "after": {
+        "defaultName": "Atún vegano",
+        "translations": {
+          "es": "Atún vegano"
+        },
+        "aliases": [
+          "Atún vegano"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "azafr_n",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Azafr�n",
+        "translations": {
+          "es": "Azafr�n"
+        },
+        "aliases": [
+          "Azafr�n"
+        ]
+      },
+      "after": {
+        "defaultName": "Azafrán",
+        "translations": {
+          "es": "Azafrán"
+        },
+        "aliases": [
+          "Azafrán"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "c_rcuma",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "C�rcuma",
+        "translations": {
+          "es": "C�rcuma"
+        },
+        "aliases": [
+          "C�rcuma"
+        ]
+      },
+      "after": {
+        "defaultName": "Cúrcuma",
+        "translations": {
+          "es": "Cúrcuma"
+        },
+        "aliases": [
+          "Cúrcuma"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "estrag_n_franc_s",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Estrag�n franc�s",
+        "translations": {
+          "es": "Estrag�n franc�s"
+        },
+        "aliases": [
+          "Estrag�n franc�s"
+        ]
+      },
+      "after": {
+        "defaultName": "Estragón francés",
+        "translations": {
+          "es": "Estragón francés"
+        },
+        "aliases": [
+          "Estragón francés"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "estrag_n_ruso",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Estrag�n ruso",
+        "translations": {
+          "es": "Estrag�n ruso"
+        },
+        "aliases": [
+          "Estrag�n ruso"
+        ]
+      },
+      "after": {
+        "defaultName": "Estragón ruso",
+        "translations": {
+          "es": "Estragón ruso"
+        },
+        "aliases": [
+          "Estragón ruso"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "hierba_luisa_lemongrass",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Hierba luisa / Lemongrass",
+        "translations": {
+          "es": "Hierba luisa / Lemongrass"
+        },
+        "aliases": [
+          "Hierba luisa / Lemongrass"
+        ]
+      },
+      "after": {
+        "defaultName": "Hierba luisa / lemongrass",
+        "translations": {
+          "es": "Hierba luisa / lemongrass"
+        },
+        "aliases": [
+          "Hierba luisa / lemongrass"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "jackfruit_bbq",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Jackfruit BBQ",
+        "translations": {
+          "es": "Jackfruit BBQ"
+        },
+        "aliases": [
+          "Jackfruit BBQ"
+        ]
+      },
+      "after": {
+        "defaultName": "Yaca a la barbacoa",
+        "translations": {
+          "es": "Yaca a la barbacoa"
+        },
+        "aliases": [
+          "Yaca a la barbacoa",
+          "Jackfruit BBQ"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "jackfruit_estilo_pulled_pork",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Jackfruit estilo pulled pork",
+        "translations": {
+          "es": "Jackfruit estilo pulled pork"
+        },
+        "aliases": [
+          "Jackfruit estilo pulled pork"
+        ]
+      },
+      "after": {
+        "defaultName": "Yaca estilo pulled pork",
+        "translations": {
+          "es": "Yaca estilo pulled pork"
+        },
+        "aliases": [
+          "Yaca estilo pulled pork",
+          "Jackfruit estilo pulled pork"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "jackfruit_pepperoni",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Jackfruit pepperoni",
+        "translations": {
+          "es": "Jackfruit pepperoni"
+        },
+        "aliases": [
+          "Jackfruit pepperoni"
+        ]
+      },
+      "after": {
+        "defaultName": "Pepperoni de yaca",
+        "translations": {
+          "es": "Pepperoni de yaca"
+        },
+        "aliases": [
+          "Pepperoni de yaca",
+          "Jackfruit pepperoni"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "jalape_o_en_polvo",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Jalape�o en polvo",
+        "translations": {
+          "es": "Jalape�o en polvo"
+        },
+        "aliases": [
+          "Jalape�o en polvo"
+        ]
+      },
+      "after": {
+        "defaultName": "Jalapeño en polvo",
+        "translations": {
+          "es": "Jalapeño en polvo"
+        },
+        "aliases": [
+          "Jalapeño en polvo"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "jam_n_vegano",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Jam�n vegano",
+        "translations": {
+          "es": "Jam�n vegano"
+        },
+        "aliases": [
+          "Jam�n vegano"
+        ]
+      },
+      "after": {
+        "defaultName": "Jamón vegano",
+        "translations": {
+          "es": "Jamón vegano"
+        },
+        "aliases": [
+          "Jamón vegano"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "merk_n",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Merk�n",
+        "translations": {
+          "es": "Merk�n"
+        },
+        "aliases": [
+          "Merk�n"
+        ]
+      },
+      "after": {
+        "defaultName": "Merkén",
+        "translations": {
+          "es": "Merkén"
+        },
+        "aliases": [
+          "Merkén"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "or_gano",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Or�gano",
+        "translations": {
+          "es": "Or�gano"
+        },
+        "aliases": [
+          "Or�gano"
+        ]
+      },
+      "after": {
+        "defaultName": "Orégano",
+        "translations": {
+          "es": "Orégano"
+        },
+        "aliases": [
+          "Orégano"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "or_gano_seco",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Or�gano seco",
+        "translations": {
+          "es": "Or�gano seco"
+        },
+        "aliases": [
+          "Or�gano seco"
+        ]
+      },
+      "after": {
+        "defaultName": "Orégano seco",
+        "translations": {
+          "es": "Orégano seco"
+        },
+        "aliases": [
+          "Orégano seco"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "piment_n",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Piment�n",
+        "translations": {
+          "es": "Piment�n"
+        },
+        "aliases": [
+          "Piment�n"
+        ]
+      },
+      "after": {
+        "defaultName": "Pimentón",
+        "translations": {
+          "es": "Pimentón"
+        },
+        "aliases": [
+          "Pimentón"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "piment_n_ahumado",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Piment�n ahumado",
+        "translations": {
+          "es": "Piment�n ahumado"
+        },
+        "aliases": [
+          "Piment�n ahumado"
+        ]
+      },
+      "after": {
+        "defaultName": "Pimentón ahumado",
+        "translations": {
+          "es": "Pimentón ahumado"
+        },
+        "aliases": [
+          "Pimentón ahumado"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "piment_n_picante_paprika",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Piment�n picante / Paprika",
+        "translations": {
+          "es": "Piment�n picante / Paprika"
+        },
+        "aliases": [
+          "Piment�n picante / Paprika"
+        ]
+      },
+      "after": {
+        "defaultName": "Pimentón picante / paprika",
+        "translations": {
+          "es": "Pimentón picante / paprika"
+        },
+        "aliases": [
+          "Pimentón picante / paprika"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "piment_n_picante_paprika_ahumado",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Piment�n picante / Paprika Ahumado",
+        "translations": {
+          "es": "Piment�n picante / Paprika Ahumado"
+        },
+        "aliases": [
+          "Piment�n picante / Paprika Ahumado"
+        ]
+      },
+      "after": {
+        "defaultName": "Pimentón picante ahumado / paprika ahumada",
+        "translations": {
+          "es": "Pimentón picante ahumado / paprika ahumada"
+        },
+        "aliases": [
+          "Pimentón picante ahumado / paprika ahumada"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "prote_na_de_garbanzo",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Prote�na de garbanzo",
+        "translations": {
+          "es": "Prote�na de garbanzo"
+        },
+        "aliases": [
+          "Prote�na de garbanzo"
+        ]
+      },
+      "after": {
+        "defaultName": "Proteína de garbanzo",
+        "translations": {
+          "es": "Proteína de garbanzo"
+        },
+        "aliases": [
+          "Proteína de garbanzo"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "prote_na_de_guisante",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Prote�na de guisante",
+        "translations": {
+          "es": "Prote�na de guisante"
+        },
+        "aliases": [
+          "Prote�na de guisante"
+        ]
+      },
+      "after": {
+        "defaultName": "Proteína de guisante",
+        "translations": {
+          "es": "Proteína de guisante"
+        },
+        "aliases": [
+          "Proteína de guisante"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "p_palo",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "P�palo",
+        "translations": {
+          "es": "P�palo"
+        },
+        "aliases": [
+          "P�palo"
+        ]
+      },
+      "after": {
+        "defaultName": "Pápalo",
+        "translations": {
+          "es": "Pápalo"
+        },
+        "aliases": [
+          "Pápalo"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "seit_n",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Seit�n",
+        "translations": {
+          "es": "Seit�n"
+        },
+        "aliases": [
+          "Seit�n"
+        ]
+      },
+      "after": {
+        "defaultName": "Seitán",
+        "translations": {
+          "es": "Seitán"
+        },
+        "aliases": [
+          "Seitán"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "seit_n_ahumado",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Seit�n ahumado",
+        "translations": {
+          "es": "Seit�n ahumado"
+        },
+        "aliases": [
+          "Seit�n ahumado"
+        ]
+      },
+      "after": {
+        "defaultName": "Seitán ahumado",
+        "translations": {
+          "es": "Seitán ahumado"
+        },
+        "aliases": [
+          "Seitán ahumado"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "seit_n_estilo_shawarma",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Seit�n estilo shawarma",
+        "translations": {
+          "es": "Seit�n estilo shawarma"
+        },
+        "aliases": [
+          "Seit�n estilo shawarma"
+        ]
+      },
+      "after": {
+        "defaultName": "Seitán estilo shawarma",
+        "translations": {
+          "es": "Seitán estilo shawarma"
+        },
+        "aliases": [
+          "Seitán estilo shawarma"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "shichimi_tmgarashi",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Shichimi tMgarashi",
+        "translations": {
+          "es": "Shichimi tMgarashi"
+        },
+        "aliases": [
+          "Shichimi tMgarashi"
+        ]
+      },
+      "after": {
+        "defaultName": "Shichimi togarashi",
+        "translations": {
+          "es": "Shichimi togarashi"
+        },
+        "aliases": [
+          "Shichimi togarashi",
+          "Shichimi tōgarashi"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "zumo_de_lim_n_concentrado",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Zumo de lim�n concentrado",
+        "translations": {
+          "es": "Zumo de lim�n concentrado"
+        },
+        "aliases": [
+          "Zumo de lim�n concentrado"
+        ]
+      },
+      "after": {
+        "defaultName": "Zumo de limón concentrado",
+        "translations": {
+          "es": "Zumo de limón concentrado"
+        },
+        "aliases": [
+          "Zumo de limón concentrado"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "at_n_carpaccio",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "At�n carpaccio",
+        "translations": {
+          "es": "At�n carpaccio"
+        },
+        "aliases": [
+          "At�n carpaccio"
+        ]
+      },
+      "after": {
+        "defaultName": "Carpaccio de atún",
+        "translations": {
+          "es": "Carpaccio de atún"
+        },
+        "aliases": [
+          "Carpaccio de atún"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "cacahuete_man",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Cacahuete / man�",
+        "translations": {
+          "es": "Cacahuete / man�"
+        },
+        "aliases": [
+          "Cacahuete / man�"
+        ]
+      },
+      "after": {
+        "defaultName": "Cacahuete / maní",
+        "translations": {
+          "es": "Cacahuete / maní"
+        },
+        "aliases": [
+          "Cacahuete / maní"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "cacao_sin_az_car",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Cacao sin az�car",
+        "translations": {
+          "es": "Cacao sin az�car"
+        },
+        "aliases": [
+          "Cacao sin az�car"
+        ]
+      },
+      "after": {
+        "defaultName": "Cacao sin azúcar",
+        "translations": {
+          "es": "Cacao sin azúcar"
+        },
+        "aliases": [
+          "Cacao sin azúcar"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "camar_n_sakura",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Camar�n sakura",
+        "translations": {
+          "es": "Camar�n sakura"
+        },
+        "aliases": [
+          "Camar�n sakura"
+        ]
+      },
+      "after": {
+        "defaultName": "Camarón sakura",
+        "translations": {
+          "es": "Camarón sakura"
+        },
+        "aliases": [
+          "Camarón sakura"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "chile_crispy",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Chile crispy",
+        "translations": {
+          "es": "Chile crispy"
+        },
+        "aliases": [
+          "Chile crispy"
+        ]
+      },
+      "after": {
+        "defaultName": "Chile crujiente",
+        "translations": {
+          "es": "Chile crujiente"
+        },
+        "aliases": [
+          "Chile crujiente",
+          "Chile crispy"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "concentrado_de_champi_ones",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Concentrado de champi�ones",
+        "translations": {
+          "es": "Concentrado de champi�ones"
+        },
+        "aliases": [
+          "Concentrado de champi�ones"
+        ]
+      },
+      "after": {
+        "defaultName": "Concentrado de champiñones",
+        "translations": {
+          "es": "Concentrado de champiñones"
+        },
+        "aliases": [
+          "Concentrado de champiñones"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "couscous",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Couscous",
+        "translations": {
+          "es": "Couscous"
+        },
+        "aliases": [
+          "Couscous"
+        ]
+      },
+      "after": {
+        "defaultName": "Cuscús",
+        "translations": {
+          "es": "Cuscús"
+        },
+        "aliases": [
+          "Cuscús",
+          "Couscous",
+          "Cous cous"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "fain_tortilla_de_garbanzos",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Fain� / Tortilla de garbanzos",
+        "translations": {
+          "es": "Fain� / Tortilla de garbanzos"
+        },
+        "aliases": [
+          "Fain� / Tortilla de garbanzos"
+        ]
+      },
+      "after": {
+        "defaultName": "Fainá / tortilla de garbanzos",
+        "translations": {
+          "es": "Fainá / tortilla de garbanzos"
+        },
+        "aliases": [
+          "Fainá / tortilla de garbanzos"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "fibra_de_bamb",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Fibra de bamb�",
+        "translations": {
+          "es": "Fibra de bamb�"
+        },
+        "aliases": [
+          "Fibra de bamb�"
+        ]
+      },
+      "after": {
+        "defaultName": "Fibra de bambú",
+        "translations": {
+          "es": "Fibra de bambú"
+        },
+        "aliases": [
+          "Fibra de bambú"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "f_cula_de_mandioca",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "F�cula de mandioca",
+        "translations": {
+          "es": "F�cula de mandioca"
+        },
+        "aliases": [
+          "F�cula de mandioca"
+        ]
+      },
+      "after": {
+        "defaultName": "Fécula de mandioca",
+        "translations": {
+          "es": "Fécula de mandioca"
+        },
+        "aliases": [
+          "Fécula de mandioca"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "f_cula_de_ma_z",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "F�cula de ma�z",
+        "translations": {
+          "es": "F�cula de ma�z"
+        },
+        "aliases": [
+          "F�cula de ma�z"
+        ]
+      },
+      "after": {
+        "defaultName": "Fécula de maíz",
+        "translations": {
+          "es": "Fécula de maíz"
+        },
+        "aliases": [
+          "Fécula de maíz"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "jud_as_rojas",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Jud�as rojas",
+        "translations": {
+          "es": "Jud�as rojas"
+        },
+        "aliases": [
+          "Jud�as rojas"
+        ]
+      },
+      "after": {
+        "defaultName": "Judías rojas",
+        "translations": {
+          "es": "Judías rojas"
+        },
+        "aliases": [
+          "Judías rojas"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "pi_ones",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Pi�ones",
+        "translations": {
+          "es": "Pi�ones"
+        },
+        "aliases": [
+          "Pi�ones"
+        ]
+      },
+      "after": {
+        "defaultName": "Piñones",
+        "translations": {
+          "es": "Piñones"
+        },
+        "aliases": [
+          "Piñones"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "popcorn_palomitas_de_ma_z",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Popcorn / Palomitas de ma�z",
+        "translations": {
+          "es": "Popcorn / Palomitas de ma�z"
+        },
+        "aliases": [
+          "Popcorn / Palomitas de ma�z"
+        ]
+      },
+      "after": {
+        "defaultName": "Palomitas de maíz",
+        "translations": {
+          "es": "Palomitas de maíz"
+        },
+        "aliases": [
+          "Palomitas de maíz",
+          "Popcorn"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "pur_de_cebolla",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Pur� de cebolla",
+        "translations": {
+          "es": "Pur� de cebolla"
+        },
+        "aliases": [
+          "Pur� de cebolla"
+        ]
+      },
+      "after": {
+        "defaultName": "Puré de cebolla",
+        "translations": {
+          "es": "Puré de cebolla"
+        },
+        "aliases": [
+          "Puré de cebolla"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "pur_de_ciruela_dulce",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Pur� de ciruela dulce",
+        "translations": {
+          "es": "Pur� de ciruela dulce"
+        },
+        "aliases": [
+          "Pur� de ciruela dulce"
+        ]
+      },
+      "after": {
+        "defaultName": "Puré de ciruela dulce",
+        "translations": {
+          "es": "Puré de ciruela dulce"
+        },
+        "aliases": [
+          "Puré de ciruela dulce"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "pur_de_coliflor",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Pur� de coliflor",
+        "translations": {
+          "es": "Pur� de coliflor"
+        },
+        "aliases": [
+          "Pur� de coliflor"
+        ]
+      },
+      "after": {
+        "defaultName": "Puré de coliflor",
+        "translations": {
+          "es": "Puré de coliflor"
+        },
+        "aliases": [
+          "Puré de coliflor"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "pur_de_jengibre",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Pur� de jengibre",
+        "translations": {
+          "es": "Pur� de jengibre"
+        },
+        "aliases": [
+          "Pur� de jengibre"
+        ]
+      },
+      "after": {
+        "defaultName": "Puré de jengibre",
+        "translations": {
+          "es": "Puré de jengibre"
+        },
+        "aliases": [
+          "Puré de jengibre"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "pur_de_lima",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Pur� de lima",
+        "translations": {
+          "es": "Pur� de lima"
+        },
+        "aliases": [
+          "Pur� de lima"
+        ]
+      },
+      "after": {
+        "defaultName": "Puré de lima",
+        "translations": {
+          "es": "Puré de lima"
+        },
+        "aliases": [
+          "Puré de lima"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "pur_de_patata",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Pur� de patata",
+        "translations": {
+          "es": "Pur� de patata"
+        },
+        "aliases": [
+          "Pur� de patata"
+        ]
+      },
+      "after": {
+        "defaultName": "Puré de patata",
+        "translations": {
+          "es": "Puré de patata"
+        },
+        "aliases": [
+          "Puré de patata"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "ralladura_de_lim_n",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Ralladura de lim�n",
+        "translations": {
+          "es": "Ralladura de lim�n"
+        },
+        "aliases": [
+          "Ralladura de lim�n"
+        ]
+      },
+      "after": {
+        "defaultName": "Ralladura de limón",
+        "translations": {
+          "es": "Ralladura de limón"
+        },
+        "aliases": [
+          "Ralladura de limón"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "sal_de_camargue",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Sal de camargue",
+        "translations": {
+          "es": "Sal de camargue"
+        },
+        "aliases": [
+          "Sal de camargue"
+        ]
+      },
+      "after": {
+        "defaultName": "Sal de Camargue",
+        "translations": {
+          "es": "Sal de Camargue"
+        },
+        "aliases": [
+          "Sal de Camargue"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "sal_de_gu_rande",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Sal de gu�rande",
+        "translations": {
+          "es": "Sal de gu�rande"
+        },
+        "aliases": [
+          "Sal de gu�rande"
+        ]
+      },
+      "after": {
+        "defaultName": "Sal de Guérande",
+        "translations": {
+          "es": "Sal de Guérande"
+        },
+        "aliases": [
+          "Sal de Guérande"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "salted_egg_huevo_de_pato_salado",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Salted egg / Huevo de pato salado",
+        "translations": {
+          "es": "Salted egg / Huevo de pato salado"
+        },
+        "aliases": [
+          "Salted egg / Huevo de pato salado"
+        ]
+      },
+      "after": {
+        "defaultName": "Huevo de pato salado",
+        "translations": {
+          "es": "Huevo de pato salado"
+        },
+        "aliases": [
+          "Huevo de pato salado",
+          "Salted egg"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "semillas_de_acacias_tostadas_wattleseed",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Semillas de acacias tostadas / Wattleseed",
+        "translations": {
+          "es": "Semillas de acacias tostadas / Wattleseed"
+        },
+        "aliases": [
+          "Semillas de acacias tostadas / Wattleseed"
+        ]
+      },
+      "after": {
+        "defaultName": "Semillas de acacia tostadas / wattleseed",
+        "translations": {
+          "es": "Semillas de acacia tostadas / wattleseed"
+        },
+        "aliases": [
+          "Semillas de acacia tostadas / wattleseed"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "semillas_de_ch_a",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Semillas de ch�a",
+        "translations": {
+          "es": "Semillas de ch�a"
+        },
+        "aliases": [
+          "Semillas de ch�a"
+        ]
+      },
+      "after": {
+        "defaultName": "Semillas de chía",
+        "translations": {
+          "es": "Semillas de chía"
+        },
+        "aliases": [
+          "Semillas de chía"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "semillas_de_s_samo",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Semillas de s�samo",
+        "translations": {
+          "es": "Semillas de s�samo"
+        },
+        "aliases": [
+          "Semillas de s�samo"
+        ]
+      },
+      "after": {
+        "defaultName": "Semillas de sésamo",
+        "translations": {
+          "es": "Semillas de sésamo"
+        },
+        "aliases": [
+          "Semillas de sésamo"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "s_samo_tostado",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "S�samo tostado",
+        "translations": {
+          "es": "S�samo tostado"
+        },
+        "aliases": [
+          "S�samo tostado"
+        ]
+      },
+      "after": {
+        "defaultName": "Sésamo tostado",
+        "translations": {
+          "es": "Sésamo tostado"
+        },
+        "aliases": [
+          "Sésamo tostado"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "at_n",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "At�n",
+        "translations": {
+          "es": "At�n"
+        },
+        "aliases": [
+          "At�n"
+        ]
+      },
+      "after": {
+        "defaultName": "Atún",
+        "translations": {
+          "es": "Atún"
+        },
+        "aliases": [
+          "Atún"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "camarones_n_rdicos",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Camarones n�rdicos",
+        "translations": {
+          "es": "Camarones n�rdicos"
+        },
+        "aliases": [
+          "Camarones n�rdicos"
+        ]
+      },
+      "after": {
+        "defaultName": "Camarones nórdicos",
+        "translations": {
+          "es": "Camarones nórdicos"
+        },
+        "aliases": [
+          "Camarones nórdicos"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "cangrejo_de_r_o",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Cangrejo de r�o",
+        "translations": {
+          "es": "Cangrejo de r�o"
+        },
+        "aliases": [
+          "Cangrejo de r�o"
+        ]
+      },
+      "after": {
+        "defaultName": "Cangrejo de río",
+        "translations": {
+          "es": "Cangrejo de río"
+        },
+        "aliases": [
+          "Cangrejo de río"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "espad_n_ahumado",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Espad�n ahumado",
+        "translations": {
+          "es": "Espad�n ahumado"
+        },
+        "aliases": [
+          "Espad�n ahumado"
+        ]
+      },
+      "after": {
+        "defaultName": "Espadín ahumado",
+        "translations": {
+          "es": "Espadín ahumado"
+        },
+        "aliases": [
+          "Espadín ahumado"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "hokkaido_uni_erizo_de_mar_de_hokkaido",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Hokkaido uni / Erizo de mar de Hokkaido",
+        "translations": {
+          "es": "Hokkaido uni / Erizo de mar de Hokkaido"
+        },
+        "aliases": [
+          "Hokkaido uni / Erizo de mar de Hokkaido"
+        ]
+      },
+      "after": {
+        "defaultName": "Erizo de mar de Hokkaido",
+        "translations": {
+          "es": "Erizo de mar de Hokkaido"
+        },
+        "aliases": [
+          "Erizo de mar de Hokkaido",
+          "Hokkaido uni"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "huevas_roe",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Huevas / roe",
+        "translations": {
+          "es": "Huevas / roe"
+        },
+        "aliases": [
+          "Huevas / roe"
+        ]
+      },
+      "after": {
+        "defaultName": "Huevas",
+        "translations": {
+          "es": "Huevas"
+        },
+        "aliases": [
+          "Huevas",
+          "Roe"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "h_karl_tibur_n_fermentado",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "H�karl / Tibur�n fermentado",
+        "translations": {
+          "es": "H�karl / Tibur�n fermentado"
+        },
+        "aliases": [
+          "H�karl / Tibur�n fermentado"
+        ]
+      },
+      "after": {
+        "defaultName": "Hákarl / tiburón fermentado",
+        "translations": {
+          "es": "Hákarl / tiburón fermentado"
+        },
+        "aliases": [
+          "Hákarl / tiburón fermentado"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "ikra_huevas_de_salm_n",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Ikra / Huevas de salm�n",
+        "translations": {
+          "es": "Ikra / Huevas de salm�n"
+        },
+        "aliases": [
+          "Ikra / Huevas de salm�n"
+        ]
+      },
+      "after": {
+        "defaultName": "Ikra / huevas de salmón",
+        "translations": {
+          "es": "Ikra / huevas de salmón"
+        },
+        "aliases": [
+          "Ikra / huevas de salmón"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "kanikama_crab_stick",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Kanikama / crab stick",
+        "translations": {
+          "es": "Kanikama / crab stick"
+        },
+        "aliases": [
+          "Kanikama / crab stick"
+        ]
+      },
+      "after": {
+        "defaultName": "Kanikama / palitos de cangrejo",
+        "translations": {
+          "es": "Kanikama / palitos de cangrejo"
+        },
+        "aliases": [
+          "Kanikama / palitos de cangrejo",
+          "Crab stick"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "kingfish_pez_rey_del_golfo",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Kingfish / Pez rey del Golfo",
+        "translations": {
+          "es": "Kingfish / Pez rey del Golfo"
+        },
+        "aliases": [
+          "Kingfish / Pez rey del Golfo"
+        ]
+      },
+      "after": {
+        "defaultName": "Kingfish / pez rey del Golfo",
+        "translations": {
+          "es": "Kingfish / pez rey del Golfo"
+        },
+        "aliases": [
+          "Kingfish / pez rey del Golfo"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "ndomba_de_silure_bagre_africano",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Ndomba de Silure / Bagre africano",
+        "translations": {
+          "es": "Ndomba de Silure / Bagre africano"
+        },
+        "aliases": [
+          "Ndomba de Silure / Bagre africano"
+        ]
+      },
+      "after": {
+        "defaultName": "Ndomba de silure / bagre africano",
+        "translations": {
+          "es": "Ndomba de silure / bagre africano"
+        },
+        "aliases": [
+          "Ndomba de silure / bagre africano"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "r_get_l",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "R�get �l",
+        "translations": {
+          "es": "R�get �l"
+        },
+        "aliases": [
+          "R�get �l"
+        ]
+      },
+      "after": {
+        "defaultName": "Røget ål",
+        "translations": {
+          "es": "Røget ål"
+        },
+        "aliases": [
+          "Røget ål",
+          "Roget al",
+          "Roeget aal"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "salm_n",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Salm�n",
+        "translations": {
+          "es": "Salm�n"
+        },
+        "aliases": [
+          "Salm�n"
+        ]
+      },
+      "after": {
+        "defaultName": "Salmón",
+        "translations": {
+          "es": "Salmón"
+        },
+        "aliases": [
+          "Salmón"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "salm_n_ahumado",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Salm�n ahumado",
+        "translations": {
+          "es": "Salm�n ahumado"
+        },
+        "aliases": [
+          "Salm�n ahumado"
+        ]
+      },
+      "after": {
+        "defaultName": "Salmón ahumado",
+        "translations": {
+          "es": "Salmón ahumado"
+        },
+        "aliases": [
+          "Salmón ahumado"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "salm_n_del_pac_fico",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Salm�n del pac�fico",
+        "translations": {
+          "es": "Salm�n del pac�fico"
+        },
+        "aliases": [
+          "Salm�n del pac�fico"
+        ]
+      },
+      "after": {
+        "defaultName": "Salmón del Pacífico",
+        "translations": {
+          "es": "Salmón del Pacífico"
+        },
+        "aliases": [
+          "Salmón del Pacífico"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "scungilli_caracola",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Scungilli / Caracola",
+        "translations": {
+          "es": "Scungilli / Caracola"
+        },
+        "aliases": [
+          "Scungilli / Caracola"
+        ]
+      },
+      "after": {
+        "defaultName": "Scungilli / caracola",
+        "translations": {
+          "es": "Scungilli / caracola"
+        },
+        "aliases": [
+          "Scungilli / caracola"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "vieiras_hokkaido",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Vieiras Hokkaido",
+        "translations": {
+          "es": "Vieiras Hokkaido"
+        },
+        "aliases": [
+          "Vieiras Hokkaido"
+        ]
+      },
+      "after": {
+        "defaultName": "Vieiras de Hokkaido",
+        "translations": {
+          "es": "Vieiras de Hokkaido"
+        },
+        "aliases": [
+          "Vieiras de Hokkaido"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "aaaruul",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Aaaruul",
+        "translations": {
+          "es": "Aaaruul"
+        },
+        "aliases": [
+          "Aaaruul"
+        ]
+      },
+      "after": {
+        "defaultName": "Aaruul",
+        "translations": {
+          "es": "Aaruul"
+        },
+        "aliases": [
+          "Aaruul"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "bejna",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "bejna",
+        "translations": {
+          "es": "bejna"
+        },
+        "aliases": [
+          "bejna"
+        ]
+      },
+      "after": {
+        "defaultName": "Ġbejna",
+        "translations": {
+          "es": "Ġbejna"
+        },
+        "aliases": [
+          "Ġbejna",
+          "Gbejna"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "cheddar_ahumado",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Cheddar Ahumado",
+        "translations": {
+          "es": "Cheddar Ahumado"
+        },
+        "aliases": [
+          "Cheddar Ahumado"
+        ]
+      },
+      "after": {
+        "defaultName": "Cheddar ahumado",
+        "translations": {
+          "es": "Cheddar ahumado"
+        },
+        "aliases": [
+          "Cheddar ahumado"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "cheddar_vermont",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Cheddar Vermont",
+        "translations": {
+          "es": "Cheddar Vermont"
+        },
+        "aliases": [
+          "Cheddar Vermont"
+        ]
+      },
+      "after": {
+        "defaultName": "Cheddar de Vermont",
+        "translations": {
+          "es": "Cheddar de Vermont"
+        },
+        "aliases": [
+          "Cheddar de Vermont"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "cheddar_vintage_extra_a_ejo",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Cheddar vintage / extra a�ejo",
+        "translations": {
+          "es": "Cheddar vintage / extra a�ejo"
+        },
+        "aliases": [
+          "Cheddar vintage / extra a�ejo"
+        ]
+      },
+      "after": {
+        "defaultName": "Cheddar vintage / extra añejo",
+        "translations": {
+          "es": "Cheddar vintage / extra añejo"
+        },
+        "aliases": [
+          "Cheddar vintage / extra añejo"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "comt",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Comt�",
+        "translations": {
+          "es": "Comt�"
+        },
+        "aliases": [
+          "Comt�"
+        ]
+      },
+      "after": {
+        "defaultName": "Comté",
+        "translations": {
+          "es": "Comté"
+        },
+        "aliases": [
+          "Comté"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "gr_ddost",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Gr�ddost",
+        "translations": {
+          "es": "Gr�ddost"
+        },
+        "aliases": [
+          "Gr�ddost"
+        ]
+      },
+      "after": {
+        "defaultName": "Gräddost",
+        "translations": {
+          "es": "Gräddost"
+        },
+        "aliases": [
+          "Gräddost"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "ka_ar_peyniri",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Ka_ar peyniri",
+        "translations": {
+          "es": "Ka_ar peyniri"
+        },
+        "aliases": [
+          "Ka_ar peyniri"
+        ]
+      },
+      "after": {
+        "defaultName": "Kaşar peyniri",
+        "translations": {
+          "es": "Kaşar peyniri"
+        },
+        "aliases": [
+          "Kaşar peyniri",
+          "Kasar peyniri",
+          "Kashar"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "kachk_is",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Kachk�is",
+        "translations": {
+          "es": "Kachk�is"
+        },
+        "aliases": [
+          "Kachk�is"
+        ]
+      },
+      "after": {
+        "defaultName": "Kachkéis",
+        "translations": {
+          "es": "Kachkéis"
+        },
+        "aliases": [
+          "Kachkéis"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "mascarpone_vainilla",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Mascarpone vainilla",
+        "translations": {
+          "es": "Mascarpone vainilla"
+        },
+        "aliases": [
+          "Mascarpone vainilla"
+        ]
+      },
+      "after": {
+        "defaultName": "Mascarpone con vainilla",
+        "translations": {
+          "es": "Mascarpone con vainilla"
+        },
+        "aliases": [
+          "Mascarpone con vainilla"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "mozzarella_rallada",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Mozzarella rallada",
+        "translations": {
+          "es": "Mozzarella rallada"
+        },
+        "aliases": [
+          "Mozzarella rallada",
+          "Mozzarella rayada",
+          "Queso mozzarella rallado",
+          "Shredded mozzarella"
+        ]
+      },
+      "after": {
+        "defaultName": "Mozzarella rallada",
+        "translations": {
+          "es": "Mozzarella rallada"
+        },
+        "aliases": [
+          "Mozzarella rallada",
+          "Queso mozzarella rallado",
+          "Shredded mozzarella"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "mozzarella_de_b_fala",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Mozzarella de b�fala",
+        "translations": {
+          "es": "Mozzarella de b�fala"
+        },
+        "aliases": [
+          "Mozzarella de b�fala"
+        ]
+      },
+      "after": {
+        "defaultName": "Mozzarella de búfala",
+        "translations": {
+          "es": "Mozzarella de búfala"
+        },
+        "aliases": [
+          "Mozzarella de búfala"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "mozzarella_toonsbridge",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Mozzarella toonsbridge",
+        "translations": {
+          "es": "Mozzarella toonsbridge"
+        },
+        "aliases": [
+          "Mozzarella toonsbridge"
+        ]
+      },
+      "after": {
+        "defaultName": "Mozzarella Toonsbridge",
+        "translations": {
+          "es": "Mozzarella Toonsbridge"
+        },
+        "aliases": [
+          "Mozzarella Toonsbridge"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "oscypek_queso_ahumado_de_oveja",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Oscypek / Queso ahumado de oveja",
+        "translations": {
+          "es": "Oscypek / Queso ahumado de oveja"
+        },
+        "aliases": [
+          "Oscypek / Queso ahumado de oveja"
+        ]
+      },
+      "after": {
+        "defaultName": "Oscypek / queso ahumado de oveja",
+        "translations": {
+          "es": "Oscypek / queso ahumado de oveja"
+        },
+        "aliases": [
+          "Oscypek / queso ahumado de oveja"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "pecorino_romano",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Pecorino romano",
+        "translations": {
+          "es": "Pecorino romano"
+        },
+        "aliases": [
+          "Pecorino romano"
+        ]
+      },
+      "after": {
+        "defaultName": "Pecorino Romano",
+        "translations": {
+          "es": "Pecorino Romano"
+        },
+        "aliases": [
+          "Pecorino Romano"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "piton_ma_do",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Piton Ma�do",
+        "translations": {
+          "es": "Piton Ma�do"
+        },
+        "aliases": [
+          "Piton Ma�do"
+        ]
+      },
+      "after": {
+        "defaultName": "Piton Maïdo",
+        "translations": {
+          "es": "Piton Maïdo"
+        },
+        "aliases": [
+          "Piton Maïdo"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "queso_ardsallagh",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Queso ardsallagh",
+        "translations": {
+          "es": "Queso ardsallagh"
+        },
+        "aliases": [
+          "Queso ardsallagh"
+        ]
+      },
+      "after": {
+        "defaultName": "Queso Ardsallagh",
+        "translations": {
+          "es": "Queso Ardsallagh"
+        },
+        "aliases": [
+          "Queso Ardsallagh"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "queso_blanco_para_fre_r",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Queso blanco para fre�r",
+        "translations": {
+          "es": "Queso blanco para fre�r"
+        },
+        "aliases": [
+          "Queso blanco para fre�r"
+        ]
+      },
+      "after": {
+        "defaultName": "Queso blanco para freír",
+        "translations": {
+          "es": "Queso blanco para freír"
+        },
+        "aliases": [
+          "Queso blanco para freír"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "queso_cabrales",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Queso cabrales",
+        "translations": {
+          "es": "Queso cabrales"
+        },
+        "aliases": [
+          "Queso cabrales"
+        ]
+      },
+      "after": {
+        "defaultName": "Queso Cabrales",
+        "translations": {
+          "es": "Queso Cabrales"
+        },
+        "aliases": [
+          "Queso Cabrales"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "queso_coolea_farmhouse",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Queso coolea farmhouse",
+        "translations": {
+          "es": "Queso coolea farmhouse"
+        },
+        "aliases": [
+          "Queso coolea farmhouse"
+        ]
+      },
+      "after": {
+        "defaultName": "Queso Coolea Farmhouse",
+        "translations": {
+          "es": "Queso Coolea Farmhouse"
+        },
+        "aliases": [
+          "Queso Coolea Farmhouse"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "queso_coste_o",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Queso coste�o",
+        "translations": {
+          "es": "Queso coste�o"
+        },
+        "aliases": [
+          "Queso coste�o"
+        ]
+      },
+      "after": {
+        "defaultName": "Queso costeño",
+        "translations": {
+          "es": "Queso costeño"
+        },
+        "aliases": [
+          "Queso costeño"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "queso_guayan_s",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Queso guayan�s",
+        "translations": {
+          "es": "Queso guayan�s"
+        },
+        "aliases": [
+          "Queso guayan�s"
+        ]
+      },
+      "after": {
+        "defaultName": "Queso guayanés",
+        "translations": {
+          "es": "Queso guayanés"
+        },
+        "aliases": [
+          "Queso guayanés"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "queso_h_ngaro_a_ejo",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Queso h�ngaro a�ejo",
+        "translations": {
+          "es": "Queso h�ngaro a�ejo"
+        },
+        "aliases": [
+          "Queso h�ngaro a�ejo"
+        ]
+      },
+      "after": {
+        "defaultName": "Queso húngaro añejo",
+        "translations": {
+          "es": "Queso húngaro añejo"
+        },
+        "aliases": [
+          "Queso húngaro añejo"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "queso_stracchino",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Queso Stracchino",
+        "translations": {
+          "es": "Queso Stracchino"
+        },
+        "aliases": [
+          "Queso Stracchino"
+        ]
+      },
+      "after": {
+        "defaultName": "Queso stracchino",
+        "translations": {
+          "es": "Queso stracchino"
+        },
+        "aliases": [
+          "Queso stracchino"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "queso_tvorog",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Queso Tvorog",
+        "translations": {
+          "es": "Queso Tvorog"
+        },
+        "aliases": [
+          "Queso Tvorog"
+        ]
+      },
+      "after": {
+        "defaultName": "Queso tvorog",
+        "translations": {
+          "es": "Queso tvorog"
+        },
+        "aliases": [
+          "Queso tvorog"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "queso_uzbek",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Queso uzbek",
+        "translations": {
+          "es": "Queso uzbek"
+        },
+        "aliases": [
+          "Queso uzbek"
+        ]
+      },
+      "after": {
+        "defaultName": "Queso uzbeko",
+        "translations": {
+          "es": "Queso uzbeko"
+        },
+        "aliases": [
+          "Queso uzbeko"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "queso_vegano",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Queso Vegano",
+        "translations": {
+          "es": "Queso Vegano"
+        },
+        "aliases": [
+          "Queso Vegano"
+        ]
+      },
+      "after": {
+        "defaultName": "Queso vegano",
+        "translations": {
+          "es": "Queso vegano"
+        },
+        "aliases": [
+          "Queso vegano"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "queso_v_sterbottenost",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Queso V�sterbottenost",
+        "translations": {
+          "es": "Queso V�sterbottenost"
+        },
+        "aliases": [
+          "Queso V�sterbottenost"
+        ]
+      },
+      "after": {
+        "defaultName": "Queso Västerbottensost",
+        "translations": {
+          "es": "Queso Västerbottensost"
+        },
+        "aliases": [
+          "Queso Västerbottensost"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "requeij_o_cremoso",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Requeij�o cremoso",
+        "translations": {
+          "es": "Requeij�o cremoso"
+        },
+        "aliases": [
+          "Requeij�o cremoso"
+        ]
+      },
+      "after": {
+        "defaultName": "Requeijão cremoso",
+        "translations": {
+          "es": "Requeijão cremoso"
+        },
+        "aliases": [
+          "Requeijão cremoso"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "ube_ricotta_ricotta_de_ame_morado",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Ube ricotta / ricotta de �ame morado",
+        "translations": {
+          "es": "Ube ricotta / ricotta de �ame morado"
+        },
+        "aliases": [
+          "Ube ricotta / ricotta de �ame morado"
+        ]
+      },
+      "after": {
+        "defaultName": "Ricotta de ñame morado",
+        "translations": {
+          "es": "Ricotta de ñame morado"
+        },
+        "aliases": [
+          "Ricotta de ñame morado",
+          "Ube ricotta"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "bbq",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "BBQ",
+        "translations": {
+          "es": "BBQ"
+        },
+        "aliases": [
+          "BBQ"
+        ]
+      },
+      "after": {
+        "defaultName": "Salsa barbacoa",
+        "translations": {
+          "es": "Salsa barbacoa"
+        },
+        "aliases": [
+          "Salsa barbacoa",
+          "BBQ",
+          "Barbacoa"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "bigilla_pasta_de_habas_maltesa",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Bigilla / Pasta de habas maltesa",
+        "translations": {
+          "es": "Bigilla / Pasta de habas maltesa"
+        },
+        "aliases": [
+          "Bigilla / Pasta de habas maltesa"
+        ]
+      },
+      "after": {
+        "defaultName": "Bigilla / pasta de habas maltesa",
+        "translations": {
+          "es": "Bigilla / pasta de habas maltesa"
+        },
+        "aliases": [
+          "Bigilla / pasta de habas maltesa"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "crema_de_aj_amarillo",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Crema de aj� amarillo",
+        "translations": {
+          "es": "Crema de aj� amarillo"
+        },
+        "aliases": [
+          "Crema de aj� amarillo"
+        ]
+      },
+      "after": {
+        "defaultName": "Crema de ají amarillo",
+        "translations": {
+          "es": "Crema de ají amarillo"
+        },
+        "aliases": [
+          "Crema de ají amarillo"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "crema_de_calabac_n",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Crema de calabac�n",
+        "translations": {
+          "es": "Crema de calabac�n"
+        },
+        "aliases": [
+          "Crema de calabac�n"
+        ]
+      },
+      "after": {
+        "defaultName": "Crema de calabacín",
+        "translations": {
+          "es": "Crema de calabacín"
+        },
+        "aliases": [
+          "Crema de calabacín"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "crema_de_huanca_na",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Crema de huanca�na",
+        "translations": {
+          "es": "Crema de huanca�na"
+        },
+        "aliases": [
+          "Crema de huanca�na"
+        ]
+      },
+      "after": {
+        "defaultName": "Crema de huancaína",
+        "translations": {
+          "es": "Crema de huancaína"
+        },
+        "aliases": [
+          "Crema de huancaína"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "cr_me_fra_che",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Cr�me Fra�che",
+        "translations": {
+          "es": "Cr�me Fra�che"
+        },
+        "aliases": [
+          "Cr�me Fra�che"
+        ]
+      },
+      "after": {
+        "defaultName": "Crème fraîche",
+        "translations": {
+          "es": "Crème fraîche"
+        },
+        "aliases": [
+          "Crème fraîche"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "doenjang_mayo",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Doenjang mayo",
+        "translations": {
+          "es": "Doenjang mayo"
+        },
+        "aliases": [
+          "Doenjang mayo"
+        ]
+      },
+      "after": {
+        "defaultName": "Mayonesa de doenjang",
+        "translations": {
+          "es": "Mayonesa de doenjang"
+        },
+        "aliases": [
+          "Mayonesa de doenjang",
+          "Doenjang mayo"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "glaseado_bals_mico",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Glaseado bals�mico",
+        "translations": {
+          "es": "Glaseado bals�mico"
+        },
+        "aliases": [
+          "Glaseado bals�mico"
+        ]
+      },
+      "after": {
+        "defaultName": "Glaseado balsámico",
+        "translations": {
+          "es": "Glaseado balsámico"
+        },
+        "aliases": [
+          "Glaseado balsámico"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "mango_habanero_bbq",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Mango habanero BBQ",
+        "translations": {
+          "es": "Mango habanero BBQ"
+        },
+        "aliases": [
+          "Mango habanero BBQ"
+        ]
+      },
+      "after": {
+        "defaultName": "Salsa barbacoa de mango y habanero",
+        "translations": {
+          "es": "Salsa barbacoa de mango y habanero"
+        },
+        "aliases": [
+          "Salsa barbacoa de mango y habanero",
+          "Mango habanero BBQ"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "miel_mostaza",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Miel-mostaza",
+        "translations": {
+          "es": "Miel-mostaza"
+        },
+        "aliases": [
+          "Miel-mostaza"
+        ]
+      },
+      "after": {
+        "defaultName": "Miel y mostaza",
+        "translations": {
+          "es": "Miel y mostaza"
+        },
+        "aliases": [
+          "Miel y mostaza",
+          "Miel-mostaza"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "mostaza_dijon",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Mostaza Dijon",
+        "translations": {
+          "es": "Mostaza Dijon"
+        },
+        "aliases": [
+          "Mostaza Dijon"
+        ]
+      },
+      "after": {
+        "defaultName": "Mostaza de Dijon",
+        "translations": {
+          "es": "Mostaza de Dijon"
+        },
+        "aliases": [
+          "Mostaza de Dijon"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "nga_pi_pasta_de_pescado_fermentado",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Nga pi / Pasta de pescado fermentado",
+        "translations": {
+          "es": "Nga pi / Pasta de pescado fermentado"
+        },
+        "aliases": [
+          "Nga pi / Pasta de pescado fermentado"
+        ]
+      },
+      "after": {
+        "defaultName": "Nga pi / pasta de pescado fermentado",
+        "translations": {
+          "es": "Nga pi / pasta de pescado fermentado"
+        },
+        "aliases": [
+          "Nga pi / pasta de pescado fermentado"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "pur_de_calabaza",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Pur� de calabaza",
+        "translations": {
+          "es": "Pur� de calabaza"
+        },
+        "aliases": [
+          "Pur� de calabaza"
+        ]
+      },
+      "after": {
+        "defaultName": "Puré de calabaza",
+        "translations": {
+          "es": "Puré de calabaza"
+        },
+        "aliases": [
+          "Puré de calabaza"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "pur_de_chile",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Pur� de chile",
+        "translations": {
+          "es": "Pur� de chile"
+        },
+        "aliases": [
+          "Pur� de chile"
+        ]
+      },
+      "after": {
+        "defaultName": "Puré de chile",
+        "translations": {
+          "es": "Puré de chile"
+        },
+        "aliases": [
+          "Puré de chile"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "pur_de_chile_rojo",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Pur� de chile rojo",
+        "translations": {
+          "es": "Pur� de chile rojo"
+        },
+        "aliases": [
+          "Pur� de chile rojo"
+        ]
+      },
+      "after": {
+        "defaultName": "Puré de chile rojo",
+        "translations": {
+          "es": "Puré de chile rojo"
+        },
+        "aliases": [
+          "Puré de chile rojo"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "pur_de_ciruela_picante",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Pur� de ciruela picante",
+        "translations": {
+          "es": "Pur� de ciruela picante"
+        },
+        "aliases": [
+          "Pur� de ciruela picante"
+        ]
+      },
+      "after": {
+        "defaultName": "Puré de ciruela picante",
+        "translations": {
+          "es": "Puré de ciruela picante"
+        },
+        "aliases": [
+          "Puré de ciruela picante"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "pur_de_kawakawa",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Pur� de kawakawa",
+        "translations": {
+          "es": "Pur� de kawakawa"
+        },
+        "aliases": [
+          "Pur� de kawakawa"
+        ]
+      },
+      "after": {
+        "defaultName": "Puré de kawakawa",
+        "translations": {
+          "es": "Puré de kawakawa"
+        },
+        "aliases": [
+          "Puré de kawakawa"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "pur_de_pimiento_picante",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Pur� de pimiento picante",
+        "translations": {
+          "es": "Pur� de pimiento picante"
+        },
+        "aliases": [
+          "Pur� de pimiento picante"
+        ]
+      },
+      "after": {
+        "defaultName": "Puré de pimiento picante",
+        "translations": {
+          "es": "Puré de pimiento picante"
+        },
+        "aliases": [
+          "Puré de pimiento picante"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "reducci_n_de_uva",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Reducci�n de uva",
+        "translations": {
+          "es": "Reducci�n de uva"
+        },
+        "aliases": [
+          "Reducci�n de uva"
+        ]
+      },
+      "after": {
+        "defaultName": "Reducción de uva",
+        "translations": {
+          "es": "Reducción de uva"
+        },
+        "aliases": [
+          "Reducción de uva"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "relish_de_jalape_o_encurtido",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Relish de jalape�o encurtido",
+        "translations": {
+          "es": "Relish de jalape�o encurtido"
+        },
+        "aliases": [
+          "Relish de jalape�o encurtido"
+        ]
+      },
+      "after": {
+        "defaultName": "Relish de jalapeño encurtido",
+        "translations": {
+          "es": "Relish de jalapeño encurtido"
+        },
+        "aliases": [
+          "Relish de jalapeño encurtido"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "salsa_arrabiata",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Salsa arrabiata",
+        "translations": {
+          "es": "Salsa arrabiata"
+        },
+        "aliases": [
+          "Salsa arrabiata"
+        ]
+      },
+      "after": {
+        "defaultName": "Salsa arrabbiata",
+        "translations": {
+          "es": "Salsa arrabbiata"
+        },
+        "aliases": [
+          "Salsa arrabbiata"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "salsa_buffalo",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Salsa buffalo",
+        "translations": {
+          "es": "Salsa buffalo"
+        },
+        "aliases": [
+          "Salsa buffalo"
+        ]
+      },
+      "after": {
+        "defaultName": "Salsa Buffalo",
+        "translations": {
+          "es": "Salsa Buffalo"
+        },
+        "aliases": [
+          "Salsa Buffalo"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "salsa_curry",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Salsa curry",
+        "translations": {
+          "es": "Salsa curry"
+        },
+        "aliases": [
+          "Salsa curry"
+        ]
+      },
+      "after": {
+        "defaultName": "Salsa de curry",
+        "translations": {
+          "es": "Salsa de curry"
+        },
+        "aliases": [
+          "Salsa de curry"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "salsa_de_abul_n",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Salsa de abul�n",
+        "translations": {
+          "es": "Salsa de abul�n"
+        },
+        "aliases": [
+          "Salsa de abul�n"
+        ]
+      },
+      "after": {
+        "defaultName": "Salsa de abulón",
+        "translations": {
+          "es": "Salsa de abulón"
+        },
+        "aliases": [
+          "Salsa de abulón"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "salsa_de_bearnesa",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Salsa de bearnesa",
+        "translations": {
+          "es": "Salsa de bearnesa"
+        },
+        "aliases": [
+          "Salsa de bearnesa"
+        ]
+      },
+      "after": {
+        "defaultName": "Salsa bearnesa",
+        "translations": {
+          "es": "Salsa bearnesa"
+        },
+        "aliases": [
+          "Salsa bearnesa"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "salsa_de_champi_ones",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Salsa de champi�ones",
+        "translations": {
+          "es": "Salsa de champi�ones"
+        },
+        "aliases": [
+          "Salsa de champi�ones"
+        ]
+      },
+      "after": {
+        "defaultName": "Salsa de champiñones",
+        "translations": {
+          "es": "Salsa de champiñones"
+        },
+        "aliases": [
+          "Salsa de champiñones"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "salsa_de_r_bano",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Salsa de r�bano",
+        "translations": {
+          "es": "Salsa de r�bano"
+        },
+        "aliases": [
+          "Salsa de r�bano"
+        ]
+      },
+      "after": {
+        "defaultName": "Salsa de rábano",
+        "translations": {
+          "es": "Salsa de rábano"
+        },
+        "aliases": [
+          "Salsa de rábano"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "salsa_de_tomatillo_verde_mexicana",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Salsa de tomatillo / verde mexicana",
+        "translations": {
+          "es": "Salsa de tomatillo / verde mexicana"
+        },
+        "aliases": [
+          "Salsa de tomatillo / verde mexicana"
+        ]
+      },
+      "after": {
+        "defaultName": "Salsa de tomatillo / salsa verde mexicana",
+        "translations": {
+          "es": "Salsa de tomatillo / salsa verde mexicana"
+        },
+        "aliases": [
+          "Salsa de tomatillo / salsa verde mexicana"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "salsa_de_t_tailand_s",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Salsa de t� tailand�s",
+        "translations": {
+          "es": "Salsa de t� tailand�s"
+        },
+        "aliases": [
+          "Salsa de t� tailand�s"
+        ]
+      },
+      "after": {
+        "defaultName": "Salsa de té tailandés",
+        "translations": {
+          "es": "Salsa de té tailandés"
+        },
+        "aliases": [
+          "Salsa de té tailandés"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "salsa_de_yogurt",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Salsa de yogurt",
+        "translations": {
+          "es": "Salsa de yogurt"
+        },
+        "aliases": [
+          "Salsa de yogurt"
+        ]
+      },
+      "after": {
+        "defaultName": "Salsa de yogur",
+        "translations": {
+          "es": "Salsa de yogur"
+        },
+        "aliases": [
+          "Salsa de yogur",
+          "Salsa de yogurt"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "salsa_d_til",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Salsa d�til",
+        "translations": {
+          "es": "Salsa d�til"
+        },
+        "aliases": [
+          "Salsa d�til"
+        ]
+      },
+      "after": {
+        "defaultName": "Salsa de dátil",
+        "translations": {
+          "es": "Salsa de dátil"
+        },
+        "aliases": [
+          "Salsa de dátil"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "salsa_mantequilla",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Salsa mantequilla",
+        "translations": {
+          "es": "Salsa mantequilla"
+        },
+        "aliases": [
+          "Salsa mantequilla"
+        ]
+      },
+      "after": {
+        "defaultName": "Salsa de mantequilla",
+        "translations": {
+          "es": "Salsa de mantequilla"
+        },
+        "aliases": [
+          "Salsa de mantequilla"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "salsa_picante_de_pi_a",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Salsa picante de pi�a",
+        "translations": {
+          "es": "Salsa picante de pi�a"
+        },
+        "aliases": [
+          "Salsa picante de pi�a"
+        ]
+      },
+      "after": {
+        "defaultName": "Salsa picante de piña",
+        "translations": {
+          "es": "Salsa picante de piña"
+        },
+        "aliases": [
+          "Salsa picante de piña"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "salsa_sichuan",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Salsa sichuan",
+        "translations": {
+          "es": "Salsa sichuan"
+        },
+        "aliases": [
+          "Salsa sichuan"
+        ]
+      },
+      "after": {
+        "defaultName": "Salsa Sichuan",
+        "translations": {
+          "es": "Salsa Sichuan"
+        },
+        "aliases": [
+          "Salsa Sichuan"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "salsa_vodka",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Salsa vodka",
+        "translations": {
+          "es": "Salsa vodka"
+        },
+        "aliases": [
+          "Salsa vodka"
+        ]
+      },
+      "after": {
+        "defaultName": "Salsa de vodka",
+        "translations": {
+          "es": "Salsa de vodka"
+        },
+        "aliases": [
+          "Salsa de vodka"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "tapenade_de_champi_ones",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Tapenade de champi�ones",
+        "translations": {
+          "es": "Tapenade de champi�ones"
+        },
+        "aliases": [
+          "Tapenade de champi�ones"
+        ]
+      },
+      "after": {
+        "defaultName": "Tapenade de champiñones",
+        "translations": {
+          "es": "Tapenade de champiñones"
+        },
+        "aliases": [
+          "Tapenade de champiñones"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "champi_ones_al_ajillo",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Champi�ones al ajillo",
+        "translations": {
+          "es": "Champi�ones al ajillo"
+        },
+        "aliases": [
+          "Champi�ones al ajillo"
+        ]
+      },
+      "after": {
+        "defaultName": "Champiñones al ajillo",
+        "translations": {
+          "es": "Champiñones al ajillo"
+        },
+        "aliases": [
+          "Champiñones al ajillo"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "champi_ones_blancos",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Champi�ones blancos",
+        "translations": {
+          "es": "Champi�ones blancos"
+        },
+        "aliases": [
+          "Champi�ones blancos"
+        ]
+      },
+      "after": {
+        "defaultName": "Champiñones blancos",
+        "translations": {
+          "es": "Champiñones blancos"
+        },
+        "aliases": [
+          "Champiñones blancos"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "champi_ones_cocidos_pasteurizados",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Champi�ones cocidos pasteurizados",
+        "translations": {
+          "es": "Champi�ones cocidos pasteurizados"
+        },
+        "aliases": [
+          "Champi�ones cocidos pasteurizados"
+        ]
+      },
+      "after": {
+        "defaultName": "Champiñones cocidos pasteurizados",
+        "translations": {
+          "es": "Champiñones cocidos pasteurizados"
+        },
+        "aliases": [
+          "Champiñones cocidos pasteurizados"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "champi_ones_de_par_s",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Champi�ones de Par�s",
+        "translations": {
+          "es": "Champi�ones de Par�s"
+        },
+        "aliases": [
+          "Champi�ones de Par�s"
+        ]
+      },
+      "after": {
+        "defaultName": "Champiñones de París",
+        "translations": {
+          "es": "Champiñones de París"
+        },
+        "aliases": [
+          "Champiñones de París"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "champi_ones_grillados",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Champi�ones grillados",
+        "translations": {
+          "es": "Champi�ones grillados"
+        },
+        "aliases": [
+          "Champi�ones grillados"
+        ]
+      },
+      "after": {
+        "defaultName": "Champiñones grillados",
+        "translations": {
+          "es": "Champiñones grillados"
+        },
+        "aliases": [
+          "Champiñones grillados"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "champi_ones_marinados",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Champi�ones marinados",
+        "translations": {
+          "es": "Champi�ones marinados"
+        },
+        "aliases": [
+          "Champi�ones marinados"
+        ]
+      },
+      "after": {
+        "defaultName": "Champiñones marinados",
+        "translations": {
+          "es": "Champiñones marinados"
+        },
+        "aliases": [
+          "Champiñones marinados"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "champi_ones_portobello_sazonados",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Champi�ones portobello sazonados",
+        "translations": {
+          "es": "Champi�ones portobello sazonados"
+        },
+        "aliases": [
+          "Champi�ones portobello sazonados"
+        ]
+      },
+      "after": {
+        "defaultName": "Champiñones portobello sazonados",
+        "translations": {
+          "es": "Champiñones portobello sazonados"
+        },
+        "aliases": [
+          "Champiñones portobello sazonados"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "champi_ones_salteados",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Champi�ones salteados",
+        "translations": {
+          "es": "Champi�ones salteados"
+        },
+        "aliases": [
+          "Champi�ones salteados"
+        ]
+      },
+      "after": {
+        "defaultName": "Champiñones salteados",
+        "translations": {
+          "es": "Champiñones salteados"
+        },
+        "aliases": [
+          "Champiñones salteados"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "champi_ones_shiitake_y_pleurotus",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Champi�ones shiitake y pleurotus",
+        "translations": {
+          "es": "Champi�ones shiitake y pleurotus"
+        },
+        "aliases": [
+          "Champi�ones shiitake y pleurotus"
+        ]
+      },
+      "after": {
+        "defaultName": "Champiñones shiitake y pleurotus",
+        "translations": {
+          "es": "Champiñones shiitake y pleurotus"
+        },
+        "aliases": [
+          "Champiñones shiitake y pleurotus"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "champi_nes_blancos",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Champi��nes blancos",
+        "translations": {
+          "es": "Champi��nes blancos"
+        },
+        "aliases": [
+          "Champi��nes blancos"
+        ]
+      },
+      "after": {
+        "defaultName": "Champiñones blancos",
+        "translations": {
+          "es": "Champiñones blancos"
+        },
+        "aliases": [
+          "Champiñones blancos"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "champi_nes_casta_os",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Champi��nes casta�os",
+        "translations": {
+          "es": "Champi��nes casta�os"
+        },
+        "aliases": [
+          "Champi��nes casta�os"
+        ]
+      },
+      "after": {
+        "defaultName": "Champiñones castaños",
+        "translations": {
+          "es": "Champiñones castaños"
+        },
+        "aliases": [
+          "Champiñones castaños"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "champi_nes_crimini",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Champi��nes crimini",
+        "translations": {
+          "es": "Champi��nes crimini"
+        },
+        "aliases": [
+          "Champi��nes crimini"
+        ]
+      },
+      "after": {
+        "defaultName": "Champiñones crimini",
+        "translations": {
+          "es": "Champiñones crimini"
+        },
+        "aliases": [
+          "Champiñones crimini"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "melena_de_le_n",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Melena de le�n",
+        "translations": {
+          "es": "Melena de le�n"
+        },
+        "aliases": [
+          "Melena de le�n"
+        ]
+      },
+      "after": {
+        "defaultName": "Melena de león",
+        "translations": {
+          "es": "Melena de león"
+        },
+        "aliases": [
+          "Melena de león"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "pioppino_seta_de_lamo",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Pioppino / Seta de �lamo",
+        "translations": {
+          "es": "Pioppino / Seta de �lamo"
+        },
+        "aliases": [
+          "Pioppino / Seta de �lamo"
+        ]
+      },
+      "after": {
+        "defaultName": "Pioppino / seta de álamo",
+        "translations": {
+          "es": "Pioppino / seta de álamo"
+        },
+        "aliases": [
+          "Pioppino / seta de álamo"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "tartufi_istriani_trufa_de_istriani",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Tartufi istriani / trufa de istriani",
+        "translations": {
+          "es": "Tartufi istriani / trufa de istriani"
+        },
+        "aliases": [
+          "Tartufi istriani / trufa de istriani"
+        ]
+      },
+      "after": {
+        "defaultName": "Tartufi istriani / trufas de Istria",
+        "translations": {
+          "es": "Tartufi istriani / trufas de Istria"
+        },
+        "aliases": [
+          "Tartufi istriani / trufas de Istria"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "aceitunas_kalamata",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Aceitunas kalamata",
+        "translations": {
+          "es": "Aceitunas kalamata"
+        },
+        "aliases": [
+          "Aceitunas kalamata"
+        ]
+      },
+      "after": {
+        "defaultName": "Aceitunas Kalamata",
+        "translations": {
+          "es": "Aceitunas Kalamata"
+        },
+        "aliases": [
+          "Aceitunas Kalamata"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "brotes_de_bamb",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Brotes de bamb�",
+        "translations": {
+          "es": "Brotes de bamb�"
+        },
+        "aliases": [
+          "Brotes de bamb�"
+        ]
+      },
+      "after": {
+        "defaultName": "Brotes de bambú",
+        "translations": {
+          "es": "Brotes de bambú"
+        },
+        "aliases": [
+          "Brotes de bambú"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "br_coli",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Br�coli",
+        "translations": {
+          "es": "Br�coli"
+        },
+        "aliases": [
+          "Br�coli"
+        ]
+      },
+      "after": {
+        "defaultName": "Brócoli",
+        "translations": {
+          "es": "Brócoli"
+        },
+        "aliases": [
+          "Brócoli"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "calabac_n",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Calabac�n",
+        "translations": {
+          "es": "Calabac�n"
+        },
+        "aliases": [
+          "Calabac�n"
+        ]
+      },
+      "after": {
+        "defaultName": "Calabacín",
+        "translations": {
+          "es": "Calabacín"
+        },
+        "aliases": [
+          "Calabacín"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "calabac_n_grillado",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Calabac�n grillado",
+        "translations": {
+          "es": "Calabac�n grillado"
+        },
+        "aliases": [
+          "Calabac�n grillado"
+        ]
+      },
+      "after": {
+        "defaultName": "Calabacín grillado",
+        "translations": {
+          "es": "Calabacín grillado"
+        },
+        "aliases": [
+          "Calabacín grillado"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "cebolla_roja_bals_mica",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Cebolla roja bals�mica",
+        "translations": {
+          "es": "Cebolla roja bals�mica"
+        },
+        "aliases": [
+          "Cebolla roja bals�mica"
+        ]
+      },
+      "after": {
+        "defaultName": "Cebolla roja balsámica",
+        "translations": {
+          "es": "Cebolla roja balsámica"
+        },
+        "aliases": [
+          "Cebolla roja balsámica"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "ceboll_n_frito",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Ceboll�n frito",
+        "translations": {
+          "es": "Ceboll�n frito"
+        },
+        "aliases": [
+          "Ceboll�n frito"
+        ]
+      },
+      "after": {
+        "defaultName": "Cebollín frito",
+        "translations": {
+          "es": "Cebollín frito"
+        },
+        "aliases": [
+          "Cebollín frito"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "chiriv_a",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Chiriv�a",
+        "translations": {
+          "es": "Chiriv�a"
+        },
+        "aliases": [
+          "Chiriv�a"
+        ]
+      },
+      "after": {
+        "defaultName": "Chirivía",
+        "translations": {
+          "es": "Chirivía"
+        },
+        "aliases": [
+          "Chirivía"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "esp_rrago_triguero",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Esp�rrago triguero",
+        "translations": {
+          "es": "Esp�rrago triguero"
+        },
+        "aliases": [
+          "Esp�rrago triguero"
+        ]
+      },
+      "after": {
+        "defaultName": "Espárrago triguero",
+        "translations": {
+          "es": "Espárrago triguero"
+        },
+        "aliases": [
+          "Espárrago triguero"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "esp_rrago_verde",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Esp�rrago verde",
+        "translations": {
+          "es": "Esp�rrago verde"
+        },
+        "aliases": [
+          "Esp�rrago verde"
+        ]
+      },
+      "after": {
+        "defaultName": "Espárrago verde",
+        "translations": {
+          "es": "Espárrago verde"
+        },
+        "aliases": [
+          "Espárrago verde"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "hojas_de_t_fermentadas",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Hojas de t� fermentadas",
+        "translations": {
+          "es": "Hojas de t� fermentadas"
+        },
+        "aliases": [
+          "Hojas de t� fermentadas"
+        ]
+      },
+      "after": {
+        "defaultName": "Hojas de té fermentadas",
+        "translations": {
+          "es": "Hojas de té fermentadas"
+        },
+        "aliases": [
+          "Hojas de té fermentadas"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "jalape_o",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Jalape�o",
+        "translations": {
+          "es": "Jalape�o"
+        },
+        "aliases": [
+          "Jalape�o"
+        ]
+      },
+      "after": {
+        "defaultName": "Jalapeño",
+        "translations": {
+          "es": "Jalapeño"
+        },
+        "aliases": [
+          "Jalapeño"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "jalape_o_deshidratado",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Jalape�o deshidratado",
+        "translations": {
+          "es": "Jalape�o deshidratado"
+        },
+        "aliases": [
+          "Jalape�o deshidratado"
+        ]
+      },
+      "after": {
+        "defaultName": "Jalapeño deshidratado",
+        "translations": {
+          "es": "Jalapeño deshidratado"
+        },
+        "aliases": [
+          "Jalapeño deshidratado"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "jalape_os_marinados",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Jalape�os marinados",
+        "translations": {
+          "es": "Jalape�os marinados"
+        },
+        "aliases": [
+          "Jalape�os marinados"
+        ]
+      },
+      "after": {
+        "defaultName": "Jalapeños marinados",
+        "translations": {
+          "es": "Jalapeños marinados"
+        },
+        "aliases": [
+          "Jalapeños marinados"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "kumara_batata_maor",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Kumara / batata maor�",
+        "translations": {
+          "es": "Kumara / batata maor�"
+        },
+        "aliases": [
+          "Kumara / batata maor�"
+        ]
+      },
+      "after": {
+        "defaultName": "Kumara / batata maorí",
+        "translations": {
+          "es": "Kumara / batata maorí"
+        },
+        "aliases": [
+          "Kumara / batata maorí"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "ma_z",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Ma�z",
+        "translations": {
+          "es": "Ma�z"
+        },
+        "aliases": [
+          "Ma�z"
+        ]
+      },
+      "after": {
+        "defaultName": "Maíz",
+        "translations": {
+          "es": "Maíz"
+        },
+        "aliases": [
+          "Maíz"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "ma_z_tostado",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Ma�z tostado",
+        "translations": {
+          "es": "Ma�z tostado"
+        },
+        "aliases": [
+          "Ma�z tostado"
+        ]
+      },
+      "after": {
+        "defaultName": "Maíz tostado",
+        "translations": {
+          "es": "Maíz tostado"
+        },
+        "aliases": [
+          "Maíz tostado"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "rabano",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Rabano",
+        "translations": {
+          "es": "Rabano"
+        },
+        "aliases": [
+          "Rabano"
+        ]
+      },
+      "after": {
+        "defaultName": "Rábano",
+        "translations": {
+          "es": "Rábano"
+        },
+        "aliases": [
+          "Rábano"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "ra_z_de_bardana",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "Ra�z de bardana",
+        "translations": {
+          "es": "Ra�z de bardana"
+        },
+        "aliases": [
+          "Ra�z de bardana"
+        ]
+      },
+      "after": {
+        "defaultName": "Raíz de bardana",
+        "translations": {
+          "es": "Raíz de bardana"
+        },
+        "aliases": [
+          "Raíz de bardana"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "r_cula",
+      "reason": "encoding_repair_and_editorial_normalization",
+      "before": {
+        "defaultName": "R�cula",
+        "translations": {
+          "es": "R�cula"
+        },
+        "aliases": [
+          "R�cula"
+        ]
+      },
+      "after": {
+        "defaultName": "Rúcula",
+        "translations": {
+          "es": "Rúcula"
+        },
+        "aliases": [
+          "Rúcula"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "shiso_perilla",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Shiso / Perilla",
+        "translations": {
+          "es": "Shiso / Perilla"
+        },
+        "aliases": [
+          "Shiso / Perilla"
+        ]
+      },
+      "after": {
+        "defaultName": "Shiso / perilla",
+        "translations": {
+          "es": "Shiso / perilla"
+        },
+        "aliases": [
+          "Shiso / perilla"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "tomates_fresco",
+      "reason": "spelling_case_or_alias_normalization",
+      "before": {
+        "defaultName": "Tomates fresco",
+        "translations": {
+          "es": "Tomates fresco"
+        },
+        "aliases": [
+          "Tomates fresco"
+        ]
+      },
+      "after": {
+        "defaultName": "Tomates frescos",
+        "translations": {
+          "es": "Tomates frescos"
+        },
+        "aliases": [
+          "Tomates frescos"
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "name": "Údené mäso",
+      "url": "https://slovakia.travel/vydajte-sa-s-nami-objavovat-chute-slovenskych-regionov",
+      "purpose": "Verificación de escritura; no certifica equivalencias, composición ni alérgenos.",
+      "checkedAt": "2026-09-16"
+    },
+    {
+      "name": "Cârnăciori",
+      "url": "https://cpac.afir.info/Produs?id=99",
+      "purpose": "Verificación de escritura; no certifica equivalencias, composición ni alérgenos.",
+      "checkedAt": "2026-09-16"
+    },
+    {
+      "name": "Njeguški pršut",
+      "url": "https://www.montenegro.travel/uploads/content/2_explore/arome-i-ukusi-crne-gore.pdf",
+      "purpose": "Verificación de escritura; no certifica equivalencias, composición ni alérgenos.",
+      "checkedAt": "2026-09-16"
+    },
+    {
+      "name": "Kiełbasa",
+      "url": "https://www.poland.travel/en/wp-content/uploads/sites/17/2025/12/Kulinaria_EN.pdf",
+      "purpose": "Verificación de escritura; no certifica equivalencias, composición ni alérgenos.",
+      "checkedAt": "2026-09-16"
+    },
+    {
+      "name": "Pastırma",
+      "url": "https://goturkiye.com/tr/kayseri/tat",
+      "purpose": "Verificación de escritura; no certifica equivalencias, composición ni alérgenos.",
+      "checkedAt": "2026-09-16"
+    },
+    {
+      "name": "Kaşar peyniri",
+      "url": "https://goturkiye.com/tr/kars/tat",
+      "purpose": "Verificación de escritura; no certifica equivalencias, composición ni alérgenos.",
+      "checkedAt": "2026-09-16"
+    },
+    {
+      "name": "Shichimi togarashi",
+      "url": "https://nagano-shodan.com/en/foods/fcpPdf/67",
+      "purpose": "Verificación de escritura; no certifica equivalencias, composición ni alérgenos.",
+      "checkedAt": "2026-09-16"
+    },
+    {
+      "name": "Aaruul",
+      "url": "https://www.irci.jp/rdb/item/13427",
+      "purpose": "Verificación de escritura; no certifica equivalencias, composición ni alérgenos.",
+      "checkedAt": "2026-09-16"
+    },
+    {
+      "name": "Ġbejna",
+      "url": "https://mccaa.org.mt/media/3472/2-website_%C4%A1bejna-product-specification.pdf",
+      "purpose": "Verificación de escritura; no certifica equivalencias, composición ni alérgenos.",
+      "checkedAt": "2026-09-16"
+    },
+    {
+      "name": "Røget ål",
+      "url": "https://www.visitdenmark.dk/danmark/explore/det-gamle-roegeri-hanstholm-gdk601880",
+      "purpose": "Verificación de escritura; no certifica equivalencias, composición ni alérgenos.",
+      "checkedAt": "2026-09-16"
+    },
+    {
+      "name": "Gräddost",
+      "url": "https://www.arla.se/produkter/graddost/",
+      "purpose": "Verificación de escritura; no certifica equivalencias, composición ni alérgenos.",
+      "checkedAt": "2026-09-16"
+    },
+    {
+      "name": "Kachkéis",
+      "url": "https://www.luxembourg-city.com/en/about-luxembourg-city/meng-stad-my-city/luxembourg-cuisine",
+      "purpose": "Verificación de escritura; no certifica equivalencias, composición ni alérgenos.",
+      "checkedAt": "2026-09-16"
+    },
+    {
+      "name": "Piton Maïdo",
+      "url": "https://fromagesdelareunion.re/produit/piton-maido/",
+      "purpose": "Verificación de escritura; no certifica equivalencias, composición ni alérgenos.",
+      "checkedAt": "2026-09-16"
+    },
+    {
+      "name": "Västerbottensost",
+      "url": "https://vasterbottensost.com/en/",
+      "purpose": "Verificación de escritura; no certifica equivalencias, composición ni alérgenos.",
+      "checkedAt": "2026-09-16"
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import IngredientOnboardingModal from "./IngredientOnboardingModal";
+import IngredientOnboardingModal, { matchesIngredientSearch } from "./IngredientOnboardingModal";
+import ingredientMasterSource from "../../data/ingredientMasterSource.json";
 import IngredientsModule from "./IngredientsModule";
 import api from "../../setupAxios";
 
@@ -134,8 +135,37 @@ test("successful onboarding opens the ingredient category and retains its image 
   fireEvent.click(screen.getByRole("button", { name: "Añadir ingrediente" }));
   await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
   expect(await screen.findByText("POLLO FRITO")).toBeVisible();
-  expect(screen.getByText("Upload")).toBeVisible();
-  expect(screen.getByRole("button", { name: "Ver traducciones" })).toBeVisible();
+  expect(screen.getByRole("button", { name: "Editar" })).toBeVisible();
+  expect(screen.getByRole("button", { name: "Eliminar" })).toBeVisible();
+});
+
+test("real master keeps synonyms on one identity and distinguishes preparations", () => {
+  const search = (query) => ingredientMasterSource.filter((row) => matchesIngredientSearch([row.defaultName, ...row.aliases], query));
+  expect(search("palta").filter((row) => row.category === "VERDURAS").map((row) => row.canonicalKey)).toEqual(["aguacate"]);
+  expect(search("aceite de palta").map((row) => row.canonicalKey)).toEqual(["aceite_de_aguacate"]);
+  expect(search("aguaymanto").map((row) => row.canonicalKey)).toEqual(["uchuva"]);
+  expect(search("colin de alaska").map((row) => row.canonicalKey)).toEqual(["abadejo_de_alaska"]);
+  expect(search("carne molida de res").map((row) => row.canonicalKey)).toEqual(["carne_molida_de_vacuno"]);
+  expect(search("champinones blancos").map((row) => row.canonicalKey)).toEqual(["champi_ones_blancos"]);
+  const peanut = ingredientMasterSource.find((row) => row.canonicalKey === "cacahuete_man");
+  for (const term of ["maní", "mani", "cacahuate", "cacahuete"]) expect(matchesIngredientSearch(peanut.aliases, term)).toBe(true);
+  expect(search("pina caramelizada").map((row) => row.canonicalKey)).toEqual(["pi_a_caramelizada"]);
+  expect(ingredientMasterSource.find((row) => row.canonicalKey === "pi_a")).toBeDefined();
+  expect(search("queso duro blando")).toHaveLength(0);
+  expect(matchesIngredientSearch(["奶酪"], "豆腐")).toBe(false);
+  expect(matchesIngredientSearch(["奶酪"], "奶酪")).toBe(true);
+});
+
+test("the single surviving master choice recognizes an existing retired key", async () => {
+  api.get.mockImplementation((path) => Promise.resolve({ data: path === "/ingredients"
+    ? [{ id: 81, name: "Nombre histórico", canonicalKey: "champi_nes_blancos", category: "SETAS", isSystem: true }] : [] }));
+  render(<IngredientsModule />);
+  await waitFor(() => expect(screen.getByRole("button", { name: "+ Añadir ingrediente" })).toBeEnabled());
+  fireEvent.click(screen.getByRole("button", { name: "+ Añadir ingrediente" }));
+  fireEvent.change(screen.getByLabelText("Buscar en la lista maestra"), { target: { value: "champiñones blancos" } });
+  const choices = screen.getAllByRole("button", { name: /Champiñones blancos.*Ya añadido/ });
+  expect(choices).toHaveLength(1);
+  expect(choices[0]).toBeDisabled();
 });
 
 test("photo selection previews locally and saves the file with the seven languages", async () => {
@@ -206,13 +236,13 @@ test("an existing ingredient can translate when only Arabic and Chinese are miss
   await waitFor(() => expect(screen.getByRole("button", { name: "+ Añadir ingrediente" })).toBeEnabled());
   fireEvent.click(screen.getByRole("button", { name: "Buscar ya añadidos" }));
   fireEvent.change(screen.getByLabelText("Buscar ingredientes del catálogo"), { target: { value: "pollo" } });
-  fireEvent.click(screen.getByRole("button", { name: "Semantics" }));
-  expect(await screen.findByLabelText("Nombre AR")).toHaveValue("");
+  fireEvent.click(screen.getByRole("button", { name: "Editar" }));
+  expect(await screen.findByLabelText("Nombre en árabe")).toHaveValue("");
   const translate = screen.getByRole("button", { name: "Traducir idiomas pendientes" });
   expect(translate).toBeEnabled(); fireEvent.click(translate);
-  await waitFor(() => expect(screen.getByLabelText("Nombre ZH")).toHaveValue("炸鸡"));
-  expect(screen.getByLabelText("Nombre AR")).toHaveValue("دجاج مقلي");
-  expect(screen.getByLabelText("Nombre AR")).toHaveAttribute("dir", "rtl");
-  expect(screen.getByLabelText("Nombre EN")).toHaveValue("Fried chicken");
+  await waitFor(() => expect(screen.getByLabelText("Nombre en chino")).toHaveValue("炸鸡"));
+  expect(screen.getByLabelText("Nombre en árabe")).toHaveValue("دجاج مقلي");
+  expect(screen.getByLabelText("Nombre en árabe")).toHaveAttribute("dir", "rtl");
+  expect(screen.getByLabelText("Nombre en inglés")).toHaveValue("Fried chicken");
   expect(translate).toBeDisabled();
 });

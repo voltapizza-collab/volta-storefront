@@ -426,6 +426,14 @@ color: var(--black);
   font-variant-numeric: tabular-nums;
 }
 
+/* Available ingredients: distinguish the add action from saved statuses. */
+.inv-ingredientTile.is-new .inv-tileStatus,
+.inv-itemsGrid--search .inv-ingredientTile.is-new .inv-tileMeta strong {
+  background: var(--brand-2, #ffb61c);
+  color: var(--brand-1, #3b008b);
+  box-shadow: 0 0 0 1px rgba(59, 0, 139, 0.15);
+}
+
 /* ITEM ROW */
 .inv-itemRow {
   display: flex;

@@ -2,6 +2,8 @@ import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react"
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import OrderPortalTransition from "../components/Storefront/OrderPortalTransition";
 import api from "../services/api";
+import ProductNoticeBadge from "../components/Storefront/ProductNoticeBadge";
+import { productNoticeLabels, normalizeProductNotices } from "../constants/productNotices";
 import "../styles/Storefront.css";
 import "../styles/CatalogLayout.css";
 import "../styles/CatalogDesktop.css";
@@ -46,10 +48,7 @@ const DEFAULT_BOOST_SETTINGS = {
 };
 const DEFAULT_TRENDING_PRICE_BAND = 0.5;
 const TRENDING_PRICE_REFRESH_MS = 5000;
-const PRODUCT_TAG_LABELS = {
-  spicy: "Picante",
-  vegan: "Vegano",
-};
+const PRODUCT_TAG_LABELS = productNoticeLabels("es");
 const RANDOM_SELECTION_CANONICAL_KEYS = new Set([
   "random_selection_1",
   "random_selection_2",
@@ -1897,7 +1896,7 @@ const renderAllergenNotice = (allergens = []) => {
 };
 
 const normalizeProductTagList = (productTags = []) =>
-  (Array.isArray(productTags) ? productTags : [])
+  normalizeProductNotices(productTags)
     .map((tag) => {
       const value = String(tag || "").trim();
       if (!value) return null;
@@ -5782,29 +5781,7 @@ export default function StorePage() {
     );
   };
 
-  const renderProductTags = (item) => {
-    const tags = Array.isArray(item?.productTags)
-      ? item.productTags
-          .map((tag) => ({
-            value: tag,
-            label: PRODUCT_TAG_LABELS[tag] || tag,
-          }))
-          .filter((tag) => tag.label)
-          .slice(0, 3)
-      : [];
-
-    if (!tags.length) return null;
-
-    return (
-      <div className="lsf-productTags" aria-label="Etiquetas del producto">
-        {tags.map((tag) => (
-          <span key={tag.value} className={`lsf-productTag lsf-productTag--${tag.value}`}>
-            {tag.label}
-          </span>
-        ))}
-      </div>
-    );
-  };
+  const renderProductTags = item => <ProductNoticeBadge tags={item?.productTags} />;
 
   const renderProductCard = (item) => {
     const flipped = flippedId === item.pizzaId;

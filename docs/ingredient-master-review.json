@@ -1,0 +1,652 @@
+{
+  "schemaVersion": 2,
+  "date": "2026-09-17",
+  "policy": "Una identidad por ingrediente; los alias y traducciones no aumentan el número. Las fichas ambiguas se conservan fuera del selector de nuevas altas.",
+  "decisions": [
+    {
+      "section": "confirmedDuplicateGroups",
+      "originalKeys": [
+        "champi_ones_blancos",
+        "champi_nes_blancos"
+      ],
+      "activeKeys": [
+        "champi_ones_blancos"
+      ],
+      "pendingKeys": [],
+      "status": "CONSOLIDATED",
+      "reason": "Mismo champiñón blanco de cultivo, sin diferencias de preparación indicadas. Se conservan los crimini y portobello como variedades/presentaciones diferenciadas.",
+      "sources": []
+    },
+    {
+      "section": "possibleEquivalentGroups",
+      "originalKeys": [
+        "aceite_de_canola",
+        "aceite_de_colza"
+      ],
+      "activeKeys": [
+        "aceite_de_canola",
+        "aceite_de_colza"
+      ],
+      "pendingKeys": [],
+      "status": "KEPT_DISTINCT_OR_CLARIFIED",
+      "reason": "Canola designa colza seleccionada de baja concentración de ácido erúcico. Se mantienen las fichas genéricas separadas hasta precisar la calidad de la colza.",
+      "sources": [
+        "https://inspection.canada.ca/en/plant-health/plant-varieties/novel-traits/applicants/directive-94-08/biology-documents/brassica-napus"
+      ]
+    },
+    {
+      "section": "possibleEquivalentGroups",
+      "originalKeys": [
+        "extracto_de_paprika",
+        "extracto_de_piment_n"
+      ],
+      "activeKeys": [
+        "extracto_de_piment_n"
+      ],
+      "pendingKeys": [],
+      "status": "CONSOLIDATED",
+      "reason": "Sinónimo del mismo extracto genérico. La equivalencia ya está recogida en seedIngredientSemanticFinalCleanup.js y en la base consultada (75 → pimenton_extract).",
+      "sources": []
+    },
+    {
+      "section": "possibleEquivalentGroups",
+      "originalKeys": [
+        "carne_molida_de_res",
+        "carne_molida_de_vacuno"
+      ],
+      "activeKeys": [
+        "carne_molida_de_vacuno"
+      ],
+      "pendingKeys": [],
+      "status": "CONSOLIDATED",
+      "reason": "Misma carne y misma preparación; res y vacuno son denominaciones regionales en este contexto culinario.",
+      "sources": []
+    },
+    {
+      "section": "possibleEquivalentGroups",
+      "originalKeys": [
+        "res",
+        "vacuno"
+      ],
+      "activeKeys": [
+        "vacuno"
+      ],
+      "pendingKeys": [],
+      "status": "CONSOLIDATED",
+      "reason": "Misma identidad genérica de carne bovina; se mantienen ternera y buey por separado.",
+      "sources": []
+    },
+    {
+      "section": "possibleEquivalentGroups",
+      "originalKeys": [
+        "cayena",
+        "pimienta_cayena"
+      ],
+      "activeKeys": [
+        "cayena"
+      ],
+      "pendingKeys": [],
+      "status": "CONSOLIDATED",
+      "reason": "Dos nombres de la misma especia. No se incorpora chile genérico ni otras variedades.",
+      "sources": []
+    },
+    {
+      "section": "possibleEquivalentGroups",
+      "originalKeys": [
+        "cilantro",
+        "coriandro",
+        "semillas_de_cilantro"
+      ],
+      "activeKeys": [
+        "cilantro",
+        "semillas_de_cilantro"
+      ],
+      "pendingKeys": [
+        "coriandro"
+      ],
+      "status": "NEEDS_SOURCE",
+      "reason": "Puede referirse a la planta, sus hojas o sus semillas. No se une a cilantro ni a semillas de cilantro sin conocer la parte usada.",
+      "sources": []
+    },
+    {
+      "section": "possibleEquivalentGroups",
+      "originalKeys": [
+        "alubias_rojas",
+        "jud_as_rojas"
+      ],
+      "activeKeys": [
+        "alubias_rojas"
+      ],
+      "pendingKeys": [],
+      "status": "CONSOLIDATED",
+      "reason": "Misma denominación genérica de alubia roja, sin variedad ni preparación diferente documentada.",
+      "sources": []
+    },
+    {
+      "section": "possibleEquivalentGroups",
+      "originalKeys": [
+        "linaza",
+        "semillas_de_lino"
+      ],
+      "activeKeys": [
+        "semillas_de_lino"
+      ],
+      "pendingKeys": [],
+      "status": "CONSOLIDATED",
+      "reason": "Linaza es el nombre de la semilla de lino; se mantienen linaza molida y dorada por separado.",
+      "sources": []
+    },
+    {
+      "section": "possibleEquivalentGroups",
+      "originalKeys": [
+        "ostiones",
+        "ostras"
+      ],
+      "activeKeys": [
+        "ostras"
+      ],
+      "pendingKeys": [
+        "ostiones"
+      ],
+      "status": "NEEDS_SOURCE",
+      "reason": "El nombre regional puede designar ostras o vieiras; hace falta país y especie.",
+      "sources": []
+    },
+    {
+      "section": "possibleEquivalentGroups",
+      "originalKeys": [
+        "caracola",
+        "scungilli_caracola"
+      ],
+      "activeKeys": [
+        "caracola"
+      ],
+      "pendingKeys": [
+        "scungilli_caracola"
+      ],
+      "status": "NEEDS_SOURCE",
+      "reason": "Falta especie o presentación que permita distinguirlo de la ficha genérica caracola.",
+      "sources": []
+    },
+    {
+      "section": "possibleEquivalentGroups",
+      "originalKeys": [
+        "crema_fresca",
+        "cr_me_fra_che"
+      ],
+      "activeKeys": [
+        "cr_me_fra_che"
+      ],
+      "pendingKeys": [
+        "crema_fresca"
+      ],
+      "status": "NEEDS_SOURCE",
+      "reason": "Falta confirmar si es nata sin fermentar o crème fraîche fermentada.",
+      "sources": []
+    },
+    {
+      "section": "possibleEquivalentGroups",
+      "originalKeys": [
+        "chipotle",
+        "salsa_de_chipotle"
+      ],
+      "activeKeys": [
+        "chipotle",
+        "salsa_de_chipotle"
+      ],
+      "pendingKeys": [],
+      "status": "KEPT_DISTINCT_OR_CLARIFIED",
+      "reason": "Chile chipotle pasa a hierbas/especias y conserva una identidad distinta de la salsa de chipotle y del chipotle en polvo.",
+      "sources": [
+        "https://www.gob.mx/agricultura/articulos/ahora-es-cuando-chile-verde-le-has-de-dar-sabor-al-caldo"
+      ]
+    },
+    {
+      "section": "possibleEquivalentGroups",
+      "originalKeys": [
+        "salsa_peri_peri",
+        "salsa_piri_piri"
+      ],
+      "activeKeys": [
+        "salsa_peri_peri"
+      ],
+      "pendingKeys": [],
+      "status": "CONSOLIDATED",
+      "reason": "Variantes de escritura de la salsa genérica; ninguna ficha especifica receta, marca o intensidad distinta. No se fusionan formulaciones concretas.",
+      "sources": []
+    },
+    {
+      "section": "possibleEquivalentGroups",
+      "originalKeys": [
+        "salsa_tum",
+        "toum"
+      ],
+      "activeKeys": [
+        "toum"
+      ],
+      "pendingKeys": [
+        "salsa_tum"
+      ],
+      "status": "NEEDS_SOURCE",
+      "reason": "Probable variante de toum; las fichas discrepan en los alérgenos heredados. Falta receta para consolidar.",
+      "sources": []
+    },
+    {
+      "section": "possibleEquivalentGroups",
+      "originalKeys": [
+        "champi_ones_blancos",
+        "champi_ones_de_par_s"
+      ],
+      "activeKeys": [
+        "champi_ones_blancos"
+      ],
+      "pendingKeys": [],
+      "status": "CONSOLIDATED",
+      "reason": "Mismo champiñón blanco de cultivo, sin diferencias de preparación indicadas. Se conservan los crimini y portobello como variedades/presentaciones diferenciadas.",
+      "sources": []
+    },
+    {
+      "section": "possibleEquivalentGroups",
+      "originalKeys": [
+        "boletus",
+        "porcini"
+      ],
+      "activeKeys": [
+        "porcini"
+      ],
+      "pendingKeys": [
+        "boletus"
+      ],
+      "status": "NEEDS_SOURCE",
+      "reason": "Denominación demasiado amplia para distinguirla de porcini; falta especie o mezcla.",
+      "sources": []
+    },
+    {
+      "section": "possibleEquivalentGroups",
+      "originalKeys": [
+        "champi_nes_crimini",
+        "portabellini"
+      ],
+      "activeKeys": [
+        "champi_nes_crimini",
+        "portabellini"
+      ],
+      "pendingKeys": [],
+      "status": "KEPT_DISTINCT_OR_CLARIFIED",
+      "reason": "Se mantienen crimini y portabellini: el productor distingue Portabellini como presentación de tamaño intermedio. No se mezcla con portobello maduro.",
+      "sources": [
+        "https://www.montereymushrooms.com/brown-mushrooms-portabellini"
+      ]
+    },
+    {
+      "section": "possibleEquivalentGroups",
+      "originalKeys": [
+        "cebolla_morada_de_tropea",
+        "cebolla_roja_de_tropea"
+      ],
+      "activeKeys": [
+        "cebolla_roja_de_tropea"
+      ],
+      "pendingKeys": [],
+      "status": "CONSOLIDATED",
+      "reason": "Misma cebolla de Tropea, sin diferencia de preparación; roja y morada son variantes de denominación.",
+      "sources": []
+    },
+    {
+      "section": "possibleEquivalentGroups",
+      "originalKeys": [
+        "cebolla_de_verdeo",
+        "cebolleta"
+      ],
+      "activeKeys": [
+        "cebolleta"
+      ],
+      "pendingKeys": [
+        "cebolla_de_verdeo"
+      ],
+      "status": "NEEDS_SOURCE",
+      "reason": "Falta especie o madurez que permita distinguirla de cebolleta.",
+      "sources": []
+    },
+    {
+      "section": "possibleEquivalentGroups",
+      "originalKeys": [
+        "choclo",
+        "ma_z"
+      ],
+      "activeKeys": [
+        "choclo",
+        "ma_z"
+      ],
+      "pendingKeys": [],
+      "status": "KEPT_DISTINCT_OR_CLARIFIED",
+      "reason": "Se aclara como maíz tierno (choclo), distinto del maíz genérico sin especificar madurez. No se añade choclo como alias genérico de todo maíz.",
+      "sources": [
+        "https://www.asale.org/damer/choclo"
+      ]
+    },
+    {
+      "section": "possibleEquivalentGroups",
+      "originalKeys": [
+        "esp_rrago_triguero",
+        "esp_rrago_verde"
+      ],
+      "activeKeys": [
+        "esp_rrago_triguero",
+        "esp_rrago_verde"
+      ],
+      "pendingKeys": [],
+      "status": "KEPT_DISTINCT_OR_CLARIFIED",
+      "reason": "Se mantienen triguero y verde: existen especies y formas cultivadas diferenciadas. No se fuerza una equivalencia universal de nombres comerciales.",
+      "sources": [
+        "https://www.mapa.gob.es/dam/mapa/contenido/agricultura/temas/medios-de-produccion/semillas-y-plantas-de-vivero/recursos-fitogeneticos-para-la-agricultura-y-la-alimentacion/docs/tardio_etal2022_iectbavol2.pdf"
+      ]
+    },
+    {
+      "section": "possibleEquivalentGroups",
+      "originalKeys": [
+        "peperoncino_marinado",
+        "peperoni_en_vinagre",
+        "peperoni_encurtidos",
+        "pimientos_al_vinagre"
+      ],
+      "activeKeys": [
+        "peperoncino_marinado",
+        "pimientos_al_vinagre"
+      ],
+      "pendingKeys": [
+        "peperoni_encurtidos"
+      ],
+      "status": "NEEDS_SOURCE",
+      "reason": "Falta indicar si son pimientos en vinagre o fermentados, y si hay una variedad distinta.",
+      "sources": []
+    },
+    {
+      "section": "semanticReview",
+      "originalKeys": [
+        "cocodrilo_caim_n"
+      ],
+      "activeKeys": [],
+      "pendingKeys": [
+        "cocodrilo_caim_n"
+      ],
+      "status": "NEEDS_SOURCE",
+      "reason": "Combina animales distintos. Hace falta determinar el producto original antes de asignar referencias o crear fichas separadas.",
+      "sources": []
+    },
+    {
+      "section": "semanticReview",
+      "originalKeys": [
+        "hierba_luisa_lemongrass"
+      ],
+      "activeKeys": [],
+      "pendingKeys": [
+        "hierba_luisa_lemongrass"
+      ],
+      "status": "NEEDS_SOURCE",
+      "reason": "El nombre regional puede representar Aloysia citrodora o Cymbopogon citratus; falta la especie.",
+      "sources": []
+    },
+    {
+      "section": "semanticReview",
+      "originalKeys": [
+        "chapulines_grillos_tostados"
+      ],
+      "activeKeys": [],
+      "pendingKeys": [
+        "chapulines_grillos_tostados"
+      ],
+      "status": "NEEDS_SOURCE",
+      "reason": "Combina saltamontes y grillos; no son alias del mismo ingrediente.",
+      "sources": []
+    },
+    {
+      "section": "semanticReview",
+      "originalKeys": [
+        "queso_duro_blando"
+      ],
+      "activeKeys": [],
+      "pendingKeys": [
+        "queso_duro_blando"
+      ],
+      "status": "NEEDS_SOURCE",
+      "reason": "Descripción contradictoria; falta el nombre del queso.",
+      "sources": []
+    },
+    {
+      "section": "semanticReview",
+      "originalKeys": [
+        "soppressata_salami_sin_curar",
+        "soppressata_salchicha_curada"
+      ],
+      "activeKeys": [
+        "soppressata_salchicha_curada"
+      ],
+      "pendingKeys": [
+        "soppressata_salami_sin_curar"
+      ],
+      "status": "NEEDS_SOURCE",
+      "reason": "Sin curar puede significar sin nitritos añadidos o ausencia de curación; no se puede inferir equivalencia con otra soppressata.",
+      "sources": []
+    },
+    {
+      "section": "semanticReview",
+      "originalKeys": [
+        "queso_saint_maure"
+      ],
+      "activeKeys": [
+        "queso_saint_maure"
+      ],
+      "pendingKeys": [],
+      "status": "KEPT_DISTINCT_OR_CLARIFIED",
+      "reason": "Se corrige la grafía Sainte-Maure, sin atribuir a esta ficha una certificación AOP ni el origen Touraine.",
+      "sources": [
+        "https://www.inao.gouv.fr/produit/sainte-maure-de-touraine-16988"
+      ]
+    },
+    {
+      "section": "semanticReview",
+      "originalKeys": [
+        "gamonal",
+        "red_hotdog",
+        "tomate_bush",
+        "keong_khas_banyubiru",
+        "kingfish_pez_rey_del_golfo",
+        "piton_ma_do",
+        "pljevlja_queso_de_oveja_de_pljevlja",
+        "queso_tasty",
+        "queso_yuki",
+        "picante",
+        "salsa_de_hueso",
+        "salsa_k_ssamjang",
+        "vinaza_roja",
+        "rocket_maldivo"
+      ],
+      "activeKeys": [
+        "red_hotdog",
+        "tomate_bush",
+        "piton_ma_do"
+      ],
+      "pendingKeys": [
+        "gamonal",
+        "keong_khas_banyubiru",
+        "kingfish_pez_rey_del_golfo",
+        "pljevlja_queso_de_oveja_de_pljevlja",
+        "queso_tasty",
+        "queso_yuki",
+        "picante",
+        "salsa_de_hueso",
+        "salsa_k_ssamjang",
+        "vinaza_roja",
+        "rocket_maldivo"
+      ],
+      "status": "NEEDS_SOURCE",
+      "reason": "Nombre no suficientemente identificado con una fuente de producto. Falta distinguir especie de caracol y preparación regional. Kingfish designa especies distintas por región; falta la especie. Falta confirmar el tipo de leche de esta ficha; no se deduce del origen geográfico. Tasty puede ser una denominación comercial de cheddar maduro; falta especificación para contar una identidad distinta. Denominación no suficientemente identificada; falta productor o tipo de queso. Es una propiedad, no identifica una salsa concreta. No se conoce el producto, la especie ni la preparación a que se refiere. Falta confirmar si K-Ssamjang es una receta o marca diferenciada de ssamjang. Falta identificar si se refiere a lías de fermentación, una salsa u otro producto. Falta identificar la planta y el significado de la denominación regional.",
+      "sources": []
+    },
+    {
+      "section": "categoryReview",
+      "originalKeys": [
+        "caracoles_malteses",
+        "escargots_de_bourgogne"
+      ],
+      "activeKeys": [
+        "caracoles_malteses",
+        "escargots_de_bourgogne"
+      ],
+      "pendingKeys": [],
+      "status": "CATEGORY_REVIEWED",
+      "reason": "Se aplicó un criterio culinario usando las categorías existentes; véase reclassified en la auditoría. La fruta del pan se mantiene en verduras.",
+      "sources": []
+    },
+    {
+      "section": "categoryReview",
+      "originalKeys": [
+        "shubat"
+      ],
+      "activeKeys": [
+        "shubat"
+      ],
+      "pendingKeys": [],
+      "status": "CATEGORY_REVIEWED",
+      "reason": "Se aplicó un criterio culinario usando las categorías existentes; véase reclassified en la auditoría. La fruta del pan se mantiene en verduras.",
+      "sources": []
+    },
+    {
+      "section": "categoryReview",
+      "originalKeys": [
+        "mermelada_de_tocino"
+      ],
+      "activeKeys": [
+        "mermelada_de_tocino"
+      ],
+      "pendingKeys": [],
+      "status": "CATEGORY_REVIEWED",
+      "reason": "Se aplicó un criterio culinario usando las categorías existentes; véase reclassified en la auditoría. La fruta del pan se mantiene en verduras.",
+      "sources": []
+    },
+    {
+      "section": "categoryReview",
+      "originalKeys": [
+        "at_n_vegano",
+        "chorizo_vegetal",
+        "falafel",
+        "jackfruit_bbq",
+        "jackfruit_estilo_pulled_pork",
+        "jackfruit_pepperoni",
+        "jam_n_vegano",
+        "natto",
+        "pepperoni_de_zanahoria",
+        "pepperoni_vegetal",
+        "pepperoni_vegetal_de_guisantes",
+        "prote_na_de_garbanzo",
+        "prote_na_de_guisante",
+        "salami_vegano",
+        "salchicha_italiana_vegetal",
+        "seit_n",
+        "seit_n_ahumado",
+        "seit_n_estilo_shawarma",
+        "soja_texturizada",
+        "tempeh",
+        "tempeh_ahumado",
+        "tofu",
+        "tofu_ahumado",
+        "tofu_apestoso",
+        "tofu_de_garbanzo_birmano"
+      ],
+      "activeKeys": [
+        "at_n_vegano",
+        "chorizo_vegetal",
+        "falafel",
+        "jackfruit_bbq",
+        "jackfruit_estilo_pulled_pork",
+        "jackfruit_pepperoni",
+        "jam_n_vegano",
+        "natto",
+        "pepperoni_de_zanahoria",
+        "pepperoni_vegetal",
+        "pepperoni_vegetal_de_guisantes",
+        "prote_na_de_garbanzo",
+        "prote_na_de_guisante",
+        "salami_vegano",
+        "salchicha_italiana_vegetal",
+        "seit_n",
+        "seit_n_ahumado",
+        "seit_n_estilo_shawarma",
+        "soja_texturizada",
+        "tempeh",
+        "tempeh_ahumado",
+        "tofu",
+        "tofu_ahumado",
+        "tofu_apestoso",
+        "tofu_de_garbanzo_birmano"
+      ],
+      "pendingKeys": [],
+      "status": "CATEGORY_REVIEWED",
+      "reason": "Se aplicó un criterio culinario usando las categorías existentes; véase reclassified en la auditoría. La fruta del pan se mantiene en verduras.",
+      "sources": []
+    },
+    {
+      "section": "categoryReview",
+      "originalKeys": [
+        "at_n_carpaccio",
+        "camar_n_sakura",
+        "pasta_de_anchoas",
+        "pescado_blanco_en_polvo"
+      ],
+      "activeKeys": [
+        "at_n_carpaccio",
+        "camar_n_sakura",
+        "pasta_de_anchoas",
+        "pescado_blanco_en_polvo"
+      ],
+      "pendingKeys": [],
+      "status": "CATEGORY_REVIEWED",
+      "reason": "Se aplicó un criterio culinario usando las categorías existentes; véase reclassified en la auditoría. La fruta del pan se mantiene en verduras.",
+      "sources": []
+    },
+    {
+      "section": "categoryReview",
+      "originalKeys": [
+        "queso_crema_de_ajo"
+      ],
+      "activeKeys": [
+        "queso_crema_de_ajo"
+      ],
+      "pendingKeys": [],
+      "status": "CATEGORY_REVIEWED",
+      "reason": "Se aplicó un criterio culinario usando las categorías existentes; véase reclassified en la auditoría. La fruta del pan se mantiene en verduras.",
+      "sources": []
+    },
+    {
+      "section": "categoryReview",
+      "originalKeys": [
+        "cuajo_de_oveja"
+      ],
+      "activeKeys": [
+        "cuajo_de_oveja"
+      ],
+      "pendingKeys": [],
+      "status": "CATEGORY_REVIEWED",
+      "reason": "Se aplicó un criterio culinario usando las categorías existentes; véase reclassified en la auditoría. La fruta del pan se mantiene en verduras.",
+      "sources": []
+    },
+    {
+      "section": "categoryReview",
+      "originalKeys": [
+        "tomate_datterino",
+        "tomate_pera",
+        "fruta_del_pan"
+      ],
+      "activeKeys": [
+        "tomate_datterino",
+        "tomate_pera",
+        "fruta_del_pan"
+      ],
+      "pendingKeys": [],
+      "status": "CATEGORY_REVIEWED",
+      "reason": "Se aplicó un criterio culinario usando las categorías existentes; véase reclassified en la auditoría. La fruta del pan se mantiene en verduras.",
+      "sources": []
+    }
+  ]
+}

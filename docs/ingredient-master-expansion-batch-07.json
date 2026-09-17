@@ -1,0 +1,2771 @@
+{
+  "schemaVersion": 1,
+  "batchId": "2026-09-17-07",
+  "date": "2026-09-17",
+  "status": "EDITORIAL_REVIEW",
+  "targetTotal": 3000,
+  "policy": "Solo identidades diferentes en las 14 categorías existentes. Alias y traducciones no cuentan como ingredientes nuevos. No se genera ninguna traducción de interfaz.",
+  "researchScope": {
+    "scope": "Zumos, frutas deshidratadas, materias primas vegetales, cortes cárnicos, mieles por origen floral, conservas y auxiliares culinarios. Se excluyen diferencias de envase, marca, grado nutricional o mero porcentaje de grasa."
+  },
+  "allergenPolicy": "Valores iniciales con el vocabulario existente de Volta. No equivalen a una declaración de ausencia de alérgenos ni a validación de una formulación o producto concreto. Se conserva NEEDS_REVIEW.",
+  "sources": {
+    "FDC": {
+      "title": "USDA FoodData Central — SR Legacy",
+      "url": "https://fdc.nal.usda.gov/download-datasets/",
+      "dataset": "FoodData_Central_sr_legacy_food_csv_2018-04",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://fdc.nal.usda.gov/api-guide/"
+    },
+    "PAT_2024": {
+      "title": "MASAF — catálogo histórico de productos agroalimentarios tradicionales, anexo 2024",
+      "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+      "scope": "Referencia de identidad y nombre, no afirmación del estado registral actual."
+    },
+    "SOSA": {
+      "title": "Sosa Ingredients — materias primas de cocina y repostería",
+      "url": "https://www.sosa.cat/"
+    }
+  },
+  "records": [
+    {
+      "canonicalKey": "zumo_de_limon",
+      "defaultName": "Zumo de limón",
+      "category": "FRUTAS",
+      "aliases": [
+        "Zumo de limón",
+        "Jugo de limón"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "167747",
+        "sourceName": "Lemon juice, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/167747/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "zumo_de_lima",
+      "defaultName": "Zumo de lima",
+      "category": "FRUTAS",
+      "aliases": [
+        "Zumo de lima",
+        "Jugo de lima"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "168156",
+        "sourceName": "Lime juice, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/168156/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "zumo_de_naranja",
+      "defaultName": "Zumo de naranja",
+      "category": "FRUTAS",
+      "aliases": [
+        "Zumo de naranja",
+        "Jugo de naranja"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169098",
+        "sourceName": "Orange juice, raw (Includes foods for USDA's Food Distribution Program)",
+        "url": "https://fdc.nal.usda.gov/food-details/169098/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "zumo_de_pomelo",
+      "defaultName": "Zumo de pomelo",
+      "category": "FRUTAS",
+      "aliases": [
+        "Zumo de pomelo",
+        "Jugo de pomelo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "167774",
+        "sourceName": "Grapefruit juice, pink, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/167774/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "zumo_de_granada",
+      "defaultName": "Zumo de granada",
+      "category": "FRUTAS",
+      "aliases": [
+        "Zumo de granada",
+        "Jugo de granada"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "167787",
+        "sourceName": "Pomegranate juice, bottled",
+        "url": "https://fdc.nal.usda.gov/food-details/167787/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "zumo_de_guinda",
+      "defaultName": "Zumo de guinda",
+      "category": "FRUTAS",
+      "aliases": [
+        "Zumo de guinda",
+        "Jugo de guinda"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "167807",
+        "sourceName": "Cherry juice, tart",
+        "url": "https://fdc.nal.usda.gov/food-details/167807/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "zumo_de_arandano_rojo",
+      "defaultName": "Zumo de arándano rojo",
+      "category": "FRUTAS",
+      "aliases": [
+        "Zumo de arándano rojo",
+        "Jugo de arándano rojo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "168117",
+        "sourceName": "Cranberry juice, unsweetened",
+        "url": "https://fdc.nal.usda.gov/food-details/168117/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "zumo_de_maracuya",
+      "defaultName": "Zumo de maracuyá",
+      "category": "FRUTAS",
+      "aliases": [
+        "Zumo de maracuyá",
+        "Jugo de maracuyá"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169109",
+        "sourceName": "Passion-fruit juice, purple, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/169109/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "zumo_de_mandarina",
+      "defaultName": "Zumo de mandarina",
+      "category": "FRUTAS",
+      "aliases": [
+        "Zumo de mandarina",
+        "Jugo de mandarina"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169925",
+        "sourceName": "Tangerine juice, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/169925/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "zumo_de_pina",
+      "defaultName": "Zumo de piña",
+      "category": "FRUTAS",
+      "aliases": [
+        "Zumo de piña",
+        "Jugo de piña"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169947",
+        "sourceName": "Pineapple juice, canned or bottled, unsweetened, without added ascorbic acid",
+        "url": "https://fdc.nal.usda.gov/food-details/169947/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "zumo_de_acerola",
+      "defaultName": "Zumo de acerola",
+      "category": "FRUTAS",
+      "aliases": [
+        "Zumo de acerola",
+        "Jugo de acerola"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171687",
+        "sourceName": "Acerola juice, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/171687/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "zumo_de_manzana",
+      "defaultName": "Zumo de manzana",
+      "category": "FRUTAS",
+      "aliases": [
+        "Zumo de manzana",
+        "Jugo de manzana"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "173933",
+        "sourceName": "Apple juice, canned or bottled, unsweetened, without added ascorbic acid",
+        "url": "https://fdc.nal.usda.gov/food-details/173933/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "zumo_de_mora",
+      "defaultName": "Zumo de mora",
+      "category": "FRUTAS",
+      "aliases": [
+        "Zumo de mora",
+        "Jugo de mora"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "173947",
+        "sourceName": "Blackberry juice, canned",
+        "url": "https://fdc.nal.usda.gov/food-details/173947/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "zumo_de_ciruela_pasa",
+      "defaultName": "Zumo de ciruela pasa",
+      "category": "FRUTAS",
+      "aliases": [
+        "Zumo de ciruela pasa",
+        "Jugo de ciruela pasa"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "167753",
+        "sourceName": "Prune juice, canned",
+        "url": "https://fdc.nal.usda.gov/food-details/167753/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "ciruelas_pasas",
+      "defaultName": "Ciruelas pasas",
+      "category": "FRUTAS",
+      "aliases": [
+        "Ciruelas pasas"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "168162",
+        "sourceName": "Plums, dried (prunes), uncooked",
+        "url": "https://fdc.nal.usda.gov/food-details/168162/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "arandanos_azules_secos_azucarados",
+      "defaultName": "Arándanos azules secos azucarados",
+      "category": "FRUTAS",
+      "aliases": [
+        "Arándanos azules secos azucarados"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "168158",
+        "sourceName": "Blueberries, dried, sweetened",
+        "url": "https://fdc.nal.usda.gov/food-details/168158/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "mango_seco_azucarado",
+      "defaultName": "Mango seco azucarado",
+      "category": "FRUTAS",
+      "aliases": [
+        "Mango seco azucarado"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169091",
+        "sourceName": "Mango, dried, sweetened",
+        "url": "https://fdc.nal.usda.gov/food-details/169091/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "pera_seca",
+      "defaultName": "Pera seca",
+      "category": "FRUTAS",
+      "aliases": [
+        "Pera seca"
+      ],
+      "allergens": [
+        "SULFITES"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169121",
+        "sourceName": "Pears, dried, sulfured, uncooked",
+        "url": "https://fdc.nal.usda.gov/food-details/169121/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "melocoton_seco",
+      "defaultName": "Melocotón seco",
+      "category": "FRUTAS",
+      "aliases": [
+        "Melocotón seco"
+      ],
+      "allergens": [
+        "SULFITES"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169934",
+        "sourceName": "Peaches, dried, sulfured, uncooked",
+        "url": "https://fdc.nal.usda.gov/food-details/169934/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "manzana_seca",
+      "defaultName": "Manzana seca",
+      "category": "FRUTAS",
+      "aliases": [
+        "Manzana seca"
+      ],
+      "allergens": [
+        "SULFITES"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171691",
+        "sourceName": "Apples, dried, sulfured, uncooked",
+        "url": "https://fdc.nal.usda.gov/food-details/171691/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "guindas_secas_azucaradas",
+      "defaultName": "Guindas secas azucaradas",
+      "category": "FRUTAS",
+      "aliases": [
+        "Guindas secas azucaradas"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171708",
+        "sourceName": "Cherries, tart, dried, sweetened (Includes foods for USDA's Food Distribution Program)",
+        "url": "https://fdc.nal.usda.gov/food-details/171708/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "arandanos_rojos_secos_azucarados",
+      "defaultName": "Arándanos rojos secos azucarados",
+      "category": "FRUTAS",
+      "aliases": [
+        "Arándanos rojos secos azucarados"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171723",
+        "sourceName": "Cranberries, dried, sweetened (Includes foods for USDA's Food Distribution Program)",
+        "url": "https://fdc.nal.usda.gov/food-details/171723/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "platano_deshidratado",
+      "defaultName": "Plátano deshidratado",
+      "category": "FRUTAS",
+      "aliases": [
+        "Plátano deshidratado"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "173945",
+        "sourceName": "Bananas, dehydrated, or banana powder",
+        "url": "https://fdc.nal.usda.gov/food-details/173945/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "higos_secos",
+      "defaultName": "Higos secos",
+      "category": "FRUTAS",
+      "aliases": [
+        "Higos secos"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "174665",
+        "sourceName": "Figs, dried, uncooked",
+        "url": "https://fdc.nal.usda.gov/food-details/174665/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "pure_de_frambuesa",
+      "defaultName": "Puré de frambuesa",
+      "category": "FRUTAS",
+      "aliases": [
+        "Puré de frambuesa"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "167808",
+        "sourceName": "Raspberries, puree, seedless",
+        "url": "https://fdc.nal.usda.gov/food-details/167808/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "abiyuch",
+      "defaultName": "Abiyuch",
+      "category": "FRUTAS",
+      "aliases": [
+        "Abiyuch"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "167782",
+        "sourceName": "Abiyuch, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/167782/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "rowal",
+      "defaultName": "Rowal",
+      "category": "FRUTAS",
+      "aliases": [
+        "Rowal"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "167783",
+        "sourceName": "Rowal, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/167783/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "bayas_de_ohelo",
+      "defaultName": "Bayas de ʻōhelo",
+      "category": "FRUTAS",
+      "aliases": [
+        "Bayas de ʻōhelo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169915",
+        "sourceName": "Oheloberries, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/169915/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "caqui_americano",
+      "defaultName": "Caqui americano",
+      "category": "FRUTAS",
+      "aliases": [
+        "Caqui americano"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169943",
+        "sourceName": "Persimmons, native, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/169943/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "manzanas_silvestres",
+      "defaultName": "Manzanas silvestres",
+      "category": "FRUTAS",
+      "aliases": [
+        "Manzanas silvestres"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171721",
+        "sourceName": "Crabapples, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/171721/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "judias_moth",
+      "defaultName": "Judías moth",
+      "category": "OTROS",
+      "aliases": [
+        "Judías moth"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172425",
+        "sourceName": "Mothbeans, mature seeds, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/172425/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "judias_urd",
+      "defaultName": "Judías urd",
+      "category": "OTROS",
+      "aliases": [
+        "Judías urd"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "174259",
+        "sourceName": "Mungo beans, mature seeds, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/174259/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "judias_jacinto",
+      "defaultName": "Judías jacinto",
+      "category": "OTROS",
+      "aliases": [
+        "Judías jacinto"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "175210",
+        "sourceName": "Hyacinth beans, mature seeds, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/175210/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "alubias_rosadas",
+      "defaultName": "Alubias rosadas",
+      "category": "OTROS",
+      "aliases": [
+        "Alubias rosadas"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "173748",
+        "sourceName": "Beans, pink, mature seeds, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/173748/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "alubias_amarillas",
+      "defaultName": "Alubias amarillas",
+      "category": "OTROS",
+      "aliases": [
+        "Alubias amarillas"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "173751",
+        "sourceName": "Beans, yellow, mature seeds, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/173751/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "alubias_great_northern",
+      "defaultName": "Alubias Great Northern",
+      "category": "OTROS",
+      "aliases": [
+        "Alubias Great Northern"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "175190",
+        "sourceName": "Beans, great northern, mature seeds, raw (Includes foods for USDA's Food Distribution Program)",
+        "url": "https://fdc.nal.usda.gov/food-details/175190/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "alubias_navy",
+      "defaultName": "Alubias Navy",
+      "category": "OTROS",
+      "aliases": [
+        "Alubias Navy"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "173745",
+        "sourceName": "Beans, navy, mature seeds, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/173745/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "harina_de_cacahuete",
+      "defaultName": "Harina de cacahuete",
+      "category": "OTROS",
+      "aliases": [
+        "Harina de cacahuete"
+      ],
+      "allergens": [
+        "PEANUT"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172435",
+        "sourceName": "Peanut flour, low fat",
+        "url": "https://fdc.nal.usda.gov/food-details/172435/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "proteina_aislada_de_soja",
+      "defaultName": "Proteína aislada de soja",
+      "category": "OTROS",
+      "aliases": [
+        "Proteína aislada de soja"
+      ],
+      "allergens": [
+        "SOY"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "174276",
+        "sourceName": "Soy protein isolate",
+        "url": "https://fdc.nal.usda.gov/food-details/174276/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "semillas_de_loto_frescas",
+      "defaultName": "Semillas de loto frescas",
+      "category": "OTROS",
+      "aliases": [
+        "Semillas de loto frescas"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "168591",
+        "sourceName": "Seeds, lotus seeds, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/168591/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "semillas_de_sandia",
+      "defaultName": "Semillas de sandía",
+      "category": "OTROS",
+      "aliases": [
+        "Semillas de sandía"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169407",
+        "sourceName": "Seeds, watermelon seed kernels, dried",
+        "url": "https://fdc.nal.usda.gov/food-details/169407/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "castana_japonesa",
+      "defaultName": "Castaña japonesa",
+      "category": "OTROS",
+      "aliases": [
+        "Castaña japonesa"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169413",
+        "sourceName": "Nuts, chestnuts, japanese, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/169413/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "castana_china",
+      "defaultName": "Castaña china",
+      "category": "OTROS",
+      "aliases": [
+        "Castaña china"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "170164",
+        "sourceName": "Nuts, chestnuts, chinese, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/170164/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "nuez_de_hickory",
+      "defaultName": "Nuez de hickory",
+      "category": "OTROS",
+      "aliases": [
+        "Nuez de hickory"
+      ],
+      "allergens": [
+        "NUTS"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "170177",
+        "sourceName": "Nuts, hickorynuts, dried",
+        "url": "https://fdc.nal.usda.gov/food-details/170177/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "nuez_cenicienta",
+      "defaultName": "Nuez cenicienta",
+      "category": "OTROS",
+      "aliases": [
+        "Nuez cenicienta"
+      ],
+      "allergens": [
+        "NUTS"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "170570",
+        "sourceName": "Nuts, butternuts, dried",
+        "url": "https://fdc.nal.usda.gov/food-details/170570/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "semillas_de_cartamo",
+      "defaultName": "Semillas de cártamo",
+      "category": "OTROS",
+      "aliases": [
+        "Semillas de cártamo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "170558",
+        "sourceName": "Seeds, safflower seed kernels, dried",
+        "url": "https://fdc.nal.usda.gov/food-details/170558/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "semillas_de_ramon",
+      "defaultName": "Semillas de ramón",
+      "category": "OTROS",
+      "aliases": [
+        "Semillas de ramón"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "170552",
+        "sourceName": "Seeds, breadnut tree seeds, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/170552/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "harina_de_bellota",
+      "defaultName": "Harina de bellota",
+      "category": "OTROS",
+      "aliases": [
+        "Harina de bellota"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "170566",
+        "sourceName": "Nuts, acorn flour, full fat",
+        "url": "https://fdc.nal.usda.gov/food-details/170566/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "lactosuero_dulce_liquido",
+      "defaultName": "Lactosuero dulce líquido",
+      "category": "OTROS",
+      "aliases": [
+        "Lactosuero dulce líquido"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171282",
+        "sourceName": "Whey, sweet, fluid",
+        "url": "https://fdc.nal.usda.gov/food-details/171282/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "lactosuero_acido_liquido",
+      "defaultName": "Lactosuero ácido líquido",
+      "category": "OTROS",
+      "aliases": [
+        "Lactosuero ácido líquido"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "170885",
+        "sourceName": "Whey, acid, fluid",
+        "url": "https://fdc.nal.usda.gov/food-details/170885/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "suero_de_mantequilla_en_polvo",
+      "defaultName": "Suero de mantequilla en polvo",
+      "category": "OTROS",
+      "aliases": [
+        "Suero de mantequilla en polvo"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171274",
+        "sourceName": "Milk, buttermilk, dried",
+        "url": "https://fdc.nal.usda.gov/food-details/171274/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "pasta_fresca_de_trigo",
+      "defaultName": "Pasta fresca de trigo",
+      "category": "OTROS",
+      "aliases": [
+        "Pasta fresca de trigo"
+      ],
+      "allergens": [
+        "GLUTEN",
+        "WHEAT",
+        "EGG"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169727",
+        "sourceName": "Pasta, fresh-refrigerated, plain, as purchased",
+        "url": "https://fdc.nal.usda.gov/food-details/169727/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "pasta_fresca_de_espinaca",
+      "defaultName": "Pasta fresca de espinaca",
+      "category": "OTROS",
+      "aliases": [
+        "Pasta fresca de espinaca"
+      ],
+      "allergens": [
+        "GLUTEN",
+        "WHEAT",
+        "EGG"
+      ],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169729",
+        "sourceName": "Pasta, fresh-refrigerated, spinach, as purchased",
+        "url": "https://fdc.nal.usda.gov/food-details/169729/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "lomo_de_cerdo_fresco",
+      "defaultName": "Lomo de cerdo fresco",
+      "category": "CARNES",
+      "aliases": [
+        "Lomo de cerdo fresco"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "167818",
+        "sourceName": "Pork, fresh, loin, whole, separable lean and fat, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/167818/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "paleta_de_cerdo_fresca",
+      "defaultName": "Paleta de cerdo fresca",
+      "category": "CARNES",
+      "aliases": [
+        "Paleta de cerdo fresca"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "167843",
+        "sourceName": "Pork, fresh, shoulder, whole, separable lean and fat, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/167843/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "pulmon_de_cerdo",
+      "defaultName": "Pulmón de cerdo",
+      "category": "CARNES",
+      "aliases": [
+        "Pulmón de cerdo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "167864",
+        "sourceName": "Pork, fresh, variety meats and by-products, lungs, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/167864/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "bazo_de_cerdo",
+      "defaultName": "Bazo de cerdo",
+      "category": "CARNES",
+      "aliases": [
+        "Bazo de cerdo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "167865",
+        "sourceName": "Pork, fresh, variety meats and by-products, spleen, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/167865/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "estomago_de_cerdo",
+      "defaultName": "Estómago de cerdo",
+      "category": "CARNES",
+      "aliases": [
+        "Estómago de cerdo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "167867",
+        "sourceName": "Pork, fresh, variety meats and by-products, stomach, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/167867/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "sesos_de_cerdo",
+      "defaultName": "Sesos de cerdo",
+      "category": "CARNES",
+      "aliases": [
+        "Sesos de cerdo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "168264",
+        "sourceName": "Pork, fresh, variety meats and by-products, brain, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/168264/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "corazon_de_cerdo",
+      "defaultName": "Corazón de cerdo",
+      "category": "CARNES",
+      "aliases": [
+        "Corazón de cerdo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "168267",
+        "sourceName": "Pork, fresh, variety meats and by-products, heart, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/168267/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "sesos_de_vacuno",
+      "defaultName": "Sesos de vacuno",
+      "category": "CARNES",
+      "aliases": [
+        "Sesos de vacuno"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "168622",
+        "sourceName": "Beef, variety meats and by-products, brain, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/168622/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "pulmon_de_vacuno",
+      "defaultName": "Pulmón de vacuno",
+      "category": "CARNES",
+      "aliases": [
+        "Pulmón de vacuno"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "168628",
+        "sourceName": "Beef, variety meats and by-products, lungs, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/168628/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "bazo_de_vacuno",
+      "defaultName": "Bazo de vacuno",
+      "category": "CARNES",
+      "aliases": [
+        "Bazo de vacuno"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169454",
+        "sourceName": "Beef, variety meats and by-products, spleen, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/169454/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "mollejas_de_vacuno",
+      "defaultName": "Mollejas de vacuno",
+      "category": "CARNES",
+      "aliases": [
+        "Mollejas de vacuno"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "170194",
+        "sourceName": "Beef, variety meats and by-products, thymus, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/170194/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "morcillo_de_ternera",
+      "defaultName": "Morcillo de ternera",
+      "category": "CARNES",
+      "aliases": [
+        "Morcillo de ternera"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172568",
+        "sourceName": "Veal, shank (fore and hind), separable lean and fat, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/172568/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "lomo_de_ternera",
+      "defaultName": "Lomo de ternera",
+      "category": "CARNES",
+      "aliases": [
+        "Lomo de ternera"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "173823",
+        "sourceName": "Veal, loin, separable lean and fat, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/173823/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "costillar_de_ternera",
+      "defaultName": "Costillar de ternera",
+      "category": "CARNES",
+      "aliases": [
+        "Costillar de ternera"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "175275",
+        "sourceName": "Veal, rib, separable lean and fat, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/175275/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "paleta_de_ternera",
+      "defaultName": "Paleta de ternera",
+      "category": "CARNES",
+      "aliases": [
+        "Paleta de ternera"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "175277",
+        "sourceName": "Veal, shoulder, whole (arm and blade), separable lean and fat, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/175277/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "pechuga_de_pato",
+      "defaultName": "Pechuga de pato",
+      "category": "CARNES",
+      "aliases": [
+        "Pechuga de pato"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "174469",
+        "sourceName": "Duck, wild, breast, meat only, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/174469/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "jarrete_de_cordero",
+      "defaultName": "Jarrete de cordero",
+      "category": "CARNES",
+      "aliases": [
+        "Jarrete de cordero"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172481",
+        "sourceName": "Lamb, foreshank, separable lean and fat, trimmed to 1/4\" fat, choice, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/172481/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "lomo_de_cordero",
+      "defaultName": "Lomo de cordero",
+      "category": "CARNES",
+      "aliases": [
+        "Lomo de cordero"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172551",
+        "sourceName": "Lamb, loin, separable lean and fat, trimmed to 1/8\" fat, choice, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/172551/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "paletilla_de_cordero",
+      "defaultName": "Paletilla de cordero",
+      "category": "CARNES",
+      "aliases": [
+        "Paletilla de cordero"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172496",
+        "sourceName": "Lamb, shoulder, whole (arm and blade), separable lean and fat, trimmed to 1/4\" fat, choice, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/172496/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "pierna_de_cordero",
+      "defaultName": "Pierna de cordero",
+      "category": "CARNES",
+      "aliases": [
+        "Pierna de cordero"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "174311",
+        "sourceName": "Lamb, leg, whole (shank and sirloin), separable lean and fat, trimmed to 1/4\" fat, choice, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/174311/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "pecho_de_cordero",
+      "defaultName": "Pecho de cordero",
+      "category": "CARNES",
+      "aliases": [
+        "Pecho de cordero"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172611",
+        "sourceName": "Lamb, New Zealand, imported, breast, separable lean only, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/172611/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "solomillo_de_cordero",
+      "defaultName": "Solomillo de cordero",
+      "category": "CARNES",
+      "aliases": [
+        "Solomillo de cordero"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172623",
+        "sourceName": "Lamb, New Zealand, imported, tenderloin, separable lean only, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/172623/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "mollejas_de_cordero",
+      "defaultName": "Mollejas de cordero",
+      "category": "CARNES",
+      "aliases": [
+        "Mollejas de cordero"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "174446",
+        "sourceName": "Lamb, New Zealand, imported, sweetbread, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/174446/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "sesos_de_cordero",
+      "defaultName": "Sesos de cordero",
+      "category": "CARNES",
+      "aliases": [
+        "Sesos de cordero"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172525",
+        "sourceName": "Lamb, variety meats and by-products, brain, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/172525/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "pecho_de_vacuno",
+      "defaultName": "Pecho de vacuno",
+      "category": "CARNES",
+      "aliases": [
+        "Pecho de vacuno"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "168664",
+        "sourceName": "Beef, brisket, whole, separable lean and fat, trimmed to 1/8\" fat, all grades, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/168664/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "vacio_de_vacuno",
+      "defaultName": "Vacío de vacuno",
+      "category": "CARNES",
+      "aliases": [
+        "Vacío de vacuno"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169563",
+        "sourceName": "Beef, flank, steak, separable lean and fat, trimmed to 0\" fat, all grades, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/169563/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "solomillo_de_vacuno",
+      "defaultName": "Solomillo de vacuno",
+      "category": "CARNES",
+      "aliases": [
+        "Solomillo de vacuno"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169542",
+        "sourceName": "Beef, tenderloin, steak, separable lean and fat, trimmed to 1/8\" fat, all grades, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/169542/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "tocino_dorsal_fresco",
+      "defaultName": "Tocino dorsal fresco",
+      "category": "ACEITES_GRASAS_VINAGRES",
+      "aliases": [
+        "Tocino dorsal fresco"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "167811",
+        "sourceName": "Pork, fresh, backfat, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/167811/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "manteca_de_rinonada_de_cerdo",
+      "defaultName": "Manteca de riñonada de cerdo",
+      "category": "ACEITES_GRASAS_VINAGRES",
+      "aliases": [
+        "Manteca de riñonada de cerdo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "167861",
+        "sourceName": "Pork, fresh, variety meats and by-products, leaf fat, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/167861/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "aceite_de_palmiste",
+      "defaultName": "Aceite de palmiste",
+      "category": "ACEITES_GRASAS_VINAGRES",
+      "aliases": [
+        "Aceite de palmiste"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171422",
+        "sourceName": "Vegetable oil, palm kernel",
+        "url": "https://fdc.nal.usda.gov/food-details/171422/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "grasa_de_beicon",
+      "defaultName": "Grasa de beicon",
+      "category": "ACEITES_GRASAS_VINAGRES",
+      "aliases": [
+        "Grasa de beicon"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172345",
+        "sourceName": "Animal fat, bacon grease",
+        "url": "https://fdc.nal.usda.gov/food-details/172345/nutrients"
+      },
+      "identityReason": "Materia prima o elaboración culinaria diferenciada y documentada; no se crean fichas por traducción, marca, envase o certificación."
+    },
+    {
+      "canonicalKey": "sirope_de_higo",
+      "defaultName": "Sirope de higo",
+      "category": "ENDULZANTES",
+      "aliases": [
+        "Sirope de higo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CALABRIA-113",
+        "sourceName": "Miele di fichi",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=8"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "miel_de_naranjo",
+      "defaultName": "Miel de naranjo",
+      "category": "ENDULZANTES",
+      "aliases": [
+        "Miel de naranjo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CALABRIA-260",
+        "sourceName": "Miele di arancio calabrese",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=10"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "miel_de_castano",
+      "defaultName": "Miel de castaño",
+      "category": "ENDULZANTES",
+      "aliases": [
+        "Miel de castaño"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CALABRIA-261",
+        "sourceName": "Miele di castagno calabrese",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=10"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "miel_de_madrono",
+      "defaultName": "Miel de madroño",
+      "category": "ENDULZANTES",
+      "aliases": [
+        "Miel de madroño"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CALABRIA-262",
+        "sourceName": "Miele di corbezzolo",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=10"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "miel_de_eucalipto",
+      "defaultName": "Miel de eucalipto",
+      "category": "ENDULZANTES",
+      "aliases": [
+        "Miel de eucalipto"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CALABRIA-263",
+        "sourceName": "Miele di eucaliptus calabrese",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=10"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "miel_de_mielato_de_abeto",
+      "defaultName": "Miel de mielato de abeto",
+      "category": "ENDULZANTES",
+      "aliases": [
+        "Miel de mielato de abeto"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CALABRIA-264",
+        "sourceName": "Miele di melata di abete calabrese",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=10"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "miel_de_zulla",
+      "defaultName": "Miel de zulla",
+      "category": "ENDULZANTES",
+      "aliases": [
+        "Miel de zulla"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CALABRIA-265",
+        "sourceName": "Miele di sulla calabrese",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=10"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "miel_de_asfodelo",
+      "defaultName": "Miel de asfódelo",
+      "category": "ENDULZANTES",
+      "aliases": [
+        "Miel de asfódelo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-580",
+        "sourceName": "Miele di asfodelo",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=19"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "miel_de_borraja",
+      "defaultName": "Miel de borraja",
+      "category": "ENDULZANTES",
+      "aliases": [
+        "Miel de borraja"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-581",
+        "sourceName": "Miele di borragine",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=19"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "miel_de_cardo",
+      "defaultName": "Miel de cardo",
+      "category": "ENDULZANTES",
+      "aliases": [
+        "Miel de cardo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-582",
+        "sourceName": "Miele di cardo",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=19"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "miel_de_girasol",
+      "defaultName": "Miel de girasol",
+      "category": "ENDULZANTES",
+      "aliases": [
+        "Miel de girasol"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-584",
+        "sourceName": "Miele di girasole",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=19"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "miel_de_esparceta",
+      "defaultName": "Miel de esparceta",
+      "category": "ENDULZANTES",
+      "aliases": [
+        "Miel de esparceta"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-585",
+        "sourceName": "Miele di lupinella",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=19"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "miel_de_zarzamora",
+      "defaultName": "Miel de zarzamora",
+      "category": "ENDULZANTES",
+      "aliases": [
+        "Miel de zarzamora"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-586",
+        "sourceName": "Miele di rovo",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=19"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "miel_multifloral",
+      "defaultName": "Miel multifloral",
+      "category": "ENDULZANTES",
+      "aliases": [
+        "Miel multifloral"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-588",
+        "sourceName": "Miele millefiori",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=19"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "sirope_de_naranja",
+      "defaultName": "Sirope de naranja",
+      "category": "ENDULZANTES",
+      "aliases": [
+        "Sirope de naranja"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-17",
+        "sourceName": "Sciroppo di arancia bionda",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=11"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "miel_de_alfalfa",
+      "defaultName": "Miel de alfalfa",
+      "category": "ENDULZANTES",
+      "aliases": [
+        "Miel de alfalfa"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE EMILIA-ROMAGNA-391",
+        "sourceName": "Miele di erba medica della pianura Emiliano-Romagnolo",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=25"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "miel_de_tilo",
+      "defaultName": "Miel de tilo",
+      "category": "ENDULZANTES",
+      "aliases": [
+        "Miel de tilo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE EMILIA-ROMAGNA-392",
+        "sourceName": "Miele di tiglio, Mel tiglio",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=25"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "sirope_de_espino_amarillo",
+      "defaultName": "Sirope de espino amarillo",
+      "category": "ENDULZANTES",
+      "aliases": [
+        "Sirope de espino amarillo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA FRIULI-VENEZIA GIULIA-3",
+        "sourceName": "Sciroppo di olivello spinoso",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=26"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "sirope_de_sauco",
+      "defaultName": "Sirope de saúco",
+      "category": "ENDULZANTES",
+      "aliases": [
+        "Sirope de saúco"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA FRIULI-VENEZIA GIULIA-5",
+        "sourceName": "Sciroppo di sambuco",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=26"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "sirope_de_diente_de_leon",
+      "defaultName": "Sirope de diente de león",
+      "category": "ENDULZANTES",
+      "aliases": [
+        "Sirope de diente de león"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA FRIULI-VENEZIA GIULIA-6",
+        "sourceName": "Sciroppo di tarassaco",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=26"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "miel_de_cerezo_marasca",
+      "defaultName": "Miel de cerezo marasca",
+      "category": "ENDULZANTES",
+      "aliases": [
+        "Miel de cerezo marasca"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA FRIULI-VENEZIA GIULIA-165",
+        "sourceName": "Miele di marasca del Carso",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=28"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "miel_de_ailanto",
+      "defaultName": "Miel de ailanto",
+      "category": "ENDULZANTES",
+      "aliases": [
+        "Miel de ailanto"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA FRIULI-VENEZIA GIULIA-169",
+        "sourceName": "Miele friulano di ailanto",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=28"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "miel_de_amorfa",
+      "defaultName": "Miel de amorfa",
+      "category": "ENDULZANTES",
+      "aliases": [
+        "Miel de amorfa"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA FRIULI-VENEZIA GIULIA-170",
+        "sourceName": "Miele friulano di amorfa",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=28"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "miel_de_rododendro",
+      "defaultName": "Miel de rododendro",
+      "category": "ENDULZANTES",
+      "aliases": [
+        "Miel de rododendro"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA FRIULI-VENEZIA GIULIA-173",
+        "sourceName": "Miele friulano di rododendro",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=28"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "miel_de_diente_de_leon",
+      "defaultName": "Miel de diente de león",
+      "category": "ENDULZANTES",
+      "aliases": [
+        "Miel de diente de león"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA FRIULI-VENEZIA GIULIA-174",
+        "sourceName": "Miele friulano di tarassaco",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=28"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "miel_de_ajedrea",
+      "defaultName": "Miel de ajedrea",
+      "category": "ENDULZANTES",
+      "aliases": [
+        "Miel de ajedrea"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LAZIO-467",
+        "sourceName": "Miele di Santoreggia",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=35"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "sirope_de_higo_chumbo",
+      "defaultName": "Sirope de higo chumbo",
+      "category": "ENDULZANTES",
+      "aliases": [
+        "Sirope de higo chumbo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA DELLA SARDEGNA-5",
+        "sourceName": "Sapa di fico d'india, Saba de figu morisca",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=66"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "miel_de_romero",
+      "defaultName": "Miel de romero",
+      "category": "ENDULZANTES",
+      "aliases": [
+        "Miel de romero"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA DELLA SARDEGNA-262",
+        "sourceName": "Miele di rosmarino",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=69"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "sirope_de_rosa",
+      "defaultName": "Sirope de rosa",
+      "category": "ENDULZANTES",
+      "aliases": [
+        "Sirope de rosa"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LIGURIA-155",
+        "sourceName": "Sciroppo di rose",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=38"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "sirope_de_violeta",
+      "defaultName": "Sirope de violeta",
+      "category": "ENDULZANTES",
+      "aliases": [
+        "Sirope de violeta"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LIGURIA-156",
+        "sourceName": "Sciroppo di viole",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=38"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "vinagre_de_higo",
+      "defaultName": "Vinagre de higo",
+      "category": "ACEITES_GRASAS_VINAGRES",
+      "aliases": [
+        "Vinagre de higo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-1",
+        "sourceName": "Aceto di Fico Bianco",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=11"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "vinagre_de_kiwi",
+      "defaultName": "Vinagre de kiwi",
+      "category": "ACEITES_GRASAS_VINAGRES",
+      "aliases": [
+        "Vinagre de kiwi"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LAZIO-74",
+        "sourceName": "Aceto di kiwi affinato dell'agro pontino",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=30"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "mermelada_de_tomate_rojo",
+      "defaultName": "Mermelada de tomate rojo",
+      "category": "FRUTAS",
+      "aliases": [
+        "Mermelada de tomate rojo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CALABRIA-84",
+        "sourceName": "Confettura di pomodori rossi",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=8"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "mermelada_de_naranja",
+      "defaultName": "Mermelada de naranja",
+      "category": "FRUTAS",
+      "aliases": [
+        "Mermelada de naranja"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CALABRIA-105",
+        "sourceName": "Marmellata di arance",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=8"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "mermelada_de_bergamota",
+      "defaultName": "Mermelada de bergamota",
+      "category": "FRUTAS",
+      "aliases": [
+        "Mermelada de bergamota"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CALABRIA-106",
+        "sourceName": "Marmellata di bergamotto",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=8"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "mermelada_de_clementina",
+      "defaultName": "Mermelada de clementina",
+      "category": "FRUTAS",
+      "aliases": [
+        "Mermelada de clementina"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CALABRIA-107",
+        "sourceName": "Marmellata di clementine",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=8"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "mermelada_de_limon",
+      "defaultName": "Mermelada de limón",
+      "category": "FRUTAS",
+      "aliases": [
+        "Mermelada de limón"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CALABRIA-108",
+        "sourceName": "Marmellata di limoni",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=8"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "mermelada_de_mandarina",
+      "defaultName": "Mermelada de mandarina",
+      "category": "FRUTAS",
+      "aliases": [
+        "Mermelada de mandarina"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CALABRIA-109",
+        "sourceName": "Marmellata di mandarini",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=8"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "mermelada_de_uva",
+      "defaultName": "Mermelada de uva",
+      "category": "FRUTAS",
+      "aliases": [
+        "Mermelada de uva"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CALABRIA-110",
+        "sourceName": "Marmellata di uva",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=8"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "mermelada_de_escaramujo",
+      "defaultName": "Mermelada de escaramujo",
+      "category": "FRUTAS",
+      "aliases": [
+        "Mermelada de escaramujo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE EMILIA-ROMAGNA-109",
+        "sourceName": "Marmellata di bacche di rosa canina",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=21"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "mermelada_de_tomate_verde",
+      "defaultName": "Mermelada de tomate verde",
+      "category": "FRUTAS",
+      "aliases": [
+        "Mermelada de tomate verde"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE MARCHE-86",
+        "sourceName": "Marmellata di pomodori verdi",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=46"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "mermelada_de_higo",
+      "defaultName": "Mermelada de higo",
+      "category": "FRUTAS",
+      "aliases": [
+        "Mermelada de higo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PUGLIA-137",
+        "sourceName": "Marmellata di fichi",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=61"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "mermelada_de_membrillo",
+      "defaultName": "Mermelada de membrillo",
+      "category": "FRUTAS",
+      "aliases": [
+        "Mermelada de membrillo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA DELLA SARDEGNA-64",
+        "sourceName": "Confettura di mela cotogna",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=66"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "mermelada_de_granada",
+      "defaultName": "Mermelada de granada",
+      "category": "FRUTAS",
+      "aliases": [
+        "Mermelada de granada"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA DELLA SARDEGNA-65",
+        "sourceName": "Confettura di melograno",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=66"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "confitura_de_flores_de_falsa_acacia",
+      "defaultName": "Confitura de flores de falsa acacia",
+      "category": "CREMAS_DULCES",
+      "aliases": [
+        "Confitura de flores de falsa acacia"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LIGURIA-86",
+        "sourceName": "Confettura di acacia, Confettura di robinia",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=37"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "confitura_de_petalos_de_violeta",
+      "defaultName": "Confitura de pétalos de violeta",
+      "category": "CREMAS_DULCES",
+      "aliases": [
+        "Confitura de pétalos de violeta"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LIGURIA-88",
+        "sourceName": "Confettura di petali di viola, Confettura di violetta",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=37"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "confitura_de_petalos_de_rosa",
+      "defaultName": "Confitura de pétalos de rosa",
+      "category": "CREMAS_DULCES",
+      "aliases": [
+        "Confitura de pétalos de rosa"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LIGURIA-89",
+        "sourceName": "Confettura extra di petali di rosa, zucchero rosato, conserva di rose",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=37"
+      },
+      "identityReason": "Ingrediente elaborado o miel de origen floral específico documentado. Se usa el nombre español de la composición, sin otra ficha por región de procedencia."
+    },
+    {
+      "canonicalKey": "lecitina_de_soja",
+      "defaultName": "Lecitina de soja",
+      "category": "OTROS",
+      "aliases": [
+        "Lecitina de soja"
+      ],
+      "allergens": [
+        "SOY"
+      ],
+      "evidence": {
+        "sourceId": "SOSA",
+        "recordId": "LECITINA DE SOJA EN POLVO",
+        "sourceName": "LECITINA DE SOJA EN POLVO",
+        "url": "https://www.sosa.cat/categoria-producto/texturizantes/"
+      },
+      "identityReason": "Materia prima culinaria o aromatizante documentado por el fabricante; nombre genérico sin marca, tamaño de envase ni variantes por presentación."
+    },
+    {
+      "canonicalKey": "proteina_concentrada_de_leche",
+      "defaultName": "Proteína concentrada de leche",
+      "category": "OTROS",
+      "aliases": [
+        "Proteína concentrada de leche"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "SOSA",
+        "recordId": "PROTEÍNA CONCENTRADA DE LECHE",
+        "sourceName": "PROTEÍNA CONCENTRADA DE LECHE",
+        "url": "https://www.sosa.cat/categoria-producto/texturizantes/"
+      },
+      "identityReason": "Materia prima culinaria o aromatizante documentado por el fabricante; nombre genérico sin marca, tamaño de envase ni variantes por presentación."
+    },
+    {
+      "canonicalKey": "glicerina_alimentaria",
+      "defaultName": "Glicerina alimentaria",
+      "category": "OTROS",
+      "aliases": [
+        "Glicerina alimentaria"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA",
+        "recordId": "GLICERINA",
+        "sourceName": "GLICERINA",
+        "url": "https://www.sosa.cat/categoria-producto/texturizantes/"
+      },
+      "identityReason": "Materia prima culinaria o aromatizante documentado por el fabricante; nombre genérico sin marca, tamaño de envase ni variantes por presentación."
+    },
+    {
+      "canonicalKey": "goma_arabiga",
+      "defaultName": "Goma arábiga",
+      "category": "OTROS",
+      "aliases": [
+        "Goma arábiga"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA",
+        "recordId": "GOMA ARÁBIGA",
+        "sourceName": "GOMA ARÁBIGA",
+        "url": "https://www.sosa.cat/categoria-producto/texturizantes/"
+      },
+      "identityReason": "Materia prima culinaria o aromatizante documentado por el fabricante; nombre genérico sin marca, tamaño de envase ni variantes por presentación."
+    },
+    {
+      "canonicalKey": "goma_garrofin",
+      "defaultName": "Goma garrofín",
+      "category": "OTROS",
+      "aliases": [
+        "Goma garrofín",
+        "Goma de algarrobo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA",
+        "recordId": "GOMA GARROFÍN / DE ALGARROBO",
+        "sourceName": "GOMA GARROFÍN / DE ALGARROBO",
+        "url": "https://www.sosa.cat/categoria-producto/texturizantes/"
+      },
+      "identityReason": "Materia prima culinaria o aromatizante documentado por el fabricante; nombre genérico sin marca, tamaño de envase ni variantes por presentación."
+    },
+    {
+      "canonicalKey": "almidon_de_arroz_glutinoso",
+      "defaultName": "Almidón de arroz glutinoso",
+      "category": "OTROS",
+      "aliases": [
+        "Almidón de arroz glutinoso"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA",
+        "recordId": "ALMIDÓN DE ARROZ GLUTINOSO",
+        "sourceName": "ALMIDÓN DE ARROZ GLUTINOSO",
+        "url": "https://www.sosa.cat/categoria-producto/texturizantes/"
+      },
+      "identityReason": "Materia prima culinaria o aromatizante documentado por el fabricante; nombre genérico sin marca, tamaño de envase ni variantes por presentación."
+    },
+    {
+      "canonicalKey": "goma_tara",
+      "defaultName": "Goma tara",
+      "category": "OTROS",
+      "aliases": [
+        "Goma tara"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA",
+        "recordId": "GOMA TARA",
+        "sourceName": "GOMA TARA",
+        "url": "https://www.sosa.cat/categoria-producto/texturizantes/"
+      },
+      "identityReason": "Materia prima culinaria o aromatizante documentado por el fabricante; nombre genérico sin marca, tamaño de envase ni variantes por presentación."
+    },
+    {
+      "canonicalKey": "goma_guar",
+      "defaultName": "Goma guar",
+      "category": "OTROS",
+      "aliases": [
+        "Goma guar"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA",
+        "recordId": "GOMA GUAR",
+        "sourceName": "GOMA GUAR",
+        "url": "https://www.sosa.cat/categoria-producto/texturizantes/"
+      },
+      "identityReason": "Materia prima culinaria o aromatizante documentado por el fabricante; nombre genérico sin marca, tamaño de envase ni variantes por presentación."
+    },
+    {
+      "canonicalKey": "goma_xantana",
+      "defaultName": "Goma xantana",
+      "category": "OTROS",
+      "aliases": [
+        "Goma xantana"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA",
+        "recordId": "GOMA XANTANA",
+        "sourceName": "GOMA XANTANA",
+        "url": "https://www.sosa.cat/categoria-producto/texturizantes/"
+      },
+      "identityReason": "Materia prima culinaria o aromatizante documentado por el fabricante; nombre genérico sin marca, tamaño de envase ni variantes por presentación."
+    },
+    {
+      "canonicalKey": "agar_agar",
+      "defaultName": "Agar-agar",
+      "category": "OTROS",
+      "aliases": [
+        "Agar-agar"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA",
+        "recordId": "AGAR-AGAR PURO",
+        "sourceName": "AGAR-AGAR PURO",
+        "url": "https://www.sosa.cat/categoria-producto/texturizantes/"
+      },
+      "identityReason": "Materia prima culinaria o aromatizante documentado por el fabricante; nombre genérico sin marca, tamaño de envase ni variantes por presentación."
+    },
+    {
+      "canonicalKey": "goma_gellan",
+      "defaultName": "Goma gellan",
+      "category": "OTROS",
+      "aliases": [
+        "Goma gellan"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA",
+        "recordId": "GOMA GELLAN",
+        "sourceName": "GOMA GELLAN",
+        "url": "https://www.sosa.cat/categoria-producto/texturizantes/"
+      },
+      "identityReason": "Materia prima culinaria o aromatizante documentado por el fabricante; nombre genérico sin marca, tamaño de envase ni variantes por presentación."
+    },
+    {
+      "canonicalKey": "alginato_de_sodio",
+      "defaultName": "Alginato de sodio",
+      "category": "OTROS",
+      "aliases": [
+        "Alginato de sodio"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA",
+        "recordId": "ALGINATO",
+        "sourceName": "ALGINATO",
+        "url": "https://www.sosa.cat/categoria-producto/texturizantes/"
+      },
+      "identityReason": "Materia prima culinaria o aromatizante documentado por el fabricante; nombre genérico sin marca, tamaño de envase ni variantes por presentación."
+    },
+    {
+      "canonicalKey": "gelatina_bovina",
+      "defaultName": "Gelatina bovina",
+      "category": "OTROS",
+      "aliases": [
+        "Gelatina bovina"
+      ],
+      "allergens": [
+        "GELATIN"
+      ],
+      "evidence": {
+        "sourceId": "SOSA",
+        "recordId": "GELATINA DE BOVINO",
+        "sourceName": "GELATINA DE BOVINO",
+        "url": "https://www.sosa.cat/categoria-producto/texturizantes/"
+      },
+      "identityReason": "Materia prima culinaria o aromatizante documentado por el fabricante; nombre genérico sin marca, tamaño de envase ni variantes por presentación."
+    },
+    {
+      "canonicalKey": "maltodextrina",
+      "defaultName": "Maltodextrina",
+      "category": "OTROS",
+      "aliases": [
+        "Maltodextrina"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA",
+        "recordId": "MALTODEXTRINA 12DE",
+        "sourceName": "MALTODEXTRINA 12DE",
+        "url": "https://www.sosa.cat/categoria-producto/texturizantes/"
+      },
+      "identityReason": "Materia prima culinaria o aromatizante documentado por el fabricante; nombre genérico sin marca, tamaño de envase ni variantes por presentación."
+    },
+    {
+      "canonicalKey": "acido_tartarico_alimentario",
+      "defaultName": "Ácido tartárico alimentario",
+      "category": "OTROS",
+      "aliases": [
+        "Ácido tartárico alimentario"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA",
+        "recordId": "ÁCIDO TARTÁRICO",
+        "sourceName": "ÁCIDO TARTÁRICO",
+        "url": "https://www.sosa.cat/categoria-producto/texturizantes/"
+      },
+      "identityReason": "Materia prima culinaria o aromatizante documentado por el fabricante; nombre genérico sin marca, tamaño de envase ni variantes por presentación."
+    },
+    {
+      "canonicalKey": "acido_ascorbico_alimentario",
+      "defaultName": "Ácido ascórbico alimentario",
+      "category": "OTROS",
+      "aliases": [
+        "Ácido ascórbico alimentario"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA",
+        "recordId": "ÁCIDO ASCÓRBICO EN POLVO",
+        "sourceName": "ÁCIDO ASCÓRBICO EN POLVO",
+        "url": "https://www.sosa.cat/categoria-producto/texturizantes/"
+      },
+      "identityReason": "Materia prima culinaria o aromatizante documentado por el fabricante; nombre genérico sin marca, tamaño de envase ni variantes por presentación."
+    },
+    {
+      "canonicalKey": "acido_citrico_alimentario",
+      "defaultName": "Ácido cítrico alimentario",
+      "category": "OTROS",
+      "aliases": [
+        "Ácido cítrico alimentario"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA",
+        "recordId": "ÁCIDO CÍTRICO EN POLVO",
+        "sourceName": "ÁCIDO CÍTRICO EN POLVO",
+        "url": "https://www.sosa.cat/categoria-producto/texturizantes/"
+      },
+      "identityReason": "Materia prima culinaria o aromatizante documentado por el fabricante; nombre genérico sin marca, tamaño de envase ni variantes por presentación."
+    },
+    {
+      "canonicalKey": "aroma_de_pistacho",
+      "defaultName": "Aroma de pistacho",
+      "category": "AROMAS_Y_EXTRACTOS",
+      "aliases": [
+        "Aroma de pistacho"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA",
+        "recordId": "AROMA NATURAL DE PISTACHO",
+        "sourceName": "AROMA NATURAL DE PISTACHO",
+        "url": "https://www.sosa.cat/categoria-producto/aromas/"
+      },
+      "identityReason": "Materia prima culinaria o aromatizante documentado por el fabricante; nombre genérico sin marca, tamaño de envase ni variantes por presentación."
+    },
+    {
+      "canonicalKey": "aroma_de_fresa",
+      "defaultName": "Aroma de fresa",
+      "category": "AROMAS_Y_EXTRACTOS",
+      "aliases": [
+        "Aroma de fresa"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA",
+        "recordId": "AROMA NATURAL FRESA MADURA",
+        "sourceName": "AROMA NATURAL FRESA MADURA",
+        "url": "https://www.sosa.cat/categoria-producto/aromas/"
+      },
+      "identityReason": "Materia prima culinaria o aromatizante documentado por el fabricante; nombre genérico sin marca, tamaño de envase ni variantes por presentación."
+    },
+    {
+      "canonicalKey": "aroma_de_manzana",
+      "defaultName": "Aroma de manzana",
+      "category": "AROMAS_Y_EXTRACTOS",
+      "aliases": [
+        "Aroma de manzana"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA",
+        "recordId": "AROMA NATURAL DE MANZANA GOLDEN",
+        "sourceName": "AROMA NATURAL DE MANZANA GOLDEN",
+        "url": "https://www.sosa.cat/categoria-producto/aromas/"
+      },
+      "identityReason": "Materia prima culinaria o aromatizante documentado por el fabricante; nombre genérico sin marca, tamaño de envase ni variantes por presentación."
+    },
+    {
+      "canonicalKey": "aroma_de_azafran",
+      "defaultName": "Aroma de azafrán",
+      "category": "AROMAS_Y_EXTRACTOS",
+      "aliases": [
+        "Aroma de azafrán"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA",
+        "recordId": "AROMA NATURAL DE AZAFRÁN",
+        "sourceName": "AROMA NATURAL DE AZAFRÁN",
+        "url": "https://www.sosa.cat/categoria-producto/aromas/"
+      },
+      "identityReason": "Materia prima culinaria o aromatizante documentado por el fabricante; nombre genérico sin marca, tamaño de envase ni variantes por presentación."
+    },
+    {
+      "canonicalKey": "aroma_de_haba_tonka",
+      "defaultName": "Aroma de haba tonka",
+      "category": "AROMAS_Y_EXTRACTOS",
+      "aliases": [
+        "Aroma de haba tonka"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA",
+        "recordId": "AROMA NATURAL HABA TONKA",
+        "sourceName": "AROMA NATURAL HABA TONKA",
+        "url": "https://www.sosa.cat/categoria-producto/aromas/"
+      },
+      "identityReason": "Materia prima culinaria o aromatizante documentado por el fabricante; nombre genérico sin marca, tamaño de envase ni variantes por presentación."
+    },
+    {
+      "canonicalKey": "aroma_de_cola",
+      "defaultName": "Aroma de cola",
+      "category": "AROMAS_Y_EXTRACTOS",
+      "aliases": [
+        "Aroma de cola"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA",
+        "recordId": "AROMA NATURAL COLA",
+        "sourceName": "AROMA NATURAL COLA",
+        "url": "https://www.sosa.cat/categoria-producto/aromas/"
+      },
+      "identityReason": "Materia prima culinaria o aromatizante documentado por el fabricante; nombre genérico sin marca, tamaño de envase ni variantes por presentación."
+    },
+    {
+      "canonicalKey": "aroma_de_avellana",
+      "defaultName": "Aroma de avellana",
+      "category": "AROMAS_Y_EXTRACTOS",
+      "aliases": [
+        "Aroma de avellana"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA",
+        "recordId": "AROMA NATURAL DE AVELLANA TOSTADA",
+        "sourceName": "AROMA NATURAL DE AVELLANA TOSTADA",
+        "url": "https://www.sosa.cat/categoria-producto/aromas/"
+      },
+      "identityReason": "Materia prima culinaria o aromatizante documentado por el fabricante; nombre genérico sin marca, tamaño de envase ni variantes por presentación."
+    },
+    {
+      "canonicalKey": "aroma_de_citronela",
+      "defaultName": "Aroma de citronela",
+      "category": "AROMAS_Y_EXTRACTOS",
+      "aliases": [
+        "Aroma de citronela"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA",
+        "recordId": "AROMA NATURAL CITRONELA",
+        "sourceName": "AROMA NATURAL CITRONELA",
+        "url": "https://www.sosa.cat/categoria-producto/aromas/"
+      },
+      "identityReason": "Materia prima culinaria o aromatizante documentado por el fabricante; nombre genérico sin marca, tamaño de envase ni variantes por presentación."
+    },
+    {
+      "canonicalKey": "aroma_de_caramelo",
+      "defaultName": "Aroma de caramelo",
+      "category": "AROMAS_Y_EXTRACTOS",
+      "aliases": [
+        "Aroma de caramelo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA",
+        "recordId": "AROMA CARAMELO",
+        "sourceName": "AROMA CARAMELO",
+        "url": "https://www.sosa.cat/categoria-producto/aromas/"
+      },
+      "identityReason": "Materia prima culinaria o aromatizante documentado por el fabricante; nombre genérico sin marca, tamaño de envase ni variantes por presentación."
+    },
+    {
+      "canonicalKey": "aroma_de_algodon_de_azucar",
+      "defaultName": "Aroma de algodón de azúcar",
+      "category": "AROMAS_Y_EXTRACTOS",
+      "aliases": [
+        "Aroma de algodón de azúcar"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA",
+        "recordId": "AROMA ALGODÓN DE AZÚCAR",
+        "sourceName": "AROMA ALGODÓN DE AZÚCAR",
+        "url": "https://www.sosa.cat/categoria-producto/aromas/"
+      },
+      "identityReason": "Materia prima culinaria o aromatizante documentado por el fabricante; nombre genérico sin marca, tamaño de envase ni variantes por presentación."
+    },
+    {
+      "canonicalKey": "aroma_de_trufa_blanca",
+      "defaultName": "Aroma de trufa blanca",
+      "category": "AROMAS_Y_EXTRACTOS",
+      "aliases": [
+        "Aroma de trufa blanca"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA",
+        "recordId": "AROMA DE TRUFA BLANCA",
+        "sourceName": "AROMA DE TRUFA BLANCA",
+        "url": "https://www.sosa.cat/categoria-producto/aromas/"
+      },
+      "identityReason": "Materia prima culinaria o aromatizante documentado por el fabricante; nombre genérico sin marca, tamaño de envase ni variantes por presentación."
+    },
+    {
+      "canonicalKey": "aroma_de_trufa_negra",
+      "defaultName": "Aroma de trufa negra",
+      "category": "AROMAS_Y_EXTRACTOS",
+      "aliases": [
+        "Aroma de trufa negra"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA",
+        "recordId": "AROMA DE TRUFA NEGRA",
+        "sourceName": "AROMA DE TRUFA NEGRA",
+        "url": "https://www.sosa.cat/categoria-producto/aromas/"
+      },
+      "identityReason": "Materia prima culinaria o aromatizante documentado por el fabricante; nombre genérico sin marca, tamaño de envase ni variantes por presentación."
+    },
+    {
+      "canonicalKey": "aroma_de_coco",
+      "defaultName": "Aroma de coco",
+      "category": "AROMAS_Y_EXTRACTOS",
+      "aliases": [
+        "Aroma de coco"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA",
+        "recordId": "AROMA DE COCO",
+        "sourceName": "AROMA DE COCO",
+        "url": "https://www.sosa.cat/categoria-producto/aromas/"
+      },
+      "identityReason": "Materia prima culinaria o aromatizante documentado por el fabricante; nombre genérico sin marca, tamaño de envase ni variantes por presentación."
+    },
+    {
+      "canonicalKey": "aroma_de_maracuya",
+      "defaultName": "Aroma de maracuyá",
+      "category": "AROMAS_Y_EXTRACTOS",
+      "aliases": [
+        "Aroma de maracuyá"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA",
+        "recordId": "AROMA DE FRUTA PASIÓN",
+        "sourceName": "AROMA DE FRUTA PASIÓN",
+        "url": "https://www.sosa.cat/categoria-producto/aromas/"
+      },
+      "identityReason": "Materia prima culinaria o aromatizante documentado por el fabricante; nombre genérico sin marca, tamaño de envase ni variantes por presentación."
+    },
+    {
+      "canonicalKey": "aroma_de_mango",
+      "defaultName": "Aroma de mango",
+      "category": "AROMAS_Y_EXTRACTOS",
+      "aliases": [
+        "Aroma de mango"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA",
+        "recordId": "AROMA DE MANGO",
+        "sourceName": "AROMA DE MANGO",
+        "url": "https://www.sosa.cat/categoria-producto/aromas/"
+      },
+      "identityReason": "Materia prima culinaria o aromatizante documentado por el fabricante; nombre genérico sin marca, tamaño de envase ni variantes por presentación."
+    },
+    {
+      "canonicalKey": "aroma_de_melocoton",
+      "defaultName": "Aroma de melocotón",
+      "category": "AROMAS_Y_EXTRACTOS",
+      "aliases": [
+        "Aroma de melocotón"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA",
+        "recordId": "AROMA DE MELOCOTÓN",
+        "sourceName": "AROMA DE MELOCOTÓN",
+        "url": "https://www.sosa.cat/categoria-producto/aromas/"
+      },
+      "identityReason": "Materia prima culinaria o aromatizante documentado por el fabricante; nombre genérico sin marca, tamaño de envase ni variantes por presentación."
+    },
+    {
+      "canonicalKey": "aroma_de_grosella_negra",
+      "defaultName": "Aroma de grosella negra",
+      "category": "AROMAS_Y_EXTRACTOS",
+      "aliases": [
+        "Aroma de grosella negra"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA",
+        "recordId": "AROMA DE GROSELLA NEGRA (CASSIS)",
+        "sourceName": "AROMA DE GROSELLA NEGRA (CASSIS)",
+        "url": "https://www.sosa.cat/categoria-producto/aromas/"
+      },
+      "identityReason": "Materia prima culinaria o aromatizante documentado por el fabricante; nombre genérico sin marca, tamaño de envase ni variantes por presentación."
+    },
+    {
+      "canonicalKey": "aroma_de_rosa",
+      "defaultName": "Aroma de rosa",
+      "category": "AROMAS_Y_EXTRACTOS",
+      "aliases": [
+        "Aroma de rosa"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA",
+        "recordId": "AROMA DE ROSA",
+        "sourceName": "AROMA DE ROSA",
+        "url": "https://www.sosa.cat/categoria-producto/aromas/"
+      },
+      "identityReason": "Materia prima culinaria o aromatizante documentado por el fabricante; nombre genérico sin marca, tamaño de envase ni variantes por presentación."
+    },
+    {
+      "canonicalKey": "aroma_de_violeta",
+      "defaultName": "Aroma de violeta",
+      "category": "AROMAS_Y_EXTRACTOS",
+      "aliases": [
+        "Aroma de violeta"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA",
+        "recordId": "AROMA DE VIOLETA",
+        "sourceName": "AROMA DE VIOLETA",
+        "url": "https://www.sosa.cat/categoria-producto/aromas/"
+      },
+      "identityReason": "Materia prima culinaria o aromatizante documentado por el fabricante; nombre genérico sin marca, tamaño de envase ni variantes por presentación."
+    }
+  ],
+  "collisionReview": {
+    "method": "Selección editorial, cruce de nombres y alias normalizados, claves históricas, evidencia ya aplicada y especie científica cuando corresponde.",
+    "resolved": [],
+    "excluded": [
+      {
+        "candidate": "Leches y huevos en polvo ya presentes, variedades de zumo solo por fortificación y recortes cárnicos solo por grado de grasa",
+        "reason": "No representan altas nuevas de identidad."
+      },
+      {
+        "candidate": "Aroma de jengibre, limón, naranja, almendra, vainilla, café y humo",
+        "reason": "Identidades ya representadas por extractos o aromas; no se amplía cambiando solamente la palabra aroma/extracto."
+      },
+      {
+        "candidate": "Psyllium, inulina/fibra de achicoria, fibra de lino, crema de coco y sapa/reducción de uva",
+        "reason": "Se evitan equivalencias o posibles solapamientos con la maestra."
+      }
+    ]
+  }
+}

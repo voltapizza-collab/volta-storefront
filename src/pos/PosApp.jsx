@@ -18,6 +18,7 @@ import { shouldShowCheckoutAlert } from '../utils/checkoutPresence';
 import "../styles/PosApp.css";
 import { ingredientRemovalRows } from "../utils/ingredientRemovals";
 import { getLineChangeRows } from './orderLineChanges';
+import { getOrderPayment, getPaymentLabel, isCashPaymentOrder, isCashPaymentPending } from './orderPayment';
 
 const POS_SESSION_KEY = "volta_pos_virtual_session";
 const POS_REMEMBERED_LOGIN_KEY = "volta_pos_remembered_login";
@@ -375,7 +376,7 @@ export const buildWindowsPrintTicketHtml = (order) => {
         <div>Cliente: ${escapeHtml(customer.name || "-")}</div>
         <div>Telefono: ${escapeHtml(customer.phone || "-")}</div>
         <div>Pago: ${escapeHtml(getPaymentLabel(order))}</div>
-        ${isCashPaymentOrder(order) ? `<div class="cashAlert">PENDIENTE DE PAGO EN EFECTIVO</div>` : ""}
+        ${isCashPaymentPending(order) ? `<div class="cashAlert">PENDIENTE DE PAGO EN EFECTIVO</div>` : ""}
         ${showAddress ? `<div>Direccion: ${escapeHtml(customer.address_1)}</div>` : ""}
       </section>
       <section class="block">
@@ -687,37 +688,6 @@ const getCustomerAddress = (order) => {
   return isDeliveryOrder(order) || String(delivery.method || "").toUpperCase() === "COURIER" ? address : "";
 };
 
-const getPaymentSignal = (order) => {
-  const customerData = order?.customerData || {};
-  return [
-    order?.paymentMode,
-    order?.paymentStatus,
-    order?.paymentMethod,
-    customerData.paymentMode,
-    customerData.paymentStatus,
-    customerData.paymentMethod,
-  ]
-    .filter(Boolean)
-    .map((value) => String(value).trim().toLowerCase())
-    .join(" ");
-};
-
-const isCashPaymentOrder = (order) => {
-  const paymentSignal = getPaymentSignal(order);
-  return paymentSignal.includes("cash") || paymentSignal.includes("efectivo");
-};
-
-const getPaymentLabel = (order) => {
-  const paymentSignal = getPaymentSignal(order);
-
-  if (isCashPaymentOrder(order)) return "Efectivo pendiente";
-  if (paymentSignal.includes("card") || paymentSignal.includes("tarjeta") || paymentSignal.includes("stripe")) {
-    return "Tarjeta";
-  }
-
-  return "Tarjeta";
-};
-
 const formatElapsed = (value) => {
   if (!value) return "nunca";
   const diff = Math.max(Date.now() - new Date(value).getTime(), 0);
@@ -781,7 +751,7 @@ export function DayOrderCard({ order, onOpen }) {
       <small className="pos-dayOrderMovement">{asArray(order.products).map(item => `${lineQty(item)}× ${lineName(item)}`).join(" · ") || "Sin detalle de productos"}</small>
       <span className="pos-dayOrderTags">
         <em>Finalizada</em>
-        <em>{isCashPaymentOrder(order) ? "Efectivo" : getPaymentSignal(order).match(/card|tarjeta|stripe/) ? "Tarjeta" : "Pago sin especificar"}</em>
+        <em>{isCashPaymentOrder(order) ? "Efectivo" : getOrderPayment(order).mode === "card" ? "Tarjeta" : "Pago sin especificar"}</em>
         <em>{getOrderType(order)}</em>
       </span>
     </button>
@@ -942,7 +912,7 @@ function TicketPreview({ order }) {
   const schedule = getScheduledOrderState(order);
   const address = getCustomerAddress(order);
   const priority = getOrderPriority(order);
-  const cashPayment = isCashPaymentOrder(order);
+  const cashPayment = isCashPaymentPending(order);
 
   return (
     <div className="pos-ticketPreview">
@@ -2253,7 +2223,7 @@ export default function PosApp() {
   const confirmReadyRequest = (order) => {
     if (!order) return;
 
-    if (isCashPaymentOrder(order) && readyCashReminderOrder?.id !== order.id) {
+    if (isCashPaymentPending(order) && readyCashReminderOrder?.id !== order.id) {
       setReadyCashReminderOrder(order);
       return;
     }
@@ -2671,7 +2641,7 @@ export default function PosApp() {
                   const boosted = isBoostedOrder(order);
                   const vip = isVipOrder(order);
                   const schedule = getScheduledOrderState(order, clockTick);
-                  const cashPayment = isCashPaymentOrder(order);
+                  const cashPayment = isCashPaymentPending(order);
 
                   return (
                     <button

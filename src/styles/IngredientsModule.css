@@ -1287,3 +1287,27 @@
     flex-direction: column;
   }
 }
+
+.gm-master-protection { margin:0 0 14px; color:#695775; font-size:12px; line-height:1.5; }
+.gm-catalog-action { min-height:28px; padding:5px 10px; border:1px solid #c49aee; border-radius:6px; background:#ffffff12; color:#fff; font:inherit; font-size:11px; font-weight:700; cursor:pointer; }
+.gm-catalog-action:hover { background:#ffffff25; }
+.gm-catalog-action--delete { border-color:#f3a7b7; color:#ffd4de; }
+.gm-catalog-action:focus-visible { outline:2px solid #ffb61c; outline-offset:2px; }
+.gm-return-dialog { width:min(470px,calc(100vw - 32px)); margin:auto; padding:26px; border:1px solid #e3d7ef; border-radius:16px; background:#fffdfa; color:#371b4b; box-shadow:0 24px 90px #1e003b55; font-family:inherit; }
+.gm-return-dialog::backdrop { background:#1b0930aa; backdrop-filter:blur(3px); }
+.gm-return-dialog h2 { margin:0 0 18px; color:#3b008b; font-size:22px; }
+.gm-return-dialog p { font-size:14px; line-height:1.65; }
+.gm-return-warning { padding:12px; border-radius:8px; background:#ffedf0; color:#8d203a; }
+.gm-return-note { color:#756480; }
+.gm-return-actions { display:flex; justify-content:flex-end; flex-wrap:wrap; gap:10px; margin-top:24px; }
+.gm-return-actions button { padding:11px 16px; border:1px solid #ded4e9; border-radius:8px; color:#3b008b; background:#fff; cursor:pointer; font:inherit; font-size:13px; }
+.gm-return-actions .gm-return-confirm { background:#a82c4b; border-color:#a82c4b; color:#fff; }
+.gm-return-actions button:disabled { opacity:.5; cursor:default; }
+.gm-ingredientsModule .gm-node-left { min-width:0; overflow-wrap:anywhere; color:#ffcc35; }
+@media(max-width:700px) {
+  .gm-ingredientsModule .gm-node { flex-wrap:wrap; gap:9px; padding:10px; }
+  .gm-ingredientsModule .gm-node-left { flex-basis:100%; }
+  .gm-ingredientsModule .gm-node-right { min-width:0; flex-wrap:wrap; width:100%; justify-content:flex-start; margin-left:0; gap:6px; }
+  .gm-ingredientsModule .gm-ingredient-toolbar { flex-wrap:wrap; }
+  .gm-ingredientsModule .gm-categoryHeader strong { white-space:normal; }
+}

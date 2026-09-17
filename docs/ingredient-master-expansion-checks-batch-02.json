@@ -1,0 +1,17 @@
+{
+  "date": "2026-09-17",
+  "batchId": "2026-09-17-02",
+  "activeValidated": 1612,
+  "added": 254,
+  "originalRecordsUnchanged": 1358,
+  "categories": 14,
+  "newCategories": 0,
+  "pendingBlocked": 25,
+  "historicalRedirectsPreserved": 11,
+  "backendAcceptsEntireMaster": true,
+  "generatedTranslations": 0,
+  "databaseWrites": 0,
+  "multiBatchRegressionTests": 7,
+  "frontendTests": 18,
+  "productionBuild": "PASSED"
+}

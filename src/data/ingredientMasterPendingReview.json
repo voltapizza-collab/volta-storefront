@@ -1,0 +1,474 @@
+[
+  {
+    "canonicalKey": "cocodrilo_caim_n",
+    "sourceCategory": "CARNES",
+    "category": "CARNES",
+    "semanticCategoryKey": "meats",
+    "defaultName": "Cocodrilo / caimán",
+    "allergens": [],
+    "translations": {
+      "es": "Cocodrilo / caimán"
+    },
+    "aliases": [
+      "Cocodrilo / caimán"
+    ],
+    "semanticStatus": "NEEDS_REVIEW",
+    "imageStatus": "MISSING",
+    "source": "LEGACY_INGREDIENTS_BASE",
+    "reviewReason": "Combina animales distintos. Hace falta determinar el producto original antes de asignar referencias o crear fichas separadas."
+  },
+  {
+    "canonicalKey": "hierba_luisa_lemongrass",
+    "sourceCategory": "HIERBAS_ESPECIAS",
+    "category": "HIERBAS_ESPECIAS",
+    "semanticCategoryKey": "herbs_spices",
+    "defaultName": "Hierba luisa / lemongrass",
+    "allergens": [],
+    "translations": {
+      "es": "Hierba luisa / lemongrass"
+    },
+    "aliases": [
+      "Hierba luisa / lemongrass"
+    ],
+    "semanticStatus": "NEEDS_REVIEW",
+    "imageStatus": "MISSING",
+    "source": "LEGACY_INGREDIENTS_BASE",
+    "reviewReason": "El nombre regional puede representar Aloysia citrodora o Cymbopogon citratus; falta la especie."
+  },
+  {
+    "canonicalKey": "chapulines_grillos_tostados",
+    "sourceCategory": "OTROS",
+    "category": "OTROS",
+    "semanticCategoryKey": "other",
+    "defaultName": "Chapulines / grillos tostados",
+    "allergens": [],
+    "translations": {
+      "es": "Chapulines / grillos tostados"
+    },
+    "aliases": [
+      "Chapulines / grillos tostados"
+    ],
+    "semanticStatus": "NEEDS_REVIEW",
+    "imageStatus": "MISSING",
+    "source": "LEGACY_INGREDIENTS_BASE",
+    "reviewReason": "Combina saltamontes y grillos; no son alias del mismo ingrediente."
+  },
+  {
+    "canonicalKey": "queso_duro_blando",
+    "sourceCategory": "QUESOS",
+    "category": "QUESOS",
+    "semanticCategoryKey": "cheeses",
+    "defaultName": "Queso duro blando",
+    "allergens": [
+      "LACTOSE"
+    ],
+    "translations": {
+      "es": "Queso duro blando"
+    },
+    "aliases": [
+      "Queso duro blando"
+    ],
+    "semanticStatus": "NEEDS_REVIEW",
+    "imageStatus": "MISSING",
+    "source": "LEGACY_INGREDIENTS_BASE",
+    "reviewReason": "Descripción contradictoria; falta el nombre del queso."
+  },
+  {
+    "canonicalKey": "soppressata_salami_sin_curar",
+    "sourceCategory": "EMBUTIDOS",
+    "category": "EMBUTIDOS",
+    "semanticCategoryKey": "cured_meats",
+    "defaultName": "Soppressata: salami sin curar",
+    "allergens": [
+      "SULFITES"
+    ],
+    "translations": {
+      "es": "Soppressata: salami sin curar"
+    },
+    "aliases": [
+      "Soppressata: salami sin curar"
+    ],
+    "semanticStatus": "NEEDS_REVIEW",
+    "imageStatus": "MISSING",
+    "source": "LEGACY_INGREDIENTS_BASE",
+    "reviewReason": "Sin curar puede significar sin nitritos añadidos o ausencia de curación; no se puede inferir equivalencia con otra soppressata."
+  },
+  {
+    "canonicalKey": "gamonal",
+    "sourceCategory": "EMBUTIDOS",
+    "category": "EMBUTIDOS",
+    "semanticCategoryKey": "cured_meats",
+    "defaultName": "Gamonal",
+    "allergens": [],
+    "translations": {
+      "es": "Gamonal"
+    },
+    "aliases": [
+      "Gamonal"
+    ],
+    "semanticStatus": "NEEDS_REVIEW",
+    "imageStatus": "MISSING",
+    "source": "LEGACY_INGREDIENTS_BASE",
+    "reviewReason": "Nombre no suficientemente identificado con una fuente de producto."
+  },
+  {
+    "canonicalKey": "keong_khas_banyubiru",
+    "sourceCategory": "PESCADOS_Y_MARISCOS",
+    "category": "PESCADOS_Y_MARISCOS",
+    "semanticCategoryKey": "seafood",
+    "defaultName": "Keong khas Banyubiru",
+    "allergens": [
+      "SHELLFISH"
+    ],
+    "translations": {
+      "es": "Keong khas Banyubiru"
+    },
+    "aliases": [
+      "Keong khas Banyubiru"
+    ],
+    "semanticStatus": "NEEDS_REVIEW",
+    "imageStatus": "MISSING",
+    "source": "LEGACY_INGREDIENTS_BASE",
+    "reviewReason": "Falta distinguir especie de caracol y preparación regional."
+  },
+  {
+    "canonicalKey": "kingfish_pez_rey_del_golfo",
+    "sourceCategory": "PESCADOS_Y_MARISCOS",
+    "category": "PESCADOS_Y_MARISCOS",
+    "semanticCategoryKey": "seafood",
+    "defaultName": "Kingfish / pez rey del Golfo",
+    "allergens": [
+      "FISH"
+    ],
+    "translations": {
+      "es": "Kingfish / pez rey del Golfo"
+    },
+    "aliases": [
+      "Kingfish / pez rey del Golfo"
+    ],
+    "semanticStatus": "NEEDS_REVIEW",
+    "imageStatus": "MISSING",
+    "source": "LEGACY_INGREDIENTS_BASE",
+    "reviewReason": "Kingfish designa especies distintas por región; falta la especie."
+  },
+  {
+    "canonicalKey": "pljevlja_queso_de_oveja_de_pljevlja",
+    "sourceCategory": "QUESOS",
+    "category": "QUESOS",
+    "semanticCategoryKey": "cheeses",
+    "defaultName": "Pljevlja / queso de oveja de Pljevlja",
+    "allergens": [
+      "LACTOSE"
+    ],
+    "translations": {
+      "es": "Pljevlja / queso de oveja de Pljevlja"
+    },
+    "aliases": [
+      "Pljevlja / queso de oveja de Pljevlja"
+    ],
+    "semanticStatus": "NEEDS_REVIEW",
+    "imageStatus": "MISSING",
+    "source": "LEGACY_INGREDIENTS_BASE",
+    "reviewReason": "Falta confirmar el tipo de leche de esta ficha; no se deduce del origen geográfico."
+  },
+  {
+    "canonicalKey": "queso_yuki",
+    "sourceCategory": "QUESOS",
+    "category": "QUESOS",
+    "semanticCategoryKey": "cheeses",
+    "defaultName": "Queso yuki",
+    "allergens": [
+      "LACTOSE"
+    ],
+    "translations": {
+      "es": "Queso yuki"
+    },
+    "aliases": [
+      "Queso yuki"
+    ],
+    "semanticStatus": "NEEDS_REVIEW",
+    "imageStatus": "MISSING",
+    "source": "LEGACY_INGREDIENTS_BASE",
+    "reviewReason": "Denominación no suficientemente identificada; falta productor o tipo de queso."
+  },
+  {
+    "canonicalKey": "queso_tasty",
+    "sourceCategory": "QUESOS",
+    "category": "QUESOS",
+    "semanticCategoryKey": "cheeses",
+    "defaultName": "Queso tasty",
+    "allergens": [
+      "LACTOSE"
+    ],
+    "translations": {
+      "es": "Queso tasty"
+    },
+    "aliases": [
+      "Queso tasty"
+    ],
+    "semanticStatus": "NEEDS_REVIEW",
+    "imageStatus": "MISSING",
+    "source": "LEGACY_INGREDIENTS_BASE",
+    "reviewReason": "Tasty puede ser una denominación comercial de cheddar maduro; falta especificación para contar una identidad distinta."
+  },
+  {
+    "canonicalKey": "picante",
+    "sourceCategory": "SALSAS_CREMAS",
+    "category": "SALSAS",
+    "semanticCategoryKey": "sauces",
+    "defaultName": "Picante",
+    "allergens": [],
+    "translations": {
+      "es": "Picante"
+    },
+    "aliases": [
+      "Picante"
+    ],
+    "semanticStatus": "NEEDS_REVIEW",
+    "imageStatus": "MISSING",
+    "source": "LEGACY_INGREDIENTS_BASE",
+    "reviewReason": "Es una propiedad, no identifica una salsa concreta."
+  },
+  {
+    "canonicalKey": "salsa_de_hueso",
+    "sourceCategory": "SALSAS_CREMAS",
+    "category": "SALSAS",
+    "semanticCategoryKey": "sauces",
+    "defaultName": "Salsa de hueso",
+    "allergens": [],
+    "translations": {
+      "es": "Salsa de hueso"
+    },
+    "aliases": [
+      "Salsa de hueso"
+    ],
+    "semanticStatus": "NEEDS_REVIEW",
+    "imageStatus": "MISSING",
+    "source": "LEGACY_INGREDIENTS_BASE",
+    "reviewReason": "No se conoce el producto, la especie ni la preparación a que se refiere."
+  },
+  {
+    "canonicalKey": "salsa_k_ssamjang",
+    "sourceCategory": "SALSAS_CREMAS",
+    "category": "SALSAS",
+    "semanticCategoryKey": "sauces",
+    "defaultName": "Salsa K-Ssamjang",
+    "allergens": [
+      "SOY"
+    ],
+    "translations": {
+      "es": "Salsa K-Ssamjang"
+    },
+    "aliases": [
+      "Salsa K-Ssamjang"
+    ],
+    "semanticStatus": "NEEDS_REVIEW",
+    "imageStatus": "MISSING",
+    "source": "LEGACY_INGREDIENTS_BASE",
+    "reviewReason": "Falta confirmar si K-Ssamjang es una receta o marca diferenciada de ssamjang."
+  },
+  {
+    "canonicalKey": "vinaza_roja",
+    "sourceCategory": "SALSAS_CREMAS",
+    "category": "SALSAS",
+    "semanticCategoryKey": "sauces",
+    "defaultName": "Vinaza roja",
+    "allergens": [],
+    "translations": {
+      "es": "Vinaza roja"
+    },
+    "aliases": [
+      "Vinaza roja"
+    ],
+    "semanticStatus": "NEEDS_REVIEW",
+    "imageStatus": "MISSING",
+    "source": "LEGACY_INGREDIENTS_BASE",
+    "reviewReason": "Falta identificar si se refiere a lías de fermentación, una salsa u otro producto."
+  },
+  {
+    "canonicalKey": "rocket_maldivo",
+    "sourceCategory": "VERDURAS",
+    "category": "VERDURAS",
+    "semanticCategoryKey": "vegetables",
+    "defaultName": "Rocket maldivo",
+    "allergens": [],
+    "translations": {
+      "es": "Rocket maldivo"
+    },
+    "aliases": [
+      "Rocket maldivo"
+    ],
+    "semanticStatus": "NEEDS_REVIEW",
+    "imageStatus": "MISSING",
+    "source": "LEGACY_INGREDIENTS_BASE",
+    "reviewReason": "Falta identificar la planta y el significado de la denominación regional."
+  },
+  {
+    "canonicalKey": "coriandro",
+    "sourceCategory": "HIERBAS_ESPECIAS",
+    "category": "HIERBAS_ESPECIAS",
+    "semanticCategoryKey": "herbs_spices",
+    "defaultName": "Coriandro",
+    "allergens": [],
+    "translations": {
+      "es": "Coriandro"
+    },
+    "aliases": [
+      "Coriandro"
+    ],
+    "semanticStatus": "NEEDS_REVIEW",
+    "imageStatus": "MISSING",
+    "source": "LEGACY_INGREDIENTS_BASE",
+    "reviewReason": "Puede referirse a la planta, sus hojas o sus semillas. No se une a cilantro ni a semillas de cilantro sin conocer la parte usada."
+  },
+  {
+    "canonicalKey": "salsa_tum",
+    "sourceCategory": "SALSAS_CREMAS",
+    "category": "SALSAS",
+    "semanticCategoryKey": "sauces",
+    "defaultName": "Salsa Tum",
+    "allergens": [],
+    "translations": {
+      "es": "Salsa Tum"
+    },
+    "aliases": [
+      "Salsa Tum"
+    ],
+    "semanticStatus": "NEEDS_REVIEW",
+    "imageStatus": "MISSING",
+    "source": "LEGACY_INGREDIENTS_BASE",
+    "reviewReason": "Probable variante de toum; las fichas discrepan en los alérgenos heredados. Falta receta para consolidar."
+  },
+  {
+    "canonicalKey": "crema_fresca",
+    "sourceCategory": "SALSAS_CREMAS",
+    "category": "SALSAS",
+    "semanticCategoryKey": "sauces",
+    "defaultName": "Crema fresca",
+    "allergens": [
+      "LACTOSE"
+    ],
+    "translations": {
+      "es": "Crema fresca"
+    },
+    "aliases": [
+      "Crema fresca"
+    ],
+    "semanticStatus": "NEEDS_REVIEW",
+    "imageStatus": "MISSING",
+    "source": "LEGACY_INGREDIENTS_BASE",
+    "reviewReason": "Falta confirmar si es nata sin fermentar o crème fraîche fermentada."
+  },
+  {
+    "canonicalKey": "mermelada_compota_de_grosella",
+    "sourceCategory": "TOPPINGS_DULCES",
+    "category": "FRUTAS",
+    "semanticCategoryKey": "fruits",
+    "defaultName": "Mermelada / compota de grosella",
+    "allergens": [],
+    "translations": {
+      "es": "Mermelada / compota de grosella"
+    },
+    "aliases": [
+      "Mermelada / compota de grosella"
+    ],
+    "semanticStatus": "NEEDS_REVIEW",
+    "imageStatus": "MISSING",
+    "source": "LEGACY_INGREDIENTS_BASE",
+    "reviewReason": "Mermelada y compota son preparaciones distintas. Falta identificar cuál representa la ficha."
+  },
+  {
+    "canonicalKey": "ostiones",
+    "sourceCategory": "PESCADOS_Y_MARISCOS",
+    "category": "PESCADOS_Y_MARISCOS",
+    "semanticCategoryKey": "seafood",
+    "defaultName": "Ostiones",
+    "allergens": [
+      "SHELLFISH"
+    ],
+    "translations": {
+      "es": "Ostiones"
+    },
+    "aliases": [
+      "Ostiones"
+    ],
+    "semanticStatus": "NEEDS_REVIEW",
+    "imageStatus": "MISSING",
+    "source": "LEGACY_INGREDIENTS_BASE",
+    "reviewReason": "El nombre regional puede designar ostras o vieiras; hace falta país y especie."
+  },
+  {
+    "canonicalKey": "boletus",
+    "sourceCategory": "SETAS",
+    "category": "SETAS",
+    "semanticCategoryKey": "mushrooms",
+    "defaultName": "Boletus",
+    "allergens": [],
+    "translations": {
+      "es": "Boletus"
+    },
+    "aliases": [
+      "Boletus"
+    ],
+    "semanticStatus": "NEEDS_REVIEW",
+    "imageStatus": "MISSING",
+    "source": "LEGACY_INGREDIENTS_BASE",
+    "reviewReason": "Denominación demasiado amplia para distinguirla de porcini; falta especie o mezcla."
+  },
+  {
+    "canonicalKey": "scungilli_caracola",
+    "sourceCategory": "PESCADOS_Y_MARISCOS",
+    "category": "PESCADOS_Y_MARISCOS",
+    "semanticCategoryKey": "seafood",
+    "defaultName": "Scungilli / caracola",
+    "allergens": [
+      "SHELLFISH"
+    ],
+    "translations": {
+      "es": "Scungilli / caracola"
+    },
+    "aliases": [
+      "Scungilli / caracola"
+    ],
+    "semanticStatus": "NEEDS_REVIEW",
+    "imageStatus": "MISSING",
+    "source": "LEGACY_INGREDIENTS_BASE",
+    "reviewReason": "Falta especie o presentación que permita distinguirlo de la ficha genérica caracola."
+  },
+  {
+    "canonicalKey": "cebolla_de_verdeo",
+    "sourceCategory": "VERDURAS",
+    "category": "VERDURAS",
+    "semanticCategoryKey": "vegetables",
+    "defaultName": "Cebolla de verdeo",
+    "allergens": [],
+    "translations": {
+      "es": "Cebolla de verdeo"
+    },
+    "aliases": [
+      "Cebolla de verdeo"
+    ],
+    "semanticStatus": "NEEDS_REVIEW",
+    "imageStatus": "MISSING",
+    "source": "LEGACY_INGREDIENTS_BASE",
+    "reviewReason": "Falta especie o madurez que permita distinguirla de cebolleta."
+  },
+  {
+    "canonicalKey": "peperoni_encurtidos",
+    "sourceCategory": "VERDURAS",
+    "category": "VERDURAS",
+    "semanticCategoryKey": "vegetables",
+    "defaultName": "Peperoni encurtidos",
+    "allergens": [],
+    "translations": {
+      "es": "Peperoni encurtidos"
+    },
+    "aliases": [
+      "Peperoni encurtidos"
+    ],
+    "semanticStatus": "NEEDS_REVIEW",
+    "imageStatus": "MISSING",
+    "source": "LEGACY_INGREDIENTS_BASE",
+    "reviewReason": "Falta indicar si son pimientos en vinagre o fermentados, y si hay una variedad distinta."
+  }
+]

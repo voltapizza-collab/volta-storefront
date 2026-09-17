@@ -1,0 +1,4036 @@
+{
+  "schemaVersion": 1,
+  "batchId": "2026-09-17-05",
+  "date": "2026-09-17",
+  "status": "EDITORIAL_REVIEW",
+  "targetTotal": 3000,
+  "policy": "Solo identidades diferentes en las 14 categorías existentes. Alias y traducciones no cuentan como ingredientes nuevos. No se genera ninguna traducción de interfaz.",
+  "researchScope": {
+    "scope": "Variedades alimentarias tradicionales con denominación específica. La variedad se mantiene como nombre propio y se traduce el tipo de alimento. Se excluyen nombres regionales que solo repiten el producto genérico y equivalencias evidentes entre regiones."
+  },
+  "allergenPolicy": "Valores iniciales con el vocabulario existente de Volta. No equivalen a una declaración de ausencia de alérgenos ni a validación de una formulación o producto concreto. Se conserva NEEDS_REVIEW.",
+  "sources": {
+    "PAT_2024": {
+      "title": "MASAF — catálogo histórico de productos agroalimentarios tradicionales, anexo 2024",
+      "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+      "scope": "Referencia de identidad y nombre, no afirmación del estado registral actual."
+    }
+  },
+  "records": [
+    {
+      "canonicalKey": "cereza_del_monte",
+      "defaultName": "Cereza del Monte",
+      "category": "FRUTAS",
+      "aliases": [
+        "Cereza del Monte"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-201",
+        "sourceName": "Ciliegia del Monte",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=13"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "cereza_della_recca",
+      "defaultName": "Cereza della Recca",
+      "category": "FRUTAS",
+      "aliases": [
+        "Cereza della Recca"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-202",
+        "sourceName": "Ciliegia della Recca",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=13"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "cereza_maiatica",
+      "defaultName": "Cereza Maiatica",
+      "category": "FRUTAS",
+      "aliases": [
+        "Cereza Maiatica"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-205",
+        "sourceName": "Ciliegia maiatica",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=13"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "cereza_melella",
+      "defaultName": "Cereza Melella",
+      "category": "FRUTAS",
+      "aliases": [
+        "Cereza Melella"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-206",
+        "sourceName": "Ciliegia melella",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=13"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "cereza_san_pasquale",
+      "defaultName": "Cereza San Pasquale",
+      "category": "FRUTAS",
+      "aliases": [
+        "Cereza San Pasquale"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-207",
+        "sourceName": "Ciliegia S. Pasquale",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=13"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "higo_lardaro",
+      "defaultName": "Higo Lardaro",
+      "category": "FRUTAS",
+      "aliases": [
+        "Higo Lardaro"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-246",
+        "sourceName": "Fico lardaro",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=14"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "higo_troiano",
+      "defaultName": "Higo Troiano",
+      "category": "FRUTAS",
+      "aliases": [
+        "Higo Troiano"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-247",
+        "sourceName": "Fico troiano",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=14"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "higo_vendemmia",
+      "defaultName": "Higo Vendemmia",
+      "category": "FRUTAS",
+      "aliases": [
+        "Higo Vendemmia",
+        "Higo Natalese"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-248",
+        "sourceName": "Fico vendemmia, Natalese",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=14"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "manzana_renetta_champagne",
+      "defaultName": "Manzana Renetta Champagne",
+      "category": "FRUTAS",
+      "aliases": [
+        "Manzana Renetta Champagne"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-275",
+        "sourceName": "Mela bianca di Grottolella, Mela Renetta champagne",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=14"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "manzana_capodiciuccio",
+      "defaultName": "Manzana Capodiciuccio",
+      "category": "FRUTAS",
+      "aliases": [
+        "Manzana Capodiciuccio"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-276",
+        "sourceName": "Mela capodiciuccio",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=14"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "manzana_chianella",
+      "defaultName": "Manzana Chianella",
+      "category": "FRUTAS",
+      "aliases": [
+        "Manzana Chianella"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-277",
+        "sourceName": "Mela chianella",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=14"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "manzana_chichedda",
+      "defaultName": "Manzana Chichedda",
+      "category": "FRUTAS",
+      "aliases": [
+        "Manzana Chichedda"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-278",
+        "sourceName": "Mela chichedda",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=14"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "manzana_limoncella",
+      "defaultName": "Manzana Limoncella",
+      "category": "FRUTAS",
+      "aliases": [
+        "Manzana Limoncella"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-279",
+        "sourceName": "Mela limoncella",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=14"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "manzana_limoncellona",
+      "defaultName": "Manzana Limoncellona",
+      "category": "FRUTAS",
+      "aliases": [
+        "Manzana Limoncellona"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-280",
+        "sourceName": "Mela limoncellona",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=14"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "manzana_san_giovanni",
+      "defaultName": "Manzana San Giovanni",
+      "category": "FRUTAS",
+      "aliases": [
+        "Manzana San Giovanni"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-281",
+        "sourceName": "Mela San Giovanni",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=14"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "manzana_sergente",
+      "defaultName": "Manzana Sergente",
+      "category": "FRUTAS",
+      "aliases": [
+        "Manzana Sergente"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-282",
+        "sourceName": "Mela sergente",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=14"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "manzana_tubbiona",
+      "defaultName": "Manzana Tubbiona",
+      "category": "FRUTAS",
+      "aliases": [
+        "Manzana Tubbiona"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-283",
+        "sourceName": "Mela tubbiona",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=14"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "manzana_zitella",
+      "defaultName": "Manzana Zitella",
+      "category": "FRUTAS",
+      "aliases": [
+        "Manzana Zitella"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-284",
+        "sourceName": "Mela zitella",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=14"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "pera_carmosina",
+      "defaultName": "Pera Carmosina",
+      "category": "FRUTAS",
+      "aliases": [
+        "Pera Carmosina"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-328",
+        "sourceName": "Pera carmosina",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=15"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "pera_del_rosario",
+      "defaultName": "Pera del Rosario",
+      "category": "FRUTAS",
+      "aliases": [
+        "Pera del Rosario"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-329",
+        "sourceName": "Pera del rosario",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=15"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "pera_lardara",
+      "defaultName": "Pera Lardara",
+      "category": "FRUTAS",
+      "aliases": [
+        "Pera Lardara"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-330",
+        "sourceName": "Pera lardara",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=15"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "pera_mastantuono",
+      "defaultName": "Pera Mastantuono",
+      "category": "FRUTAS",
+      "aliases": [
+        "Pera Mastantuono"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-331",
+        "sourceName": "Pera mastantuono",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=15"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "pera_pennata",
+      "defaultName": "Pera Pennata",
+      "category": "FRUTAS",
+      "aliases": [
+        "Pera Pennata"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-332",
+        "sourceName": "Pera pennata",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=15"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "pera_sant_anna",
+      "defaultName": "Pera Sant’Anna",
+      "category": "FRUTAS",
+      "aliases": [
+        "Pera Sant’Anna"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-333",
+        "sourceName": "Pera Sant'Anna",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=15"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "pera_sorba",
+      "defaultName": "Pera Sorba",
+      "category": "FRUTAS",
+      "aliases": [
+        "Pera Sorba"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-334",
+        "sourceName": "Pera sorba",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=15"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "pera_spadona",
+      "defaultName": "Pera Spadona",
+      "category": "FRUTAS",
+      "aliases": [
+        "Pera Spadona"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-335",
+        "sourceName": "Pera spadona di Salerno",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=15"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "pera_spina",
+      "defaultName": "Pera Spina",
+      "category": "FRUTAS",
+      "aliases": [
+        "Pera Spina"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-336",
+        "sourceName": "Pera spina",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=15"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "melocoton_percoca_col_pizzo",
+      "defaultName": "Melocotón Percoca col Pizzo",
+      "category": "FRUTAS",
+      "aliases": [
+        "Melocotón Percoca col Pizzo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-337",
+        "sourceName": "Percoca col pizzo",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=15"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "melocoton_percoca_puteolana",
+      "defaultName": "Melocotón Percoca Puteolana",
+      "category": "FRUTAS",
+      "aliases": [
+        "Melocotón Percoca Puteolana"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-338",
+        "sourceName": "Percoca puteolana",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=15"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "melocoton_percoca_terzarola",
+      "defaultName": "Melocotón Percoca Terzarola",
+      "category": "FRUTAS",
+      "aliases": [
+        "Melocotón Percoca Terzarola"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-339",
+        "sourceName": "Percoca terzarola",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=15"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "melocoton_bellella",
+      "defaultName": "Melocotón Bellella",
+      "category": "FRUTAS",
+      "aliases": [
+        "Melocotón Bellella"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-340",
+        "sourceName": "Pesca bellella di Melito",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=15"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "melocoton_bianco_napoletano",
+      "defaultName": "Melocotón Bianco Napoletano",
+      "category": "FRUTAS",
+      "aliases": [
+        "Melocotón Bianco Napoletano"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-341",
+        "sourceName": "Pesca bianca napoletana",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=15"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "melocoton_poppa_di_venere",
+      "defaultName": "Melocotón Poppa di Venere",
+      "category": "FRUTAS",
+      "aliases": [
+        "Melocotón Poppa di Venere"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-342",
+        "sourceName": "Pesca poppa di venere",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=15"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "ciruela_coglipiecuri",
+      "defaultName": "Ciruela Coglipiecuri",
+      "category": "FRUTAS",
+      "aliases": [
+        "Ciruela Coglipiecuri"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-362",
+        "sourceName": "Prugna coglipiecuri",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=16"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "ciruela_botta_a_muro",
+      "defaultName": "Ciruela Botta a Muro",
+      "category": "FRUTAS",
+      "aliases": [
+        "Ciruela Botta a Muro"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-373",
+        "sourceName": "Susina botta a muro",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=16"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "ciruela_marmulegna",
+      "defaultName": "Ciruela Marmulegna",
+      "category": "FRUTAS",
+      "aliases": [
+        "Ciruela Marmulegna"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-374",
+        "sourceName": "Susina marmulegna",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=16"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "ciruela_pappacona",
+      "defaultName": "Ciruela Pappacona",
+      "category": "FRUTAS",
+      "aliases": [
+        "Ciruela Pappacona"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-375",
+        "sourceName": "Susina pappacona",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=16"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "ciruela_pazza",
+      "defaultName": "Ciruela Pazza",
+      "category": "FRUTAS",
+      "aliases": [
+        "Ciruela Pazza"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-376",
+        "sourceName": "Susina pazza",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=16"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "ciruela_scarrafona",
+      "defaultName": "Ciruela Scarrafona",
+      "category": "FRUTAS",
+      "aliases": [
+        "Ciruela Scarrafona"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-377",
+        "sourceName": "Susina scarrafona",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=16"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "ciruela_turcona",
+      "defaultName": "Ciruela Turcona",
+      "category": "FRUTAS",
+      "aliases": [
+        "Ciruela Turcona"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-378",
+        "sourceName": "Susina turcona",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=16"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "uva_armonera",
+      "defaultName": "Uva Armonera",
+      "category": "FRUTAS",
+      "aliases": [
+        "Uva Armonera"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-386",
+        "sourceName": "Uva armonera del Cilento",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=16"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "uva_bianca_a_cuore",
+      "defaultName": "Uva Bianca a Cuore",
+      "category": "FRUTAS",
+      "aliases": [
+        "Uva Bianca a Cuore"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-387",
+        "sourceName": "Uva bianca a cuore del Cilento",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=16"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "uva_catalanesca",
+      "defaultName": "Uva Catalanesca",
+      "category": "FRUTAS",
+      "aliases": [
+        "Uva Catalanesca"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-388",
+        "sourceName": "Uva catalanesca",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=16"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "uva_coda_di_volpe_rossa",
+      "defaultName": "Uva Coda di Volpe Rossa",
+      "category": "FRUTAS",
+      "aliases": [
+        "Uva Coda di Volpe Rossa"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-389",
+        "sourceName": "Uva Coda di Volpe Rossa",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=16"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "uva_cornicella",
+      "defaultName": "Uva Cornicella",
+      "category": "FRUTAS",
+      "aliases": [
+        "Uva Cornicella"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-390",
+        "sourceName": "Uva cornicella",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=16"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "uva_lengua_de_femmena",
+      "defaultName": "Uva Lengua de Femmena",
+      "category": "FRUTAS",
+      "aliases": [
+        "Uva Lengua de Femmena"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-391",
+        "sourceName": "Uva Lengua de Femmena",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=16"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "uva_salamanna",
+      "defaultName": "Uva Salamanna",
+      "category": "FRUTAS",
+      "aliases": [
+        "Uva Salamanna"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-392",
+        "sourceName": "Uva salamanna",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=16"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "uva_sanginella",
+      "defaultName": "Uva Sanginella",
+      "category": "FRUTAS",
+      "aliases": [
+        "Uva Sanginella"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-393",
+        "sourceName": "Uva sanginella",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=16"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "manzana_campanina",
+      "defaultName": "Manzana Campanina",
+      "category": "FRUTAS",
+      "aliases": [
+        "Manzana Campanina"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE EMILIA-ROMAGNA-113",
+        "sourceName": "Mela campanina, Pòm campanein",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=21"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "manzana_rosa_romana",
+      "defaultName": "Manzana Rosa Romana",
+      "category": "FRUTAS",
+      "aliases": [
+        "Manzana Rosa Romana"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE EMILIA-ROMAGNA-114",
+        "sourceName": "Mela rosa Romana, Mela Rousména",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=21"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "pera_scipiona",
+      "defaultName": "Pera Scipiona",
+      "category": "FRUTAS",
+      "aliases": [
+        "Pera Scipiona"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE EMILIA-ROMAGNA-118",
+        "sourceName": "Pera Scipiona",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=21"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "pera_volpina",
+      "defaultName": "Pera Volpina",
+      "category": "FRUTAS",
+      "aliases": [
+        "Pera Volpina"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE EMILIA-ROMAGNA-119",
+        "sourceName": "Pera Volpina",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=21"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "melocoton_bella_di_cesena",
+      "defaultName": "Melocotón Bella di Cesena",
+      "category": "FRUTAS",
+      "aliases": [
+        "Melocotón Bella di Cesena"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE EMILIA-ROMAGNA-120",
+        "sourceName": "Pesca Bella di Cesena",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=21"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "melocoton_buco_incavato",
+      "defaultName": "Melocotón Buco Incavato",
+      "category": "FRUTAS",
+      "aliases": [
+        "Melocotón Buco Incavato"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE EMILIA-ROMAGNA-121",
+        "sourceName": "Pesca buco incavato, Bus incavè",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=21"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "ciruela_vaca_zebeo",
+      "defaultName": "Ciruela Vaca Zebeo",
+      "category": "FRUTAS",
+      "aliases": [
+        "Ciruela Vaca Zebeo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE EMILIA-ROMAGNA-130",
+        "sourceName": "Susina Vaca Zebeo, Vacazebeo, Vacaza zebeo, Vacazaebeo, Vacazza",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=21"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "higo_moro",
+      "defaultName": "Higo Moro",
+      "category": "FRUTAS",
+      "aliases": [
+        "Higo Moro"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA FRIULI-VENEZIA GIULIA-98",
+        "sourceName": "Fico figo moro",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=27"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "manzana_zeuka",
+      "defaultName": "Manzana Zeuka",
+      "category": "FRUTAS",
+      "aliases": [
+        "Manzana Zeuka"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA FRIULI-VENEZIA GIULIA-102",
+        "sourceName": "Mela zeuka",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=27"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "pera_per_martin",
+      "defaultName": "Pera Pêr Martìn",
+      "category": "FRUTAS",
+      "aliases": [
+        "Pera Pêr Martìn"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA FRIULI-VENEZIA GIULIA-107",
+        "sourceName": "Pera Pêr Martìn",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=27"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "melocoton_iris_rosso",
+      "defaultName": "Melocotón Iris Rosso",
+      "category": "FRUTAS",
+      "aliases": [
+        "Melocotón Iris Rosso"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA FRIULI-VENEZIA GIULIA-108",
+        "sourceName": "Pesca iris rosso",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=27"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "melocoton_isontina",
+      "defaultName": "Melocotón Isontina",
+      "category": "FRUTAS",
+      "aliases": [
+        "Melocotón Isontina"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA FRIULI-VENEZIA GIULIA-109",
+        "sourceName": "Pesca isontina",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=27"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "melocoton_triestina",
+      "defaultName": "Melocotón Triestina",
+      "category": "FRUTAS",
+      "aliases": [
+        "Melocotón Triestina"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA FRIULI-VENEZIA GIULIA-110",
+        "sourceName": "Pesca triestina",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=27"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "albaricoque_tigrato",
+      "defaultName": "Albaricoque Tigrato",
+      "category": "FRUTAS",
+      "aliases": [
+        "Albaricoque Tigrato"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LIGURIA-67",
+        "sourceName": "Albicocca tigrato, Miscimìn tigrato",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=36"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "albaricoque_valleggia",
+      "defaultName": "Albaricoque Valleggia",
+      "category": "FRUTAS",
+      "aliases": [
+        "Albaricoque Valleggia"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LIGURIA-68",
+        "sourceName": "Albicocca valleggia",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=36"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "naranja_pernambucco",
+      "defaultName": "Naranja Pernambucco",
+      "category": "FRUTAS",
+      "aliases": [
+        "Naranja Pernambucco"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LIGURIA-70",
+        "sourceName": "Arancio pernambucco (Portugallo)",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=37"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "manzana_rosa",
+      "defaultName": "Manzana Rosa",
+      "category": "FRUTAS",
+      "aliases": [
+        "Manzana Rosa"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE MARCHE-90",
+        "sourceName": "Mela rosa - Pianella - Rosetta - Durella - Appietta",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=46"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "manzana_rozza",
+      "defaultName": "Manzana Rozza",
+      "category": "FRUTAS",
+      "aliases": [
+        "Manzana Rozza"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE MARCHE-91",
+        "sourceName": "Mela rozza",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=46"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "pera_angelica",
+      "defaultName": "Pera Angelica",
+      "category": "FRUTAS",
+      "aliases": [
+        "Pera Angelica"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE MARCHE-96",
+        "sourceName": "Pera Angelica",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=46"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "albaricoque_tonda_di_costigliole",
+      "defaultName": "Albaricoque Tonda di Costigliole",
+      "category": "FRUTAS",
+      "aliases": [
+        "Albaricoque Tonda di Costigliole"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-138",
+        "sourceName": "Albicocca tonda di Costigliole",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=52"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "pera_madernassa",
+      "defaultName": "Pera Madernassa",
+      "category": "FRUTAS",
+      "aliases": [
+        "Pera Madernassa"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-195",
+        "sourceName": "Pera madernassa",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=53"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "ciruela_santa_clara",
+      "defaultName": "Ciruela Santa Clara",
+      "category": "FRUTAS",
+      "aliases": [
+        "Ciruela Santa Clara"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-219",
+        "sourceName": "Susina Santa Clara del Saluzzese",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=54"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "uva_fragola",
+      "defaultName": "Uva Fragola",
+      "category": "FRUTAS",
+      "aliases": [
+        "Uva Fragola"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-225",
+        "sourceName": "Uva fragola",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=54"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "albaricoque_de_galatone",
+      "defaultName": "Albaricoque de Galatone",
+      "category": "FRUTAS",
+      "aliases": [
+        "Albaricoque de Galatone"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PUGLIA-61",
+        "sourceName": "Albicocca di Galatone, Arnacocchia di Galatone",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=60"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "pera_petrucina",
+      "defaultName": "Pera Petrucina",
+      "category": "FRUTAS",
+      "aliases": [
+        "Pera Petrucina"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PUGLIA-158",
+        "sourceName": "Pera Petrucina",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=62"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "uva_baresana",
+      "defaultName": "Uva Baresana",
+      "category": "FRUTAS",
+      "aliases": [
+        "Uva Baresana"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PUGLIA-190",
+        "sourceName": "Uva baresana, doraca, uva drech, imperatore, lattuaria, lattuario, roscio, sacra, sagrone, turca, turchiesca, uva di cera, uva rosa",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=62"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "uva_cardinal",
+      "defaultName": "Uva Cardinal",
+      "category": "FRUTAS",
+      "aliases": [
+        "Uva Cardinal"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PUGLIA-191",
+        "sourceName": "Uva cardinal di Guagnano",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=62"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "cereza_furistera",
+      "defaultName": "Cereza Furistera",
+      "category": "FRUTAS",
+      "aliases": [
+        "Cereza Furistera"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA DELLA SARDEGNA-59",
+        "sourceName": "Ciliegia furistera - Kariasa 'e ispiritu",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=66"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "higo_nero_di_chia",
+      "defaultName": "Higo Nero di Chia",
+      "category": "FRUTAS",
+      "aliases": [
+        "Higo Nero di Chia"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA DELLA SARDEGNA-72",
+        "sourceName": "Fico nero di Chia/Figu niedda de Chia",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=66"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "limon_dulce_de_muravera",
+      "defaultName": "Limón dulce de Muravera",
+      "category": "FRUTAS",
+      "aliases": [
+        "Limón dulce de Muravera"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA DELLA SARDEGNA-79",
+        "sourceName": "Limone dolce di Muravera",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=67"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "manzana_appicadorza",
+      "defaultName": "Manzana Appicadorza",
+      "category": "FRUTAS",
+      "aliases": [
+        "Manzana Appicadorza"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA DELLA SARDEGNA-84",
+        "sourceName": "Mela appicadorza - Baccalana - Baccalarisca - Mela 'e ferru",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=67"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "pera_bianca_di_bonarcado",
+      "defaultName": "Pera Bianca di Bonarcado",
+      "category": "FRUTAS",
+      "aliases": [
+        "Pera Bianca di Bonarcado"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA DELLA SARDEGNA-95",
+        "sourceName": "Pera bianca di Bonarcado - Pira bianca",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=67"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "pera_camusina",
+      "defaultName": "Pera Camusina",
+      "category": "FRUTAS",
+      "aliases": [
+        "Pera Camusina"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA DELLA SARDEGNA-96",
+        "sourceName": "Pera Camusina",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=67"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "sandia_gigante_di_fontarronco",
+      "defaultName": "Sandía Gigante di Fontarronco",
+      "category": "FRUTAS",
+      "aliases": [
+        "Sandía Gigante di Fontarronco"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-168",
+        "sourceName": "Cocomero gigante, Gigante di Fontarronco, Cocomero della Val di Chiana",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=75"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "higo_dottato",
+      "defaultName": "Higo Dottato",
+      "category": "FRUTAS",
+      "aliases": [
+        "Higo Dottato"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-215",
+        "sourceName": "Fico dottato, Ottato",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=76"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "higo_san_piero",
+      "defaultName": "Higo San Piero",
+      "category": "FRUTAS",
+      "aliases": [
+        "Higo San Piero"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-216",
+        "sourceName": "Fico San Piero, Corbo",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=76"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "higo_verdino",
+      "defaultName": "Higo Verdino",
+      "category": "FRUTAS",
+      "aliases": [
+        "Higo Verdino"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-217",
+        "sourceName": "Fico verdino",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=76"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "manzana_binotto",
+      "defaultName": "Manzana Binotto",
+      "category": "FRUTAS",
+      "aliases": [
+        "Manzana Binotto"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-234",
+        "sourceName": "Mela binotto",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=76"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "manzana_carla",
+      "defaultName": "Manzana Carla",
+      "category": "FRUTAS",
+      "aliases": [
+        "Manzana Carla"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-235",
+        "sourceName": "Mela Carla aretina, Finalina, Mela di Finale",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=76"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "manzana_casciana",
+      "defaultName": "Manzana Casciana",
+      "category": "FRUTAS",
+      "aliases": [
+        "Manzana Casciana"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-236",
+        "sourceName": "Mela casciana, Rosetta, Rosina",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=76"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "manzana_casolana",
+      "defaultName": "Manzana Casolana",
+      "category": "FRUTAS",
+      "aliases": [
+        "Manzana Casolana"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-237",
+        "sourceName": "Mela casolana",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=76"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "manzana_francesca",
+      "defaultName": "Manzana Francesca",
+      "category": "FRUTAS",
+      "aliases": [
+        "Manzana Francesca"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-238",
+        "sourceName": "Mela Francesca aretina, Aretina",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=76"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "manzana_muso_di_bue",
+      "defaultName": "Manzana Muso di Bue",
+      "category": "FRUTAS",
+      "aliases": [
+        "Manzana Muso di Bue"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-239",
+        "sourceName": "Mela \"muso di bue\", Mela \"muso de be\"",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=76"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "manzana_decio",
+      "defaultName": "Manzana Decio",
+      "category": "FRUTAS",
+      "aliases": [
+        "Manzana Decio"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-240",
+        "sourceName": "Mela nesta, Decio",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=76"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "manzana_panaia",
+      "defaultName": "Manzana Panaia",
+      "category": "FRUTAS",
+      "aliases": [
+        "Manzana Panaia"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-241",
+        "sourceName": "Mela panaia, Flagellata",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=76"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "manzana_roggiola",
+      "defaultName": "Manzana Roggiola",
+      "category": "FRUTAS",
+      "aliases": [
+        "Manzana Roggiola"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-242",
+        "sourceName": "Mela roggiola",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=76"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "manzana_rotella",
+      "defaultName": "Manzana Rotella",
+      "category": "FRUTAS",
+      "aliases": [
+        "Manzana Rotella"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-244",
+        "sourceName": "Mela rotella della Lunigiana, Pomo rodello",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=76"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "manzana_stayman",
+      "defaultName": "Manzana Stayman",
+      "category": "FRUTAS",
+      "aliases": [
+        "Manzana Stayman"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-246",
+        "sourceName": "Mela stayman aretina, Mela stayman red o nieplyng",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=76"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "pera_coscia",
+      "defaultName": "Pera Coscia",
+      "category": "FRUTAS",
+      "aliases": [
+        "Pera Coscia"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-260",
+        "sourceName": "Pera coscia aretina",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=76"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "pera_del_curato",
+      "defaultName": "Pera del Curato",
+      "category": "FRUTAS",
+      "aliases": [
+        "Pera del Curato"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-262",
+        "sourceName": "Pera del curato toscana",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=76"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "pera_gentile",
+      "defaultName": "Pera Gentile",
+      "category": "FRUTAS",
+      "aliases": [
+        "Pera Gentile"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-263",
+        "sourceName": "Pera gentile, Gentile d'estate, Gentile bianca, Pera zuccherina",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=76"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "pera_picciola",
+      "defaultName": "Pera Picciola",
+      "category": "FRUTAS",
+      "aliases": [
+        "Pera Picciola"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-264",
+        "sourceName": "Pera picciola",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=76"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "pera_ruse",
+      "defaultName": "Pera Rusè",
+      "category": "FRUTAS",
+      "aliases": [
+        "Pera Rusè"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-265",
+        "sourceName": "Pera rusè",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=76"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "melocoton_cotogna",
+      "defaultName": "Melocotón Cotogna",
+      "category": "FRUTAS",
+      "aliases": [
+        "Melocotón Cotogna"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-268",
+        "sourceName": "Pesca cotogna toscana",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=76"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "melocoton_diga",
+      "defaultName": "Melocotón Diga",
+      "category": "FRUTAS",
+      "aliases": [
+        "Melocotón Diga"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-269",
+        "sourceName": "Pesca diga",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=76"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "melocoton_elberta",
+      "defaultName": "Melocotón Elberta",
+      "category": "FRUTAS",
+      "aliases": [
+        "Melocotón Elberta"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-270",
+        "sourceName": "Pesca Elberta, Pesca Alberta, Pesca Lamberta",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=76"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "melocoton_limone",
+      "defaultName": "Melocotón Limone",
+      "category": "FRUTAS",
+      "aliases": [
+        "Melocotón Limone"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-271",
+        "sourceName": "Pesca limone, Cotogna tardiva",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=76"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "melocoton_maglia_rosa",
+      "defaultName": "Melocotón Maglia Rosa",
+      "category": "FRUTAS",
+      "aliases": [
+        "Melocotón Maglia Rosa"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-272",
+        "sourceName": "Pesca maglia rosa",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=76"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "melocoton_michelini",
+      "defaultName": "Melocotón Michelini",
+      "category": "FRUTAS",
+      "aliases": [
+        "Melocotón Michelini"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-273",
+        "sourceName": "Pesca Michelini",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=76"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "melocoton_mora_di_moriano",
+      "defaultName": "Melocotón Mora di Moriano",
+      "category": "FRUTAS",
+      "aliases": [
+        "Melocotón Mora di Moriano"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-274",
+        "sourceName": "Pesca mora di Moriano Dolfi, Pesca mora di Dolfo",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=76"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "melocoton_passerina",
+      "defaultName": "Melocotón Passerina",
+      "category": "FRUTAS",
+      "aliases": [
+        "Melocotón Passerina"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-275",
+        "sourceName": "Pesca passerina, Pesca ubriaca",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=77"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "melocoton_regina_di_londa",
+      "defaultName": "Melocotón Regina di Londa",
+      "category": "FRUTAS",
+      "aliases": [
+        "Melocotón Regina di Londa"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-276",
+        "sourceName": "Pesca regina di Londa, Regina d'autunno, Tardiva di Londa",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=77"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "melocoton_trionfo_rosso",
+      "defaultName": "Melocotón Trionfo Rosso",
+      "category": "FRUTAS",
+      "aliases": [
+        "Melocotón Trionfo Rosso"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-277",
+        "sourceName": "Pesca trionfo rosso, Trionfo, Trionfo peloso",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=77"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "ciruela_amoscina_nera",
+      "defaultName": "Ciruela Amoscina Nera",
+      "category": "FRUTAS",
+      "aliases": [
+        "Ciruela Amoscina Nera"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-305",
+        "sourceName": "Susina Amoscina nera di San Miniato, Susina Moscia o Moscina",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=77"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "uva_colombana",
+      "defaultName": "Uva Colombana",
+      "category": "FRUTAS",
+      "aliases": [
+        "Uva Colombana"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-312",
+        "sourceName": "Uva colombana di Peccioli",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=77"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "ajo_rosso_di_sulmona",
+      "defaultName": "Ajo Rosso di Sulmona",
+      "category": "VERDURAS",
+      "aliases": [
+        "Ajo Rosso di Sulmona"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE ABRUZZO-49",
+        "sourceName": "Aglio rosso di Sulmona",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=1"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "patata_turchesa",
+      "defaultName": "Patata Turchesa",
+      "category": "VERDURAS",
+      "aliases": [
+        "Patata Turchesa"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE ABRUZZO-69",
+        "sourceName": "Patata turchesa, Turca, Turchesca, Viola",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=1"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "pimiento_rosso_di_altino",
+      "defaultName": "Pimiento Rosso di Altino",
+      "category": "VERDURAS",
+      "aliases": [
+        "Pimiento Rosso di Altino"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE ABRUZZO-72",
+        "sourceName": "Peperone rosso di Altino",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=1"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "jilo",
+      "defaultName": "Jiló",
+      "category": "VERDURAS",
+      "aliases": [
+        "Jiló"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE BASILICATA-83",
+        "sourceName": "Gilò di Maratea",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=5"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "lampascioni",
+      "defaultName": "Lampascioni",
+      "category": "VERDURAS",
+      "aliases": [
+        "Lampascioni"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE BASILICATA-86",
+        "sourceName": "Lampascioni",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=5"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "pimiento_blanco_de_castronuovo",
+      "defaultName": "Pimiento blanco de Castronuovo",
+      "category": "VERDURAS",
+      "aliases": [
+        "Pimiento blanco de Castronuovo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE BASILICATA-109",
+        "sourceName": "Peperone bianco di Castronuovo di Sant’Andrea",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=5"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "tomate_giallo_costoluto_di_castronuovo",
+      "defaultName": "Tomate Giallo Costoluto di Castronuovo",
+      "category": "VERDURAS",
+      "aliases": [
+        "Tomate Giallo Costoluto di Castronuovo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE BASILICATA-114",
+        "sourceName": "Pomodorino giallo costoluto di Castronuovo di Sant'Andrea",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=5"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "tomate_giallo_lungo_di_castronuovo",
+      "defaultName": "Tomate Giallo Lungo di Castronuovo",
+      "category": "VERDURAS",
+      "aliases": [
+        "Tomate Giallo Lungo di Castronuovo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE BASILICATA-115",
+        "sourceName": "Pomodorino giallo lungo di Castronuovo di Sant'Andrea",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=5"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "tomate_rosso_lungo_di_castronuovo",
+      "defaultName": "Tomate Rosso Lungo di Castronuovo",
+      "category": "VERDURAS",
+      "aliases": [
+        "Tomate Rosso Lungo di Castronuovo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE BASILICATA-116",
+        "sourceName": "Pomodorino rosso lungo di Castronuovo di Sant'Andrea",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=5"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "pimiento_roggianese",
+      "defaultName": "Pimiento Roggianese",
+      "category": "VERDURAS",
+      "aliases": [
+        "Pimiento Roggianese"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CALABRIA-128",
+        "sourceName": "Peperone roggianese",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=8"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "tomate_de_belmonte",
+      "defaultName": "Tomate de Belmonte",
+      "category": "VERDURAS",
+      "aliases": [
+        "Tomate de Belmonte"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CALABRIA-134",
+        "sourceName": "Pomodoro di Belmonte",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=8"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "pimiento_zafarana_di_tortora",
+      "defaultName": "Pimiento Zafarana di Tortora",
+      "category": "VERDURAS",
+      "aliases": [
+        "Pimiento Zafarana di Tortora"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CALABRIA-137",
+        "sourceName": "Zafarana di Tortora",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=8"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "brocoli_san_pasquale",
+      "defaultName": "Brócoli San Pasquale",
+      "category": "VERDURAS",
+      "aliases": [
+        "Brócoli San Pasquale"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-168",
+        "sourceName": "Broccolo San Pasquale",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=13"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alcachofa_blanca",
+      "defaultName": "Alcachofa blanca",
+      "category": "VERDURAS",
+      "aliases": [
+        "Alcachofa blanca"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-172",
+        "sourceName": "Carciofo bianco",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=13"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alcachofa_capuanella",
+      "defaultName": "Alcachofa Capuanella",
+      "category": "VERDURAS",
+      "aliases": [
+        "Alcachofa Capuanella"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-173",
+        "sourceName": "Carciofo capuanella",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=13"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alcachofa_pignatella",
+      "defaultName": "Alcachofa Pignatella",
+      "category": "VERDURAS",
+      "aliases": [
+        "Alcachofa Pignatella"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-178",
+        "sourceName": "Carciofo pignatella, Carciofo rosso, Carcioffola pascaiola",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=13"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "coliflor_gigante_di_napoli",
+      "defaultName": "Coliflor Gigante di Napoli",
+      "category": "VERDURAS",
+      "aliases": [
+        "Coliflor Gigante di Napoli"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-192",
+        "sourceName": "Cavolfiore gigante di Napoli",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=13"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "achicoria_verde_di_napoli",
+      "defaultName": "Achicoria Verde di Napoli",
+      "category": "VERDURAS",
+      "aliases": [
+        "Achicoria Verde di Napoli"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-200",
+        "sourceName": "Cicoria verde di Napoli",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=13"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "cebolla_de_vatolla",
+      "defaultName": "Cebolla de Vatolla",
+      "category": "VERDURAS",
+      "aliases": [
+        "Cebolla de Vatolla"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-212",
+        "sourceName": "Cipolla di Vatolla",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=13"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "cebolla_ramata_di_montoro",
+      "defaultName": "Cebolla Ramata di Montoro",
+      "category": "VERDURAS",
+      "aliases": [
+        "Cebolla Ramata di Montoro"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-213",
+        "sourceName": "Cipolla ramata di Montoro",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=13"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "berenjena_cima_di_viola",
+      "defaultName": "Berenjena Cima di Viola",
+      "category": "VERDURAS",
+      "aliases": [
+        "Berenjena Cima di Viola"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-285",
+        "sourceName": "Melanzana cima di viola",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=15"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "berenjena_lunga_di_napoli",
+      "defaultName": "Berenjena Lunga di Napoli",
+      "category": "VERDURAS",
+      "aliases": [
+        "Berenjena Lunga di Napoli"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-286",
+        "sourceName": "Melanzana lunga di Napoli",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=15"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "berenjena_paccia",
+      "defaultName": "Berenjena Paccia",
+      "category": "VERDURAS",
+      "aliases": [
+        "Berenjena Paccia"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-287",
+        "sourceName": "Melanzana paccia",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=15"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "patata_nera_del_matese",
+      "defaultName": "Patata Nera del Matese",
+      "category": "VERDURAS",
+      "aliases": [
+        "Patata Nera del Matese"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-314",
+        "sourceName": "Patata nera del Matese",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=15"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "patata_ricciona_di_napoli",
+      "defaultName": "Patata Ricciona di Napoli",
+      "category": "VERDURAS",
+      "aliases": [
+        "Patata Ricciona di Napoli"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-316",
+        "sourceName": "Patata ricciona o riccia di Napoli",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=15"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "pimiento_cazzone",
+      "defaultName": "Pimiento Cazzone",
+      "category": "VERDURAS",
+      "aliases": [
+        "Pimiento Cazzone"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-323",
+        "sourceName": "Peperone cazzone",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=15"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "pimiento_papaccella",
+      "defaultName": "Pimiento Papaccella",
+      "category": "VERDURAS",
+      "aliases": [
+        "Pimiento Papaccella"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-324",
+        "sourceName": "Peperone papaccella, Papaccelle riccie",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=15"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "pimiento_quarantino_di_san_salvatore",
+      "defaultName": "Pimiento Quarantino di San Salvatore",
+      "category": "VERDURAS",
+      "aliases": [
+        "Pimiento Quarantino di San Salvatore"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-325",
+        "sourceName": "Peperone quarantino di San Salvatore",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=15"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "pimiento_sassaniello",
+      "defaultName": "Pimiento Sassaniello",
+      "category": "VERDURAS",
+      "aliases": [
+        "Pimiento Sassaniello"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-326",
+        "sourceName": "Peperone sassaniello",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=15"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "tomate_cannellino_di_pimonte",
+      "defaultName": "Tomate Cannellino di Pimonte",
+      "category": "VERDURAS",
+      "aliases": [
+        "Tomate Cannellino di Pimonte"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-349",
+        "sourceName": "Pomodorino Cannellino di Pimonte",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=15"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "tomate_corbarino",
+      "defaultName": "Tomate Corbarino",
+      "category": "VERDURAS",
+      "aliases": [
+        "Tomate Corbarino"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-350",
+        "sourceName": "Pomodorino corbarino",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=15"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "tomate_cannellino_flegreo",
+      "defaultName": "Tomate Cannellino Flegreo",
+      "category": "VERDURAS",
+      "aliases": [
+        "Tomate Cannellino Flegreo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-355",
+        "sourceName": "Pomodoro cannellino flegreo",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=15"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "tomate_fiaschello_di_battipaglia",
+      "defaultName": "Tomate Fiaschello di Battipaglia",
+      "category": "VERDURAS",
+      "aliases": [
+        "Tomate Fiaschello di Battipaglia"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-357",
+        "sourceName": "Pomodoro fiaschello di Battipaglia",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=16"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "tomate_guardiolo",
+      "defaultName": "Tomate Guardiolo",
+      "category": "VERDURAS",
+      "aliases": [
+        "Tomate Guardiolo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-358",
+        "sourceName": "Pomodoro guardiolo",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=16"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "tomate_re_umberto",
+      "defaultName": "Tomate Re Umberto",
+      "category": "VERDURAS",
+      "aliases": [
+        "Tomate Re Umberto"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-360",
+        "sourceName": "Pomodoro Re Umberto",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=16"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "nabo_catozza",
+      "defaultName": "Nabo Catozza",
+      "category": "VERDURAS",
+      "aliases": [
+        "Nabo Catozza"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-363",
+        "sourceName": "Rapa catozza",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=16"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "calabaza_lunga_di_napoli",
+      "defaultName": "Calabaza Lunga di Napoli",
+      "category": "VERDURAS",
+      "aliases": [
+        "Calabaza Lunga di Napoli"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-397",
+        "sourceName": "Zucca lunga di Napoli, Cocuzza zuccarina",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=16"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "cebolla_prossedana",
+      "defaultName": "Cebolla Prossedana",
+      "category": "VERDURAS",
+      "aliases": [
+        "Cebolla Prossedana"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LAZIO-160",
+        "sourceName": "Cipolla Prossedana",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=31"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "tomate_corno_di_toro",
+      "defaultName": "Tomate Corno di Toro",
+      "category": "VERDURAS",
+      "aliases": [
+        "Tomate Corno di Toro"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LAZIO-222",
+        "sourceName": "Pomodoro corno di toro",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=32"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "tomate_fiaschetta_di_fondi",
+      "defaultName": "Tomate Fiaschetta di Fondi",
+      "category": "VERDURAS",
+      "aliases": [
+        "Tomate Fiaschetta di Fondi"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LAZIO-223",
+        "sourceName": "Pomodoro fiaschetta di Fondi",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=32"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "tomate_ovalone_reatino",
+      "defaultName": "Tomate Ovalone Reatino",
+      "category": "VERDURAS",
+      "aliases": [
+        "Tomate Ovalone Reatino"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LAZIO-224",
+        "sourceName": "Pomodoro ovalone Reatino",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=32"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "tomate_scatolone_di_bolsena",
+      "defaultName": "Tomate Scatolone di Bolsena",
+      "category": "VERDURAS",
+      "aliases": [
+        "Tomate Scatolone di Bolsena"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LAZIO-226",
+        "sourceName": "Pomodoro scatolone di Bolsena",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=32"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "tomate_spagnoletta",
+      "defaultName": "Tomate Spagnoletta",
+      "category": "VERDURAS",
+      "aliases": [
+        "Tomate Spagnoletta"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LAZIO-227",
+        "sourceName": "Pomodoro spagnoletta del Golfo di Gaeta e di Formia",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=32"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alcachofa_violeta_de_provenza",
+      "defaultName": "Alcachofa violeta de Provenza",
+      "category": "VERDURAS",
+      "aliases": [
+        "Alcachofa violeta de Provenza"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LIGURIA-72",
+        "sourceName": "Carciofo di Provenza, Violet di Provenza",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=37"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alcachofa_violeta_de_albenga",
+      "defaultName": "Alcachofa violeta de Albenga",
+      "category": "VERDURAS",
+      "aliases": [
+        "Alcachofa violeta de Albenga"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LIGURIA-73",
+        "sourceName": "Carciofo spinoso (Violetto di Albenga)",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=37"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "berenjena_tonda_genovese",
+      "defaultName": "Berenjena Tonda Genovese",
+      "category": "VERDURAS",
+      "aliases": [
+        "Berenjena Tonda Genovese"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LIGURIA-109",
+        "sourceName": "Melanzana tonda (genovese)",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=37"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "patata_cabannese",
+      "defaultName": "Patata Cabannese",
+      "category": "VERDURAS",
+      "aliases": [
+        "Patata Cabannese"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LIGURIA-138",
+        "sourceName": "Patata cabannese, Sarvèga, Purchin-a, Matta",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=37"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "patata_cannellina_nera",
+      "defaultName": "Patata Cannellina Nera",
+      "category": "VERDURAS",
+      "aliases": [
+        "Patata Cannellina Nera"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LIGURIA-139",
+        "sourceName": "Patata cannellina nera, Cannellina",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=37"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "patata_morella",
+      "defaultName": "Patata Morella",
+      "category": "VERDURAS",
+      "aliases": [
+        "Patata Morella"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LIGURIA-141",
+        "sourceName": "Patata morella, Muella, Muellin-a",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=38"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "patata_quarantina_bianca",
+      "defaultName": "Patata Quarantina Bianca",
+      "category": "VERDURAS",
+      "aliases": [
+        "Patata Quarantina Bianca"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LIGURIA-142",
+        "sourceName": "Patata quarantina bianca, Quarantina genovese, Quarantina, Bianca di Montoggio, di Reppia, di Rovegno, di Torriglia",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=38"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "patata_quarantina_gialla",
+      "defaultName": "Patata Quarantina Gialla",
+      "category": "VERDURAS",
+      "aliases": [
+        "Patata Quarantina Gialla"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LIGURIA-143",
+        "sourceName": "Patata quarantina gialla, Giana riunda, Giana de masùn, Franseize, Franseize de servàesa",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=38"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "patata_quarantina_prugnona",
+      "defaultName": "Patata Quarantina Prugnona",
+      "category": "VERDURAS",
+      "aliases": [
+        "Patata Quarantina Prugnona"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LIGURIA-144",
+        "sourceName": "Patata quarantina prugnona, Prugnona, Quarantina vera, Quarantina rossa, Brignùn-a",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=38"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "patata_salamina",
+      "defaultName": "Patata Salamina",
+      "category": "VERDURAS",
+      "aliases": [
+        "Patata Salamina"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LIGURIA-145",
+        "sourceName": "Patata salamina, Calice al cornoviglio",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=38"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "tomate_corazon_de_buey",
+      "defaultName": "Tomate Corazón de Buey",
+      "category": "VERDURAS",
+      "aliases": [
+        "Tomate Corazón de Buey"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LIGURIA-149",
+        "sourceName": "Pomodoro cuore di bue",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=38"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "cebolla_bionda_astigiana",
+      "defaultName": "Cebolla Bionda Astigiana",
+      "category": "VERDURAS",
+      "aliases": [
+        "Cebolla Bionda Astigiana"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-160",
+        "sourceName": "Cipolla bionda astigiana",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=53"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "cebolla_piatlina_bionda",
+      "defaultName": "Cebolla Piatlina Bionda",
+      "category": "VERDURAS",
+      "aliases": [
+        "Cebolla Piatlina Bionda"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-163",
+        "sourceName": "Cipolla piatlina bionda di Andezeno",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=53"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "berenjena_violetta_casalese",
+      "defaultName": "Berenjena Violetta Casalese",
+      "category": "VERDURAS",
+      "aliases": [
+        "Berenjena Violetta Casalese"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-182",
+        "sourceName": "Melanzana violetta casalese",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=53"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "patata_piatlina",
+      "defaultName": "Patata Piatlina",
+      "category": "VERDURAS",
+      "aliases": [
+        "Patata Piatlina"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-186",
+        "sourceName": "Patata piatlina della Valle Grana",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=53"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "pimiento_quadrato_d_asti",
+      "defaultName": "Pimiento Quadrato d’Asti",
+      "category": "VERDURAS",
+      "aliases": [
+        "Pimiento Quadrato d’Asti"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-193",
+        "sourceName": "Peperone quadrato d'Asti",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=53"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "tomate_costoluto_di_cambiano",
+      "defaultName": "Tomate Costoluto di Cambiano",
+      "category": "VERDURAS",
+      "aliases": [
+        "Tomate Costoluto di Cambiano"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-204",
+        "sourceName": "Pomodoro costoluto di Cambiano",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=53"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "tomate_costoluto_di_chivasso",
+      "defaultName": "Tomate Costoluto di Chivasso",
+      "category": "VERDURAS",
+      "aliases": [
+        "Tomate Costoluto di Chivasso"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-205",
+        "sourceName": "Pomodoro costoluto di Chivasso",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=53"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "tomate_delizia_di_tortona",
+      "defaultName": "Tomate Delizia di Tortona",
+      "category": "VERDURAS",
+      "aliases": [
+        "Tomate Delizia di Tortona"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-206",
+        "sourceName": "Pomodoro delizia di Tortona",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=53"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "tomate_piatta_di_bernezzo",
+      "defaultName": "Tomate Piatta di Bernezzo",
+      "category": "VERDURAS",
+      "aliases": [
+        "Tomate Piatta di Bernezzo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-207",
+        "sourceName": "Pomodoro piatta di Bernezzo",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=53"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "tomate_prunill",
+      "defaultName": "Tomate Prunill",
+      "category": "VERDURAS",
+      "aliases": [
+        "Tomate Prunill"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PUGLIA-175",
+        "sourceName": "Pomodoro Prunill",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=62"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "tomate_regina",
+      "defaultName": "Tomate Regina",
+      "category": "VERDURAS",
+      "aliases": [
+        "Tomate Regina"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PUGLIA-176",
+        "sourceName": "Pomodoro regina",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=62"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alcachofa_empolese",
+      "defaultName": "Alcachofa Empolese",
+      "category": "VERDURAS",
+      "aliases": [
+        "Alcachofa Empolese"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-142",
+        "sourceName": "Carciofo empolese",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=75"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "cebolla_vernina",
+      "defaultName": "Cebolla Vernina",
+      "category": "VERDURAS",
+      "aliases": [
+        "Cebolla Vernina"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-166",
+        "sourceName": "Cipolla vernina, Cipolla bastarda",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=75"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "berenjena_violetta_fiorentina",
+      "defaultName": "Berenjena Violetta Fiorentina",
+      "category": "VERDURAS",
+      "aliases": [
+        "Berenjena Violetta Fiorentina"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-247",
+        "sourceName": "Melanzana violetta fiorentina, Fiorentina",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=76"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "patata_rossa_di_cetica",
+      "defaultName": "Patata Rossa di Cetica",
+      "category": "VERDURAS",
+      "aliases": [
+        "Patata Rossa di Cetica"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-259",
+        "sourceName": "Patata rossa di Cetica, Patata rossa del Pratomagno, Patata rossa del Casentino",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=76"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "tomate_borsa_di_montone",
+      "defaultName": "Tomate Borsa di Montone",
+      "category": "VERDURAS",
+      "aliases": [
+        "Tomate Borsa di Montone"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-285",
+        "sourceName": "Pomodoro Borsa di Montone",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=77"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "tomate_canestrino_di_lucca",
+      "defaultName": "Tomate Canestrino di Lucca",
+      "category": "VERDURAS",
+      "aliases": [
+        "Tomate Canestrino di Lucca"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-286",
+        "sourceName": "Pomodoro canestrino di Lucca",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=77"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "tomate_costoluto_fiorentino",
+      "defaultName": "Tomate Costoluto Fiorentino",
+      "category": "VERDURAS",
+      "aliases": [
+        "Tomate Costoluto Fiorentino"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-288",
+        "sourceName": "Pomodoro costoluto fiorentino, Pomodoro rosso da conserva",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=77"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "tomate_fragola",
+      "defaultName": "Tomate Fragola",
+      "category": "VERDURAS",
+      "aliases": [
+        "Tomate Fragola"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-290",
+        "sourceName": "Pomodoro fragola di Albiano Minucciano, Pomodoro fragola",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=77"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "tomate_grinzoso_sanminiatese",
+      "defaultName": "Tomate Grinzoso Sanminiatese",
+      "category": "VERDURAS",
+      "aliases": [
+        "Tomate Grinzoso Sanminiatese"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-291",
+        "sourceName": "Pomodoro grinzoso sanminiatese, Pomodoro di San Miniato",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=77"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "tomate_marmande",
+      "defaultName": "Tomate Marmande",
+      "category": "VERDURAS",
+      "aliases": [
+        "Tomate Marmande"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-292",
+        "sourceName": "Pomodoro marmande",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=77"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "tomate_pisanello",
+      "defaultName": "Tomate Pisanello",
+      "category": "VERDURAS",
+      "aliases": [
+        "Tomate Pisanello"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-295",
+        "sourceName": "Pomodoro pisanello, Pomodoro pizza",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=77"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "tomate_quarantino",
+      "defaultName": "Tomate Quarantino",
+      "category": "VERDURAS",
+      "aliases": [
+        "Tomate Quarantino"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-296",
+        "sourceName": "Pomodoro quarantino, Pomodoro antico nostrale",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=77"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "tomate_stella",
+      "defaultName": "Tomate Stella",
+      "category": "VERDURAS",
+      "aliases": [
+        "Tomate Stella"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-297",
+        "sourceName": "Pomodoro stella, Pomodoro pesciatino o del Morianese",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=77"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "calabaza_lardaia",
+      "defaultName": "Calabaza Lardaia",
+      "category": "VERDURAS",
+      "aliases": [
+        "Calabaza Lardaia"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-317",
+        "sourceName": "Zucca lardaia",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=77"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alcachofa_violetta_di_sant_erasmo",
+      "defaultName": "Alcachofa Violetta di Sant’Erasmo",
+      "category": "VERDURAS",
+      "aliases": [
+        "Alcachofa Violetta di Sant’Erasmo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE VENETO-171",
+        "sourceName": "Carciofo violetto di S. Erasmo",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=85"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "patata_cornetta",
+      "defaultName": "Patata Cornetta",
+      "category": "VERDURAS",
+      "aliases": [
+        "Patata Cornetta"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE VENETO-238",
+        "sourceName": "Patata cornetta",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=86"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "calabaza_marina_di_chioggia",
+      "defaultName": "Calabaza Marina di Chioggia",
+      "category": "VERDURAS",
+      "aliases": [
+        "Calabaza Marina di Chioggia"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE VENETO-275",
+        "sourceName": "Zucca Marina di Chioggia",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=86"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "calabaza_santa_bellunese",
+      "defaultName": "Calabaza Santa Bellunese",
+      "category": "VERDURAS",
+      "aliases": [
+        "Calabaza Santa Bellunese"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE VENETO-276",
+        "sourceName": "Zucca santa bellunese",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=86"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_castelluccisa",
+      "defaultName": "Alubia Castelluccisa",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia Castelluccisa"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE BASILICATA-63",
+        "sourceName": "Fagiolo Castelluccisa di Rotonda",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=4"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_occhio_di_bue",
+      "defaultName": "Alubia Occhio di Bue",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia Occhio di Bue"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE BASILICATA-67",
+        "sourceName": "Fagiolo Occhio di bue di Rotonda",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=4"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_panzaredda",
+      "defaultName": "Alubia Panzaredda",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia Panzaredda"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE BASILICATA-68",
+        "sourceName": "Fagiolo Panzaredda di Rotonda",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=4"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_quarantano",
+      "defaultName": "Alubia Quarantano",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia Quarantano"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE BASILICATA-69",
+        "sourceName": "Fagiolo Quarantano di Terranova di Pollino",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=4"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_za_vicenza",
+      "defaultName": "Alubia Za’ Vicenza",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia Za’ Vicenza"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE BASILICATA-70",
+        "sourceName": "Fagiolo Za' Vicenza di Rotonda",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=4"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_zeminelle",
+      "defaultName": "Alubia Zeminelle",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia Zeminelle"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE BASILICATA-71",
+        "sourceName": "Fagiolo zeminelle",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=4"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_poverello_bianco",
+      "defaultName": "Alubia Poverello Bianco",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia Poverello Bianco"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CALABRIA-88",
+        "sourceName": "Fagiolo poverello bianco",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=8"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_a_formella",
+      "defaultName": "Alubia a Formella",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia a Formella"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-221",
+        "sourceName": "Fagiolo a formella",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=14"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_a_pisello",
+      "defaultName": "Alubia a Pisello",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia a Pisello"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-222",
+        "sourceName": "Fagiolo a pisello",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=14"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_dente_di_morto",
+      "defaultName": "Alubia Dente di Morto",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia Dente di Morto"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-226",
+        "sourceName": "Fagiolo dente di morto",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=14"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_di_cera",
+      "defaultName": "Alubia di Cera",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia di Cera"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-227",
+        "sourceName": "Fagiolo di Cera",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=14"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_mustacciello",
+      "defaultName": "Alubia Mustacciello",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia Mustacciello"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-233",
+        "sourceName": "Fagiolo mustacciello",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=14"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_risillo",
+      "defaultName": "Alubia Risillo",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia Risillo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-234",
+        "sourceName": "Fagiolo risillo",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=14"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_san_pasquale",
+      "defaultName": "Alubia San Pasquale",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia San Pasquale"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-235",
+        "sourceName": "Fagiolo San Pasquale di Casalbuono",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=14"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_s_anter",
+      "defaultName": "Alubia S’Anter",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia S’Anter"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-236",
+        "sourceName": "Fagiolo s'anter di Casalbuono",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=14"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_zampognaro",
+      "defaultName": "Alubia Zampognaro",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia Zampognaro"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-240",
+        "sourceName": "Fagiolo Zampognaro",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=14"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_zolfariello",
+      "defaultName": "Alubia Zolfariello",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia Zolfariello"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-241",
+        "sourceName": "Fagiolo zolfariello",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=14"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_cesarins",
+      "defaultName": "Alubia Cesarins",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia Cesarins"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA FRIULI-VENEZIA GIULIA-91",
+        "sourceName": "Fagiolo cesarins",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=27"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_dal_santisim",
+      "defaultName": "Alubia dal Santisim",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia dal Santisim"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA FRIULI-VENEZIA GIULIA-92",
+        "sourceName": "Fagiolo dal santisim",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=27"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_dal_voglut",
+      "defaultName": "Alubia dal Voglut",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia dal Voglut"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA FRIULI-VENEZIA GIULIA-93",
+        "sourceName": "Fagiolo dal voglut",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=27"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_laurons",
+      "defaultName": "Alubia Laurons",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia Laurons"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA FRIULI-VENEZIA GIULIA-94",
+        "sourceName": "Fagiolo laurons",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=27"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_militons",
+      "defaultName": "Alubia Militons",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia Militons"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA FRIULI-VENEZIA GIULIA-95",
+        "sourceName": "Fagiolo militons",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=27"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_fiorina",
+      "defaultName": "Alubia Fiorina",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia Fiorina"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA FRIULI-VENEZIA GIULIA-96",
+        "sourceName": "Fagiolo rampicante fiorina",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=27"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_a_carne",
+      "defaultName": "Alubia a Carne",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia a Carne"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LAZIO-169",
+        "sourceName": "Fagiolo a carne",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=31"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_a_suricchio",
+      "defaultName": "Alubia a Suricchio",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia a Suricchio"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LAZIO-171",
+        "sourceName": "Fagiolo a suricchio",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=31"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_borbontino",
+      "defaultName": "Alubia Borbontino",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia Borbontino"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LAZIO-172",
+        "sourceName": "Fagiolo borbontino",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=31"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_cappellette",
+      "defaultName": "Alubia Cappellette",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia Cappellette"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LAZIO-173",
+        "sourceName": "Fagiolo cappellette di Vallepietra",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=31"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_ciavattone_piccolo",
+      "defaultName": "Alubia Ciavattone Piccolo",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia Ciavattone Piccolo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LAZIO-174",
+        "sourceName": "Fagiolo ciavattone piccolo",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=31"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_cioncone",
+      "defaultName": "Alubia Cioncone",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia Cioncone"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LAZIO-175",
+        "sourceName": "Fagiolo cioncone",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=31"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_del_purgatorio",
+      "defaultName": "Alubia del Purgatorio",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia del Purgatorio"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LAZIO-176",
+        "sourceName": "Fagiolo del purgatorio di Gradoli",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=31"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_gentile_di_labro",
+      "defaultName": "Alubia Gentile di Labro",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia Gentile di Labro"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LAZIO-178",
+        "sourceName": "Fagiolo gentile di Labro",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=31"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_verdolino",
+      "defaultName": "Alubia Verdolino",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia Verdolino"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LAZIO-182",
+        "sourceName": "Fagiolo verdolino",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=31"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_cannellino_dall_occhio_rosso",
+      "defaultName": "Alubia Cannellino dall’Occhio Rosso",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia Cannellino dall’Occhio Rosso"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LIGURIA-93",
+        "sourceName": "Fagiolo cannellino dall'occhio rosso",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=37"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_cenerino",
+      "defaultName": "Alubia Cenerino",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia Cenerino"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LIGURIA-95",
+        "sourceName": "Fagiolo cenerino della Val di Vara (Senerín)",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=37"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_gianetto",
+      "defaultName": "Alubia Gianetto",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia Gianetto"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LIGURIA-97",
+        "sourceName": "Fagiolo gianetto",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=37"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_lupinaro",
+      "defaultName": "Alubia Lupinaro",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia Lupinaro"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LIGURIA-98",
+        "sourceName": "Fagiolo lupinaro",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=37"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_burro_toscano",
+      "defaultName": "Alubia Burro Toscano",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia Burro Toscano"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-177",
+        "sourceName": "Fagiolo burro toscano",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=75"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_cappone",
+      "defaultName": "Alubia Cappone",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia Cappone"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-180",
+        "sourceName": "Fagiolo Cappone",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=75"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_coco_nano",
+      "defaultName": "Alubia Coco Nano",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia Coco Nano"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-182",
+        "sourceName": "Fagiolo coco nano, Fagiolo cocco",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=75"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_diecimino",
+      "defaultName": "Alubia Diecimino",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia Diecimino"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-187",
+        "sourceName": "Fagiolo diecimino, Fagiolo scritto rampicante",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=75"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_fico_di_gallicano",
+      "defaultName": "Alubia Fico di Gallicano",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia Fico di Gallicano"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-188",
+        "sourceName": "Fagiolo fico di Gallicano",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=75"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_giallorino",
+      "defaultName": "Alubia Giallorino",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia Giallorino"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-189",
+        "sourceName": "Fagiolo giallorino della Garfagnana, Fagiolo giallorino, Fagiolo nano da sgusciare",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=75"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_malato",
+      "defaultName": "Alubia Malato",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia Malato"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-190",
+        "sourceName": "Fagiolo malato, Malatino, Fagiolo verdone, Fagiolo giallino, Fagiolo di S. Giuseppe",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=75"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_marconi_de_semilla_negra",
+      "defaultName": "Alubia Marconi de semilla negra",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia Marconi de semilla negra"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-191",
+        "sourceName": "Fagiolo Marconi a seme nero, Fagiolo seme nero",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=75"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_mascherino",
+      "defaultName": "Alubia Mascherino",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia Mascherino"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-192",
+        "sourceName": "Fagiolo mascherino",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=75"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_pievarino",
+      "defaultName": "Alubia Pievarino",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia Pievarino"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-194",
+        "sourceName": "Fagiolo pievarino",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=75"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_romano",
+      "defaultName": "Alubia Romano",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia Romano"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-195",
+        "sourceName": "Fagiolo romano, Fagiolo romanello",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=75"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_schiaccione",
+      "defaultName": "Alubia Schiaccione",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia Schiaccione"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-197",
+        "sourceName": "Fagiolo schiaccione",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=75"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_turco_di_castello",
+      "defaultName": "Alubia Turco di Castello",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia Turco di Castello"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-203",
+        "sourceName": "Fagiolo turco di Castello",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=75"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_zolfino",
+      "defaultName": "Alubia Zolfino",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia Zolfino"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-204",
+        "sourceName": "Fagiolo zolfino",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=75"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_bala_rossa",
+      "defaultName": "Alubia Bala Rossa",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia Bala Rossa"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE VENETO-192",
+        "sourceName": "Fagiolo bala rossa feltrina o Fasol balìn feltrino",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=85"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_bonel",
+      "defaultName": "Alubia Bonèl",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia Bonèl"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE VENETO-193",
+        "sourceName": "Fagiolo bonèl di Fonzaso",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=85"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_gialet",
+      "defaultName": "Alubia Giàlet",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia Giàlet"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE VENETO-196",
+        "sourceName": "Fagiolo giàlet",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=85"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    },
+    {
+      "canonicalKey": "alubia_gnoco",
+      "defaultName": "Alubia Gnoco",
+      "category": "OTROS",
+      "aliases": [
+        "Alubia Gnoco"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE VENETO-197",
+        "sourceName": "Fagiolo gnoco Borlotto",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=85"
+      },
+      "identityReason": "Variedad alimentaria con nombre propio documentada en el catálogo tradicional; se conserva una sola ficha por variedad, sin desdoblarla por idioma, sinónimo ni sello de procedencia."
+    }
+  ],
+  "collisionReview": {
+    "method": "Selección editorial, cruce de nombres y alias normalizados, claves históricas, evidencia ya aplicada y especie científica cuando corresponde.",
+    "resolved": [],
+    "excluded": [
+      {
+        "candidate": "Manzana rugginosa/Golden, alubia dell’occhio, alcachofa por procedencia sin variedad y múltiples sinónimos locales",
+        "reason": "Se omiten equivalencias del catálogo existente o denominaciones que no aportan una identidad de variedad suficientemente clara."
+      },
+      {
+        "candidate": "Variedades Limoncella, Zitella, Turchesa, Lupinaro, Spadona y Corazón de Buey repetidas por región",
+        "reason": "Una sola alta por identidad; no se multiplican al aparecer en más de una región."
+      }
+    ]
+  }
+}

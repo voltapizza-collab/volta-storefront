@@ -1,0 +1,4675 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-09-17",
+  "scope": "Master source only; no database writes",
+  "baselineSha256": "2a3f3decd3f5e978aa8a481726fae02fd746e23acf4a0f68efb950ceeff98024",
+  "summary": {
+    "originalRecords": 1140,
+    "selectableRecords": 1104,
+    "pendingRecords": 25,
+    "consolidatedRecords": 11,
+    "consolidatedGroups": 10,
+    "editedSurvivors": 103,
+    "recategorizedRecords": 38,
+    "addedAliases": 93,
+    "newIngredients": 0,
+    "generatedTranslations": 0
+  },
+  "sources": {
+    "linaza": "https://dle.rae.es/linaza",
+    "res": "https://www.larousse.com/en/dictionaries/spanish-english/res/33589",
+    "alubia": "https://www.mapa.gob.es/ministerio/pags/biblioteca/hojas/hd_1948_23.pdf",
+    "paprika": "https://www.mapa.gob.es/ministerio/pags/plataforma_conocimiento/alimentos/fichas%20de%20alimentos/condimentos/PIMENTON.pdf",
+    "cayena": "https://dle.rae.es/cayena",
+    "tropea": "https://www.consorziocipollatropeaigp.com/cipolla-rossa-di-tropea-calabria-igp.html",
+    "mushrooms": "https://www.mushroomcouncil.com/mushroom-101/varieties/white-button/",
+    "paris": "https://lou-legumes.com/gammes/poeler-croquer/",
+    "portabellini": "https://www.montereymushrooms.com/brown-mushrooms-portabellini",
+    "canola": "https://inspection.canada.ca/en/plant-health/plant-varieties/novel-traits/applicants/directive-94-08/biology-documents/brassica-napus",
+    "chipotle": "https://www.gob.mx/agricultura/articulos/ahora-es-cuando-chile-verde-le-has-de-dar-sabor-al-caldo",
+    "choclo": "https://www.asale.org/damer/choclo",
+    "asparagus": "https://www.mapa.gob.es/dam/mapa/contenido/agricultura/temas/medios-de-produccion/semillas-y-plantas-de-vivero/recursos-fitogeneticos-para-la-agricultura-y-la-alimentacion/docs/tardio_etal2022_iectbavol2.pdf",
+    "palta": "https://www.asale.org/damer/palta",
+    "mani": "https://dle.rae.es/man%C3%AD",
+    "bush": "https://www.apvma.gov.au/crop-groups/fruiting-vegetables",
+    "saintMaure": "https://www.inao.gouv.fr/produit/sainte-maure-de-touraine-16988",
+    "piton": "https://fromagesdelareunion.re/produit/piton-maido/",
+    "peri": "https://dictionary.cambridge.org/us/dictionary/english/peri-peri",
+    "peperoni": "https://dictionary.cambridge.org/us/dictionary/italian-english/peperone"
+  },
+  "merges": [
+    {
+      "canonicalKey": "champi_ones_blancos",
+      "retiredCanonicalKeys": [
+        "champi_nes_blancos",
+        "champi_ones_de_par_s"
+      ],
+      "reason": "Mismo champiñón blanco de cultivo, sin diferencias de preparación indicadas. Se conservan los crimini y portobello como variedades/presentaciones diferenciadas.",
+      "sources": [
+        "https://www.mushroomcouncil.com/mushroom-101/varieties/white-button/",
+        "https://lou-legumes.com/gammes/poeler-croquer/"
+      ],
+      "retiredRecords": [
+        {
+          "canonicalKey": "champi_nes_blancos",
+          "sourceCategory": "SETAS",
+          "category": "SETAS",
+          "semanticCategoryKey": "mushrooms",
+          "defaultName": "Champiñones blancos",
+          "allergens": [],
+          "translations": {
+            "es": "Champiñones blancos"
+          },
+          "aliases": [
+            "Champiñones blancos"
+          ],
+          "semanticStatus": "NEEDS_REVIEW",
+          "imageStatus": "MISSING",
+          "source": "LEGACY_INGREDIENTS_BASE"
+        },
+        {
+          "canonicalKey": "champi_ones_de_par_s",
+          "sourceCategory": "SETAS",
+          "category": "SETAS",
+          "semanticCategoryKey": "mushrooms",
+          "defaultName": "Champiñones de París",
+          "allergens": [],
+          "translations": {
+            "es": "Champiñones de París"
+          },
+          "aliases": [
+            "Champiñones de París"
+          ],
+          "semanticStatus": "NEEDS_REVIEW",
+          "imageStatus": "MISSING",
+          "source": "LEGACY_INGREDIENTS_BASE"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "extracto_de_piment_n",
+      "retiredCanonicalKeys": [
+        "extracto_de_paprika"
+      ],
+      "reason": "Sinónimo del mismo extracto genérico. La equivalencia ya está recogida en seedIngredientSemanticFinalCleanup.js y en la base consultada (75 → pimenton_extract).",
+      "sources": [
+        "https://www.mapa.gob.es/ministerio/pags/plataforma_conocimiento/alimentos/fichas%20de%20alimentos/condimentos/PIMENTON.pdf"
+      ],
+      "retiredRecords": [
+        {
+          "canonicalKey": "extracto_de_paprika",
+          "sourceCategory": "AROMAS_Y_EXTRACTOS",
+          "category": "AROMAS_Y_EXTRACTOS",
+          "semanticCategoryKey": "extras",
+          "defaultName": "Extracto de paprika",
+          "allergens": [],
+          "translations": {
+            "es": "Extracto de paprika"
+          },
+          "aliases": [
+            "Extracto de paprika"
+          ],
+          "semanticStatus": "NEEDS_REVIEW",
+          "imageStatus": "MISSING",
+          "source": "LEGACY_INGREDIENTS_BASE"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "carne_molida_de_vacuno",
+      "retiredCanonicalKeys": [
+        "carne_molida_de_res"
+      ],
+      "reason": "Misma carne y misma preparación; res y vacuno son denominaciones regionales en este contexto culinario.",
+      "sources": [
+        "https://www.larousse.com/en/dictionaries/spanish-english/res/33589"
+      ],
+      "retiredRecords": [
+        {
+          "canonicalKey": "carne_molida_de_res",
+          "sourceCategory": "CARNES",
+          "category": "CARNES",
+          "semanticCategoryKey": "meats",
+          "defaultName": "Carne molida de res",
+          "allergens": [],
+          "translations": {
+            "es": "Carne molida de res"
+          },
+          "aliases": [
+            "Carne molida de res"
+          ],
+          "semanticStatus": "NEEDS_REVIEW",
+          "imageStatus": "MISSING",
+          "source": "LEGACY_INGREDIENTS_BASE"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "vacuno",
+      "retiredCanonicalKeys": [
+        "res"
+      ],
+      "reason": "Misma identidad genérica de carne bovina; se mantienen ternera y buey por separado.",
+      "sources": [
+        "https://www.larousse.com/en/dictionaries/spanish-english/res/33589"
+      ],
+      "retiredRecords": [
+        {
+          "canonicalKey": "res",
+          "sourceCategory": "CARNES",
+          "category": "CARNES",
+          "semanticCategoryKey": "meats",
+          "defaultName": "Res",
+          "allergens": [],
+          "translations": {
+            "es": "Res"
+          },
+          "aliases": [
+            "Res"
+          ],
+          "semanticStatus": "NEEDS_REVIEW",
+          "imageStatus": "MISSING",
+          "source": "LEGACY_INGREDIENTS_BASE"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "alubias_rojas",
+      "retiredCanonicalKeys": [
+        "jud_as_rojas"
+      ],
+      "reason": "Misma denominación genérica de alubia roja, sin variedad ni preparación diferente documentada.",
+      "sources": [
+        "https://www.mapa.gob.es/ministerio/pags/biblioteca/hojas/hd_1948_23.pdf"
+      ],
+      "retiredRecords": [
+        {
+          "canonicalKey": "jud_as_rojas",
+          "sourceCategory": "OTROS",
+          "category": "OTROS",
+          "semanticCategoryKey": "other",
+          "defaultName": "Judías rojas",
+          "allergens": [],
+          "translations": {
+            "es": "Judías rojas"
+          },
+          "aliases": [
+            "Judías rojas"
+          ],
+          "semanticStatus": "NEEDS_REVIEW",
+          "imageStatus": "MISSING",
+          "source": "LEGACY_INGREDIENTS_BASE"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "semillas_de_lino",
+      "retiredCanonicalKeys": [
+        "linaza"
+      ],
+      "reason": "Linaza es el nombre de la semilla de lino; se mantienen linaza molida y dorada por separado.",
+      "sources": [
+        "https://dle.rae.es/linaza"
+      ],
+      "retiredRecords": [
+        {
+          "canonicalKey": "linaza",
+          "sourceCategory": "OTROS",
+          "category": "OTROS",
+          "semanticCategoryKey": "other",
+          "defaultName": "Linaza",
+          "allergens": [],
+          "translations": {
+            "es": "Linaza"
+          },
+          "aliases": [
+            "Linaza"
+          ],
+          "semanticStatus": "NEEDS_REVIEW",
+          "imageStatus": "MISSING",
+          "source": "LEGACY_INGREDIENTS_BASE"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "cayena",
+      "retiredCanonicalKeys": [
+        "pimienta_cayena"
+      ],
+      "reason": "Dos nombres de la misma especia. No se incorpora chile genérico ni otras variedades.",
+      "sources": [
+        "https://dle.rae.es/cayena"
+      ],
+      "retiredRecords": [
+        {
+          "canonicalKey": "pimienta_cayena",
+          "sourceCategory": "HIERBAS_ESPECIAS",
+          "category": "HIERBAS_ESPECIAS",
+          "semanticCategoryKey": "herbs_spices",
+          "defaultName": "Pimienta cayena",
+          "allergens": [],
+          "translations": {
+            "es": "Pimienta cayena"
+          },
+          "aliases": [
+            "Pimienta cayena"
+          ],
+          "semanticStatus": "NEEDS_REVIEW",
+          "imageStatus": "MISSING",
+          "source": "LEGACY_INGREDIENTS_BASE"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "cebolla_roja_de_tropea",
+      "retiredCanonicalKeys": [
+        "cebolla_morada_de_tropea"
+      ],
+      "reason": "Misma cebolla de Tropea, sin diferencia de preparación; roja y morada son variantes de denominación.",
+      "sources": [
+        "https://www.consorziocipollatropeaigp.com/cipolla-rossa-di-tropea-calabria-igp.html"
+      ],
+      "retiredRecords": [
+        {
+          "canonicalKey": "cebolla_morada_de_tropea",
+          "sourceCategory": "VERDURAS",
+          "category": "VERDURAS",
+          "semanticCategoryKey": "vegetables",
+          "defaultName": "Cebolla morada de Tropea",
+          "allergens": [],
+          "translations": {
+            "es": "Cebolla morada de Tropea"
+          },
+          "aliases": [
+            "Cebolla morada de Tropea"
+          ],
+          "semanticStatus": "NEEDS_REVIEW",
+          "imageStatus": "MISSING",
+          "source": "LEGACY_INGREDIENTS_BASE"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "salsa_peri_peri",
+      "retiredCanonicalKeys": [
+        "salsa_piri_piri"
+      ],
+      "reason": "Variantes de escritura de la salsa genérica; ninguna ficha especifica receta, marca o intensidad distinta. No se fusionan formulaciones concretas.",
+      "sources": [
+        "https://dictionary.cambridge.org/us/dictionary/english/peri-peri"
+      ],
+      "retiredRecords": [
+        {
+          "canonicalKey": "salsa_piri_piri",
+          "sourceCategory": "SALSAS_CREMAS",
+          "category": "SALSAS",
+          "semanticCategoryKey": "sauces",
+          "defaultName": "Salsa piri piri",
+          "allergens": [],
+          "translations": {
+            "es": "Salsa piri piri"
+          },
+          "aliases": [
+            "Salsa piri piri"
+          ],
+          "semanticStatus": "NEEDS_REVIEW",
+          "imageStatus": "MISSING",
+          "source": "LEGACY_INGREDIENTS_BASE"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "pimientos_al_vinagre",
+      "retiredCanonicalKeys": [
+        "peperoni_en_vinagre"
+      ],
+      "reason": "Peperoni es el nombre italiano de pimientos; ambas fichas indican la misma preparación en vinagre. No se equipara peperoncino picante ni encurtido sin medio especificado.",
+      "sources": [
+        "https://dictionary.cambridge.org/us/dictionary/italian-english/peperone"
+      ],
+      "retiredRecords": [
+        {
+          "canonicalKey": "peperoni_en_vinagre",
+          "sourceCategory": "VERDURAS",
+          "category": "VERDURAS",
+          "semanticCategoryKey": "vegetables",
+          "defaultName": "Peperoni en vinagre",
+          "allergens": [],
+          "translations": {
+            "es": "Peperoni en vinagre"
+          },
+          "aliases": [
+            "Peperoni en vinagre"
+          ],
+          "semanticStatus": "NEEDS_REVIEW",
+          "imageStatus": "MISSING",
+          "source": "LEGACY_INGREDIENTS_BASE"
+        }
+      ]
+    }
+  ],
+  "reclassified": [
+    {
+      "canonicalKey": "at_n_vegano",
+      "from": "HIERBAS_ESPECIAS",
+      "to": "OTROS",
+      "reason": "Proteína vegetal o preparado; no es una hierba/especia. Se utiliza la categoría existente Otros."
+    },
+    {
+      "canonicalKey": "chorizo_vegetal",
+      "from": "HIERBAS_ESPECIAS",
+      "to": "OTROS",
+      "reason": "Proteína vegetal o preparado; no es una hierba/especia. Se utiliza la categoría existente Otros."
+    },
+    {
+      "canonicalKey": "falafel",
+      "from": "HIERBAS_ESPECIAS",
+      "to": "OTROS",
+      "reason": "Proteína vegetal o preparado; no es una hierba/especia. Se utiliza la categoría existente Otros."
+    },
+    {
+      "canonicalKey": "jackfruit_bbq",
+      "from": "HIERBAS_ESPECIAS",
+      "to": "OTROS",
+      "reason": "Proteína vegetal o preparado; no es una hierba/especia. Se utiliza la categoría existente Otros."
+    },
+    {
+      "canonicalKey": "jackfruit_estilo_pulled_pork",
+      "from": "HIERBAS_ESPECIAS",
+      "to": "OTROS",
+      "reason": "Proteína vegetal o preparado; no es una hierba/especia. Se utiliza la categoría existente Otros."
+    },
+    {
+      "canonicalKey": "jackfruit_pepperoni",
+      "from": "HIERBAS_ESPECIAS",
+      "to": "OTROS",
+      "reason": "Proteína vegetal o preparado; no es una hierba/especia. Se utiliza la categoría existente Otros."
+    },
+    {
+      "canonicalKey": "jam_n_vegano",
+      "from": "HIERBAS_ESPECIAS",
+      "to": "OTROS",
+      "reason": "Proteína vegetal o preparado; no es una hierba/especia. Se utiliza la categoría existente Otros."
+    },
+    {
+      "canonicalKey": "natto",
+      "from": "HIERBAS_ESPECIAS",
+      "to": "OTROS",
+      "reason": "Proteína vegetal o preparado; no es una hierba/especia. Se utiliza la categoría existente Otros."
+    },
+    {
+      "canonicalKey": "pepperoni_de_zanahoria",
+      "from": "HIERBAS_ESPECIAS",
+      "to": "OTROS",
+      "reason": "Proteína vegetal o preparado; no es una hierba/especia. Se utiliza la categoría existente Otros."
+    },
+    {
+      "canonicalKey": "pepperoni_vegetal",
+      "from": "HIERBAS_ESPECIAS",
+      "to": "OTROS",
+      "reason": "Proteína vegetal o preparado; no es una hierba/especia. Se utiliza la categoría existente Otros."
+    },
+    {
+      "canonicalKey": "pepperoni_vegetal_de_guisantes",
+      "from": "HIERBAS_ESPECIAS",
+      "to": "OTROS",
+      "reason": "Proteína vegetal o preparado; no es una hierba/especia. Se utiliza la categoría existente Otros."
+    },
+    {
+      "canonicalKey": "prote_na_de_garbanzo",
+      "from": "HIERBAS_ESPECIAS",
+      "to": "OTROS",
+      "reason": "Proteína vegetal o preparado; no es una hierba/especia. Se utiliza la categoría existente Otros."
+    },
+    {
+      "canonicalKey": "prote_na_de_guisante",
+      "from": "HIERBAS_ESPECIAS",
+      "to": "OTROS",
+      "reason": "Proteína vegetal o preparado; no es una hierba/especia. Se utiliza la categoría existente Otros."
+    },
+    {
+      "canonicalKey": "salami_vegano",
+      "from": "HIERBAS_ESPECIAS",
+      "to": "OTROS",
+      "reason": "Proteína vegetal o preparado; no es una hierba/especia. Se utiliza la categoría existente Otros."
+    },
+    {
+      "canonicalKey": "salchicha_italiana_vegetal",
+      "from": "HIERBAS_ESPECIAS",
+      "to": "OTROS",
+      "reason": "Proteína vegetal o preparado; no es una hierba/especia. Se utiliza la categoría existente Otros."
+    },
+    {
+      "canonicalKey": "seit_n",
+      "from": "HIERBAS_ESPECIAS",
+      "to": "OTROS",
+      "reason": "Proteína vegetal o preparado; no es una hierba/especia. Se utiliza la categoría existente Otros."
+    },
+    {
+      "canonicalKey": "seit_n_ahumado",
+      "from": "HIERBAS_ESPECIAS",
+      "to": "OTROS",
+      "reason": "Proteína vegetal o preparado; no es una hierba/especia. Se utiliza la categoría existente Otros."
+    },
+    {
+      "canonicalKey": "seit_n_estilo_shawarma",
+      "from": "HIERBAS_ESPECIAS",
+      "to": "OTROS",
+      "reason": "Proteína vegetal o preparado; no es una hierba/especia. Se utiliza la categoría existente Otros."
+    },
+    {
+      "canonicalKey": "soja_texturizada",
+      "from": "HIERBAS_ESPECIAS",
+      "to": "OTROS",
+      "reason": "Proteína vegetal o preparado; no es una hierba/especia. Se utiliza la categoría existente Otros."
+    },
+    {
+      "canonicalKey": "tempeh",
+      "from": "HIERBAS_ESPECIAS",
+      "to": "OTROS",
+      "reason": "Proteína vegetal o preparado; no es una hierba/especia. Se utiliza la categoría existente Otros."
+    },
+    {
+      "canonicalKey": "tempeh_ahumado",
+      "from": "HIERBAS_ESPECIAS",
+      "to": "OTROS",
+      "reason": "Proteína vegetal o preparado; no es una hierba/especia. Se utiliza la categoría existente Otros."
+    },
+    {
+      "canonicalKey": "tofu",
+      "from": "HIERBAS_ESPECIAS",
+      "to": "OTROS",
+      "reason": "Proteína vegetal o preparado; no es una hierba/especia. Se utiliza la categoría existente Otros."
+    },
+    {
+      "canonicalKey": "tofu_ahumado",
+      "from": "HIERBAS_ESPECIAS",
+      "to": "OTROS",
+      "reason": "Proteína vegetal o preparado; no es una hierba/especia. Se utiliza la categoría existente Otros."
+    },
+    {
+      "canonicalKey": "tofu_apestoso",
+      "from": "HIERBAS_ESPECIAS",
+      "to": "OTROS",
+      "reason": "Proteína vegetal o preparado; no es una hierba/especia. Se utiliza la categoría existente Otros."
+    },
+    {
+      "canonicalKey": "tofu_de_garbanzo_birmano",
+      "from": "HIERBAS_ESPECIAS",
+      "to": "OTROS",
+      "reason": "Proteína vegetal o preparado; no es una hierba/especia. Se utiliza la categoría existente Otros."
+    },
+    {
+      "canonicalKey": "caracoles_malteses",
+      "from": "CARNES",
+      "to": "OTROS",
+      "reason": "Molusco terrestre; no se clasifica como pescado ni marisco marino."
+    },
+    {
+      "canonicalKey": "escargots_de_bourgogne",
+      "from": "CARNES",
+      "to": "OTROS",
+      "reason": "Molusco terrestre; no se clasifica como pescado ni marisco marino."
+    },
+    {
+      "canonicalKey": "shubat",
+      "from": "CREMAS_DULCES",
+      "to": "OTROS",
+      "reason": "Lácteo fermentado, no crema dulce."
+    },
+    {
+      "canonicalKey": "mermelada_de_tocino",
+      "from": "FRUTAS",
+      "to": "SALSAS",
+      "reason": "Preparado de tocino para acompañar; no fruta."
+    },
+    {
+      "canonicalKey": "at_n_carpaccio",
+      "from": "OTROS",
+      "to": "PESCADOS_Y_MARISCOS",
+      "reason": "Ingrediente de pescado o marisco identificado."
+    },
+    {
+      "canonicalKey": "camar_n_sakura",
+      "from": "OTROS",
+      "to": "PESCADOS_Y_MARISCOS",
+      "reason": "Ingrediente de pescado o marisco identificado."
+    },
+    {
+      "canonicalKey": "pasta_de_anchoas",
+      "from": "OTROS",
+      "to": "PESCADOS_Y_MARISCOS",
+      "reason": "Ingrediente de pescado o marisco identificado."
+    },
+    {
+      "canonicalKey": "pescado_blanco_en_polvo",
+      "from": "OTROS",
+      "to": "PESCADOS_Y_MARISCOS",
+      "reason": "Ingrediente de pescado o marisco identificado."
+    },
+    {
+      "canonicalKey": "queso_crema_de_ajo",
+      "from": "OTROS",
+      "to": "QUESOS",
+      "reason": "Queso crema saborizado."
+    },
+    {
+      "canonicalKey": "cuajo_de_oveja",
+      "from": "QUESOS",
+      "to": "OTROS",
+      "reason": "Ingrediente para elaborar queso, no un queso."
+    },
+    {
+      "canonicalKey": "tomate_datterino",
+      "from": "FRUTAS",
+      "to": "VERDURAS",
+      "reason": "Criterio culinario coherente con los demás tomates."
+    },
+    {
+      "canonicalKey": "tomate_pera",
+      "from": "FRUTAS",
+      "to": "VERDURAS",
+      "reason": "Criterio culinario coherente con los demás tomates."
+    },
+    {
+      "canonicalKey": "chipotle",
+      "from": "SALSAS",
+      "to": "HIERBAS_ESPECIAS",
+      "reason": "Chile seco y ahumado; distinto de salsa de chipotle."
+    }
+  ],
+  "changes": [
+    {
+      "canonicalKey": "aceite_de_s_samo",
+      "before": {
+        "canonicalKey": "aceite_de_s_samo",
+        "sourceCategory": "ACEITES_GRASAS_VINAGRES",
+        "category": "ACEITES_GRASAS_VINAGRES",
+        "semanticCategoryKey": "oils_fats_vinegars",
+        "defaultName": "Aceite de sésamo",
+        "allergens": [
+          "SESAME"
+        ],
+        "translations": {
+          "es": "Aceite de sésamo"
+        },
+        "aliases": [
+          "Aceite de sésamo"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "aceite_de_s_samo",
+        "sourceCategory": "ACEITES_GRASAS_VINAGRES",
+        "category": "ACEITES_GRASAS_VINAGRES",
+        "semanticCategoryKey": "oils_fats_vinegars",
+        "defaultName": "Aceite de sésamo",
+        "allergens": [
+          "SESAME"
+        ],
+        "translations": {
+          "es": "Aceite de sésamo"
+        },
+        "aliases": [
+          "Aceite de sésamo",
+          "Aceite de ajonjolí"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "extracto_de_piment_n",
+      "before": {
+        "canonicalKey": "extracto_de_piment_n",
+        "sourceCategory": "AROMAS_Y_EXTRACTOS",
+        "category": "AROMAS_Y_EXTRACTOS",
+        "semanticCategoryKey": "extras",
+        "defaultName": "Extracto de pimentón",
+        "allergens": [],
+        "translations": {
+          "es": "Extracto de pimentón"
+        },
+        "aliases": [
+          "Extracto de pimentón"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "extracto_de_piment_n",
+        "sourceCategory": "AROMAS_Y_EXTRACTOS",
+        "category": "AROMAS_Y_EXTRACTOS",
+        "semanticCategoryKey": "extras",
+        "defaultName": "Extracto de pimentón",
+        "allergens": [],
+        "translations": {
+          "es": "Extracto de pimentón"
+        },
+        "aliases": [
+          "Extracto de pimentón",
+          "Extracto de paprika"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE",
+        "legacyCanonicalKeys": [
+          "extracto_de_paprika"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "caracoles_malteses",
+      "before": {
+        "canonicalKey": "caracoles_malteses",
+        "sourceCategory": "CARNES",
+        "category": "CARNES",
+        "semanticCategoryKey": "meats",
+        "defaultName": "Caracoles malteses",
+        "allergens": [],
+        "translations": {
+          "es": "Caracoles malteses"
+        },
+        "aliases": [
+          "Caracoles malteses"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "caracoles_malteses",
+        "sourceCategory": "CARNES",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Caracoles malteses",
+        "allergens": [],
+        "translations": {
+          "es": "Caracoles malteses"
+        },
+        "aliases": [
+          "Caracoles malteses"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "carne_molida_de_vacuno",
+      "before": {
+        "canonicalKey": "carne_molida_de_vacuno",
+        "sourceCategory": "CARNES",
+        "category": "CARNES",
+        "semanticCategoryKey": "meats",
+        "defaultName": "Carne molida de vacuno",
+        "allergens": [],
+        "translations": {
+          "es": "Carne molida de vacuno"
+        },
+        "aliases": [
+          "Carne molida de vacuno"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "carne_molida_de_vacuno",
+        "sourceCategory": "CARNES",
+        "category": "CARNES",
+        "semanticCategoryKey": "meats",
+        "defaultName": "Carne molida de vacuno",
+        "allergens": [],
+        "translations": {
+          "es": "Carne molida de vacuno"
+        },
+        "aliases": [
+          "Carne molida de vacuno",
+          "Carne molida de res",
+          "Carne picada de vacuno",
+          "Carne picada de res"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE",
+        "legacyCanonicalKeys": [
+          "carne_molida_de_res"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "escargots_de_bourgogne",
+      "before": {
+        "canonicalKey": "escargots_de_bourgogne",
+        "sourceCategory": "CARNES",
+        "category": "CARNES",
+        "semanticCategoryKey": "meats",
+        "defaultName": "Escargots de Bourgogne",
+        "allergens": [],
+        "translations": {
+          "es": "Escargots de Bourgogne"
+        },
+        "aliases": [
+          "Escargots de Bourgogne"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "escargots_de_bourgogne",
+        "sourceCategory": "CARNES",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Escargots de Bourgogne",
+        "allergens": [],
+        "translations": {
+          "es": "Escargots de Bourgogne"
+        },
+        "aliases": [
+          "Escargots de Bourgogne"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "pork_floss_cerdo_deshebrado_seco",
+      "before": {
+        "canonicalKey": "pork_floss_cerdo_deshebrado_seco",
+        "sourceCategory": "CARNES",
+        "category": "CARNES",
+        "semanticCategoryKey": "meats",
+        "defaultName": "Pork floss / cerdo deshebrado seco",
+        "allergens": [],
+        "translations": {
+          "es": "Pork floss / cerdo deshebrado seco"
+        },
+        "aliases": [
+          "Pork floss / cerdo deshebrado seco"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "pork_floss_cerdo_deshebrado_seco",
+        "sourceCategory": "CARNES",
+        "category": "CARNES",
+        "semanticCategoryKey": "meats",
+        "defaultName": "Cerdo deshebrado seco",
+        "allergens": [],
+        "translations": {
+          "es": "Cerdo deshebrado seco"
+        },
+        "aliases": [
+          "Cerdo deshebrado seco",
+          "Pork floss"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "vacuno",
+      "before": {
+        "canonicalKey": "vacuno",
+        "sourceCategory": "CARNES",
+        "category": "CARNES",
+        "semanticCategoryKey": "meats",
+        "defaultName": "Vacuno",
+        "allergens": [],
+        "translations": {
+          "es": "Vacuno"
+        },
+        "aliases": [
+          "Vacuno"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "vacuno",
+        "sourceCategory": "CARNES",
+        "category": "CARNES",
+        "semanticCategoryKey": "meats",
+        "defaultName": "Carne de vacuno",
+        "allergens": [],
+        "translations": {
+          "es": "Carne de vacuno"
+        },
+        "aliases": [
+          "Carne de vacuno",
+          "Res",
+          "Vacuno",
+          "Carne de res",
+          "Carne bovina"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE",
+        "legacyCanonicalKeys": [
+          "res"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "crema_de_cacahuete",
+      "before": {
+        "canonicalKey": "crema_de_cacahuete",
+        "sourceCategory": "TOPPINGS_DULCES",
+        "category": "CREMAS_DULCES",
+        "semanticCategoryKey": "sweet_creams",
+        "defaultName": "Crema de cacahuete",
+        "allergens": [
+          "PEANUT"
+        ],
+        "translations": {
+          "es": "Crema de cacahuete"
+        },
+        "aliases": [
+          "Crema de cacahuete"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "crema_de_cacahuete",
+        "sourceCategory": "TOPPINGS_DULCES",
+        "category": "CREMAS_DULCES",
+        "semanticCategoryKey": "sweet_creams",
+        "defaultName": "Crema de cacahuete",
+        "allergens": [
+          "PEANUT"
+        ],
+        "translations": {
+          "es": "Crema de cacahuete"
+        },
+        "aliases": [
+          "Crema de cacahuete",
+          "Crema de maní",
+          "Crema de cacahuate"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "shubat",
+      "before": {
+        "canonicalKey": "shubat",
+        "sourceCategory": "SALSAS_CREMAS",
+        "category": "CREMAS_DULCES",
+        "semanticCategoryKey": "sweet_creams",
+        "defaultName": "Shubat",
+        "allergens": [
+          "LACTOSE"
+        ],
+        "translations": {
+          "es": "Shubat"
+        },
+        "aliases": [
+          "Shubat"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "shubat",
+        "sourceCategory": "SALSAS_CREMAS",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Shubat",
+        "allergens": [
+          "LACTOSE"
+        ],
+        "translations": {
+          "es": "Shubat"
+        },
+        "aliases": [
+          "Shubat"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "boczek_bacon_polaco_ahumado",
+      "before": {
+        "canonicalKey": "boczek_bacon_polaco_ahumado",
+        "sourceCategory": "EMBUTIDOS",
+        "category": "EMBUTIDOS",
+        "semanticCategoryKey": "cured_meats",
+        "defaultName": "Boczek / bacon polaco ahumado",
+        "allergens": [],
+        "translations": {
+          "es": "Boczek / bacon polaco ahumado"
+        },
+        "aliases": [
+          "Boczek / bacon polaco ahumado"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "boczek_bacon_polaco_ahumado",
+        "sourceCategory": "EMBUTIDOS",
+        "category": "EMBUTIDOS",
+        "semanticCategoryKey": "cured_meats",
+        "defaultName": "Boczek",
+        "allergens": [],
+        "translations": {
+          "es": "Boczek"
+        },
+        "aliases": [
+          "Boczek",
+          "Bacon polaco ahumado"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "coppa_capocollo",
+      "before": {
+        "canonicalKey": "coppa_capocollo",
+        "sourceCategory": "EMBUTIDOS",
+        "category": "EMBUTIDOS",
+        "semanticCategoryKey": "cured_meats",
+        "defaultName": "Coppa / Capocollo",
+        "allergens": [
+          "SULFITES"
+        ],
+        "translations": {
+          "es": "Coppa / Capocollo"
+        },
+        "aliases": [
+          "Coppa / Capocollo"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "coppa_capocollo",
+        "sourceCategory": "EMBUTIDOS",
+        "category": "EMBUTIDOS",
+        "semanticCategoryKey": "cured_meats",
+        "defaultName": "Coppa",
+        "allergens": [
+          "SULFITES"
+        ],
+        "translations": {
+          "es": "Coppa"
+        },
+        "aliases": [
+          "Coppa",
+          "Capocollo"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "kazy_salchicha_de_caballo",
+      "before": {
+        "canonicalKey": "kazy_salchicha_de_caballo",
+        "sourceCategory": "EMBUTIDOS",
+        "category": "EMBUTIDOS",
+        "semanticCategoryKey": "cured_meats",
+        "defaultName": "Kazy / salchicha de caballo",
+        "allergens": [],
+        "translations": {
+          "es": "Kazy / salchicha de caballo"
+        },
+        "aliases": [
+          "Kazy / salchicha de caballo"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "kazy_salchicha_de_caballo",
+        "sourceCategory": "EMBUTIDOS",
+        "category": "EMBUTIDOS",
+        "semanticCategoryKey": "cured_meats",
+        "defaultName": "Kazy",
+        "allergens": [],
+        "translations": {
+          "es": "Kazy"
+        },
+        "aliases": [
+          "Kazy",
+          "Salchicha de caballo kazy"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "longganisa_salchicha_dulce_filipina",
+      "before": {
+        "canonicalKey": "longganisa_salchicha_dulce_filipina",
+        "sourceCategory": "EMBUTIDOS",
+        "category": "EMBUTIDOS",
+        "semanticCategoryKey": "cured_meats",
+        "defaultName": "Longganisa / salchicha dulce filipina",
+        "allergens": [],
+        "translations": {
+          "es": "Longganisa / salchicha dulce filipina"
+        },
+        "aliases": [
+          "Longganisa / salchicha dulce filipina"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "longganisa_salchicha_dulce_filipina",
+        "sourceCategory": "EMBUTIDOS",
+        "category": "EMBUTIDOS",
+        "semanticCategoryKey": "cured_meats",
+        "defaultName": "Longganisa",
+        "allergens": [],
+        "translations": {
+          "es": "Longganisa"
+        },
+        "aliases": [
+          "Longganisa",
+          "Salchicha dulce filipina"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "njeguaki_praut_jam_n_ahumado_de_njegua",
+      "before": {
+        "canonicalKey": "njeguaki_praut_jam_n_ahumado_de_njegua",
+        "sourceCategory": "EMBUTIDOS",
+        "category": "EMBUTIDOS",
+        "semanticCategoryKey": "cured_meats",
+        "defaultName": "Njeguški pršut / jamón ahumado de Njeguši",
+        "allergens": [],
+        "translations": {
+          "es": "Njeguški pršut / jamón ahumado de Njeguši"
+        },
+        "aliases": [
+          "Njeguški pršut / jamón ahumado de Njeguši"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "njeguaki_praut_jam_n_ahumado_de_njegua",
+        "sourceCategory": "EMBUTIDOS",
+        "category": "EMBUTIDOS",
+        "semanticCategoryKey": "cured_meats",
+        "defaultName": "Njeguški pršut",
+        "allergens": [],
+        "translations": {
+          "es": "Njeguški pršut"
+        },
+        "aliases": [
+          "Njeguški pršut",
+          "Jamón ahumado de Njeguši"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "sucuk_sujuk",
+      "before": {
+        "canonicalKey": "sucuk_sujuk",
+        "sourceCategory": "EMBUTIDOS",
+        "category": "EMBUTIDOS",
+        "semanticCategoryKey": "cured_meats",
+        "defaultName": "Sucuk / Sujuk",
+        "allergens": [
+          "CELERY",
+          "MUSTARD",
+          "SULFITES"
+        ],
+        "translations": {
+          "es": "Sucuk / Sujuk"
+        },
+        "aliases": [
+          "Sucuk / Sujuk"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "sucuk_sujuk",
+        "sourceCategory": "EMBUTIDOS",
+        "category": "EMBUTIDOS",
+        "semanticCategoryKey": "cured_meats",
+        "defaultName": "Sucuk",
+        "allergens": [
+          "CELERY",
+          "MUSTARD",
+          "SULFITES"
+        ],
+        "translations": {
+          "es": "Sucuk"
+        },
+        "aliases": [
+          "Sucuk",
+          "Sujuk"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "albaricoque",
+      "before": {
+        "canonicalKey": "albaricoque",
+        "sourceCategory": "FRUTAS",
+        "category": "FRUTAS",
+        "semanticCategoryKey": "fruits",
+        "defaultName": "Albaricoque",
+        "allergens": [],
+        "translations": {
+          "es": "Albaricoque"
+        },
+        "aliases": [
+          "Albaricoque"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "albaricoque",
+        "sourceCategory": "FRUTAS",
+        "category": "FRUTAS",
+        "semanticCategoryKey": "fruits",
+        "defaultName": "Albaricoque",
+        "allergens": [],
+        "translations": {
+          "es": "Albaricoque"
+        },
+        "aliases": [
+          "Albaricoque",
+          "Damasco",
+          "Chabacano"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "albaricoque_seco",
+      "before": {
+        "canonicalKey": "albaricoque_seco",
+        "sourceCategory": "FRUTAS",
+        "category": "FRUTAS",
+        "semanticCategoryKey": "fruits",
+        "defaultName": "Albaricoque seco",
+        "allergens": [],
+        "translations": {
+          "es": "Albaricoque seco"
+        },
+        "aliases": [
+          "Albaricoque seco"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "albaricoque_seco",
+        "sourceCategory": "FRUTAS",
+        "category": "FRUTAS",
+        "semanticCategoryKey": "fruits",
+        "defaultName": "Albaricoque seco",
+        "allergens": [],
+        "translations": {
+          "es": "Albaricoque seco"
+        },
+        "aliases": [
+          "Albaricoque seco",
+          "Damasco seco",
+          "Chabacano seco"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "melocot_n",
+      "before": {
+        "canonicalKey": "melocot_n",
+        "sourceCategory": "FRUTAS",
+        "category": "FRUTAS",
+        "semanticCategoryKey": "fruits",
+        "defaultName": "Melocotón",
+        "allergens": [],
+        "translations": {
+          "es": "Melocotón"
+        },
+        "aliases": [
+          "Melocotón"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "melocot_n",
+        "sourceCategory": "FRUTAS",
+        "category": "FRUTAS",
+        "semanticCategoryKey": "fruits",
+        "defaultName": "Melocotón",
+        "allergens": [],
+        "translations": {
+          "es": "Melocotón"
+        },
+        "aliases": [
+          "Melocotón",
+          "Durazno"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "mermelada_de_tocino",
+      "before": {
+        "canonicalKey": "mermelada_de_tocino",
+        "sourceCategory": "TOPPINGS_DULCES",
+        "category": "FRUTAS",
+        "semanticCategoryKey": "fruits",
+        "defaultName": "Mermelada de tocino",
+        "allergens": [],
+        "translations": {
+          "es": "Mermelada de tocino"
+        },
+        "aliases": [
+          "Mermelada de tocino"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "mermelada_de_tocino",
+        "sourceCategory": "TOPPINGS_DULCES",
+        "category": "SALSAS",
+        "semanticCategoryKey": "sauces",
+        "defaultName": "Mermelada de tocino",
+        "allergens": [],
+        "translations": {
+          "es": "Mermelada de tocino"
+        },
+        "aliases": [
+          "Mermelada de tocino"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "pi_a",
+      "before": {
+        "canonicalKey": "pi_a",
+        "sourceCategory": "FRUTAS",
+        "category": "FRUTAS",
+        "semanticCategoryKey": "fruits",
+        "defaultName": "Piña",
+        "allergens": [],
+        "translations": {
+          "es": "Piña"
+        },
+        "aliases": [
+          "Piña"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "pi_a",
+        "sourceCategory": "FRUTAS",
+        "category": "FRUTAS",
+        "semanticCategoryKey": "fruits",
+        "defaultName": "Piña",
+        "allergens": [],
+        "translations": {
+          "es": "Piña"
+        },
+        "aliases": [
+          "Piña",
+          "Ananá",
+          "Ananás"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "pi_a_caramelizada",
+      "before": {
+        "canonicalKey": "pi_a_caramelizada",
+        "sourceCategory": "FRUTAS",
+        "category": "FRUTAS",
+        "semanticCategoryKey": "fruits",
+        "defaultName": "Piña caramelizada",
+        "allergens": [],
+        "translations": {
+          "es": "Piña caramelizada"
+        },
+        "aliases": [
+          "Piña caramelizada"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "pi_a_caramelizada",
+        "sourceCategory": "FRUTAS",
+        "category": "FRUTAS",
+        "semanticCategoryKey": "fruits",
+        "defaultName": "Piña caramelizada",
+        "allergens": [],
+        "translations": {
+          "es": "Piña caramelizada"
+        },
+        "aliases": [
+          "Piña caramelizada",
+          "Ananá caramelizado",
+          "Ananás caramelizado"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "pi_a_encurtida",
+      "before": {
+        "canonicalKey": "pi_a_encurtida",
+        "sourceCategory": "FRUTAS",
+        "category": "FRUTAS",
+        "semanticCategoryKey": "fruits",
+        "defaultName": "Piña encurtida",
+        "allergens": [],
+        "translations": {
+          "es": "Piña encurtida"
+        },
+        "aliases": [
+          "Piña encurtida"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "pi_a_encurtida",
+        "sourceCategory": "FRUTAS",
+        "category": "FRUTAS",
+        "semanticCategoryKey": "fruits",
+        "defaultName": "Piña encurtida",
+        "allergens": [],
+        "translations": {
+          "es": "Piña encurtida"
+        },
+        "aliases": [
+          "Piña encurtida",
+          "Ananá encurtido",
+          "Ananás encurtido"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "tomate_datterino",
+      "before": {
+        "canonicalKey": "tomate_datterino",
+        "sourceCategory": "FRUTAS",
+        "category": "FRUTAS",
+        "semanticCategoryKey": "fruits",
+        "defaultName": "Tomate datterino",
+        "allergens": [],
+        "translations": {
+          "es": "Tomate datterino"
+        },
+        "aliases": [
+          "Tomate datterino"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "tomate_datterino",
+        "sourceCategory": "FRUTAS",
+        "category": "VERDURAS",
+        "semanticCategoryKey": "vegetables",
+        "defaultName": "Tomate datterino",
+        "allergens": [],
+        "translations": {
+          "es": "Tomate datterino"
+        },
+        "aliases": [
+          "Tomate datterino"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "tomate_pera",
+      "before": {
+        "canonicalKey": "tomate_pera",
+        "sourceCategory": "FRUTAS",
+        "category": "FRUTAS",
+        "semanticCategoryKey": "fruits",
+        "defaultName": "Tomate pera",
+        "allergens": [],
+        "translations": {
+          "es": "Tomate pera"
+        },
+        "aliases": [
+          "Tomate pera"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "tomate_pera",
+        "sourceCategory": "FRUTAS",
+        "category": "VERDURAS",
+        "semanticCategoryKey": "vegetables",
+        "defaultName": "Tomate pera",
+        "allergens": [],
+        "translations": {
+          "es": "Tomate pera"
+        },
+        "aliases": [
+          "Tomate pera"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "at_n_vegano",
+      "before": {
+        "canonicalKey": "at_n_vegano",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "HIERBAS_ESPECIAS",
+        "semanticCategoryKey": "herbs_spices",
+        "defaultName": "Atún vegano",
+        "allergens": [
+          "SOY"
+        ],
+        "translations": {
+          "es": "Atún vegano"
+        },
+        "aliases": [
+          "Atún vegano"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "at_n_vegano",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Atún vegano",
+        "allergens": [
+          "SOY"
+        ],
+        "translations": {
+          "es": "Atún vegano"
+        },
+        "aliases": [
+          "Atún vegano"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "cayena",
+      "before": {
+        "canonicalKey": "cayena",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "HIERBAS_ESPECIAS",
+        "semanticCategoryKey": "herbs_spices",
+        "defaultName": "Cayena",
+        "allergens": [],
+        "translations": {
+          "es": "Cayena"
+        },
+        "aliases": [
+          "Cayena"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "cayena",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "HIERBAS_ESPECIAS",
+        "semanticCategoryKey": "herbs_spices",
+        "defaultName": "Cayena",
+        "allergens": [],
+        "translations": {
+          "es": "Cayena"
+        },
+        "aliases": [
+          "Cayena",
+          "Pimienta cayena",
+          "Pimienta de Cayena"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE",
+        "legacyCanonicalKeys": [
+          "pimienta_cayena"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "chorizo_vegetal",
+      "before": {
+        "canonicalKey": "chorizo_vegetal",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "HIERBAS_ESPECIAS",
+        "semanticCategoryKey": "herbs_spices",
+        "defaultName": "Chorizo vegetal",
+        "allergens": [],
+        "translations": {
+          "es": "Chorizo vegetal"
+        },
+        "aliases": [
+          "Chorizo vegetal"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "chorizo_vegetal",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Chorizo vegetal",
+        "allergens": [],
+        "translations": {
+          "es": "Chorizo vegetal"
+        },
+        "aliases": [
+          "Chorizo vegetal"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "falafel",
+      "before": {
+        "canonicalKey": "falafel",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "HIERBAS_ESPECIAS",
+        "semanticCategoryKey": "herbs_spices",
+        "defaultName": "Falafel",
+        "allergens": [
+          "GLUTEN"
+        ],
+        "translations": {
+          "es": "Falafel"
+        },
+        "aliases": [
+          "Falafel"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "falafel",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Falafel",
+        "allergens": [
+          "GLUTEN"
+        ],
+        "translations": {
+          "es": "Falafel"
+        },
+        "aliases": [
+          "Falafel"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "jackfruit_bbq",
+      "before": {
+        "canonicalKey": "jackfruit_bbq",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "HIERBAS_ESPECIAS",
+        "semanticCategoryKey": "herbs_spices",
+        "defaultName": "Yaca a la barbacoa",
+        "allergens": [],
+        "translations": {
+          "es": "Yaca a la barbacoa"
+        },
+        "aliases": [
+          "Yaca a la barbacoa",
+          "Jackfruit BBQ"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "jackfruit_bbq",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Yaca a la barbacoa",
+        "allergens": [],
+        "translations": {
+          "es": "Yaca a la barbacoa"
+        },
+        "aliases": [
+          "Yaca a la barbacoa",
+          "Jackfruit BBQ"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "jackfruit_estilo_pulled_pork",
+      "before": {
+        "canonicalKey": "jackfruit_estilo_pulled_pork",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "HIERBAS_ESPECIAS",
+        "semanticCategoryKey": "herbs_spices",
+        "defaultName": "Yaca estilo pulled pork",
+        "allergens": [],
+        "translations": {
+          "es": "Yaca estilo pulled pork"
+        },
+        "aliases": [
+          "Yaca estilo pulled pork",
+          "Jackfruit estilo pulled pork"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "jackfruit_estilo_pulled_pork",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Yaca estilo pulled pork",
+        "allergens": [],
+        "translations": {
+          "es": "Yaca estilo pulled pork"
+        },
+        "aliases": [
+          "Yaca estilo pulled pork",
+          "Jackfruit estilo pulled pork"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "jackfruit_pepperoni",
+      "before": {
+        "canonicalKey": "jackfruit_pepperoni",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "HIERBAS_ESPECIAS",
+        "semanticCategoryKey": "herbs_spices",
+        "defaultName": "Pepperoni de yaca",
+        "allergens": [],
+        "translations": {
+          "es": "Pepperoni de yaca"
+        },
+        "aliases": [
+          "Pepperoni de yaca",
+          "Jackfruit pepperoni"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "jackfruit_pepperoni",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Pepperoni de yaca",
+        "allergens": [],
+        "translations": {
+          "es": "Pepperoni de yaca"
+        },
+        "aliases": [
+          "Pepperoni de yaca",
+          "Jackfruit pepperoni"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "jam_n_vegano",
+      "before": {
+        "canonicalKey": "jam_n_vegano",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "HIERBAS_ESPECIAS",
+        "semanticCategoryKey": "herbs_spices",
+        "defaultName": "Jamón vegano",
+        "allergens": [],
+        "translations": {
+          "es": "Jamón vegano"
+        },
+        "aliases": [
+          "Jamón vegano"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "jam_n_vegano",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Jamón vegano",
+        "allergens": [],
+        "translations": {
+          "es": "Jamón vegano"
+        },
+        "aliases": [
+          "Jamón vegano"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "natto",
+      "before": {
+        "canonicalKey": "natto",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "HIERBAS_ESPECIAS",
+        "semanticCategoryKey": "herbs_spices",
+        "defaultName": "Natto",
+        "allergens": [
+          "SOY"
+        ],
+        "translations": {
+          "es": "Natto"
+        },
+        "aliases": [
+          "Natto"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "natto",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Natto",
+        "allergens": [
+          "SOY"
+        ],
+        "translations": {
+          "es": "Natto"
+        },
+        "aliases": [
+          "Natto"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "pepperoni_de_zanahoria",
+      "before": {
+        "canonicalKey": "pepperoni_de_zanahoria",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "HIERBAS_ESPECIAS",
+        "semanticCategoryKey": "herbs_spices",
+        "defaultName": "Pepperoni de zanahoria",
+        "allergens": [],
+        "translations": {
+          "es": "Pepperoni de zanahoria"
+        },
+        "aliases": [
+          "Pepperoni de zanahoria"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "pepperoni_de_zanahoria",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Pepperoni de zanahoria",
+        "allergens": [],
+        "translations": {
+          "es": "Pepperoni de zanahoria"
+        },
+        "aliases": [
+          "Pepperoni de zanahoria"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "pepperoni_vegetal",
+      "before": {
+        "canonicalKey": "pepperoni_vegetal",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "HIERBAS_ESPECIAS",
+        "semanticCategoryKey": "herbs_spices",
+        "defaultName": "Pepperoni vegetal",
+        "allergens": [],
+        "translations": {
+          "es": "Pepperoni vegetal"
+        },
+        "aliases": [
+          "Pepperoni vegetal"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "pepperoni_vegetal",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Pepperoni vegetal",
+        "allergens": [],
+        "translations": {
+          "es": "Pepperoni vegetal"
+        },
+        "aliases": [
+          "Pepperoni vegetal"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "pepperoni_vegetal_de_guisantes",
+      "before": {
+        "canonicalKey": "pepperoni_vegetal_de_guisantes",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "HIERBAS_ESPECIAS",
+        "semanticCategoryKey": "herbs_spices",
+        "defaultName": "Pepperoni vegetal de guisantes",
+        "allergens": [
+          "SOY"
+        ],
+        "translations": {
+          "es": "Pepperoni vegetal de guisantes"
+        },
+        "aliases": [
+          "Pepperoni vegetal de guisantes"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "pepperoni_vegetal_de_guisantes",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Pepperoni vegetal de guisantes",
+        "allergens": [
+          "SOY"
+        ],
+        "translations": {
+          "es": "Pepperoni vegetal de guisantes"
+        },
+        "aliases": [
+          "Pepperoni vegetal de guisantes"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "piment_n_picante_paprika",
+      "before": {
+        "canonicalKey": "piment_n_picante_paprika",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "HIERBAS_ESPECIAS",
+        "semanticCategoryKey": "herbs_spices",
+        "defaultName": "Pimentón picante / paprika",
+        "allergens": [],
+        "translations": {
+          "es": "Pimentón picante / paprika"
+        },
+        "aliases": [
+          "Pimentón picante / paprika"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "piment_n_picante_paprika",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "HIERBAS_ESPECIAS",
+        "semanticCategoryKey": "herbs_spices",
+        "defaultName": "Pimentón picante",
+        "allergens": [],
+        "translations": {
+          "es": "Pimentón picante"
+        },
+        "aliases": [
+          "Pimentón picante",
+          "Paprika picante"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "piment_n_picante_paprika_ahumado",
+      "before": {
+        "canonicalKey": "piment_n_picante_paprika_ahumado",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "HIERBAS_ESPECIAS",
+        "semanticCategoryKey": "herbs_spices",
+        "defaultName": "Pimentón picante ahumado / paprika ahumada",
+        "allergens": [],
+        "translations": {
+          "es": "Pimentón picante ahumado / paprika ahumada"
+        },
+        "aliases": [
+          "Pimentón picante ahumado / paprika ahumada"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "piment_n_picante_paprika_ahumado",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "HIERBAS_ESPECIAS",
+        "semanticCategoryKey": "herbs_spices",
+        "defaultName": "Pimentón picante ahumado",
+        "allergens": [],
+        "translations": {
+          "es": "Pimentón picante ahumado"
+        },
+        "aliases": [
+          "Pimentón picante ahumado",
+          "Paprika picante ahumada"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "prote_na_de_garbanzo",
+      "before": {
+        "canonicalKey": "prote_na_de_garbanzo",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "HIERBAS_ESPECIAS",
+        "semanticCategoryKey": "herbs_spices",
+        "defaultName": "Proteína de garbanzo",
+        "allergens": [],
+        "translations": {
+          "es": "Proteína de garbanzo"
+        },
+        "aliases": [
+          "Proteína de garbanzo"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "prote_na_de_garbanzo",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Proteína de garbanzo",
+        "allergens": [],
+        "translations": {
+          "es": "Proteína de garbanzo"
+        },
+        "aliases": [
+          "Proteína de garbanzo"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "prote_na_de_guisante",
+      "before": {
+        "canonicalKey": "prote_na_de_guisante",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "HIERBAS_ESPECIAS",
+        "semanticCategoryKey": "herbs_spices",
+        "defaultName": "Proteína de guisante",
+        "allergens": [],
+        "translations": {
+          "es": "Proteína de guisante"
+        },
+        "aliases": [
+          "Proteína de guisante"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "prote_na_de_guisante",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Proteína de guisante",
+        "allergens": [],
+        "translations": {
+          "es": "Proteína de guisante"
+        },
+        "aliases": [
+          "Proteína de guisante"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "salami_vegano",
+      "before": {
+        "canonicalKey": "salami_vegano",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "HIERBAS_ESPECIAS",
+        "semanticCategoryKey": "herbs_spices",
+        "defaultName": "Salami vegano",
+        "allergens": [],
+        "translations": {
+          "es": "Salami vegano"
+        },
+        "aliases": [
+          "Salami vegano"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "salami_vegano",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Salami vegano",
+        "allergens": [],
+        "translations": {
+          "es": "Salami vegano"
+        },
+        "aliases": [
+          "Salami vegano"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "salchicha_italiana_vegetal",
+      "before": {
+        "canonicalKey": "salchicha_italiana_vegetal",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "HIERBAS_ESPECIAS",
+        "semanticCategoryKey": "herbs_spices",
+        "defaultName": "Salchicha italiana vegetal",
+        "allergens": [],
+        "translations": {
+          "es": "Salchicha italiana vegetal"
+        },
+        "aliases": [
+          "Salchicha italiana vegetal"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "salchicha_italiana_vegetal",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Salchicha italiana vegetal",
+        "allergens": [],
+        "translations": {
+          "es": "Salchicha italiana vegetal"
+        },
+        "aliases": [
+          "Salchicha italiana vegetal"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "seit_n",
+      "before": {
+        "canonicalKey": "seit_n",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "HIERBAS_ESPECIAS",
+        "semanticCategoryKey": "herbs_spices",
+        "defaultName": "Seitán",
+        "allergens": [
+          "GLUTEN"
+        ],
+        "translations": {
+          "es": "Seitán"
+        },
+        "aliases": [
+          "Seitán"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "seit_n",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Seitán",
+        "allergens": [
+          "GLUTEN"
+        ],
+        "translations": {
+          "es": "Seitán"
+        },
+        "aliases": [
+          "Seitán"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "seit_n_ahumado",
+      "before": {
+        "canonicalKey": "seit_n_ahumado",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "HIERBAS_ESPECIAS",
+        "semanticCategoryKey": "herbs_spices",
+        "defaultName": "Seitán ahumado",
+        "allergens": [
+          "GLUTEN"
+        ],
+        "translations": {
+          "es": "Seitán ahumado"
+        },
+        "aliases": [
+          "Seitán ahumado"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "seit_n_ahumado",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Seitán ahumado",
+        "allergens": [
+          "GLUTEN"
+        ],
+        "translations": {
+          "es": "Seitán ahumado"
+        },
+        "aliases": [
+          "Seitán ahumado"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "seit_n_estilo_shawarma",
+      "before": {
+        "canonicalKey": "seit_n_estilo_shawarma",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "HIERBAS_ESPECIAS",
+        "semanticCategoryKey": "herbs_spices",
+        "defaultName": "Seitán estilo shawarma",
+        "allergens": [
+          "GLUTEN"
+        ],
+        "translations": {
+          "es": "Seitán estilo shawarma"
+        },
+        "aliases": [
+          "Seitán estilo shawarma"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "seit_n_estilo_shawarma",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Seitán estilo shawarma",
+        "allergens": [
+          "GLUTEN"
+        ],
+        "translations": {
+          "es": "Seitán estilo shawarma"
+        },
+        "aliases": [
+          "Seitán estilo shawarma"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "soja_texturizada",
+      "before": {
+        "canonicalKey": "soja_texturizada",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "HIERBAS_ESPECIAS",
+        "semanticCategoryKey": "herbs_spices",
+        "defaultName": "Soja texturizada",
+        "allergens": [
+          "SOY"
+        ],
+        "translations": {
+          "es": "Soja texturizada"
+        },
+        "aliases": [
+          "Soja texturizada"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "soja_texturizada",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Soja texturizada",
+        "allergens": [
+          "SOY"
+        ],
+        "translations": {
+          "es": "Soja texturizada"
+        },
+        "aliases": [
+          "Soja texturizada"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "tempeh",
+      "before": {
+        "canonicalKey": "tempeh",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "HIERBAS_ESPECIAS",
+        "semanticCategoryKey": "herbs_spices",
+        "defaultName": "Tempeh",
+        "allergens": [
+          "SOY"
+        ],
+        "translations": {
+          "es": "Tempeh"
+        },
+        "aliases": [
+          "Tempeh"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "tempeh",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Tempeh",
+        "allergens": [
+          "SOY"
+        ],
+        "translations": {
+          "es": "Tempeh"
+        },
+        "aliases": [
+          "Tempeh"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "tempeh_ahumado",
+      "before": {
+        "canonicalKey": "tempeh_ahumado",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "HIERBAS_ESPECIAS",
+        "semanticCategoryKey": "herbs_spices",
+        "defaultName": "Tempeh ahumado",
+        "allergens": [
+          "SOY"
+        ],
+        "translations": {
+          "es": "Tempeh ahumado"
+        },
+        "aliases": [
+          "Tempeh ahumado"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "tempeh_ahumado",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Tempeh ahumado",
+        "allergens": [
+          "SOY"
+        ],
+        "translations": {
+          "es": "Tempeh ahumado"
+        },
+        "aliases": [
+          "Tempeh ahumado"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "tofu",
+      "before": {
+        "canonicalKey": "tofu",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "HIERBAS_ESPECIAS",
+        "semanticCategoryKey": "herbs_spices",
+        "defaultName": "Tofu",
+        "allergens": [
+          "SOY"
+        ],
+        "translations": {
+          "es": "Tofu"
+        },
+        "aliases": [
+          "Tofu"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "tofu",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Tofu",
+        "allergens": [
+          "SOY"
+        ],
+        "translations": {
+          "es": "Tofu"
+        },
+        "aliases": [
+          "Tofu"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "tofu_ahumado",
+      "before": {
+        "canonicalKey": "tofu_ahumado",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "HIERBAS_ESPECIAS",
+        "semanticCategoryKey": "herbs_spices",
+        "defaultName": "Tofu ahumado",
+        "allergens": [
+          "SOY"
+        ],
+        "translations": {
+          "es": "Tofu ahumado"
+        },
+        "aliases": [
+          "Tofu ahumado"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "tofu_ahumado",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Tofu ahumado",
+        "allergens": [
+          "SOY"
+        ],
+        "translations": {
+          "es": "Tofu ahumado"
+        },
+        "aliases": [
+          "Tofu ahumado"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "tofu_apestoso",
+      "before": {
+        "canonicalKey": "tofu_apestoso",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "HIERBAS_ESPECIAS",
+        "semanticCategoryKey": "herbs_spices",
+        "defaultName": "Tofu apestoso",
+        "allergens": [
+          "SOY"
+        ],
+        "translations": {
+          "es": "Tofu apestoso"
+        },
+        "aliases": [
+          "Tofu apestoso"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "tofu_apestoso",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Tofu apestoso",
+        "allergens": [
+          "SOY"
+        ],
+        "translations": {
+          "es": "Tofu apestoso"
+        },
+        "aliases": [
+          "Tofu apestoso"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "tofu_de_garbanzo_birmano",
+      "before": {
+        "canonicalKey": "tofu_de_garbanzo_birmano",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "HIERBAS_ESPECIAS",
+        "semanticCategoryKey": "herbs_spices",
+        "defaultName": "Tofu de garbanzo birmano",
+        "allergens": [],
+        "translations": {
+          "es": "Tofu de garbanzo birmano"
+        },
+        "aliases": [
+          "Tofu de garbanzo birmano"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "tofu_de_garbanzo_birmano",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Tofu de garbanzo birmano",
+        "allergens": [],
+        "translations": {
+          "es": "Tofu de garbanzo birmano"
+        },
+        "aliases": [
+          "Tofu de garbanzo birmano"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "tomate_bush",
+      "before": {
+        "canonicalKey": "tomate_bush",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "HIERBAS_ESPECIAS",
+        "semanticCategoryKey": "herbs_spices",
+        "defaultName": "Tomate Bush",
+        "allergens": [],
+        "translations": {
+          "es": "Tomate Bush"
+        },
+        "aliases": [
+          "Tomate Bush"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "tomate_bush",
+        "sourceCategory": "HIERBAS_ESPECIAS",
+        "category": "HIERBAS_ESPECIAS",
+        "semanticCategoryKey": "herbs_spices",
+        "defaultName": "Tomate del desierto",
+        "allergens": [],
+        "translations": {
+          "es": "Tomate del desierto"
+        },
+        "aliases": [
+          "Tomate del desierto",
+          "Bush tomato",
+          "Tomate Bush"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "alubias_rojas",
+      "before": {
+        "canonicalKey": "alubias_rojas",
+        "sourceCategory": "OTROS",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Alubias rojas",
+        "allergens": [],
+        "translations": {
+          "es": "Alubias rojas"
+        },
+        "aliases": [
+          "Alubias rojas"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "alubias_rojas",
+        "sourceCategory": "OTROS",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Alubias rojas",
+        "allergens": [],
+        "translations": {
+          "es": "Alubias rojas"
+        },
+        "aliases": [
+          "Alubias rojas",
+          "Judías rojas",
+          "Frijoles rojos",
+          "Porotos rojos"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE",
+        "legacyCanonicalKeys": [
+          "jud_as_rojas"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "anacardos",
+      "before": {
+        "canonicalKey": "anacardos",
+        "sourceCategory": "FRUTOS_SECOS_Y_SEMILLAS",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Anacardos",
+        "allergens": [
+          "NUTS"
+        ],
+        "translations": {
+          "es": "Anacardos"
+        },
+        "aliases": [
+          "Anacardos"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "anacardos",
+        "sourceCategory": "FRUTOS_SECOS_Y_SEMILLAS",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Anacardos",
+        "allergens": [
+          "NUTS"
+        ],
+        "translations": {
+          "es": "Anacardos"
+        },
+        "aliases": [
+          "Anacardos",
+          "Nueces de cajú",
+          "Castañas de cajú",
+          "Nueces de marañón"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "at_n_carpaccio",
+      "before": {
+        "canonicalKey": "at_n_carpaccio",
+        "sourceCategory": "OTROS",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Carpaccio de atún",
+        "allergens": [],
+        "translations": {
+          "es": "Carpaccio de atún"
+        },
+        "aliases": [
+          "Carpaccio de atún"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "at_n_carpaccio",
+        "sourceCategory": "OTROS",
+        "category": "PESCADOS_Y_MARISCOS",
+        "semanticCategoryKey": "seafood",
+        "defaultName": "Carpaccio de atún",
+        "allergens": [],
+        "translations": {
+          "es": "Carpaccio de atún"
+        },
+        "aliases": [
+          "Carpaccio de atún"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "cacahuete_man",
+      "before": {
+        "canonicalKey": "cacahuete_man",
+        "sourceCategory": "FRUTOS_SECOS_Y_SEMILLAS",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Cacahuete / maní",
+        "allergens": [
+          "PEANUT"
+        ],
+        "translations": {
+          "es": "Cacahuete / maní"
+        },
+        "aliases": [
+          "Cacahuete / maní"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "cacahuete_man",
+        "sourceCategory": "FRUTOS_SECOS_Y_SEMILLAS",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Cacahuete",
+        "allergens": [
+          "PEANUT"
+        ],
+        "translations": {
+          "es": "Cacahuete"
+        },
+        "aliases": [
+          "Cacahuete",
+          "Maní",
+          "Cacahuate"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "camar_n_sakura",
+      "before": {
+        "canonicalKey": "camar_n_sakura",
+        "sourceCategory": "OTROS",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Camarón sakura",
+        "allergens": [
+          "SHELLFISH"
+        ],
+        "translations": {
+          "es": "Camarón sakura"
+        },
+        "aliases": [
+          "Camarón sakura"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "camar_n_sakura",
+        "sourceCategory": "OTROS",
+        "category": "PESCADOS_Y_MARISCOS",
+        "semanticCategoryKey": "seafood",
+        "defaultName": "Camarón sakura",
+        "allergens": [
+          "SHELLFISH"
+        ],
+        "translations": {
+          "es": "Camarón sakura"
+        },
+        "aliases": [
+          "Camarón sakura"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "fain_tortilla_de_garbanzos",
+      "before": {
+        "canonicalKey": "fain_tortilla_de_garbanzos",
+        "sourceCategory": "OTROS",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Fainá / tortilla de garbanzos",
+        "allergens": [],
+        "translations": {
+          "es": "Fainá / tortilla de garbanzos"
+        },
+        "aliases": [
+          "Fainá / tortilla de garbanzos"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "fain_tortilla_de_garbanzos",
+        "sourceCategory": "OTROS",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Fainá",
+        "allergens": [],
+        "translations": {
+          "es": "Fainá"
+        },
+        "aliases": [
+          "Fainá",
+          "Tortilla de garbanzos fainá"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "pasta_de_anchoas",
+      "before": {
+        "canonicalKey": "pasta_de_anchoas",
+        "sourceCategory": "OTROS",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Pasta de anchoas",
+        "allergens": [],
+        "translations": {
+          "es": "Pasta de anchoas"
+        },
+        "aliases": [
+          "Pasta de anchoas"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "pasta_de_anchoas",
+        "sourceCategory": "OTROS",
+        "category": "PESCADOS_Y_MARISCOS",
+        "semanticCategoryKey": "seafood",
+        "defaultName": "Pasta de anchoas",
+        "allergens": [],
+        "translations": {
+          "es": "Pasta de anchoas"
+        },
+        "aliases": [
+          "Pasta de anchoas"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "pescado_blanco_en_polvo",
+      "before": {
+        "canonicalKey": "pescado_blanco_en_polvo",
+        "sourceCategory": "OTROS",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Pescado blanco en polvo",
+        "allergens": [
+          "FISH"
+        ],
+        "translations": {
+          "es": "Pescado blanco en polvo"
+        },
+        "aliases": [
+          "Pescado blanco en polvo"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "pescado_blanco_en_polvo",
+        "sourceCategory": "OTROS",
+        "category": "PESCADOS_Y_MARISCOS",
+        "semanticCategoryKey": "seafood",
+        "defaultName": "Pescado blanco en polvo",
+        "allergens": [
+          "FISH"
+        ],
+        "translations": {
+          "es": "Pescado blanco en polvo"
+        },
+        "aliases": [
+          "Pescado blanco en polvo"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "queso_crema_de_ajo",
+      "before": {
+        "canonicalKey": "queso_crema_de_ajo",
+        "sourceCategory": "OTROS",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Queso crema de ajo",
+        "allergens": [
+          "LACTOSE"
+        ],
+        "translations": {
+          "es": "Queso crema de ajo"
+        },
+        "aliases": [
+          "Queso crema de ajo"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "queso_crema_de_ajo",
+        "sourceCategory": "OTROS",
+        "category": "QUESOS",
+        "semanticCategoryKey": "cheeses",
+        "defaultName": "Queso crema de ajo",
+        "allergens": [
+          "LACTOSE"
+        ],
+        "translations": {
+          "es": "Queso crema de ajo"
+        },
+        "aliases": [
+          "Queso crema de ajo"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "semillas_de_lino",
+      "before": {
+        "canonicalKey": "semillas_de_lino",
+        "sourceCategory": "FRUTOS_SECOS_Y_SEMILLAS",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Semillas de lino",
+        "allergens": [],
+        "translations": {
+          "es": "Semillas de lino"
+        },
+        "aliases": [
+          "Semillas de lino"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "semillas_de_lino",
+        "sourceCategory": "FRUTOS_SECOS_Y_SEMILLAS",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Semillas de lino",
+        "allergens": [],
+        "translations": {
+          "es": "Semillas de lino"
+        },
+        "aliases": [
+          "Semillas de lino",
+          "Linaza",
+          "Semillas de linaza"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE",
+        "legacyCanonicalKeys": [
+          "linaza"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "semillas_de_s_samo",
+      "before": {
+        "canonicalKey": "semillas_de_s_samo",
+        "sourceCategory": "FRUTOS_SECOS_Y_SEMILLAS",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Semillas de sésamo",
+        "allergens": [
+          "SESAME"
+        ],
+        "translations": {
+          "es": "Semillas de sésamo"
+        },
+        "aliases": [
+          "Semillas de sésamo"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "semillas_de_s_samo",
+        "sourceCategory": "FRUTOS_SECOS_Y_SEMILLAS",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Semillas de sésamo",
+        "allergens": [
+          "SESAME"
+        ],
+        "translations": {
+          "es": "Semillas de sésamo"
+        },
+        "aliases": [
+          "Semillas de sésamo",
+          "Semillas de ajonjolí"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "s_samo_tostado",
+      "before": {
+        "canonicalKey": "s_samo_tostado",
+        "sourceCategory": "FRUTOS_SECOS_Y_SEMILLAS",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Sésamo tostado",
+        "allergens": [
+          "SESAME"
+        ],
+        "translations": {
+          "es": "Sésamo tostado"
+        },
+        "aliases": [
+          "Sésamo tostado"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "s_samo_tostado",
+        "sourceCategory": "FRUTOS_SECOS_Y_SEMILLAS",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Sésamo tostado",
+        "allergens": [
+          "SESAME"
+        ],
+        "translations": {
+          "es": "Sésamo tostado"
+        },
+        "aliases": [
+          "Sésamo tostado",
+          "Ajonjolí tostado"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "h_karl_tibur_n_fermentado",
+      "before": {
+        "canonicalKey": "h_karl_tibur_n_fermentado",
+        "sourceCategory": "PESCADOS_Y_MARISCOS",
+        "category": "PESCADOS_Y_MARISCOS",
+        "semanticCategoryKey": "seafood",
+        "defaultName": "Hákarl / tiburón fermentado",
+        "allergens": [
+          "FISH"
+        ],
+        "translations": {
+          "es": "Hákarl / tiburón fermentado"
+        },
+        "aliases": [
+          "Hákarl / tiburón fermentado"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "h_karl_tibur_n_fermentado",
+        "sourceCategory": "PESCADOS_Y_MARISCOS",
+        "category": "PESCADOS_Y_MARISCOS",
+        "semanticCategoryKey": "seafood",
+        "defaultName": "Hákarl",
+        "allergens": [
+          "FISH"
+        ],
+        "translations": {
+          "es": "Hákarl"
+        },
+        "aliases": [
+          "Hákarl",
+          "Tiburón fermentado hákarl"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "ikra_huevas_de_salm_n",
+      "before": {
+        "canonicalKey": "ikra_huevas_de_salm_n",
+        "sourceCategory": "PESCADOS_Y_MARISCOS",
+        "category": "PESCADOS_Y_MARISCOS",
+        "semanticCategoryKey": "seafood",
+        "defaultName": "Ikra / huevas de salmón",
+        "allergens": [
+          "FISH"
+        ],
+        "translations": {
+          "es": "Ikra / huevas de salmón"
+        },
+        "aliases": [
+          "Ikra / huevas de salmón"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "ikra_huevas_de_salm_n",
+        "sourceCategory": "PESCADOS_Y_MARISCOS",
+        "category": "PESCADOS_Y_MARISCOS",
+        "semanticCategoryKey": "seafood",
+        "defaultName": "Huevas de salmón",
+        "allergens": [
+          "FISH"
+        ],
+        "translations": {
+          "es": "Huevas de salmón"
+        },
+        "aliases": [
+          "Huevas de salmón",
+          "Ikra de salmón"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "kanikama_crab_stick",
+      "before": {
+        "canonicalKey": "kanikama_crab_stick",
+        "sourceCategory": "PESCADOS_Y_MARISCOS",
+        "category": "PESCADOS_Y_MARISCOS",
+        "semanticCategoryKey": "seafood",
+        "defaultName": "Kanikama / palitos de cangrejo",
+        "allergens": [
+          "SHELLFISH"
+        ],
+        "translations": {
+          "es": "Kanikama / palitos de cangrejo"
+        },
+        "aliases": [
+          "Kanikama / palitos de cangrejo",
+          "Crab stick"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "kanikama_crab_stick",
+        "sourceCategory": "PESCADOS_Y_MARISCOS",
+        "category": "PESCADOS_Y_MARISCOS",
+        "semanticCategoryKey": "seafood",
+        "defaultName": "Kanikama",
+        "allergens": [
+          "SHELLFISH"
+        ],
+        "translations": {
+          "es": "Kanikama"
+        },
+        "aliases": [
+          "Kanikama",
+          "Crab stick",
+          "Palitos de cangrejo"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "cheddar_vintage_extra_a_ejo",
+      "before": {
+        "canonicalKey": "cheddar_vintage_extra_a_ejo",
+        "sourceCategory": "QUESOS",
+        "category": "QUESOS",
+        "semanticCategoryKey": "cheeses",
+        "defaultName": "Cheddar vintage / extra añejo",
+        "allergens": [
+          "LACTOSE"
+        ],
+        "translations": {
+          "es": "Cheddar vintage / extra añejo"
+        },
+        "aliases": [
+          "Cheddar vintage / extra añejo"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "cheddar_vintage_extra_a_ejo",
+        "sourceCategory": "QUESOS",
+        "category": "QUESOS",
+        "semanticCategoryKey": "cheeses",
+        "defaultName": "Cheddar extra añejo",
+        "allergens": [
+          "LACTOSE"
+        ],
+        "translations": {
+          "es": "Cheddar extra añejo"
+        },
+        "aliases": [
+          "Cheddar extra añejo",
+          "Cheddar vintage"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "cuajo_de_oveja",
+      "before": {
+        "canonicalKey": "cuajo_de_oveja",
+        "sourceCategory": "QUESOS",
+        "category": "QUESOS",
+        "semanticCategoryKey": "cheeses",
+        "defaultName": "Cuajo de oveja",
+        "allergens": [
+          "LACTOSE"
+        ],
+        "translations": {
+          "es": "Cuajo de oveja"
+        },
+        "aliases": [
+          "Cuajo de oveja"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "cuajo_de_oveja",
+        "sourceCategory": "QUESOS",
+        "category": "OTROS",
+        "semanticCategoryKey": "other",
+        "defaultName": "Cuajo de oveja",
+        "allergens": [
+          "LACTOSE"
+        ],
+        "translations": {
+          "es": "Cuajo de oveja"
+        },
+        "aliases": [
+          "Cuajo de oveja"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "oscypek_queso_ahumado_de_oveja",
+      "before": {
+        "canonicalKey": "oscypek_queso_ahumado_de_oveja",
+        "sourceCategory": "QUESOS",
+        "category": "QUESOS",
+        "semanticCategoryKey": "cheeses",
+        "defaultName": "Oscypek / queso ahumado de oveja",
+        "allergens": [
+          "LACTOSE"
+        ],
+        "translations": {
+          "es": "Oscypek / queso ahumado de oveja"
+        },
+        "aliases": [
+          "Oscypek / queso ahumado de oveja"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "oscypek_queso_ahumado_de_oveja",
+        "sourceCategory": "QUESOS",
+        "category": "QUESOS",
+        "semanticCategoryKey": "cheeses",
+        "defaultName": "Oscypek",
+        "allergens": [
+          "LACTOSE"
+        ],
+        "translations": {
+          "es": "Oscypek"
+        },
+        "aliases": [
+          "Oscypek",
+          "Queso ahumado de oveja oscypek"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "queso_saint_maure",
+      "before": {
+        "canonicalKey": "queso_saint_maure",
+        "sourceCategory": "QUESOS",
+        "category": "QUESOS",
+        "semanticCategoryKey": "cheeses",
+        "defaultName": "Queso Saint-Maure",
+        "allergens": [
+          "LACTOSE"
+        ],
+        "translations": {
+          "es": "Queso Saint-Maure"
+        },
+        "aliases": [
+          "Queso Saint-Maure"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "queso_saint_maure",
+        "sourceCategory": "QUESOS",
+        "category": "QUESOS",
+        "semanticCategoryKey": "cheeses",
+        "defaultName": "Queso Sainte-Maure",
+        "allergens": [
+          "LACTOSE"
+        ],
+        "translations": {
+          "es": "Queso Sainte-Maure"
+        },
+        "aliases": [
+          "Queso Sainte-Maure",
+          "Sainte-Maure"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "bigilla_pasta_de_habas_maltesa",
+      "before": {
+        "canonicalKey": "bigilla_pasta_de_habas_maltesa",
+        "sourceCategory": "SALSAS_CREMAS",
+        "category": "SALSAS",
+        "semanticCategoryKey": "sauces",
+        "defaultName": "Bigilla / pasta de habas maltesa",
+        "allergens": [],
+        "translations": {
+          "es": "Bigilla / pasta de habas maltesa"
+        },
+        "aliases": [
+          "Bigilla / pasta de habas maltesa"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "bigilla_pasta_de_habas_maltesa",
+        "sourceCategory": "SALSAS_CREMAS",
+        "category": "SALSAS",
+        "semanticCategoryKey": "sauces",
+        "defaultName": "Bigilla",
+        "allergens": [],
+        "translations": {
+          "es": "Bigilla"
+        },
+        "aliases": [
+          "Bigilla",
+          "Pasta de habas maltesa"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "chipotle",
+      "before": {
+        "canonicalKey": "chipotle",
+        "sourceCategory": "SALSAS_CREMAS",
+        "category": "SALSAS",
+        "semanticCategoryKey": "sauces",
+        "defaultName": "Chipotle",
+        "allergens": [],
+        "translations": {
+          "es": "Chipotle"
+        },
+        "aliases": [
+          "Chipotle"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "chipotle",
+        "sourceCategory": "SALSAS_CREMAS",
+        "category": "HIERBAS_ESPECIAS",
+        "semanticCategoryKey": "herbs_spices",
+        "defaultName": "Chile chipotle",
+        "allergens": [],
+        "translations": {
+          "es": "Chile chipotle"
+        },
+        "aliases": [
+          "Chile chipotle",
+          "Chipotle",
+          "Chile chilpotle"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "nga_pi_pasta_de_pescado_fermentado",
+      "before": {
+        "canonicalKey": "nga_pi_pasta_de_pescado_fermentado",
+        "sourceCategory": "SALSAS_CREMAS",
+        "category": "SALSAS",
+        "semanticCategoryKey": "sauces",
+        "defaultName": "Nga pi / pasta de pescado fermentado",
+        "allergens": [
+          "FISH"
+        ],
+        "translations": {
+          "es": "Nga pi / pasta de pescado fermentado"
+        },
+        "aliases": [
+          "Nga pi / pasta de pescado fermentado"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "nga_pi_pasta_de_pescado_fermentado",
+        "sourceCategory": "SALSAS_CREMAS",
+        "category": "SALSAS",
+        "semanticCategoryKey": "sauces",
+        "defaultName": "Nga pi",
+        "allergens": [
+          "FISH"
+        ],
+        "translations": {
+          "es": "Nga pi"
+        },
+        "aliases": [
+          "Nga pi",
+          "Pasta de pescado fermentado nga pi"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "salsa_de_cacahuate",
+      "before": {
+        "canonicalKey": "salsa_de_cacahuate",
+        "sourceCategory": "SALSAS_CREMAS",
+        "category": "SALSAS",
+        "semanticCategoryKey": "sauces",
+        "defaultName": "Salsa de cacahuate",
+        "allergens": [
+          "PEANUT"
+        ],
+        "translations": {
+          "es": "Salsa de cacahuate"
+        },
+        "aliases": [
+          "Salsa de cacahuate"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "salsa_de_cacahuate",
+        "sourceCategory": "SALSAS_CREMAS",
+        "category": "SALSAS",
+        "semanticCategoryKey": "sauces",
+        "defaultName": "Salsa de cacahuate",
+        "allergens": [
+          "PEANUT"
+        ],
+        "translations": {
+          "es": "Salsa de cacahuate"
+        },
+        "aliases": [
+          "Salsa de cacahuate",
+          "Salsa de cacahuete",
+          "Salsa de maní"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "salsa_de_tomatillo_verde_mexicana",
+      "before": {
+        "canonicalKey": "salsa_de_tomatillo_verde_mexicana",
+        "sourceCategory": "SALSAS_CREMAS",
+        "category": "SALSAS",
+        "semanticCategoryKey": "sauces",
+        "defaultName": "Salsa de tomatillo / salsa verde mexicana",
+        "allergens": [],
+        "translations": {
+          "es": "Salsa de tomatillo / salsa verde mexicana"
+        },
+        "aliases": [
+          "Salsa de tomatillo / salsa verde mexicana"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "salsa_de_tomatillo_verde_mexicana",
+        "sourceCategory": "SALSAS_CREMAS",
+        "category": "SALSAS",
+        "semanticCategoryKey": "sauces",
+        "defaultName": "Salsa de tomatillo",
+        "allergens": [],
+        "translations": {
+          "es": "Salsa de tomatillo"
+        },
+        "aliases": [
+          "Salsa de tomatillo",
+          "Salsa verde mexicana de tomatillo"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "salsa_peri_peri",
+      "before": {
+        "canonicalKey": "salsa_peri_peri",
+        "sourceCategory": "SALSAS_CREMAS",
+        "category": "SALSAS",
+        "semanticCategoryKey": "sauces",
+        "defaultName": "Salsa peri-peri",
+        "allergens": [],
+        "translations": {
+          "es": "Salsa peri-peri"
+        },
+        "aliases": [
+          "Salsa peri-peri"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "salsa_peri_peri",
+        "sourceCategory": "SALSAS_CREMAS",
+        "category": "SALSAS",
+        "semanticCategoryKey": "sauces",
+        "defaultName": "Salsa peri-peri",
+        "allergens": [],
+        "translations": {
+          "es": "Salsa peri-peri"
+        },
+        "aliases": [
+          "Salsa peri-peri",
+          "Salsa piri piri"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE",
+        "legacyCanonicalKeys": [
+          "salsa_piri_piri"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "champi_ones_blancos",
+      "before": {
+        "canonicalKey": "champi_ones_blancos",
+        "sourceCategory": "SETAS",
+        "category": "SETAS",
+        "semanticCategoryKey": "mushrooms",
+        "defaultName": "Champiñones blancos",
+        "allergens": [],
+        "translations": {
+          "es": "Champiñones blancos"
+        },
+        "aliases": [
+          "Champiñones blancos"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "champi_ones_blancos",
+        "sourceCategory": "SETAS",
+        "category": "SETAS",
+        "semanticCategoryKey": "mushrooms",
+        "defaultName": "Champiñones blancos",
+        "allergens": [],
+        "translations": {
+          "es": "Champiñones blancos"
+        },
+        "aliases": [
+          "Champiñones blancos",
+          "Champiñones de París"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE",
+        "legacyCanonicalKeys": [
+          "champi_nes_blancos",
+          "champi_ones_de_par_s"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "hongo_de_marayhuaca_suillus_luteus",
+      "before": {
+        "canonicalKey": "hongo_de_marayhuaca_suillus_luteus",
+        "sourceCategory": "SETAS",
+        "category": "SETAS",
+        "semanticCategoryKey": "mushrooms",
+        "defaultName": "Hongo de Marayhuaca / Suillus luteus",
+        "allergens": [],
+        "translations": {
+          "es": "Hongo de Marayhuaca / Suillus luteus"
+        },
+        "aliases": [
+          "Hongo de Marayhuaca / Suillus luteus"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "hongo_de_marayhuaca_suillus_luteus",
+        "sourceCategory": "SETAS",
+        "category": "SETAS",
+        "semanticCategoryKey": "mushrooms",
+        "defaultName": "Hongo de Marayhuaca",
+        "allergens": [],
+        "translations": {
+          "es": "Hongo de Marayhuaca"
+        },
+        "aliases": [
+          "Hongo de Marayhuaca",
+          "Suillus luteus"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "pioppino_seta_de_lamo",
+      "before": {
+        "canonicalKey": "pioppino_seta_de_lamo",
+        "sourceCategory": "SETAS",
+        "category": "SETAS",
+        "semanticCategoryKey": "mushrooms",
+        "defaultName": "Pioppino / seta de álamo",
+        "allergens": [],
+        "translations": {
+          "es": "Pioppino / seta de álamo"
+        },
+        "aliases": [
+          "Pioppino / seta de álamo"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "pioppino_seta_de_lamo",
+        "sourceCategory": "SETAS",
+        "category": "SETAS",
+        "semanticCategoryKey": "mushrooms",
+        "defaultName": "Seta de álamo",
+        "allergens": [],
+        "translations": {
+          "es": "Seta de álamo"
+        },
+        "aliases": [
+          "Seta de álamo",
+          "Pioppino"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "tartufi_istriani_trufa_de_istriani",
+      "before": {
+        "canonicalKey": "tartufi_istriani_trufa_de_istriani",
+        "sourceCategory": "SETAS",
+        "category": "SETAS",
+        "semanticCategoryKey": "mushrooms",
+        "defaultName": "Tartufi istriani / trufas de Istria",
+        "allergens": [],
+        "translations": {
+          "es": "Tartufi istriani / trufas de Istria"
+        },
+        "aliases": [
+          "Tartufi istriani / trufas de Istria"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "tartufi_istriani_trufa_de_istriani",
+        "sourceCategory": "SETAS",
+        "category": "SETAS",
+        "semanticCategoryKey": "mushrooms",
+        "defaultName": "Trufas de Istria",
+        "allergens": [],
+        "translations": {
+          "es": "Trufas de Istria"
+        },
+        "aliases": [
+          "Trufas de Istria",
+          "Tartufi istriani"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "aguacate",
+      "before": {
+        "canonicalKey": "aguacate",
+        "sourceCategory": "VERDURAS",
+        "category": "VERDURAS",
+        "semanticCategoryKey": "vegetables",
+        "defaultName": "Aguacate",
+        "allergens": [],
+        "translations": {
+          "es": "Aguacate"
+        },
+        "aliases": [
+          "Aguacate"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "aguacate",
+        "sourceCategory": "VERDURAS",
+        "category": "VERDURAS",
+        "semanticCategoryKey": "vegetables",
+        "defaultName": "Aguacate",
+        "allergens": [],
+        "translations": {
+          "es": "Aguacate"
+        },
+        "aliases": [
+          "Aguacate",
+          "Palta"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "batata",
+      "before": {
+        "canonicalKey": "batata",
+        "sourceCategory": "VERDURAS",
+        "category": "VERDURAS",
+        "semanticCategoryKey": "vegetables",
+        "defaultName": "Batata",
+        "allergens": [],
+        "translations": {
+          "es": "Batata"
+        },
+        "aliases": [
+          "Batata"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "batata",
+        "sourceCategory": "VERDURAS",
+        "category": "VERDURAS",
+        "semanticCategoryKey": "vegetables",
+        "defaultName": "Batata",
+        "allergens": [],
+        "translations": {
+          "es": "Batata"
+        },
+        "aliases": [
+          "Batata",
+          "Boniato",
+          "Camote"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "calabac_n",
+      "before": {
+        "canonicalKey": "calabac_n",
+        "sourceCategory": "VERDURAS",
+        "category": "VERDURAS",
+        "semanticCategoryKey": "vegetables",
+        "defaultName": "Calabacín",
+        "allergens": [],
+        "translations": {
+          "es": "Calabacín"
+        },
+        "aliases": [
+          "Calabacín"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "calabac_n",
+        "sourceCategory": "VERDURAS",
+        "category": "VERDURAS",
+        "semanticCategoryKey": "vegetables",
+        "defaultName": "Calabacín",
+        "allergens": [],
+        "translations": {
+          "es": "Calabacín"
+        },
+        "aliases": [
+          "Calabacín",
+          "Calabacita",
+          "Zapallito italiano"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "calabac_n_grillado",
+      "before": {
+        "canonicalKey": "calabac_n_grillado",
+        "sourceCategory": "VERDURAS",
+        "category": "VERDURAS",
+        "semanticCategoryKey": "vegetables",
+        "defaultName": "Calabacín grillado",
+        "allergens": [],
+        "translations": {
+          "es": "Calabacín grillado"
+        },
+        "aliases": [
+          "Calabacín grillado"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "calabac_n_grillado",
+        "sourceCategory": "VERDURAS",
+        "category": "VERDURAS",
+        "semanticCategoryKey": "vegetables",
+        "defaultName": "Calabacín grillado",
+        "allergens": [],
+        "translations": {
+          "es": "Calabacín grillado"
+        },
+        "aliases": [
+          "Calabacín grillado",
+          "Calabacín a la parrilla",
+          "Zapallito italiano a la parrilla"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "cebolla_roja",
+      "before": {
+        "canonicalKey": "cebolla_roja",
+        "sourceCategory": "VERDURAS",
+        "category": "VERDURAS",
+        "semanticCategoryKey": "vegetables",
+        "defaultName": "Cebolla roja",
+        "allergens": [],
+        "translations": {
+          "es": "Cebolla roja"
+        },
+        "aliases": [
+          "Cebolla roja"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "cebolla_roja",
+        "sourceCategory": "VERDURAS",
+        "category": "VERDURAS",
+        "semanticCategoryKey": "vegetables",
+        "defaultName": "Cebolla roja",
+        "allergens": [],
+        "translations": {
+          "es": "Cebolla roja"
+        },
+        "aliases": [
+          "Cebolla roja",
+          "Cebolla morada"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "cebolla_roja_asada",
+      "before": {
+        "canonicalKey": "cebolla_roja_asada",
+        "sourceCategory": "VERDURAS",
+        "category": "VERDURAS",
+        "semanticCategoryKey": "vegetables",
+        "defaultName": "Cebolla roja asada",
+        "allergens": [],
+        "translations": {
+          "es": "Cebolla roja asada"
+        },
+        "aliases": [
+          "Cebolla roja asada"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "cebolla_roja_asada",
+        "sourceCategory": "VERDURAS",
+        "category": "VERDURAS",
+        "semanticCategoryKey": "vegetables",
+        "defaultName": "Cebolla roja asada",
+        "allergens": [],
+        "translations": {
+          "es": "Cebolla roja asada"
+        },
+        "aliases": [
+          "Cebolla roja asada",
+          "Cebolla morada asada"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "cebolla_roja_de_tropea",
+      "before": {
+        "canonicalKey": "cebolla_roja_de_tropea",
+        "sourceCategory": "VERDURAS",
+        "category": "VERDURAS",
+        "semanticCategoryKey": "vegetables",
+        "defaultName": "Cebolla roja de Tropea",
+        "allergens": [],
+        "translations": {
+          "es": "Cebolla roja de Tropea"
+        },
+        "aliases": [
+          "Cebolla roja de Tropea"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "cebolla_roja_de_tropea",
+        "sourceCategory": "VERDURAS",
+        "category": "VERDURAS",
+        "semanticCategoryKey": "vegetables",
+        "defaultName": "Cebolla roja de Tropea",
+        "allergens": [],
+        "translations": {
+          "es": "Cebolla roja de Tropea"
+        },
+        "aliases": [
+          "Cebolla roja de Tropea",
+          "Cebolla morada de Tropea",
+          "Cebolla de Tropea"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE",
+        "legacyCanonicalKeys": [
+          "cebolla_morada_de_tropea"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "cebolla_roja_encurtida",
+      "before": {
+        "canonicalKey": "cebolla_roja_encurtida",
+        "sourceCategory": "VERDURAS",
+        "category": "VERDURAS",
+        "semanticCategoryKey": "vegetables",
+        "defaultName": "Cebolla roja encurtida",
+        "allergens": [],
+        "translations": {
+          "es": "Cebolla roja encurtida"
+        },
+        "aliases": [
+          "Cebolla roja encurtida"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "cebolla_roja_encurtida",
+        "sourceCategory": "VERDURAS",
+        "category": "VERDURAS",
+        "semanticCategoryKey": "vegetables",
+        "defaultName": "Cebolla roja encurtida",
+        "allergens": [],
+        "translations": {
+          "es": "Cebolla roja encurtida"
+        },
+        "aliases": [
+          "Cebolla roja encurtida",
+          "Cebolla morada encurtida"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "choclo",
+      "before": {
+        "canonicalKey": "choclo",
+        "sourceCategory": "VERDURAS",
+        "category": "VERDURAS",
+        "semanticCategoryKey": "vegetables",
+        "defaultName": "Choclo",
+        "allergens": [],
+        "translations": {
+          "es": "Choclo"
+        },
+        "aliases": [
+          "Choclo"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "choclo",
+        "sourceCategory": "VERDURAS",
+        "category": "VERDURAS",
+        "semanticCategoryKey": "vegetables",
+        "defaultName": "Maíz tierno (choclo)",
+        "allergens": [],
+        "translations": {
+          "es": "Maíz tierno (choclo)"
+        },
+        "aliases": [
+          "Maíz tierno (choclo)",
+          "Choclo",
+          "Maíz tierno"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "guisantes",
+      "before": {
+        "canonicalKey": "guisantes",
+        "sourceCategory": "VERDURAS",
+        "category": "VERDURAS",
+        "semanticCategoryKey": "vegetables",
+        "defaultName": "Guisantes",
+        "allergens": [],
+        "translations": {
+          "es": "Guisantes"
+        },
+        "aliases": [
+          "Guisantes"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "guisantes",
+        "sourceCategory": "VERDURAS",
+        "category": "VERDURAS",
+        "semanticCategoryKey": "vegetables",
+        "defaultName": "Guisantes",
+        "allergens": [],
+        "translations": {
+          "es": "Guisantes"
+        },
+        "aliases": [
+          "Guisantes",
+          "Arvejas",
+          "Chícharos"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "kale_col_rizada",
+      "before": {
+        "canonicalKey": "kale_col_rizada",
+        "sourceCategory": "VERDURAS",
+        "category": "VERDURAS",
+        "semanticCategoryKey": "vegetables",
+        "defaultName": "Kale / col rizada",
+        "allergens": [],
+        "translations": {
+          "es": "Kale / col rizada"
+        },
+        "aliases": [
+          "Kale / col rizada"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "kale_col_rizada",
+        "sourceCategory": "VERDURAS",
+        "category": "VERDURAS",
+        "semanticCategoryKey": "vegetables",
+        "defaultName": "Col rizada",
+        "allergens": [],
+        "translations": {
+          "es": "Col rizada"
+        },
+        "aliases": [
+          "Col rizada",
+          "Kale"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "kale_col_rizada_en_polvo",
+      "before": {
+        "canonicalKey": "kale_col_rizada_en_polvo",
+        "sourceCategory": "VERDURAS",
+        "category": "VERDURAS",
+        "semanticCategoryKey": "vegetables",
+        "defaultName": "Kale / col rizada en polvo",
+        "allergens": [],
+        "translations": {
+          "es": "Kale / col rizada en polvo"
+        },
+        "aliases": [
+          "Kale / col rizada en polvo"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "kale_col_rizada_en_polvo",
+        "sourceCategory": "VERDURAS",
+        "category": "VERDURAS",
+        "semanticCategoryKey": "vegetables",
+        "defaultName": "Col rizada en polvo",
+        "allergens": [],
+        "translations": {
+          "es": "Col rizada en polvo"
+        },
+        "aliases": [
+          "Col rizada en polvo",
+          "Kale en polvo"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "patatas",
+      "before": {
+        "canonicalKey": "patatas",
+        "sourceCategory": "VERDURAS",
+        "category": "VERDURAS",
+        "semanticCategoryKey": "vegetables",
+        "defaultName": "Patatas",
+        "allergens": [],
+        "translations": {
+          "es": "Patatas"
+        },
+        "aliases": [
+          "Patatas"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "patatas",
+        "sourceCategory": "VERDURAS",
+        "category": "VERDURAS",
+        "semanticCategoryKey": "vegetables",
+        "defaultName": "Patatas",
+        "allergens": [],
+        "translations": {
+          "es": "Patatas"
+        },
+        "aliases": [
+          "Patatas",
+          "Papas"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "patatas_asadas",
+      "before": {
+        "canonicalKey": "patatas_asadas",
+        "sourceCategory": "VERDURAS",
+        "category": "VERDURAS",
+        "semanticCategoryKey": "vegetables",
+        "defaultName": "Patatas asadas",
+        "allergens": [],
+        "translations": {
+          "es": "Patatas asadas"
+        },
+        "aliases": [
+          "Patatas asadas"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "patatas_asadas",
+        "sourceCategory": "VERDURAS",
+        "category": "VERDURAS",
+        "semanticCategoryKey": "vegetables",
+        "defaultName": "Patatas asadas",
+        "allergens": [],
+        "translations": {
+          "es": "Patatas asadas"
+        },
+        "aliases": [
+          "Patatas asadas",
+          "Papas asadas"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "patatas_fritas",
+      "before": {
+        "canonicalKey": "patatas_fritas",
+        "sourceCategory": "VERDURAS",
+        "category": "VERDURAS",
+        "semanticCategoryKey": "vegetables",
+        "defaultName": "Patatas fritas",
+        "allergens": [],
+        "translations": {
+          "es": "Patatas fritas"
+        },
+        "aliases": [
+          "Patatas fritas"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "patatas_fritas",
+        "sourceCategory": "VERDURAS",
+        "category": "VERDURAS",
+        "semanticCategoryKey": "vegetables",
+        "defaultName": "Patatas fritas",
+        "allergens": [],
+        "translations": {
+          "es": "Patatas fritas"
+        },
+        "aliases": [
+          "Patatas fritas",
+          "Papas fritas"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "patatas_paja",
+      "before": {
+        "canonicalKey": "patatas_paja",
+        "sourceCategory": "VERDURAS",
+        "category": "VERDURAS",
+        "semanticCategoryKey": "vegetables",
+        "defaultName": "Patatas paja",
+        "allergens": [],
+        "translations": {
+          "es": "Patatas paja"
+        },
+        "aliases": [
+          "Patatas paja"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "patatas_paja",
+        "sourceCategory": "VERDURAS",
+        "category": "VERDURAS",
+        "semanticCategoryKey": "vegetables",
+        "defaultName": "Patatas paja",
+        "allergens": [],
+        "translations": {
+          "es": "Patatas paja"
+        },
+        "aliases": [
+          "Patatas paja",
+          "Papas paja"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "pimientos_al_vinagre",
+      "before": {
+        "canonicalKey": "pimientos_al_vinagre",
+        "sourceCategory": "VERDURAS",
+        "category": "VERDURAS",
+        "semanticCategoryKey": "vegetables",
+        "defaultName": "Pimientos al vinagre",
+        "allergens": [],
+        "translations": {
+          "es": "Pimientos al vinagre"
+        },
+        "aliases": [
+          "Pimientos al vinagre"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "pimientos_al_vinagre",
+        "sourceCategory": "VERDURAS",
+        "category": "VERDURAS",
+        "semanticCategoryKey": "vegetables",
+        "defaultName": "Pimientos al vinagre",
+        "allergens": [],
+        "translations": {
+          "es": "Pimientos al vinagre"
+        },
+        "aliases": [
+          "Pimientos al vinagre",
+          "Peperoni en vinagre",
+          "Pimientos en vinagre"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE",
+        "legacyCanonicalKeys": [
+          "peperoni_en_vinagre"
+        ]
+      }
+    },
+    {
+      "canonicalKey": "remolacha",
+      "before": {
+        "canonicalKey": "remolacha",
+        "sourceCategory": "VERDURAS",
+        "category": "VERDURAS",
+        "semanticCategoryKey": "vegetables",
+        "defaultName": "Remolacha",
+        "allergens": [],
+        "translations": {
+          "es": "Remolacha"
+        },
+        "aliases": [
+          "Remolacha"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "remolacha",
+        "sourceCategory": "VERDURAS",
+        "category": "VERDURAS",
+        "semanticCategoryKey": "vegetables",
+        "defaultName": "Remolacha",
+        "allergens": [],
+        "translations": {
+          "es": "Remolacha"
+        },
+        "aliases": [
+          "Remolacha",
+          "Betabel",
+          "Betarraga"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "remolacha_encurtida",
+      "before": {
+        "canonicalKey": "remolacha_encurtida",
+        "sourceCategory": "VERDURAS",
+        "category": "VERDURAS",
+        "semanticCategoryKey": "vegetables",
+        "defaultName": "Remolacha encurtida",
+        "allergens": [],
+        "translations": {
+          "es": "Remolacha encurtida"
+        },
+        "aliases": [
+          "Remolacha encurtida"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "remolacha_encurtida",
+        "sourceCategory": "VERDURAS",
+        "category": "VERDURAS",
+        "semanticCategoryKey": "vegetables",
+        "defaultName": "Remolacha encurtida",
+        "allergens": [],
+        "translations": {
+          "es": "Remolacha encurtida"
+        },
+        "aliases": [
+          "Remolacha encurtida",
+          "Betabel encurtido",
+          "Betarraga encurtida"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "remolacha_frita",
+      "before": {
+        "canonicalKey": "remolacha_frita",
+        "sourceCategory": "VERDURAS",
+        "category": "VERDURAS",
+        "semanticCategoryKey": "vegetables",
+        "defaultName": "Remolacha frita",
+        "allergens": [],
+        "translations": {
+          "es": "Remolacha frita"
+        },
+        "aliases": [
+          "Remolacha frita"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "remolacha_frita",
+        "sourceCategory": "VERDURAS",
+        "category": "VERDURAS",
+        "semanticCategoryKey": "vegetables",
+        "defaultName": "Remolacha frita",
+        "allergens": [],
+        "translations": {
+          "es": "Remolacha frita"
+        },
+        "aliases": [
+          "Remolacha frita",
+          "Betabel frito",
+          "Betarraga frita"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    },
+    {
+      "canonicalKey": "shiso_perilla",
+      "before": {
+        "canonicalKey": "shiso_perilla",
+        "sourceCategory": "VERDURAS",
+        "category": "VERDURAS",
+        "semanticCategoryKey": "vegetables",
+        "defaultName": "Shiso / perilla",
+        "allergens": [],
+        "translations": {
+          "es": "Shiso / perilla"
+        },
+        "aliases": [
+          "Shiso / perilla"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      },
+      "after": {
+        "canonicalKey": "shiso_perilla",
+        "sourceCategory": "VERDURAS",
+        "category": "VERDURAS",
+        "semanticCategoryKey": "vegetables",
+        "defaultName": "Shiso",
+        "allergens": [],
+        "translations": {
+          "es": "Shiso"
+        },
+        "aliases": [
+          "Shiso",
+          "Perilla"
+        ],
+        "semanticStatus": "NEEDS_REVIEW",
+        "imageStatus": "MISSING",
+        "source": "LEGACY_INGREDIENTS_BASE"
+      }
+    }
+  ],
+  "referenceReview": {
+    "snapshot": "../../output/ingredient-cleanup/reference-snapshot-2026-09-17.json",
+    "scope": "Read-only snapshot of the configured database; not proof of other environments.",
+    "note": "Existing records and numeric IDs remain unchanged. Consolidated keys are recognized when marking already-added ingredients and checking duplicate onboarding."
+  }
+}

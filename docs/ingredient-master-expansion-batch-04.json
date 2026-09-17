@@ -1,0 +1,4274 @@
+{
+  "schemaVersion": 1,
+  "batchId": "2026-09-17-04",
+  "date": "2026-09-17",
+  "status": "EDITORIAL_REVIEW",
+  "targetTotal": 3000,
+  "policy": "Solo identidades diferentes en las 14 categorías existentes. Alias y traducciones no cuentan como ingredientes nuevos. No se genera ninguna traducción de interfaz.",
+  "researchScope": {
+    "scope": "Tipos de queso y elaboraciones tradicionales documentados. Se conservan nombres propios; no se cuenta otra ficha por sello DOP/IGP ni se importan marcas."
+  },
+  "allergenPolicy": "Valores iniciales con el vocabulario existente de Volta. No equivalen a una declaración de ausencia de alérgenos ni a validación de una formulación o producto concreto. Se conserva NEEDS_REVIEW.",
+  "sources": {
+    "MASAF_CHEESE": {
+      "title": "MASAF — catálogo de tipos de queso con pliego individual",
+      "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3340"
+    },
+    "MASAF_MEAT": {
+      "title": "MASAF — catálogo de elaboraciones cárnicas con pliego individual",
+      "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3339"
+    },
+    "PAT_2024": {
+      "title": "MASAF — catálogo histórico de productos agroalimentarios tradicionales, anexo 2024",
+      "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+      "scope": "Referencia de identidad y nombre, no afirmación del estado registral actual."
+    }
+  },
+  "records": [
+    {
+      "canonicalKey": "bitto",
+      "defaultName": "Bitto",
+      "category": "QUESOS",
+      "aliases": [
+        "Bitto"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MASAF_CHEESE",
+        "recordId": "Bitto",
+        "sourceName": "Bitto",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3340"
+      },
+      "identityReason": "Tipo de queso con pliego propio en la fuente oficial. Se añade el nombre del tipo una sola vez, sin duplicarlo como versión certificada."
+    },
+    {
+      "canonicalKey": "bra",
+      "defaultName": "Bra",
+      "category": "QUESOS",
+      "aliases": [
+        "Bra"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MASAF_CHEESE",
+        "recordId": "Bra",
+        "sourceName": "Bra",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3340"
+      },
+      "identityReason": "Tipo de queso con pliego propio en la fuente oficial. Se añade el nombre del tipo una sola vez, sin duplicarlo como versión certificada."
+    },
+    {
+      "canonicalKey": "caciottone_di_norcia",
+      "defaultName": "Caciottone di Norcia",
+      "category": "QUESOS",
+      "aliases": [
+        "Caciottone di Norcia"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MASAF_CHEESE",
+        "recordId": "Caciottone di Norcia",
+        "sourceName": "Caciottone di Norcia",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3340"
+      },
+      "identityReason": "Tipo de queso con pliego propio en la fuente oficial. Se añade el nombre del tipo una sola vez, sin duplicarlo como versión certificada."
+    },
+    {
+      "canonicalKey": "canestrato_di_moliterno",
+      "defaultName": "Canestrato di Moliterno",
+      "category": "QUESOS",
+      "aliases": [
+        "Canestrato di Moliterno"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MASAF_CHEESE",
+        "recordId": "Canestrato di Moliterno",
+        "sourceName": "Canestrato di Moliterno",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3340"
+      },
+      "identityReason": "Tipo de queso con pliego propio en la fuente oficial. Se añade el nombre del tipo una sola vez, sin duplicarlo como versión certificada."
+    },
+    {
+      "canonicalKey": "canestrato_pugliese",
+      "defaultName": "Canestrato Pugliese",
+      "category": "QUESOS",
+      "aliases": [
+        "Canestrato Pugliese"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MASAF_CHEESE",
+        "recordId": "Canestrato Pugliese",
+        "sourceName": "Canestrato Pugliese",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3340"
+      },
+      "identityReason": "Tipo de queso con pliego propio en la fuente oficial. Se añade el nombre del tipo una sola vez, sin duplicarlo como versión certificada."
+    },
+    {
+      "canonicalKey": "casatella_trevigiana",
+      "defaultName": "Casatella Trevigiana",
+      "category": "QUESOS",
+      "aliases": [
+        "Casatella Trevigiana"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MASAF_CHEESE",
+        "recordId": "Casatella Trevigiana",
+        "sourceName": "Casatella Trevigiana",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3340"
+      },
+      "identityReason": "Tipo de queso con pliego propio en la fuente oficial. Se añade el nombre del tipo una sola vez, sin duplicarlo como versión certificada."
+    },
+    {
+      "canonicalKey": "casciotta_d_urbino",
+      "defaultName": "Casciotta d’Urbino",
+      "category": "QUESOS",
+      "aliases": [
+        "Casciotta d’Urbino"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MASAF_CHEESE",
+        "recordId": "Casciotta d’Urbino",
+        "sourceName": "Casciotta d’Urbino",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3340"
+      },
+      "identityReason": "Tipo de queso con pliego propio en la fuente oficial. Se añade el nombre del tipo una sola vez, sin duplicarlo como versión certificada."
+    },
+    {
+      "canonicalKey": "castelmagno",
+      "defaultName": "Castelmagno",
+      "category": "QUESOS",
+      "aliases": [
+        "Castelmagno"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MASAF_CHEESE",
+        "recordId": "Castelmagno",
+        "sourceName": "Castelmagno",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3340"
+      },
+      "identityReason": "Tipo de queso con pliego propio en la fuente oficial. Se añade el nombre del tipo una sola vez, sin duplicarlo como versión certificada."
+    },
+    {
+      "canonicalKey": "fiore_sardo",
+      "defaultName": "Fiore Sardo",
+      "category": "QUESOS",
+      "aliases": [
+        "Fiore Sardo"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MASAF_CHEESE",
+        "recordId": "Fiore Sardo",
+        "sourceName": "Fiore Sardo",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3340"
+      },
+      "identityReason": "Tipo de queso con pliego propio en la fuente oficial. Se añade el nombre del tipo una sola vez, sin duplicarlo como versión certificada."
+    },
+    {
+      "canonicalKey": "formaggella_del_luinese",
+      "defaultName": "Formaggella del Luinese",
+      "category": "QUESOS",
+      "aliases": [
+        "Formaggella del Luinese"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MASAF_CHEESE",
+        "recordId": "Formaggella del Luinese",
+        "sourceName": "Formaggella del Luinese",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3340"
+      },
+      "identityReason": "Tipo de queso con pliego propio en la fuente oficial. Se añade el nombre del tipo una sola vez, sin duplicarlo como versión certificada."
+    },
+    {
+      "canonicalKey": "formaggio_di_fossa_di_sogliano",
+      "defaultName": "Formaggio di Fossa di Sogliano",
+      "category": "QUESOS",
+      "aliases": [
+        "Formaggio di Fossa di Sogliano"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MASAF_CHEESE",
+        "recordId": "Formaggio di Fossa di Sogliano",
+        "sourceName": "Formaggio di Fossa di Sogliano",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3340"
+      },
+      "identityReason": "Tipo de queso con pliego propio en la fuente oficial. Se añade el nombre del tipo una sola vez, sin duplicarlo como versión certificada."
+    },
+    {
+      "canonicalKey": "formai_de_mut_dell_alta_valle_brembana",
+      "defaultName": "Formai de Mut dell’Alta Valle Brembana",
+      "category": "QUESOS",
+      "aliases": [
+        "Formai de Mut dell’Alta Valle Brembana"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MASAF_CHEESE",
+        "recordId": "Formai de Mut dell’Alta Valle Brembana",
+        "sourceName": "Formai de Mut dell’Alta Valle Brembana",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3340"
+      },
+      "identityReason": "Tipo de queso con pliego propio en la fuente oficial. Se añade el nombre del tipo una sola vez, sin duplicarlo como versión certificada."
+    },
+    {
+      "canonicalKey": "monte_veronese",
+      "defaultName": "Monte Veronese",
+      "category": "QUESOS",
+      "aliases": [
+        "Monte Veronese"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MASAF_CHEESE",
+        "recordId": "Monte Veronese",
+        "sourceName": "Monte Veronese",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3340"
+      },
+      "identityReason": "Tipo de queso con pliego propio en la fuente oficial. Se añade el nombre del tipo una sola vez, sin duplicarlo como versión certificada."
+    },
+    {
+      "canonicalKey": "murazzano",
+      "defaultName": "Murazzano",
+      "category": "QUESOS",
+      "aliases": [
+        "Murazzano"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MASAF_CHEESE",
+        "recordId": "Murazzano",
+        "sourceName": "Murazzano",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3340"
+      },
+      "identityReason": "Tipo de queso con pliego propio en la fuente oficial. Se añade el nombre del tipo una sola vez, sin duplicarlo como versión certificada."
+    },
+    {
+      "canonicalKey": "nostrano_valtrompia",
+      "defaultName": "Nostrano Valtrompia",
+      "category": "QUESOS",
+      "aliases": [
+        "Nostrano Valtrompia"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MASAF_CHEESE",
+        "recordId": "Nostrano Valtrompia",
+        "sourceName": "Nostrano Valtrompia",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3340"
+      },
+      "identityReason": "Tipo de queso con pliego propio en la fuente oficial. Se añade el nombre del tipo una sola vez, sin duplicarlo como versión certificada."
+    },
+    {
+      "canonicalKey": "ossolano",
+      "defaultName": "Ossolano",
+      "category": "QUESOS",
+      "aliases": [
+        "Ossolano"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MASAF_CHEESE",
+        "recordId": "Ossolano",
+        "sourceName": "Ossolano",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3340"
+      },
+      "identityReason": "Tipo de queso con pliego propio en la fuente oficial. Se añade el nombre del tipo una sola vez, sin duplicarlo como versión certificada."
+    },
+    {
+      "canonicalKey": "pecorino_crotonese",
+      "defaultName": "Pecorino Crotonese",
+      "category": "QUESOS",
+      "aliases": [
+        "Pecorino Crotonese"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MASAF_CHEESE",
+        "recordId": "Pecorino Crotonese",
+        "sourceName": "Pecorino Crotonese",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3340"
+      },
+      "identityReason": "Tipo de queso con pliego propio en la fuente oficial. Se añade el nombre del tipo una sola vez, sin duplicarlo como versión certificada."
+    },
+    {
+      "canonicalKey": "pecorino_delle_balze_volterrane",
+      "defaultName": "Pecorino delle Balze Volterrane",
+      "category": "QUESOS",
+      "aliases": [
+        "Pecorino delle Balze Volterrane"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MASAF_CHEESE",
+        "recordId": "Pecorino delle Balze Volterrane",
+        "sourceName": "Pecorino delle Balze Volterrane",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3340"
+      },
+      "identityReason": "Tipo de queso con pliego propio en la fuente oficial. Se añade el nombre del tipo una sola vez, sin duplicarlo como versión certificada."
+    },
+    {
+      "canonicalKey": "pecorino_del_monte_poro",
+      "defaultName": "Pecorino del Monte Poro",
+      "category": "QUESOS",
+      "aliases": [
+        "Pecorino del Monte Poro"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MASAF_CHEESE",
+        "recordId": "Pecorino del Monte Poro",
+        "sourceName": "Pecorino del Monte Poro",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3340"
+      },
+      "identityReason": "Tipo de queso con pliego propio en la fuente oficial. Se añade el nombre del tipo una sola vez, sin duplicarlo como versión certificada."
+    },
+    {
+      "canonicalKey": "pecorino_di_filiano",
+      "defaultName": "Pecorino di Filiano",
+      "category": "QUESOS",
+      "aliases": [
+        "Pecorino di Filiano"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MASAF_CHEESE",
+        "recordId": "Pecorino di Filiano",
+        "sourceName": "Pecorino di Filiano",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3340"
+      },
+      "identityReason": "Tipo de queso con pliego propio en la fuente oficial. Se añade el nombre del tipo una sola vez, sin duplicarlo como versión certificada."
+    },
+    {
+      "canonicalKey": "pecorino_di_picinisco",
+      "defaultName": "Pecorino di Picinisco",
+      "category": "QUESOS",
+      "aliases": [
+        "Pecorino di Picinisco"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MASAF_CHEESE",
+        "recordId": "Pecorino di Picinisco",
+        "sourceName": "Pecorino di Picinisco",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3340"
+      },
+      "identityReason": "Tipo de queso con pliego propio en la fuente oficial. Se añade el nombre del tipo una sola vez, sin duplicarlo como versión certificada."
+    },
+    {
+      "canonicalKey": "pecorino_siciliano",
+      "defaultName": "Pecorino Siciliano",
+      "category": "QUESOS",
+      "aliases": [
+        "Pecorino Siciliano"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MASAF_CHEESE",
+        "recordId": "Pecorino Siciliano",
+        "sourceName": "Pecorino Siciliano",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3340"
+      },
+      "identityReason": "Tipo de queso con pliego propio en la fuente oficial. Se añade el nombre del tipo una sola vez, sin duplicarlo como versión certificada."
+    },
+    {
+      "canonicalKey": "pecorino_toscano",
+      "defaultName": "Pecorino Toscano",
+      "category": "QUESOS",
+      "aliases": [
+        "Pecorino Toscano"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MASAF_CHEESE",
+        "recordId": "Pecorino Toscano",
+        "sourceName": "Pecorino Toscano",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3340"
+      },
+      "identityReason": "Tipo de queso con pliego propio en la fuente oficial. Se añade el nombre del tipo una sola vez, sin duplicarlo como versión certificada."
+    },
+    {
+      "canonicalKey": "piacentinu_ennese",
+      "defaultName": "Piacentinu Ennese",
+      "category": "QUESOS",
+      "aliases": [
+        "Piacentinu Ennese"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MASAF_CHEESE",
+        "recordId": "Piacentinu Ennese",
+        "sourceName": "Piacentinu Ennese",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3340"
+      },
+      "identityReason": "Tipo de queso con pliego propio en la fuente oficial. Se añade el nombre del tipo una sola vez, sin duplicarlo como versión certificada."
+    },
+    {
+      "canonicalKey": "provola_dei_nebrodi",
+      "defaultName": "Provola dei Nebrodi",
+      "category": "QUESOS",
+      "aliases": [
+        "Provola dei Nebrodi"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MASAF_CHEESE",
+        "recordId": "Provola dei Nebrodi",
+        "sourceName": "Provola dei Nebrodi",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3340"
+      },
+      "identityReason": "Tipo de queso con pliego propio en la fuente oficial. Se añade el nombre del tipo una sola vez, sin duplicarlo como versión certificada."
+    },
+    {
+      "canonicalKey": "provolone_del_monaco",
+      "defaultName": "Provolone del Monaco",
+      "category": "QUESOS",
+      "aliases": [
+        "Provolone del Monaco"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MASAF_CHEESE",
+        "recordId": "Provolone del Monaco",
+        "sourceName": "Provolone del Monaco",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3340"
+      },
+      "identityReason": "Tipo de queso con pliego propio en la fuente oficial. Se añade el nombre del tipo una sola vez, sin duplicarlo como versión certificada."
+    },
+    {
+      "canonicalKey": "puzzone_di_moena",
+      "defaultName": "Puzzone di Moena",
+      "category": "QUESOS",
+      "aliases": [
+        "Puzzone di Moena"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MASAF_CHEESE",
+        "recordId": "Puzzone di Moena",
+        "sourceName": "Puzzone di Moena",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3340"
+      },
+      "identityReason": "Tipo de queso con pliego propio en la fuente oficial. Se añade el nombre del tipo una sola vez, sin duplicarlo como versión certificada."
+    },
+    {
+      "canonicalKey": "quartirolo_lombardo",
+      "defaultName": "Quartirolo Lombardo",
+      "category": "QUESOS",
+      "aliases": [
+        "Quartirolo Lombardo"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MASAF_CHEESE",
+        "recordId": "Quartirolo Lombardo",
+        "sourceName": "Quartirolo Lombardo",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3340"
+      },
+      "identityReason": "Tipo de queso con pliego propio en la fuente oficial. Se añade el nombre del tipo una sola vez, sin duplicarlo como versión certificada."
+    },
+    {
+      "canonicalKey": "ragusano",
+      "defaultName": "Ragusano",
+      "category": "QUESOS",
+      "aliases": [
+        "Ragusano"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MASAF_CHEESE",
+        "recordId": "Ragusano",
+        "sourceName": "Ragusano",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3340"
+      },
+      "identityReason": "Tipo de queso con pliego propio en la fuente oficial. Se añade el nombre del tipo una sola vez, sin duplicarlo como versión certificada."
+    },
+    {
+      "canonicalKey": "raschera",
+      "defaultName": "Raschera",
+      "category": "QUESOS",
+      "aliases": [
+        "Raschera"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MASAF_CHEESE",
+        "recordId": "Raschera",
+        "sourceName": "Raschera",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3340"
+      },
+      "identityReason": "Tipo de queso con pliego propio en la fuente oficial. Se añade el nombre del tipo una sola vez, sin duplicarlo como versión certificada."
+    },
+    {
+      "canonicalKey": "robiola_di_roccaverano",
+      "defaultName": "Robiola di Roccaverano",
+      "category": "QUESOS",
+      "aliases": [
+        "Robiola di Roccaverano"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MASAF_CHEESE",
+        "recordId": "Robiola di Roccaverano",
+        "sourceName": "Robiola di Roccaverano",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3340"
+      },
+      "identityReason": "Tipo de queso con pliego propio en la fuente oficial. Se añade el nombre del tipo una sola vez, sin duplicarlo como versión certificada."
+    },
+    {
+      "canonicalKey": "salva_cremasco",
+      "defaultName": "Salva Cremasco",
+      "category": "QUESOS",
+      "aliases": [
+        "Salva Cremasco"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MASAF_CHEESE",
+        "recordId": "Salva Cremasco",
+        "sourceName": "Salva Cremasco",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3340"
+      },
+      "identityReason": "Tipo de queso con pliego propio en la fuente oficial. Se añade el nombre del tipo una sola vez, sin duplicarlo como versión certificada."
+    },
+    {
+      "canonicalKey": "silter",
+      "defaultName": "Silter",
+      "category": "QUESOS",
+      "aliases": [
+        "Silter"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MASAF_CHEESE",
+        "recordId": "Silter",
+        "sourceName": "Silter",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3340"
+      },
+      "identityReason": "Tipo de queso con pliego propio en la fuente oficial. Se añade el nombre del tipo una sola vez, sin duplicarlo como versión certificada."
+    },
+    {
+      "canonicalKey": "spressa_delle_giudicarie",
+      "defaultName": "Spressa delle Giudicarie",
+      "category": "QUESOS",
+      "aliases": [
+        "Spressa delle Giudicarie"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MASAF_CHEESE",
+        "recordId": "Spressa delle Giudicarie",
+        "sourceName": "Spressa delle Giudicarie",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3340"
+      },
+      "identityReason": "Tipo de queso con pliego propio en la fuente oficial. Se añade el nombre del tipo una sola vez, sin duplicarlo como versión certificada."
+    },
+    {
+      "canonicalKey": "squacquerone_di_romagna",
+      "defaultName": "Squacquerone di Romagna",
+      "category": "QUESOS",
+      "aliases": [
+        "Squacquerone di Romagna"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MASAF_CHEESE",
+        "recordId": "Squacquerone di Romagna",
+        "sourceName": "Squacquerone di Romagna",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3340"
+      },
+      "identityReason": "Tipo de queso con pliego propio en la fuente oficial. Se añade el nombre del tipo una sola vez, sin duplicarlo como versión certificada."
+    },
+    {
+      "canonicalKey": "stelvio",
+      "defaultName": "Stelvio",
+      "category": "QUESOS",
+      "aliases": [
+        "Stelvio"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MASAF_CHEESE",
+        "recordId": "Stelvio",
+        "sourceName": "Stelvio",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3340"
+      },
+      "identityReason": "Tipo de queso con pliego propio en la fuente oficial. Se añade el nombre del tipo una sola vez, sin duplicarlo como versión certificada."
+    },
+    {
+      "canonicalKey": "strachitunt",
+      "defaultName": "Strachitunt",
+      "category": "QUESOS",
+      "aliases": [
+        "Strachitunt"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MASAF_CHEESE",
+        "recordId": "Strachitunt",
+        "sourceName": "Strachitunt",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3340"
+      },
+      "identityReason": "Tipo de queso con pliego propio en la fuente oficial. Se añade el nombre del tipo una sola vez, sin duplicarlo como versión certificada."
+    },
+    {
+      "canonicalKey": "taleggio",
+      "defaultName": "Taleggio",
+      "category": "QUESOS",
+      "aliases": [
+        "Taleggio"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MASAF_CHEESE",
+        "recordId": "Taleggio",
+        "sourceName": "Taleggio",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3340"
+      },
+      "identityReason": "Tipo de queso con pliego propio en la fuente oficial. Se añade el nombre del tipo una sola vez, sin duplicarlo como versión certificada."
+    },
+    {
+      "canonicalKey": "valle_d_aosta_fromadzo",
+      "defaultName": "Valle d’Aosta Fromadzo",
+      "category": "QUESOS",
+      "aliases": [
+        "Valle d’Aosta Fromadzo"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MASAF_CHEESE",
+        "recordId": "Valle d’Aosta Fromadzo",
+        "sourceName": "Valle d’Aosta Fromadzo",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3340"
+      },
+      "identityReason": "Tipo de queso con pliego propio en la fuente oficial. Se añade el nombre del tipo una sola vez, sin duplicarlo como versión certificada."
+    },
+    {
+      "canonicalKey": "valtellina_casera",
+      "defaultName": "Valtellina Casera",
+      "category": "QUESOS",
+      "aliases": [
+        "Valtellina Casera"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MASAF_CHEESE",
+        "recordId": "Valtellina Casera",
+        "sourceName": "Valtellina Casera",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3340"
+      },
+      "identityReason": "Tipo de queso con pliego propio en la fuente oficial. Se añade el nombre del tipo una sola vez, sin duplicarlo como versión certificada."
+    },
+    {
+      "canonicalKey": "vastedda_della_valle_del_belice",
+      "defaultName": "Vastedda della Valle del Belice",
+      "category": "QUESOS",
+      "aliases": [
+        "Vastedda della Valle del Belice"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "MASAF_CHEESE",
+        "recordId": "Vastedda della Valle del Belice",
+        "sourceName": "Vastedda della Valle del Belice",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3340"
+      },
+      "identityReason": "Tipo de queso con pliego propio en la fuente oficial. Se añade el nombre del tipo una sola vez, sin duplicarlo como versión certificada."
+    },
+    {
+      "canonicalKey": "ciauscolo",
+      "defaultName": "Ciauscolo",
+      "category": "EMBUTIDOS",
+      "aliases": [
+        "Ciauscolo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MASAF_MEAT",
+        "recordId": "Ciauscolo",
+        "sourceName": "Ciauscolo",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3339"
+      },
+      "identityReason": "Elaboración cárnica diferenciada en el catálogo oficial; se omite el sello y no se añaden presentaciones de envase."
+    },
+    {
+      "canonicalKey": "cotechino",
+      "defaultName": "Cotechino",
+      "category": "EMBUTIDOS",
+      "aliases": [
+        "Cotechino"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MASAF_MEAT",
+        "recordId": "Cotechino Modena",
+        "sourceName": "Cotechino Modena",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3339"
+      },
+      "identityReason": "Elaboración cárnica diferenciada en el catálogo oficial; se omite el sello y no se añaden presentaciones de envase."
+    },
+    {
+      "canonicalKey": "culatello_di_zibello",
+      "defaultName": "Culatello di Zibello",
+      "category": "EMBUTIDOS",
+      "aliases": [
+        "Culatello di Zibello"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MASAF_MEAT",
+        "recordId": "Culatello di Zibello",
+        "sourceName": "Culatello di Zibello",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3339"
+      },
+      "identityReason": "Elaboración cárnica diferenciada en el catálogo oficial; se omite el sello y no se añaden presentaciones de envase."
+    },
+    {
+      "canonicalKey": "finocchiona",
+      "defaultName": "Finocchiona",
+      "category": "EMBUTIDOS",
+      "aliases": [
+        "Finocchiona"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MASAF_MEAT",
+        "recordId": "Finocchiona",
+        "sourceName": "Finocchiona",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3339"
+      },
+      "identityReason": "Elaboración cárnica diferenciada en el catálogo oficial; se omite el sello y no se añaden presentaciones de envase."
+    },
+    {
+      "canonicalKey": "lucanica_di_picerno",
+      "defaultName": "Lucanica di Picerno",
+      "category": "EMBUTIDOS",
+      "aliases": [
+        "Lucanica di Picerno"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MASAF_MEAT",
+        "recordId": "Lucanica di Picerno",
+        "sourceName": "Lucanica di Picerno",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3339"
+      },
+      "identityReason": "Elaboración cárnica diferenciada en el catálogo oficial; se omite el sello y no se añaden presentaciones de envase."
+    },
+    {
+      "canonicalKey": "mortadela_de_prato",
+      "defaultName": "Mortadela de Prato",
+      "category": "EMBUTIDOS",
+      "aliases": [
+        "Mortadela de Prato"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MASAF_MEAT",
+        "recordId": "Mortadella di Prato",
+        "sourceName": "Mortadella di Prato",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3339"
+      },
+      "identityReason": "Elaboración cárnica diferenciada en el catálogo oficial; se omite el sello y no se añaden presentaciones de envase."
+    },
+    {
+      "canonicalKey": "pitina",
+      "defaultName": "Pitina",
+      "category": "EMBUTIDOS",
+      "aliases": [
+        "Pitina"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MASAF_MEAT",
+        "recordId": "Pitina",
+        "sourceName": "Pitina",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3339"
+      },
+      "identityReason": "Elaboración cárnica diferenciada en el catálogo oficial; se omite el sello y no se añaden presentaciones de envase."
+    },
+    {
+      "canonicalKey": "salama_da_sugo",
+      "defaultName": "Salama da sugo",
+      "category": "EMBUTIDOS",
+      "aliases": [
+        "Salama da sugo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MASAF_MEAT",
+        "recordId": "Salama da sugo",
+        "sourceName": "Salama da sugo",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3339"
+      },
+      "identityReason": "Elaboración cárnica diferenciada en el catálogo oficial; se omite el sello y no se añaden presentaciones de envase."
+    },
+    {
+      "canonicalKey": "salame_brianza",
+      "defaultName": "Salame Brianza",
+      "category": "EMBUTIDOS",
+      "aliases": [
+        "Salame Brianza"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MASAF_MEAT",
+        "recordId": "Salame Brianza",
+        "sourceName": "Salame Brianza",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3339"
+      },
+      "identityReason": "Elaboración cárnica diferenciada en el catálogo oficial; se omite el sello y no se añaden presentaciones de envase."
+    },
+    {
+      "canonicalKey": "salame_cremona",
+      "defaultName": "Salame Cremona",
+      "category": "EMBUTIDOS",
+      "aliases": [
+        "Salame Cremona"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MASAF_MEAT",
+        "recordId": "Salame Cremona",
+        "sourceName": "Salame Cremona",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3339"
+      },
+      "identityReason": "Elaboración cárnica diferenciada en el catálogo oficial; se omite el sello y no se añaden presentaciones de envase."
+    },
+    {
+      "canonicalKey": "salame_de_oca_de_mortara",
+      "defaultName": "Salame de oca de Mortara",
+      "category": "EMBUTIDOS",
+      "aliases": [
+        "Salame de oca de Mortara"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MASAF_MEAT",
+        "recordId": "Salame d’oca di Mortara",
+        "sourceName": "Salame d’oca di Mortara",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3339"
+      },
+      "identityReason": "Elaboración cárnica diferenciada en el catálogo oficial; se omite el sello y no se añaden presentaciones de envase."
+    },
+    {
+      "canonicalKey": "salame_di_varzi",
+      "defaultName": "Salame di Varzi",
+      "category": "EMBUTIDOS",
+      "aliases": [
+        "Salame di Varzi"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MASAF_MEAT",
+        "recordId": "Salame di Varzi",
+        "sourceName": "Salame di Varzi",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3339"
+      },
+      "identityReason": "Elaboración cárnica diferenciada en el catálogo oficial; se omite el sello y no se añaden presentaciones de envase."
+    },
+    {
+      "canonicalKey": "salame_piacentino",
+      "defaultName": "Salame Piacentino",
+      "category": "EMBUTIDOS",
+      "aliases": [
+        "Salame Piacentino"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MASAF_MEAT",
+        "recordId": "Salame Piacentino",
+        "sourceName": "Salame Piacentino",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3339"
+      },
+      "identityReason": "Elaboración cárnica diferenciada en el catálogo oficial; se omite el sello y no se añaden presentaciones de envase."
+    },
+    {
+      "canonicalKey": "salame_piemonte",
+      "defaultName": "Salame Piemonte",
+      "category": "EMBUTIDOS",
+      "aliases": [
+        "Salame Piemonte"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MASAF_MEAT",
+        "recordId": "Salame Piemonte",
+        "sourceName": "Salame Piemonte",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3339"
+      },
+      "identityReason": "Elaboración cárnica diferenciada en el catálogo oficial; se omite el sello y no se añaden presentaciones de envase."
+    },
+    {
+      "canonicalKey": "salame_sant_angelo",
+      "defaultName": "Salame Sant’Angelo",
+      "category": "EMBUTIDOS",
+      "aliases": [
+        "Salame Sant’Angelo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MASAF_MEAT",
+        "recordId": "Salame S.Angelo",
+        "sourceName": "Salame S.Angelo",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3339"
+      },
+      "identityReason": "Elaboración cárnica diferenciada en el catálogo oficial; se omite el sello y no se añaden presentaciones de envase."
+    },
+    {
+      "canonicalKey": "salame_felino",
+      "defaultName": "Salame Felino",
+      "category": "EMBUTIDOS",
+      "aliases": [
+        "Salame Felino"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MASAF_MEAT",
+        "recordId": "Salame Felino",
+        "sourceName": "Salame Felino",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3339"
+      },
+      "identityReason": "Elaboración cárnica diferenciada en el catálogo oficial; se omite el sello y no se añaden presentaciones de envase."
+    },
+    {
+      "canonicalKey": "salamini_alla_cacciatora",
+      "defaultName": "Salamini alla cacciatora",
+      "category": "EMBUTIDOS",
+      "aliases": [
+        "Salamini alla cacciatora"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MASAF_MEAT",
+        "recordId": "Salamini Italiani alla cacciatora",
+        "sourceName": "Salamini Italiani alla cacciatora",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3339"
+      },
+      "identityReason": "Elaboración cárnica diferenciada en el catálogo oficial; se omite el sello y no se añaden presentaciones de envase."
+    },
+    {
+      "canonicalKey": "sopressa_vicentina",
+      "defaultName": "Sopressa Vicentina",
+      "category": "EMBUTIDOS",
+      "aliases": [
+        "Sopressa Vicentina"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MASAF_MEAT",
+        "recordId": "Sopressa Vicentina",
+        "sourceName": "Sopressa Vicentina",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3339"
+      },
+      "identityReason": "Elaboración cárnica diferenciada en el catálogo oficial; se omite el sello y no se añaden presentaciones de envase."
+    },
+    {
+      "canonicalKey": "zampina_di_sammichele_di_bari",
+      "defaultName": "Zampina di Sammichele di Bari",
+      "category": "EMBUTIDOS",
+      "aliases": [
+        "Zampina di Sammichele di Bari"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MASAF_MEAT",
+        "recordId": "Zampina di Sammichele di Bari",
+        "sourceName": "Zampina di Sammichele di Bari",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3339"
+      },
+      "identityReason": "Elaboración cárnica diferenciada en el catálogo oficial; se omite el sello y no se añaden presentaciones de envase."
+    },
+    {
+      "canonicalKey": "zampone",
+      "defaultName": "Zampone",
+      "category": "EMBUTIDOS",
+      "aliases": [
+        "Zampone"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MASAF_MEAT",
+        "recordId": "Zampone Modena",
+        "sourceName": "Zampone Modena",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/3339"
+      },
+      "identityReason": "Elaboración cárnica diferenciada en el catálogo oficial; se omite el sello y no se añaden presentaciones de envase."
+    },
+    {
+      "canonicalKey": "caciotta_de_vaca",
+      "defaultName": "Caciotta de vaca",
+      "category": "QUESOS",
+      "aliases": [
+        "Caciotta de vaca"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE ABRUZZO-33",
+        "sourceName": "Cacio di vacca bianca, Caciotta di vacca",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=1"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "caciofiore_aquilano",
+      "defaultName": "Caciofiore aquilano",
+      "category": "QUESOS",
+      "aliases": [
+        "Caciofiore aquilano"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE ABRUZZO-35",
+        "sourceName": "Caciofiore aquilano",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=1"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "giuncata",
+      "defaultName": "Giuncata",
+      "category": "QUESOS",
+      "aliases": [
+        "Giuncata"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE ABRUZZO-39",
+        "sourceName": "Giuncata vaccina abruzzese, Sprisciocca",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=1"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "giuncatella",
+      "defaultName": "Giuncatella",
+      "category": "QUESOS",
+      "aliases": [
+        "Giuncatella"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE ABRUZZO-40",
+        "sourceName": "Giuncatella abruzzese",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=1"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "incanestrato_di_castel_del_monte",
+      "defaultName": "Incanestrato di Castel del Monte",
+      "category": "QUESOS",
+      "aliases": [
+        "Incanestrato di Castel del Monte"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE ABRUZZO-41",
+        "sourceName": "Incanestrato di Castel del Monte",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=1"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "pecorino_di_atri",
+      "defaultName": "Pecorino di Atri",
+      "category": "QUESOS",
+      "aliases": [
+        "Pecorino di Atri"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE ABRUZZO-43",
+        "sourceName": "Pecorino di Atri",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=1"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "pecorino_di_farindola",
+      "defaultName": "Pecorino di Farindola",
+      "category": "QUESOS",
+      "aliases": [
+        "Pecorino di Farindola"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE ABRUZZO-44",
+        "sourceName": "Pecorino di Farindola",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=1"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "pecorino_marcetto",
+      "defaultName": "Pecorino marcetto",
+      "category": "QUESOS",
+      "aliases": [
+        "Pecorino marcetto"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE ABRUZZO-45",
+        "sourceName": "Pecorino marcetto, Cacio marcetto",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=1"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "cacioricotta",
+      "defaultName": "Cacioricotta",
+      "category": "QUESOS",
+      "aliases": [
+        "Cacioricotta"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE BASILICATA-32",
+        "sourceName": "Cacioricotta",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=4"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "casieddu",
+      "defaultName": "Casieddu",
+      "category": "QUESOS",
+      "aliases": [
+        "Casieddu",
+        "Casieddo"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE BASILICATA-34",
+        "sourceName": "Casieddo o Casieddu",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=4"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "burrino",
+      "defaultName": "Burrino",
+      "category": "QUESOS",
+      "aliases": [
+        "Burrino"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE BASILICATA-35",
+        "sourceName": "Manteca",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=4"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "padraccio",
+      "defaultName": "Padraccio",
+      "category": "QUESOS",
+      "aliases": [
+        "Padraccio"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE BASILICATA-38",
+        "sourceName": "Padraccio",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=4"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "tagliatizzo_di_castelsaraceno",
+      "defaultName": "Tagliatizzo di Castelsaraceno",
+      "category": "QUESOS",
+      "aliases": [
+        "Tagliatizzo di Castelsaraceno"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE BASILICATA-42",
+        "sourceName": "Tagliatizzo di Castelsaraceno",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=4"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "caciotto_di_cirella_di_plati",
+      "defaultName": "Caciotto di Cirella di Platì",
+      "category": "QUESOS",
+      "aliases": [
+        "Caciotto di Cirella di Platì"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CALABRIA-45",
+        "sourceName": "Caciotto di Cirella di Platì",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=7"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "farci_provola",
+      "defaultName": "Farci-provola",
+      "category": "QUESOS",
+      "aliases": [
+        "Farci-provola"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CALABRIA-49",
+        "sourceName": "Farci-provola",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=7"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "felciata",
+      "defaultName": "Felciata",
+      "category": "QUESOS",
+      "aliases": [
+        "Felciata"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CALABRIA-50",
+        "sourceName": "Felciata",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=7"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "musulupu",
+      "defaultName": "Musulupu",
+      "category": "QUESOS",
+      "aliases": [
+        "Musulupu"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CALABRIA-54",
+        "sourceName": "Musulupu dell'Aspromonte",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=7"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "pecorino_primo_sale",
+      "defaultName": "Pecorino primo sale",
+      "category": "QUESOS",
+      "aliases": [
+        "Pecorino primo sale"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CALABRIA-59",
+        "sourceName": "Pecorino primo sale",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=7"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "rasco",
+      "defaultName": "Rasco",
+      "category": "QUESOS",
+      "aliases": [
+        "Rasco"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CALABRIA-61",
+        "sourceName": "Rasco",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=7"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "strazzatella_silana",
+      "defaultName": "Strazzatella silana",
+      "category": "QUESOS",
+      "aliases": [
+        "Strazzatella silana"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CALABRIA-62",
+        "sourceName": "Strazzatella silana",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=7"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "caciobarile",
+      "defaultName": "Caciobarile",
+      "category": "QUESOS",
+      "aliases": [
+        "Caciobarile"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-91",
+        "sourceName": "Caciobarile",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=12"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "caciocavallo_ahumado",
+      "defaultName": "Caciocavallo ahumado",
+      "category": "QUESOS",
+      "aliases": [
+        "Caciocavallo ahumado"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-92",
+        "sourceName": "Caciocavallo affumicato",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=12"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "caciocavallo_de_bufala",
+      "defaultName": "Caciocavallo de búfala",
+      "category": "QUESOS",
+      "aliases": [
+        "Caciocavallo de búfala"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-95",
+        "sourceName": "Caciocavallo di bufala",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=12"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "caciocchiato",
+      "defaultName": "Caciocchiato",
+      "category": "QUESOS",
+      "aliases": [
+        "Caciocchiato"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-102",
+        "sourceName": "Caciocchiato",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=12"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "caciottina_canestrata_di_sorrento",
+      "defaultName": "Caciottina canestrata di Sorrento",
+      "category": "QUESOS",
+      "aliases": [
+        "Caciottina canestrata di Sorrento"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-105",
+        "sourceName": "Caciottina canestrata di Sorrento",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=12"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "caso_conzato",
+      "defaultName": "Caso conzato",
+      "category": "QUESOS",
+      "aliases": [
+        "Caso conzato"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-107",
+        "sourceName": "Caso conzato*",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=12"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "caso_vallicelli",
+      "defaultName": "Caso Vallicelli",
+      "category": "QUESOS",
+      "aliases": [
+        "Caso Vallicelli"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-109",
+        "sourceName": "Caso Vallicelli*",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=12"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "casoperuto",
+      "defaultName": "Casoperuto",
+      "category": "QUESOS",
+      "aliases": [
+        "Casoperuto"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-110",
+        "sourceName": "Casoperuto e marzolino*",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=12"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "casuforte_di_statigliano",
+      "defaultName": "Casuforte di Statigliano",
+      "category": "QUESOS",
+      "aliases": [
+        "Casuforte di Statigliano"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-111",
+        "sourceName": "Casuforte di Statigliano, Cacioforte, Casoforte*",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=12"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "casu_musciu",
+      "defaultName": "Casu Musciu",
+      "category": "QUESOS",
+      "aliases": [
+        "Casu Musciu"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-112",
+        "sourceName": "Casu Musciu*",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=12"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "mascarpone_de_bufala",
+      "defaultName": "Mascarpone de búfala",
+      "category": "QUESOS",
+      "aliases": [
+        "Mascarpone de búfala"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-123",
+        "sourceName": "Mascarpone di Bufala",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=12"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "mozzarella_nella_mortella",
+      "defaultName": "Mozzarella nella mortella",
+      "category": "QUESOS",
+      "aliases": [
+        "Mozzarella nella mortella"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-124",
+        "sourceName": "Mozzarella nella mortella*",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=12"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "o_peluso",
+      "defaultName": "O’ Peluso",
+      "category": "QUESOS",
+      "aliases": [
+        "O’ Peluso"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-125",
+        "sourceName": "O' Peluso*",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=12"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "pecorino_di_carmasciano",
+      "defaultName": "Pecorino di Carmasciano",
+      "category": "QUESOS",
+      "aliases": [
+        "Pecorino di Carmasciano"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-128",
+        "sourceName": "Pecorino di Carmasciano*",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=12"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "pecorino_di_laticauda",
+      "defaultName": "Pecorino di Laticauda",
+      "category": "QUESOS",
+      "aliases": [
+        "Pecorino di Laticauda"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-129",
+        "sourceName": "Pecorino di Laticauda*",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=12"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "cuffianella",
+      "defaultName": "Cuffianella",
+      "category": "QUESOS",
+      "aliases": [
+        "Cuffianella"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-134",
+        "sourceName": "Cuffianella*",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=12"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "riavulillo",
+      "defaultName": "Riavulillo",
+      "category": "QUESOS",
+      "aliases": [
+        "Riavulillo"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-138",
+        "sourceName": "Riavulillo*",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=12"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "ricotta_di_fuscella",
+      "defaultName": "Ricotta di fuscella",
+      "category": "QUESOS",
+      "aliases": [
+        "Ricotta di fuscella"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-139",
+        "sourceName": "Ricotta di fuscella di Sant'Anastasia*",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=12"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "scamorza_de_bufala",
+      "defaultName": "Scamorza de búfala",
+      "category": "QUESOS",
+      "aliases": [
+        "Scamorza de búfala"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-141",
+        "sourceName": "Scamorza di bufala",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=12"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "stracchino_de_bufala",
+      "defaultName": "Stracchino de búfala",
+      "category": "QUESOS",
+      "aliases": [
+        "Stracchino de búfala"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-146",
+        "sourceName": "Stracchino di Bufala",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=13"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "stracciata",
+      "defaultName": "Stracciata",
+      "category": "QUESOS",
+      "aliases": [
+        "Stracciata"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-147",
+        "sourceName": "Stracciata*",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=13"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "raviggiolo",
+      "defaultName": "Raviggiolo",
+      "category": "QUESOS",
+      "aliases": [
+        "Raviggiolo"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE EMILIA-ROMAGNA-73",
+        "sourceName": "Raviggiolo*",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=21"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "ribiola_della_bettola",
+      "defaultName": "Ribiola della Bettola",
+      "category": "QUESOS",
+      "aliases": [
+        "Ribiola della Bettola"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE EMILIA-ROMAGNA-74",
+        "sourceName": "Ribiola della bettola, ill Ribiol*",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=21"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "cuincir",
+      "defaultName": "Cuincir",
+      "category": "QUESOS",
+      "aliases": [
+        "Cuincir"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA FRIULI-VENEZIA GIULIA-58",
+        "sourceName": "Cuincir",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=26"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "formadi_frant",
+      "defaultName": "Formadi frant",
+      "category": "QUESOS",
+      "aliases": [
+        "Formadi frant"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA FRIULI-VENEZIA GIULIA-59",
+        "sourceName": "Formadi frant",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=26"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "queso_asino",
+      "defaultName": "Queso Asìno",
+      "category": "QUESOS",
+      "aliases": [
+        "Queso Asìno"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA FRIULI-VENEZIA GIULIA-60",
+        "sourceName": "Formaggio asìno*",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=26"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "queso_fagagna",
+      "defaultName": "Queso Fagagna",
+      "category": "QUESOS",
+      "aliases": [
+        "Queso Fagagna"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA FRIULI-VENEZIA GIULIA-63",
+        "sourceName": "Formaggio fagagna",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=26"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "formai_del_cit",
+      "defaultName": "Formai del cìt",
+      "category": "QUESOS",
+      "aliases": [
+        "Formai del cìt"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA FRIULI-VENEZIA GIULIA-65",
+        "sourceName": "Formai del cìt",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=26"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "queso_latteria",
+      "defaultName": "Queso Latteria",
+      "category": "QUESOS",
+      "aliases": [
+        "Queso Latteria"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA FRIULI-VENEZIA GIULIA-67",
+        "sourceName": "Latteria",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=26"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "monte_re",
+      "defaultName": "Monte Re",
+      "category": "QUESOS",
+      "aliases": [
+        "Monte Re"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA FRIULI-VENEZIA GIULIA-68",
+        "sourceName": "Monte Re",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=26"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "sot_la_trape",
+      "defaultName": "Sot la trape",
+      "category": "QUESOS",
+      "aliases": [
+        "Sot la trape"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA FRIULI-VENEZIA GIULIA-69",
+        "sourceName": "Sot la trape",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=26"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "queso_tabor",
+      "defaultName": "Queso Tabor",
+      "category": "QUESOS",
+      "aliases": [
+        "Queso Tabor"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA FRIULI-VENEZIA GIULIA-70",
+        "sourceName": "Tabor",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=26"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "burrata_de_bufala",
+      "defaultName": "Burrata de búfala",
+      "category": "QUESOS",
+      "aliases": [
+        "Burrata de búfala"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LAZIO-78",
+        "sourceName": "Burrata di bufala*",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=30"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "cacio_di_genazzano",
+      "defaultName": "Cacio di Genazzano",
+      "category": "QUESOS",
+      "aliases": [
+        "Cacio di Genazzano"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LAZIO-79",
+        "sourceName": "Cacio di Genazzano*",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=30"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "cacio_magno",
+      "defaultName": "Cacio magno",
+      "category": "QUESOS",
+      "aliases": [
+        "Cacio magno"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LAZIO-82",
+        "sourceName": "Cacio magno (semplice e alle erbe)*",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=30"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "cacioricotta_de_bufala",
+      "defaultName": "Cacioricotta de búfala",
+      "category": "QUESOS",
+      "aliases": [
+        "Cacioricotta de búfala"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LAZIO-86",
+        "sourceName": "Cacioricotta di bufala*",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=30"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "caciotta_de_bufala",
+      "defaultName": "Caciotta de búfala",
+      "category": "QUESOS",
+      "aliases": [
+        "Caciotta de búfala"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LAZIO-89",
+        "sourceName": "Caciotta di bufala (Pontina)*",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=30"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "ciambella_di_morolo",
+      "defaultName": "Ciambella di Morolo",
+      "category": "QUESOS",
+      "aliases": [
+        "Ciambella di Morolo"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LAZIO-98",
+        "sourceName": "Ciambella di Morolo*",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=30"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "conciato_di_san_vittore",
+      "defaultName": "Conciato di San Vittore",
+      "category": "QUESOS",
+      "aliases": [
+        "Conciato di San Vittore"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LAZIO-99",
+        "sourceName": "Conciato di San Vittore*",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=30"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "gran_cacio_di_morolo",
+      "defaultName": "Gran cacio di Morolo",
+      "category": "QUESOS",
+      "aliases": [
+        "Gran cacio di Morolo"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LAZIO-103",
+        "sourceName": "Gran cacio di Morolo*",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=30"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "marzolina",
+      "defaultName": "Marzolina",
+      "category": "QUESOS",
+      "aliases": [
+        "Marzolina"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LAZIO-104",
+        "sourceName": "Marzolino e/o Marzolina*",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=30"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "mugnaia_di_bufala",
+      "defaultName": "Mugnaia di bufala",
+      "category": "QUESOS",
+      "aliases": [
+        "Mugnaia di bufala"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LAZIO-105",
+        "sourceName": "Mugnaia di bufala",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=30"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "pecorino_ai_bronzi",
+      "defaultName": "Pecorino ai bronzi",
+      "category": "QUESOS",
+      "aliases": [
+        "Pecorino ai bronzi"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LAZIO-107",
+        "sourceName": "Pecorino ai bronzi*",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=30"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "pressato_a_mano",
+      "defaultName": "Pressato a mano",
+      "category": "QUESOS",
+      "aliases": [
+        "Pressato a mano"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LAZIO-113",
+        "sourceName": "Pressato a mano*",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=30"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "squarquaglione_dei_monti_lepini",
+      "defaultName": "Squarquaglione dei Monti Lepini",
+      "category": "QUESOS",
+      "aliases": [
+        "Squarquaglione dei Monti Lepini"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LAZIO-121",
+        "sourceName": "Squarquaglione dei Monti Lepini*",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=30"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "stracchino_de_cabra",
+      "defaultName": "Stracchino de cabra",
+      "category": "QUESOS",
+      "aliases": [
+        "Stracchino de cabra"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LAZIO-123",
+        "sourceName": "Stracchino di capra*",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=30"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "bruzzo",
+      "defaultName": "Bruzzo",
+      "category": "QUESOS",
+      "aliases": [
+        "Bruzzo",
+        "Brussu"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LIGURIA-46",
+        "sourceName": "Bruzzo (Brus, Brussu, della Valle Arroscia)",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=36"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "prescinseua",
+      "defaultName": "Prescinsêua",
+      "category": "QUESOS",
+      "aliases": [
+        "Prescinsêua",
+        "Prescinseua"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LIGURIA-57",
+        "sourceName": "Prescinseua (Quagliata)",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=36"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "san_ste",
+      "defaultName": "San Stè",
+      "category": "QUESOS",
+      "aliases": [
+        "San Stè"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LIGURIA-59",
+        "sourceName": "S. Stefano d’Aveto (San Ste’)",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=36"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "sarasso",
+      "defaultName": "Sarasso",
+      "category": "QUESOS",
+      "aliases": [
+        "Sarasso"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LIGURIA-60",
+        "sourceName": "Sarasso (Sarazzu)",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=36"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "sola",
+      "defaultName": "Söla",
+      "category": "QUESOS",
+      "aliases": [
+        "Söla"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LIGURIA-61",
+        "sourceName": "Söla (Tumma, Sola delle Alpi Marittime)",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=36"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "agri_di_valtorta",
+      "defaultName": "Agrì di Valtorta",
+      "category": "QUESOS",
+      "aliases": [
+        "Agrì di Valtorta"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-80",
+        "sourceName": "Agrì di valtorta",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=42"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "bagoss",
+      "defaultName": "Bagòss",
+      "category": "QUESOS",
+      "aliases": [
+        "Bagòss"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-81",
+        "sourceName": "Bagoss",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=42"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "queso_bernardo",
+      "defaultName": "Queso Bernardo",
+      "category": "QUESOS",
+      "aliases": [
+        "Queso Bernardo"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-82",
+        "sourceName": "Bernardo",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=42"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "branzi",
+      "defaultName": "Branzi",
+      "category": "QUESOS",
+      "aliases": [
+        "Branzi"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-83",
+        "sourceName": "Branzi",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=42"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "cadolet_de_cabra",
+      "defaultName": "Cadolet de cabra",
+      "category": "QUESOS",
+      "aliases": [
+        "Cadolet de cabra"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-84",
+        "sourceName": "Cadolet di capra",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=42"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "casatta_di_corteno_golgi",
+      "defaultName": "Casatta di Corteno Golgi",
+      "category": "QUESOS",
+      "aliases": [
+        "Casatta di Corteno Golgi"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-88",
+        "sourceName": "Casatta di Corteno Golgi",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=42"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "casolet",
+      "defaultName": "Casolèt",
+      "category": "QUESOS",
+      "aliases": [
+        "Casolèt"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-89",
+        "sourceName": "Casolet",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=42"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "casoretta",
+      "defaultName": "Casoretta",
+      "category": "QUESOS",
+      "aliases": [
+        "Casoretta"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-90",
+        "sourceName": "Casoretta",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=42"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "fatuli",
+      "defaultName": "Fatulì",
+      "category": "QUESOS",
+      "aliases": [
+        "Fatulì"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-92",
+        "sourceName": "Fatuli’",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=42"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "fiorone_della_valsassina",
+      "defaultName": "Fiorone della Valsassina",
+      "category": "QUESOS",
+      "aliases": [
+        "Fiorone della Valsassina"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-93",
+        "sourceName": "Fiorone della Valsassina",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=42"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "fiuri",
+      "defaultName": "Fiurì",
+      "category": "QUESOS",
+      "aliases": [
+        "Fiurì",
+        "Fiurit"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-94",
+        "sourceName": "Fiurì o Fiurit",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=42"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "formaggella_tremosine",
+      "defaultName": "Formaggella Tremosine",
+      "category": "QUESOS",
+      "aliases": [
+        "Formaggella Tremosine"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-103",
+        "sourceName": "Formaggella Tremosine",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=42"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "formai_de_livign",
+      "defaultName": "Formai de Livign",
+      "category": "QUESOS",
+      "aliases": [
+        "Formai de Livign"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-108",
+        "sourceName": "Formai de Livign",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=42"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "frumagit_di_curiglia",
+      "defaultName": "Frumagit di Curiglia",
+      "category": "QUESOS",
+      "aliases": [
+        "Frumagit di Curiglia"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-109",
+        "sourceName": "Frumagit di Curiglia",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=42"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "furmag_de_segia",
+      "defaultName": "Furmag de Segia",
+      "category": "QUESOS",
+      "aliases": [
+        "Furmag de Segia"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-110",
+        "sourceName": "Furmag de Segia",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=42"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "granone_lodigiano",
+      "defaultName": "Granone lodigiano",
+      "category": "QUESOS",
+      "aliases": [
+        "Granone lodigiano"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-112",
+        "sourceName": "Granone lodigiano",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=42"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "queso_italico",
+      "defaultName": "Queso Itálico",
+      "category": "QUESOS",
+      "aliases": [
+        "Queso Itálico"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-113",
+        "sourceName": "Italico",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=42"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "magnoca",
+      "defaultName": "Magnoca",
+      "category": "QUESOS",
+      "aliases": [
+        "Magnoca"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-116",
+        "sourceName": "Magnoca",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=42"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "magro_di_piatta",
+      "defaultName": "Magro di Piatta",
+      "category": "QUESOS",
+      "aliases": [
+        "Magro di Piatta"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-119",
+        "sourceName": "Magro di Piatta",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=42"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "mascherpa_d_alpe",
+      "defaultName": "Mascherpa d’Alpe",
+      "category": "QUESOS",
+      "aliases": [
+        "Mascherpa d’Alpe"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-120",
+        "sourceName": "Mascherpa d'Alpe",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=42"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "matusc",
+      "defaultName": "Matusc",
+      "category": "QUESOS",
+      "aliases": [
+        "Matusc"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-121",
+        "sourceName": "Matusc",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=42"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "moteli",
+      "defaultName": "Motelì",
+      "category": "QUESOS",
+      "aliases": [
+        "Motelì"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-122",
+        "sourceName": "Motelì",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=42"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "nisso",
+      "defaultName": "Nisso",
+      "category": "QUESOS",
+      "aliases": [
+        "Nisso"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-123",
+        "sourceName": "Nisso",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=42"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "pannerone",
+      "defaultName": "Pannerone",
+      "category": "QUESOS",
+      "aliases": [
+        "Pannerone"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-126",
+        "sourceName": "Panerone",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=42"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "robiola_bresciana",
+      "defaultName": "Robiola bresciana",
+      "category": "QUESOS",
+      "aliases": [
+        "Robiola bresciana"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-127",
+        "sourceName": "Robiola bresciana",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=42"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "robiola_della_valsassina",
+      "defaultName": "Robiola della Valsassina",
+      "category": "QUESOS",
+      "aliases": [
+        "Robiola della Valsassina"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-128",
+        "sourceName": "Robiola della Valsassina",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=42"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "rosa_camuna",
+      "defaultName": "Rosa Camuna",
+      "category": "QUESOS",
+      "aliases": [
+        "Rosa Camuna"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-129",
+        "sourceName": "Rosa camuna",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=42"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "semuda",
+      "defaultName": "Semuda",
+      "category": "QUESOS",
+      "aliases": [
+        "Semuda"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-130",
+        "sourceName": "Semuda",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=42"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "sta_el",
+      "defaultName": "Sta’el",
+      "category": "QUESOS",
+      "aliases": [
+        "Sta’el"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-131",
+        "sourceName": "Sta’el",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=42"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "strachet",
+      "defaultName": "Strachet",
+      "category": "QUESOS",
+      "aliases": [
+        "Strachet"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-136",
+        "sourceName": "Strachet",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=42"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "tombea",
+      "defaultName": "Tombea",
+      "category": "QUESOS",
+      "aliases": [
+        "Tombea"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-137",
+        "sourceName": "Tombea",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=42"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "scimudin",
+      "defaultName": "Scimudin",
+      "category": "QUESOS",
+      "aliases": [
+        "Scimudin"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-139",
+        "sourceName": "Valtellina scimudin",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=42"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "zincarlin",
+      "defaultName": "Zincarlin",
+      "category": "QUESOS",
+      "aliases": [
+        "Zincarlin"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-140",
+        "sourceName": "Zincarlin",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=42"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "cacio_in_forma_di_limone",
+      "defaultName": "Cacio in forma di limone",
+      "category": "QUESOS",
+      "aliases": [
+        "Cacio in forma di limone"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE MARCHE-45",
+        "sourceName": "Cacio in forma di limone",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=45"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "caciotta_de_cuajo_vegetal",
+      "defaultName": "Caciotta de cuajo vegetal",
+      "category": "QUESOS",
+      "aliases": [
+        "Caciotta de cuajo vegetal"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE MARCHE-47",
+        "sourceName": "Caciotta vaccina al caglio vegetale",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=45"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "queso_de_cabra_con_latex_de_higuera",
+      "defaultName": "Queso de cabra con látex de higuera",
+      "category": "QUESOS",
+      "aliases": [
+        "Queso de cabra con látex de higuera"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE MARCHE-49",
+        "sourceName": "Caprino al lattice di fico",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=45"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "casecc",
+      "defaultName": "Casecc",
+      "category": "QUESOS",
+      "aliases": [
+        "Casecc"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE MARCHE-51",
+        "sourceName": "Casecc",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=45"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "pecorino_in_botte",
+      "defaultName": "Pecorino in botte",
+      "category": "QUESOS",
+      "aliases": [
+        "Pecorino in botte"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE MARCHE-54",
+        "sourceName": "Pecorino in botte",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=45"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "slattato",
+      "defaultName": "Slattato",
+      "category": "QUESOS",
+      "aliases": [
+        "Slattato"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE MARCHE-56",
+        "sourceName": "Slattato",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=45"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "beddo",
+      "defaultName": "Beddo",
+      "category": "QUESOS",
+      "aliases": [
+        "Beddo"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-83",
+        "sourceName": "Beddo",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=52"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "beggia",
+      "defaultName": "Bëggia",
+      "category": "QUESOS",
+      "aliases": [
+        "Bëggia"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-84",
+        "sourceName": "Bëggia",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=52"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "bettelmatt",
+      "defaultName": "Bettelmatt",
+      "category": "QUESOS",
+      "aliases": [
+        "Bettelmatt"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-85",
+        "sourceName": "Bettelmat",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=52"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "queso_boves",
+      "defaultName": "Queso Boves",
+      "category": "QUESOS",
+      "aliases": [
+        "Queso Boves"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-86",
+        "sourceName": "Boves",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=52"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "caso_di_elva",
+      "defaultName": "Caso di Elva",
+      "category": "QUESOS",
+      "aliases": [
+        "Caso di Elva"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-91",
+        "sourceName": "Caso di Elva (Toma di Elva o Casale de Elva o Toumo de caso)",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=52"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "cevrin_di_coazze",
+      "defaultName": "Cevrin di Coazze",
+      "category": "QUESOS",
+      "aliases": [
+        "Cevrin di Coazze"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-92",
+        "sourceName": "Cevrin di Coazze",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=52"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "civrin_della_val_chiusella",
+      "defaultName": "Civrin della Val Chiusella",
+      "category": "QUESOS",
+      "aliases": [
+        "Civrin della Val Chiusella"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-93",
+        "sourceName": "Civrin della Val Chiusella",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=52"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "queso_gioda",
+      "defaultName": "Queso Gioda",
+      "category": "QUESOS",
+      "aliases": [
+        "Queso Gioda"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-96",
+        "sourceName": "Gioda",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=52"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "maccagno",
+      "defaultName": "Maccagno",
+      "category": "QUESOS",
+      "aliases": [
+        "Maccagno",
+        "Macagn"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-97",
+        "sourceName": "Maccagno o Macagn",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=52"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "mollana_della_val_borbera",
+      "defaultName": "Mollana della Val Borbera",
+      "category": "QUESOS",
+      "aliases": [
+        "Mollana della Val Borbera"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-98",
+        "sourceName": "Mollana della Val Borbera",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=52"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "montebore",
+      "defaultName": "Montebore",
+      "category": "QUESOS",
+      "aliases": [
+        "Montebore"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-99",
+        "sourceName": "Montebore",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=52"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "montegranero",
+      "defaultName": "Montegranero",
+      "category": "QUESOS",
+      "aliases": [
+        "Montegranero"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-100",
+        "sourceName": "Montegranero",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=52"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "queso_motta",
+      "defaultName": "Queso Motta",
+      "category": "QUESOS",
+      "aliases": [
+        "Queso Motta"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-101",
+        "sourceName": "Motta",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=52"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "murianengo",
+      "defaultName": "Murianengo",
+      "category": "QUESOS",
+      "aliases": [
+        "Murianengo",
+        "Moncenisio"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-102",
+        "sourceName": "Murianengo o Moncenisio",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=52"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "murtarat",
+      "defaultName": "Murtarat",
+      "category": "QUESOS",
+      "aliases": [
+        "Murtarat"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-103",
+        "sourceName": "Murtarat",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=52"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "paglierina",
+      "defaultName": "Paglierina",
+      "category": "QUESOS",
+      "aliases": [
+        "Paglierina"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-105",
+        "sourceName": "Paglierina",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=52"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "robiola_d_alba",
+      "defaultName": "Robiola d’Alba",
+      "category": "QUESOS",
+      "aliases": [
+        "Robiola d’Alba"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-106",
+        "sourceName": "Robiola d’Alba",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=52"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "robiola_di_cocconato",
+      "defaultName": "Robiola di Cocconato",
+      "category": "QUESOS",
+      "aliases": [
+        "Robiola di Cocconato"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-107",
+        "sourceName": "Robiola di Cocconato",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=52"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "spress",
+      "defaultName": "Spress",
+      "category": "QUESOS",
+      "aliases": [
+        "Spress"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-110",
+        "sourceName": "Spress",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=52"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "toma_ajgra",
+      "defaultName": "Toma ajgra",
+      "category": "QUESOS",
+      "aliases": [
+        "Toma ajgra"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-111",
+        "sourceName": "Toma ajgra",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=52"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "toma_del_lait_brusc",
+      "defaultName": "Toma del lait brusc",
+      "category": "QUESOS",
+      "aliases": [
+        "Toma del lait brusc"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-114",
+        "sourceName": "Toma del lait brusc o bianca alpina",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=52"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "tomino_del_talucco",
+      "defaultName": "Tomino del Talucco",
+      "category": "QUESOS",
+      "aliases": [
+        "Tomino del Talucco"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-123",
+        "sourceName": "Tomino del Talucco",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=52"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "tomino_di_saronsella",
+      "defaultName": "Tomino di Saronsella",
+      "category": "QUESOS",
+      "aliases": [
+        "Tomino di Saronsella"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-126",
+        "sourceName": "Tomino di Saronsella (Chivassotto)",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=52"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "toumin_dal_mel",
+      "defaultName": "Toumin dal mel",
+      "category": "QUESOS",
+      "aliases": [
+        "Toumin dal mel"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-128",
+        "sourceName": "Toumin dal mel",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=52"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "tuma_d_trausela",
+      "defaultName": "Tuma ’d trausela",
+      "category": "QUESOS",
+      "aliases": [
+        "Tuma ’d trausela"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-129",
+        "sourceName": "Tuma 'd trausela",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=52"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "tuma_mola",
+      "defaultName": "Tuma mola",
+      "category": "QUESOS",
+      "aliases": [
+        "Tuma mola"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-131",
+        "sourceName": "Tuma mola",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=52"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "vaciarin",
+      "defaultName": "Vaciarin",
+      "category": "QUESOS",
+      "aliases": [
+        "Vaciarin"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-132",
+        "sourceName": "Vaciarin",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=52"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "graukase",
+      "defaultName": "Graukäse",
+      "category": "QUESOS",
+      "aliases": [
+        "Graukäse"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "PROVINCIA AUTONOMA DI BOLZANO-27",
+        "sourceName": "Graukäse (Formaggio grigio)*",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=56"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "queso_alta_badia",
+      "defaultName": "Queso Alta Badia",
+      "category": "QUESOS",
+      "aliases": [
+        "Queso Alta Badia"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "PROVINCIA AUTONOMA DI BOLZANO-28",
+        "sourceName": "Hartkäse Alta Badia (Formaggio duro Alta Badia)",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=56"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "hochpustertaler",
+      "defaultName": "Hochpustertaler",
+      "category": "QUESOS",
+      "aliases": [
+        "Hochpustertaler"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "PROVINCIA AUTONOMA DI BOLZANO-30",
+        "sourceName": "Hochpustertaler (Formaggio Alta Pusteria)",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=56"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "innichner",
+      "defaultName": "Innichner",
+      "category": "QUESOS",
+      "aliases": [
+        "Innichner"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "PROVINCIA AUTONOMA DI BOLZANO-32",
+        "sourceName": "Innichner (San Candido)",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=56"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "queso_ortler",
+      "defaultName": "Queso Ortler",
+      "category": "QUESOS",
+      "aliases": [
+        "Queso Ortler"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "PROVINCIA AUTONOMA DI BOLZANO-35",
+        "sourceName": "Ortler (Formaggio Ortler)",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=56"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "toblacher_stangenkase",
+      "defaultName": "Toblacher Stangenkäse",
+      "category": "QUESOS",
+      "aliases": [
+        "Toblacher Stangenkäse"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "PROVINCIA AUTONOMA DI BOLZANO-47",
+        "sourceName": "Toblacher stangenkäse (Formaggio originale Dobbiaco)",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=56"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "zieger_aromatizado",
+      "defaultName": "Zieger aromatizado",
+      "category": "QUESOS",
+      "aliases": [
+        "Zieger aromatizado"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "PROVINCIA AUTONOMA DI BOLZANO-48",
+        "sourceName": "Zieger (Formaggio fresco aromatizzato)*",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=56"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "casada",
+      "defaultName": "Casàda",
+      "category": "QUESOS",
+      "aliases": [
+        "Casàda"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "PROVINCIA AUTONOMA DI TRENTO-47",
+        "sourceName": "Casàda",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=58"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "queso_dolomiti",
+      "defaultName": "Queso Dolomiti",
+      "category": "QUESOS",
+      "aliases": [
+        "Queso Dolomiti"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "PROVINCIA AUTONOMA DI TRENTO-49",
+        "sourceName": "Dolomiti",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=58"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "monteson",
+      "defaultName": "Monteson",
+      "category": "QUESOS",
+      "aliases": [
+        "Monteson"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "PROVINCIA AUTONOMA DI TRENTO-54",
+        "sourceName": "Monteson",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=58"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "tosela",
+      "defaultName": "Tosèla",
+      "category": "QUESOS",
+      "aliases": [
+        "Tosèla"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "PROVINCIA AUTONOMA DI TRENTO-57",
+        "sourceName": "Tosela",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=58"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "vezzena",
+      "defaultName": "Vezzena",
+      "category": "QUESOS",
+      "aliases": [
+        "Vezzena"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "PROVINCIA AUTONOMA DI TRENTO-59",
+        "sourceName": "Vezzena",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=58"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "pallone_di_gravina",
+      "defaultName": "Pallone di Gravina",
+      "category": "QUESOS",
+      "aliases": [
+        "Pallone di Gravina"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PUGLIA-52",
+        "sourceName": "Pallone di Gravina",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=60"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "scamorza_de_oveja",
+      "defaultName": "Scamorza de oveja",
+      "category": "QUESOS",
+      "aliases": [
+        "Scamorza de oveja"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PUGLIA-57",
+        "sourceName": "Scamorza di pecora",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=60"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "axridda",
+      "defaultName": "Axridda",
+      "category": "QUESOS",
+      "aliases": [
+        "Axridda"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA DELLA SARDEGNA-28",
+        "sourceName": "Axridda",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=66"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "queso_biancospino",
+      "defaultName": "Queso Biancospino",
+      "category": "QUESOS",
+      "aliases": [
+        "Queso Biancospino"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA DELLA SARDEGNA-29",
+        "sourceName": "Biancospino",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=66"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "bonassai",
+      "defaultName": "Bonassai",
+      "category": "QUESOS",
+      "aliases": [
+        "Bonassai"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA DELLA SARDEGNA-30",
+        "sourceName": "Bonassai",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=66"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "prittas",
+      "defaultName": "Prittas",
+      "category": "QUESOS",
+      "aliases": [
+        "Prittas"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA DELLA SARDEGNA-31",
+        "sourceName": "Casizolu di pecora - Prittas",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=66"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "casizolu",
+      "defaultName": "Casizolu",
+      "category": "QUESOS",
+      "aliases": [
+        "Casizolu"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA DELLA SARDEGNA-32",
+        "sourceName": "Casizolu, Tittighedda, Figu",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=66"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "casu_axedu",
+      "defaultName": "Casu axedu",
+      "category": "QUESOS",
+      "aliases": [
+        "Casu axedu"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA DELLA SARDEGNA-33",
+        "sourceName": "Casu axedu, Fruhe, Frughe, Frua merca, Fiscidu, Viscidu, Ischidu, Bischidu, Vischidàle, Préta, Piéta, Casàdu, Cagiadda, Casu agèru, Casu e fitta, Latte cazàdu, Latti callàu",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=66"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "casu_cottu_de_cabra",
+      "defaultName": "Casu cottu de cabra",
+      "category": "QUESOS",
+      "aliases": [
+        "Casu cottu de cabra"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA DELLA SARDEGNA-34",
+        "sourceName": "Casu cottu (di capra)",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=66"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "casu_in_filixi",
+      "defaultName": "Casu in filixi",
+      "category": "QUESOS",
+      "aliases": [
+        "Casu in filixi"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA DELLA SARDEGNA-36",
+        "sourceName": "Casu in filixi",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=66"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "queso_de_calostro_de_oveja",
+      "defaultName": "Queso de calostro de oveja",
+      "category": "QUESOS",
+      "aliases": [
+        "Queso de calostro de oveja"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA DELLA SARDEGNA-39",
+        "sourceName": "Formaggio di colostro ovino",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=66"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "queso_fresa",
+      "defaultName": "Queso Fresa",
+      "category": "QUESOS",
+      "aliases": [
+        "Queso Fresa"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA DELLA SARDEGNA-41",
+        "sourceName": "Fresa, Fresa de attunzu",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=66"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "greviera_di_ozieri",
+      "defaultName": "Greviera di Ozieri",
+      "category": "QUESOS",
+      "aliases": [
+        "Greviera di Ozieri"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA DELLA SARDEGNA-42",
+        "sourceName": "Greviera di Ozieri",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=66"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "ircano",
+      "defaultName": "Ircano",
+      "category": "QUESOS",
+      "aliases": [
+        "Ircano"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA DELLA SARDEGNA-43",
+        "sourceName": "Ircano",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=66"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "pecorino_di_nule",
+      "defaultName": "Pecorino di Nule",
+      "category": "QUESOS",
+      "aliases": [
+        "Pecorino di Nule"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA DELLA SARDEGNA-44",
+        "sourceName": "Pecorino di Nule",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=66"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "pecorino_di_osilo",
+      "defaultName": "Pecorino di Osilo",
+      "category": "QUESOS",
+      "aliases": [
+        "Pecorino di Osilo"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA DELLA SARDEGNA-45",
+        "sourceName": "Pecorino di Osilo",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=66"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "caciotta_de_oveja",
+      "defaultName": "Caciotta de oveja",
+      "category": "QUESOS",
+      "aliases": [
+        "Caciotta de oveja"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-93",
+        "sourceName": "Caciotta di pecora",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=74"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "marzolino_di_lucardo",
+      "defaultName": "Marzolino di Lucardo",
+      "category": "QUESOS",
+      "aliases": [
+        "Marzolino di Lucardo"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-102",
+        "sourceName": "Marzolino di Lucardo, Pecorino di Lucardo",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=74"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "pecorino_de_corteza_florida",
+      "defaultName": "Pecorino de corteza florida",
+      "category": "QUESOS",
+      "aliases": [
+        "Pecorino de corteza florida"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-104",
+        "sourceName": "Pecorino a crosta fiorita, Pecorino buccia di rospo",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=74"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "pecorino_con_hierbas_aromaticas",
+      "defaultName": "Pecorino con hierbas aromáticas",
+      "category": "QUESOS",
+      "aliases": [
+        "Pecorino con hierbas aromáticas"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-108",
+        "sourceName": "Pecorino alle erbe aromatiche, Pecorino fresco verde",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=74"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "pecorino_madurado_en_hojas_de_nogal",
+      "defaultName": "Pecorino madurado en hojas de nogal",
+      "category": "QUESOS",
+      "aliases": [
+        "Pecorino madurado en hojas de nogal"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-117",
+        "sourceName": "Pecorino stagionato in foglie di noce",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=74"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "reblec",
+      "defaultName": "Reblec",
+      "category": "QUESOS",
+      "aliases": [
+        "Reblec"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA VALLE d’AOSTA-14",
+        "sourceName": "Reblec",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=82"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "reblec_de_crama",
+      "defaultName": "Reblec de crama",
+      "category": "QUESOS",
+      "aliases": [
+        "Reblec de crama"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA VALLE d’AOSTA-15",
+        "sourceName": "Reblec de crama",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=82"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "salignoun",
+      "defaultName": "Salignoùn",
+      "category": "QUESOS",
+      "aliases": [
+        "Salignoùn"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA VALLE d’AOSTA-16",
+        "sourceName": "Salignoùn",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=82"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    },
+    {
+      "canonicalKey": "toma_di_gressoney",
+      "defaultName": "Toma di Gressoney",
+      "category": "QUESOS",
+      "aliases": [
+        "Toma di Gressoney"
+      ],
+      "allergens": [
+        "LACTOSE"
+      ],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA VALLE d’AOSTA-18",
+        "sourceName": "Toma di Gressoney",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=82"
+      },
+      "identityReason": "Tipo de queso tradicional identificado en el catálogo por región y número de ficha. Se conserva el nombre propio; sin duplicar sus variantes ortográficas o nombres locales."
+    }
+  ],
+  "collisionReview": {
+    "method": "Selección editorial, cruce de nombres y alias normalizados, claves históricas, evidencia ya aplicada y especie científica cuando corresponde.",
+    "resolved": [
+      {
+        "canonicalKey": "queso_fresa",
+        "existingKey": "fresas",
+        "decision": "Fresa es el nombre propio de un queso sardo; no es una fruta. Se mantiene el prefijo Queso para distinguirlo."
+      }
+    ],
+    "excluded": [
+      {
+        "candidate": "Crescenza, Fiordilatte, Casu frazigu, Fontal y Caciocavallo genérico",
+        "reason": "Equivalencias de stracchino, mozzarella de vaca, Casu marzu, queso fontal o caciocavallo ya presentes."
+      },
+      {
+        "candidate": "Nuevas fichas solo por denominación de procedencia de prosciutto, coppa, lardo o mozzarella",
+        "reason": "Se priorizan elaboraciones con identidad diferenciada; las denominaciones solapadas quedan fuera."
+      }
+    ]
+  },
+  "provenanceCorrections": {
+    "reason": "Corrección de la lectura del encabezado regional del PDF; nombres y claves de la maestra sin cambios.",
+    "records": [
+      {
+        "key": "reblec",
+        "old": "Anatra germanata veneta",
+        "correct": "Reblec",
+        "page": 82
+      },
+      {
+        "key": "reblec_de_crama",
+        "old": "Anatra mignon",
+        "correct": "Reblec de crama",
+        "page": 82
+      },
+      {
+        "key": "salignoun",
+        "old": "Bogoni di Badia Calavena",
+        "correct": "Salignoùn",
+        "page": 82
+      },
+      {
+        "key": "toma_di_gressoney",
+        "old": "Bondiola col lengual del padovano",
+        "correct": "Toma di Gressoney",
+        "page": 82
+      }
+    ]
+  }
+}

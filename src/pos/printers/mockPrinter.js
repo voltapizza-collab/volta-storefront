@@ -1,4 +1,5 @@
 import { getLineChangeRows } from '../orderLineChanges';
+import { getPaymentLabel } from '../orderPayment';
 const PRINT_LOG_KEY = "volta_pos_virtual_print_log";
 
 const parseLog = () => {
@@ -190,30 +191,6 @@ const getDeliveryAddress = (order) => {
   const address = String(order?.customerData?.address_1 || order?.address_1 || nestedAddress || order?.customerData?.address || "").trim();
 
   return address && !/^\(PICKUP\)/i.test(address) ? address : "";
-};
-
-const getPaymentLabel = (order) => {
-  const customerData = order?.customerData || {};
-  const paymentSignal = [
-    order?.paymentMode,
-    order?.paymentStatus,
-    order?.paymentMethod,
-    customerData.paymentMode,
-    customerData.paymentStatus,
-    customerData.paymentMethod,
-  ]
-    .filter(Boolean)
-    .map((value) => String(value).trim().toLowerCase())
-    .join(" ");
-
-  if (paymentSignal.includes("cash") || paymentSignal.includes("efectivo")) {
-    return ["paid", "cash_paid"].includes(String(order?.paymentStatus || customerData.paymentStatus || "").toLowerCase()) ? "Efectivo cobrado" : "Efectivo pendiente";
-  }
-  const status = String(order?.paymentStatus || customerData.paymentStatus || "").toLowerCase();
-  if (status === "card_paid") return "Tarjeta pagada";
-  if (status === "awaiting_card_payment") return "Tarjeta pendiente";
-  if (/card|tarjeta|stripe/.test(paymentSignal)) return "Tarjeta";
-  return "Por confirmar";
 };
 
 export const mockPrinter = {

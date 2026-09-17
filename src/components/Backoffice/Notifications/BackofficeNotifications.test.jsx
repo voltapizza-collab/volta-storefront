@@ -66,6 +66,8 @@ test("unread notes survive closing; explicitly read notes stay in history and re
   render(<BackofficeNotifications partnerId={7} />); await flush();
   expect(dialog()).toBeNull();
   fireEvent.click(screen.getByRole("button", { name: "Avisos" }));
+  expect(within(dialog()).queryByText(news.title)).toBeNull();
+  fireEvent.click(screen.getByRole('button', { name: 'Historial 1' }));
   expect(within(dialog()).getByText(/Leído/)).not.toBeNull();
   fireEvent.click(screen.getByRole("button", { name: "Cerrar avisos" }));
   respond([{ ...news, revision: 2 }]); await tick();
@@ -93,6 +95,7 @@ test("API errors are visible, preserve the last known alert, and recover with re
   fireEvent.click(screen.getByRole("button", { name: /No se pudieron comprobar/ }));
   expect(within(dialog()).getByRole("heading").textContent).toBe("No pudimos comprobar tus avisos");
   respond([sms()]); fireEvent.click(screen.getByRole("button", { name: "Reintentar" })); await flush();
+  fireEvent.click(screen.getByRole('button', { name: /Te quedan 10 mensajes/ }));
   expect(within(dialog()).getByRole("heading").textContent).toBe("Te quedan 10 mensajes");
   api.get.mockRejectedValue(new Error("offline")); await tick();
   expect(within(dialog()).getByText(/El saldo mostrado puede haber cambiado/)).not.toBeNull();
@@ -146,14 +149,101 @@ test("strict effects, blocked storage and Escape keep the backoffice usable", as
   jest.spyOn(Storage.prototype, "getItem").mockImplementation(() => { throw new Error("blocked"); });
   jest.spyOn(Storage.prototype, "setItem").mockImplementation(() => { throw new Error("blocked"); });
   respond([news]);
-  render(<StrictMode><BackofficeNotifications partnerId={7} /></StrictMode>); await flush();
+  render(<StrictMode><BackofficeNotifications partnerId={107} /></StrictMode>); await flush();
   expect(dialog()).not.toBeNull();
   fireEvent(dialog(), new Event("cancel", { cancelable: true }));
   expect(dialog()).toBeNull();
   expect(document.body.style.overflow).toBe("");
   fireEvent.click(screen.getByRole("button", { name: "Avisos: 1 pendientes" }));
-  fireEvent.click(screen.getByRole("button", { name: "Marcar como leído" }));
+  fireEvent.click(screen.getByRole("button", { name: "Marcar como leído: Una mejora de Volta" }));
+  fireEvent.click(screen.getByRole('button', { name: 'Cerrar avisos' }));
   await tick(); expect(dialog()).toBeNull();
+});
+
+test('reading in another tab removes an already queued release without hiding operational alerts', async () => {
+  respond([news, sms()]);
+  render(<BackofficeNotifications partnerId={37} />); await flush();
+  localStorage.setItem('volta_backoffice_notices_read_v1:37', JSON.stringify(['release-one:1']));
+  fireEvent(window, new StorageEvent('storage', { key: 'volta_backoffice_notices_read_v1:37' }));
+  expect(within(dialog()).getByRole('heading').textContent).toBe('Te quedan 10 mensajes');
+  fireEvent.click(screen.getByRole('button', { name: 'Recordármelo al volver' }));
+  expect(dialog()).toBeNull();
+  await tick(); expect(dialog()).toBeNull();
+});
+
+test('history preserves read content after it expires from the feed and survives reopening the page', async () => {
+  respond([news]);
+  const first = render(<BackofficeNotifications partnerId={47} />); await flush();
+  fireEvent.click(screen.getByRole('button', { name: 'Marcar como leído' }));
+  first.unmount();
+  respond([]);
+  render(<BackofficeNotifications partnerId={47} />); await flush();
+  expect(dialog()).toBeNull();
+  fireEvent.click(screen.getByRole('button', { name: 'Avisos' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Historial 1' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Una mejora de Volta Leído' }));
+  expect(screen.getByText(news.message)).not.toBeNull();
+  fireEvent.click(screen.getByRole('button', { name: 'Volver a la lista' }));
+  expect(screen.getByRole('heading').textContent).toBe('Historial');
+});
+
+test('inbox marking files a release immediately and does not replay read items when reopening', async () => {
+  respond([news]);
+  render(<BackofficeNotifications partnerId={57} />); await flush();
+  fireEvent.click(screen.getByRole('button', { name: 'Pendientes 1' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Marcar como leído: Una mejora de Volta' }));
+  expect(screen.getByText('No tienes avisos pendientes.')).not.toBeNull();
+  fireEvent.click(screen.getByRole('button', { name: 'Cerrar avisos' }));
+  await tick(); expect(dialog()).toBeNull();
+  fireEvent.click(screen.getByRole('button', { name: 'Avisos' }));
+  expect(screen.queryByText(news.title)).toBeNull();
+  expect(screen.getByRole('button', { name: 'Historial 1' })).not.toBeNull();
+});
+
+test('failed storage writes retain reads across remounts in this page session', async () => {
+  jest.spyOn(Storage.prototype, 'setItem').mockImplementation(() => { throw new Error('quota'); });
+  respond([news]);
+  const first = render(<BackofficeNotifications partnerId={67} />); await flush();
+  fireEvent.click(screen.getByRole('button', { name: 'Marcar como leído' }));
+  first.unmount();
+  render(<BackofficeNotifications partnerId={67} />); await flush();
+  expect(dialog()).toBeNull();
+  fireEvent.click(screen.getByRole('button', { name: 'Avisos' }));
+  expect(screen.getByRole('button', { name: 'Historial 1' })).not.toBeNull();
+});
+
+test('existing read receipts migrate into history without replaying the announcement', async () => {
+  localStorage.setItem('volta_backoffice_notices_read_v1:77', JSON.stringify(['release-one:1']));
+  respond([news]);
+  render(<BackofficeNotifications partnerId={77} />); await flush();
+  expect(dialog()).toBeNull();
+  expect(JSON.parse(localStorage.getItem('volta_backoffice_notices_history_v1:77'))[0].title).toBe(news.title);
+  fireEvent.click(screen.getByRole('button', { name: 'Avisos' }));
+  expect(screen.queryByText(news.title)).toBeNull();
+  fireEvent.click(screen.getByRole('button', { name: 'Historial 1' }));
+  expect(screen.getByText(news.title)).not.toBeNull();
+});
+
+test('a saved history entry itself prevents replay if the separate receipt is missing', async () => {
+  localStorage.setItem('volta_backoffice_notices_history_v1:97', JSON.stringify([news]));
+  respond([news]);
+  render(<BackofficeNotifications partnerId={97} />); await flush();
+  expect(dialog()).toBeNull();
+  expect(JSON.parse(localStorage.getItem('volta_backoffice_notices_read_v1:97'))).toContain('release-one:1');
+});
+
+test('history stores original content so reading in English does not overwrite Spanish', async () => {
+  const translated = { ...news, translations: { en: { title: 'English update', message: 'English message' } } };
+  respond([translated]);
+  const view = render(<BackofficeNotifications partnerId={87} language="en" />); await flush();
+  fireEvent.click(screen.getByRole('button', { name: 'Mark as read' }));
+  view.unmount(); respond([]);
+  render(<BackofficeNotifications partnerId={87} language="es" />); await flush();
+  fireEvent.click(screen.getByRole('button', { name: 'Avisos' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Historial 1' }));
+  fireEvent.click(screen.getByRole('button', { name: `${news.title} Leído` }));
+  expect(screen.getByRole('heading').textContent).toBe(news.title);
+  expect(screen.getByText(news.message)).not.toBeNull();
 });
 
 test("all selector languages translate the whole notification UI and SMS singular/plural", () => {

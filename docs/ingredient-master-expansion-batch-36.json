@@ -1,0 +1,314 @@
+{
+  "schemaVersion": 1,
+  "batchId": "2026-09-25-36",
+  "date": "2026-09-25",
+  "status": "EDITORIAL_REVIEW",
+  "targetTotal": 5000,
+  "policy": "Continuar expansión por indicación del usuario; equivalencias históricas al final. Panes regionales y bases sin relleno para uso como ingredientes, sin platos terminados ni multiplicación por envase o marca.",
+  "allergenPolicy": "NEEDS_REVIEW e imágenes MISSING. Alérgenos vacíos significa no aprobados, nunca ausencia. Revisar ficha técnica de suministro y trazas; trigo, huevo y leche requieren especial atención en estas identidades.",
+  "sources": {
+    "bread36-emilia": {
+      "title": "Emilia Romagna Turismo — More than just bread",
+      "url": "https://emiliaromagnaturismo.it/en/food-valley/emilia-romagna-on-a-plate/bread",
+      "accessed": "2026-09-25",
+      "notes": "Página oficial abierta y recuperada el 25 de septiembre de 2026. Identidad culinaria, no fórmula universal ni acreditación de origen."
+    },
+    "bread36-toscana": {
+      "title": "Visit Tuscany — 5 pani tradizionali della Toscana",
+      "url": "https://www.visittuscany.com/it/idee/5-traditional-breads-from-tuscany/",
+      "accessed": "2026-09-25",
+      "notes": "Página oficial abierta y recuperada el 25 de septiembre de 2026. Identidad culinaria, no fórmula universal ni acreditación de origen."
+    },
+    "bread36-sardegna": {
+      "title": "Italia.it — Sardinian bread",
+      "url": "https://www.italia.it/en/sardinia/things-to-do/sardinian-bread",
+      "accessed": "2026-09-25",
+      "notes": "Página oficial abierta y recuperada el 25 de septiembre de 2026. Identidad culinaria, no fórmula universal ni acreditación de origen."
+    }
+  },
+  "records": [
+    {
+      "canonicalKey": "pan_bataro",
+      "defaultName": "Pan batarö",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Pan batarö",
+        "Batarö"
+      ],
+      "allergens": [],
+      "culinaryForm": "PAN_PLANO",
+      "evidence": {
+        "sourceId": "bread36-emilia",
+        "recordId": "pan_bataro",
+        "sourceName": "Emilia Romagna Turismo — More than just bread",
+        "url": "https://emiliaromagnaturismo.it/en/food-valley/emilia-romagna-on-a-plate/bread"
+      },
+      "identityReason": "Pan plano de trigo y maíz; se incorpora sin acompañamiento."
+    },
+    {
+      "canonicalKey": "borlenghi_sin_relleno",
+      "defaultName": "Borlenghi sin relleno",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Borlenghi sin relleno",
+        "Borlenghi"
+      ],
+      "allergens": [],
+      "culinaryForm": "BASE_FINA_PARA_RELLENAR",
+      "evidence": {
+        "sourceId": "bread36-emilia",
+        "recordId": "borlenghi_sin_relleno",
+        "sourceName": "Emilia Romagna Turismo — More than just bread",
+        "url": "https://emiliaromagnaturismo.it/en/food-valley/emilia-romagna-on-a-plate/bread"
+      },
+      "identityReason": "Base fina de masa cocida; no incluye cunza, queso ni embutido."
+    },
+    {
+      "canonicalKey": "pan_coppia_ferrarese",
+      "defaultName": "Pan coppia ferrarese",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Pan coppia ferrarese",
+        "Coppia ferrarese"
+      ],
+      "allergens": [],
+      "culinaryForm": "PAN_REGIONAL",
+      "evidence": {
+        "sourceId": "bread36-emilia",
+        "recordId": "pan_coppia_ferrarese",
+        "sourceName": "Emilia Romagna Turismo — More than just bread",
+        "url": "https://emiliaromagnaturismo.it/en/food-valley/emilia-romagna-on-a-plate/bread"
+      },
+      "identityReason": "Pan regional con brazos enrollados; la ficha no acredita certificación IGP."
+    },
+    {
+      "canonicalKey": "crescente_bolonesa",
+      "defaultName": "Crescente boloñesa",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Crescente boloñesa",
+        "Crescente bolognese"
+      ],
+      "allergens": [],
+      "culinaryForm": "PAN_ENRIQUECIDO",
+      "evidence": {
+        "sourceId": "bread36-emilia",
+        "recordId": "crescente_bolonesa",
+        "sourceName": "Emilia Romagna Turismo — More than just bread",
+        "url": "https://emiliaromagnaturismo.it/en/food-valley/emilia-romagna-on-a-plate/bread"
+      },
+      "identityReason": "Masa levada enriquecida con grasa y embutido; no equivale a focaccia de chicharrones."
+    },
+    {
+      "canonicalKey": "panecillos_tigelle",
+      "defaultName": "Panecillos tigelle",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Panecillos tigelle",
+        "Tigelle",
+        "Crescentine de Módena"
+      ],
+      "allergens": [],
+      "culinaryForm": "PAN_PLANO",
+      "evidence": {
+        "sourceId": "bread36-emilia",
+        "recordId": "panecillos_tigelle",
+        "sourceName": "Emilia Romagna Turismo — More than just bread",
+        "url": "https://emiliaromagnaturismo.it/en/food-valley/emilia-romagna-on-a-plate/bread"
+      },
+      "identityReason": "Panecillos planos sin relleno; no usar crescentina genérico, también aplicado a masa frita."
+    },
+    {
+      "canonicalKey": "pan_col_bollo",
+      "defaultName": "Pan col bollo",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Pan col bollo",
+        "Pane col bollo"
+      ],
+      "allergens": [],
+      "culinaryForm": "PAN_REGIONAL",
+      "evidence": {
+        "sourceId": "bread36-emilia",
+        "recordId": "pan_col_bollo",
+        "sourceName": "Emilia Romagna Turismo — More than just bread",
+        "url": "https://emiliaromagnaturismo.it/en/food-valley/emilia-romagna-on-a-plate/bread"
+      },
+      "identityReason": "Pan tradicional identificado por un sello de masa; se omiten acompañamientos."
+    },
+    {
+      "canonicalKey": "pan_toscano_sin_sal",
+      "defaultName": "Pan toscano sin sal",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Pan toscano sin sal",
+        "Pane toscano"
+      ],
+      "allergens": [],
+      "culinaryForm": "PAN_REGIONAL",
+      "evidence": {
+        "sourceId": "bread36-toscana",
+        "recordId": "pan_toscano_sin_sal",
+        "sourceName": "Visit Tuscany — 5 pani tradizionali della Toscana",
+        "url": "https://www.visittuscany.com/it/idee/5-traditional-breads-from-tuscany/"
+      },
+      "identityReason": "Pan regional sin sal; el nombre no acredita certificación DOP."
+    },
+    {
+      "canonicalKey": "pan_marocca_de_casola",
+      "defaultName": "Pan marocca de Casola",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Pan marocca de Casola",
+        "Marocca di Casola"
+      ],
+      "allergens": [],
+      "culinaryForm": "PAN_REGIONAL",
+      "evidence": {
+        "sourceId": "bread36-toscana",
+        "recordId": "pan_marocca_de_casola",
+        "sourceName": "Visit Tuscany — 5 pani tradizionali della Toscana",
+        "url": "https://www.visittuscany.com/it/idee/5-traditional-breads-from-tuscany/"
+      },
+      "identityReason": "Pan de castaña, trigo y patata; variante explícita del genérico Pan de castañas."
+    },
+    {
+      "canonicalKey": "pan_de_altopascio",
+      "defaultName": "Pan de Altopascio",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Pan de Altopascio",
+        "Pane di Altopascio"
+      ],
+      "allergens": [],
+      "culinaryForm": "PAN_REGIONAL",
+      "evidence": {
+        "sourceId": "bread36-toscana",
+        "recordId": "pan_de_altopascio",
+        "sourceName": "Visit Tuscany — 5 pani tradizionali della Toscana",
+        "url": "https://www.visittuscany.com/it/idee/5-traditional-breads-from-tuscany/"
+      },
+      "identityReason": "Pan tradicional de trigo con fermentación natural; se conserva su identidad regional."
+    },
+    {
+      "canonicalKey": "pan_marocco_de_montignoso",
+      "defaultName": "Pan marocco de Montignoso",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Pan marocco de Montignoso",
+        "Pane marocco di Montignoso"
+      ],
+      "allergens": [],
+      "culinaryForm": "PAN_ENRIQUECIDO",
+      "evidence": {
+        "sourceId": "bread36-toscana",
+        "recordId": "pan_marocco_de_montignoso",
+        "sourceName": "Visit Tuscany — 5 pani tradizionali della Toscana",
+        "url": "https://www.visittuscany.com/it/idee/5-traditional-breads-from-tuscany/"
+      },
+      "identityReason": "Pan de maíz y trigo con aceitunas y aromáticos; distinto de Marocca de Casola."
+    },
+    {
+      "canonicalKey": "panigacci_de_podenzana",
+      "defaultName": "Panigacci de Podenzana",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Panigacci de Podenzana",
+        "Panigaccio di Podenzana"
+      ],
+      "allergens": [],
+      "culinaryForm": "PAN_PLANO",
+      "evidence": {
+        "sourceId": "bread36-toscana",
+        "recordId": "panigacci_de_podenzana",
+        "sourceName": "Visit Tuscany — 5 pani tradizionali della Toscana",
+        "url": "https://www.visittuscany.com/it/idee/5-traditional-breads-from-tuscany/"
+      },
+      "identityReason": "Discos sin levadura cocidos en terracota, sin relleno; no se equiparan a testaroli."
+    },
+    {
+      "canonicalKey": "pan_pistoccu",
+      "defaultName": "Pan pistoccu",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Pan pistoccu",
+        "Pistoccu"
+      ],
+      "allergens": [],
+      "culinaryForm": "PAN_SECO",
+      "evidence": {
+        "sourceId": "bread36-sardegna",
+        "recordId": "pan_pistoccu",
+        "sourceName": "Italia.it — Sardinian bread",
+        "url": "https://www.italia.it/en/sardinia/things-to-do/sardinian-bread"
+      },
+      "identityReason": "Pan seco en láminas gruesas de doble cocción; distinto del carasau fino."
+    },
+    {
+      "canonicalKey": "pan_civraxiu",
+      "defaultName": "Pan civraxiu",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Pan civraxiu",
+        "Civraxiu"
+      ],
+      "allergens": [],
+      "culinaryForm": "PAN_REGIONAL",
+      "evidence": {
+        "sourceId": "bread36-sardegna",
+        "recordId": "pan_civraxiu",
+        "sourceName": "Italia.it — Sardinian bread",
+        "url": "https://www.italia.it/en/sardinia/things-to-do/sardinian-bread"
+      },
+      "identityReason": "Pan tradicional de Campidano; no se desdobla por tamaño ni variantes locales."
+    },
+    {
+      "canonicalKey": "pan_coccoi",
+      "defaultName": "Pan coccoi",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Pan coccoi",
+        "Coccoi"
+      ],
+      "allergens": [],
+      "culinaryForm": "PAN_REGIONAL",
+      "evidence": {
+        "sourceId": "bread36-sardegna",
+        "recordId": "pan_coccoi",
+        "sourceName": "Italia.it — Sardinian bread",
+        "url": "https://www.italia.it/en/sardinia/things-to-do/sardinian-bread"
+      },
+      "identityReason": "Pan decorado de sémola; las decoraciones no generan altas y se excluye huevo añadido."
+    }
+  ],
+  "exclusions": [
+    {
+      "names": [
+        "Chisola",
+        "Pan de patata de Garfagnana"
+      ],
+      "reason": "Se apartan ante focaccia de chicharrones y pan de patata existentes; equivalencias al final."
+    },
+    {
+      "names": [
+        "Pane frattau",
+        "Coccoi con huevo"
+      ],
+      "reason": "No se incorporan platos terminados ni variantes decorativas o de servicio."
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "date": "2026-09-24",
+  "batchId": "2026-09-24-21",
+  "baseline": 3574,
+  "added": 15,
+  "total": 3589,
+  "remainingTo5000": 1411,
+  "byCategory": {
+    "OTROS": 15
+  },
+  "byRestaurantFamily": {
+    "PASTAS_ARROCES_CEREALES": 15
+  },
+  "byForm": {
+    "FIDEO": 5,
+    "ARROZ": 4,
+    "CEREAL_GRANO": 3,
+    "CEREAL_ELABORADO": 1,
+    "PASTA_LEGUMBRE": 2
+  },
+  "aliasesAdded": 9,
+  "exclusionGroups": 7,
+  "preservedMasterRows": 3574,
+  "preservedTaxonomyAssignments": 3574,
+  "pendingPreserved": 25,
+  "idempotentBatches": 21,
+  "historicalAuditsUnchanged": true,
+  "backendProjectionMatches": true,
+  "sourceSha256": "bc0650e8fa2ed0a94f969bd4c51ce62b507ae490f6375cb3cb88814f769873d2",
+  "productionDeployment": false,
+  "databaseWrites": 0,
+  "validation": "Ingredient master OK: 3589 records, 14 categories; valid UTF-8/NFC, names, aliases and identifiers.\n11 consolidated keys preserved; 25 ambiguous records held separately. No duplicate names or shared exact aliases in the selectable source.",
+  "tests": {
+    "importer": 9,
+    "backend": 48,
+    "frontend": 27,
+    "total": 84,
+    "frontendScope": "3 suites: IngredientOnboardingModal, IngredientsSemantics y PosInventoryTaxonomy",
+    "logs": [
+      "tmp/ingredients-batch21-importer-tests.log",
+      "tmp/ingredients-batch21-backend-tests.log",
+      "tmp/ingredients-batch21-ui-tests.log"
+    ]
+  },
+  "build": {
+    "status": "passed",
+    "artifact": "output/ingredients-batch21-build",
+    "bundle": "main.1d0c24e5.js",
+    "log": "tmp/ingredients-batch21-build.log"
+  },
+  "browser": {
+    "status": "pending",
+    "reason": "No se utiliza el navegador integrado durante el diagnóstico de los cierres de Codex; no se acredita comprobación visual ni integración con base de datos."
+  }
+}

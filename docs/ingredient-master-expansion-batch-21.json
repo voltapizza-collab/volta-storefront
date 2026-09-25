@@ -1,0 +1,419 @@
+{
+  "schemaVersion": 1,
+  "batchId": "2026-09-24-21",
+  "date": "2026-09-24",
+  "status": "EDITORIAL_REVIEW",
+  "targetTotal": 5000,
+  "policy": "Pastas, arroces y cereales con identidad culinaria documentada. Sin cuotas, combinaciones automáticas o altas por marca; fichas anteriores intactas.",
+  "allergenPolicy": "NEEDS_REVIEW e imágenes MISSING. Alérgenos vacíos significa no aprobados, nunca ausencia. Revisar trigo y gluten en udon, ramen, freekeh, einkorn y emmer, además de composición y trazas de cada suministro. No importar alegaciones de ausencia de las fuentes.",
+  "sources": {
+    "CLEARSPRING_UDON": {
+      "title": "Clearspring — Organic Japanese Wide Udon Noodles",
+      "url": "https://www.clearspring.co.uk/collections/japanese/products/organic-japanese-wide-udon-noodles",
+      "accessed": "2026-09-24",
+      "notes": "La ficha identifica udon de harina de trigo y sal. No se crean altas por ancho o envase."
+    },
+    "SUNNOODLE_RAMEN": {
+      "title": "Sun Noodle — Our Process",
+      "url": "https://sunnoodle.com/our-process/",
+      "accessed": "2026-09-24",
+      "notes": "El fabricante describe fideos de trigo con kansui. Formas rectas u onduladas se agrupan."
+    },
+    "HOUSE_SHIRATAKI": {
+      "title": "House Foods — Shirataki",
+      "url": "https://www.house-foods.com/products/shirataki",
+      "accessed": "2026-09-24",
+      "notes": "Contenido indexado del fabricante: distingue shirataki tradicional de konjac y la mezcla con tofu. Apertura directa bloqueada con 403."
+    },
+    "OTTOGI_SWEET_POTATO": {
+      "title": "Ottogi — Global Sales Catalog, Korean Vermicelli",
+      "url": "https://www.ottogi.co.kr/en/pdf/Ottogi%20global%20sales%20catalog.pdf",
+      "accessed": "2026-09-24",
+      "notes": "Catálogo del fabricante indexado, páginas impresas 28–29: Korean Vermicelli de almidón de boniato. No se pudo recuperar el PDF completo; se usa la descripción indexada."
+    },
+    "GOLDENTURTLE_MUNG_PEA": {
+      "title": "Golden Turtle for Chefs — Mung Bean Vermicelli",
+      "url": "https://www.goldenturtlechef.com/product/mung-bean-vermicelli/",
+      "accessed": "2026-09-24",
+      "notes": "La ficha declara almidón de guisante y almidón de mungo. Se conserva la composición mixta en el nombre."
+    },
+    "LOTUS_JASMINE": {
+      "title": "Lotus Foods — Organic White Jasmine Rice",
+      "url": "https://www.lotusfoods.com/products/organic-white-jasmine-rice",
+      "accessed": "2026-09-24",
+      "notes": "La ficha documenta arroz aromático jazmín. No se importan origen, certificaciones ni alegaciones nutricionales."
+    },
+    "LOTUS_BLACK_RICE": {
+      "title": "Lotus Foods — Organic Forbidden Rice",
+      "url": "https://www.lotusfoods.com/products/organic-forbidden%C2%AE-rice",
+      "accessed": "2026-09-24",
+      "notes": "La lista de ingredientes identifica arroz negro. Forbidden es la marca de referencia, no un alias genérico."
+    },
+    "JFC_KOSHIHIKARI": {
+      "title": "JFC International — Ayanishiki",
+      "url": "https://www.jfc.com/rice-expert/ayanishiki",
+      "accessed": "2026-09-24",
+      "notes": "El proveedor identifica la variedad Koshihikari en su arroz de grano corto para cocina japonesa."
+    },
+    "ORIVARZEA_CAROLINO": {
+      "title": "Orivárzea — O nosso arroz",
+      "url": "https://www.orivarzea.pt/pt",
+      "accessed": "2026-09-24",
+      "notes": "El productor distingue Carolino de Agulha y Aromático. Se registra como tipo comercial culinario, no como una variedad botánica única."
+    },
+    "YOLELE_FONIO": {
+      "title": "Yolélé — Frequently Asked Questions, About Fonio",
+      "url": "https://yolele.com/pages/faqs",
+      "accessed": "2026-09-24",
+      "notes": "El productor identifica Digitaria exilis y usos del grano en cocina. No se importan afirmaciones sanitarias."
+    },
+    "BOBS_FREEKEH": {
+      "title": "Bob’s Red Mill — Product List 2017, Organic Cracked Freekeh",
+      "url": "https://ebook.bobsredmill.com/2017-BRM-Product-List/files/assets/common/downloads/publication.pdf",
+      "accessed": "2026-09-24",
+      "notes": "Catálogo histórico del fabricante indexado, página 29: trigo joven verde tostado. PDF completo no recuperado; no acredita disponibilidad actual."
+    },
+    "JOVIAL_EINKORN": {
+      "title": "Jovial — Wheat Berries",
+      "url": "https://jovialfoods.com/collections/jovial-wheat-berries",
+      "accessed": "2026-09-24",
+      "notes": "El fabricante documenta einkorn en grano para ensaladas y otras preparaciones. No se añade otra ficha por envase."
+    },
+    "BLUEBIRD_EMMER": {
+      "title": "Bluebird Grain Farms — Emmer vs. Farro",
+      "url": "https://bluebirdgrainfarms.com/emmer-vs-farro/",
+      "accessed": "2026-09-24",
+      "notes": "El productor identifica emmer como Triticum dicoccum y aclara que farro también puede designar einkorn o espelta."
+    },
+    "BARILLA_CHICKPEA_PASTA": {
+      "title": "Barilla — Chickpea Pasta",
+      "url": "https://www.barilla.com/en-us/products/pasta/legume",
+      "accessed": "2026-09-24",
+      "notes": "El catálogo identifica pasta de garbanzo. Las distintas formas se agrupan sin importar alegaciones de ausencia de gluten."
+    },
+    "BARILLA_RED_LENTIL_PASTA": {
+      "title": "Barilla — Red Lentil Pasta",
+      "url": "https://www.barilla.com/en-us/products/pasta/legume",
+      "accessed": "2026-09-24",
+      "notes": "El catálogo identifica pasta de lenteja roja. Penne, rotini y espaguetis no generan combinaciones adicionales."
+    }
+  },
+  "records": [
+    {
+      "canonicalKey": "fideos_udon",
+      "defaultName": "Fideos udon",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Fideos udon",
+        "Udon"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "CLEARSPRING_UDON",
+        "recordId": "fideos_udon",
+        "sourceName": "Clearspring — Organic Japanese Wide Udon Noodles",
+        "url": "https://www.clearspring.co.uk/collections/japanese/products/organic-japanese-wide-udon-noodles"
+      },
+      "identityReason": "Fideos documentados, distintos de soba y somen; no plato salteado ni sopa preparada.",
+      "culinaryForm": "FIDEO"
+    },
+    {
+      "canonicalKey": "fideos_ramen_de_trigo",
+      "defaultName": "Fideos ramen de trigo",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Fideos ramen de trigo",
+        "Fideos alcalinos para ramen"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SUNNOODLE_RAMEN",
+        "recordId": "fideos_ramen_de_trigo",
+        "sourceName": "Sun Noodle — Our Process",
+        "url": "https://sunnoodle.com/our-process/"
+      },
+      "identityReason": "Se delimita el fideo alcalino, no caldo, plato completo ni una mezcla instantánea con condimentos.",
+      "culinaryForm": "FIDEO"
+    },
+    {
+      "canonicalKey": "fideos_shirataki_de_konjac",
+      "defaultName": "Fideos shirataki de konjac",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Fideos shirataki de konjac",
+        "Shirataki de konjac"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "HOUSE_SHIRATAKI",
+        "recordId": "fideos_shirataki_de_konjac",
+        "sourceName": "House Foods — Shirataki",
+        "url": "https://www.house-foods.com/products/shirataki"
+      },
+      "identityReason": "Fideos de konjac, distintos de shiratama, fideos de arroz y productos mezclados con tofu.",
+      "culinaryForm": "FIDEO"
+    },
+    {
+      "canonicalKey": "fideos_de_almidon_de_boniato",
+      "defaultName": "Fideos de almidón de boniato",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Fideos de almidón de boniato",
+        "Fideos de almidón de batata"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "OTTOGI_SWEET_POTATO",
+        "recordId": "fideos_de_almidon_de_boniato",
+        "sourceName": "Ottogi — Global Sales Catalog, Korean Vermicelli",
+        "url": "https://www.ottogi.co.kr/en/pdf/Ottogi%20global%20sales%20catalog.pdf"
+      },
+      "identityReason": "Pasta de almidón documentada, distinta de fideos de arroz o de otras legumbres. Corte y longitud no generan altas.",
+      "culinaryForm": "FIDEO"
+    },
+    {
+      "canonicalKey": "fideos_de_almidon_de_guisante_y_mungo",
+      "defaultName": "Fideos de almidón de guisante y mungo",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Fideos de almidón de guisante y mungo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "GOLDENTURTLE_MUNG_PEA",
+        "recordId": "fideos_de_almidon_de_guisante_y_mungo",
+        "sourceName": "Golden Turtle for Chefs — Mung Bean Vermicelli",
+        "url": "https://www.goldenturtlechef.com/product/mung-bean-vermicelli/"
+      },
+      "identityReason": "Elaboración real documentada; no representa fideos de mungo puro ni todos los fideos de cristal.",
+      "culinaryForm": "FIDEO"
+    },
+    {
+      "canonicalKey": "arroz_jazmin",
+      "defaultName": "Arroz jazmín",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Arroz jazmín",
+        "Arroz jasmine"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "LOTUS_JASMINE",
+        "recordId": "arroz_jazmin",
+        "sourceName": "Lotus Foods — Organic White Jasmine Rice",
+        "url": "https://www.lotusfoods.com/products/organic-white-jasmine-rice"
+      },
+      "identityReason": "Tipo de arroz identificado, distinto del basmati. No se multiplican presentaciones integral y blanca.",
+      "culinaryForm": "ARROZ"
+    },
+    {
+      "canonicalKey": "arroz_negro_en_grano",
+      "defaultName": "Arroz negro en grano",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Arroz negro en grano"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "LOTUS_BLACK_RICE",
+        "recordId": "arroz_negro_en_grano",
+        "sourceName": "Lotus Foods — Organic Forbidden Rice",
+        "url": "https://www.lotusfoods.com/products/organic-forbidden%C2%AE-rice"
+      },
+      "identityReason": "Grano de arroz pigmentado, no arroz salvaje ni el plato de arroz teñido con tinta.",
+      "culinaryForm": "ARROZ"
+    },
+    {
+      "canonicalKey": "arroz_koshihikari",
+      "defaultName": "Arroz Koshihikari",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Arroz Koshihikari"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "JFC_KOSHIHIKARI",
+        "recordId": "arroz_koshihikari",
+        "sourceName": "JFC International — Ayanishiki",
+        "url": "https://www.jfc.com/rice-expert/ayanishiki"
+      },
+      "identityReason": "Variedad identificada; no se usa arroz para sushi como alias ni se duplica por marca.",
+      "culinaryForm": "ARROZ"
+    },
+    {
+      "canonicalKey": "arroz_carolino",
+      "defaultName": "Arroz Carolino",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Arroz Carolino"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "ORIVARZEA_CAROLINO",
+        "recordId": "arroz_carolino",
+        "sourceName": "Orivárzea — O nosso arroz",
+        "url": "https://www.orivarzea.pt/pt"
+      },
+      "identityReason": "Tipo de arroz documentado; no se añaden automáticamente las variedades ni las marcas citadas por el productor.",
+      "culinaryForm": "ARROZ"
+    },
+    {
+      "canonicalKey": "fonio_en_grano",
+      "defaultName": "Fonio en grano",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Fonio en grano",
+        "Fonio"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "YOLELE_FONIO",
+        "recordId": "fonio_en_grano",
+        "sourceName": "Yolélé — Frequently Asked Questions, About Fonio",
+        "url": "https://yolele.com/pages/faqs"
+      },
+      "identityReason": "Cereal identificado distinto de mijo genérico, teff y quinoa.",
+      "culinaryForm": "CEREAL_GRANO"
+    },
+    {
+      "canonicalKey": "freekeh",
+      "defaultName": "Freekeh",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Freekeh",
+        "Trigo verde tostado"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "BOBS_FREEKEH",
+        "recordId": "freekeh",
+        "sourceName": "Bob’s Red Mill — Product List 2017, Organic Cracked Freekeh",
+        "url": "https://ebook.bobsredmill.com/2017-BRM-Product-List/files/assets/common/downloads/publication.pdf"
+      },
+      "identityReason": "Elaboración cerealista identificada, distinta de bulgur. Entero y partido se agrupan.",
+      "culinaryForm": "CEREAL_ELABORADO"
+    },
+    {
+      "canonicalKey": "trigo_einkorn_en_grano",
+      "defaultName": "Trigo einkorn en grano",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Trigo einkorn en grano",
+        "Escaña menor en grano"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "JOVIAL_EINKORN",
+        "recordId": "trigo_einkorn_en_grano",
+        "sourceName": "Jovial — Wheat Berries",
+        "url": "https://jovialfoods.com/collections/jovial-wheat-berries"
+      },
+      "identityReason": "Grano identificado distinto de espelta, trigo duro y khorasan; no harina.",
+      "culinaryForm": "CEREAL_GRANO"
+    },
+    {
+      "canonicalKey": "trigo_emmer_en_grano",
+      "defaultName": "Trigo emmer en grano",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Trigo emmer en grano",
+        "Farro emmer"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "BLUEBIRD_EMMER",
+        "recordId": "trigo_emmer_en_grano",
+        "sourceName": "Bluebird Grain Farms — Emmer vs. Farro",
+        "url": "https://bluebirdgrainfarms.com/emmer-vs-farro/"
+      },
+      "identityReason": "Se delimita emmer y se evita farro sin calificativo como alias para no crear equivalencias ambiguas.",
+      "culinaryForm": "CEREAL_GRANO"
+    },
+    {
+      "canonicalKey": "pasta_de_garbanzo",
+      "defaultName": "Pasta de garbanzo",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta de garbanzo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "BARILLA_CHICKPEA_PASTA",
+        "recordId": "pasta_de_garbanzo",
+        "sourceName": "Barilla — Chickpea Pasta",
+        "url": "https://www.barilla.com/en-us/products/pasta/legume"
+      },
+      "identityReason": "Pasta elaborada diferenciada del grano, harina y proteína de garbanzo.",
+      "culinaryForm": "PASTA_LEGUMBRE"
+    },
+    {
+      "canonicalKey": "pasta_de_lenteja_roja",
+      "defaultName": "Pasta de lenteja roja",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta de lenteja roja"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "BARILLA_RED_LENTIL_PASTA",
+        "recordId": "pasta_de_lenteja_roja",
+        "sourceName": "Barilla — Red Lentil Pasta",
+        "url": "https://www.barilla.com/en-us/products/pasta/legume"
+      },
+      "identityReason": "Pasta de legumbre documentada, distinta de pasta de trigo y lenteja roja entera.",
+      "culinaryForm": "PASTA_LEGUMBRE"
+    }
+  ],
+  "exclusions": [
+    {
+      "candidate": "Formas italianas de pasta ya registradas",
+      "decision": "ALREADY_REPRESENTED",
+      "reason": "Se conservan sus claves; no nuevas altas por marca, calibre o una combinación de forma y legumbre."
+    },
+    {
+      "candidate": "Farro sin calificativo",
+      "decision": "AMBIGUOUS",
+      "reason": "Puede designar emmer, einkorn o espelta. Se utiliza Farro emmer como alias delimitado."
+    },
+    {
+      "candidate": "Ramen preparado, caldos y sobres de condimento",
+      "decision": "NOT_IMPORTED",
+      "reason": "La nueva ficha corresponde solo al fideo de trigo con kansui."
+    },
+    {
+      "candidate": "Fideos de mungo puro y fideos de cristal genéricos",
+      "decision": "DEFERRED",
+      "reason": "La referencia seleccionada contiene guisante y mungo. No habilita una ficha de ingrediente puro."
+    },
+    {
+      "candidate": "Shirataki con tofu y variantes aromatizadas",
+      "decision": "DEFERRED",
+      "reason": "No se asumen equivalentes al shirataki tradicional de konjac."
+    },
+    {
+      "candidate": "Arroz para sushi, risotto y marcas de arroz negro",
+      "decision": "GROUPED",
+      "reason": "Uso y marca no prueban por sí solos una variedad nueva."
+    },
+    {
+      "candidate": "Arroz integral/blanco de cada variedad, envase y certificaciones",
+      "decision": "GROUPED",
+      "reason": "Se evita multiplicar automáticamente las identidades. Los registros históricos permanecen intactos."
+    }
+  ]
+}

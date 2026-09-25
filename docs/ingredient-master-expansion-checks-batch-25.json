@@ -1,0 +1,57 @@
+{
+  "date": "2026-09-24",
+  "batchId": "2026-09-24-25",
+  "baseline": 3624,
+  "added": 11,
+  "total": 3635,
+  "remainingTo5000": 1365,
+  "byCategory": {
+    "VERDURAS": 11
+  },
+  "byRestaurantFamily": {
+    "VERDURAS_SETAS_ALGAS": 11
+  },
+  "byForm": {
+    "HOJA_TALLO": 3,
+    "TUBERCULO": 4,
+    "RAIZ": 2,
+    "ALGA": 2
+  },
+  "aliasesAdded": 4,
+  "exclusionGroups": 5,
+  "preservedMasterRows": 3624,
+  "preservedTaxonomyAssignments": 3624,
+  "pendingPreserved": 25,
+  "idempotentBatches": 25,
+  "historicalAuditsUnchanged": true,
+  "backendProjectionMatches": true,
+  "sourceSha256": "fd63e4feed4cd224079c59653e7ef277dbe58008c8d08a6d3aefa0a975d22718",
+  "productionDeployment": false,
+  "databaseWrites": 0,
+  "validation": "Ingredient master OK: 3635 records, 14 categories; valid UTF-8/NFC, names, aliases and identifiers.\n11 consolidated keys preserved; 25 ambiguous records held separately. No duplicate names or shared exact aliases in the selectable source.",
+  "tests": {
+    "importer": {
+      "passed": 9,
+      "log": "tmp/ingredients-batch25-importer-tests.log"
+    },
+    "backend": {
+      "passed": 48,
+      "log": "tmp/ingredients-batch25-backend-tests.log"
+    },
+    "ui": {
+      "passed": 27,
+      "log": "tmp/ingredients-batch25-ui-tests.log"
+    },
+    "totalPassed": 84
+  },
+  "build": {
+    "status": "PASSED",
+    "artifact": "output/ingredients-batch25-build",
+    "bundle": "main.8dc4c8e4.js",
+    "log": "tmp/ingredients-batch25-build.log"
+  },
+  "browser": {
+    "status": "PENDING",
+    "reason": "Verificación visual de lotes 16–25 pendiente; evitar navegador integrado durante el diagnóstico de los cierres de Codex."
+  }
+}

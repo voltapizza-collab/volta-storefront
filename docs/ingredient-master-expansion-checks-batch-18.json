@@ -1,0 +1,54 @@
+{
+  "date": "2026-09-24",
+  "batchId": "2026-09-24-18",
+  "baseline": 3534,
+  "added": 16,
+  "total": 3550,
+  "remainingTo5000": 1450,
+  "byCategory": {
+    "HIERBAS_ESPECIAS": 16
+  },
+  "byRestaurantFamily": {
+    "SALSAS_CONDIMENTOS_BASES": 16
+  },
+  "byForm": {
+    "MEZCLA_ESPECIAS": 12,
+    "MEZCLA_HIERBAS": 1,
+    "CONDIMENTO_FRUTA": 2,
+    "CONDIMENTO_DULCE": 1
+  },
+  "aliasesAdded": 13,
+  "exclusionGroups": 7,
+  "preservedMasterRows": 3534,
+  "preservedTaxonomyAssignments": 3534,
+  "pendingPreserved": 25,
+  "idempotentBatches": 18,
+  "historicalAuditsUnchanged": true,
+  "backendProjectionMatches": true,
+  "sourceSha256": "d781b2414df8625355d458d4103c1c8a4f8b1eb66a87c43d78b867063e5a022b",
+  "productionDeployment": false,
+  "databaseWrites": 0,
+  "validation": "Ingredient master OK: 3550 records, 14 categories; valid UTF-8/NFC, names, aliases and identifiers.\n11 consolidated keys preserved; 25 ambiguous records held separately. No duplicate names or shared exact aliases in the selectable source.",
+  "tests": {
+    "importer": 9,
+    "backend": 48,
+    "frontend": 27,
+    "total": 84,
+    "frontendScope": "3 suites: IngredientOnboardingModal, IngredientsSemantics y PosInventoryTaxonomy",
+    "logs": [
+      "tmp/ingredients-batch18-importer-tests.log",
+      "tmp/ingredients-batch18-backend-tests.log",
+      "tmp/ingredients-batch18-ui-tests.log"
+    ]
+  },
+  "build": {
+    "status": "passed",
+    "artifact": "output/ingredients-batch18-build",
+    "bundle": "main.0ba00fc3.js",
+    "log": "tmp/ingredients-batch18-build.log"
+  },
+  "browser": {
+    "status": "pending",
+    "reason": "No se utiliza el navegador integrado durante el diagnóstico de los cierres de Codex; no se acredita comprobación visual ni integración con base de datos."
+  }
+}

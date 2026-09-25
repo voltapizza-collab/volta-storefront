@@ -1,0 +1,3547 @@
+{
+  "schemaVersion": 1,
+  "batchId": "2026-09-24-08",
+  "date": "2026-09-24",
+  "status": "EDITORIAL_REVIEW",
+  "targetTotal": 5000,
+  "policy": "Altas documentadas para restaurantes. Clasificación histórica conservada y familia restaurant-v2 explícita por nueva identidad. Sin traducciones automáticas, marcas, tamaños o envases contados como altas.",
+  "researchScope": {
+    "scope": "Primer bloque prioritario: panes y masas, formatos de pasta, cortes anatómicos y bases de cocina."
+  },
+  "allergenPolicy": "No se infieren formulaciones ni alérgenos de un nombre genérico. Lista vacía significa no documentado, nunca ausencia de alérgenos. Todas las altas mantienen NEEDS_REVIEW y MISSING para imagen.",
+  "sources": {
+    "FDC": {
+      "title": "USDA FoodData Central — SR Legacy",
+      "url": "https://fdc.nal.usda.gov/download-datasets/",
+      "dataset": "FoodData_Central_sr_legacy_food_csv_2018-04",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://fdc.nal.usda.gov/api-guide/"
+    },
+    "PAT_2024": {
+      "title": "MASAF — catálogo histórico de productos agroalimentarios tradicionales, anexo 2024",
+      "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+      "scope": "Identidad culinaria; no certifica estado registral actual. Se reutiliza la copia contrastada durante los lotes anteriores."
+    },
+    "DECECCO_SEMOLA": {
+      "title": "De Cecco — catálogo oficial de formatos de pasta de sémola",
+      "url": "https://www.dececco.com/es_es/products/pasta-de-semola/",
+      "accessed": "2026-09-24",
+      "scope": "Nombres y referencias de formatos; no se importan textos descriptivos, marcas, fotografías ni propiedades nutricionales."
+    },
+    "UFS_2026": {
+      "title": "Unilever Food Solutions — catálogo Restauración 2026",
+      "url": "https://www.unileverfoodsolutions.es/dam/ufs-es/es/brochure/Catalogo-Digital-Unilever-Food-Solutions-2026.pdf",
+      "accessed": "2026-09-24",
+      "scope": "Referencia comercial como evidencia de la preparación genérica; tamaños y marcas no crean identidades."
+    },
+    "EUROPASTRY_MOLDE": {
+      "title": "Europastry — panes de molde",
+      "url": "https://shop.europastry.com/es/catalogo/2_0J",
+      "accessed": "2026-09-24"
+    },
+    "SAN_ROQUE": {
+      "title": "Mollete San Roque — fabricante de molletes",
+      "url": "https://mollete.com/es/",
+      "accessed": "2026-09-24"
+    },
+    "PANAMAR_BURGER": {
+      "title": "Panamar Bakery — gama Burger",
+      "url": "https://www.panamarbakery.com/gama-burger",
+      "accessed": "2026-09-24"
+    },
+    "GALLINA_BLANCA": {
+      "title": "Gallina Blanca — salsas",
+      "url": "https://www.gallinablanca.es/productos/marca/mis-salsas/",
+      "accessed": "2026-09-24"
+    },
+    "PANAMAR_PANES": {
+      "title": "Panamar — catálogo de panes",
+      "url": "https://www.panamarbakery.com/catalogo-panusa",
+      "accessed": "2026-09-24"
+    }
+  },
+  "records": [
+    {
+      "canonicalKey": "pan_de_patata",
+      "defaultName": "Pan de patata",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Pan de patata"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "167943",
+        "sourceName": "Bread, potato",
+        "url": "https://fdc.nal.usda.gov/food-details/167943/nutrients"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "pan_de_queso",
+      "defaultName": "Pan de queso",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Pan de queso"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "167944",
+        "sourceName": "Bread, cheese",
+        "url": "https://fdc.nal.usda.gov/food-details/167944/nutrients"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "pan_multicereales",
+      "defaultName": "Pan multicereales",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Pan multicereales"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "168013",
+        "sourceName": "Bread, multi-grain (includes whole-grain)",
+        "url": "https://fdc.nal.usda.gov/food-details/168013/nutrients"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "chapati",
+      "defaultName": "Chapati",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Chapati",
+        "Roti de trigo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171844",
+        "sourceName": "Bread, chapati or roti, plain, commercially prepared",
+        "url": "https://fdc.nal.usda.gov/food-details/171844/nutrients"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "naan",
+      "defaultName": "Naan",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Naan"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171845",
+        "sourceName": "Bread, naan, plain, commercially prepared, refrigerated",
+        "url": "https://fdc.nal.usda.gov/food-details/171845/nutrients"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "pan_de_canela",
+      "defaultName": "Pan de canela",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Pan de canela"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171849",
+        "sourceName": "Bread, cinnamon",
+        "url": "https://fdc.nal.usda.gov/food-details/171849/nutrients"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "pan_de_trigo_germinado",
+      "defaultName": "Pan de trigo germinado",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Pan de trigo germinado"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171850",
+        "sourceName": "Bread, wheat, sprouted",
+        "url": "https://fdc.nal.usda.gov/food-details/171850/nutrients"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "bagel_multicereales",
+      "defaultName": "Bagel multicereales",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Bagel multicereales"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171852",
+        "sourceName": "Bagels, multigrain",
+        "url": "https://fdc.nal.usda.gov/food-details/171852/nutrients"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "bagel_de_canela_y_pasas",
+      "defaultName": "Bagel de canela y pasas",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Bagel de canela y pasas"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172664",
+        "sourceName": "Bagels, cinnamon-raisin",
+        "url": "https://fdc.nal.usda.gov/food-details/172664/nutrients"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "bagel_de_salvado_de_avena",
+      "defaultName": "Bagel de salvado de avena",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Bagel de salvado de avena"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172666",
+        "sourceName": "Bagels, oat bran",
+        "url": "https://fdc.nal.usda.gov/food-details/172666/nutrients"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "pan_de_trigo_partido",
+      "defaultName": "Pan de trigo partido",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Pan de trigo partido"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172672",
+        "sourceName": "Bread, cracked-wheat",
+        "url": "https://fdc.nal.usda.gov/food-details/172672/nutrients"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "pan_de_huevo",
+      "defaultName": "Pan de huevo",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Pan de huevo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172673",
+        "sourceName": "Bread, egg",
+        "url": "https://fdc.nal.usda.gov/food-details/172673/nutrients"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "pan_de_salvado_de_avena",
+      "defaultName": "Pan de salvado de avena",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Pan de salvado de avena"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172676",
+        "sourceName": "Bread, oat bran",
+        "url": "https://fdc.nal.usda.gov/food-details/172676/nutrients"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "pan_de_avena",
+      "defaultName": "Pan de avena",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Pan de avena"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172678",
+        "sourceName": "Bread, oatmeal",
+        "url": "https://fdc.nal.usda.gov/food-details/172678/nutrients"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "pan_de_pasas",
+      "defaultName": "Pan de pasas",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Pan de pasas"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172680",
+        "sourceName": "Bread, raisin, enriched",
+        "url": "https://fdc.nal.usda.gov/food-details/172680/nutrients"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "pan_de_centeno",
+      "defaultName": "Pan de centeno",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Pan de centeno"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172684",
+        "sourceName": "Bread, rye",
+        "url": "https://fdc.nal.usda.gov/food-details/172684/nutrients"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "pan_integral_de_trigo",
+      "defaultName": "Pan integral de trigo",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Pan integral de trigo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172688",
+        "sourceName": "Bread, whole-wheat, commercially prepared",
+        "url": "https://fdc.nal.usda.gov/food-details/172688/nutrients"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "masa_de_hojaldre",
+      "defaultName": "Masa de hojaldre",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Masa de hojaldre",
+        "Hojaldre"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172790",
+        "sourceName": "Puff pastry, frozen, ready-to-bake",
+        "url": "https://fdc.nal.usda.gov/food-details/172790/nutrients"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "masa_filo",
+      "defaultName": "Masa filo",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Masa filo",
+        "Pasta filo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172791",
+        "sourceName": "Phyllo dough",
+        "url": "https://fdc.nal.usda.gov/food-details/172791/nutrients"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "panecillo_integral_de_trigo",
+      "defaultName": "Panecillo integral de trigo",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Panecillo integral de trigo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172794",
+        "sourceName": "Rolls, dinner, whole-wheat",
+        "url": "https://fdc.nal.usda.gov/food-details/172794/nutrients"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "pan_para_hamburguesa_o_perrito_caliente",
+      "defaultName": "Pan para hamburguesa o perrito caliente",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Pan para hamburguesa o perrito caliente"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172796",
+        "sourceName": "Rolls, hamburger or hotdog, plain",
+        "url": "https://fdc.nal.usda.gov/food-details/172796/nutrients"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "pan_multicereales_para_hamburguesa_o_perrito_caliente",
+      "defaultName": "Pan multicereales para hamburguesa o perrito caliente",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Pan multicereales para hamburguesa o perrito caliente"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172797",
+        "sourceName": "Rolls, hamburger or hotdog, mixed-grain",
+        "url": "https://fdc.nal.usda.gov/food-details/172797/nutrients"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "laminas_de_wonton",
+      "defaultName": "Láminas de wonton",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Láminas de wonton",
+        "Masa de wonton"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172802",
+        "sourceName": "Wonton wrappers (includes egg roll wrappers)",
+        "url": "https://fdc.nal.usda.gov/food-details/172802/nutrients"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "pan_rallado_sazonado",
+      "defaultName": "Pan rallado sazonado",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Pan rallado sazonado"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172806",
+        "sourceName": "Bread, crumbs, dry, grated, seasoned",
+        "url": "https://fdc.nal.usda.gov/food-details/172806/nutrients"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "chapati_integral",
+      "defaultName": "Chapati integral",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Chapati integral"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "174075",
+        "sourceName": "Bread, chapati or roti, whole wheat, commercially prepared, frozen",
+        "url": "https://fdc.nal.usda.gov/food-details/174075/nutrients"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "paratha_integral",
+      "defaultName": "Paratha integral",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Paratha integral"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "174076",
+        "sourceName": "Bread, paratha, whole wheat, commercially prepared, frozen",
+        "url": "https://fdc.nal.usda.gov/food-details/174076/nutrients"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "naan_integral",
+      "defaultName": "Naan integral",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Naan integral"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "174077",
+        "sourceName": "Bread, naan, whole wheat, commercially prepared, refrigerated",
+        "url": "https://fdc.nal.usda.gov/food-details/174077/nutrients"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "bolillo_mexicano",
+      "defaultName": "Bolillo mexicano",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Bolillo mexicano"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "174078",
+        "sourceName": "Bread, roll, Mexican, bollilo",
+        "url": "https://fdc.nal.usda.gov/food-details/174078/nutrients"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "tortilla_integral_de_trigo",
+      "defaultName": "Tortilla integral de trigo",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Tortilla integral de trigo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "174081",
+        "sourceName": "Tortillas, ready-to-bake or -fry, whole wheat",
+        "url": "https://fdc.nal.usda.gov/food-details/174081/nutrients"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "bagel_de_trigo",
+      "defaultName": "Bagel de trigo",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Bagel de trigo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "174899",
+        "sourceName": "Bagels, plain, enriched, with calcium propionate (includes onion, poppy, sesame)",
+        "url": "https://fdc.nal.usda.gov/food-details/174899/nutrients"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "bagel_de_huevo",
+      "defaultName": "Bagel de huevo",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Bagel de huevo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "174901",
+        "sourceName": "Bagels, egg",
+        "url": "https://fdc.nal.usda.gov/food-details/174901/nutrients"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "pan_de_maiz",
+      "defaultName": "Pan de maíz",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Pan de maíz"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "174910",
+        "sourceName": "Bread, cornbread, prepared from recipe, made with low fat (2%) milk",
+        "url": "https://fdc.nal.usda.gov/food-details/174910/nutrients"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "pan_de_soda_irlandes",
+      "defaultName": "Pan de soda irlandés",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Pan de soda irlandés"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "174912",
+        "sourceName": "Bread, irish soda, prepared from recipe",
+        "url": "https://fdc.nal.usda.gov/food-details/174912/nutrients"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "pan_pumpernickel",
+      "defaultName": "Pan pumpernickel",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Pan pumpernickel"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "174918",
+        "sourceName": "Bread, pumpernickel",
+        "url": "https://fdc.nal.usda.gov/food-details/174918/nutrients"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "pan_de_salvado_de_arroz",
+      "defaultName": "Pan de salvado de arroz",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Pan de salvado de arroz"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "174923",
+        "sourceName": "Bread, rice bran",
+        "url": "https://fdc.nal.usda.gov/food-details/174923/nutrients"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "pan_de_molde_blanco",
+      "defaultName": "Pan de molde blanco",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Pan de molde blanco"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "174924",
+        "sourceName": "Bread, white, commercially prepared (includes soft bread crumbs)",
+        "url": "https://fdc.nal.usda.gov/food-details/174924/nutrients"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "grissini",
+      "defaultName": "Grissini",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Grissini",
+        "Palitos de pan"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "174929",
+        "sourceName": "Bread, sticks, plain",
+        "url": "https://fdc.nal.usda.gov/food-details/174929/nutrients"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "muffin_ingles",
+      "defaultName": "Muffin inglés",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Muffin inglés"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "174994",
+        "sourceName": "Muffins, English, plain, enriched, with ca prop (includes sourdough)",
+        "url": "https://fdc.nal.usda.gov/food-details/174994/nutrients"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "muffin_ingles_multicereales",
+      "defaultName": "Muffin inglés multicereales",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Muffin inglés multicereales"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "174996",
+        "sourceName": "Muffins, English, mixed-grain (includes granola)",
+        "url": "https://fdc.nal.usda.gov/food-details/174996/nutrients"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "muffin_ingles_de_canela_y_pasas",
+      "defaultName": "Muffin inglés de canela y pasas",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Muffin inglés de canela y pasas"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "174997",
+        "sourceName": "Muffins, English, raisin-cinnamon (includes apple-cinnamon)",
+        "url": "https://fdc.nal.usda.gov/food-details/174997/nutrients"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "panecillo_kaiser",
+      "defaultName": "Panecillo Kaiser",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Panecillo Kaiser"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "175031",
+        "sourceName": "Rolls, hard (includes kaiser)",
+        "url": "https://fdc.nal.usda.gov/food-details/175031/nutrients"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "tortilla_de_maiz",
+      "defaultName": "Tortilla de maíz",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Tortilla de maíz"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "175036",
+        "sourceName": "Tortillas, ready-to-bake or -fry, corn",
+        "url": "https://fdc.nal.usda.gov/food-details/175036/nutrients"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "tortilla_de_trigo",
+      "defaultName": "Tortilla de trigo",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Tortilla de trigo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "175037",
+        "sourceName": "Tortillas, ready-to-bake or -fry, flour, refrigerated",
+        "url": "https://fdc.nal.usda.gov/food-details/175037/nutrients"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "muffin_ingles_integral",
+      "defaultName": "Muffin inglés integral",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Muffin inglés integral"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172762",
+        "sourceName": "Muffins, English, whole-wheat",
+        "url": "https://fdc.nal.usda.gov/food-details/172762/nutrients"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "pan_de_masa_madre",
+      "defaultName": "Pan de masa madre",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Pan de masa madre"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE EMILIA-ROMAGNA-226",
+        "sourceName": "Pane a lievitazione naturale",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=23"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "pan_de_calabaza",
+      "defaultName": "Pan de calabaza",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Pan de calabaza"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE EMILIA-ROMAGNA-229",
+        "sourceName": "Pane di zucca, Pan ad zücca",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=23"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "pan_de_aceitunas",
+      "defaultName": "Pan de aceitunas",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Pan de aceitunas"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LAZIO-355",
+        "sourceName": "Pane con le olive bianche e nere",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=33"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "pan_de_semola_de_trigo_duro",
+      "defaultName": "Pan de sémola de trigo duro",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Pan de sémola de trigo duro"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LAZIO-358",
+        "sourceName": "Pane di semola di grano duro (Pane nero di Monteromano, di Allumiere)",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=33"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "focaccia",
+      "defaultName": "Focaccia",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Focaccia"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LIGURIA-196",
+        "sourceName": "Focaccia",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=38"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "pan_de_cebada",
+      "defaultName": "Pan de cebada",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Pan de cebada"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LIGURIA-213",
+        "sourceName": "Pane d'orzo",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=39"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "pan_de_arroz",
+      "defaultName": "Pan de arroz",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Pan de arroz"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-219",
+        "sourceName": "Pane di riso",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=44"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "pan_de_castanas",
+      "defaultName": "Pan de castañas",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Pan de castañas"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CALABRIA-178",
+        "sourceName": "Pane di castagne",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=9"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "pan_de_sesamo",
+      "defaultName": "Pan de sésamo",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Pan de sésamo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CALABRIA-177",
+        "sourceName": "Pane con la giuggiulena",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=9"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "pan_carasau",
+      "defaultName": "Pan carasau",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Pan carasau",
+        "Carta da musica"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA DELLA SARDEGNA-170",
+        "sourceName": "Pane carasau, Pane carasatu, Carta da musica",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=68"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "pan_guttiau",
+      "defaultName": "Pan guttiau",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Pan guttiau"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA DELLA SARDEGNA-178",
+        "sourceName": "Pane guttiaiu",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=68"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "pan_spianata_sardo",
+      "defaultName": "Pan spianata sardo",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Pan spianata sardo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA DELLA SARDEGNA-208",
+        "sourceName": "Spianada - Spianata - Cozzula - Panedda",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=68"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "pan_nociato",
+      "defaultName": "Pan nociato",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Pan nociato"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE UMBRIA-46",
+        "sourceName": "Pan nociato",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=80"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "panecillo_de_aceite",
+      "defaultName": "Panecillo de aceite",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Panecillo de aceite"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LAZIO-366",
+        "sourceName": "Panini all'olio",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=34"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "focaccia_de_chicharrones",
+      "defaultName": "Focaccia de chicharrones",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Focaccia de chicharrones",
+        "Chisola"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE EMILIA-ROMAGNA-184",
+        "sourceName": "Focaccia con ciccioli, Chisola",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=22"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "pan_brioche",
+      "defaultName": "Pan brioche",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Pan brioche",
+        "Brioche"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "EUROPASTRY_MOLDE",
+        "recordId": "67750",
+        "sourceName": "Pan de Molde Brioche",
+        "url": "https://shop.europastry.com/es/catalogo/2_0J"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "mollete_andaluz",
+      "defaultName": "Mollete andaluz",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Mollete andaluz"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SAN_ROQUE",
+        "recordId": "mollete",
+        "sourceName": "Mollete",
+        "url": "https://mollete.com/es/"
+      },
+      "identityReason": "Pan o masa utilizado como ingrediente de bocadillos, hamburguesas o cocina. Identidad por composición o elaboración; no se separan tamaños, envases, marcas, tostado ni fortificación."
+    },
+    {
+      "canonicalKey": "pasta_capellini",
+      "defaultName": "Pasta capellini",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta capellini",
+        "Capellini"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-9",
+        "sourceName": "Capellini n° 9",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_fedelini",
+      "defaultName": "Pasta fedelini",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta fedelini",
+        "Fedelini"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-10",
+        "sourceName": "Fedelini n° 10",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_spaghettini",
+      "defaultName": "Pasta spaghettini",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta spaghettini",
+        "Spaghettini"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-11",
+        "sourceName": "Spaghettini n° 11",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "espaguetis",
+      "defaultName": "Espaguetis",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Espaguetis",
+        "Spaghetti"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-12",
+        "sourceName": "Spaghetti n° 12",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_spaghettoni",
+      "defaultName": "Pasta spaghettoni",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta spaghettoni",
+        "Spaghettoni"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-412",
+        "sourceName": "Spaghettoni n° 412",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_vermicelli_de_trigo",
+      "defaultName": "Pasta vermicelli de trigo",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta vermicelli de trigo",
+        "Vermicelli de trigo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-170",
+        "sourceName": "Vermicelli de trigo n° 170",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_alla_chitarra",
+      "defaultName": "Pasta alla chitarra",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta alla chitarra",
+        "Maccheroni alla chitarra"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-13",
+        "sourceName": "Maccheroni alla chitarra n° 13",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_bucatini",
+      "defaultName": "Pasta bucatini",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta bucatini",
+        "Bucatini"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-15",
+        "sourceName": "Bucatini n° 15",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_ziti",
+      "defaultName": "Pasta ziti",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta ziti",
+        "Ziti",
+        "Zita"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-18",
+        "sourceName": "Ziti n° 18",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_zitoni",
+      "defaultName": "Pasta zitoni",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta zitoni",
+        "Zitoni",
+        "Zitone"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-19",
+        "sourceName": "Zitoni n° 19",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_fusilli_largos_huecos",
+      "defaultName": "Pasta fusilli largos huecos",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta fusilli largos huecos",
+        "Fusilli lunghi bucati"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-5",
+        "sourceName": "Fusilli lunghi bucati n° 5",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_linguine",
+      "defaultName": "Pasta linguine",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta linguine",
+        "Linguine",
+        "Linguini"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-7",
+        "sourceName": "Linguine n° 7",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_tripoline",
+      "defaultName": "Pasta tripoline",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta tripoline",
+        "Tripoline"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-3",
+        "sourceName": "Tripoline n° 3",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_mafaldine",
+      "defaultName": "Pasta mafaldine",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta mafaldine",
+        "Mafaldine"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-2",
+        "sourceName": "Mafaldine n° 2",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_sedanini",
+      "defaultName": "Pasta sedanini",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta sedanini",
+        "Sedanini"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-61",
+        "sourceName": "Sedanini n° 61",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_sedani_rigati",
+      "defaultName": "Pasta sedani rigati",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta sedani rigati",
+        "Sedani rigati"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-57",
+        "sourceName": "Sedani rigati n° 57",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_trivelli",
+      "defaultName": "Pasta trivelli",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta trivelli",
+        "Trivelli"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-60",
+        "sourceName": "Trivelli n° 60",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_rigatoncelli",
+      "defaultName": "Pasta rigatoncelli",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta rigatoncelli",
+        "Rigatoncello"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-28",
+        "sourceName": "Rigatoncello n° 28",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_tortiglioni",
+      "defaultName": "Pasta tortiglioni",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta tortiglioni",
+        "Tortiglioni"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-23",
+        "sourceName": "Tortiglioni n° 23",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_tufoli",
+      "defaultName": "Pasta tufoli",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta tufoli",
+        "Tufoli"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-29",
+        "sourceName": "Tufoli n° 29",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_rigatoni",
+      "defaultName": "Pasta rigatoni",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta rigatoni",
+        "Rigatoni"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-24",
+        "sourceName": "Rigatoni n° 24",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_penne_lisce",
+      "defaultName": "Pasta penne lisce",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta penne lisce",
+        "Penne lisce",
+        "Plumas lisas de pasta"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-40",
+        "sourceName": "Penne lisce n° 40",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_penne_rigate",
+      "defaultName": "Pasta penne rigate",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta penne rigate",
+        "Penne rigate",
+        "Plumas rayadas de pasta"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-41",
+        "sourceName": "Penne rigate n° 41",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_pennoni_lisci",
+      "defaultName": "Pasta pennoni lisci",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta pennoni lisci",
+        "Pennoni lisci"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-38",
+        "sourceName": "Pennoni lisci n° 38",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_pennoni_rigati",
+      "defaultName": "Pasta pennoni rigati",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta pennoni rigati",
+        "Pennoni rigati"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-39",
+        "sourceName": "Pennoni rigati n° 39",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_penne_a_candela",
+      "defaultName": "Pasta penne a candela",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta penne a candela",
+        "Penne a candela"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-340",
+        "sourceName": "Penne a candela n° 340",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "macarrones",
+      "defaultName": "Macarrones",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Macarrones",
+        "Maccheroni"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-122",
+        "sourceName": "Maccheroni n° 122",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_farfalle",
+      "defaultName": "Pasta farfalle",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta farfalle",
+        "Farfalle",
+        "Lazos de pasta"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-93",
+        "sourceName": "Farfalle n° 93",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_spaccatella",
+      "defaultName": "Pasta spaccatella",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta spaccatella",
+        "Spaccatella"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-171",
+        "sourceName": "Spaccatella n° 171",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_cavatappi",
+      "defaultName": "Pasta cavatappi",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta cavatappi",
+        "Cavatappi"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-87",
+        "sourceName": "Cavatappi n° 87",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_fusilli_cortos_huecos",
+      "defaultName": "Pasta fusilli cortos huecos",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta fusilli cortos huecos",
+        "Fusilli corti bucati"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-198",
+        "sourceName": "Fusilli corti bucati n° 198",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_orecchiette",
+      "defaultName": "Pasta orecchiette",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta orecchiette",
+        "Orecchiette"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-91",
+        "sourceName": "Orecchiette n° 91",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_gnocchetti_sardi",
+      "defaultName": "Pasta gnocchetti sardi",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta gnocchetti sardi",
+        "Gnocchetti sardi",
+        "Malloreddus"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-83",
+        "sourceName": "Gnocchetti sardi n° 83",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_chifferi_rigati",
+      "defaultName": "Pasta chifferi rigati",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta chifferi rigati",
+        "Chifferi rigati"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-33",
+        "sourceName": "Chifferi rigati n° 33",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_de_semola_en_forma_de_gnocchi",
+      "defaultName": "Pasta de sémola en forma de gnocchi",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta de sémola en forma de gnocchi"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-46",
+        "sourceName": "Pasta de sémola en forma de gnocchi n° 46",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_pipe_rigate",
+      "defaultName": "Pasta pipe rigate",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta pipe rigate",
+        "Pipe rigate"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-49",
+        "sourceName": "Pipe rigate n° 49",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_anelli_siciliani",
+      "defaultName": "Pasta anelli siciliani",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta anelli siciliani",
+        "Anelli siciliani"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-179",
+        "sourceName": "Anelli siciliani n° 179",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_gramigna",
+      "defaultName": "Pasta gramigna",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta gramigna",
+        "Gramigna"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-31",
+        "sourceName": "Gramigna n° 31",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_fusilli",
+      "defaultName": "Pasta fusilli",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta fusilli",
+        "Fusilli"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-34",
+        "sourceName": "Fusilli n° 34",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_lumache_rigate",
+      "defaultName": "Pasta lumache rigate",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta lumache rigate",
+        "Lumache rigate"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-43",
+        "sourceName": "Lumache rigate n° 43",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_rotelle",
+      "defaultName": "Pasta rotelle",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta rotelle",
+        "Rotelle",
+        "Ruedas de pasta"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-54",
+        "sourceName": "Rotelle n° 54",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_conchiglie_rigate",
+      "defaultName": "Pasta conchiglie rigate",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta conchiglie rigate",
+        "Conchiglie rigate"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-50",
+        "sourceName": "Conchiglie rigate n° 50",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_radiatori",
+      "defaultName": "Pasta radiatori",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta radiatori",
+        "Radiatori"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-199",
+        "sourceName": "Radiatori n° 199",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_festonati",
+      "defaultName": "Pasta festonati",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta festonati",
+        "Festonati"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-22",
+        "sourceName": "Festonati n° 22",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_racchette",
+      "defaultName": "Pasta racchette",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta racchette",
+        "Racchette"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-90",
+        "sourceName": "Racchette n° 90",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_galletti",
+      "defaultName": "Pasta galletti",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta galletti",
+        "Galletti"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-44",
+        "sourceName": "Galletti n° 44",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_funghini",
+      "defaultName": "Pasta funghini",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta funghini",
+        "Funghini"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-96",
+        "sourceName": "Funghini n° 96",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_ditali_lisci",
+      "defaultName": "Pasta ditali lisci",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta ditali lisci",
+        "Ditali lisci"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-58",
+        "sourceName": "Ditali lisci n° 58",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_ditali_rigati",
+      "defaultName": "Pasta ditali rigati",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta ditali rigati",
+        "Ditali rigati"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-59",
+        "sourceName": "Ditali rigati n° 59",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_tubetti_lisci",
+      "defaultName": "Pasta tubetti lisci",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta tubetti lisci",
+        "Tubetti lisci"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-62",
+        "sourceName": "Tubetti lisci n° 62",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_tubetti_rigati",
+      "defaultName": "Pasta tubetti rigati",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta tubetti rigati",
+        "Tubetti rigati"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-64",
+        "sourceName": "Tubetti rigati n° 64",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_gnocchetti_di_zita",
+      "defaultName": "Pasta gnocchetti di zita",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta gnocchetti di zita",
+        "Gnocchetti di zita"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-37",
+        "sourceName": "Gnocchetti di zita n° 37",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_filini",
+      "defaultName": "Pasta filini",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta filini",
+        "Filini"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-181",
+        "sourceName": "Filini n° 181",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_mixta_para_sopa",
+      "defaultName": "Pasta mixta para sopa",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta mixta para sopa",
+        "Pasta mista"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-120",
+        "sourceName": "Pasta mista n° 120",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_rombi",
+      "defaultName": "Pasta rombi",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta rombi",
+        "Rombi"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-121",
+        "sourceName": "Rombi n° 121",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_sagnette",
+      "defaultName": "Pasta sagnette",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta sagnette",
+        "Sagnette abruzzesi"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-89",
+        "sourceName": "Sagnette abruzzesi n° 89",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_coquillettes",
+      "defaultName": "Pasta coquillettes",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta coquillettes",
+        "Coquillettes"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-168",
+        "sourceName": "Coquillettes n° 168",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_acini_di_pepe",
+      "defaultName": "Pasta acini di pepe",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta acini di pepe",
+        "Acini di pepe"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-78",
+        "sourceName": "Acini di pepe n° 78",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_corallini",
+      "defaultName": "Pasta corallini",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta corallini",
+        "Corallini"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-84",
+        "sourceName": "Corallini n° 84",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_seme_di_melone",
+      "defaultName": "Pasta seme di melone",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta seme di melone",
+        "Seme di melone"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-80",
+        "sourceName": "Seme di melone n° 80",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_orzo",
+      "defaultName": "Pasta orzo",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta orzo",
+        "Orzo de pasta"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-74",
+        "sourceName": "Orzo de pasta n° 74",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_en_estrellas",
+      "defaultName": "Pasta en estrellas",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta en estrellas",
+        "Stellette"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-75",
+        "sourceName": "Stellette n° 75",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_en_corazones",
+      "defaultName": "Pasta en corazones",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta en corazones",
+        "Cuoretti"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-76",
+        "sourceName": "Cuoretti n° 76",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_de_letras",
+      "defaultName": "Pasta de letras",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta de letras",
+        "Alfabeto de pasta"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-173",
+        "sourceName": "Alfabeto de pasta n° 173",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_quadretti",
+      "defaultName": "Pasta quadretti",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta quadretti",
+        "Quadretti"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-172",
+        "sourceName": "Quadretti n° 172",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_stortini",
+      "defaultName": "Pasta stortini",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta stortini",
+        "Stortini"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-72",
+        "sourceName": "Stortini n° 72",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_anellini",
+      "defaultName": "Pasta anellini",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta anellini",
+        "Anellini"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-71",
+        "sourceName": "Anellini n° 71",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_casarecce",
+      "defaultName": "Pasta casarecce",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta casarecce",
+        "Casarecce",
+        "Casareccia"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-88",
+        "sourceName": "Casarecce n° 88",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_paccheri",
+      "defaultName": "Pasta paccheri",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta paccheri",
+        "Paccheri"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-125",
+        "sourceName": "Paccheri n° 125",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_paccheri_rigati",
+      "defaultName": "Pasta paccheri rigati",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta paccheri rigati",
+        "Paccheri rigati"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-130",
+        "sourceName": "Paccheri rigati n° 130",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_bombardoni_rigati",
+      "defaultName": "Pasta bombardoni rigati",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta bombardoni rigati",
+        "Bombardoni rigati"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-128",
+        "sourceName": "Bombardoni rigati n° 128",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_conchiglioni_rigati",
+      "defaultName": "Pasta conchiglioni rigati",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta conchiglioni rigati",
+        "Conchiglioni rigati"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-126",
+        "sourceName": "Conchiglioni rigati n° 126",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_calamarata",
+      "defaultName": "Pasta calamarata",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta calamarata",
+        "Calamarata"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-129",
+        "sourceName": "Calamarata n° 129",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_lumaconi_rigati",
+      "defaultName": "Pasta lumaconi rigati",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta lumaconi rigati",
+        "Lumaconi rigati"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-123",
+        "sourceName": "Lumaconi rigati n° 123",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_strangozzi",
+      "defaultName": "Pasta strangozzi",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta strangozzi",
+        "Strangozzi"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-212",
+        "sourceName": "Strangozzi n° 212",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_candele",
+      "defaultName": "Pasta candele",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta candele",
+        "Candele"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-127",
+        "sourceName": "Candele n° 127",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_tagliolini",
+      "defaultName": "Pasta tagliolini",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta tagliolini",
+        "Tagliolini"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-206",
+        "sourceName": "Tagliolini n° 206",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_tagliatelle",
+      "defaultName": "Pasta tagliatelle",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta tagliatelle",
+        "Tagliatelle",
+        "Tallarines tagliatelle"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-203",
+        "sourceName": "Tagliatelle n° 203",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_fettuccine",
+      "defaultName": "Pasta fettuccine",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta fettuccine",
+        "Fettuccine"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-233",
+        "sourceName": "Fettuccine n° 233",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_pappardelle",
+      "defaultName": "Pasta pappardelle",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta pappardelle",
+        "Pappardelle"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-201",
+        "sourceName": "Pappardelle n° 201",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "laminas_de_lasana",
+      "defaultName": "Láminas de lasaña",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Láminas de lasaña",
+        "Pasta para lasaña"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-502",
+        "sourceName": "Pasta para lasaña n° 502",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "laminas_de_lasana_rizada",
+      "defaultName": "Láminas de lasaña rizada",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Láminas de lasaña rizada",
+        "Lasagna riccia"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-1",
+        "sourceName": "Lasagna riccia n° 1",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      },
+      "identityReason": "Formato tradicional de pasta documentado y útil para definir recetas. Se conserva la identidad del formato; los números del fabricante, marcas y envases no se incorporan al nombre ni generan altas."
+    },
+    {
+      "canonicalKey": "pasta_cavatelli",
+      "defaultName": "Pasta cavatelli",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta cavatelli",
+        "Cavatelli"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CAMPANIA-418",
+        "sourceName": "Cavatelli*",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=16"
+      },
+      "identityReason": "Pasta o preparado de pasta utilizado como ingrediente antes de añadir la salsa o terminar el plato. Se distingue formato o relleno documentado; no se importan platos ya montados ni localidades como variantes automáticas."
+    },
+    {
+      "canonicalKey": "pasta_garganelli",
+      "defaultName": "Pasta garganelli",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta garganelli",
+        "Garganelli"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE EMILIA-ROMAGNA-190",
+        "sourceName": "Garganelli, Garganell, Maccheroni al pettine",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=22"
+      },
+      "identityReason": "Pasta o preparado de pasta utilizado como ingrediente antes de añadir la salsa o terminar el plato. Se distingue formato o relleno documentado; no se importan platos ya montados ni localidades como variantes automáticas."
+    },
+    {
+      "canonicalKey": "noquis_de_patata",
+      "defaultName": "Ñoquis de patata",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Ñoquis de patata",
+        "Gnocchi de patata"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE EMILIA-ROMAGNA-196",
+        "sourceName": "Gnocco di patate, Gnocchi di patate, Sgranfignone, Macarun s'al pateti, Gnòc",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=22"
+      },
+      "identityReason": "Pasta o preparado de pasta utilizado como ingrediente antes de añadir la salsa o terminar el plato. Se distingue formato o relleno documentado; no se importan platos ya montados ni localidades como variantes automáticas."
+    },
+    {
+      "canonicalKey": "pasta_strozzapreti",
+      "defaultName": "Pasta strozzapreti",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta strozzapreti",
+        "Strozzapreti"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE EMILIA-ROMAGNA-269",
+        "sourceName": "Strozzapreti, Strozaprit",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=23"
+      },
+      "identityReason": "Pasta o preparado de pasta utilizado como ingrediente antes de añadir la salsa o terminar el plato. Se distingue formato o relleno documentado; no se importan platos ya montados ni localidades como variantes automáticas."
+    },
+    {
+      "canonicalKey": "pasta_maltagliati",
+      "defaultName": "Pasta maltagliati",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta maltagliati",
+        "Maltagliati"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LAZIO-339",
+        "sourceName": "Maltagliati o Fregnacce",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=33"
+      },
+      "identityReason": "Pasta o preparado de pasta utilizado como ingrediente antes de añadir la salsa o terminar el plato. Se distingue formato o relleno documentado; no se importan platos ya montados ni localidades como variantes automáticas."
+    },
+    {
+      "canonicalKey": "pasta_trofie",
+      "defaultName": "Pasta trofie",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta trofie",
+        "Trofie"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LIGURIA-246",
+        "sourceName": "Trofie",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=39"
+      },
+      "identityReason": "Pasta o preparado de pasta utilizado como ingrediente antes de añadir la salsa o terminar el plato. Se distingue formato o relleno documentado; no se importan platos ya montados ni localidades como variantes automáticas."
+    },
+    {
+      "canonicalKey": "pasta_pici",
+      "defaultName": "Pasta pici",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta pici",
+        "Pici",
+        "Pinci"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-399",
+        "sourceName": "Pici, Pinci",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=78"
+      },
+      "identityReason": "Pasta o preparado de pasta utilizado como ingrediente antes de añadir la salsa o terminar el plato. Se distingue formato o relleno documentado; no se importan platos ya montados ni localidades como variantes automáticas."
+    },
+    {
+      "canonicalKey": "pasta_fileja",
+      "defaultName": "Pasta fileja",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta fileja",
+        "Fileja"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE CALABRIA-185",
+        "sourceName": "Pasta fileja",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=9"
+      },
+      "identityReason": "Pasta o preparado de pasta utilizado como ingrediente antes de añadir la salsa o terminar el plato. Se distingue formato o relleno documentado; no se importan platos ya montados ni localidades como variantes automáticas."
+    },
+    {
+      "canonicalKey": "noquis_de_calabaza",
+      "defaultName": "Ñoquis de calabaza",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Ñoquis de calabaza",
+        "Gnocchi de calabaza"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-206",
+        "sourceName": "Gnocchi di zucca",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=43"
+      },
+      "identityReason": "Pasta o preparado de pasta utilizado como ingrediente antes de añadir la salsa o terminar el plato. Se distingue formato o relleno documentado; no se importan platos ya montados ni localidades como variantes automáticas."
+    },
+    {
+      "canonicalKey": "noquis_de_castanas",
+      "defaultName": "Ñoquis de castañas",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Ñoquis de castañas",
+        "Gnocchi de castañas"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LAZIO-323",
+        "sourceName": "Gnocchi di castagne",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=33"
+      },
+      "identityReason": "Pasta o preparado de pasta utilizado como ingrediente antes de añadir la salsa o terminar el plato. Se distingue formato o relleno documentado; no se importan platos ya montados ni localidades como variantes automáticas."
+    },
+    {
+      "canonicalKey": "tortelli_de_patata",
+      "defaultName": "Tortelli de patata",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Tortelli de patata"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE EMILIA-ROMAGNA-300",
+        "sourceName": "Tortelli di patate",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=24"
+      },
+      "identityReason": "Pasta o preparado de pasta utilizado como ingrediente antes de añadir la salsa o terminar el plato. Se distingue formato o relleno documentado; no se importan platos ya montados ni localidades como variantes automáticas."
+    },
+    {
+      "canonicalKey": "tortelli_de_ricotta",
+      "defaultName": "Tortelli de ricotta",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Tortelli de ricotta"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE EMILIA-ROMAGNA-301",
+        "sourceName": "Tortelli di ricotta",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=24"
+      },
+      "identityReason": "Pasta o preparado de pasta utilizado como ingrediente antes de añadir la salsa o terminar el plato. Se distingue formato o relleno documentado; no se importan platos ya montados ni localidades como variantes automáticas."
+    },
+    {
+      "canonicalKey": "tortelli_de_col",
+      "defaultName": "Tortelli de col",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Tortelli de col"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE EMILIA-ROMAGNA-304",
+        "sourceName": "Tortelli di verza",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=24"
+      },
+      "identityReason": "Pasta o preparado de pasta utilizado como ingrediente antes de añadir la salsa o terminar el plato. Se distingue formato o relleno documentado; no se importan platos ya montados ni localidades como variantes automáticas."
+    },
+    {
+      "canonicalKey": "tortelli_de_calabaza",
+      "defaultName": "Tortelli de calabaza",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Tortelli de calabaza"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE EMILIA-ROMAGNA-306",
+        "sourceName": "Tortelli di zucca, Tortei ad zücc, Cappellacci di zucca, Turtlòn ad sùca",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=24"
+      },
+      "identityReason": "Pasta o preparado de pasta utilizado como ingrediente antes de añadir la salsa o terminar el plato. Se distingue formato o relleno documentado; no se importan platos ya montados ni localidades como variantes automáticas."
+    },
+    {
+      "canonicalKey": "ravioli_de_ricotta",
+      "defaultName": "Ravioli de ricotta",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Ravioli de ricotta"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PUGLIA-265",
+        "sourceName": "Ravioli con ricotta",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=63"
+      },
+      "identityReason": "Pasta o preparado de pasta utilizado como ingrediente antes de añadir la salsa o terminar el plato. Se distingue formato o relleno documentado; no se importan platos ya montados ni localidades como variantes automáticas."
+    },
+    {
+      "canonicalKey": "ravioli_de_patata",
+      "defaultName": "Ravioli de patata",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Ravioli de patata"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LAZIO-396",
+        "sourceName": "Ravioli di patate",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=34"
+      },
+      "identityReason": "Pasta o preparado de pasta utilizado como ingrediente antes de añadir la salsa o terminar el plato. Se distingue formato o relleno documentado; no se importan platos ya montados ni localidades como variantes automáticas."
+    },
+    {
+      "canonicalKey": "pansoti_de_hierbas",
+      "defaultName": "Pansoti de hierbas",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pansoti de hierbas",
+        "Pansoti"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LIGURIA-224",
+        "sourceName": "Raviolo alle erbette, Pansoto",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download#page=39"
+      },
+      "identityReason": "Pasta o preparado de pasta utilizado como ingrediente antes de añadir la salsa o terminar el plato. Se distingue formato o relleno documentado; no se importan platos ya montados ni localidades como variantes automáticas."
+    },
+    {
+      "canonicalKey": "corte_denver_de_vacuno",
+      "defaultName": "Corte Denver de vacuno",
+      "category": "CARNES",
+      "restaurantCategoryKey": "CARNES_AVES",
+      "aliases": [
+        "Corte Denver de vacuno"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "170205",
+        "sourceName": "Beef, chuck, under blade center steak, boneless, Denver Cut, separable lean only, trimmed to 0\" fat, all grades, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/170205/nutrients"
+      },
+      "identityReason": "Corte anatómico de vacuno documentado. No se crean variantes por grado de calidad, porcentaje de grasa, grosor de filete ni estado crudo/cocinado; se conserva la distinción entre vacuno y las fichas históricas de ternera."
+    },
+    {
+      "canonicalKey": "redondo_de_vacuno",
+      "defaultName": "Redondo de vacuno",
+      "category": "CARNES",
+      "restaurantCategoryKey": "CARNES_AVES",
+      "aliases": [
+        "Redondo de vacuno"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169523",
+        "sourceName": "Beef, round, eye of round, roast, separable lean and fat, trimmed to 1/8\" fat, all grades, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/169523/nutrients"
+      },
+      "identityReason": "Corte anatómico de vacuno documentado. No se crean variantes por grado de calidad, porcentaje de grasa, grosor de filete ni estado crudo/cocinado; se conserva la distinción entre vacuno y las fichas históricas de ternera."
+    },
+    {
+      "canonicalKey": "tapa_de_vacuno",
+      "defaultName": "Tapa de vacuno",
+      "category": "CARNES",
+      "restaurantCategoryKey": "CARNES_AVES",
+      "aliases": [
+        "Tapa de vacuno"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169529",
+        "sourceName": "Beef, round, top round, steak, separable lean and fat, trimmed to 1/8\" fat, all grades, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/169529/nutrients"
+      },
+      "identityReason": "Corte anatómico de vacuno documentado. No se crean variantes por grado de calidad, porcentaje de grasa, grosor de filete ni estado crudo/cocinado; se conserva la distinción entre vacuno y las fichas históricas de ternera."
+    },
+    {
+      "canonicalKey": "contra_de_vacuno",
+      "defaultName": "Contra de vacuno",
+      "category": "CARNES",
+      "restaurantCategoryKey": "CARNES_AVES",
+      "aliases": [
+        "Contra de vacuno"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169519",
+        "sourceName": "Beef, round, bottom round, steak, separable lean and fat, trimmed to 1/8\" fat, all grades, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/169519/nutrients"
+      },
+      "identityReason": "Corte anatómico de vacuno documentado. No se crean variantes por grado de calidad, porcentaje de grasa, grosor de filete ni estado crudo/cocinado; se conserva la distinción entre vacuno y las fichas históricas de ternera."
+    },
+    {
+      "canonicalKey": "rabillo_de_cadera_de_vacuno",
+      "defaultName": "Rabillo de cadera de vacuno",
+      "category": "CARNES",
+      "restaurantCategoryKey": "CARNES_AVES",
+      "aliases": [
+        "Rabillo de cadera de vacuno",
+        "Tri-tip de vacuno"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "168734",
+        "sourceName": "Beef, bottom sirloin, tri-tip roast, separable lean and fat, trimmed to 0\" fat, all grades, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/168734/nutrients"
+      },
+      "identityReason": "Corte anatómico de vacuno documentado. No se crean variantes por grado de calidad, porcentaje de grasa, grosor de filete ni estado crudo/cocinado; se conserva la distinción entre vacuno y las fichas históricas de ternera."
+    },
+    {
+      "canonicalKey": "ojo_de_lomo_de_vacuno",
+      "defaultName": "Ojo de lomo de vacuno",
+      "category": "CARNES",
+      "restaurantCategoryKey": "CARNES_AVES",
+      "aliases": [
+        "Ojo de lomo de vacuno",
+        "Ribeye de vacuno"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "170839",
+        "sourceName": "Beef, rib eye steak/roast, boneless, lip-on, separable lean only, trimmed to 1/8\" fat, all grades, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/170839/nutrients"
+      },
+      "identityReason": "Corte anatómico de vacuno documentado. No se crean variantes por grado de calidad, porcentaje de grasa, grosor de filete ni estado crudo/cocinado; se conserva la distinción entre vacuno y las fichas históricas de ternera."
+    },
+    {
+      "canonicalKey": "morcillo_de_vacuno",
+      "defaultName": "Morcillo de vacuno",
+      "category": "CARNES",
+      "restaurantCategoryKey": "CARNES_AVES",
+      "aliases": [
+        "Morcillo de vacuno"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169441",
+        "sourceName": "Beef, shank crosscuts, separable lean only, trimmed to 1/4\" fat, choice, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/169441/nutrients"
+      },
+      "identityReason": "Corte anatómico de vacuno documentado. No se crean variantes por grado de calidad, porcentaje de grasa, grosor de filete ni estado crudo/cocinado; se conserva la distinción entre vacuno y las fichas históricas de ternera."
+    },
+    {
+      "canonicalKey": "falso_solomillo_de_vacuno",
+      "defaultName": "Falso solomillo de vacuno",
+      "category": "CARNES",
+      "restaurantCategoryKey": "CARNES_AVES",
+      "aliases": [
+        "Falso solomillo de vacuno",
+        "Mock tender de vacuno"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171202",
+        "sourceName": "Beef, chuck, mock tender steak, boneless, separable lean only, trimmed to 0\" fat, all grades, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/171202/nutrients"
+      },
+      "identityReason": "Corte anatómico de vacuno documentado. No se crean variantes por grado de calidad, porcentaje de grasa, grosor de filete ni estado crudo/cocinado; se conserva la distinción entre vacuno y las fichas históricas de ternera."
+    },
+    {
+      "canonicalKey": "costillas_cortas_de_aguja_de_vacuno",
+      "defaultName": "Costillas cortas de aguja de vacuno",
+      "category": "CARNES",
+      "restaurantCategoryKey": "CARNES_AVES",
+      "aliases": [
+        "Costillas cortas de aguja de vacuno"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "170796",
+        "sourceName": "Beef, chuck, short ribs, boneless, separable lean only, trimmed to 0\" fat, all grades, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/170796/nutrients"
+      },
+      "identityReason": "Corte anatómico de vacuno documentado. No se crean variantes por grado de calidad, porcentaje de grasa, grosor de filete ni estado crudo/cocinado; se conserva la distinción entre vacuno y las fichas históricas de ternera."
+    },
+    {
+      "canonicalKey": "fondo_de_vacuno",
+      "defaultName": "Fondo de vacuno",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Fondo de vacuno"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172883",
+        "sourceName": "Soup, stock, beef, home-prepared",
+        "url": "https://fdc.nal.usda.gov/food-details/172883/nutrients"
+      },
+      "identityReason": "Base de cocina o salsa utilizada como ingrediente. Se elimina marca y presentación comercial y se conserva la preparación culinaria; formulación y alérgenos requieren revisión específica."
+    },
+    {
+      "canonicalKey": "fondo_de_pollo",
+      "defaultName": "Fondo de pollo",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Fondo de pollo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172884",
+        "sourceName": "Soup, stock, chicken, home-prepared",
+        "url": "https://fdc.nal.usda.gov/food-details/172884/nutrients"
+      },
+      "identityReason": "Base de cocina o salsa utilizada como ingrediente. Se elimina marca y presentación comercial y se conserva la preparación culinaria; formulación y alérgenos requieren revisión específica."
+    },
+    {
+      "canonicalKey": "fondo_de_pescado",
+      "defaultName": "Fondo de pescado",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Fondo de pescado",
+        "Fumet de pescado"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172885",
+        "sourceName": "Soup, stock, fish, home-prepared",
+        "url": "https://fdc.nal.usda.gov/food-details/172885/nutrients"
+      },
+      "identityReason": "Base de cocina o salsa utilizada como ingrediente. Se elimina marca y presentación comercial y se conserva la preparación culinaria; formulación y alérgenos requieren revisión específica."
+    },
+    {
+      "canonicalKey": "caldo_de_verduras",
+      "defaultName": "Caldo de verduras",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Caldo de verduras"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171583",
+        "sourceName": "Soup, vegetable broth, ready to serve",
+        "url": "https://fdc.nal.usda.gov/food-details/171583/nutrients"
+      },
+      "identityReason": "Base de cocina o salsa utilizada como ingrediente. Se elimina marca y presentación comercial y se conserva la preparación culinaria; formulación y alérgenos requieren revisión específica."
+    },
+    {
+      "canonicalKey": "jugo_de_carne_para_salsa",
+      "defaultName": "Jugo de carne para salsa",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Jugo de carne para salsa",
+        "Salsa au jus"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171168",
+        "sourceName": "Gravy, au jus, canned",
+        "url": "https://fdc.nal.usda.gov/food-details/171168/nutrients"
+      },
+      "identityReason": "Base de cocina o salsa utilizada como ingrediente. Se elimina marca y presentación comercial y se conserva la preparación culinaria; formulación y alérgenos requieren revisión específica."
+    },
+    {
+      "canonicalKey": "salsa_gravy_de_cebolla",
+      "defaultName": "Salsa gravy de cebolla",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Salsa gravy de cebolla"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171172",
+        "sourceName": "Gravy, onion, dry, mix",
+        "url": "https://fdc.nal.usda.gov/food-details/171172/nutrients"
+      },
+      "identityReason": "Base de cocina o salsa utilizada como ingrediente. Se elimina marca y presentación comercial y se conserva la preparación culinaria; formulación y alérgenos requieren revisión específica."
+    },
+    {
+      "canonicalKey": "salsa_gravy_de_cerdo",
+      "defaultName": "Salsa gravy de cerdo",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Salsa gravy de cerdo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171173",
+        "sourceName": "Gravy, pork, dry, powder",
+        "url": "https://fdc.nal.usda.gov/food-details/171173/nutrients"
+      },
+      "identityReason": "Base de cocina o salsa utilizada como ingrediente. Se elimina marca y presentación comercial y se conserva la preparación culinaria; formulación y alérgenos requieren revisión específica."
+    },
+    {
+      "canonicalKey": "salsa_gravy_de_pollo",
+      "defaultName": "Salsa gravy de pollo",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Salsa gravy de pollo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171566",
+        "sourceName": "Gravy, chicken, canned or bottled, ready-to-serve",
+        "url": "https://fdc.nal.usda.gov/food-details/171566/nutrients"
+      },
+      "identityReason": "Base de cocina o salsa utilizada como ingrediente. Se elimina marca y presentación comercial y se conserva la preparación culinaria; formulación y alérgenos requieren revisión específica."
+    },
+    {
+      "canonicalKey": "salsa_gravy_de_pavo",
+      "defaultName": "Salsa gravy de pavo",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Salsa gravy de pavo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171568",
+        "sourceName": "Gravy, turkey, canned, ready-to-serve",
+        "url": "https://fdc.nal.usda.gov/food-details/171568/nutrients"
+      },
+      "identityReason": "Base de cocina o salsa utilizada como ingrediente. Se elimina marca y presentación comercial y se conserva la preparación culinaria; formulación y alérgenos requieren revisión específica."
+    },
+    {
+      "canonicalKey": "sofrito",
+      "defaultName": "Sofrito",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Sofrito"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171174",
+        "sourceName": "Sauce, sofrito, prepared from recipe",
+        "url": "https://fdc.nal.usda.gov/food-details/171174/nutrients"
+      },
+      "identityReason": "Base de cocina o salsa utilizada como ingrediente. Se elimina marca y presentación comercial y se conserva la preparación culinaria; formulación y alérgenos requieren revisión específica."
+    },
+    {
+      "canonicalKey": "salsa_para_carne_a_base_de_tomate",
+      "defaultName": "Salsa para carne a base de tomate",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Salsa para carne a base de tomate"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171825",
+        "sourceName": "Sauce, steak, tomato based",
+        "url": "https://fdc.nal.usda.gov/food-details/171825/nutrients"
+      },
+      "identityReason": "Base de cocina o salsa utilizada como ingrediente. Se elimina marca y presentación comercial y se conserva la preparación culinaria; formulación y alérgenos requieren revisión específica."
+    },
+    {
+      "canonicalKey": "salsa_de_tomate_y_chile",
+      "defaultName": "Salsa de tomate y chile",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Salsa de tomate y chile"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171595",
+        "sourceName": "Sauce, tomato chili sauce, bottled, with salt",
+        "url": "https://fdc.nal.usda.gov/food-details/171595/nutrients"
+      },
+      "identityReason": "Base de cocina o salsa utilizada como ingrediente. Se elimina marca y presentación comercial y se conserva la preparación culinaria; formulación y alérgenos requieren revisión específica."
+    },
+    {
+      "canonicalKey": "salsa_demi_glace",
+      "defaultName": "Salsa demi-glace",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Salsa demi-glace"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "UFS_2026",
+        "recordId": "10419902",
+        "sourceName": "Salsa Demi-Glace Knorr",
+        "url": "https://www.unileverfoodsolutions.es/dam/ufs-es/es/brochure/Catalogo-Digital-Unilever-Food-Solutions-2026.pdf"
+      },
+      "identityReason": "Base de cocina o salsa utilizada como ingrediente. Se elimina marca y presentación comercial y se conserva la preparación culinaria; formulación y alérgenos requieren revisión específica."
+    },
+    {
+      "canonicalKey": "base_de_salsa_espanola",
+      "defaultName": "Base de salsa española",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Base de salsa española"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "UFS_2026",
+        "recordId": "64927509",
+        "sourceName": "Base Española En Frío Knorr",
+        "url": "https://www.unileverfoodsolutions.es/dam/ufs-es/es/brochure/Catalogo-Digital-Unilever-Food-Solutions-2026.pdf"
+      },
+      "identityReason": "Base de cocina o salsa utilizada como ingrediente. Se elimina marca y presentación comercial y se conserva la preparación culinaria; formulación y alérgenos requieren revisión específica."
+    },
+    {
+      "canonicalKey": "salsa_de_queso_gouda",
+      "defaultName": "Salsa de queso gouda",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Salsa de queso gouda"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "UFS_2026",
+        "recordId": "64332272",
+        "sourceName": "Salsa Líquida Queso Gouda Knorr",
+        "url": "https://www.unileverfoodsolutions.es/dam/ufs-es/es/brochure/Catalogo-Digital-Unilever-Food-Solutions-2026.pdf"
+      },
+      "identityReason": "Base de cocina o salsa utilizada como ingrediente. Se elimina marca y presentación comercial y se conserva la preparación culinaria; formulación y alérgenos requieren revisión específica."
+    },
+    {
+      "canonicalKey": "salsa_de_pimienta_verde",
+      "defaultName": "Salsa de pimienta verde",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Salsa de pimienta verde"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "UFS_2026",
+        "recordId": "64347037",
+        "sourceName": "Salsa Líquida Pimienta Verde Knorr",
+        "url": "https://www.unileverfoodsolutions.es/dam/ufs-es/es/brochure/Catalogo-Digital-Unilever-Food-Solutions-2026.pdf"
+      },
+      "identityReason": "Base de cocina o salsa utilizada como ingrediente. Se elimina marca y presentación comercial y se conserva la preparación culinaria; formulación y alérgenos requieren revisión específica."
+    },
+    {
+      "canonicalKey": "salsa_de_chile_dulce",
+      "defaultName": "Salsa de chile dulce",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Salsa de chile dulce"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "UFS_2026",
+        "recordId": "14413801",
+        "sourceName": "Salsa Sweet Chili Knorr",
+        "url": "https://www.unileverfoodsolutions.es/dam/ufs-es/es/brochure/Catalogo-Digital-Unilever-Food-Solutions-2026.pdf"
+      },
+      "identityReason": "Base de cocina o salsa utilizada como ingrediente. Se elimina marca y presentación comercial y se conserva la preparación culinaria; formulación y alérgenos requieren revisión específica."
+    },
+    {
+      "canonicalKey": "roux_claro",
+      "defaultName": "Roux claro",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Roux claro"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "UFS_2026",
+        "recordId": "64360280",
+        "sourceName": "Roux Claro Knorr",
+        "url": "https://www.unileverfoodsolutions.es/dam/ufs-es/es/brochure/Catalogo-Digital-Unilever-Food-Solutions-2026.pdf"
+      },
+      "identityReason": "Base de cocina o salsa utilizada como ingrediente. Se elimina marca y presentación comercial y se conserva la preparación culinaria; formulación y alérgenos requieren revisión específica."
+    },
+    {
+      "canonicalKey": "roux_oscuro",
+      "defaultName": "Roux oscuro",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Roux oscuro"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "UFS_2026",
+        "recordId": "64376919",
+        "sourceName": "Roux Oscuro Knorr",
+        "url": "https://www.unileverfoodsolutions.es/dam/ufs-es/es/brochure/Catalogo-Digital-Unilever-Food-Solutions-2026.pdf"
+      },
+      "identityReason": "Base de cocina o salsa utilizada como ingrediente. Se elimina marca y presentación comercial y se conserva la preparación culinaria; formulación y alérgenos requieren revisión específica."
+    },
+    {
+      "canonicalKey": "aderezo_de_citricos",
+      "defaultName": "Aderezo de cítricos",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Aderezo de cítricos"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "UFS_2026",
+        "recordId": "64310436",
+        "sourceName": "Aderezo de Cítricos Knorr",
+        "url": "https://www.unileverfoodsolutions.es/dam/ufs-es/es/brochure/Catalogo-Digital-Unilever-Food-Solutions-2026.pdf"
+      },
+      "identityReason": "Base de cocina o salsa utilizada como ingrediente. Se elimina marca y presentación comercial y se conserva la preparación culinaria; formulación y alérgenos requieren revisión específica."
+    },
+    {
+      "canonicalKey": "salsa_chilindron",
+      "defaultName": "Salsa chilindrón",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Salsa chilindrón"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "GALLINA_BLANCA",
+        "recordId": "salsa-chilindron",
+        "sourceName": "Salsa Chilindrón",
+        "url": "https://www.gallinablanca.es/productos/marca/mis-salsas/"
+      },
+      "identityReason": "Base de cocina o salsa utilizada como ingrediente. Se elimina marca y presentación comercial y se conserva la preparación culinaria; formulación y alérgenos requieren revisión específica."
+    },
+    {
+      "canonicalKey": "chapata",
+      "defaultName": "Chapata",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Chapata",
+        "Ciabatta"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PANAMAR_PANES",
+        "recordId": "241",
+        "sourceName": "Chapata 460g",
+        "url": "https://panamarbakery.com/ciabatta-460g"
+      },
+      "identityReason": "Tipo de pan documentado para bocadillos y cocina; referencias de tamaño y marca no generan identidades nuevas."
+    },
+    {
+      "canonicalKey": "baguette",
+      "defaultName": "Baguette",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Baguette"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PANAMAR_PANES",
+        "recordId": "130015",
+        "sourceName": "Baguette Obrador 240g",
+        "url": "https://www.panamarbakery.com/catalogo-panusa"
+      },
+      "identityReason": "Tipo de pan documentado para bocadillos y cocina; referencias de tamaño y marca no generan identidades nuevas."
+    }
+  ],
+  "exclusions": [
+    {
+      "candidate": "Tripoline n° 211",
+      "decision": "SAME_FORMAT",
+      "existingKey": "pasta_tripoline",
+      "reason": "Segundo número comercial del mismo formato; no se cuenta dos veces."
+    },
+    {
+      "candidate": "Bucatini piccoli/grandi; linguine piccoli/grandi",
+      "decision": "SIZE_ONLY",
+      "reason": "Se conserva el formato principal; tamaños comerciales no generan automáticamente identidades."
+    },
+    {
+      "candidate": "Panes tostados, bajos en calorías, fortificados o en distintos envases",
+      "decision": "PRESENTATION_OR_NUTRITION",
+      "reason": "No constituyen por sí solos una nueva identidad culinaria."
+    },
+    {
+      "candidate": "Pane di patate de varias localidades",
+      "decision": "SAME_GENERIC_PREPARATION",
+      "existingKey": "pan_de_patata",
+      "reason": "Se añade una sola preparación genérica hasta documentar una composición realmente distinta."
+    },
+    {
+      "candidate": "Capelli d’Angelo n° 209",
+      "decision": "POSSIBLE_SYNONYM",
+      "existingKey": "pasta_capellini",
+      "reason": "No se añade por posible equivalencia con capellini; falta contrastar identidad."
+    },
+    {
+      "candidate": "Gnudi / ravioli nudi / strozzapreti del Casentino",
+      "decision": "AMBIGUOUS_NAME",
+      "reason": "La fuente mezcla alias que también designan otros formatos; se conserva fuera del lote hasta desambiguar."
+    },
+    {
+      "candidate": "Pan brioche para hamburguesa",
+      "decision": "REVIEW_REQUIRED",
+      "reason": "Se representa brioche una sola vez sin multiplicarlo por formato de pan.",
+      "evidence": {
+        "sourceId": "PANAMAR_BURGER",
+        "recordId": "gama-brioche",
+        "sourceName": "Gama brioche",
+        "url": "https://www.panamarbakery.com/gama-burger"
+      }
+    },
+    {
+      "candidate": "Pasta fettuccelle",
+      "decision": "REVIEW_REQUIRED",
+      "reason": "Posible variante dimensional de fettuccine; falta justificar identidad separada.",
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-6",
+        "sourceName": "Fettuccelle n° 6",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      }
+    },
+    {
+      "candidate": "Pasta millerighe",
+      "decision": "REVIEW_REQUIRED",
+      "reason": "Posible solapamiento con rigatoni; no basta otro nombre comercial.",
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-25",
+        "sourceName": "Millerighe n° 25",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      }
+    },
+    {
+      "candidate": "Pasta puntalette",
+      "decision": "REVIEW_REQUIRED",
+      "reason": "Posible solapamiento con pasta orzo; pendiente de contraste.",
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-73",
+        "sourceName": "Puntalette n° 73",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      }
+    },
+    {
+      "candidate": "Pasta taglierini",
+      "decision": "REVIEW_REQUIRED",
+      "reason": "Posible sinónimo de tagliolini; no se crea identidad sin desambiguar.",
+      "evidence": {
+        "sourceId": "DECECCO_SEMOLA",
+        "recordId": "n-205",
+        "sourceName": "Taglierini n° 205",
+        "url": "https://www.dececco.com/es_es/products/pasta-de-semola/"
+      }
+    },
+    {
+      "candidate": "Brazuelo de vacuno",
+      "decision": "REVIEW_REQUIRED",
+      "reason": "La equivalencia española de arm roast no está suficientemente contrastada.",
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "169491",
+        "sourceName": "Beef, chuck, arm pot roast, separable lean and fat, trimmed to 1/8\" fat, all grades, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/169491/nutrients"
+      }
+    }
+  ]
+}

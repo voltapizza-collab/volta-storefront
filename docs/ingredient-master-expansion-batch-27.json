@@ -1,0 +1,321 @@
+{
+  "schemaVersion": 1,
+  "batchId": "2026-09-24-27",
+  "date": "2026-09-24",
+  "status": "EDITORIAL_REVIEW",
+  "targetTotal": 5000,
+  "policy": "Hierbas y especias culinarias con identidad y parte vegetal documentadas. Sin cuotas ni altas por marca. Distinguir especies de rizomas y revisar nombres históricos antes de crear solapamientos.",
+  "allergenPolicy": "NEEDS_REVIEW e imágenes MISSING. Alérgenos vacíos significa no aprobados, nunca ausencia. Revisar ficha técnica del suministro y posibles trazas. No transferir alegaciones sanitarias.",
+  "sources": {
+    "nparks-galanga": {
+      "title": "NParks — Alpinia galanga",
+      "url": "https://www.nparks.gov.sg/florafaunaweb/flora/1/6/1644",
+      "accessed": "2026-09-24",
+      "notes": "Contenido indexado: rizoma aromático empleado en pastas de especias y curris. Se limita la ficha al rizoma culinario."
+    },
+    "nparks-pandan": {
+      "title": "NParks — What is in Singapore sweet treats: Pandan",
+      "url": "https://www.nparks.gov.sg/publications-resources/articles/what-s-in-singapore-s-sweet-treats",
+      "accessed": "2026-09-24",
+      "notes": "Página recuperada: hojas de Pandanus amaryllifolius utilizadas para aromatizar platos y postres. Se excluyen extractos y otras especies de Pandanus."
+    },
+    "nparks-cilantro-vietnamita": {
+      "title": "NParks — Persicaria odorata",
+      "url": "https://www.nparks.gov.sg/florafaunaweb/flora/3/2/3207",
+      "accessed": "2026-09-24",
+      "notes": "Página recuperada: Vietnamese Coriander o Laksa Leaf, utilizada como hierba culinaria. La propia fuente distingue Persicaria hydropiper."
+    },
+    "koppert-huacatay": {
+      "title": "Koppert Cress — Aclla Cress",
+      "url": "https://www.koppertcress.com/nl/producten/aclla-cress",
+      "accessed": "2026-09-24",
+      "notes": "Página recuperada del productor: planta comestible, con Tagetes minuta y Huacatay entre sus identificadores. Se omite la marca Aclla Cress y se limita al uso de hojas y brotes culinarios."
+    },
+    "nparks-fingerroot": {
+      "title": "NParks — Boesenbergia rotunda",
+      "url": "https://www.nparks.gov.sg/florafaunaweb/flora/4/8/4849",
+      "accessed": "2026-09-24",
+      "notes": "Contenido indexado: rizomas jóvenes comestibles. Uso como aromatizante contrastado en folleto NParks Know 10 Root Vegetables. No se importan usos medicinales ni extractos."
+    },
+    "nparks-kencur": {
+      "title": "GardeningSG — Sand Ginger",
+      "url": "https://gardeningsg.nparks.gov.sg/gardening-resource-library/sand-ginger/",
+      "accessed": "2026-09-24",
+      "notes": "Página recuperada: Kaempferia galanga, también Kencur; el rizoma se utiliza para condimentar salsas y curris. Las hojas quedan fuera de esta ficha."
+    },
+    "spicery-cubeb": {
+      "title": "The Spicery — Cubeb Pepper",
+      "url": "https://thespicery.com/products/cubeb-pepper",
+      "accessed": "2026-09-24",
+      "notes": "Página recuperada: cubeba culinaria para condimentar. Piper cubeba aparece en contenido indexado del catálogo histórico de Terre Exotique: https://www.terreexotique.fr/media/wysiwyg/catalogue/Catalogue_TE_2022.pdf. PDF no recuperado completo."
+    },
+    "poimena-pepperberry": {
+      "title": "Poimena Peppers — Tasmanian Mountain Pepper Berry",
+      "url": "https://www.poimenapeppers.com/",
+      "accessed": "2026-09-24",
+      "notes": "Página recuperada del productor: bayas de Tasmannia lanceolata utilizadas como alimento aromático. Se limita la ficha a las bayas; no hojas, aceites ni alegaciones sanitarias."
+    },
+    "australian-black-limes": {
+      "title": "Australian Black Limes — Black Lime Powder",
+      "url": "https://australianblacklimes.com.au/product/black-lime-powder/",
+      "accessed": "2026-09-24",
+      "notes": "Página recuperada del productor: lima negra desecada y molida para condimentar. No se asigna especie botánica no identificada en la ficha."
+    },
+    "bf-mahlab": {
+      "title": "BF Spices — Mahlab (Mahlep)",
+      "url": "https://www.bfspices.com/product/mahlab/",
+      "accessed": "2026-09-24",
+      "notes": "Página recuperada: especia de semillas de Prunus mahaleb preparada para panadería y repostería; se agrupan semillas y molienda comercial."
+    },
+    "chios-mastiha": {
+      "title": "Chios Mastiha Growers Association — Mastiha in gastronomy",
+      "url": "https://www.gummastic.gr/public/Leaflets/ENG.pdf",
+      "accessed": "2026-09-24",
+      "notes": "Contenido indexado del folleto de la asociación productora: cristales de mastiha utilizados en gastronomía. El PDF completo no se recuperó. Se excluyen aceite, aromatizante diluido, chicle y suplementos."
+    }
+  },
+  "records": [
+    {
+      "canonicalKey": "galanga_mayor",
+      "defaultName": "Galanga mayor",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Galanga mayor",
+        "Lengkuas"
+      ],
+      "scientificName": "Alpinia galanga",
+      "allergens": [],
+      "evidence": {
+        "sourceId": "nparks-galanga",
+        "recordId": "galanga_mayor",
+        "sourceName": "NParks — Alpinia galanga",
+        "url": "https://www.nparks.gov.sg/florafaunaweb/flora/1/6/1644"
+      },
+      "identityReason": "Especie diferente de jengibre, cúrcuma, kencur y fingerroot; no se adopta galanga menor como alias.",
+      "culinaryForm": "RIZOMA"
+    },
+    {
+      "canonicalKey": "hojas_de_pandan",
+      "defaultName": "Hojas de pandán",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Hojas de pandán"
+      ],
+      "scientificName": "Pandanus amaryllifolius",
+      "allergens": [],
+      "evidence": {
+        "sourceId": "nparks-pandan",
+        "recordId": "hojas_de_pandan",
+        "sourceName": "NParks — What is in Singapore sweet treats: Pandan",
+        "url": "https://www.nparks.gov.sg/publications-resources/articles/what-s-in-singapore-s-sweet-treats"
+      },
+      "identityReason": "Hoja aromática con identidad propia; no esencia de vainilla ni fruto de pandano.",
+      "culinaryForm": "HOJA"
+    },
+    {
+      "canonicalKey": "cilantro_vietnamita",
+      "defaultName": "Cilantro vietnamita",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Cilantro vietnamita",
+        "Hojas de laksa"
+      ],
+      "scientificName": "Persicaria odorata",
+      "allergens": [],
+      "evidence": {
+        "sourceId": "nparks-cilantro-vietnamita",
+        "recordId": "cilantro_vietnamita",
+        "sourceName": "NParks — Persicaria odorata",
+        "url": "https://www.nparks.gov.sg/florafaunaweb/flora/3/2/3207"
+      },
+      "identityReason": "Especie diferente de Cilantro y Culantro ya registrados; ficha limitada a la hoja aromática.",
+      "culinaryForm": "HOJA"
+    },
+    {
+      "canonicalKey": "huacatay",
+      "defaultName": "Huacatay",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Huacatay"
+      ],
+      "scientificName": "Tagetes minuta",
+      "allergens": [],
+      "evidence": {
+        "sourceId": "koppert-huacatay",
+        "recordId": "huacatay",
+        "sourceName": "Koppert Cress — Aclla Cress",
+        "url": "https://www.koppertcress.com/nl/producten/aclla-cress"
+      },
+      "identityReason": "Hierba de especie distinta de menta, cilantro y pápalo; no mezcla de salsa huacatay.",
+      "culinaryForm": "HOJA"
+    },
+    {
+      "canonicalKey": "rizoma_de_fingerroot",
+      "defaultName": "Rizoma de fingerroot",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Rizoma de fingerroot",
+        "Fingerroot"
+      ],
+      "scientificName": "Boesenbergia rotunda",
+      "allergens": [],
+      "evidence": {
+        "sourceId": "nparks-fingerroot",
+        "recordId": "rizoma_de_fingerroot",
+        "sourceName": "NParks — Boesenbergia rotunda",
+        "url": "https://www.nparks.gov.sg/florafaunaweb/flora/4/8/4849"
+      },
+      "identityReason": "Rizoma de especie distinta de galanga mayor, kencur y jengibre.",
+      "culinaryForm": "RIZOMA"
+    },
+    {
+      "canonicalKey": "rizoma_de_kencur",
+      "defaultName": "Rizoma de kencur",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Rizoma de kencur",
+        "Kencur"
+      ],
+      "scientificName": "Kaempferia galanga",
+      "allergens": [],
+      "evidence": {
+        "sourceId": "nparks-kencur",
+        "recordId": "rizoma_de_kencur",
+        "sourceName": "GardeningSG — Sand Ginger",
+        "url": "https://gardeningsg.nparks.gov.sg/gardening-resource-library/sand-ginger/"
+      },
+      "identityReason": "Rizoma de especie propia; se evita galanga menor, nombre usado para más de una planta.",
+      "culinaryForm": "RIZOMA"
+    },
+    {
+      "canonicalKey": "pimienta_cubeba",
+      "defaultName": "Pimienta cubeba",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Pimienta cubeba",
+        "Cubeba"
+      ],
+      "scientificName": "Piper cubeba",
+      "allergens": [],
+      "evidence": {
+        "sourceId": "spicery-cubeb",
+        "recordId": "pimienta_cubeba",
+        "sourceName": "The Spicery — Cubeb Pepper",
+        "url": "https://thespicery.com/products/cubeb-pepper"
+      },
+      "identityReason": "Especie distinta de la pimienta negra y de los granos del paraíso; sin alias genérico pimienta de Java.",
+      "culinaryForm": "BAYA_ESPECIA"
+    },
+    {
+      "canonicalKey": "bayas_de_pimienta_de_tasmania",
+      "defaultName": "Bayas de pimienta de Tasmania",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Bayas de pimienta de Tasmania"
+      ],
+      "scientificName": "Tasmannia lanceolata",
+      "allergens": [],
+      "evidence": {
+        "sourceId": "poimena-pepperberry",
+        "recordId": "bayas_de_pimienta_de_tasmania",
+        "sourceName": "Poimena Peppers — Tasmanian Mountain Pepper Berry",
+        "url": "https://www.poimenapeppers.com/"
+      },
+      "identityReason": "Especia de especie diferente de Piper y Zanthoxylum; no una procedencia de pimienta negra.",
+      "culinaryForm": "BAYA_ESPECIA"
+    },
+    {
+      "canonicalKey": "lima_negra_seca_en_polvo",
+      "defaultName": "Lima negra seca en polvo",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Lima negra seca en polvo",
+        "Loomi en polvo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "australian-black-limes",
+        "recordId": "lima_negra_seca_en_polvo",
+        "sourceName": "Australian Black Limes — Black Lime Powder",
+        "url": "https://australianblacklimes.com.au/product/black-lime-powder/"
+      },
+      "identityReason": "Elaboración seca de lima para condimentar, distinta de Lima, zumo de lima y su concentrado; no otra alta por tamaño de envase.",
+      "culinaryForm": "FRUTO_SECO_CONDIMENTO"
+    },
+    {
+      "canonicalKey": "mahlab",
+      "defaultName": "Mahlab",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Mahlab",
+        "Mahleb"
+      ],
+      "scientificName": "Prunus mahaleb",
+      "allergens": [],
+      "evidence": {
+        "sourceId": "bf-mahlab",
+        "recordId": "mahlab",
+        "sourceName": "BF Spices — Mahlab (Mahlep)",
+        "url": "https://www.bfspices.com/product/mahlab/"
+      },
+      "identityReason": "Especia comercial identificada por especie y parte utilizada; no cereza común ni almendra.",
+      "culinaryForm": "SEMILLA_ESPECIA"
+    },
+    {
+      "canonicalKey": "almaciga_culinaria",
+      "defaultName": "Almáciga culinaria",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Almáciga culinaria",
+        "Mastiha en resina"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "chios-mastiha",
+        "recordId": "almaciga_culinaria",
+        "sourceName": "Chios Mastiha Growers Association — Mastiha in gastronomy",
+        "url": "https://www.gummastic.gr/public/Leaflets/ENG.pdf"
+      },
+      "identityReason": "Resina culinaria aromática documentada, distinta de gomas espesantes y asafétida preparada.",
+      "culinaryForm": "RESINA_CULINARIA"
+    }
+  ],
+  "exclusions": [
+    {
+      "candidate": "Shiso, perilla, cebollino, cilantro y culantro",
+      "decision": "ALREADY_REPRESENTED",
+      "reason": "Se conservan sus fichas existentes, incluidas las clasificadas históricamente como Verduras."
+    },
+    {
+      "candidate": "Sansho y otras pimientas Zanthoxylum",
+      "decision": "DEFERRED",
+      "reason": "Delimitar primero el alcance de Pimienta de Sichuan, cuya ficha histórica no identifica especie."
+    },
+    {
+      "candidate": "Galanga menor, pimienta de Java y menta peruana sin calificación",
+      "decision": "AMBIGUOUS",
+      "reason": "No se importan como alias por su posible confusión con otras especies o nombres genéricos."
+    },
+    {
+      "candidate": "Hojas de fenogreco",
+      "decision": "DEFERRED",
+      "reason": "Revisar primero qué parte vegetal abarca Fenogreco en la maestra histórica."
+    },
+    {
+      "candidate": "Marcas, calibres, hojas de rizomas, aceites y extractos",
+      "decision": "NOT_IMPORTED",
+      "reason": "Las altas se limitan a la parte culinaria documentada; sin variantes automáticas ni alegaciones medicinales."
+    }
+  ]
+}

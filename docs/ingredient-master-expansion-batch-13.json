@@ -1,0 +1,625 @@
+{
+  "schemaVersion": 1,
+  "batchId": "2026-09-24-13",
+  "date": "2026-09-24",
+  "status": "EDITORIAL_REVIEW",
+  "targetTotal": 5000,
+  "policy": "Selección explícita de alternativas vegetales, algas y condimentos documentados. Sin cuotas ni altas por marca, envase o corte.",
+  "allergenPolicy": "Lista vacía significa no documentado, nunca ausencia. Todas las altas siguen NEEDS_REVIEW e imágenes MISSING; verificar formulación y alérgenos antes de uso operativo.",
+  "sources": {
+    "TAIFUN_SILKEN": {
+      "title": "Taifun — Organic Silken Tofu",
+      "url": "https://www.taifun-tofu.de/en/bulk-pacs/organic-silken-tofu",
+      "accessed": "2026-09-24"
+    },
+    "HODO_YUBA": {
+      "title": "Hodo — What is yuba?",
+      "url": "https://www.hodofoods.com/faq",
+      "accessed": "2026-09-24"
+    },
+    "VEGETALIA_TEMPE_GUISANTE": {
+      "title": "Vegetalia — Tempe de guisante",
+      "url": "https://vegetalia.com/tempe-de-guisante/",
+      "accessed": "2026-09-24"
+    },
+    "VEGETALIA_TEMPE_GARBANZO": {
+      "title": "Vegetalia — Tempe de guisante, referencia al tempeh de garbanzo",
+      "url": "https://vegetalia.com/tempe-de-guisante/",
+      "accessed": "2026-09-24"
+    },
+    "PORTOMUINOS_LECHUGA_DE_MAR": {
+      "title": "Porto-Muiños — Lechuga de mar",
+      "url": "https://www.portomuinos.com/alga/lechuga-de-mar/",
+      "accessed": "2026-09-24"
+    },
+    "PORTOMUINOS_CODIUM": {
+      "title": "Porto-Muiños — Codium",
+      "url": "https://www.portomuinos.com/alga/codium/",
+      "accessed": "2026-09-24"
+    },
+    "PORTOMUINOS_KOMBU": {
+      "title": "Porto-Muiños — Kombu atlántico",
+      "url": "https://www.portomuinos.com/alga/kombu/",
+      "accessed": "2026-09-24"
+    },
+    "PORTOMUINOS_MUSGO_DE_IRLANDA": {
+      "title": "Porto-Muiños — Musgo de Irlanda",
+      "url": "https://www.portomuinos.com/alga/musgo-de-irlanda/",
+      "accessed": "2026-09-24"
+    },
+    "PORTOMUINOS_MUSGO_ESTRELLADO": {
+      "title": "Porto-Muiños — Musgo estrellado",
+      "url": "https://www.portomuinos.com/alga/musgo-estrellado/",
+      "accessed": "2026-09-24"
+    },
+    "CLEARSPRING_ARAME": {
+      "title": "Clearspring — Japanese Arame",
+      "url": "https://www.clearspring.co.uk/products/japanese-arame-dried-sea-vegetable",
+      "accessed": "2026-09-24"
+    },
+    "SEMPIO_DOENJANG": {
+      "title": "Sempio — Doenjang, Korean Soybean Paste",
+      "url": "https://en.sempio.com/product/jangpaste/view/625",
+      "accessed": "2026-09-24"
+    },
+    "SEMPIO_SSAMJANG": {
+      "title": "Sempio — Ssamjang, Korean Soybean Dipping Paste",
+      "url": "https://en.sempio.com/product/jangpaste/view/632",
+      "accessed": "2026-09-24"
+    },
+    "CLEARSPRING_MUGI": {
+      "title": "Clearspring — Organic Japanese Barley Miso Paste",
+      "url": "https://www.clearspring.co.uk/collections/great-taste-awards/products/organic-japanese-barley-miso-paste-unpasteurised",
+      "accessed": "2026-09-24"
+    },
+    "CLEARSPRING_GENMAI": {
+      "title": "Clearspring — Organic Japanese Brown Rice Miso Paste",
+      "url": "https://www.clearspring.co.uk/products/organic-japanese-brown-rice-miso-paste-unpasteurised",
+      "accessed": "2026-09-24"
+    },
+    "CLEARSPRING_SHIRO": {
+      "title": "Clearspring — Organic Japanese White Miso Paste",
+      "url": "https://www.clearspring.co.uk/products/organic-japanese-white-miso-unpasteurised",
+      "accessed": "2026-09-24"
+    },
+    "HIKARI_SHIO_KOJI": {
+      "title": "Hikari Miso — Shio Koji",
+      "url": "https://hikarimiso.com/products/shio-koji/",
+      "accessed": "2026-09-24"
+    },
+    "HIKARI_SHOYU_KOJI": {
+      "title": "Hikari Miso — Shoyu Koji",
+      "url": "https://hikarimiso.com/products/shoyu-koji/",
+      "accessed": "2026-09-24"
+    },
+    "SB_YUZU_KOSHO": {
+      "title": "S&B — Prepared Spicy Citrus Paste (Yuzu-kosho)",
+      "url": "https://www.sbfoods-worldwide.com/products/search/026.html",
+      "accessed": "2026-09-24"
+    },
+    "LKK_CHILLI_BEAN_SAUCE": {
+      "title": "Lee Kum Kee — Chilli Bean Sauce (Toban Djan)",
+      "url": "https://uk.lkk.com/products/chilli-bean-sauce",
+      "accessed": "2026-09-24"
+    },
+    "LKK_BLACK_BEAN_GARLIC_SAUCE": {
+      "title": "Lee Kum Kee — Black Bean Garlic Sauce",
+      "url": "https://uk.lkk.com/products/black-bean-garlic-sauce",
+      "accessed": "2026-09-24"
+    },
+    "LKK_CHAR_SIU_SAUCE": {
+      "title": "Lee Kum Kee — Char Siu Sauce",
+      "url": "https://uk.lkk.com/products/char-siu-sauce",
+      "accessed": "2026-09-24"
+    },
+    "LKK_XO_SAUCE": {
+      "title": "Lee Kum Kee — XO Sauce",
+      "url": "https://uk.lkk.com/products/xo-sauce",
+      "accessed": "2026-09-24"
+    },
+    "EDEN_GOMASIO": {
+      "title": "Eden Foods — Gomasio, Sesame Seed Condiments",
+      "url": "https://www.edenfoods.com/galleries/images/L738-sellsheet-gomasio.pdf",
+      "accessed": "2026-09-24"
+    },
+    "GRANERO_LEVADURA": {
+      "title": "El Granero Integral — Levadura Nutricional Bio",
+      "url": "https://elgranero.com/articulos/levadura-nutricional-bio-100-g/",
+      "accessed": "2026-09-24"
+    }
+  },
+  "records": [
+    {
+      "canonicalKey": "tofu_sedoso",
+      "defaultName": "Tofu sedoso",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "aliases": [
+        "Tofu sedoso",
+        "Silken tofu"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "TAIFUN_SILKEN",
+        "recordId": "taifun_organic_silken_tofu",
+        "sourceName": "Taifun — Organic Silken Tofu",
+        "url": "https://www.taifun-tofu.de/en/bulk-pacs/organic-silken-tofu"
+      },
+      "identityReason": "Elaboración cremosa identificada para salsas y postres; se conserva Tofu como ficha genérica. No subdividir por firmeza o envase."
+    },
+    {
+      "canonicalKey": "yuba",
+      "defaultName": "Yuba",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "aliases": [
+        "Yuba",
+        "Piel de tofu"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "HODO_YUBA",
+        "recordId": "hodo_what_is_yuba",
+        "sourceName": "Hodo — What is yuba?",
+        "url": "https://www.hodofoods.com/faq"
+      },
+      "identityReason": "Película formada al calentar bebida de soja, distinta de su cuajada. Se agrupan hojas, tiras y presentaciones fresca o seca."
+    },
+    {
+      "canonicalKey": "tempeh_de_guisante",
+      "defaultName": "Tempeh de guisante",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "aliases": [
+        "Tempeh de guisante",
+        "Tempe de guisante"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "VEGETALIA_TEMPE_GUISANTE",
+        "recordId": "vegetalia_tempe_de_guisante",
+        "sourceName": "Vegetalia — Tempe de guisante",
+        "url": "https://vegetalia.com/tempe-de-guisante/"
+      },
+      "identityReason": "Fermentado de guisante, distinto del tempeh histórico de soja. La fuente acredita identidad y uso, no disponibilidad actual ni formulación completa."
+    },
+    {
+      "canonicalKey": "tempeh_de_garbanzo",
+      "defaultName": "Tempeh de garbanzo",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "aliases": [
+        "Tempeh de garbanzo",
+        "Tempe de garbanzo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "VEGETALIA_TEMPE_GARBANZO",
+        "recordId": "vegetalia_tempe_de_guisante_referencia_al_tempeh_de_garbanzo",
+        "sourceName": "Vegetalia — Tempe de guisante, referencia al tempeh de garbanzo",
+        "url": "https://vegetalia.com/tempe-de-guisante/"
+      },
+      "identityReason": "La fuente del fabricante reconoce el fermentado de garbanzo. Distinto del tempeh de soja y del tofu de garbanzo; no se importan marinados ni se afirma ausencia de soja."
+    },
+    {
+      "canonicalKey": "lechuga_de_mar",
+      "defaultName": "Lechuga de mar",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Lechuga de mar"
+      ],
+      "allergens": [],
+      "scientificName": "Ulva spp.",
+      "evidence": {
+        "sourceId": "PORTOMUINOS_LECHUGA_DE_MAR",
+        "recordId": "porto_muinos_lechuga_de_mar",
+        "sourceName": "Porto-Muiños — Lechuga de mar",
+        "url": "https://www.portomuinos.com/alga/lechuga-de-mar/"
+      },
+      "identityReason": "Identidad culinaria del género indicado por el proveedor. No añadir especies dentro de esta cobertura sin delimitarla."
+    },
+    {
+      "canonicalKey": "codium",
+      "defaultName": "Codium",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Codium"
+      ],
+      "allergens": [],
+      "scientificName": "Codium spp.",
+      "evidence": {
+        "sourceId": "PORTOMUINOS_CODIUM",
+        "recordId": "porto_muinos_codium",
+        "sourceName": "Porto-Muiños — Codium",
+        "url": "https://www.portomuinos.com/alga/codium/"
+      },
+      "identityReason": "Género culinario identificado; no se infiere una especie concreta ni se multiplica por conservación."
+    },
+    {
+      "canonicalKey": "kombu_atlantico",
+      "defaultName": "Kombu atlántico",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Kombu atlántico"
+      ],
+      "allergens": [],
+      "scientificName": "Laminaria ochroleuca",
+      "evidence": {
+        "sourceId": "PORTOMUINOS_KOMBU",
+        "recordId": "porto_muinos_kombu_atlantico",
+        "sourceName": "Porto-Muiños — Kombu atlántico",
+        "url": "https://www.portomuinos.com/alga/kombu/"
+      },
+      "identityReason": "Especie distinta del Kombu de azúcar (Saccharina latissima) existente. Se evita el alias genérico Kombu."
+    },
+    {
+      "canonicalKey": "musgo_de_irlanda",
+      "defaultName": "Musgo de Irlanda",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Musgo de Irlanda"
+      ],
+      "allergens": [],
+      "scientificName": "Chondrus crispus",
+      "evidence": {
+        "sourceId": "PORTOMUINOS_MUSGO_DE_IRLANDA",
+        "recordId": "porto_muinos_musgo_de_irlanda",
+        "sourceName": "Porto-Muiños — Musgo de Irlanda",
+        "url": "https://www.portomuinos.com/alga/musgo-de-irlanda/"
+      },
+      "identityReason": "Alga entera identificada, distinta del musgo estrellado y de los extractos gelificantes."
+    },
+    {
+      "canonicalKey": "musgo_estrellado",
+      "defaultName": "Musgo estrellado",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Musgo estrellado"
+      ],
+      "allergens": [],
+      "scientificName": "Mastocarpus stellatus",
+      "evidence": {
+        "sourceId": "PORTOMUINOS_MUSGO_ESTRELLADO",
+        "recordId": "porto_muinos_musgo_estrellado",
+        "sourceName": "Porto-Muiños — Musgo estrellado",
+        "url": "https://www.portomuinos.com/alga/musgo-estrellado/"
+      },
+      "identityReason": "Especie distinta de Chondrus crispus. Se omite el alias ambiguo Musgo de mar."
+    },
+    {
+      "canonicalKey": "arame",
+      "defaultName": "Arame",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Arame"
+      ],
+      "allergens": [],
+      "scientificName": "Eisenia bicyclis",
+      "evidence": {
+        "sourceId": "CLEARSPRING_ARAME",
+        "recordId": "clearspring_japanese_arame",
+        "sourceName": "Clearspring — Japanese Arame",
+        "url": "https://www.clearspring.co.uk/products/japanese-arame-dried-sea-vegetable"
+      },
+      "identityReason": "Alga identificada por especie en ingredientes. No se cuenta la deshidratación o el corte como otra identidad."
+    },
+    {
+      "canonicalKey": "doenjang",
+      "defaultName": "Doenjang",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Doenjang",
+        "Pasta coreana de soja fermentada"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SEMPIO_DOENJANG",
+        "recordId": "sempio_doenjang_korean_soybean_paste",
+        "sourceName": "Sempio — Doenjang, Korean Soybean Paste",
+        "url": "https://en.sempio.com/product/jangpaste/view/625"
+      },
+      "identityReason": "Pasta coreana de soja fermentada; distinta de la mayonesa de doenjang y del miso japonés."
+    },
+    {
+      "canonicalKey": "ssamjang",
+      "defaultName": "Ssamjang",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Ssamjang"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SEMPIO_SSAMJANG",
+        "recordId": "sempio_ssamjang_korean_soybean_dipping_paste",
+        "sourceName": "Sempio — Ssamjang, Korean Soybean Dipping Paste",
+        "url": "https://en.sempio.com/product/jangpaste/view/632"
+      },
+      "identityReason": "Condimento sazonado de pasta de soja y chile; distinto de doenjang y gochujang."
+    },
+    {
+      "canonicalKey": "miso_de_cebada",
+      "defaultName": "Miso de cebada",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Miso de cebada",
+        "Mugi miso"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "CLEARSPRING_MUGI",
+        "recordId": "clearspring_organic_japanese_barley_miso_paste",
+        "sourceName": "Clearspring — Organic Japanese Barley Miso Paste",
+        "url": "https://www.clearspring.co.uk/collections/great-taste-awards/products/organic-japanese-barley-miso-paste-unpasteurised"
+      },
+      "identityReason": "Variante identificada por cebada y soja; conserva la ficha genérica Miso de soja. No equivale a una crema preparada."
+    },
+    {
+      "canonicalKey": "miso_de_arroz_integral",
+      "defaultName": "Miso de arroz integral",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Miso de arroz integral",
+        "Genmai miso"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "CLEARSPRING_GENMAI",
+        "recordId": "clearspring_organic_japanese_brown_rice_miso_paste",
+        "sourceName": "Clearspring — Organic Japanese Brown Rice Miso Paste",
+        "url": "https://www.clearspring.co.uk/products/organic-japanese-brown-rice-miso-paste-unpasteurised"
+      },
+      "identityReason": "Variante de soja y arroz integral cultivado; distinta de la de cebada. No se subdivide por pasteurización, envase o marca."
+    },
+    {
+      "canonicalKey": "miso_blanco_de_arroz",
+      "defaultName": "Miso blanco de arroz",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Miso blanco de arroz",
+        "Shiro miso"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "CLEARSPRING_SHIRO",
+        "recordId": "clearspring_organic_japanese_white_miso_paste",
+        "sourceName": "Clearspring — Organic Japanese White Miso Paste",
+        "url": "https://www.clearspring.co.uk/products/organic-japanese-white-miso-unpasteurised"
+      },
+      "identityReason": "Variante blanca documentada con soja y arroz; conserva la ficha genérica. No es la crema dulce formulada ni el miso gratinado históricos."
+    },
+    {
+      "canonicalKey": "shio_koji",
+      "defaultName": "Shio koji",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Shio koji"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "HIKARI_SHIO_KOJI",
+        "recordId": "hikari_miso_shio_koji",
+        "sourceName": "Hikari Miso — Shio Koji",
+        "url": "https://hikarimiso.com/products/shio-koji/"
+      },
+      "identityReason": "Condimento fermentado de arroz koji con sal y agua; no es miso ni cultivo iniciador puro."
+    },
+    {
+      "canonicalKey": "shoyu_koji",
+      "defaultName": "Shoyu koji",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Shoyu koji"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "HIKARI_SHOYU_KOJI",
+        "recordId": "hikari_miso_shoyu_koji",
+        "sourceName": "Hikari Miso — Shoyu Koji",
+        "url": "https://hikarimiso.com/products/shoyu-koji/"
+      },
+      "identityReason": "Preparado de arroz koji con salsa de soja; distinto del shio koji y de la salsa de soja sola."
+    },
+    {
+      "canonicalKey": "yuzu_kosho",
+      "defaultName": "Yuzu kosho",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Yuzu kosho",
+        "Pasta picante de yuzu"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SB_YUZU_KOSHO",
+        "recordId": "s_b_prepared_spicy_citrus_paste_yuzu_kosho",
+        "sourceName": "S&B — Prepared Spicy Citrus Paste (Yuzu-kosho)",
+        "url": "https://www.sbfoods-worldwide.com/products/search/026.html"
+      },
+      "identityReason": "Condimento de piel de yuzu, chile verde y sal, con otros ingredientes según proveedor; distinto del aroma de yuzu y del ponzu."
+    },
+    {
+      "canonicalKey": "doubanjiang",
+      "defaultName": "Doubanjiang",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Doubanjiang",
+        "Toban djan",
+        "Pasta de habas fermentadas con chile"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "LKK_CHILLI_BEAN_SAUCE",
+        "recordId": "lee_kum_kee_chilli_bean_sauce_toban_djan",
+        "sourceName": "Lee Kum Kee — Chilli Bean Sauce (Toban Djan)",
+        "url": "https://uk.lkk.com/products/chilli-bean-sauce"
+      },
+      "identityReason": "Pasta de chile con habas y soja fermentadas; distinta de salsa Sichuan genérica y de gochujang. El fabricante publica ingredientes principales, no una ficha completa de formulación."
+    },
+    {
+      "canonicalKey": "salsa_de_soja_negra_fermentada_y_ajo",
+      "defaultName": "Salsa de soja negra fermentada y ajo",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Salsa de soja negra fermentada y ajo",
+        "Salsa de judías negras fermentadas y ajo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "LKK_BLACK_BEAN_GARLIC_SAUCE",
+        "recordId": "lee_kum_kee_black_bean_garlic_sauce",
+        "sourceName": "Lee Kum Kee — Black Bean Garlic Sauce",
+        "url": "https://uk.lkk.com/products/black-bean-garlic-sauce"
+      },
+      "identityReason": "Condimento elaborado de soja negra fermentada y ajo, distinto de la legumbre fermentada sola. El fabricante publica ingredientes principales, no una ficha completa de formulación."
+    },
+    {
+      "canonicalKey": "salsa_char_siu",
+      "defaultName": "Salsa char siu",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Salsa char siu",
+        "Salsa para char siu"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "LKK_CHAR_SIU_SAUCE",
+        "recordId": "lee_kum_kee_char_siu_sauce",
+        "sourceName": "Lee Kum Kee — Char Siu Sauce",
+        "url": "https://uk.lkk.com/products/char-siu-sauce"
+      },
+      "identityReason": "Salsa para marinar con soja fermentada y miel en la referencia; distinta de hoisin y de salsa barbacoa genérica. No es el plato de cerdo. El fabricante publica ingredientes principales, no una ficha completa de formulación."
+    },
+    {
+      "canonicalKey": "salsa_xo",
+      "defaultName": "Salsa XO",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Salsa XO"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "LKK_XO_SAUCE",
+        "recordId": "lee_kum_kee_xo_sauce",
+        "sourceName": "Lee Kum Kee — XO Sauce",
+        "url": "https://uk.lkk.com/products/xo-sauce"
+      },
+      "identityReason": "Condimento con marisco seco, aceite y chile; distinto de la salsa de ostras. No se presenta como alternativa vegetal. El fabricante publica ingredientes principales, no una ficha completa de formulación."
+    },
+    {
+      "canonicalKey": "gomasio",
+      "defaultName": "Gomasio",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Gomasio",
+        "Gomashio",
+        "Sal de sésamo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "EDEN_GOMASIO",
+        "recordId": "eden_foods_gomasio_sesame_seed_condiments",
+        "sourceName": "Eden Foods — Gomasio, Sesame Seed Condiments",
+        "url": "https://www.edenfoods.com/galleries/images/L738-sellsheet-gomasio.pdf"
+      },
+      "identityReason": "Condimento de sésamo tostado y sal; distinto de semillas solas, tahini y furikake. Se agrupan colores de semilla y se difieren mezclas con ajo o algas."
+    },
+    {
+      "canonicalKey": "levadura_nutricional_inactiva",
+      "defaultName": "Levadura nutricional inactiva",
+      "category": "OTROS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Levadura nutricional inactiva",
+        "Levadura nutricional"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "GRANERO_LEVADURA",
+        "recordId": "el_granero_integral_levadura_nutricional_bio",
+        "sourceName": "El Granero Integral — Levadura Nutricional Bio",
+        "url": "https://elgranero.com/articulos/levadura-nutricional-bio-100-g/"
+      },
+      "identityReason": "Levadura inactiva para sazonar; distinta de levaduras activas de panadería. No se importan fortificaciones vitamínicas."
+    }
+  ],
+  "exclusions": [
+    {
+      "candidate": "Tofu firme, tempeh de soja, seitán, soja texturizada, natto",
+      "decision": "ALREADY_REPRESENTED",
+      "reason": "Las fichas genéricas e históricas ya cubren estas identidades."
+    },
+    {
+      "candidate": "Tofu fermentado FETO / sufu",
+      "decision": "EQUIVALENCE_PENDING",
+      "reason": "Antes de añadir más fermentados de tofu, delimitar procesos frente a la ficha histórica Tofu apestoso."
+    },
+    {
+      "candidate": "Proteína de guisante texturizada",
+      "decision": "EQUIVALENCE_PENDING",
+      "reason": "Delimitar si la ficha Proteína de guisante cubre texturizados o solo polvo antes de otra alta."
+    },
+    {
+      "candidate": "Nori, wakame, dulse, espagueti de mar, kombu de azúcar, espirulina, chlorella, ogonori",
+      "decision": "ALREADY_REPRESENTED",
+      "reason": "Ya existen. No multiplicar por deshidratado, copos, polvo, origen o marca."
+    },
+    {
+      "candidate": "Ulva lactuca, Ulva rigida y especies de Codium",
+      "decision": "GROUPED",
+      "reason": "Las referencias del proveedor abarcan géneros. No crear especies además del género sin delimitar cobertura."
+    },
+    {
+      "candidate": "Musgo de mar / Kombu",
+      "decision": "AMBIGUOUS_ALIAS",
+      "reason": "Nombres compartidos por varias especies; no asignarlos a una ficha concreta."
+    },
+    {
+      "candidate": "Tamari, miso de garbanzo, harissa, furikake, shichimi, dukkah, zaatar, ras el hanout",
+      "decision": "ALREADY_REPRESENTED",
+      "reason": "No volver a contar nombres o productos existentes."
+    },
+    {
+      "candidate": "Hatcho miso / miso de soja genérico",
+      "decision": "EQUIVALENCE_PENDING",
+      "reason": "Revisar alcance de la ficha de miso de soja antes de añadir una variante de soja sin cereal."
+    },
+    {
+      "candidate": "Salsas de ciruela, hoisin, teriyaki y chile dulce",
+      "decision": "ALREADY_REPRESENTED",
+      "reason": "Las referencias de proveedor encontradas no justifican duplicar estas fichas."
+    },
+    {
+      "candidate": "Tempeh por marinado, gomasio con ajo o algas, miso por sal o pasteurización",
+      "decision": "DEFERRED",
+      "reason": "No generar combinaciones automáticas; delimitar formulaciones y equivalencias en otro lote."
+    },
+    {
+      "candidate": "Bebidas y cremas vegetales, yogures vegetales",
+      "decision": "DEFERRED",
+      "reason": "Bloque propio pendiente de fuentes y decisión de familias por materia prima."
+    },
+    {
+      "candidate": "Afirmaciones nutricionales, sanitarias y ausencia de alérgenos",
+      "decision": "NOT_IMPORTED",
+      "reason": "Solo identidad culinaria y trazabilidad; las fuentes no aprueban formulaciones ni alérgenos de una compra."
+    }
+  ]
+}

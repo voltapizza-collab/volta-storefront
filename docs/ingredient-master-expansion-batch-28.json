@@ -1,0 +1,246 @@
+{
+  "schemaVersion": 1,
+  "batchId": "2026-09-24-28",
+  "date": "2026-09-24",
+  "status": "EDITORIAL_REVIEW",
+  "targetTotal": 5000,
+  "policy": "Frutos secos y semillas culinarias documentados por especie, parte y preparación. Sin cuotas ni altas por marca. Conservar fichas anteriores y diferir denominaciones ambiguas.",
+  "allergenPolicy": "NEEDS_REVIEW e imágenes MISSING. Alérgenos vacíos significa no aprobados, nunca ausencia. Revisar ficha técnica del suministro y posibles trazas. No transferir alegaciones sanitarias.",
+  "sources": {
+    "embrapa-baru": {
+      "title": "Embrapa — Especies Arboreas Brasileiras: Baru",
+      "url": "https://ainfo.cnptia.embrapa.br/digital/bitstream/item/231668/1/Especies-Arboreas-Brasileiras-vol-1-Baru.pdf",
+      "accessed": "2026-09-24",
+      "notes": "Contenido indexado: Dipteryx alata y consumo de sus semillas tostadas. PDF completo no recuperado. La ficha se limita al producto tostado."
+    },
+    "mincetur-sacha-inchi": {
+      "title": "MINCETUR — Presentaciones de sacha inchi",
+      "url": "https://www.mincetur.gob.pe/reglamentostecnicos/informacion_general/documentos/PRESENTACIONES_SACHA_INCHI.pdf",
+      "accessed": "2026-09-24",
+      "notes": "Contenido indexado: bocaditos tostados elaborados con semillas de Plukenetia volubilis. Acceso directo al PDF devolvió 404. Se usa como evidencia de identidad, sin afirmar vigencia normativa ni cumplimiento del suministro."
+    },
+    "niftem-makhana": {
+      "title": "NIFTEM / ICAR — Foxnut (Makhana) Processing",
+      "url": "https://niftem.ac.in/newsite/pmfme/wp-content/uploads/2022/08/makhanaprocessing.pdf",
+      "accessed": "2026-09-24",
+      "notes": "PDF recuperado: Euryale ferox; producto comestible obtenido mediante tostado e inflado. No se importan parámetros de elaboración ni datos nutricionales."
+    },
+    "kashvi-melon": {
+      "title": "Kashvi Exim — Melon Seeds",
+      "url": "https://kashviexim.com/melon-seeds/",
+      "accessed": "2026-09-24",
+      "notes": "Página recuperada: Cucumis melo, semillas enteras y peladas para uso alimentario. Se limita la ficha a las pepitas peladas y se omiten certificaciones comerciales."
+    },
+    "aciar-galip": {
+      "title": "ACIAR — Decades of research spurs PNG galip nut industry",
+      "url": "https://www.aciar.gov.au/media-search/blogs/decades-research-spurs-pngs-galip-nut-industry",
+      "accessed": "2026-09-24",
+      "notes": "Página recuperada: Canarium indicum produce galip; documenta su uso por un restaurante como ingrediente culinario."
+    },
+    "ntbg-camansi": {
+      "title": "National Tropical Botanical Garden — Breadnut: Artocarpus camansi",
+      "url": "https://ntbg.org/breadfruit/about-breadfruit/species/",
+      "accessed": "2026-09-24",
+      "notes": "Página recuperada: semillas de Artocarpus camansi consumidas cocidas o asadas. Se limita esta ficha a semillas cocidas; se excluyen pulpa y otras especies del complejo breadfruit."
+    },
+    "ifas-yaca-seeds": {
+      "title": "UF/IFAS — Jackfruit Growing in the Florida Home Landscape",
+      "url": "https://ask.ifas.ufl.edu/publication/MG370",
+      "accessed": "2026-09-24",
+      "notes": "Página recuperada: semillas de Artocarpus heterophyllus comestibles tras cocción o asado. La ficha se limita a semillas cocidas, sin instrucciones de preparación."
+    },
+    "sanbi-mongongo": {
+      "title": "SANBI PlantZAfrica — Schinziophyton rautanenii",
+      "url": "https://pza.sanbi.org/schinziophyton-rautanenii",
+      "accessed": "2026-09-24",
+      "notes": "Contenido indexado de SANBI: semillas consumidas tostadas; identifica mongongo y manketti. La página completa no se recuperó. Se excluyen pulpa y aceite."
+    }
+  },
+  "records": [
+    {
+      "canonicalKey": "nueces_de_baru_tostadas",
+      "defaultName": "Nueces de baru tostadas",
+      "category": "OTROS",
+      "restaurantCategoryKey": "FRUTOS_SECOS_SEMILLAS",
+      "aliases": [
+        "Nueces de baru tostadas",
+        "Almendras de baru tostadas"
+      ],
+      "scientificName": "Dipteryx alata",
+      "allergens": [],
+      "evidence": {
+        "sourceId": "embrapa-baru",
+        "recordId": "nueces_de_baru_tostadas",
+        "sourceName": "Embrapa — Especies Arboreas Brasileiras: Baru",
+        "url": "https://ainfo.cnptia.embrapa.br/digital/bitstream/item/231668/1/Especies-Arboreas-Brasileiras-vol-1-Baru.pdf"
+      },
+      "identityReason": "Semilla de especie distinta de almendra, cacahuete y nuez de Brasil.",
+      "culinaryForm": "TOSTADO"
+    },
+    {
+      "canonicalKey": "semillas_de_sacha_inchi_tostadas",
+      "defaultName": "Semillas de sacha inchi tostadas",
+      "category": "OTROS",
+      "restaurantCategoryKey": "FRUTOS_SECOS_SEMILLAS",
+      "aliases": [
+        "Semillas de sacha inchi tostadas"
+      ],
+      "scientificName": "Plukenetia volubilis",
+      "allergens": [],
+      "evidence": {
+        "sourceId": "mincetur-sacha-inchi",
+        "recordId": "semillas_de_sacha_inchi_tostadas",
+        "sourceName": "MINCETUR — Presentaciones de sacha inchi",
+        "url": "https://www.mincetur.gob.pe/reglamentostecnicos/informacion_general/documentos/PRESENTACIONES_SACHA_INCHI.pdf"
+      },
+      "identityReason": "Semilla tostada de especie propia; no cacahuete, aceite de sacha inchi ni proteína texturizada.",
+      "culinaryForm": "TOSTADO"
+    },
+    {
+      "canonicalKey": "makhana_inflado",
+      "defaultName": "Makhana inflado",
+      "category": "OTROS",
+      "restaurantCategoryKey": "FRUTOS_SECOS_SEMILLAS",
+      "aliases": [
+        "Makhana inflado",
+        "Makhana tostado e inflado"
+      ],
+      "scientificName": "Euryale ferox",
+      "allergens": [],
+      "evidence": {
+        "sourceId": "niftem-makhana",
+        "recordId": "makhana_inflado",
+        "sourceName": "NIFTEM / ICAR — Foxnut (Makhana) Processing",
+        "url": "https://niftem.ac.in/newsite/pmfme/wp-content/uploads/2022/08/makhanaprocessing.pdf"
+      },
+      "identityReason": "Semilla procesada de Euryale, diferenciada del loto Nelumbo; no se utiliza semillas de loto como alias.",
+      "culinaryForm": "INFLADO"
+    },
+    {
+      "canonicalKey": "semillas_de_melon_peladas",
+      "defaultName": "Semillas de melón peladas",
+      "category": "OTROS",
+      "restaurantCategoryKey": "FRUTOS_SECOS_SEMILLAS",
+      "aliases": [
+        "Semillas de melón peladas",
+        "Pepitas de melón"
+      ],
+      "scientificName": "Cucumis melo",
+      "allergens": [],
+      "evidence": {
+        "sourceId": "kashvi-melon",
+        "recordId": "semillas_de_melon_peladas",
+        "sourceName": "Kashvi Exim — Melon Seeds",
+        "url": "https://kashviexim.com/melon-seeds/"
+      },
+      "identityReason": "Parte culinaria diferente de la pulpa de melón; especie distinta de sandía. No se adopta el nombre amplio egusi.",
+      "culinaryForm": "PELADO"
+    },
+    {
+      "canonicalKey": "nueces_de_galip",
+      "defaultName": "Nueces de galip",
+      "category": "OTROS",
+      "restaurantCategoryKey": "FRUTOS_SECOS_SEMILLAS",
+      "aliases": [
+        "Nueces de galip"
+      ],
+      "scientificName": "Canarium indicum",
+      "allergens": [],
+      "evidence": {
+        "sourceId": "aciar-galip",
+        "recordId": "nueces_de_galip",
+        "sourceName": "ACIAR — Decades of research spurs PNG galip nut industry",
+        "url": "https://www.aciar.gov.au/media-search/blogs/decades-research-spurs-pngs-galip-nut-industry"
+      },
+      "identityReason": "Nuez de especie propia, diferenciada de las nueces de pili; no se adopta Canarium sin especie ni kenari como alias amplio.",
+      "culinaryForm": "NUEZ"
+    },
+    {
+      "canonicalKey": "semillas_de_camansi_cocidas",
+      "defaultName": "Semillas de camansi cocidas",
+      "category": "OTROS",
+      "restaurantCategoryKey": "FRUTOS_SECOS_SEMILLAS",
+      "aliases": [
+        "Semillas de camansi cocidas",
+        "Semillas de breadnut cocidas"
+      ],
+      "scientificName": "Artocarpus camansi",
+      "allergens": [],
+      "evidence": {
+        "sourceId": "ntbg-camansi",
+        "recordId": "semillas_de_camansi_cocidas",
+        "sourceName": "National Tropical Botanical Garden — Breadnut: Artocarpus camansi",
+        "url": "https://ntbg.org/breadfruit/about-breadfruit/species/"
+      },
+      "identityReason": "Semilla de especie distinta de yaca; no se confunde con castañas de Castanea ni con semillas de ramón.",
+      "culinaryForm": "COCIDO"
+    },
+    {
+      "canonicalKey": "semillas_de_yaca_cocidas",
+      "defaultName": "Semillas de yaca cocidas",
+      "category": "OTROS",
+      "restaurantCategoryKey": "FRUTOS_SECOS_SEMILLAS",
+      "aliases": [
+        "Semillas de yaca cocidas",
+        "Semillas de jaca cocidas"
+      ],
+      "scientificName": "Artocarpus heterophyllus",
+      "allergens": [],
+      "evidence": {
+        "sourceId": "ifas-yaca-seeds",
+        "recordId": "semillas_de_yaca_cocidas",
+        "sourceName": "UF/IFAS — Jackfruit Growing in the Florida Home Landscape",
+        "url": "https://ask.ifas.ufl.edu/publication/MG370"
+      },
+      "identityReason": "Parte culinaria diferente de Yaca verde y Yaca madura; no otra presentación de su pulpa.",
+      "culinaryForm": "COCIDO"
+    },
+    {
+      "canonicalKey": "nueces_de_mongongo_tostadas",
+      "defaultName": "Nueces de mongongo tostadas",
+      "category": "OTROS",
+      "restaurantCategoryKey": "FRUTOS_SECOS_SEMILLAS",
+      "aliases": [
+        "Nueces de mongongo tostadas",
+        "Nueces de manketti tostadas"
+      ],
+      "scientificName": "Schinziophyton rautanenii",
+      "allergens": [],
+      "evidence": {
+        "sourceId": "sanbi-mongongo",
+        "recordId": "nueces_de_mongongo_tostadas",
+        "sourceName": "SANBI PlantZAfrica — Schinziophyton rautanenii",
+        "url": "https://pza.sanbi.org/schinziophyton-rautanenii"
+      },
+      "identityReason": "Semilla tostada de especie distinta de nuez, hickory, nuez cenicienta y baru.",
+      "culinaryForm": "TOSTADO"
+    }
+  ],
+  "exclusions": [
+    {
+      "candidate": "Semillas de loto, nueces de pili, semillas de sandía y semillas de ramón",
+      "decision": "ALREADY_REPRESENTED",
+      "reason": "Se mantienen las fichas existentes; sin nuevas altas bajo alias."
+    },
+    {
+      "candidate": "Egusi y kenari sin especie",
+      "decision": "DEFERRED",
+      "reason": "Delimitar especie y alcance comercial antes de añadir identidades que puedan solaparse con semillas de sandía o Canarium."
+    },
+    {
+      "candidate": "Pastas puras de avellana, cacahuete y pistacho",
+      "decision": "DEFERRED",
+      "reason": "Revisar primero la composición y alcance de las cremas históricas con esos nombres."
+    },
+    {
+      "candidate": "Cultivares, calibres, sabores, marcas y envases",
+      "decision": "GROUPED",
+      "reason": "No generan altas; las formas cocidas, tostadas o infladas delimitan la evidencia culinaria de cada ficha."
+    },
+    {
+      "candidate": "Semillas para siembra, aceites, extractos y alegaciones de ausencia de alérgenos",
+      "decision": "NOT_IMPORTED",
+      "reason": "Se documentan ingredientes alimentarios candidatos, sin aprobar automáticamente un suministro o sus alérgenos."
+    }
+  ]
+}

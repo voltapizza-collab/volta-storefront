@@ -1,0 +1,55 @@
+{
+  "date": "2026-09-24",
+  "batchId": "2026-09-24-20",
+  "baseline": 3562,
+  "added": 12,
+  "total": 3574,
+  "remainingTo5000": 1426,
+  "byCategory": {
+    "OTROS": 12
+  },
+  "byRestaurantFamily": {
+    "LEGUMBRES_PROTEINAS_VEGETALES": 12
+  },
+  "byForm": {
+    "LEGUMBRE_VARIETAL": 6,
+    "PROTEINA_TEXTURIZADA": 1,
+    "PROTEINA_AISLADA": 1,
+    "DERIVADO_SOJA": 3,
+    "DERIVADO_GLUTEN": 1
+  },
+  "aliasesAdded": 10,
+  "exclusionGroups": 8,
+  "preservedMasterRows": 3562,
+  "preservedTaxonomyAssignments": 3562,
+  "pendingPreserved": 25,
+  "idempotentBatches": 20,
+  "historicalAuditsUnchanged": true,
+  "backendProjectionMatches": true,
+  "sourceSha256": "98d98c777b5b61b8350df3434dbeb68926cebb7834f98f646ce836c1d4466ad4",
+  "productionDeployment": false,
+  "databaseWrites": 0,
+  "validation": "Ingredient master OK: 3574 records, 14 categories; valid UTF-8/NFC, names, aliases and identifiers.\n11 consolidated keys preserved; 25 ambiguous records held separately. No duplicate names or shared exact aliases in the selectable source.",
+  "tests": {
+    "importer": 9,
+    "backend": 48,
+    "frontend": 27,
+    "total": 84,
+    "frontendScope": "3 suites: IngredientOnboardingModal, IngredientsSemantics y PosInventoryTaxonomy",
+    "logs": [
+      "tmp/ingredients-batch20-importer-tests.log",
+      "tmp/ingredients-batch20-backend-tests.log",
+      "tmp/ingredients-batch20-ui-tests.log"
+    ]
+  },
+  "build": {
+    "status": "passed",
+    "artifact": "output/ingredients-batch20-build",
+    "bundle": "main.d00a5139.js",
+    "log": "tmp/ingredients-batch20-build.log"
+  },
+  "browser": {
+    "status": "pending",
+    "reason": "No se utiliza el navegador integrado durante el diagnóstico de los cierres de Codex; no se acredita comprobación visual ni integración con base de datos."
+  }
+}

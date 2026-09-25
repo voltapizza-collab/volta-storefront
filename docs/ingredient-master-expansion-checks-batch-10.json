@@ -1,0 +1,81 @@
+{
+  "date": "2026-09-24",
+  "batchId": "2026-09-24-10",
+  "baseline": 3302,
+  "added": 59,
+  "total": 3361,
+  "remainingTo5000": 1639,
+  "byCategory": {
+    "OTROS": 59
+  },
+  "preservedMasterRows": 3302,
+  "preservedTaxonomyAssignments": 3302,
+  "pendingPreserved": 25,
+  "sourceRowsVerifiedAgainstFdcCache": 4,
+  "idempotentBatches": 10,
+  "historicalAuditsUnchanged": true,
+  "sourceSha256": "c9042cb24734271f94c604ca92274d0789ddc4f8d97b346f8682380d2d7f8fcc",
+  "productionDeployment": false,
+  "databaseWrites": 0,
+  "validation": "Ingredient master OK: 3361 records, 14 categories; valid UTF-8/NFC, names, aliases and identifiers.\n11 consolidated keys preserved; 25 ambiguous records held separately. No duplicate names or shared exact aliases in the selectable source.",
+  "byRestaurantFamily": {
+    "PASTAS_ARROCES_CEREALES": 30,
+    "PANES_MASAS_HARINAS": 10,
+    "LEGUMBRES_PROTEINAS_VEGETALES": 19
+  },
+  "aliasesAdded": 13,
+  "exclusionGroups": 12,
+  "tests": {
+    "importer": {
+      "passed": 9,
+      "failed": 0,
+      "log": "tmp/ingredients-batch10-importer-tests.log"
+    },
+    "backend": {
+      "passed": 42,
+      "failed": 0,
+      "log": "tmp/ingredients-batch10-backend-tests.log"
+    },
+    "frontend": {
+      "passed": 27,
+      "failed": 0,
+      "suites": 3,
+      "log": "tmp/ingredients-batch10-ui-tests.log"
+    },
+    "totalPassed": 78
+  },
+  "build": {
+    "passed": true,
+    "javascript": "main.2051fa28.js",
+    "css": "main.6cd59d28.css",
+    "log": "tmp/ingredients-batch10-build.log",
+    "servedLocally": true
+  },
+  "browser": {
+    "url": "http://localhost:3000/global-manager",
+    "masterCount": 3361,
+    "operationalCount": 131,
+    "searches": [
+      {
+        "query": "harina de quinua",
+        "name": "Harina de quinoa",
+        "results": 1,
+        "family": "PANES_MASAS_HARINAS"
+      },
+      {
+        "query": "pardiña",
+        "name": "Lenteja Pardina",
+        "results": 1,
+        "family": "LEGUMBRES_PROTEINAS_VEGETALES"
+      },
+      {
+        "query": "arroz sénia",
+        "name": "Arroz Senia",
+        "results": 1,
+        "family": "PASTAS_ARROCES_CEREALES"
+      }
+    ],
+    "savedIngredients": 0,
+    "requestedTranslations": 0
+  }
+}

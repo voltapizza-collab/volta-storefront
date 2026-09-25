@@ -1,0 +1,376 @@
+{
+  "schemaVersion": 1,
+  "batchId": "2026-09-24-17",
+  "date": "2026-09-24",
+  "status": "EDITORIAL_REVIEW",
+  "targetTotal": 5000,
+  "policy": "Mezclas y condimentos secos documentados por identidad. Sin cuotas ni altas por marca, envase, sal o picante; conservación íntegra de las fichas anteriores.",
+  "allergenPolicy": "NEEDS_REVIEW, imágenes MISSING y nombre español. Alérgenos vacíos significa no aprobados, nunca ausencia. Revisar expresamente apio en sal de apio y mostaza en Panch phoron y Vadouvan; cada suministro requiere composición de proveedor.",
+  "sources": {
+    "SPICEHOUSE_FIVE_SPICE": {
+      "title": "The Spice House — Chinese Five Spice",
+      "url": "https://www.thespicehouse.com/products/chinese-five-spice",
+      "accessed": "2026-09-24",
+      "notes": "Mezcla china identificada; la receta comercial consultada no se convierte en composición universal."
+    },
+    "SPICECENTRE_PANCHPURAN": {
+      "title": "The Spice Centre — Panchpuran",
+      "url": "https://thespicecentre.com/product/panchpuran/",
+      "accessed": "2026-09-24",
+      "notes": "El proveedor vincula Panchpuran con Panch Phoron y describe una mezcla de semillas que incluye mostaza."
+    },
+    "SPICEHOUSE_VADOUVAN": {
+      "title": "The Spice House — Vadouvan Curry",
+      "url": "https://www.thespicehouse.com/products/vadouvan-curry",
+      "accessed": "2026-09-24",
+      "notes": "Mezcla identificada con chalota; la referencia declara mostaza. La ficha Curry anterior conserva su alcance histórico."
+    },
+    "SPICEHOUSE_SHAWARMA": {
+      "title": "The Spice House — Shawarma Seasoning",
+      "url": "https://www.thespicehouse.com/products/shawarma-seasoning",
+      "accessed": "2026-09-24",
+      "notes": "Documenta mezcla seca para sazonar; no acredita un plato preparado ni una salsa."
+    },
+    "SPICEHOUSE_JERK_DRY": {
+      "title": "The Spice House — Jamaican Jerk Seasoning",
+      "url": "https://www.thespicehouse.com/products/jamaican-jerk-seasoning",
+      "accessed": "2026-09-24",
+      "notes": "Condimento molido para uso seco o preparación de marinadas; se distingue de la salsa histórica."
+    },
+    "SPICEHOUSE_CELERY_SALT": {
+      "title": "The Spice House — Celery Salt",
+      "url": "https://www.thespicehouse.com/products/celery-salt",
+      "accessed": "2026-09-24",
+      "notes": "La ficha combina sal con apio; es un condimento compuesto, no semillas de apio puras. Revisar apio en composición."
+    },
+    "SPICEHOUSE_LEMON_PEPPER": {
+      "title": "The Spice House — Lemon Pepper Seasoning",
+      "url": "https://www.thespicehouse.com/products/lemon-pepper-seasoning",
+      "accessed": "2026-09-24",
+      "notes": "Mezcla comercial de pimienta y limón con otros componentes. No se presume que solo contenga esos dos ingredientes."
+    },
+    "SPICEHOUSE_CAJUN": {
+      "title": "The Spice House — Cajun Salt-Free Seasoning",
+      "url": "https://www.thespicehouse.com/products/salt-free-cajun-seasoning",
+      "accessed": "2026-09-24",
+      "notes": "Referencia comercial de mezcla cajún. No se traslada la alegación sin sal a todas las formulaciones."
+    },
+    "SPICEHOUSE_TANDOORI": {
+      "title": "The Spice House — Tandoori Salt-Free Seasoning",
+      "url": "https://www.thespicehouse.com/products/tandoori-salt-free-seasoning",
+      "accessed": "2026-09-24",
+      "notes": "Mezcla seca para cocina tandoori. Composición de la referencia, no receta universal ni garantía de ausencia de sal."
+    },
+    "MDH_MASALA_CATALOGUE": {
+      "title": "MDH — Our Products",
+      "url": "https://mdhspices.com/our-products/",
+      "accessed": "2026-09-24",
+      "notes": "Catálogo del fabricante: Pav Bhaji, Chana, Sambhar/Sambar, Rasam y Jal Jeera Masala. Se documentan identidades de condimentos, sin importar recetas, marcas como ingredientes ni platos terminados."
+    }
+  },
+  "records": [
+    {
+      "canonicalKey": "cinco_especias_chinas",
+      "defaultName": "Cinco especias chinas",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Cinco especias chinas",
+        "Chinese five spice"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SPICEHOUSE_FIVE_SPICE",
+        "recordId": "chinese_five_spice",
+        "sourceName": "The Spice House — Chinese Five Spice",
+        "url": "https://www.thespicehouse.com/products/chinese-five-spice"
+      },
+      "identityReason": "Mezcla identificada distinta de Panch phoron y de las especias individuales; no se crean altas por formulación o molienda.",
+      "culinaryForm": "MEZCLA_ESPECIAS"
+    },
+    {
+      "canonicalKey": "panch_phoron",
+      "defaultName": "Panch phoron",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Panch phoron",
+        "Panchpuran"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SPICECENTRE_PANCHPURAN",
+        "recordId": "panchpuran",
+        "sourceName": "The Spice Centre — Panchpuran",
+        "url": "https://thespicecentre.com/product/panchpuran/"
+      },
+      "identityReason": "Mezcla de semillas identificada; no equivale a cinco especias chinas ni a garam masala.",
+      "culinaryForm": "MEZCLA_ESPECIAS"
+    },
+    {
+      "canonicalKey": "vadouvan",
+      "defaultName": "Vadouvan",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Vadouvan",
+        "Curry vadouvan"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SPICEHOUSE_VADOUVAN",
+        "recordId": "vadouvan_curry",
+        "sourceName": "The Spice House — Vadouvan Curry",
+        "url": "https://www.thespicehouse.com/products/vadouvan-curry"
+      },
+      "identityReason": "Mezcla culinaria con identidad propia, conservando Curry como ficha genérica. No se añade una segunda identidad por traducción.",
+      "culinaryForm": "MEZCLA_ESPECIAS"
+    },
+    {
+      "canonicalKey": "mezcla_de_especias_para_shawarma",
+      "defaultName": "Mezcla de especias para shawarma",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Mezcla de especias para shawarma",
+        "Condimento para shawarma"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SPICEHOUSE_SHAWARMA",
+        "recordId": "shawarma_seasoning",
+        "sourceName": "The Spice House — Shawarma Seasoning",
+        "url": "https://www.thespicehouse.com/products/shawarma-seasoning"
+      },
+      "identityReason": "Condimento seco independiente del Seitán estilo shawarma ya existente; no agrupa carnes preparadas.",
+      "culinaryForm": "MEZCLA_ESPECIAS"
+    },
+    {
+      "canonicalKey": "condimento_jerk_seco",
+      "defaultName": "Condimento jerk seco",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Condimento jerk seco",
+        "Mezcla seca jamaicana jerk"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SPICEHOUSE_JERK_DRY",
+        "recordId": "jamaican_jerk_seasoning",
+        "sourceName": "The Spice House — Jamaican Jerk Seasoning",
+        "url": "https://www.thespicehouse.com/products/jamaican-jerk-seasoning"
+      },
+      "identityReason": "Mezcla seca diferenciada de Salsa jerk. No se usa jerk solo como alias para evitar confundir ambas formas.",
+      "culinaryForm": "MEZCLA_ESPECIAS"
+    },
+    {
+      "canonicalKey": "sal_de_apio",
+      "defaultName": "Sal de apio",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Sal de apio"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SPICEHOUSE_CELERY_SALT",
+        "recordId": "celery_salt",
+        "sourceName": "The Spice House — Celery Salt",
+        "url": "https://www.thespicehouse.com/products/celery-salt"
+      },
+      "identityReason": "Sal condimentada distinta de Apio en polvo y Semillas de apio; no se crean variantes por proporción.",
+      "culinaryForm": "SAL_CONDIMENTADA"
+    },
+    {
+      "canonicalKey": "condimento_de_pimienta_y_limon",
+      "defaultName": "Condimento de pimienta y limón",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Condimento de pimienta y limón",
+        "Lemon pepper"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SPICEHOUSE_LEMON_PEPPER",
+        "recordId": "lemon_pepper",
+        "sourceName": "The Spice House — Lemon Pepper Seasoning",
+        "url": "https://www.thespicehouse.com/products/lemon-pepper-seasoning"
+      },
+      "identityReason": "Mezcla seca formulada distinta de pimienta, limón y sus extractos individuales.",
+      "culinaryForm": "MEZCLA_ESPECIAS"
+    },
+    {
+      "canonicalKey": "condimento_cajun",
+      "defaultName": "Condimento cajún",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Condimento cajún",
+        "Mezcla cajún"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SPICEHOUSE_CAJUN",
+        "recordId": "cajun_seasoning",
+        "sourceName": "The Spice House — Cajun Salt-Free Seasoning",
+        "url": "https://www.thespicehouse.com/products/salt-free-cajun-seasoning"
+      },
+      "identityReason": "Mezcla seca identificada; no se crean fichas adicionales por marca, cantidad de sal o nivel de picante.",
+      "culinaryForm": "MEZCLA_ESPECIAS"
+    },
+    {
+      "canonicalKey": "tandoori_masala",
+      "defaultName": "Tandoori masala",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Tandoori masala",
+        "Mezcla de especias tandoori"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SPICEHOUSE_TANDOORI",
+        "recordId": "tandoori_seasoning",
+        "sourceName": "The Spice House — Tandoori Salt-Free Seasoning",
+        "url": "https://www.thespicehouse.com/products/tandoori-salt-free-seasoning"
+      },
+      "identityReason": "Condimento seco identificado; no es un plato de pollo ni Salsa tikka masala.",
+      "culinaryForm": "MEZCLA_ESPECIAS"
+    },
+    {
+      "canonicalKey": "masala_para_pav_bhaji",
+      "defaultName": "Masala para pav bhaji",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Masala para pav bhaji",
+        "Pav bhaji masala"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MDH_MASALA_CATALOGUE",
+        "recordId": "pav_bhaji_masala",
+        "sourceName": "MDH — Our Products",
+        "url": "https://mdhspices.com/our-products/"
+      },
+      "identityReason": "Mezcla identificada en catálogo; el nombre delimita el condimento, no el plato preparado.",
+      "culinaryForm": "MEZCLA_ESPECIAS"
+    },
+    {
+      "canonicalKey": "masala_para_chana",
+      "defaultName": "Masala para chana",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Masala para chana",
+        "Chana masala en polvo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MDH_MASALA_CATALOGUE",
+        "recordId": "chana_masala",
+        "sourceName": "MDH — Our Products",
+        "url": "https://mdhspices.com/our-products/"
+      },
+      "identityReason": "Se incorpora la mezcla comercial identificada. Chhole queda sin alta ni alias hasta revisar su posible equivalencia.",
+      "culinaryForm": "MEZCLA_ESPECIAS"
+    },
+    {
+      "canonicalKey": "masala_para_sambar",
+      "defaultName": "Masala para sambar",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Masala para sambar",
+        "Sambar masala",
+        "Sambhar masala"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MDH_MASALA_CATALOGUE",
+        "recordId": "sambhar_sambar_masala",
+        "sourceName": "MDH — Our Products",
+        "url": "https://mdhspices.com/our-products/"
+      },
+      "identityReason": "Se agrupan las grafías Sambar y Sambhar del catálogo en una sola identidad de condimento.",
+      "culinaryForm": "MEZCLA_ESPECIAS"
+    },
+    {
+      "canonicalKey": "masala_para_rasam",
+      "defaultName": "Masala para rasam",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Masala para rasam",
+        "Rasam masala"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MDH_MASALA_CATALOGUE",
+        "recordId": "rasam_masala",
+        "sourceName": "MDH — Our Products",
+        "url": "https://mdhspices.com/our-products/"
+      },
+      "identityReason": "Condimento identificado separado de sambar; no representa sopa preparada.",
+      "culinaryForm": "MEZCLA_ESPECIAS"
+    },
+    {
+      "canonicalKey": "jal_jeera_masala",
+      "defaultName": "Jal jeera masala",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Jal jeera masala",
+        "Mezcla de especias jal jeera"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MDH_MASALA_CATALOGUE",
+        "recordId": "jal_jeera_masala",
+        "sourceName": "MDH — Our Products",
+        "url": "https://mdhspices.com/our-products/"
+      },
+      "identityReason": "Se incorpora el condimento seco identificado como masala, no el jarabe o bebida del mismo nombre.",
+      "culinaryForm": "MEZCLA_ESPECIAS"
+    }
+  ],
+  "exclusions": [
+    {
+      "candidate": "Curry, garam masala, chaat masala, baharat, berbere, dukkah, furikake, za’atar, ras el hanout y shichimi",
+      "decision": "ALREADY_REPRESENTED",
+      "reason": "Ya existen; no sumar otras marcas o traducciones."
+    },
+    {
+      "candidate": "Gomasio y hierbas provenzales",
+      "decision": "ALREADY_REPRESENTED",
+      "reason": "Se conservan las identidades y alias históricos."
+    },
+    {
+      "candidate": "Chhole masala",
+      "decision": "DEFERRED",
+      "reason": "La fuente lo lista junto a Chana; no se demuestra una identidad culinaria suficientemente independiente para otra alta."
+    },
+    {
+      "candidate": "Jerk sin indicación de forma, shawarma y chana masala sin contexto",
+      "decision": "AMBIGUOUS_ALIAS",
+      "reason": "Evitar confusión con salsa, carne preparada o plato terminado."
+    },
+    {
+      "candidate": "Variantes de curry por picante, sal, marca, envase o molienda",
+      "decision": "GROUPED",
+      "reason": "No se generan nuevas fichas por atributos comerciales; Curry genérico se conserva."
+    },
+    {
+      "candidate": "Quatre épices, finas hierbas, advieh y goda masala",
+      "decision": "DEFERRED",
+      "reason": "Pendientes de fuentes y revisión de identidad en otro lote."
+    },
+    {
+      "candidate": "Recetas, nutrición, certificaciones y alegaciones de ausencia",
+      "decision": "NOT_IMPORTED",
+      "reason": "La formulación depende del proveedor; listas de alérgenos sin aprobación."
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "date": "2026-09-24",
+  "batchId": "2026-09-24-19",
+  "baseline": 3550,
+  "added": 12,
+  "total": 3562,
+  "remainingTo5000": 1438,
+  "byCategory": {
+    "ACEITES_GRASAS_VINAGRES": 12
+  },
+  "byRestaurantFamily": {
+    "ACEITES_GRASAS_VINAGRES": 12
+  },
+  "byForm": {
+    "ACEITE_VEGETAL": 7,
+    "GRASA_ANIMAL": 2,
+    "VINAGRE": 3
+  },
+  "aliasesAdded": 7,
+  "exclusionGroups": 6,
+  "preservedMasterRows": 3550,
+  "preservedTaxonomyAssignments": 3550,
+  "pendingPreserved": 25,
+  "idempotentBatches": 19,
+  "historicalAuditsUnchanged": true,
+  "backendProjectionMatches": true,
+  "sourceSha256": "e8a2c04ec25886b9f70e7c3d13ec4c22410f960efe0bbc1df1dbf952d67c9505",
+  "productionDeployment": false,
+  "databaseWrites": 0,
+  "validation": "Ingredient master OK: 3562 records, 14 categories; valid UTF-8/NFC, names, aliases and identifiers.\n11 consolidated keys preserved; 25 ambiguous records held separately. No duplicate names or shared exact aliases in the selectable source.",
+  "tests": {
+    "importer": 9,
+    "backend": 48,
+    "frontend": 27,
+    "total": 84,
+    "frontendScope": "3 suites: IngredientOnboardingModal, IngredientsSemantics y PosInventoryTaxonomy",
+    "logs": [
+      "tmp/ingredients-batch19-importer-tests.log",
+      "tmp/ingredients-batch19-backend-tests.log",
+      "tmp/ingredients-batch19-ui-tests.log"
+    ]
+  },
+  "build": {
+    "status": "passed",
+    "artifact": "output/ingredients-batch19-build",
+    "bundle": "main.5493eac7.js",
+    "log": "tmp/ingredients-batch19-build.log"
+  },
+  "browser": {
+    "status": "pending",
+    "reason": "No se utiliza el navegador integrado durante el diagnóstico de los cierres de Codex; no se acredita comprobación visual ni integración con base de datos."
+  }
+}

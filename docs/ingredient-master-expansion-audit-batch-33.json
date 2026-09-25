@@ -1,8 +1,93 @@
 {
-  "version": 1,
-  "createdAt": "2026-09-17",
-  "sourceSha256": "53c1320ec010ad59e38dff70d62023836edfafc394cfd4abbcc890e36e26d8a7",
-  "keys": [
+  "schemaVersion": 1,
+  "date": "2026-09-25",
+  "batchId": "2026-09-25-33",
+  "batchPath": "docs/ingredient-master-expansion-batch-33.json",
+  "baselineSha256": "7ae1a44505bf86439cdf17653e680772869efea6269856385cca9a9054021577",
+  "summary": {
+    "baseline": 3694,
+    "added": 0,
+    "total": 3694,
+    "categories": 14,
+    "aliasesAdded": 0,
+    "pendingPreserved": 25,
+    "remainingTo3000": 0,
+    "targetTotal": 5000,
+    "remainingToTarget": 1306,
+    "byCategory": {
+      "ACEITES_GRASAS_VINAGRES": {
+        "before": 90,
+        "added": 0,
+        "after": 90
+      },
+      "AROMAS_Y_EXTRACTOS": {
+        "before": 57,
+        "added": 0,
+        "after": 57
+      },
+      "CARNES": {
+        "before": 141,
+        "added": 0,
+        "after": 141
+      },
+      "OTROS": {
+        "before": 699,
+        "added": 0,
+        "after": 699
+      },
+      "CREMAS_DULCES": {
+        "before": 42,
+        "added": 0,
+        "after": 42
+      },
+      "EMBUTIDOS": {
+        "before": 189,
+        "added": 0,
+        "after": 189
+      },
+      "ENDULZANTES": {
+        "before": 70,
+        "added": 0,
+        "after": 70
+      },
+      "FRUTAS": {
+        "before": 290,
+        "added": 0,
+        "after": 290
+      },
+      "SALSAS": {
+        "before": 218,
+        "added": 0,
+        "after": 218
+      },
+      "VERDURAS": {
+        "before": 347,
+        "added": 0,
+        "after": 347
+      },
+      "HIERBAS_ESPECIAS": {
+        "before": 159,
+        "added": 0,
+        "after": 159
+      },
+      "PESCADOS_Y_MARISCOS": {
+        "before": 856,
+        "added": 0,
+        "after": 856
+      },
+      "QUESOS": {
+        "before": 474,
+        "added": 0,
+        "after": 474
+      },
+      "SETAS": {
+        "before": 62,
+        "added": 0,
+        "after": 62
+      }
+    }
+  },
+  "baselineKeys": [
     "aceite_de_ajo",
     "aceite_de_albahaca",
     "aceite_de_arroz",
@@ -3696,40 +3781,11 @@
     "margarina",
     "vino_blanco",
     "vino_tinto",
-    "cafe_soluble",
-    "boqueron_fresco",
-    "atun_claro_en_conserva_al_natural",
-    "nata_para_cocinar",
-    "nata_para_montar",
-    "tomate_triturado",
-    "tomate_frito",
-    "pasta_fregola",
-    "pasta_lorighittas",
-    "culurgiones_de_patata_queso_y_menta",
-    "pasta_pizzoccheri_de_trigo_sarraceno",
-    "pasta_scialatielli",
-    "testaroli_sin_salsa",
-    "fideos_para_fideua",
-    "anolini_de_carne",
-    "anolini_de_queso",
-    "tortellini_de_carne",
-    "pasta_margherite_de_setas",
-    "ravioli_de_ricotta_y_salmon",
-    "pasta_caramelle_de_ricotta_y_espinacas",
-    "pisarei_de_pan_y_harina",
-    "pan_bataro",
-    "borlenghi_sin_relleno",
-    "pan_coppia_ferrarese",
-    "crescente_bolonesa",
-    "panecillos_tigelle",
-    "pan_col_bollo",
-    "pan_toscano_sin_sal",
-    "pan_marocca_de_casola",
-    "pan_de_altopascio",
-    "pan_marocco_de_montignoso",
-    "panigacci_de_podenzana",
-    "pan_pistoccu",
-    "pan_civraxiu",
-    "pan_coccoi"
-  ]
+    "cafe_soluble"
+  ],
+  "addedKeys": [],
+  "databaseWrites": 0,
+  "generatedTranslations": 0,
+  "publication": "LOCAL_ONLY",
+  "editorialReviewSha256": "d133766ac0e4d2086aa35748848995f0871f5f999e099e35717b7514d8877525"
 }

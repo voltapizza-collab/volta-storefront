@@ -1,0 +1,238 @@
+{
+  "schemaVersion": 1,
+  "batchId": "2026-09-24-30",
+  "date": "2026-09-24",
+  "status": "EDITORIAL_REVIEW",
+  "targetTotal": 5000,
+  "policy": "Harinas, almidones y fibras culinarias con materia prima y transformación documentadas. Sin cuotas ni altas por marca o grado comercial. Conservar fichas históricas y registrar alcances ambiguos.",
+  "allergenPolicy": "NEEDS_REVIEW e imágenes MISSING. Alérgenos vacíos significa no aprobados, nunca ausencia. Revisar ficha técnica del suministro y posibles trazas. No transferir alegaciones sanitarias.",
+  "sources": {
+    "bobs-potato-starch": {
+      "title": "Bob's Red Mill — Potato starch and potato flour",
+      "url": "https://support.bobsredmill.com/hc/en-us/articles/26292159396755-Are-potato-starch-and-potato-flour-the-same-product",
+      "accessed": "2026-09-24",
+      "notes": "Página recuperada: almidón extraído de patata, diferente de la harina elaborada con la patata completa. Usos en panificación y espesado."
+    },
+    "roquette-wheat-starch": {
+      "title": "Roquette — Plant-based texturizing solutions",
+      "url": "https://www.roquette.com/food-nutrition/trends-solutions/texturizing-solutions",
+      "accessed": "2026-09-24",
+      "notes": "Página recuperada: gama de almidones nativos alimentarios de trigo y otras materias primas para salsas, sopas y recubrimientos. No se incorporan marcas, grados modificados ni alegaciones de ausencia de gluten."
+    },
+    "roquette-pea-starch": {
+      "title": "Roquette — Pea starch N-735",
+      "url": "https://www.roquette.com/food-nutrition/resources/roquette-pea-starch-n-735",
+      "accessed": "2026-09-24",
+      "notes": "Página recuperada: almidón nativo extraído de guisante amarillo y aplicaciones culinarias. Se omiten grado comercial, pureza numérica y alegaciones de alérgenos."
+    },
+    "sosa-kudzu": {
+      "title": "Sosa — Kudzu",
+      "url": "https://www.sosa.cat/producto/kudzu/",
+      "accessed": "2026-09-24",
+      "notes": "Página recuperada: ingrediente almidón de kudzu obtenido de la raíz de Pueraria lobata; usos en salsas, sopas y purés. No se importan dosificaciones ni afirmaciones sobre termorreversibilidad."
+    },
+    "yoki-polvilho": {
+      "title": "Yoki — Polvilho azedo",
+      "url": "https://www.yoki.com.br/produtos/polvilho-azedo-500-g",
+      "accessed": "2026-09-24",
+      "notes": "Producto recuperado: fécula de mandioca denominada polvilho azedo. Fermentación corroborada por resumen indexado de investigación en https://apct.sede.embrapa.br/pab/pt_BR/article/view/4462 (acceso directo fallido). Sin instrucciones de fermentación."
+    },
+    "gemef-faba-flour": {
+      "title": "GEMEF Industries — Farine de fèves",
+      "url": "https://www.gemefindustries.com/produits/ingredients-varies-de-panification/farines-fonctionnelles/",
+      "accessed": "2026-09-24",
+      "notes": "Página del fabricante recuperada: harina de habas para panificación. Se distingue del concentrado proteico de habas descrito en la misma página."
+    },
+    "gemef-malted-wheat": {
+      "title": "GEMEF Industries — Farine de blé malté",
+      "url": "https://www.gemefindustries.com/produits/ingredients-varies-de-panification/farines-fonctionnelles/",
+      "accessed": "2026-09-24",
+      "notes": "Página recuperada: harina de trigo malteado de actividad enzimática para panificación. Se limita al tipo activo; no se añade otra ficha por tostado o grado comercial."
+    },
+    "sosa-inulin": {
+      "title": "Sosa — Inulina caliente",
+      "url": "https://www.sosa.cat/producto/inulina-caliente/",
+      "accessed": "2026-09-24",
+      "notes": "Página recuperada: fibra procedente de raíz de achicoria, ingrediente declarado inulina, para cremas y otras elaboraciones. Frío/caliente se conservan como grados a revisar, sin duplicar identidades. No se importan porcentajes, instrucciones de uso ni alegaciones sanitarias."
+    }
+  },
+  "records": [
+    {
+      "canonicalKey": "fecula_de_patata",
+      "defaultName": "Fécula de patata",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Fécula de patata",
+        "Almidón de patata"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "bobs-potato-starch",
+        "recordId": "fecula_de_patata",
+        "sourceName": "Bob's Red Mill — Potato starch and potato flour",
+        "url": "https://support.bobsredmill.com/hc/en-us/articles/26292159396755-Are-potato-starch-and-potato-flour-the-same-product"
+      },
+      "identityReason": "Fracción de almidón diferenciada de Harina de patata.",
+      "culinaryForm": "ALMIDON"
+    },
+    {
+      "canonicalKey": "almidon_de_trigo",
+      "defaultName": "Almidón de trigo",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Almidón de trigo",
+        "Fécula de trigo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "roquette-wheat-starch",
+        "recordId": "almidon_de_trigo",
+        "sourceName": "Roquette — Plant-based texturizing solutions",
+        "url": "https://www.roquette.com/food-nutrition/trends-solutions/texturizing-solutions"
+      },
+      "identityReason": "Almidón extraído, diferente de harina y gluten de trigo.",
+      "culinaryForm": "ALMIDON"
+    },
+    {
+      "canonicalKey": "almidon_de_guisante",
+      "defaultName": "Almidón de guisante",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Almidón de guisante",
+        "Fécula de guisante"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "roquette-pea-starch",
+        "recordId": "almidon_de_guisante",
+        "sourceName": "Roquette — Pea starch N-735",
+        "url": "https://www.roquette.com/food-nutrition/resources/roquette-pea-starch-n-735"
+      },
+      "identityReason": "Fracción de almidón distinta de harina, proteína y fideos de guisante.",
+      "culinaryForm": "ALMIDON"
+    },
+    {
+      "canonicalKey": "almidon_de_kudzu",
+      "defaultName": "Almidón de kudzu",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Almidón de kudzu",
+        "Almidón de kuzu"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "sosa-kudzu",
+        "recordId": "almidon_de_kudzu",
+        "sourceName": "Sosa — Kudzu",
+        "url": "https://www.sosa.cat/producto/kudzu/"
+      },
+      "identityReason": "Origen botánico diferente del arrurruz, patata y tapioca; no raíz completa ni mezclas comerciales.",
+      "culinaryForm": "ALMIDON"
+    },
+    {
+      "canonicalKey": "almidon_de_mandioca_fermentado",
+      "defaultName": "Almidón de mandioca fermentado",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Almidón de mandioca fermentado",
+        "Polvilho azedo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "yoki-polvilho",
+        "recordId": "almidon_de_mandioca_fermentado",
+        "sourceName": "Yoki — Polvilho azedo",
+        "url": "https://www.yoki.com.br/produtos/polvilho-azedo-500-g"
+      },
+      "identityReason": "Transformación fermentada documentada. Se conserva Fécula de mandioca genérica; su alcance histórico queda pendiente de precisar.",
+      "culinaryForm": "ALMIDON_FERMENTADO"
+    },
+    {
+      "canonicalKey": "harina_de_habas",
+      "defaultName": "Harina de habas",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Harina de habas"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "gemef-faba-flour",
+        "recordId": "harina_de_habas",
+        "sourceName": "GEMEF Industries — Farine de fèves",
+        "url": "https://www.gemefindustries.com/produits/ingredients-varies-de-panification/farines-fonctionnelles/"
+      },
+      "identityReason": "Molienda de habas, diferente de habas enteras y proteína aislada.",
+      "culinaryForm": "HARINA"
+    },
+    {
+      "canonicalKey": "harina_de_trigo_malteado",
+      "defaultName": "Harina de trigo malteado",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Harina de trigo malteado",
+        "Harina de malta de trigo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "gemef-malted-wheat",
+        "recordId": "harina_de_trigo_malteado",
+        "sourceName": "GEMEF Industries — Farine de blé malté",
+        "url": "https://www.gemefindustries.com/produits/ingredients-varies-de-panification/farines-fonctionnelles/"
+      },
+      "identityReason": "Transformación por malteado, diferente de harina de trigo ordinaria y de malta de cebada.",
+      "culinaryForm": "HARINA_MALTEADA"
+    },
+    {
+      "canonicalKey": "inulina_de_achicoria",
+      "defaultName": "Inulina de achicoria",
+      "category": "OTROS",
+      "restaurantCategoryKey": "REPOSTERIA_AUXILIARES",
+      "aliases": [
+        "Inulina de achicoria"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "sosa-inulin",
+        "recordId": "inulina_de_achicoria",
+        "sourceName": "Sosa — Inulina caliente",
+        "url": "https://www.sosa.cat/producto/inulina-caliente/"
+      },
+      "identityReason": "Fibra extraída diferente de raíz de achicoria, oligofructosa y maltodextrina.",
+      "culinaryForm": "FIBRA"
+    }
+  ],
+  "exclusions": [
+    {
+      "candidate": "Cremor tártaro, féculas de maíz y mandioca, arrurruz y harinas ya registradas",
+      "decision": "ALREADY_REPRESENTED",
+      "reason": "Conservar fichas existentes; no nuevas altas por alias."
+    },
+    {
+      "candidate": "Harina de arroz glutinoso",
+      "decision": "DEFERRED",
+      "reason": "Precisar composición y alcance de la ficha histórica Almidón de arroz glutinoso antes de añadir una posible equivalencia."
+    },
+    {
+      "candidate": "Fécula de mandioca genérica",
+      "decision": "REVIEW_EXISTING_SCOPE",
+      "reason": "Se conserva intacta. Precisar su alcance frente a la nueva presentación fermentada polvilho azedo, cuya transformación está documentada."
+    },
+    {
+      "candidate": "Grados de inulina en frío o caliente; harinas por fuerza, tostado, marca y envase",
+      "decision": "GROUPED",
+      "reason": "No se crean altas por grados comerciales. Las diferencias funcionales deben precisarse al aprobar el suministro."
+    },
+    {
+      "candidate": "Almidones de boniato y mungo; mezclas y almidones modificados sin composición",
+      "decision": "DEFERRED",
+      "reason": "Completar evidencia de presentación e identidad; no deducir fichas de materia prima a partir de fideos o marcas."
+    }
+  ]
+}

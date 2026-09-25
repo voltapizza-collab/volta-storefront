@@ -1,0 +1,765 @@
+{
+  "schemaVersion": 1,
+  "batchId": "2026-09-24-11",
+  "date": "2026-09-24",
+  "status": "EDITORIAL_REVIEW",
+  "targetTotal": 5000,
+  "policy": "Selección explícita de lácteos, ovoproductos y bases culinarias. Sin importación masiva ni combinaciones generadas.",
+  "allergenPolicy": "Las referencias documentan identidad, no una formulación universal. Lista vacía significa no documentado; NEEDS_REVIEW e imágenes MISSING.",
+  "sources": {
+    "PASCUAL_SEMI": {
+      "title": "Leche Pascual — Leche semidesnatada",
+      "url": "https://lechepascual.es/productos/leches-clasicas/leche-semidesnatada-188/",
+      "scope": "Identidad y descripción consultadas en el índice web del fabricante; apertura posterior no disponible.",
+      "accessed": "2026-09-24"
+    },
+    "PASCUAL_DESNATADA": {
+      "title": "Leche Pascual — Leche desnatada",
+      "url": "https://lechepascual.es/productos/leches-clasicas/leche-desnatada/",
+      "accessed": "2026-09-24"
+    },
+    "NESTLE_EVAPORADA": {
+      "title": "Nestlé Cocina — Qué es la leche evaporada",
+      "url": "https://www.nestlecocina.es/curiosidades/que-es-la-leche-evaporada",
+      "accessed": "2026-09-24"
+    },
+    "ARLA_SKYR": {
+      "title": "Arla Pro — Skyr natural",
+      "url": "https://www.arlapro.com/en-gb/product-catalogue/arla-skyr-0-fat-natural-yogurt-1kg/",
+      "accessed": "2026-09-24"
+    },
+    "DANONE_CUAJADA": {
+      "title": "Danone Foodservice — Cuajada",
+      "url": "https://foodservice.danone.es/product/cuajada/",
+      "accessed": "2026-09-24"
+    },
+    "DANONE_KEFIR": {
+      "title": "Danone Foodservice — Kéfir natural",
+      "url": "https://foodservice.danone.es/product/activia-kefir-natural/",
+      "accessed": "2026-09-24"
+    },
+    "LETUR_CABRA": {
+      "title": "Cantero de Letur — Lácteos de cabra",
+      "url": "https://www.elcanterodeletur.com/cabra-y-oveja/especialistas-en-lacteos-de-cabra/",
+      "accessed": "2026-09-24"
+    },
+    "LETUR_OVEJA": {
+      "title": "Cantero de Letur — Lácteos de oveja",
+      "url": "https://www.elcanterodeletur.com/cabra-y-oveja/lacteos-de-oveja/",
+      "accessed": "2026-09-24"
+    },
+    "RODDAS": {
+      "title": "Rodda’s — Clotted cream, preguntas sobre el producto",
+      "url": "https://www.roddas.co.uk/faqs/",
+      "accessed": "2026-09-24"
+    },
+    "GAZI": {
+      "title": "GAZİ — Ayran",
+      "url": "https://gazi.de/produkte/gazi-ayran-getraenk-mit-joghurt-und-salz-250ml-becher",
+      "accessed": "2026-09-24"
+    },
+    "GUILLEN": {
+      "title": "Huevos Guillén — Dossier de ovoproductos",
+      "url": "https://www.huevosguillen.com/descargas/DOSSIER_HUEVOS_GUILLEN.pdf",
+      "pageConvention": "Página física del PDF, empezando por 1. El folio impreso 11 corresponde a la página física 12.",
+      "accessed": "2026-09-24"
+    },
+    "MEXT_STOCKS": {
+      "title": "MEXT — Standard Tables of Food Composition, Notes on Foods, soup stocks",
+      "url": "https://www.mext.go.jp/component/english/__icsFiles/afieldfile/2017/12/20/1385123_Notes-on-food_r11.pdf",
+      "scope": "Referencia histórica de identidad culinaria, sin importar nutrientes ni recetas.",
+      "accessed": "2026-09-24"
+    },
+    "JETRO_DASHI": {
+      "title": "JETRO — Dashi Made Easy",
+      "url": "https://japan-food.jetro.go.jp/en/japanesecuisine/120.html",
+      "accessed": "2026-09-24"
+    },
+    "CHEF_BASES": {
+      "title": "Nestlé Professional — Gama CHEF, fondos concentrados líquidos",
+      "url": "https://www.nestleprofessional.es/conocimientos-de-nuestras-categorias/descubre-la-gama-de-productos-chef-para-anadir-en-cualquier",
+      "accessed": "2026-09-24"
+    },
+    "GALLO_MARISCO": {
+      "title": "Pastas Gallo — Caldo de marisco",
+      "url": "https://www.pastasgallo.es/productos/caldo-de-marisco/",
+      "accessed": "2026-09-24"
+    },
+    "GALLO_POLLO_JAMON": {
+      "title": "Pastas Gallo — Caldo de pollo con jamón",
+      "url": "https://www.pastasgallo.es/productos/caldo-de-pollo-con-jamon-iberico/",
+      "accessed": "2026-09-24"
+    },
+    "ELLE_VIRE": {
+      "title": "Elle & Vire — Beurre manié",
+      "url": "https://www.elle-et-vire.com/fr/fr/techniques-de-chef/comment-faire-un-beurre-manie/?tag=beurre",
+      "accessed": "2026-09-24"
+    },
+    "FDC": {
+      "title": "USDA FoodData Central — SR Legacy",
+      "url": "https://fdc.nal.usda.gov/download-datasets/",
+      "dataset": "FoodData_Central_sr_legacy_food_csv_2018-04",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://fdc.nal.usda.gov/api-guide/"
+    }
+  },
+  "records": [
+    {
+      "canonicalKey": "leche_semidesnatada",
+      "defaultName": "Leche semidesnatada",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LACTEOS_HUEVOS",
+      "aliases": [
+        "Leche semidesnatada"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PASCUAL_SEMI",
+        "recordId": "leche_semidesnatada",
+        "sourceName": "Leche Semidesnatada",
+        "url": "https://lechepascual.es/productos/leches-clasicas/leche-semidesnatada-188/"
+      },
+      "identityReason": "Leche con retirada parcial de grasa, distinta de la leche entera histórica; sin generar variantes por envase o marca."
+    },
+    {
+      "canonicalKey": "leche_desnatada",
+      "defaultName": "Leche desnatada",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LACTEOS_HUEVOS",
+      "aliases": [
+        "Leche desnatada",
+        "Leche descremada"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PASCUAL_DESNATADA",
+        "recordId": "leche_desnatada_0",
+        "sourceName": "Leche Desnatada 0%",
+        "url": "https://lechepascual.es/productos/leches-clasicas/leche-desnatada/"
+      },
+      "identityReason": "Leche líquida desnatada; distinta de la leche desnatada en polvo ya presente."
+    },
+    {
+      "canonicalKey": "leche_evaporada",
+      "defaultName": "Leche evaporada",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LACTEOS_HUEVOS",
+      "aliases": [
+        "Leche evaporada"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "NESTLE_EVAPORADA",
+        "recordId": "leche_evaporada",
+        "sourceName": "Leche evaporada",
+        "url": "https://www.nestlecocina.es/curiosidades/que-es-la-leche-evaporada"
+      },
+      "identityReason": "Leche concentrada por evaporación, separada de la leche condensada azucarada. No se multiplican porcentajes ni envases."
+    },
+    {
+      "canonicalKey": "skyr_natural",
+      "defaultName": "Skyr natural",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LACTEOS_HUEVOS",
+      "aliases": [
+        "Skyr natural"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "ARLA_SKYR",
+        "recordId": "arla_skyr_0_fat_natural_yogurt",
+        "sourceName": "Arla Skyr 0% Fat Natural Yogurt",
+        "url": "https://www.arlapro.com/en-gb/product-catalogue/arla-skyr-0-fat-natural-yogurt-1kg/"
+      },
+      "identityReason": "Fermentado identificado por nombre propio; se retira la marca y no se asimila al yogur griego ni al labneh histórico."
+    },
+    {
+      "canonicalKey": "cuajada_lactea",
+      "defaultName": "Cuajada láctea",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LACTEOS_HUEVOS",
+      "aliases": [
+        "Cuajada láctea",
+        "Cuajada (postre lácteo)"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DANONE_CUAJADA",
+        "recordId": "cuajada",
+        "sourceName": "Cuajada",
+        "url": "https://foodservice.danone.es/product/cuajada/"
+      },
+      "identityReason": "Cuajada como elaboración láctea para cocina y postres, no cuajo ni queso denominado cuajada. La formulación de un fabricante no define todas sus recetas."
+    },
+    {
+      "canonicalKey": "kefir_de_leche_natural",
+      "defaultName": "Kéfir de leche natural",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LACTEOS_HUEVOS",
+      "aliases": [
+        "Kéfir de leche natural",
+        "Kéfir natural"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DANONE_KEFIR",
+        "recordId": "activia_kefir_natural",
+        "sourceName": "Activia Kefir Natural",
+        "url": "https://foodservice.danone.es/product/activia-kefir-natural/"
+      },
+      "identityReason": "Leche fermentada con cultivos de kéfir; identidad distinta de yogur, kumis y shubat. No se traslada la formulación de marca a todos los proveedores."
+    },
+    {
+      "canonicalKey": "yogur_natural_de_cabra",
+      "defaultName": "Yogur natural de cabra",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LACTEOS_HUEVOS",
+      "aliases": [
+        "Yogur natural de cabra",
+        "Yogur de cabra"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "LETUR_CABRA",
+        "recordId": "yogur_de_cabra",
+        "sourceName": "Yogur de cabra",
+        "url": "https://www.elcanterodeletur.com/cabra-y-oveja/especialistas-en-lacteos-de-cabra/"
+      },
+      "identityReason": "Yogur natural de una especie identificada, no una traducción del yogur genérico."
+    },
+    {
+      "canonicalKey": "kefir_de_cabra",
+      "defaultName": "Kéfir de cabra",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LACTEOS_HUEVOS",
+      "aliases": [
+        "Kéfir de cabra"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "LETUR_CABRA",
+        "recordId": "kefir_de_cabra",
+        "sourceName": "Kéfir de cabra",
+        "url": "https://www.elcanterodeletur.com/cabra-y-oveja/especialistas-en-lacteos-de-cabra/"
+      },
+      "identityReason": "Fermentado de leche de cabra expresamente documentado; no se crean cruces automáticos de especie y proceso."
+    },
+    {
+      "canonicalKey": "yogur_natural_de_oveja",
+      "defaultName": "Yogur natural de oveja",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LACTEOS_HUEVOS",
+      "aliases": [
+        "Yogur natural de oveja",
+        "Yogur de oveja"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "LETUR_OVEJA",
+        "recordId": "yogur_de_oveja",
+        "sourceName": "YOGUR DE OVEJA",
+        "url": "https://www.elcanterodeletur.com/cabra-y-oveja/lacteos-de-oveja/"
+      },
+      "identityReason": "Yogur de leche de oveja documentado como elaboración propia. Se agrupan los tamaños del mismo producto."
+    },
+    {
+      "canonicalKey": "kefir_de_oveja",
+      "defaultName": "Kéfir de oveja",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LACTEOS_HUEVOS",
+      "aliases": [
+        "Kéfir de oveja"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "LETUR_OVEJA",
+        "recordId": "kefir_de_oveja",
+        "sourceName": "KÉFIR DE OVEJA",
+        "url": "https://www.elcanterodeletur.com/cabra-y-oveja/lacteos-de-oveja/"
+      },
+      "identityReason": "Fermentado de leche de oveja expresamente enumerado; sin variantes de envase."
+    },
+    {
+      "canonicalKey": "nata_cuajada_clotted_cream",
+      "defaultName": "Nata cuajada (clotted cream)",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LACTEOS_HUEVOS",
+      "aliases": [
+        "Nata cuajada (clotted cream)",
+        "Clotted cream"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "RODDAS",
+        "recordId": "cornish_clotted_cream",
+        "sourceName": "Cornish clotted cream",
+        "url": "https://www.roddas.co.uk/faqs/"
+      },
+      "identityReason": "Especialidad de nata con denominación y proceso propios; no se añade una ficha por origen Cornish ni se la declara equivalente a Kajmak."
+    },
+    {
+      "canonicalKey": "ayran",
+      "defaultName": "Ayran",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LACTEOS_HUEVOS",
+      "aliases": [
+        "Ayran"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "GAZI",
+        "recordId": "ayran",
+        "sourceName": "Ayran",
+        "url": "https://gazi.de/produkte/gazi-ayran-getraenk-mit-joghurt-und-salz-250ml-becher"
+      },
+      "identityReason": "Preparación láctea salada identificada por nombre propio y utilizada también en recetas; no se equipara al yogur natural."
+    },
+    {
+      "canonicalKey": "huevo_entero_liquido_pasteurizado",
+      "defaultName": "Huevo entero líquido pasteurizado",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LACTEOS_HUEVOS",
+      "aliases": [
+        "Huevo entero líquido pasteurizado",
+        "Huevo líquido pasteurizado"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "GUILLEN",
+        "recordId": "huevo_pasteurizado",
+        "sourceName": "Huevo pasteurizado",
+        "url": "https://www.huevosguillen.com/descargas/DOSSIER_HUEVOS_GUILLEN.pdf",
+        "page": 12
+      },
+      "identityReason": "Ovoproducto líquido homogeneizado y pasteurizado documentado. Se distingue del huevo fresco y del deshidratado, sin fichas por tamaño, envase o certificación."
+    },
+    {
+      "canonicalKey": "clara_de_huevo_liquida_pasteurizada",
+      "defaultName": "Clara de huevo líquida pasteurizada",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LACTEOS_HUEVOS",
+      "aliases": [
+        "Clara de huevo líquida pasteurizada",
+        "Clara pasteurizada"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "GUILLEN",
+        "recordId": "clara_pasteurizada",
+        "sourceName": "Clara pasteurizada",
+        "url": "https://www.huevosguillen.com/descargas/DOSSIER_HUEVOS_GUILLEN.pdf",
+        "page": 12
+      },
+      "identityReason": "Ovoproducto líquido homogeneizado y pasteurizado documentado. Se distingue del huevo fresco y del deshidratado, sin fichas por tamaño, envase o certificación."
+    },
+    {
+      "canonicalKey": "yema_de_huevo_liquida_pasteurizada",
+      "defaultName": "Yema de huevo líquida pasteurizada",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LACTEOS_HUEVOS",
+      "aliases": [
+        "Yema de huevo líquida pasteurizada",
+        "Yema pasteurizada"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "GUILLEN",
+        "recordId": "yema_pasteurizada",
+        "sourceName": "Yema pasteurizada",
+        "url": "https://www.huevosguillen.com/descargas/DOSSIER_HUEVOS_GUILLEN.pdf",
+        "page": 12
+      },
+      "identityReason": "Ovoproducto líquido homogeneizado y pasteurizado documentado. Se distingue del huevo fresco y del deshidratado, sin fichas por tamaño, envase o certificación."
+    },
+    {
+      "canonicalKey": "dashi_de_katsuobushi",
+      "defaultName": "Dashi de katsuobushi",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Dashi de katsuobushi",
+        "Katsuo dashi"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MEXT_STOCKS",
+        "recordId": "17019",
+        "sourceName": "Katsuo-bushi dashi",
+        "url": "https://www.mext.go.jp/component/english/__icsFiles/afieldfile/2017/12/20/1385123_Notes-on-food_r11.pdf",
+        "page": 257
+      },
+      "identityReason": "Caldo de katsuobushi; distinto del ingrediente seco y del fondo de pescado genérico."
+    },
+    {
+      "canonicalKey": "dashi_de_kombu",
+      "defaultName": "Dashi de kombu",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Dashi de kombu",
+        "Kombu dashi"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MEXT_STOCKS",
+        "recordId": "17020",
+        "sourceName": "kombu dashi",
+        "url": "https://www.mext.go.jp/component/english/__icsFiles/afieldfile/2017/12/20/1385123_Notes-on-food_r11.pdf",
+        "page": 257
+      },
+      "identityReason": "Caldo extraído de kombu; no equivale al alga seca."
+    },
+    {
+      "canonicalKey": "dashi_de_katsuobushi_y_kombu",
+      "defaultName": "Dashi de katsuobushi y kombu",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Dashi de katsuobushi y kombu",
+        "Awase dashi"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MEXT_STOCKS",
+        "recordId": "17021",
+        "sourceName": "Katsuo-bushi and kombu dashi",
+        "url": "https://www.mext.go.jp/component/english/__icsFiles/afieldfile/2017/12/20/1385123_Notes-on-food_r11.pdf",
+        "page": 257
+      },
+      "identityReason": "Base mixta expresamente documentada en MEXT y JETRO; no se generan otras combinaciones."
+    },
+    {
+      "canonicalKey": "dashi_de_shiitake",
+      "defaultName": "Dashi de shiitake",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Dashi de shiitake",
+        "Shiitake dashi"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MEXT_STOCKS",
+        "recordId": "17022",
+        "sourceName": "Shiitake dashi",
+        "url": "https://www.mext.go.jp/component/english/__icsFiles/afieldfile/2017/12/20/1385123_Notes-on-food_r11.pdf",
+        "page": 257
+      },
+      "identityReason": "Caldo obtenido de shiitake seco, diferenciado de otras bases de setas."
+    },
+    {
+      "canonicalKey": "dashi_de_niboshi",
+      "defaultName": "Dashi de niboshi",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Dashi de niboshi",
+        "Niboshi dashi"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MEXT_STOCKS",
+        "recordId": "17023",
+        "sourceName": "Niboshi dashi",
+        "url": "https://www.mext.go.jp/component/english/__icsFiles/afieldfile/2017/12/20/1385123_Notes-on-food_r11.pdf",
+        "page": 257
+      },
+      "identityReason": "Caldo de pescado pequeño seco documentado; no se confunde con dashi de katsuobushi."
+    },
+    {
+      "canonicalKey": "fondo_concentrado_de_cigala",
+      "defaultName": "Fondo concentrado de cigala",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Fondo concentrado de cigala"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "CHEF_BASES",
+        "recordId": "concentrado_liquido_de_cigala",
+        "sourceName": "Concentrado líquido de cigala",
+        "url": "https://www.nestleprofessional.es/conocimientos-de-nuestras-categorias/descubre-la-gama-de-productos-chef-para-anadir-en-cualquier"
+      },
+      "identityReason": "Base concentrada documentada para cocina. Se retira la marca; la composición y los alérgenos deben revisarse con la ficha concreta."
+    },
+    {
+      "canonicalKey": "fondo_concentrado_de_setas",
+      "defaultName": "Fondo concentrado de setas",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Fondo concentrado de setas"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "CHEF_BASES",
+        "recordId": "concentrado_liquido_de_setas",
+        "sourceName": "Concentrado líquido de setas",
+        "url": "https://www.nestleprofessional.es/conocimientos-de-nuestras-categorias/descubre-la-gama-de-productos-chef-para-anadir-en-cualquier"
+      },
+      "identityReason": "Base concentrada documentada para cocina. Se retira la marca; la composición y los alérgenos deben revisarse con la ficha concreta."
+    },
+    {
+      "canonicalKey": "caldo_de_marisco",
+      "defaultName": "Caldo de marisco",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Caldo de marisco"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "GALLO_MARISCO",
+        "recordId": "caldo_de_marisco",
+        "sourceName": "Caldo de Marisco",
+        "url": "https://www.pastasgallo.es/productos/caldo-de-marisco/"
+      },
+      "identityReason": "Caldo documentado con crustáceos; no se confunde con el fumet de pescado histórico ni se generan variantes por destino paella o fideuá."
+    },
+    {
+      "canonicalKey": "caldo_de_pollo_con_jamon",
+      "defaultName": "Caldo de pollo con jamón",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Caldo de pollo con jamón"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "GALLO_POLLO_JAMON",
+        "recordId": "caldo_de_pollo_con_jamon_iberico",
+        "sourceName": "Caldo de Pollo con Jamón Ibérico",
+        "url": "https://www.pastasgallo.es/productos/caldo-de-pollo-con-jamon-iberico/"
+      },
+      "identityReason": "Composición mixta expresamente documentada; una sola ficha sin multiplicarla por marca o calificación comercial del jamón."
+    },
+    {
+      "canonicalKey": "beurre_manie",
+      "defaultName": "Beurre manié",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Beurre manié",
+        "Mantequilla amasada con harina"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "ELLE_VIRE",
+        "recordId": "beurre_manie",
+        "sourceName": "Beurre manié",
+        "url": "https://www.elle-et-vire.com/fr/fr/techniques-de-chef/comment-faire-un-beurre-manie/?tag=beurre"
+      },
+      "identityReason": "Base espesante de mantequilla ablandada y harina, preparada sin cocción previa. Se diferencia de los roux claro y oscuro ya presentes."
+    },
+    {
+      "canonicalKey": "yogur_natural_desnatado",
+      "defaultName": "Yogur natural desnatado",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LACTEOS_HUEVOS",
+      "aliases": [
+        "Yogur natural desnatado"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "170887",
+        "sourceName": "Yogurt, plain, skim milk",
+        "url": "https://fdc.nal.usda.gov/food-details/170887/nutrients"
+      },
+      "identityReason": "Yogur natural elaborado con leche desnatada; no se generan sabores ni porcentajes intermedios."
+    },
+    {
+      "canonicalKey": "mezcla_de_leche_y_nata_half_and_half",
+      "defaultName": "Mezcla de leche y nata (half-and-half)",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LACTEOS_HUEVOS",
+      "aliases": [
+        "Mezcla de leche y nata (half-and-half)",
+        "Half-and-half"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171255",
+        "sourceName": "Cream, fluid, half and half",
+        "url": "https://fdc.nal.usda.gov/food-details/171255/nutrients"
+      },
+      "identityReason": "Preparación láctea identificada como mezcla de leche y nata, no nata doble ni crema agria."
+    },
+    {
+      "canonicalKey": "nata_montada",
+      "defaultName": "Nata montada",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LACTEOS_HUEVOS",
+      "aliases": [
+        "Nata montada"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "170860",
+        "sourceName": "Cream, whipped, cream topping, pressurized",
+        "url": "https://fdc.nal.usda.gov/food-details/170860/nutrients"
+      },
+      "identityReason": "Nata preparada por montado; una sola ficha para la elaboración, sin contar el aerosol como otra identidad ni inferir contenido de azúcar."
+    },
+    {
+      "canonicalKey": "huevo_cocido",
+      "defaultName": "Huevo cocido",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LACTEOS_HUEVOS",
+      "aliases": [
+        "Huevo cocido",
+        "Huevo duro"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "173424",
+        "sourceName": "Egg, whole, cooked, hard-boiled",
+        "url": "https://fdc.nal.usda.gov/food-details/173424/nutrients"
+      },
+      "identityReason": "Huevo cocido como ingrediente para ensaladas y otras elaboraciones; no subdividir por corte ni envase."
+    },
+    {
+      "canonicalKey": "huevo_escalfado",
+      "defaultName": "Huevo escalfado",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LACTEOS_HUEVOS",
+      "aliases": [
+        "Huevo escalfado",
+        "Huevo poché"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172186",
+        "sourceName": "Egg, whole, cooked, poached",
+        "url": "https://fdc.nal.usda.gov/food-details/172186/nutrients"
+      },
+      "identityReason": "Preparación por escalfado documentada, distinta de huevo frito y huevo duro."
+    },
+    {
+      "canonicalKey": "huevo_revuelto",
+      "defaultName": "Huevo revuelto",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LACTEOS_HUEVOS",
+      "aliases": [
+        "Huevo revuelto",
+        "Huevos revueltos"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172187",
+        "sourceName": "Egg, whole, cooked, scrambled",
+        "url": "https://fdc.nal.usda.gov/food-details/172187/nutrients"
+      },
+      "identityReason": "Preparación documentada usada como relleno o ingrediente; no generar recetas por guarnición."
+    },
+    {
+      "canonicalKey": "caldo_de_vacuno_deshidratado",
+      "defaultName": "Caldo de vacuno deshidratado",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Caldo de vacuno deshidratado",
+        "Caldo de vacuno en polvo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171560",
+        "sourceName": "Soup, beef broth or bouillon, powder, dry",
+        "url": "https://fdc.nal.usda.gov/food-details/171560/nutrients"
+      },
+      "identityReason": "Preparado seco para reconstituir, distinto del fondo líquido. Se agrupan polvo y pastillas sin duplicar formatos."
+    },
+    {
+      "canonicalKey": "caldo_de_pollo_deshidratado",
+      "defaultName": "Caldo de pollo deshidratado",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Caldo de pollo deshidratado",
+        "Caldo de pollo en polvo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "171562",
+        "sourceName": "Soup, chicken broth or bouillon, dry",
+        "url": "https://fdc.nal.usda.gov/food-details/171562/nutrients"
+      },
+      "identityReason": "Preparado seco para reconstituir; una ficha sin subdividir en cubos, granulados, marcas o envases."
+    }
+  ],
+  "exclusions": [
+    {
+      "candidate": "Roux blanco / blond / oscuro",
+      "decision": "ALREADY_REPRESENTED",
+      "reason": "Roux claro y oscuro ya existen; no sumar nombres de color ni traducciones sin delimitar otra elaboración."
+    },
+    {
+      "candidate": "Labneh / Kajmak / Smetana / Crème fraîche",
+      "decision": "ALREADY_REPRESENTED",
+      "reason": "Identidades históricas conservadas. No reasignar su categoría dentro de una ampliación."
+    },
+    {
+      "candidate": "Nata para cocinar / nata para montar",
+      "decision": "EQUIVALENCE_PENDING",
+      "reason": "Revisar la cobertura de Crema de leche y Nata doble antes de incorporar otros nombres por contenido graso."
+    },
+    {
+      "candidate": "Huevo en polvo / huevo entero deshidratado",
+      "decision": "HISTORICAL_OVERLAP",
+      "reason": "Ambas fichas existen. Se conserva el estado histórico y se registra el solapamiento para revisión; este lote no crea una tercera ni las fusiona."
+    },
+    {
+      "candidate": "Huevo fresco / codorniz / pato / oca / pava",
+      "decision": "ALREADY_REPRESENTED",
+      "reason": "Las especies consultadas ya están representadas; tamaño y sistema de cría no suman identidades."
+    },
+    {
+      "candidate": "Ovoproductos líquidos azucarados, salados o congelados",
+      "decision": "DEFERRED",
+      "reason": "No se multiplican conservaciones o formulaciones sin justificar una necesidad culinaria diferenciada."
+    },
+    {
+      "candidate": "Yogures y kéfires con sabores, fortificados o de marca",
+      "decision": "DEFERRED",
+      "reason": "Se priorizan bases naturales. No se generan combinaciones automáticas de especie, sabor, grasa y marca."
+    },
+    {
+      "candidate": "Fondo de ternera / vacuno / ave / pollo",
+      "decision": "EQUIVALENCE_PENDING",
+      "reason": "Vacuno y pollo ya están. Contrastar composición y elaboración antes de separar términos paraguas, edades o concentraciones."
+    },
+    {
+      "candidate": "Consomé y caldos reconstituidos de vacuno o pollo",
+      "decision": "EQUIVALENCE_PENDING",
+      "reason": "La fuente USDA mezcla términos caldo y consomé. No justificar nuevas altas por esa enumeración."
+    },
+    {
+      "candidate": "Dashi genérico / instantáneo / granulado",
+      "decision": "DEFERRED",
+      "reason": "Cinco bases concretas documentadas. No sumar además un nombre paraguas ni variantes de presentación."
+    },
+    {
+      "candidate": "Fondo asiático comercial",
+      "decision": "COMPOSITION_PENDING",
+      "reason": "Nombre demasiado amplio para delimitar identidad culinaria sin composición."
+    },
+    {
+      "candidate": "Fondo de caza",
+      "decision": "SOURCE_NOT_VERIFIED",
+      "reason": "La apertura de la página consultada falló; mantener pendiente la revisión de producto y composición."
+    },
+    {
+      "candidate": "Caldo para paella / fideuá / escudella / cocido",
+      "decision": "COMPOSITION_PENDING",
+      "reason": "No crear fichas solo por destino o receta. Priorizar una revisión posterior de sus diferencias de composición."
+    }
+  ]
+}

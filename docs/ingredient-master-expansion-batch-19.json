@@ -1,0 +1,340 @@
+{
+  "schemaVersion": 1,
+  "batchId": "2026-09-24-19",
+  "date": "2026-09-24",
+  "status": "EDITORIAL_REVIEW",
+  "targetTotal": 5000,
+  "policy": "Aceites, grasas y vinagres culinarios documentados; sin cuotas ni combinaciones artificiales. Fichas anteriores intactas.",
+  "allergenPolicy": "NEEDS_REVIEW e imágenes MISSING. Alérgenos vacíos significa no aprobados, nunca ausencia. Revisar frutos de cáscara, posibles trazas, sulfitos y composición según ficha técnica de cada suministro.",
+  "sources": {
+    "TOURANGELLE_PISTACHIO": {
+      "title": "La Tourangelle — Roasted Pistachio Oil",
+      "url": "https://latourangelle.com/products/roasted-pistachio-oil",
+      "accessed": "2026-09-24",
+      "notes": "Aceite documentado para cocina y aliños. No se crean fichas por tostado o marca."
+    },
+    "TOURANGELLE_PUMPKIN": {
+      "title": "La Tourangelle — Toasted Pumpkin Seed Oil",
+      "url": "https://latourangelle.com/products/toasted-pumpkin-seed-oil",
+      "accessed": "2026-09-24",
+      "notes": "Aceite culinario de semillas; tostado y envase no generan otras identidades."
+    },
+    "TOURANGELLE_PECAN": {
+      "title": "La Tourangelle — Frequently Asked Questions",
+      "url": "https://latourangelle.com/pages/frequently-asked-questions",
+      "accessed": "2026-09-24",
+      "notes": "La sección de repostería identifica Roasted Pecan Oil; la ficha individual no pudo recuperarse. No se afirma disponibilidad comercial."
+    },
+    "EMILE_MACADAMIA": {
+      "title": "Émile Noël — Huile Vierge de Macadamia",
+      "url": "https://www.emilenoel.com/products/huile-vierge-macadamia",
+      "accessed": "2026-09-24",
+      "notes": "La referencia acredita uso en cocina y composición de aceite de macadamia. No se importan alegaciones cosméticas o sanitarias."
+    },
+    "EMILE_HEMP": {
+      "title": "Émile Noël — Huile Vierge de Chanvre",
+      "url": "https://www.emilenoel.com/products/huile-vierge-chanvre",
+      "accessed": "2026-09-24",
+      "notes": "Aceite para aliños. La ficha indica posibles trazas; se requiere revisión del suministro."
+    },
+    "EMILE_CAMELINA": {
+      "title": "Émile Noël — Huile Vierge de Cameline",
+      "url": "https://www.emilenoel.com/products/huile-vierge-cameline",
+      "accessed": "2026-09-24",
+      "notes": "La ficha documenta aceite de camelina para preparaciones frías. No se importan alegaciones nutricionales."
+    },
+    "EMILE_ARGAN_FOOD": {
+      "title": "Émile Noël — Huile Vierge d’Argan, uso culinario",
+      "url": "https://www.emilenoel.com/products/huile-vierge-argan-equitable",
+      "accessed": "2026-09-24",
+      "notes": "La referencia seleccionada acredita platos salados y dulces. Se excluye la ficha cosmética huile-argan-equitable del mismo fabricante."
+    },
+    "FATWORKS_DUCK": {
+      "title": "Fatworks — Cage Free Duck Fat",
+      "url": "https://fatworks.com/collections/duck-fat",
+      "accessed": "2026-09-24",
+      "notes": "El catálogo del fabricante identifica grasa culinaria de pato. Se agrupan envases y métodos de cría."
+    },
+    "FATWORKS_LAMB": {
+      "title": "Fatworks — Grass Fed Lamb Tallow",
+      "url": "https://fatworks.com/products/grass-fed-lamb-tallow-8-0z",
+      "accessed": "2026-09-24",
+      "notes": "La ficha identifica grasa de cordero como ingrediente para cocinar. No se importa la certificación de cría."
+    },
+    "MAFF_AKAZU": {
+      "title": "MAFF — The Washoku Way, Condiments, página 44",
+      "url": "https://www.maff.go.jp/j/shokusan/gaisyoku/pamphlet/pdf/washoku_english.pdf",
+      "accessed": "2026-09-24",
+      "notes": "Página impresa 44, página PDF 46: vinagre rojo de lías de sake maduradas. No se universaliza un tiempo de crianza."
+    },
+    "MAFF_KUROZU": {
+      "title": "MAFF — The Washoku Way, Condiments, página 44",
+      "url": "https://www.maff.go.jp/j/shokusan/gaisyoku/pamphlet/pdf/washoku_english.pdf",
+      "accessed": "2026-09-24",
+      "notes": "La misma página identifica kurozu de arroz y su fermentación expuesta al sol. No se importan afirmaciones sanitarias del documento."
+    },
+    "ABUELO_FELIX_HONEY_VINEGAR": {
+      "title": "El Abuelo Félix — Vinagre de miel",
+      "url": "https://www.elabuelofelix.com/vinagre-de-miel",
+      "accessed": "2026-09-24",
+      "notes": "El productor documenta vinagre elaborado con miel y agua. No se importan certificaciones ni alegaciones de salud."
+    }
+  },
+  "records": [
+    {
+      "canonicalKey": "aceite_de_pistacho",
+      "defaultName": "Aceite de pistacho",
+      "category": "ACEITES_GRASAS_VINAGRES",
+      "restaurantCategoryKey": "ACEITES_GRASAS_VINAGRES",
+      "aliases": [
+        "Aceite de pistacho"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "TOURANGELLE_PISTACHIO",
+        "recordId": "aceite_de_pistacho",
+        "sourceName": "La Tourangelle — Roasted Pistachio Oil",
+        "url": "https://latourangelle.com/products/roasted-pistachio-oil"
+      },
+      "identityReason": "Aceite extraído, distinto del fruto, su pasta y su aroma.",
+      "culinaryForm": "ACEITE_VEGETAL"
+    },
+    {
+      "canonicalKey": "aceite_de_semilla_de_calabaza",
+      "defaultName": "Aceite de semilla de calabaza",
+      "category": "ACEITES_GRASAS_VINAGRES",
+      "restaurantCategoryKey": "ACEITES_GRASAS_VINAGRES",
+      "aliases": [
+        "Aceite de semilla de calabaza",
+        "Aceite de pepita de calabaza"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "TOURANGELLE_PUMPKIN",
+        "recordId": "aceite_de_semilla_de_calabaza",
+        "sourceName": "La Tourangelle — Toasted Pumpkin Seed Oil",
+        "url": "https://latourangelle.com/products/toasted-pumpkin-seed-oil"
+      },
+      "identityReason": "Aceite separado de la semilla y de la pulpa de calabaza.",
+      "culinaryForm": "ACEITE_VEGETAL"
+    },
+    {
+      "canonicalKey": "aceite_de_nuez_pecana",
+      "defaultName": "Aceite de nuez pecana",
+      "category": "ACEITES_GRASAS_VINAGRES",
+      "restaurantCategoryKey": "ACEITES_GRASAS_VINAGRES",
+      "aliases": [
+        "Aceite de nuez pecana",
+        "Aceite de pacana"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "TOURANGELLE_PECAN",
+        "recordId": "aceite_de_nuez_pecana",
+        "sourceName": "La Tourangelle — Frequently Asked Questions",
+        "url": "https://latourangelle.com/pages/frequently-asked-questions"
+      },
+      "identityReason": "Aceite de pecana, distinto del aceite de nuez común y de la pasta de pecana.",
+      "culinaryForm": "ACEITE_VEGETAL"
+    },
+    {
+      "canonicalKey": "aceite_de_macadamia",
+      "defaultName": "Aceite de macadamia",
+      "category": "ACEITES_GRASAS_VINAGRES",
+      "restaurantCategoryKey": "ACEITES_GRASAS_VINAGRES",
+      "aliases": [
+        "Aceite de macadamia"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "EMILE_MACADAMIA",
+        "recordId": "aceite_de_macadamia",
+        "sourceName": "Émile Noël — Huile Vierge de Macadamia",
+        "url": "https://www.emilenoel.com/products/huile-vierge-macadamia"
+      },
+      "identityReason": "Aceite culinario extraído de macadamia, distinto del fruto.",
+      "culinaryForm": "ACEITE_VEGETAL"
+    },
+    {
+      "canonicalKey": "aceite_de_semilla_de_canamo",
+      "defaultName": "Aceite de semilla de cáñamo",
+      "category": "ACEITES_GRASAS_VINAGRES",
+      "restaurantCategoryKey": "ACEITES_GRASAS_VINAGRES",
+      "aliases": [
+        "Aceite de semilla de cáñamo",
+        "Aceite de cáñamo alimentario"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "EMILE_HEMP",
+        "recordId": "aceite_de_semilla_de_canamo",
+        "sourceName": "Émile Noël — Huile Vierge de Chanvre",
+        "url": "https://www.emilenoel.com/products/huile-vierge-chanvre"
+      },
+      "identityReason": "Aceite alimentario de semilla; no extracto de CBD ni aceite esencial.",
+      "culinaryForm": "ACEITE_VEGETAL"
+    },
+    {
+      "canonicalKey": "aceite_de_camelina",
+      "defaultName": "Aceite de camelina",
+      "category": "ACEITES_GRASAS_VINAGRES",
+      "restaurantCategoryKey": "ACEITES_GRASAS_VINAGRES",
+      "aliases": [
+        "Aceite de camelina"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "EMILE_CAMELINA",
+        "recordId": "aceite_de_camelina",
+        "sourceName": "Émile Noël — Huile Vierge de Cameline",
+        "url": "https://www.emilenoel.com/products/huile-vierge-cameline"
+      },
+      "identityReason": "Materia prima propia; no se usa lino o sésamo como alias.",
+      "culinaryForm": "ACEITE_VEGETAL"
+    },
+    {
+      "canonicalKey": "aceite_de_argan_alimentario",
+      "defaultName": "Aceite de argán alimentario",
+      "category": "ACEITES_GRASAS_VINAGRES",
+      "restaurantCategoryKey": "ACEITES_GRASAS_VINAGRES",
+      "aliases": [
+        "Aceite de argán alimentario",
+        "Aceite culinario de argán"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "EMILE_ARGAN_FOOD",
+        "recordId": "aceite_de_argan_alimentario",
+        "sourceName": "Émile Noël — Huile Vierge d’Argan, uso culinario",
+        "url": "https://www.emilenoel.com/products/huile-vierge-argan-equitable"
+      },
+      "identityReason": "Se delimita expresamente el uso alimentario para evitar confundirlo con preparados cosméticos.",
+      "culinaryForm": "ACEITE_VEGETAL"
+    },
+    {
+      "canonicalKey": "grasa_de_pato",
+      "defaultName": "Grasa de pato",
+      "category": "ACEITES_GRASAS_VINAGRES",
+      "restaurantCategoryKey": "ACEITES_GRASAS_VINAGRES",
+      "aliases": [
+        "Grasa de pato"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FATWORKS_DUCK",
+        "recordId": "grasa_de_pato",
+        "sourceName": "Fatworks — Cage Free Duck Fat",
+        "url": "https://fatworks.com/collections/duck-fat"
+      },
+      "identityReason": "Grasa para cocina diferenciada de carne de pato y de grasa de oca.",
+      "culinaryForm": "GRASA_ANIMAL"
+    },
+    {
+      "canonicalKey": "grasa_de_cordero",
+      "defaultName": "Grasa de cordero",
+      "category": "ACEITES_GRASAS_VINAGRES",
+      "restaurantCategoryKey": "ACEITES_GRASAS_VINAGRES",
+      "aliases": [
+        "Grasa de cordero",
+        "Sebo de cordero"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FATWORKS_LAMB",
+        "recordId": "grasa_de_cordero",
+        "sourceName": "Fatworks — Grass Fed Lamb Tallow",
+        "url": "https://fatworks.com/products/grass-fed-lamb-tallow-8-0z"
+      },
+      "identityReason": "Grasa culinaria separada de cortes cárnicos y del sebo vacuno.",
+      "culinaryForm": "GRASA_ANIMAL"
+    },
+    {
+      "canonicalKey": "vinagre_rojo_de_lias_de_sake",
+      "defaultName": "Vinagre rojo de lías de sake",
+      "category": "ACEITES_GRASAS_VINAGRES",
+      "restaurantCategoryKey": "ACEITES_GRASAS_VINAGRES",
+      "aliases": [
+        "Vinagre rojo de lías de sake",
+        "Akazu"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MAFF_AKAZU",
+        "recordId": "vinagre_rojo_de_lias_de_sake",
+        "sourceName": "MAFF — The Washoku Way, Condiments, página 44",
+        "url": "https://www.maff.go.jp/j/shokusan/gaisyoku/pamphlet/pdf/washoku_english.pdf"
+      },
+      "identityReason": "Elaboración identificada; distinta de vinagre de arroz genérico. Kasuzu no se incorpora como alias exacto sin delimitar su alcance.",
+      "culinaryForm": "VINAGRE"
+    },
+    {
+      "canonicalKey": "vinagre_negro_japones_de_arroz",
+      "defaultName": "Vinagre negro japonés de arroz",
+      "category": "ACEITES_GRASAS_VINAGRES",
+      "restaurantCategoryKey": "ACEITES_GRASAS_VINAGRES",
+      "aliases": [
+        "Vinagre negro japonés de arroz",
+        "Kurozu"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MAFF_KUROZU",
+        "recordId": "vinagre_negro_japones_de_arroz",
+        "sourceName": "MAFF — The Washoku Way, Condiments, página 44",
+        "url": "https://www.maff.go.jp/j/shokusan/gaisyoku/pamphlet/pdf/washoku_english.pdf"
+      },
+      "identityReason": "Tipo identificado de vinagre japonés; no sinónimo de todo vinagre negro ni de Chinkiang.",
+      "culinaryForm": "VINAGRE"
+    },
+    {
+      "canonicalKey": "vinagre_de_miel",
+      "defaultName": "Vinagre de miel",
+      "category": "ACEITES_GRASAS_VINAGRES",
+      "restaurantCategoryKey": "ACEITES_GRASAS_VINAGRES",
+      "aliases": [
+        "Vinagre de miel"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "ABUELO_FELIX_HONEY_VINEGAR",
+        "recordId": "vinagre_de_miel",
+        "sourceName": "El Abuelo Félix — Vinagre de miel",
+        "url": "https://www.elabuelofelix.com/vinagre-de-miel"
+      },
+      "identityReason": "Vinagre cuya materia prima es miel; no mezcla de vinagre con miel ni oximiel.",
+      "culinaryForm": "VINAGRE"
+    }
+  ],
+  "exclusions": [
+    {
+      "candidate": "Canola/colza, aceite de arroz/salvado de arroz y vinagre de alcohol/destilado",
+      "decision": "HISTORICAL_REVIEW",
+      "reason": "Posibles solapamientos anteriores. Se conservan claves y referencias; no nuevas altas por estas denominaciones."
+    },
+    {
+      "candidate": "Ghee y mantequilla clarificada",
+      "decision": "ALREADY_REPRESENTED",
+      "reason": "Ghee ya existe. No se añade otra ficha sin delimitar equivalencia."
+    },
+    {
+      "candidate": "Aceites cosméticos, aceites esenciales y preparados CBD",
+      "decision": "NOT_IMPORTED",
+      "reason": "La identidad se limita a uso culinario documentado."
+    },
+    {
+      "candidate": "Vinagre o condimento de pera y de frambuesa",
+      "decision": "DEFERRED",
+      "reason": "Requieren recuperar evidencia suficiente sobre fermentación y composición."
+    },
+    {
+      "candidate": "Vinagre negro chino y kasuzu genérico",
+      "decision": "DEFERRED",
+      "reason": "No se asumen alias de kurozu y akazu respectivamente."
+    },
+    {
+      "candidate": "Marca, envase, tostado, refinado y certificación",
+      "decision": "GROUPED",
+      "reason": "No se crean variantes automáticas. Se mantienen los registros históricos sin reclasificar."
+    }
+  ]
+}

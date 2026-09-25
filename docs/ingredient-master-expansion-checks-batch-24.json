@@ -1,0 +1,60 @@
+{
+  "date": "2026-09-24",
+  "batchId": "2026-09-24-24",
+  "baseline": 3614,
+  "added": 10,
+  "total": 3624,
+  "remainingTo5000": 1376,
+  "byCategory": {
+    "OTROS": 4,
+    "CREMAS_DULCES": 3,
+    "ENDULZANTES": 3
+  },
+  "byRestaurantFamily": {
+    "REPOSTERIA_AUXILIARES": 10
+  },
+  "byForm": {
+    "GASIFICANTE": 2,
+    "INCLUSION": 2,
+    "CREMA": 2,
+    "COBERTURA_AZUCAR": 3,
+    "GLASEADO": 1
+  },
+  "aliasesAdded": 11,
+  "exclusionGroups": 7,
+  "preservedMasterRows": 3614,
+  "preservedTaxonomyAssignments": 3614,
+  "pendingPreserved": 25,
+  "idempotentBatches": 24,
+  "historicalAuditsUnchanged": true,
+  "backendProjectionMatches": true,
+  "sourceSha256": "d227899c0f4d5048afc827228531e57b63a6bc1536dfe8cf34a72b4d07f728d7",
+  "productionDeployment": false,
+  "databaseWrites": 0,
+  "validation": "Ingredient master OK: 3624 records, 14 categories; valid UTF-8/NFC, names, aliases and identifiers.\n11 consolidated keys preserved; 25 ambiguous records held separately. No duplicate names or shared exact aliases in the selectable source.",
+  "tests": {
+    "importer": {
+      "passed": 9,
+      "log": "tmp/ingredients-batch24-importer-tests.log"
+    },
+    "backend": {
+      "passed": 48,
+      "log": "tmp/ingredients-batch24-backend-tests.log"
+    },
+    "ui": {
+      "passed": 27,
+      "log": "tmp/ingredients-batch24-ui-tests.log"
+    },
+    "totalPassed": 84
+  },
+  "build": {
+    "status": "PASSED",
+    "artifact": "output/ingredients-batch24-build",
+    "bundle": "main.74d9097d.js",
+    "log": "tmp/ingredients-batch24-build.log"
+  },
+  "browser": {
+    "status": "PENDING",
+    "reason": "Verificación visual de lotes 16–24 pendiente; evitar navegador integrado durante el diagnóstico de los cierres de Codex."
+  }
+}

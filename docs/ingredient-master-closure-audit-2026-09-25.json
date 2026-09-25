@@ -1,0 +1,14 @@
+{
+  "total": 3728,
+  "additions": 2624,
+  "alternativeAliases": 626,
+  "batchesVerified": 36,
+  "historicalBaselinesVerified": 36,
+  "categories": 14,
+  "basicNeedsWithExistingRecords": 248,
+  "sourceSha256": "392160acfeff4a4cb5ef0ef4737a4e79ec33dd816faf7ef63a7e7af33106c432",
+  "backendMirrors": "verified",
+  "validation": "Ingredient master OK: 3728 records, 14 categories; valid UTF-8/NFC, names, aliases and identifiers.\n11 consolidated keys preserved; 25 ambiguous records held separately. No duplicate names or shared exact aliases in the selectable source.",
+  "databaseWrites": 0,
+  "scope": "Structural and provenance integrity; not editorial, allergen, visual or database approval."
+}

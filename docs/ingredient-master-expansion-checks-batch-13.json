@@ -1,0 +1,67 @@
+{
+  "date": "2026-09-24",
+  "batchId": "2026-09-24-13",
+  "baseline": 3432,
+  "added": 24,
+  "total": 3456,
+  "remainingTo5000": 1544,
+  "byCategory": {
+    "OTROS": 5,
+    "VERDURAS": 6,
+    "SALSAS": 12,
+    "HIERBAS_ESPECIAS": 1
+  },
+  "byRestaurantFamily": {
+    "LEGUMBRES_PROTEINAS_VEGETALES": 4,
+    "VERDURAS_SETAS_ALGAS": 6,
+    "SALSAS_CONDIMENTOS_BASES": 14
+  },
+  "aliasesAdded": 16,
+  "exclusionGroups": 12,
+  "preservedMasterRows": 3432,
+  "preservedTaxonomyAssignments": 3432,
+  "pendingPreserved": 25,
+  "idempotentBatches": 13,
+  "historicalAuditsUnchanged": true,
+  "backendProjectionMatches": true,
+  "sourceSha256": "2c53c61097dc8176c9d330f32f208b9064d28595f21cb8b4d2b123e52d0add2a",
+  "productionDeployment": false,
+  "databaseWrites": 0,
+  "validation": "Ingredient master OK: 3456 records, 14 categories; valid UTF-8/NFC, names, aliases and identifiers.\n11 consolidated keys preserved; 25 ambiguous records held separately. No duplicate names or shared exact aliases in the selectable source.",
+  "tests": {
+    "importer": 9,
+    "backend": 48,
+    "ui": 27,
+    "total": 84
+  },
+  "build": {
+    "status": "passed",
+    "artifact": "output/ingredients-batch13-build",
+    "bundle": "main.e9b6190e.js",
+    "log": "tmp/ingredients-batch13-build.log"
+  },
+  "browser": {
+    "date": "2026-09-24",
+    "status": "passed",
+    "environment": "Compiled application with empty local API fixtures; writes rejected",
+    "masterCount": 3456,
+    "searches": [
+      {
+        "query": "piel de tofu",
+        "result": "Yuba",
+        "family": "LEGUMBRES_PROTEINAS_VEGETALES"
+      },
+      {
+        "query": "kombu atlantico",
+        "result": "Kombu atlántico",
+        "family": "VERDURAS_SETAS_ALGAS"
+      },
+      {
+        "query": "toban djan",
+        "result": "Doubanjiang",
+        "family": "SALSAS_CONDIMENTOS_BASES"
+      }
+    ],
+    "databaseWrites": 0
+  }
+}

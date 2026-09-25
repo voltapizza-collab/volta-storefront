@@ -1,0 +1,319 @@
+{
+  "schemaVersion": 1,
+  "batchId": "2026-09-24-25",
+  "date": "2026-09-24",
+  "status": "EDITORIAL_REVIEW",
+  "targetTotal": 5000,
+  "policy": "Hortalizas y algas culinarias documentadas. Sin cuotas, combinaciones automáticas ni altas por marca. Contrastar especie, parte comestible y fichas históricas.",
+  "allergenPolicy": "NEEDS_REVIEW e imágenes MISSING. Alérgenos vacíos significa no aprobados, nunca ausencia. Revisar ficha técnica del suministro y posibles trazas. No transferir alegaciones sanitarias.",
+  "sources": {
+    "koppert-salicornia": {
+      "title": "Koppert Cress — Salicornia",
+      "url": "https://www.koppertcress.com/uploads/media/5dbb05589aea7/salicornia-cress-es.pdf",
+      "accessed": "2026-09-24",
+      "notes": "Ficha recuperada: cultivo joven comestible del género Salicornia. No identifica especie; se omite ese dato."
+    },
+    "rhs-agretti": {
+      "title": "RHS — Salsola soda",
+      "url": "https://www.rhs.org.uk/plants/161061/salsola-soda/details",
+      "accessed": "2026-09-24",
+      "notes": "Página recuperada: agretti es una hortaliza utilizada en cocina italiana. Se conserva el nombre botánico empleado por la fuente."
+    },
+    "cip-oca": {
+      "title": "CIP — Oca, Ulluco & Mashua: Oca",
+      "url": "https://cipotato.org/roots-and-tubers/oca-ulluco-mashua/",
+      "accessed": "2026-09-24",
+      "notes": "Contenido indexado: tubérculo de Oxalis tuberosa utilizado cocido o asado. El acceso directo devolvió 403."
+    },
+    "cip-ulluco": {
+      "title": "CIP — Oca, Ulluco & Mashua: Ulluco",
+      "url": "https://cipotato.org/roots-and-tubers/oca-ulluco-mashua/",
+      "accessed": "2026-09-24",
+      "notes": "Contenido indexado: tubérculo de Ullucus tuberosus. Olluco figura en la versión española del CIP; se limita esta ficha al tubérculo."
+    },
+    "cip-mashua": {
+      "title": "CIP — Oca, Ulluco & Mashua: Mashua",
+      "url": "https://cipotato.org/roots-and-tubers/oca-ulluco-mashua/",
+      "accessed": "2026-09-24",
+      "notes": "Contenido indexado: tubérculo de Tropaeolum tuberosum. Se excluyen alegaciones medicinales."
+    },
+    "cip-arracacha": {
+      "title": "CIP — Arracacha",
+      "url": "https://cipotato.org/roots-and-tubers/arracacha/",
+      "accessed": "2026-09-24",
+      "notes": "Página recuperada: raíz culinaria de Arracacia xanthorrhiza. Se agrupan colores; no se importan hojas ni usos alimentarios infantiles."
+    },
+    "cip-yacon": {
+      "title": "CIP — Yacon Syrup: materia prima",
+      "url": "https://www.cipotato.org/artc/cip_crops/1919-Yacon_Syrup.pdf",
+      "accessed": "2026-09-24",
+      "notes": "Contenido indexado del capítulo de materia prima: raíz comestible de Smallanthus sonchifolius. PDF completo no recuperado; no se importa el jarabe ni sus alegaciones."
+    },
+    "rhs-crosne": {
+      "title": "RHS — Stachys affinis",
+      "url": "https://www.rhs.org.uk/plants/52884/stachys-affinis/details",
+      "accessed": "2026-09-24",
+      "notes": "Contenido indexado: Chinese artichoke, crosnes; pequeños tubérculos comestibles de Stachys affinis."
+    },
+    "specialty-nz-spinach": {
+      "title": "Specialty Produce — New Zealand Spinach",
+      "url": "https://specialtyproduce.com/produce/New_Zealand_Spinach_6784.php",
+      "accessed": "2026-09-24",
+      "notes": "Contenido indexado: Tetragonia tetragonioides. Uso culinario contrastado en página recuperada de Vegetables NZ: https://www.vegetables.co.nz/vegetable-a-z/vegetables-a-z/spinach-rengamutukokihi"
+    },
+    "clearspring-kombu": {
+      "title": "Clearspring — Japanese Kombu",
+      "url": "https://www.clearspring.co.uk/products/japanese-kombu-dried-sea-vegetable",
+      "accessed": "2026-09-24",
+      "notes": "Contenido indexado del producto: Laminaria japonica. AlgaeBase la trata como sinónimo de Saccharina japonica: https://admin.algaebase.org/search/species/detail/?sk=10&species_id=1316"
+    },
+    "mext-mozuku": {
+      "title": "MEXT — Food 09037: Okinawa-mozuku",
+      "url": "https://fooddb.mext.go.jp/details/details.pl?ITEM_NO=9_09037_7",
+      "accessed": "2026-09-24",
+      "notes": "Página recuperada de la tabla oficial japonesa: alga Cladosiphon okamuranus, referencia salada y desalada. Se documenta identidad sin importar valores nutricionales."
+    }
+  },
+  "records": [
+    {
+      "canonicalKey": "salicornia",
+      "defaultName": "Salicornia",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Salicornia"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "koppert-salicornia",
+        "recordId": "salicornia",
+        "sourceName": "Koppert Cress — Salicornia",
+        "url": "https://www.koppertcress.com/uploads/media/5dbb05589aea7/salicornia-cress-es.pdf"
+      },
+      "identityReason": "Hortaliza costera, distinta de las algas y de agretti. Se agrupan sus presentaciones comerciales.",
+      "culinaryForm": "HOJA_TALLO"
+    },
+    {
+      "canonicalKey": "agretti",
+      "defaultName": "Agretti",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Agretti"
+      ],
+      "scientificName": "Salsola soda",
+      "allergens": [],
+      "evidence": {
+        "sourceId": "rhs-agretti",
+        "recordId": "agretti",
+        "sourceName": "RHS — Salsola soda",
+        "url": "https://www.rhs.org.uk/plants/161061/salsola-soda/details"
+      },
+      "identityReason": "Identidad botánica diferente de salicornia, hinojo y espinaca.",
+      "culinaryForm": "HOJA_TALLO"
+    },
+    {
+      "canonicalKey": "oca_andina",
+      "defaultName": "Oca andina",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Oca andina",
+        "Oca tubérculo"
+      ],
+      "scientificName": "Oxalis tuberosa",
+      "allergens": [],
+      "evidence": {
+        "sourceId": "cip-oca",
+        "recordId": "oca_andina",
+        "sourceName": "CIP — Oca, Ulluco & Mashua: Oca",
+        "url": "https://cipotato.org/roots-and-tubers/oca-ulluco-mashua/"
+      },
+      "identityReason": "Tubérculo distinto de patata y batata; el calificativo evita confusión con el ave oca.",
+      "culinaryForm": "TUBERCULO"
+    },
+    {
+      "canonicalKey": "ulluco",
+      "defaultName": "Ulluco",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Ulluco",
+        "Olluco"
+      ],
+      "scientificName": "Ullucus tuberosus",
+      "allergens": [],
+      "evidence": {
+        "sourceId": "cip-ulluco",
+        "recordId": "ulluco",
+        "sourceName": "CIP — Oca, Ulluco & Mashua: Ulluco",
+        "url": "https://cipotato.org/roots-and-tubers/oca-ulluco-mashua/"
+      },
+      "identityReason": "Especie culinaria diferente de oca y mashua; colores y tamaños no generan altas.",
+      "culinaryForm": "TUBERCULO"
+    },
+    {
+      "canonicalKey": "mashua",
+      "defaultName": "Mashua",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Mashua"
+      ],
+      "scientificName": "Tropaeolum tuberosum",
+      "allergens": [],
+      "evidence": {
+        "sourceId": "cip-mashua",
+        "recordId": "mashua",
+        "sourceName": "CIP — Oca, Ulluco & Mashua: Mashua",
+        "url": "https://cipotato.org/roots-and-tubers/oca-ulluco-mashua/"
+      },
+      "identityReason": "Tubérculo andino identificado por especie; no se equipara con flores ni hojas de capuchina.",
+      "culinaryForm": "TUBERCULO"
+    },
+    {
+      "canonicalKey": "arracacha",
+      "defaultName": "Arracacha",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Arracacha"
+      ],
+      "scientificName": "Arracacia xanthorrhiza",
+      "allergens": [],
+      "evidence": {
+        "sourceId": "cip-arracacha",
+        "recordId": "arracacha",
+        "sourceName": "CIP — Arracacha",
+        "url": "https://cipotato.org/roots-and-tubers/arracacha/"
+      },
+      "identityReason": "Raíz de especie propia, diferente de zanahoria, chirivía y apionabo.",
+      "culinaryForm": "RAIZ"
+    },
+    {
+      "canonicalKey": "yacon_raiz",
+      "defaultName": "Yacón raíz",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Yacón raíz",
+        "Raíz de yacón"
+      ],
+      "scientificName": "Smallanthus sonchifolius",
+      "allergens": [],
+      "evidence": {
+        "sourceId": "cip-yacon",
+        "recordId": "yacon_raiz",
+        "sourceName": "CIP — Yacon Syrup: materia prima",
+        "url": "https://www.cipotato.org/artc/cip_crops/1919-Yacon_Syrup.pdf"
+      },
+      "identityReason": "Raíz identificada por especie, distinta de topinambur y jícama.",
+      "culinaryForm": "RAIZ"
+    },
+    {
+      "canonicalKey": "crosne",
+      "defaultName": "Crosne",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Crosne",
+        "Alcachofa china"
+      ],
+      "scientificName": "Stachys affinis",
+      "allergens": [],
+      "evidence": {
+        "sourceId": "rhs-crosne",
+        "recordId": "crosne",
+        "sourceName": "RHS — Stachys affinis",
+        "url": "https://www.rhs.org.uk/plants/52884/stachys-affinis/details"
+      },
+      "identityReason": "Tubérculo de especie propia, diferente de alcachofa y topinambur.",
+      "culinaryForm": "TUBERCULO"
+    },
+    {
+      "canonicalKey": "espinaca_de_nueva_zelanda",
+      "defaultName": "Espinaca de Nueva Zelanda",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Espinaca de Nueva Zelanda"
+      ],
+      "scientificName": "Tetragonia tetragonioides",
+      "allergens": [],
+      "evidence": {
+        "sourceId": "specialty-nz-spinach",
+        "recordId": "espinaca_de_nueva_zelanda",
+        "sourceName": "Specialty Produce — New Zealand Spinach",
+        "url": "https://specialtyproduce.com/produce/New_Zealand_Spinach_6784.php"
+      },
+      "identityReason": "Verdura de hoja de especie distinta de espinaca común, de Malabar y de agua.",
+      "culinaryForm": "HOJA_TALLO"
+    },
+    {
+      "canonicalKey": "kombu_japones",
+      "defaultName": "Kombu japonés",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Kombu japonés"
+      ],
+      "scientificName": "Saccharina japonica",
+      "allergens": [],
+      "evidence": {
+        "sourceId": "clearspring-kombu",
+        "recordId": "kombu_japones",
+        "sourceName": "Clearspring — Japanese Kombu",
+        "url": "https://www.clearspring.co.uk/products/japanese-kombu-dried-sea-vegetable"
+      },
+      "identityReason": "Especie distinta de Kombu atlántico (Laminaria ochroleuca) y Kombu de azúcar (Saccharina latissima) existentes. No se crea el alias genérico kombu.",
+      "culinaryForm": "ALGA"
+    },
+    {
+      "canonicalKey": "mozuku_de_okinawa",
+      "defaultName": "Mozuku de Okinawa",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Mozuku de Okinawa"
+      ],
+      "scientificName": "Cladosiphon okamuranus",
+      "allergens": [],
+      "evidence": {
+        "sourceId": "mext-mozuku",
+        "recordId": "mozuku_de_okinawa",
+        "sourceName": "MEXT — Food 09037: Okinawa-mozuku",
+        "url": "https://fooddb.mext.go.jp/details/details.pl?ITEM_NO=9_09037_7"
+      },
+      "identityReason": "Alga de especie propia; no se extiende al término mozuku sin calificativo ni se separa por salado o secado.",
+      "culinaryForm": "ALGA"
+    }
+  ],
+  "exclusions": [
+    {
+      "candidate": "Ahipa",
+      "decision": "DEFERRED",
+      "reason": "La fuente CIP abarca Pachyrhizus spp. y puede solaparse con Jícama; se requiere delimitar especie antes de otra alta.",
+      "source": "https://cipotato.org/genebankcip/process/ahipa/"
+    },
+    {
+      "candidate": "Salsifí negro o escorzonera",
+      "decision": "DEFERRED",
+      "reason": "Revisar primero el alcance de la ficha histórica Salsifí."
+    },
+    {
+      "candidate": "Kombu y mozuku sin calificativo",
+      "decision": "AMBIGUOUS",
+      "reason": "No se crean alias genéricos que abarquen especies diferentes."
+    },
+    {
+      "candidate": "Kombu atlántico y kombu de azúcar",
+      "decision": "ALREADY_REPRESENTED",
+      "reason": "Se conservan las fichas existentes de Laminaria ochroleuca y Saccharina latissima."
+    },
+    {
+      "candidate": "Colores, calibres, marcas y formatos de conservación",
+      "decision": "GROUPED",
+      "reason": "No generan identidades nuevas; salicornia se limita al género documentado y yacón a la raíz."
+    }
+  ]
+}

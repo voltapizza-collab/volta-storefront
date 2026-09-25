@@ -1,0 +1,59 @@
+{
+  "date": "2026-09-24",
+  "batchId": "2026-09-24-30",
+  "baseline": 3675,
+  "added": 8,
+  "total": 3683,
+  "remainingTo5000": 1317,
+  "byCategory": {
+    "OTROS": 8
+  },
+  "byRestaurantFamily": {
+    "PANES_MASAS_HARINAS": 7,
+    "REPOSTERIA_AUXILIARES": 1
+  },
+  "byForm": {
+    "ALMIDON": 4,
+    "ALMIDON_FERMENTADO": 1,
+    "HARINA": 1,
+    "HARINA_MALTEADA": 1,
+    "FIBRA": 1
+  },
+  "aliasesAdded": 6,
+  "exclusionGroups": 5,
+  "preservedMasterRows": 3675,
+  "preservedTaxonomyAssignments": 3675,
+  "pendingPreserved": 25,
+  "idempotentBatches": 30,
+  "historicalAuditsUnchanged": true,
+  "backendProjectionMatches": true,
+  "sourceSha256": "831358aa5cd310ace46e6da621521ad4b5e8cdd4bbc334fb8d6d9fda93b03b19",
+  "productionDeployment": false,
+  "databaseWrites": 0,
+  "validation": "Ingredient master OK: 3683 records, 14 categories; valid UTF-8/NFC, names, aliases and identifiers.\n11 consolidated keys preserved; 25 ambiguous records held separately. No duplicate names or shared exact aliases in the selectable source.",
+  "tests": {
+    "importer": {
+      "passed": 9,
+      "log": "tmp/ingredients-batch30-importer-tests.log"
+    },
+    "backend": {
+      "passed": 48,
+      "log": "tmp/ingredients-batch30-backend-tests.log"
+    },
+    "ui": {
+      "passed": 27,
+      "log": "tmp/ingredients-batch30-ui-tests.log"
+    },
+    "totalPassed": 84
+  },
+  "build": {
+    "status": "PASSED",
+    "artifact": "output/ingredients-batch30-build",
+    "bundle": "main.cc88cdea.js",
+    "log": "tmp/ingredients-batch30-build.log"
+  },
+  "browser": {
+    "status": "PENDING",
+    "reason": "Verificación visual de lotes 16–30 pendiente; evitar navegador integrado durante el diagnóstico de los cierres de Codex."
+  }
+}

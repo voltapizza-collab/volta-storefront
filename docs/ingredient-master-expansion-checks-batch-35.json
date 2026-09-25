@@ -1,0 +1,75 @@
+{
+  "date": "2026-09-25",
+  "batchId": "2026-09-25-35",
+  "baseline": 3700,
+  "added": 14,
+  "total": 3714,
+  "remainingTo5000": 1286,
+  "byCategory": {
+    "OTROS": 14
+  },
+  "byRestaurantFamily": {
+    "PASTAS_ARROCES_CEREALES": 14
+  },
+  "byForm": {
+    "PASTA_REGIONAL": 4,
+    "PASTA_RELLENA": 7,
+    "PASTA_PRECOCIDA": 1,
+    "PASTA_PARA_FIDEUA": 1,
+    "MASA_DE_PAN_PARA_COCCION": 1
+  },
+  "aliasesAdded": 8,
+  "exclusionGroups": 2,
+  "preservedMasterRows": 3700,
+  "preservedTaxonomyAssignments": 3700,
+  "pendingPreserved": 25,
+  "idempotentBatches": 35,
+  "historicalAuditsUnchanged": true,
+  "backendProjectionMatches": true,
+  "sourceSha256": "6f355a68a0de6c414c252984752f2f0736ecfb56ae37e789701c6306b8fd5b31",
+  "productionDeployment": false,
+  "databaseWrites": 0,
+  "validation": "Ingredient master OK: 3714 records, 14 categories; valid UTF-8/NFC, names, aliases and identifiers.\n11 consolidated keys preserved; 25 ambiguous records held separately. No duplicate names or shared exact aliases in the selectable source.",
+  "tests": [
+    {
+      "name": "ui",
+      "passed": 30,
+      "failed": 0,
+      "log": "tmp/ingredients-batch35-ui-tests.log",
+      "sha256": "dc42b4590964a53c3b4ba2254221d826b66f90c6d1f7c2e834dc14cfb4e27bea"
+    },
+    {
+      "name": "backend",
+      "passed": 42,
+      "failed": 0,
+      "log": "tmp/ingredients-batch35-backend-tests.log",
+      "sha256": "88f3cad5c5e7330ac1c43494787bbd3952170702ade4928ce5a9a3c22617fce9"
+    },
+    {
+      "name": "importer",
+      "passed": 11,
+      "failed": 0,
+      "log": "tmp/ingredients-batch35-importer-tests.log",
+      "sha256": "7cdc158903ee764f2c48d73aae83cd6e40292e3e91f6bae9cfdd9c15a4a94362"
+    }
+  ],
+  "testsPassed": 83,
+  "build": {
+    "passed": true,
+    "main": "/static/js/main.8b6edeb0.js",
+    "log": "tmp/ingredients-batch35-build.log",
+    "sha256": "963b4dda4757c8694feb19b520cd9a00e0566fc54e1c2d1f96bef1e954152e0e"
+  },
+  "coverage": {
+    "referenceTotal": 248,
+    "located": 248,
+    "scopeReview": 0,
+    "newIdentitiesSearchable": 14,
+    "queriesChecked": 22,
+    "exhaustive": false
+  },
+  "historicalDocumentsUnchanged": true,
+  "visualVerification": false,
+  "databaseIntegrationTest": false,
+  "localDocumentationLinksValid": true
+}

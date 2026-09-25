@@ -1,0 +1,321 @@
+{
+  "date": "2026-09-25",
+  "legacyEvidence": {
+    "commit": "07eb1d6d4e87703c7a33a1cdda64a8f15503b01d",
+    "path": "src/components/GlobalManager/IngredientsModule.jsx",
+    "blobSha256": "3af4dc0858cffa43970c69e4d79d04cbe73963a2092104a541d297de9fd0660c",
+    "excerpts": [
+      {
+        "line": 54,
+        "text": "    { name: \"Atún\", allergens: [\"FISH\"] },"
+      },
+      {
+        "line": 55,
+        "text": "    { name: \"Anchoas\", allergens: [\"FISH\"] },"
+      },
+      {
+        "line": 688,
+        "text": "Aceitunas con hueso"
+      },
+      {
+        "line": 1043,
+        "text": "Crema de leche|MILK"
+      },
+      {
+        "line": 1293,
+        "text": "Fibra de achicoria"
+      },
+      {
+        "line": 1322,
+        "text": "Nata doble|MILK"
+      }
+    ]
+  },
+  "revisions": [
+    {
+      "commit": "55c79243a80248576eee8812129cde5673d17f11",
+      "path": "src/data/ingredientMasterSource.json",
+      "blobSha256": "3d544e1a5fdc93380ec1011b0df23f51d80d9422eb896b9d0d6625d690db6fcd",
+      "records": [
+        {
+          "canonicalKey": "fibra_de_achicoria",
+          "sourceCategory": "OTROS",
+          "category": "OTROS",
+          "semanticCategoryKey": "other",
+          "defaultName": "Fibra de achicoria",
+          "allergens": [],
+          "translations": {
+            "es": "Fibra de achicoria"
+          },
+          "aliases": [
+            "Fibra de achicoria"
+          ],
+          "semanticStatus": "NEEDS_REVIEW",
+          "imageStatus": "MISSING",
+          "source": "LEGACY_INGREDIENTS_BASE"
+        },
+        {
+          "canonicalKey": "nata_doble",
+          "sourceCategory": "OTROS",
+          "category": "OTROS",
+          "semanticCategoryKey": "other",
+          "defaultName": "Nata doble",
+          "allergens": [
+            "LACTOSE"
+          ],
+          "translations": {
+            "es": "Nata doble"
+          },
+          "aliases": [
+            "Nata doble"
+          ],
+          "semanticStatus": "NEEDS_REVIEW",
+          "imageStatus": "MISSING",
+          "source": "LEGACY_INGREDIENTS_BASE"
+        },
+        {
+          "canonicalKey": "anchoas",
+          "sourceCategory": "PESCADOS_Y_MARISCOS",
+          "category": "PESCADOS_Y_MARISCOS",
+          "semanticCategoryKey": "seafood",
+          "defaultName": "Anchoas",
+          "allergens": [
+            "FISH"
+          ],
+          "translations": {
+            "es": "Anchoas"
+          },
+          "aliases": [
+            "Anchoas"
+          ],
+          "semanticStatus": "NEEDS_REVIEW",
+          "imageStatus": "MISSING",
+          "source": "LEGACY_INGREDIENTS_BASE"
+        },
+        {
+          "canonicalKey": "at_n",
+          "sourceCategory": "PESCADOS_Y_MARISCOS",
+          "category": "PESCADOS_Y_MARISCOS",
+          "semanticCategoryKey": "seafood",
+          "defaultName": "At�n",
+          "allergens": [
+            "FISH"
+          ],
+          "translations": {
+            "es": "At�n"
+          },
+          "aliases": [
+            "At�n"
+          ],
+          "semanticStatus": "NEEDS_REVIEW",
+          "imageStatus": "MISSING",
+          "source": "LEGACY_INGREDIENTS_BASE"
+        },
+        {
+          "canonicalKey": "crema_de_leche",
+          "sourceCategory": "SALSAS_CREMAS",
+          "category": "SALSAS",
+          "semanticCategoryKey": "sauces",
+          "defaultName": "Crema de leche",
+          "allergens": [
+            "LACTOSE"
+          ],
+          "translations": {
+            "es": "Crema de leche"
+          },
+          "aliases": [
+            "Crema de leche"
+          ],
+          "semanticStatus": "NEEDS_REVIEW",
+          "imageStatus": "MISSING",
+          "source": "LEGACY_INGREDIENTS_BASE"
+        },
+        {
+          "canonicalKey": "tomate",
+          "sourceCategory": "SALSAS_CREMAS",
+          "category": "SALSAS",
+          "semanticCategoryKey": "sauces",
+          "defaultName": "Tomate",
+          "allergens": [],
+          "translations": {
+            "es": "Tomate"
+          },
+          "aliases": [
+            "Tomate"
+          ],
+          "semanticStatus": "NEEDS_REVIEW",
+          "imageStatus": "MISSING",
+          "source": "LEGACY_INGREDIENTS_BASE"
+        },
+        {
+          "canonicalKey": "aceitunas_con_hueso",
+          "sourceCategory": "VERDURAS",
+          "category": "VERDURAS",
+          "semanticCategoryKey": "vegetables",
+          "defaultName": "Aceitunas con hueso",
+          "allergens": [],
+          "translations": {
+            "es": "Aceitunas con hueso"
+          },
+          "aliases": [
+            "Aceitunas con hueso"
+          ],
+          "semanticStatus": "NEEDS_REVIEW",
+          "imageStatus": "MISSING",
+          "source": "LEGACY_INGREDIENTS_BASE"
+        }
+      ]
+    },
+    {
+      "commit": "5756ac693b5c58a94b20bb82796a254a22edb6e3",
+      "path": "src/data/ingredientMasterSource.json",
+      "blobSha256": "cf317589e5e84b16ffa00348ca3fb1c5fb9963dbc041822ecce15a56a54e8ba4",
+      "records": [
+        {
+          "canonicalKey": "fibra_de_achicoria",
+          "sourceCategory": "OTROS",
+          "category": "OTROS",
+          "semanticCategoryKey": "other",
+          "defaultName": "Fibra de achicoria",
+          "allergens": [],
+          "translations": {
+            "es": "Fibra de achicoria"
+          },
+          "aliases": [
+            "Fibra de achicoria"
+          ],
+          "semanticStatus": "NEEDS_REVIEW",
+          "imageStatus": "MISSING",
+          "source": "LEGACY_INGREDIENTS_BASE"
+        },
+        {
+          "canonicalKey": "nata_doble",
+          "sourceCategory": "OTROS",
+          "category": "OTROS",
+          "semanticCategoryKey": "other",
+          "defaultName": "Nata doble",
+          "allergens": [
+            "LACTOSE"
+          ],
+          "translations": {
+            "es": "Nata doble"
+          },
+          "aliases": [
+            "Nata doble"
+          ],
+          "semanticStatus": "NEEDS_REVIEW",
+          "imageStatus": "MISSING",
+          "source": "LEGACY_INGREDIENTS_BASE"
+        },
+        {
+          "canonicalKey": "anchoas",
+          "sourceCategory": "PESCADOS_Y_MARISCOS",
+          "category": "PESCADOS_Y_MARISCOS",
+          "semanticCategoryKey": "seafood",
+          "defaultName": "Anchoas",
+          "allergens": [
+            "FISH"
+          ],
+          "translations": {
+            "es": "Anchoas"
+          },
+          "aliases": [
+            "Anchoas"
+          ],
+          "semanticStatus": "NEEDS_REVIEW",
+          "imageStatus": "MISSING",
+          "source": "LEGACY_INGREDIENTS_BASE"
+        },
+        {
+          "canonicalKey": "at_n",
+          "sourceCategory": "PESCADOS_Y_MARISCOS",
+          "category": "PESCADOS_Y_MARISCOS",
+          "semanticCategoryKey": "seafood",
+          "defaultName": "At�n",
+          "allergens": [
+            "FISH"
+          ],
+          "translations": {
+            "es": "At�n"
+          },
+          "aliases": [
+            "At�n"
+          ],
+          "semanticStatus": "NEEDS_REVIEW",
+          "imageStatus": "MISSING",
+          "source": "LEGACY_INGREDIENTS_BASE"
+        },
+        {
+          "canonicalKey": "crema_de_leche",
+          "sourceCategory": "SALSAS_CREMAS",
+          "category": "SALSAS",
+          "semanticCategoryKey": "sauces",
+          "defaultName": "Crema de leche",
+          "allergens": [
+            "LACTOSE"
+          ],
+          "translations": {
+            "es": "Crema de leche"
+          },
+          "aliases": [
+            "Crema de leche"
+          ],
+          "semanticStatus": "NEEDS_REVIEW",
+          "imageStatus": "MISSING",
+          "source": "LEGACY_INGREDIENTS_BASE"
+        },
+        {
+          "canonicalKey": "tomate",
+          "sourceCategory": "SALSAS_CREMAS",
+          "category": "SALSAS",
+          "semanticCategoryKey": "sauces",
+          "defaultName": "Tomate",
+          "allergens": [],
+          "translations": {
+            "es": "Tomate"
+          },
+          "aliases": [
+            "Tomate"
+          ],
+          "semanticStatus": "NEEDS_REVIEW",
+          "imageStatus": "MISSING",
+          "source": "LEGACY_INGREDIENTS_BASE"
+        },
+        {
+          "canonicalKey": "aceitunas_con_hueso",
+          "sourceCategory": "VERDURAS",
+          "category": "VERDURAS",
+          "semanticCategoryKey": "vegetables",
+          "defaultName": "Aceitunas con hueso",
+          "allergens": [],
+          "translations": {
+            "es": "Aceitunas con hueso"
+          },
+          "aliases": [
+            "Aceitunas con hueso"
+          ],
+          "semanticStatus": "NEEDS_REVIEW",
+          "imageStatus": "MISSING",
+          "source": "LEGACY_INGREDIENTS_BASE"
+        }
+      ]
+    }
+  ],
+  "fdc": {
+    "file": "output/ingredient-expansion/sources/usda-sr-legacy-2018/FoodData_Central_sr_legacy_food_csv_2018-04/food.csv",
+    "sha256": "de8b0390058db4f102368c9fbdfde144790b480ff4cb0507c0e060ef99805dee",
+    "records": [
+      {
+        "id": "173823",
+        "description": "Veal, loin, separable lean and fat, raw",
+        "line": "\"173823\",\"sr_legacy_food\",\"Veal, loin, separable lean and fat, raw\",\"17\",\"2019-04-01\""
+      },
+      {
+        "id": "170839",
+        "description": "Beef, rib eye steak/roast, boneless, lip-on, separable lean only, trimmed to 1/8\" fat, all grades, raw",
+        "line": "\"170839\",\"sr_legacy_food\",\"Beef, rib eye steak/roast, boneless, lip-on, separable lean only, trimmed to 1/8\"\" fat, all grades, raw\",\"13\",\"2019-04-01\""
+      }
+    ]
+  },
+  "conclusion": "El historial recuperado contiene listas de nombres y alérgenos; no aporta proveedor, SKU, porcentaje graso ni elaboración para las siete fichas antiguas. No permite atribuirlas a una formulación concreta. El lomo de ternera sí tiene procedencia USDA, y las aceitunas de variedad están documentadas en el lote 15."
+}

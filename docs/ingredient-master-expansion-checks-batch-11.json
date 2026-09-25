@@ -1,0 +1,47 @@
+{
+  "date": "2026-09-24",
+  "batchId": "2026-09-24-11",
+  "baseline": 3361,
+  "added": 33,
+  "total": 3394,
+  "remainingTo5000": 1606,
+  "byCategory": {
+    "OTROS": 21,
+    "SALSAS": 12
+  },
+  "preservedMasterRows": 3361,
+  "preservedTaxonomyAssignments": 3361,
+  "pendingPreserved": 25,
+  "sourceRowsVerifiedAgainstFdcCache": 8,
+  "idempotentBatches": 11,
+  "historicalAuditsUnchanged": true,
+  "sourceSha256": "b66f0355b488305c2e0358302cd57390172531d7317e6207367e8d0801ea60f8",
+  "productionDeployment": false,
+  "databaseWrites": 0,
+  "validation": "Ingredient master OK: 3394 records, 14 categories; valid UTF-8/NFC, names, aliases and identifiers.\n11 consolidated keys preserved; 25 ambiguous records held separately. No duplicate names or shared exact aliases in the selectable source.",
+  "tests": {
+    "importer": 9,
+    "backend": 42,
+    "ui": 27,
+    "total": 78
+  },
+  "build": {
+    "status": "passed",
+    "artifact": "output/ingredients-batch11-build",
+    "log": "tmp/ingredients-batch11-build.log"
+  },
+  "browser": {
+    "date": "2026-09-24",
+    "status": "passed",
+    "environment": "Compiled application with empty local API fixtures; writes rejected",
+    "masterCount": 3394,
+    "query": "kefir",
+    "results": [
+      "Kéfir de leche natural",
+      "Kéfir de cabra",
+      "Kéfir de oveja"
+    ],
+    "family": "LACTEOS_HUEVOS",
+    "databaseWrites": 0
+  }
+}

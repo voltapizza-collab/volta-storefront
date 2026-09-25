@@ -1,0 +1,367 @@
+{
+  "schemaVersion": 1,
+  "batchId": "2026-09-25-35",
+  "date": "2026-09-25",
+  "status": "EDITORIAL_REVIEW",
+  "targetTotal": 5000,
+  "policy": "Continuar expansión por indicación del usuario; equivalencias históricas al final. Pastas regionales y rellenas para uso como ingredientes, sin platos terminados ni multiplicación por envase o marca.",
+  "allergenPolicy": "NEEDS_REVIEW e imágenes MISSING. Alérgenos vacíos significa no aprobados, nunca ausencia. Revisar ficha técnica de suministro y trazas; pescado y leche requieren especial atención en estas identidades.",
+  "sources": {
+    "sardegna-pastas": {
+      "title": "SardegnaTurismo — Hechas a mano, como en el pasado",
+      "url": "https://www.sardegnaturismo.it/es/hechas-mano-como-en-el-pasado",
+      "accessed": "2026-09-25",
+      "notes": "Contenido indexado oficial recuperado; acceso directo bloqueado por robots."
+    },
+    "sardegna-culurgiones": {
+      "title": "SardegnaTurismo — Los sabrosos culurgiones",
+      "url": "https://www.sardegnaturismo.it/es/rutas/los-sabrosos-culurgiones",
+      "accessed": "2026-09-25",
+      "notes": "Contenido indexado oficial recuperado; acceso directo bloqueado por robots."
+    },
+    "lombardia-pizzoccheri": {
+      "title": "Regione Lombardia — Pizzoccheri della Valtellina",
+      "url": "https://www.buonalombardia.regione.lombardia.it/wps/portal/site/buonalombardia/DettaglioRedazionale/ricette/primi-piatti/pizzoccheri-della-valtellina",
+      "accessed": "2026-09-25",
+      "notes": "Página oficial abierta y recuperada; se utiliza el apartado de pasta, no la receta terminada."
+    },
+    "garofalo-scialatielli": {
+      "title": "Garofalo — Formati speciali, Scialatielli",
+      "url": "https://shop.pastagarofalo.it/it/categorie/formati-speciali/page-3/",
+      "accessed": "2026-09-25",
+      "notes": "Catálogo del fabricante abierto; registro de Scialatielli también recuperado en el resultado indexado."
+    },
+    "toscana-testaroli": {
+      "title": "Visit Tuscany — Testaroli de Lunigiana",
+      "url": "https://www.visittuscany.com/es/sabores/testaroli-de-lunigiana/",
+      "accessed": "2026-09-25",
+      "notes": "Contenido indexado del portal oficial recuperado; documenta la base comercializada al vacío."
+    },
+    "gallo-fideua": {
+      "title": "Pastas Gallo — Fideuá",
+      "url": "https://www.pastasgallo.es/productos/fideua/",
+      "accessed": "2026-09-25",
+      "notes": "Página del fabricante abierta y recuperada; explica el fideo específico en sus preguntas frecuentes."
+    },
+    "fontana-anolini-carne": {
+      "title": "Pastificio Fontana — Anolini di carne",
+      "url": "https://www.pastificiofontana.it/anolini-carne/",
+      "accessed": "2026-09-25",
+      "notes": "Ficha identificada en resultados indexados del fabricante y catálogo; apertura directa devolvió 502."
+    },
+    "fontana-anolini-queso": {
+      "title": "Pastificio Fontana — Anolini ai formaggi",
+      "url": "https://www.pastificiofontana.it/anolini-formaggio/",
+      "accessed": "2026-09-25",
+      "notes": "Ficha e ingredientes recuperados en contenido indexado del fabricante; apertura directa devolvió 502."
+    },
+    "fontana-tortellini": {
+      "title": "Pastificio Fontana — Tortellini di carne",
+      "url": "https://www.pastificiofontana.it/tortellini-carne/",
+      "accessed": "2026-09-25",
+      "notes": "Ficha e ingredientes recuperados en contenido indexado del fabricante."
+    },
+    "fontana-margherite": {
+      "title": "Pastificio Fontana — Margherite ai funghi",
+      "url": "https://www.pastificiofontana.it/margherite-funghi/",
+      "accessed": "2026-09-25",
+      "notes": "Ficha e ingredientes recuperados en contenido indexado del fabricante; apertura directa agotó tiempo."
+    },
+    "fontana-ravioli-salmon": {
+      "title": "Pastificio Fontana — Ravioli al salmone",
+      "url": "https://www.pastificiofontana.it/ravioli-salmone/",
+      "accessed": "2026-09-25",
+      "notes": "Ficha e ingredientes recuperados en contenido indexado del fabricante; apertura directa fallida."
+    },
+    "fontana-caramelle": {
+      "title": "Pastificio Fontana — Spinach and ricotta caramelle",
+      "url": "https://www.pastificiofontana.it/caramelle-ricotta-spinaci/?lang=en",
+      "accessed": "2026-09-25",
+      "notes": "Ficha inglesa e ingredientes recuperados en contenido indexado del fabricante; la apertura de la ficha italiana agotó tiempo."
+    },
+    "pinuccio-pisarei": {
+      "title": "Trattoria da Pinuccio — Pisarei e fasö",
+      "url": "https://www.dapinuccio.it/sito/new-outdoor-area-3/",
+      "accessed": "2026-09-25",
+      "notes": "Receta de elaboración propia recuperada en contenido indexado; el catálogo de Pastificio Fontana también enumera Pisarei como producto independiente."
+    }
+  },
+  "records": [
+    {
+      "canonicalKey": "pasta_fregola",
+      "defaultName": "Pasta fregola",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta fregola",
+        "Fregola",
+        "Fregula"
+      ],
+      "allergens": [],
+      "culinaryForm": "PASTA_REGIONAL",
+      "evidence": {
+        "sourceId": "sardegna-pastas",
+        "recordId": "pasta_fregola",
+        "sourceName": "SardegnaTurismo — Hechas a mano, como en el pasado",
+        "url": "https://www.sardegnaturismo.it/es/hechas-mano-como-en-el-pasado"
+      },
+      "identityReason": "Pasta de sémola en gránulos con identidad regional documentada; no se equipara a cuscús ni a pasta orzo. Se omiten tamaños, tostado y platos con marisco."
+    },
+    {
+      "canonicalKey": "pasta_lorighittas",
+      "defaultName": "Pasta lorighittas",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta lorighittas",
+        "Lorighittas"
+      ],
+      "allergens": [],
+      "culinaryForm": "PASTA_REGIONAL",
+      "evidence": {
+        "sourceId": "sardegna-pastas",
+        "recordId": "pasta_lorighittas",
+        "sourceName": "SardegnaTurismo — Hechas a mano, como en el pasado",
+        "url": "https://www.sardegnaturismo.it/es/hechas-mano-como-en-el-pasado"
+      },
+      "identityReason": "Pasta de sémola formada en anillos trenzados; formato propio, sin convertir la salsa de acompañamiento en ingrediente de la ficha."
+    },
+    {
+      "canonicalKey": "culurgiones_de_patata_queso_y_menta",
+      "defaultName": "Culurgiones de patata, queso y menta",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Culurgiones de patata, queso y menta"
+      ],
+      "allergens": [],
+      "culinaryForm": "PASTA_RELLENA",
+      "evidence": {
+        "sourceId": "sardegna-culurgiones",
+        "recordId": "culurgiones_de_patata_queso_y_menta",
+        "sourceName": "SardegnaTurismo — Los sabrosos culurgiones",
+        "url": "https://www.sardegnaturismo.it/es/rutas/los-sabrosos-culurgiones"
+      },
+      "identityReason": "Pasta rellena con cierre característico y relleno de patata, queso y menta. No representa todos los rellenos ni otorga certificación de origen."
+    },
+    {
+      "canonicalKey": "pasta_pizzoccheri_de_trigo_sarraceno",
+      "defaultName": "Pasta pizzoccheri de trigo sarraceno",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta pizzoccheri de trigo sarraceno",
+        "Pizzoccheri"
+      ],
+      "allergens": [],
+      "culinaryForm": "PASTA_REGIONAL",
+      "evidence": {
+        "sourceId": "lombardia-pizzoccheri",
+        "recordId": "pasta_pizzoccheri_de_trigo_sarraceno",
+        "sourceName": "Regione Lombardia — Pizzoccheri della Valtellina",
+        "url": "https://www.buonalombardia.regione.lombardia.it/wps/portal/site/buonalombardia/DettaglioRedazionale/ricette/primi-piatti/pizzoccheri-della-valtellina"
+      },
+      "identityReason": "Pasta de trigo y trigo sarraceno comercializada sin condimentar; distinta del plato con patatas y queso y de los fideos soba. No se fija una proporción universal."
+    },
+    {
+      "canonicalKey": "pasta_scialatielli",
+      "defaultName": "Pasta scialatielli",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta scialatielli",
+        "Scialatielli"
+      ],
+      "allergens": [],
+      "culinaryForm": "PASTA_REGIONAL",
+      "evidence": {
+        "sourceId": "garofalo-scialatielli",
+        "recordId": "pasta_scialatielli",
+        "sourceName": "Garofalo — Formati speciali, Scialatielli",
+        "url": "https://shop.pastagarofalo.it/it/categorie/formati-speciali/page-3/"
+      },
+      "identityReason": "Formato de pasta comercializado como ingrediente sin salsa. Se conserva la identidad del formato sin importar marca, peso ni certificaciones."
+    },
+    {
+      "canonicalKey": "testaroli_sin_salsa",
+      "defaultName": "Testaroli sin salsa",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Testaroli sin salsa",
+        "Testaroli"
+      ],
+      "allergens": [],
+      "culinaryForm": "PASTA_PRECOCIDA",
+      "evidence": {
+        "sourceId": "toscana-testaroli",
+        "recordId": "testaroli_sin_salsa",
+        "sourceName": "Visit Tuscany — Testaroli de Lunigiana",
+        "url": "https://www.visittuscany.com/es/sabores/testaroli-de-lunigiana/"
+      },
+      "identityReason": "Masa cocida en testo vendida como base para recalentar y condimentar; no se incluye pesto, queso ni salsa. Elaboración distinta de las láminas de lasaña."
+    },
+    {
+      "canonicalKey": "fideos_para_fideua",
+      "defaultName": "Fideos para fideuá",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Fideos para fideuá",
+        "Pasta para fideuá"
+      ],
+      "allergens": [],
+      "culinaryForm": "PASTA_PARA_FIDEUA",
+      "evidence": {
+        "sourceId": "gallo-fideua",
+        "recordId": "fideos_para_fideua",
+        "sourceName": "Pastas Gallo — Fideuá",
+        "url": "https://www.pastasgallo.es/productos/fideua/"
+      },
+      "identityReason": "Fideo específico corto y grueso para fideuá. La ficha representa solo pasta; no incluye caldo, pescado o marisco ni convierte el plato preparado en ingrediente."
+    },
+    {
+      "canonicalKey": "anolini_de_carne",
+      "defaultName": "Anolini de carne",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Anolini de carne"
+      ],
+      "allergens": [],
+      "culinaryForm": "PASTA_RELLENA",
+      "evidence": {
+        "sourceId": "fontana-anolini-carne",
+        "recordId": "anolini_de_carne",
+        "sourceName": "Pastificio Fontana — Anolini di carne",
+        "url": "https://www.pastificiofontana.it/anolini-carne/"
+      },
+      "identityReason": "Pasta rellena de carne en formato anolini, documentada como producto separado de tortellini. Se omiten mezcla exacta de carnes y caldo de servicio."
+    },
+    {
+      "canonicalKey": "anolini_de_queso",
+      "defaultName": "Anolini de queso",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Anolini de queso"
+      ],
+      "allergens": [],
+      "culinaryForm": "PASTA_RELLENA",
+      "evidence": {
+        "sourceId": "fontana-anolini-queso",
+        "recordId": "anolini_de_queso",
+        "sourceName": "Pastificio Fontana — Anolini ai formaggi",
+        "url": "https://www.pastificiofontana.it/anolini-formaggio/"
+      },
+      "identityReason": "Formato anolini con relleno de quesos, distinto de la variante de carne. La selección de quesos del fabricante no se considera una fórmula universal."
+    },
+    {
+      "canonicalKey": "tortellini_de_carne",
+      "defaultName": "Tortellini de carne",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Tortellini de carne"
+      ],
+      "allergens": [],
+      "culinaryForm": "PASTA_RELLENA",
+      "evidence": {
+        "sourceId": "fontana-tortellini",
+        "recordId": "tortellini_de_carne",
+        "sourceName": "Pastificio Fontana — Tortellini di carne",
+        "url": "https://www.pastificiofontana.it/tortellini-carne/"
+      },
+      "identityReason": "Formato tortellini de pasta al huevo con relleno cárnico. Se registra el ingrediente sin salsa y sin fijar porcentajes ni especies de carne universales."
+    },
+    {
+      "canonicalKey": "pasta_margherite_de_setas",
+      "defaultName": "Pasta margherite de setas",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta margherite de setas"
+      ],
+      "allergens": [],
+      "culinaryForm": "PASTA_RELLENA",
+      "evidence": {
+        "sourceId": "fontana-margherite",
+        "recordId": "pasta_margherite_de_setas",
+        "sourceName": "Pastificio Fontana — Margherite ai funghi",
+        "url": "https://www.pastificiofontana.it/margherite-funghi/"
+      },
+      "identityReason": "Pasta rellena en formato margherite con setas y base láctea; no es una pizza ni un relleno puro de setas. Revisar composición de cada suministro."
+    },
+    {
+      "canonicalKey": "ravioli_de_ricotta_y_salmon",
+      "defaultName": "Ravioli de ricotta y salmón",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Ravioli de ricotta y salmón"
+      ],
+      "allergens": [],
+      "culinaryForm": "PASTA_RELLENA",
+      "evidence": {
+        "sourceId": "fontana-ravioli-salmon",
+        "recordId": "ravioli_de_ricotta_y_salmon",
+        "sourceName": "Pastificio Fontana — Ravioli al salmone",
+        "url": "https://www.pastificiofontana.it/ravioli-salmone/"
+      },
+      "identityReason": "Pasta rellena a base de ricotta y salmón, diferenciada de Ravioli de ricotta genérico por relleno explícito de pescado. No se importa la salsa ni se presume una preparación concreta del salmón."
+    },
+    {
+      "canonicalKey": "pasta_caramelle_de_ricotta_y_espinacas",
+      "defaultName": "Pasta caramelle de ricotta y espinacas",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pasta caramelle de ricotta y espinacas"
+      ],
+      "allergens": [],
+      "culinaryForm": "PASTA_RELLENA",
+      "evidence": {
+        "sourceId": "fontana-caramelle",
+        "recordId": "pasta_caramelle_de_ricotta_y_espinacas",
+        "sourceName": "Pastificio Fontana — Spinach and ricotta caramelle",
+        "url": "https://www.pastificiofontana.it/caramelle-ricotta-spinaci/?lang=en"
+      },
+      "identityReason": "Pasta al huevo rellena con ricotta y espinacas y cierre en forma de caramelo. No se considera alias de ravioli o tortelli ni incluye salsa de servicio."
+    },
+    {
+      "canonicalKey": "pisarei_de_pan_y_harina",
+      "defaultName": "Pisarei de pan y harina",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Pisarei de pan y harina",
+        "Pisarei"
+      ],
+      "allergens": [],
+      "culinaryForm": "MASA_DE_PAN_PARA_COCCION",
+      "evidence": {
+        "sourceId": "pinuccio-pisarei",
+        "recordId": "pisarei_de_pan_y_harina",
+        "sourceName": "Trattoria da Pinuccio — Pisarei e fasö",
+        "url": "https://www.dapinuccio.it/sito/new-outdoor-area-3/"
+      },
+      "identityReason": "Pequeñas piezas de masa de harina y pan rallado para cocinar. Se documenta el componente pisarei sin la salsa de alubias; no son ñoquis de patata."
+    }
+  ],
+  "exclusions": [
+    {
+      "names": [
+        "Malloreddus",
+        "Risoni"
+      ],
+      "reason": "No se añaden: revisar contra gnocchetti sardi y pasta orzo existentes; no modificar equivalencias históricas en este lote."
+    },
+    {
+      "names": [
+        "Chicche verdi",
+        "Caramelle de ricotta y radicchio"
+      ],
+      "reason": "No se incorporan en este lote: falta recuperar una ficha suficientemente precisa de las candidatas."
+    }
+  ]
+}

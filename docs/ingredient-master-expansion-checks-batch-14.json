@@ -1,0 +1,99 @@
+{
+  "date": "2026-09-24",
+  "batchId": "2026-09-24-14",
+  "baseline": 3456,
+  "added": 19,
+  "total": 3475,
+  "remainingTo5000": 1525,
+  "byCategory": {
+    "OTROS": 14,
+    "SALSAS": 5
+  },
+  "byRestaurantFamily": {
+    "LEGUMBRES_PROTEINAS_VEGETALES": 4,
+    "PASTAS_ARROCES_CEREALES": 5,
+    "FRUTOS_SECOS_SEMILLAS": 4,
+    "SALSAS_CONDIMENTOS_BASES": 5,
+    "FRUTAS": 1
+  },
+  "aliasesAdded": 23,
+  "exclusionGroups": 10,
+  "preservedMasterRows": 3456,
+  "preservedTaxonomyAssignments": 3456,
+  "pendingPreserved": 25,
+  "idempotentBatches": 14,
+  "historicalAuditsUnchanged": true,
+  "backendProjectionMatches": true,
+  "sourceSha256": "b5368948d55f2ce8094ad08f879d6d098b6bbb6fd0a015e77ad4fd73562c8cb4",
+  "productionDeployment": false,
+  "databaseWrites": 0,
+  "validation": "Ingredient master OK: 3475 records, 14 categories; valid UTF-8/NFC, names, aliases and identifiers.\n11 consolidated keys preserved; 25 ambiguous records held separately. No duplicate names or shared exact aliases in the selectable source.",
+  "tests": {
+    "importer": 9,
+    "backend": 48,
+    "frontend": 195,
+    "total": 252,
+    "frontendScope": "27 suites completas del storefront; el lanzador npm no conservó el filtro solicitado",
+    "logs": [
+      "tmp/ingredients-batch14-importer-tests.log",
+      "tmp/ingredients-batch14-backend-tests.log",
+      "tmp/ingredients-batch14-ui-tests.log"
+    ]
+  },
+  "build": {
+    "status": "passed",
+    "artifact": "output/ingredients-batch14-build",
+    "bundle": "main.ddafe555.js",
+    "log": "tmp/ingredients-batch14-build.log"
+  },
+  "browser": {
+    "date": "2026-09-24",
+    "status": "passed",
+    "environment": "Compiled application with empty local API fixtures; writes rejected",
+    "masterCount": 3475,
+    "searches": [
+      {
+        "query": "leche de canamo",
+        "results": [
+          "Bebida de cáñamo"
+        ],
+        "family": "FRUTOS_SECOS_SEMILLAS"
+      },
+      {
+        "query": "anacardo",
+        "results": [
+          "Anacardos",
+          "Crema pura de anacardo",
+          "Bebida de anacardo",
+          "Crema de anacardo para cocinar"
+        ],
+        "families": [
+          "FRUTOS_SECOS_SEMILLAS",
+          "SALSAS_CONDIMENTOS_BASES"
+        ]
+      },
+      {
+        "query": "yogur de avena",
+        "results": [
+          "Alternativa de avena al yogur natural"
+        ],
+        "family": "PASTAS_ARROCES_CEREALES"
+      },
+      {
+        "query": "kefir de soja",
+        "results": [
+          "Kéfir de soja"
+        ],
+        "family": "LEGUMBRES_PROTEINAS_VEGETALES"
+      },
+      {
+        "query": "yogur de coco",
+        "results": [
+          "Fermentado de coco natural"
+        ],
+        "family": "FRUTAS"
+      }
+    ],
+    "databaseWrites": 0
+  }
+}

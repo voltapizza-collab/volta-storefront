@@ -6,10 +6,26 @@ const root = path.resolve(__dirname, '..');
 const decodeJson = relativePath => JSON.parse(new TextDecoder('utf-8', { fatal: true })
   .decode(fs.readFileSync(path.join(root, relativePath))));
 const master = decodeJson('src/data/ingredientMasterSource.json');
+const crypto = require('node:crypto');
+const taxonomy = decodeJson('src/data/ingredientTaxonomy.json');
 const pending = decodeJson('src/data/ingredientMasterPendingReview.json');
 const review = decodeJson('docs/ingredient-master-review.json');
 const errors = [];
 const fail = (context, message) => errors.push(`${context}: ${message}`);
+// The culinary classification is versioned separately from historical research categories.
+if (taxonomy.sourceSha256 !== crypto.createHash('sha256').update(JSON.stringify(master)).digest('hex')) fail('taxonomy', 'classification is stale; rebuild it after reviewing new identities');
+const taxonomyKeys = new Set(taxonomy.categories.map(row => row.key));
+if (taxonomy.categories.length !== 14 || taxonomyKeys.size !== 14) fail('taxonomy', 'expected 14 unique culinary categories');
+for (const category of taxonomy.categories) for (const locale of ['es', 'en', 'it', 'fr', 'pt', 'ar', 'zh']) {
+  if (!category.labels[locale]?.trim()) fail('taxonomy', `${category.key}: missing ${locale} label`);
+}
+if (Object.keys(taxonomy.assignments).length !== master.length) fail('taxonomy', 'classification must cover exactly the current master');
+for (const row of master) if (!taxonomyKeys.has(taxonomy.assignments[row.canonicalKey]?.categoryKey)) fail(row.canonicalKey, 'missing culinary classification');
+for (const row of master) if (row.restaurantCategoryKey && taxonomy.assignments[row.canonicalKey]?.categoryKey !== row.restaurantCategoryKey) fail(row.canonicalKey, 'culinary classification differs from the reviewed expansion');
+for (const [local, server] of [['ingredientTaxonomy.json', 'ingredientTaxonomy.json'], ['ingredientTaxonomyResolver.js', 'ingredientTaxonomyResolver.js']]) {
+  const mirror = path.resolve(root, '../volta-backend/data', server);
+  if (fs.existsSync(mirror) && !fs.readFileSync(mirror).equals(fs.readFileSync(path.join(root, 'src/data', local)))) fail('taxonomy', `backend and storefront disagree: ${local}`);
+}
 const searchKey = value => value.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase()
   .replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
 const categoryKeys = {
@@ -133,7 +149,7 @@ if (researchRows.length) {
     const {record, batch} = entry;
     matched.add(row.canonicalKey);
     if (!batch.sources[record.evidence?.sourceId] || !record.evidence?.recordId || !/^https:\/\//.test(record.evidence?.url || '')) fail(row.canonicalKey, 'incomplete evidence');
-    for (const field of ['defaultName', 'category', 'aliases', 'allergens', 'scientificName']) {
+    for (const field of ['defaultName', 'category', 'aliases', 'allergens', 'scientificName', 'restaurantCategoryKey']) {
       if (JSON.stringify(row[field]) !== JSON.stringify(record[field])) fail(row.canonicalKey, `${field} differs from the reviewed research batch`);
     }
   }

@@ -1,0 +1,59 @@
+{
+  "date": "2026-09-24",
+  "batchId": "2026-09-24-27",
+  "baseline": 3650,
+  "added": 11,
+  "total": 3661,
+  "remainingTo5000": 1339,
+  "byCategory": {
+    "HIERBAS_ESPECIAS": 11
+  },
+  "byRestaurantFamily": {
+    "SALSAS_CONDIMENTOS_BASES": 11
+  },
+  "byForm": {
+    "RIZOMA": 3,
+    "HOJA": 3,
+    "BAYA_ESPECIA": 2,
+    "FRUTO_SECO_CONDIMENTO": 1,
+    "SEMILLA_ESPECIA": 1,
+    "RESINA_CULINARIA": 1
+  },
+  "aliasesAdded": 8,
+  "exclusionGroups": 5,
+  "preservedMasterRows": 3650,
+  "preservedTaxonomyAssignments": 3650,
+  "pendingPreserved": 25,
+  "idempotentBatches": 27,
+  "historicalAuditsUnchanged": true,
+  "backendProjectionMatches": true,
+  "sourceSha256": "3e35d0fb2f6f9e888b0c37eddf3f1e48c1f551aac7100b002ec576612d0fbe2f",
+  "productionDeployment": false,
+  "databaseWrites": 0,
+  "validation": "Ingredient master OK: 3661 records, 14 categories; valid UTF-8/NFC, names, aliases and identifiers.\n11 consolidated keys preserved; 25 ambiguous records held separately. No duplicate names or shared exact aliases in the selectable source.",
+  "tests": {
+    "importer": {
+      "passed": 9,
+      "log": "tmp/ingredients-batch27-importer-tests.log"
+    },
+    "backend": {
+      "passed": 48,
+      "log": "tmp/ingredients-batch27-backend-tests.log"
+    },
+    "ui": {
+      "passed": 27,
+      "log": "tmp/ingredients-batch27-ui-tests.log"
+    },
+    "totalPassed": 84
+  },
+  "build": {
+    "status": "PASSED",
+    "artifact": "output/ingredients-batch27-build",
+    "bundle": "main.9c1de54d.js",
+    "log": "tmp/ingredients-batch27-build.log"
+  },
+  "browser": {
+    "status": "PENDING",
+    "reason": "Verificación visual de lotes 16–27 pendiente; evitar navegador integrado durante el diagnóstico de los cierres de Codex."
+  }
+}

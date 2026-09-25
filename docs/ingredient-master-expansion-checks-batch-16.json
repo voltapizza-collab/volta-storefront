@@ -1,0 +1,55 @@
+{
+  "date": "2026-09-24",
+  "batchId": "2026-09-24-16",
+  "baseline": 3498,
+  "added": 22,
+  "total": 3520,
+  "remainingTo5000": 1480,
+  "byCategory": {
+    "HIERBAS_ESPECIAS": 7,
+    "VERDURAS": 15
+  },
+  "byRestaurantFamily": {
+    "SALSAS_CONDIMENTOS_BASES": 7,
+    "VERDURAS_SETAS_ALGAS": 15
+  },
+  "byForm": {
+    "HIERBA": 4,
+    "ESPECIA": 3,
+    "CHILE_SECO": 15
+  },
+  "aliasesAdded": 18,
+  "exclusionGroups": 9,
+  "preservedMasterRows": 3498,
+  "preservedTaxonomyAssignments": 3498,
+  "pendingPreserved": 25,
+  "idempotentBatches": 16,
+  "historicalAuditsUnchanged": true,
+  "backendProjectionMatches": true,
+  "sourceSha256": "491e3ab9cbae261ef72b0d0000126cae366f26c2d14b77219742263cd4f5b5f5",
+  "productionDeployment": false,
+  "databaseWrites": 0,
+  "validation": "Ingredient master OK: 3520 records, 14 categories; valid UTF-8/NFC, names, aliases and identifiers.\n11 consolidated keys preserved; 25 ambiguous records held separately. No duplicate names or shared exact aliases in the selectable source.",
+  "tests": {
+    "importer": 9,
+    "backend": 48,
+    "frontend": 27,
+    "total": 84,
+    "frontendScope": "3 suites: IngredientOnboardingModal, IngredientsSemantics y PosInventoryTaxonomy",
+    "logs": [
+      "tmp/ingredients-batch16-importer-tests.log",
+      "tmp/ingredients-batch16-backend-tests.log",
+      "tmp/ingredients-batch16-ui-tests.log"
+    ]
+  },
+  "build": {
+    "status": "passed",
+    "artifact": "output/ingredients-batch16-build",
+    "bundle": "main.fe0bdc11.js",
+    "log": "tmp/ingredients-batch16-build.log"
+  },
+  "browser": {
+    "status": "pending",
+    "reason": "La sesión anterior se interrumpió durante las comprobaciones del navegador integrado. No se acredita la verificación visual completa; no se repite para evitar los cierres reportados por Luigi."
+  }
+}

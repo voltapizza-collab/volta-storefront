@@ -1,0 +1,14 @@
+[
+  {
+    "canonicalKey": "ojo_de_lomo_de_vacuno",
+    "queries": ["entrecot", "entrecot de vacuno", "entrecot de lomo alto", "entrecot lomo alto"],
+    "note": "Opción de entrecot de lomo alto (ribeye); no representa el lomo bajo.",
+    "evidence": "ingredient-master-expansion-batch-32.json"
+  },
+  {
+    "canonicalKey": "aceituna_gordal_sevillana",
+    "queries": ["aceitunas verdes", "aceituna verde"],
+    "note": "Gordal: una variedad con presentación verde documentada. Confirmar el aliño del suministro.",
+    "evidence": "ingredient-master-expansion-batch-32.json"
+  }
+]

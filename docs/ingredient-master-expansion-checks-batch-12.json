@@ -1,0 +1,65 @@
+{
+  "date": "2026-09-24",
+  "batchId": "2026-09-24-12",
+  "baseline": 3394,
+  "added": 38,
+  "total": 3432,
+  "remainingTo5000": 1568,
+  "byCategory": {
+    "OTROS": 36,
+    "CREMAS_DULCES": 2
+  },
+  "byRestaurantFamily": {
+    "FRUTOS_SECOS_SEMILLAS": 23,
+    "PANES_MASAS_HARINAS": 4,
+    "REPOSTERIA_AUXILIARES": 11
+  },
+  "aliasesAdded": 12,
+  "exclusionGroups": 15,
+  "preservedMasterRows": 3394,
+  "preservedTaxonomyAssignments": 3394,
+  "pendingPreserved": 25,
+  "idempotentBatches": 12,
+  "historicalAuditsUnchanged": true,
+  "backendProjectionMatches": true,
+  "sourceSha256": "2a1c062bb9a36a9de0f230565e2ae68ff379c3f152aa41f24e448c218df9ac25",
+  "productionDeployment": false,
+  "databaseWrites": 0,
+  "validation": "Ingredient master OK: 3432 records, 14 categories; valid UTF-8/NFC, names, aliases and identifiers.\n11 consolidated keys preserved; 25 ambiguous records held separately. No duplicate names or shared exact aliases in the selectable source.",
+  "tests": {
+    "importer": 9,
+    "backend": 42,
+    "ui": 27,
+    "total": 78
+  },
+  "build": {
+    "status": "passed",
+    "artifact": "output/ingredients-batch12-build",
+    "bundle": "main.67ff2a56.js",
+    "log": "tmp/ingredients-batch12-build.log"
+  },
+  "browser": {
+    "date": "2026-09-24",
+    "status": "passed",
+    "environment": "Compiled application with empty local API fixtures; writes rejected",
+    "masterCount": 3432,
+    "searches": [
+      {
+        "query": "marcona",
+        "result": "Almendra Marcona",
+        "family": "FRUTOS_SECOS_SEMILLAS"
+      },
+      {
+        "query": "harina avellana",
+        "result": "Harina de avellana",
+        "family": "PANES_MASAS_HARINAS"
+      },
+      {
+        "query": "cmc",
+        "result": "Carboximetilcelulosa sódica alimentaria",
+        "family": "REPOSTERIA_AUXILIARES"
+      }
+    ],
+    "databaseWrites": 0
+  }
+}

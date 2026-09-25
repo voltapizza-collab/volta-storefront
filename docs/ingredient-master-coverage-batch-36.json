@@ -1,0 +1,4392 @@
+{
+  "date": "2026-09-25",
+  "batchId": "2026-09-25-36",
+  "scope": "248 necesidades editoriales con al menos una opción identificada; no certifica todas las variantes, formulaciones, traducciones ni disponibilidad operativa.",
+  "baselineCatalogueTotal": 3714,
+  "catalogueTotal": 3728,
+  "referenceTotal": 248,
+  "located": 248,
+  "scopeReview": 0,
+  "noSpecificRecord": 0,
+  "addedRecords": 14,
+  "modifiedHistoricalRecords": 0,
+  "allergenOrEditorialApproval": false,
+  "summary": [
+    {
+      "key": "CARNES_AVES",
+      "label": "Carnes, aves y otras proteínas animales",
+      "catalogueCount": 141,
+      "referenceCount": 20,
+      "located": 20,
+      "scopeReview": 0,
+      "noSpecificRecord": 0
+    },
+    {
+      "key": "EMBUTIDOS_CHARCUTERIA",
+      "label": "Embutidos y charcutería",
+      "catalogueCount": 193,
+      "referenceCount": 13,
+      "located": 13,
+      "scopeReview": 0,
+      "noSpecificRecord": 0
+    },
+    {
+      "key": "PESCADOS_Y_MARISCOS",
+      "label": "Pescados y mariscos",
+      "catalogueCount": 858,
+      "referenceCount": 18,
+      "located": 18,
+      "scopeReview": 0,
+      "noSpecificRecord": 0
+    },
+    {
+      "key": "QUESOS",
+      "label": "Quesos",
+      "catalogueCount": 474,
+      "referenceCount": 15,
+      "located": 15,
+      "scopeReview": 0,
+      "noSpecificRecord": 0
+    },
+    {
+      "key": "LACTEOS_HUEVOS",
+      "label": "Lácteos y huevos",
+      "catalogueCount": 58,
+      "referenceCount": 15,
+      "located": 15,
+      "scopeReview": 0,
+      "noSpecificRecord": 0
+    },
+    {
+      "key": "VERDURAS_SETAS_ALGAS",
+      "label": "Verduras, setas y algas",
+      "catalogueCount": 423,
+      "referenceCount": 24,
+      "located": 24,
+      "scopeReview": 0,
+      "noSpecificRecord": 0
+    },
+    {
+      "key": "FRUTAS",
+      "label": "Frutas",
+      "catalogueCount": 303,
+      "referenceCount": 16,
+      "located": 16,
+      "scopeReview": 0,
+      "noSpecificRecord": 0
+    },
+    {
+      "key": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "label": "Legumbres y proteínas vegetales",
+      "catalogueCount": 151,
+      "referenceCount": 16,
+      "located": 16,
+      "scopeReview": 0,
+      "noSpecificRecord": 0
+    },
+    {
+      "key": "PASTAS_ARROCES_CEREALES",
+      "label": "Pastas, arroces y cereales",
+      "catalogueCount": 209,
+      "referenceCount": 18,
+      "located": 18,
+      "scopeReview": 0,
+      "noSpecificRecord": 0
+    },
+    {
+      "key": "PANES_MASAS_HARINAS",
+      "label": "Panes, masas y harinas",
+      "catalogueCount": 152,
+      "referenceCount": 21,
+      "located": 21,
+      "scopeReview": 0,
+      "noSpecificRecord": 0
+    },
+    {
+      "key": "FRUTOS_SECOS_SEMILLAS",
+      "label": "Frutos secos y semillas",
+      "catalogueCount": 75,
+      "referenceCount": 15,
+      "located": 15,
+      "scopeReview": 0,
+      "noSpecificRecord": 0
+    },
+    {
+      "key": "ACEITES_GRASAS_VINAGRES",
+      "label": "Aceites, grasas y vinagres",
+      "catalogueCount": 90,
+      "referenceCount": 14,
+      "located": 14,
+      "scopeReview": 0,
+      "noSpecificRecord": 0
+    },
+    {
+      "key": "SALSAS_CONDIMENTOS_BASES",
+      "label": "Salsas, condimentos y bases de cocina",
+      "catalogueCount": 410,
+      "referenceCount": 26,
+      "located": 26,
+      "scopeReview": 0,
+      "noSpecificRecord": 0
+    },
+    {
+      "key": "REPOSTERIA_AUXILIARES",
+      "label": "Repostería y auxiliares culinarios",
+      "catalogueCount": 191,
+      "referenceCount": 17,
+      "located": 17,
+      "scopeReview": 0,
+      "noSpecificRecord": 0
+    }
+  ],
+  "checks": [
+    {
+      "family": "CARNES_AVES",
+      "term": "Pollo",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "pollo",
+          "defaultName": "Pollo",
+          "assignedFamily": "CARNES_AVES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "CARNES_AVES",
+      "term": "Pechuga de pollo",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "pechuga_de_pollo",
+          "defaultName": "Pechuga de pollo",
+          "assignedFamily": "CARNES_AVES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "CARNES_AVES",
+      "term": "Contramuslo de pollo",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "contramuslo_de_pollo",
+          "defaultName": "Contramuslo de pollo",
+          "assignedFamily": "CARNES_AVES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "CARNES_AVES",
+      "term": "Alitas de pollo",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "alitas_de_pollo",
+          "defaultName": "Alitas de pollo",
+          "assignedFamily": "CARNES_AVES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "CARNES_AVES",
+      "term": "Carne molida de vacuno",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "carne_molida_de_vacuno",
+          "defaultName": "Carne molida de vacuno",
+          "assignedFamily": "CARNES_AVES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "CARNES_AVES",
+      "term": "Carne molida de cerdo",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "carne_molida_de_cerdo",
+          "defaultName": "Carne molida de cerdo",
+          "assignedFamily": "CARNES_AVES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "CARNES_AVES",
+      "term": "Solomillo de vacuno",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "solomillo_de_vacuno",
+          "defaultName": "Solomillo de vacuno",
+          "assignedFamily": "CARNES_AVES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "CARNES_AVES",
+      "term": "Solomillo de cerdo",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "solomillo_de_cerdo",
+          "defaultName": "Solomillo de cerdo",
+          "assignedFamily": "CARNES_AVES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "CARNES_AVES",
+      "term": "Lomo de cerdo fresco",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "lomo_de_cerdo_fresco",
+          "defaultName": "Lomo de cerdo fresco",
+          "assignedFamily": "CARNES_AVES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "CARNES_AVES",
+      "term": "Costillar de cerdo",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "costillar_de_cerdo",
+          "defaultName": "Costillar de cerdo",
+          "assignedFamily": "CARNES_AVES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "CARNES_AVES",
+      "term": "Conejo",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "conejo",
+          "defaultName": "Conejo",
+          "assignedFamily": "CARNES_AVES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "CARNES_AVES",
+      "term": "Pierna de cordero",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "pierna_de_cordero",
+          "defaultName": "Pierna de cordero",
+          "assignedFamily": "CARNES_AVES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "CARNES_AVES",
+      "term": "Pechuga de pavo",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "pechuga_de_pavo",
+          "defaultName": "Pechuga de pavo",
+          "assignedFamily": "CARNES_AVES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "CARNES_AVES",
+      "term": "Pechuga de pato",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "pechuga_de_pato",
+          "defaultName": "Pechuga de pato",
+          "assignedFamily": "CARNES_AVES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "CARNES_AVES",
+      "term": "Carrillera de cerdo",
+      "status": "LOCALIZADO",
+      "note": "Corte de cerdo documentado; se omite raza, crianza y envase. No representa el guiso preparado.",
+      "records": [
+        {
+          "canonicalKey": "carrillera_de_cerdo",
+          "defaultName": "Carrillera de cerdo",
+          "assignedFamily": "CARNES_AVES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "evidenceUrls": [
+        "https://www.solobuey.com/comprar/carrillera-de-cerdo-iberico/"
+      ],
+      "resolution": "ADDED_BATCH_31",
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "CARNES_AVES",
+      "term": "Carrillera de vacuno",
+      "status": "LOCALIZADO",
+      "note": "La ficha describe un corte fresco de vacuno para cocinar. No se importa edad, procedencia ni preparación en salsa.",
+      "records": [
+        {
+          "canonicalKey": "carrillera_de_vacuno",
+          "defaultName": "Carrillera de vacuno",
+          "assignedFamily": "CARNES_AVES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "evidenceUrls": [
+        "https://discarlux.es/carrilleras-de-ternera-dos-unidades-de-500-grs-1-kg-aprox"
+      ],
+      "resolution": "ADDED_BATCH_31",
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "CARNES_AVES",
+      "term": "Secreto de cerdo",
+      "status": "LOCALIZADO",
+      "note": "Corte identificado separadamente de presa, pluma y solomillo en el catálogo del proveedor. La raza no crea otra identidad.",
+      "records": [
+        {
+          "canonicalKey": "secreto_de_cerdo",
+          "defaultName": "Secreto de cerdo",
+          "assignedFamily": "CARNES_AVES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "evidenceUrls": [
+        "https://www.solobuey.com/comprar/secreto-de-cerdo-iberico/"
+      ],
+      "resolution": "ADDED_BATCH_31",
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "CARNES_AVES",
+      "term": "Presa de cerdo",
+      "status": "LOCALIZADO",
+      "note": "Corte de cerdo comercializado como presa. No se añaden nombres genéricos sin especie ni variantes por fileteado.",
+      "records": [
+        {
+          "canonicalKey": "presa_de_cerdo",
+          "defaultName": "Presa de cerdo",
+          "assignedFamily": "CARNES_AVES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "evidenceUrls": [
+        "https://www.solobuey.com/comprar/presa-de-cerdo-iberico/"
+      ],
+      "resolution": "ADDED_BATCH_31",
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "CARNES_AVES",
+      "term": "Pluma de cerdo",
+      "status": "LOCALIZADO",
+      "note": "Pieza de la parte posterior del lomo identificada por el proveedor. Se distingue de peces y pasta con nombres de pluma; sin alias pluma a secas.",
+      "records": [
+        {
+          "canonicalKey": "pluma_de_cerdo",
+          "defaultName": "Pluma de cerdo",
+          "assignedFamily": "CARNES_AVES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "evidenceUrls": [
+        "https://www.solobuey.com/comprar/pluma-de-cerdo-iberico/"
+      ],
+      "resolution": "ADDED_BATCH_31",
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "CARNES_AVES",
+      "term": "Entrecot de vacuno",
+      "status": "LOCALIZADO",
+      "note": "La necesidad básica queda representada por la variante de entrecot de lomo alto: Ojo de lomo de vacuno, documentado como ribeye deshuesado en USDA 170839. Entrecot no se convierte en alias exclusivo: también existen cortes de lomo bajo. Lomo de ternera procede de USDA 173823 y se conserva distinto; no se renombra a lomo bajo ni se equipara toda ternera a vacuno adulto.",
+      "records": [
+        {
+          "canonicalKey": "ojo_de_lomo_de_vacuno",
+          "defaultName": "Ojo de lomo de vacuno",
+          "assignedFamily": "CARNES_AVES"
+        }
+      ],
+      "exactNameOrAlias": false,
+      "evidenceUrls": [
+        "https://fdc.nal.usda.gov/food-details/170839/nutrients",
+        "https://fdc.nal.usda.gov/food-details/173823/nutrients",
+        "https://carnicasgoia.com/producto/entrecot/",
+        "https://carnicaspozas.com/es/vacuno/1707-entrecot-de-ternera-00718.html"
+      ],
+      "searchFindsMappedRecord": true,
+      "nextAction": "Al seleccionar para una receta, elegir el corte requerido; esta correspondencia no cubre todas las variantes de entrecot ni aprueba un suministro.",
+      "resolution": "EXISTING_DOCUMENTED_VARIANT",
+      "discoveryNote": "Opción de entrecot de lomo alto (ribeye); no representa el lomo bajo."
+    },
+    {
+      "family": "EMBUTIDOS_CHARCUTERIA",
+      "term": "Jamón cocido (York)",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "jam_n_cocido_york",
+          "defaultName": "Jamón cocido (York)",
+          "assignedFamily": "EMBUTIDOS_CHARCUTERIA"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "EMBUTIDOS_CHARCUTERIA",
+      "term": "Jamón serrano",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "jam_n_serrano",
+          "defaultName": "Jamón serrano",
+          "assignedFamily": "EMBUTIDOS_CHARCUTERIA"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "EMBUTIDOS_CHARCUTERIA",
+      "term": "Bacon",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "bacon",
+          "defaultName": "Bacon",
+          "assignedFamily": "EMBUTIDOS_CHARCUTERIA"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "EMBUTIDOS_CHARCUTERIA",
+      "term": "Chorizo",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "chorizo",
+          "defaultName": "Chorizo",
+          "assignedFamily": "EMBUTIDOS_CHARCUTERIA"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "EMBUTIDOS_CHARCUTERIA",
+      "term": "Salchicha de Frankfurt",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "salchicha_de_frankfurt",
+          "defaultName": "Salchicha de Frankfurt",
+          "assignedFamily": "EMBUTIDOS_CHARCUTERIA"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "EMBUTIDOS_CHARCUTERIA",
+      "term": "Salchicha italiana",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "salchicha_italiana",
+          "defaultName": "Salchicha italiana",
+          "assignedFamily": "EMBUTIDOS_CHARCUTERIA"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "EMBUTIDOS_CHARCUTERIA",
+      "term": "Mortadela",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "mortadela",
+          "defaultName": "Mortadela",
+          "assignedFamily": "EMBUTIDOS_CHARCUTERIA"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "EMBUTIDOS_CHARCUTERIA",
+      "term": "Pepperoni",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "pepperoni",
+          "defaultName": "Pepperoni",
+          "assignedFamily": "EMBUTIDOS_CHARCUTERIA"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "EMBUTIDOS_CHARCUTERIA",
+      "term": "Guanciale",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "guanciale",
+          "defaultName": "Guanciale",
+          "assignedFamily": "EMBUTIDOS_CHARCUTERIA"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "EMBUTIDOS_CHARCUTERIA",
+      "term": "Pancetta",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "pancetta",
+          "defaultName": "Pancetta",
+          "assignedFamily": "EMBUTIDOS_CHARCUTERIA"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "EMBUTIDOS_CHARCUTERIA",
+      "term": "Sobrasada",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "sobrasada",
+          "defaultName": "Sobrasada",
+          "assignedFamily": "EMBUTIDOS_CHARCUTERIA"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "EMBUTIDOS_CHARCUTERIA",
+      "term": "Morcilla",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "morcilla",
+          "defaultName": "Morcilla",
+          "assignedFamily": "EMBUTIDOS_CHARCUTERIA"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "EMBUTIDOS_CHARCUTERIA",
+      "term": "Salchichón",
+      "status": "LOCALIZADO",
+      "note": "Embutido curado de cerdo con especias. Se conserva la denominación culinaria salchichón, sin equiparar automáticamente los salamis regionales existentes. La ficha comercial declara posibles trazas de leche y soja; no se transfieren ausencia de alérgenos ni propiedades de la marca.",
+      "records": [
+        {
+          "canonicalKey": "salchichon",
+          "defaultName": "Salchichón",
+          "assignedFamily": "EMBUTIDOS_CHARCUTERIA"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "evidenceUrls": [
+        "https://tienda.covap.es/ibericos/embutidos-de-bellota/piezas/salchichon-de-bellota-iberico-esenciaunica-sin-conservantes-anadidos/"
+      ],
+      "resolution": "ADDED_BATCH_31",
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PESCADOS_Y_MARISCOS",
+      "term": "Salmón",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "salm_n",
+          "defaultName": "Salmón",
+          "assignedFamily": "PESCADOS_Y_MARISCOS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PESCADOS_Y_MARISCOS",
+      "term": "Salmón ahumado",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "salm_n_ahumado",
+          "defaultName": "Salmón ahumado",
+          "assignedFamily": "PESCADOS_Y_MARISCOS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PESCADOS_Y_MARISCOS",
+      "term": "Atún",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "at_n",
+          "defaultName": "Atún",
+          "assignedFamily": "PESCADOS_Y_MARISCOS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PESCADOS_Y_MARISCOS",
+      "term": "Bacalao salado",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "bacalao_salado",
+          "defaultName": "Bacalao salado",
+          "assignedFamily": "PESCADOS_Y_MARISCOS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PESCADOS_Y_MARISCOS",
+      "term": "Merluza",
+      "status": "LOCALIZADO",
+      "note": "Correspondencia editorial de esta revisión; no se han añadido alias al catálogo. La ficha representa el ingrediente básico, no todas sus variantes.",
+      "records": [
+        {
+          "canonicalKey": "merluza_europea",
+          "defaultName": "Merluza europea",
+          "assignedFamily": "PESCADOS_Y_MARISCOS"
+        }
+      ],
+      "exactNameOrAlias": false,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PESCADOS_Y_MARISCOS",
+      "term": "Lubina",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "lubina",
+          "defaultName": "Lubina",
+          "assignedFamily": "PESCADOS_Y_MARISCOS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PESCADOS_Y_MARISCOS",
+      "term": "Dorada",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "dorada",
+          "defaultName": "Dorada",
+          "assignedFamily": "PESCADOS_Y_MARISCOS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PESCADOS_Y_MARISCOS",
+      "term": "Sardina",
+      "status": "LOCALIZADO",
+      "note": "Correspondencia editorial de esta revisión; no se han añadido alias al catálogo. La ficha representa el ingrediente básico, no todas sus variantes.",
+      "records": [
+        {
+          "canonicalKey": "sardinas",
+          "defaultName": "Sardinas",
+          "assignedFamily": "PESCADOS_Y_MARISCOS"
+        }
+      ],
+      "exactNameOrAlias": false,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PESCADOS_Y_MARISCOS",
+      "term": "Boquerón",
+      "status": "LOCALIZADO",
+      "note": "Presentación fresca para cocinar. Anchoas histórico es genérico según el usuario; se conserva sin atribuirle salazón, vinagre ni preparación fresca.",
+      "records": [
+        {
+          "canonicalKey": "boqueron_fresco",
+          "defaultName": "Boquerón fresco",
+          "assignedFamily": "PESCADOS_Y_MARISCOS"
+        }
+      ],
+      "exactNameOrAlias": false,
+      "evidenceUrls": [
+        "https://www.pescaderiascorunesas.es/preparaciones/boqueron"
+      ],
+      "searchFindsMappedRecord": true,
+      "nextAction": "Revisión editorial y de ficha técnica del suministro antes de uso operativo.",
+      "resolution": "SPECIFIC_VARIANT_AFTER_GENERIC_CLARIFICATION",
+      "historicalCandidates": [
+        {
+          "canonicalKey": "anchoas",
+          "defaultName": "Anchoas",
+          "assignedFamily": "PESCADOS_Y_MARISCOS"
+        }
+      ]
+    },
+    {
+      "family": "PESCADOS_Y_MARISCOS",
+      "term": "Anchoas",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "anchoas",
+          "defaultName": "Anchoas",
+          "assignedFamily": "PESCADOS_Y_MARISCOS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PESCADOS_Y_MARISCOS",
+      "term": "Calamares",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "calamares",
+          "defaultName": "Calamares",
+          "assignedFamily": "PESCADOS_Y_MARISCOS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PESCADOS_Y_MARISCOS",
+      "term": "Sepia",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "sepia",
+          "defaultName": "Sepia",
+          "assignedFamily": "PESCADOS_Y_MARISCOS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PESCADOS_Y_MARISCOS",
+      "term": "Pulpo",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "pulpo",
+          "defaultName": "Pulpo",
+          "assignedFamily": "PESCADOS_Y_MARISCOS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PESCADOS_Y_MARISCOS",
+      "term": "Gambas",
+      "status": "LOCALIZADO",
+      "note": "Correspondencia editorial de esta revisión; no se han añadido alias al catálogo. La ficha representa el ingrediente básico, no todas sus variantes.",
+      "records": [
+        {
+          "canonicalKey": "gamba_blanca",
+          "defaultName": "Gamba blanca",
+          "assignedFamily": "PESCADOS_Y_MARISCOS"
+        },
+        {
+          "canonicalKey": "gamba_roja_del_mediterraneo",
+          "defaultName": "Gamba roja del Mediterráneo",
+          "assignedFamily": "PESCADOS_Y_MARISCOS"
+        }
+      ],
+      "exactNameOrAlias": false,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PESCADOS_Y_MARISCOS",
+      "term": "Langostinos",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "langostinos",
+          "defaultName": "Langostinos",
+          "assignedFamily": "PESCADOS_Y_MARISCOS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PESCADOS_Y_MARISCOS",
+      "term": "Mejillones",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "mejillones",
+          "defaultName": "Mejillones",
+          "assignedFamily": "PESCADOS_Y_MARISCOS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PESCADOS_Y_MARISCOS",
+      "term": "Almejas",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "almejas",
+          "defaultName": "Almejas",
+          "assignedFamily": "PESCADOS_Y_MARISCOS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PESCADOS_Y_MARISCOS",
+      "term": "Atún en conserva",
+      "status": "LOCALIZADO",
+      "note": "Opción documentada de conserva con agua y sal, no de atún fresco ni de conserva en aceite o escabeche. Atún histórico permanece genérico; no se convierte todo atún en conserva en alias de esta variante.",
+      "records": [
+        {
+          "canonicalKey": "atun_claro_en_conserva_al_natural",
+          "defaultName": "Atún claro en conserva al natural",
+          "assignedFamily": "PESCADOS_Y_MARISCOS"
+        }
+      ],
+      "exactNameOrAlias": false,
+      "evidenceUrls": [
+        "https://calvo.es/producto/atun-claro-supernatural/"
+      ],
+      "searchFindsMappedRecord": true,
+      "nextAction": "Revisión editorial y de ficha técnica del suministro antes de uso operativo.",
+      "resolution": "SPECIFIC_VARIANT_AFTER_GENERIC_CLARIFICATION",
+      "historicalCandidates": [
+        {
+          "canonicalKey": "at_n",
+          "defaultName": "Atún",
+          "assignedFamily": "PESCADOS_Y_MARISCOS"
+        }
+      ]
+    },
+    {
+      "family": "QUESOS",
+      "term": "Mozzarella fresca",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "mozzarella",
+          "defaultName": "Mozzarella fresca",
+          "assignedFamily": "QUESOS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "QUESOS",
+      "term": "Mozzarella rallada",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "mozzarella_rallada",
+          "defaultName": "Mozzarella rallada",
+          "assignedFamily": "QUESOS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "QUESOS",
+      "term": "Mozzarella de búfala",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "mozzarella_de_b_fala",
+          "defaultName": "Mozzarella de búfala",
+          "assignedFamily": "QUESOS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "QUESOS",
+      "term": "Parmigiano Reggiano",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "parmigiano_reggiano",
+          "defaultName": "Parmigiano Reggiano",
+          "assignedFamily": "QUESOS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "QUESOS",
+      "term": "Grana Padano",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "grana_padano",
+          "defaultName": "Grana Padano",
+          "assignedFamily": "QUESOS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "QUESOS",
+      "term": "Pecorino Romano",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "pecorino_romano",
+          "defaultName": "Pecorino Romano",
+          "assignedFamily": "QUESOS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "QUESOS",
+      "term": "Gorgonzola",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "gorgonzola",
+          "defaultName": "Gorgonzola",
+          "assignedFamily": "QUESOS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "QUESOS",
+      "term": "Cheddar",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "cheddar",
+          "defaultName": "Cheddar",
+          "assignedFamily": "QUESOS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "QUESOS",
+      "term": "Ricotta",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "ricotta",
+          "defaultName": "Ricotta",
+          "assignedFamily": "QUESOS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "QUESOS",
+      "term": "Mascarpone",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "mascarpone",
+          "defaultName": "Mascarpone",
+          "assignedFamily": "QUESOS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "QUESOS",
+      "term": "Queso feta",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "queso_feta",
+          "defaultName": "Queso feta",
+          "assignedFamily": "QUESOS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "QUESOS",
+      "term": "Queso crema",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "queso_crema",
+          "defaultName": "Queso crema",
+          "assignedFamily": "QUESOS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "QUESOS",
+      "term": "Brie",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "brie",
+          "defaultName": "Brie",
+          "assignedFamily": "QUESOS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "QUESOS",
+      "term": "Queso Manchego",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "queso_manchego",
+          "defaultName": "Queso Manchego",
+          "assignedFamily": "QUESOS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "QUESOS",
+      "term": "Queso de cabra",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "queso_de_cabra",
+          "defaultName": "Queso de cabra",
+          "assignedFamily": "QUESOS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "LACTEOS_HUEVOS",
+      "term": "Leche entera",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "leche_entera",
+          "defaultName": "Leche entera",
+          "assignedFamily": "LACTEOS_HUEVOS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "LACTEOS_HUEVOS",
+      "term": "Leche semidesnatada",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "leche_semidesnatada",
+          "defaultName": "Leche semidesnatada",
+          "assignedFamily": "LACTEOS_HUEVOS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "LACTEOS_HUEVOS",
+      "term": "Leche desnatada",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "leche_desnatada",
+          "defaultName": "Leche desnatada",
+          "assignedFamily": "LACTEOS_HUEVOS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "LACTEOS_HUEVOS",
+      "term": "Leche evaporada",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "leche_evaporada",
+          "defaultName": "Leche evaporada",
+          "assignedFamily": "LACTEOS_HUEVOS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "LACTEOS_HUEVOS",
+      "term": "Leche condensada",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "leche_condensada",
+          "defaultName": "Leche condensada",
+          "assignedFamily": "LACTEOS_HUEVOS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "LACTEOS_HUEVOS",
+      "term": "Yogur natural",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "yogur_natural",
+          "defaultName": "Yogur natural",
+          "assignedFamily": "LACTEOS_HUEVOS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "LACTEOS_HUEVOS",
+      "term": "Yogur griego natural",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "yogur_griego_natural",
+          "defaultName": "Yogur griego natural",
+          "assignedFamily": "LACTEOS_HUEVOS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "LACTEOS_HUEVOS",
+      "term": "Crème fraîche",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "cr_me_fra_che",
+          "defaultName": "Crème fraîche",
+          "assignedFamily": "LACTEOS_HUEVOS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "LACTEOS_HUEVOS",
+      "term": "Huevo",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "huevo",
+          "defaultName": "Huevo",
+          "assignedFamily": "LACTEOS_HUEVOS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "LACTEOS_HUEVOS",
+      "term": "Huevo de codorniz",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "huevo_de_codorniz",
+          "defaultName": "Huevo de codorniz",
+          "assignedFamily": "LACTEOS_HUEVOS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "LACTEOS_HUEVOS",
+      "term": "Huevo entero líquido pasteurizado",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "huevo_entero_liquido_pasteurizado",
+          "defaultName": "Huevo entero líquido pasteurizado",
+          "assignedFamily": "LACTEOS_HUEVOS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "LACTEOS_HUEVOS",
+      "term": "Clara de huevo líquida pasteurizada",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "clara_de_huevo_liquida_pasteurizada",
+          "defaultName": "Clara de huevo líquida pasteurizada",
+          "assignedFamily": "LACTEOS_HUEVOS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "LACTEOS_HUEVOS",
+      "term": "Yema de huevo líquida pasteurizada",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "yema_de_huevo_liquida_pasteurizada",
+          "defaultName": "Yema de huevo líquida pasteurizada",
+          "assignedFamily": "LACTEOS_HUEVOS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "LACTEOS_HUEVOS",
+      "term": "Nata para cocinar",
+      "status": "LOCALIZADO",
+      "note": "Uso culinario lácteo documentado; formulación y materia grasa dependen del suministro. No se equipara automáticamente con Crema de leche, Nata doble ni preparados vegetales.",
+      "records": [
+        {
+          "canonicalKey": "nata_para_cocinar",
+          "defaultName": "Nata para cocinar",
+          "assignedFamily": "LACTEOS_HUEVOS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "evidenceUrls": [
+        "https://www.centrallecheraasturiana.es/productos/nata/nata-para-cocinar/nata-cocinar-500ml/"
+      ],
+      "searchFindsMappedRecord": true,
+      "nextAction": "Revisión editorial y de ficha técnica del suministro antes de uso operativo.",
+      "resolution": "SPECIFIC_VARIANT_AFTER_GENERIC_CLARIFICATION",
+      "historicalCandidates": [
+        {
+          "canonicalKey": "crema_de_leche",
+          "defaultName": "Crema de leche",
+          "assignedFamily": "LACTEOS_HUEVOS"
+        },
+        {
+          "canonicalKey": "nata_doble",
+          "defaultName": "Nata doble",
+          "assignedFamily": "LACTEOS_HUEVOS"
+        }
+      ]
+    },
+    {
+      "family": "LACTEOS_HUEVOS",
+      "term": "Nata para montar",
+      "status": "LOCALIZADO",
+      "note": "Nata láctea líquida destinada a montarse; se diferencia por estado y uso de Nata montada. No se atribuye una composición universal ni se fusiona Nata doble.",
+      "records": [
+        {
+          "canonicalKey": "nata_para_montar",
+          "defaultName": "Nata para montar",
+          "assignedFamily": "LACTEOS_HUEVOS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "evidenceUrls": [
+        "https://www.centrallecheraasturiana.es/productos/nata/nata-para-montar/nata-montar-38mg-500ml/"
+      ],
+      "searchFindsMappedRecord": true,
+      "nextAction": "Revisión editorial y de ficha técnica del suministro antes de uso operativo.",
+      "resolution": "SPECIFIC_VARIANT_AFTER_GENERIC_CLARIFICATION",
+      "historicalCandidates": [
+        {
+          "canonicalKey": "crema_de_leche",
+          "defaultName": "Crema de leche",
+          "assignedFamily": "LACTEOS_HUEVOS"
+        },
+        {
+          "canonicalKey": "nata_doble",
+          "defaultName": "Nata doble",
+          "assignedFamily": "LACTEOS_HUEVOS"
+        },
+        {
+          "canonicalKey": "nata_montada",
+          "defaultName": "Nata montada",
+          "assignedFamily": "LACTEOS_HUEVOS"
+        }
+      ]
+    },
+    {
+      "family": "VERDURAS_SETAS_ALGAS",
+      "term": "Tomate",
+      "status": "LOCALIZADO",
+      "note": "Correspondencia editorial de esta revisión; no se han añadido alias al catálogo. La ficha representa el ingrediente básico, no todas sus variantes.",
+      "records": [
+        {
+          "canonicalKey": "tomates_fresco",
+          "defaultName": "Tomates frescos",
+          "assignedFamily": "VERDURAS_SETAS_ALGAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "VERDURAS_SETAS_ALGAS",
+      "term": "Tomates cherry",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "tomates_cherry",
+          "defaultName": "Tomates cherry",
+          "assignedFamily": "VERDURAS_SETAS_ALGAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "VERDURAS_SETAS_ALGAS",
+      "term": "Cebolla",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "cebolla",
+          "defaultName": "Cebolla",
+          "assignedFamily": "VERDURAS_SETAS_ALGAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "VERDURAS_SETAS_ALGAS",
+      "term": "Cebolla roja",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "cebolla_roja",
+          "defaultName": "Cebolla roja",
+          "assignedFamily": "VERDURAS_SETAS_ALGAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "VERDURAS_SETAS_ALGAS",
+      "term": "Patata",
+      "status": "LOCALIZADO",
+      "note": "Correspondencia editorial de esta revisión; no se han añadido alias al catálogo. La ficha representa el ingrediente básico, no todas sus variantes.",
+      "records": [
+        {
+          "canonicalKey": "patatas",
+          "defaultName": "Patatas",
+          "assignedFamily": "VERDURAS_SETAS_ALGAS"
+        }
+      ],
+      "exactNameOrAlias": false,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "VERDURAS_SETAS_ALGAS",
+      "term": "Zanahoria",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "zanahoria",
+          "defaultName": "Zanahoria",
+          "assignedFamily": "VERDURAS_SETAS_ALGAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "VERDURAS_SETAS_ALGAS",
+      "term": "Calabacín",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "calabac_n",
+          "defaultName": "Calabacín",
+          "assignedFamily": "VERDURAS_SETAS_ALGAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "VERDURAS_SETAS_ALGAS",
+      "term": "Berenjena",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "berenjena",
+          "defaultName": "Berenjena",
+          "assignedFamily": "VERDURAS_SETAS_ALGAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "VERDURAS_SETAS_ALGAS",
+      "term": "Pimiento rojo",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "pimiento_rojo",
+          "defaultName": "Pimiento rojo",
+          "assignedFamily": "VERDURAS_SETAS_ALGAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "VERDURAS_SETAS_ALGAS",
+      "term": "Pimiento verde",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "pimiento_verde",
+          "defaultName": "Pimiento verde",
+          "assignedFamily": "VERDURAS_SETAS_ALGAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "VERDURAS_SETAS_ALGAS",
+      "term": "Lechuga",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "lechuga",
+          "defaultName": "Lechuga",
+          "assignedFamily": "VERDURAS_SETAS_ALGAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "VERDURAS_SETAS_ALGAS",
+      "term": "Rúcula",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "r_cula",
+          "defaultName": "Rúcula",
+          "assignedFamily": "VERDURAS_SETAS_ALGAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "VERDURAS_SETAS_ALGAS",
+      "term": "Espinaca",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "espinaca",
+          "defaultName": "Espinaca",
+          "assignedFamily": "VERDURAS_SETAS_ALGAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "VERDURAS_SETAS_ALGAS",
+      "term": "Brócoli",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "br_coli",
+          "defaultName": "Brócoli",
+          "assignedFamily": "VERDURAS_SETAS_ALGAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "VERDURAS_SETAS_ALGAS",
+      "term": "Coliflor",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "coliflor",
+          "defaultName": "Coliflor",
+          "assignedFamily": "VERDURAS_SETAS_ALGAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "VERDURAS_SETAS_ALGAS",
+      "term": "Pepino",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "pepino",
+          "defaultName": "Pepino",
+          "assignedFamily": "VERDURAS_SETAS_ALGAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "VERDURAS_SETAS_ALGAS",
+      "term": "Puerro",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "puerro",
+          "defaultName": "Puerro",
+          "assignedFamily": "VERDURAS_SETAS_ALGAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "VERDURAS_SETAS_ALGAS",
+      "term": "Apio",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "apio",
+          "defaultName": "Apio",
+          "assignedFamily": "VERDURAS_SETAS_ALGAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "VERDURAS_SETAS_ALGAS",
+      "term": "Champiñones",
+      "status": "LOCALIZADO",
+      "note": "Correspondencia editorial de esta revisión; no se han añadido alias al catálogo. La ficha representa el ingrediente básico, no todas sus variantes.",
+      "records": [
+        {
+          "canonicalKey": "champi_ones_blancos",
+          "defaultName": "Champiñones blancos",
+          "assignedFamily": "VERDURAS_SETAS_ALGAS"
+        }
+      ],
+      "exactNameOrAlias": false,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "VERDURAS_SETAS_ALGAS",
+      "term": "Aceitunas verdes",
+      "status": "LOCALIZADO",
+      "note": "La variedad de mesa Gordal del lote 15 incluye presentaciones verdes documentadas por su proveedor original. La política de ese lote agrupa color, hueso y aliño, por lo que no se crea otra identidad de aceituna verde. Esta correspondencia cubre una opción documentada de la necesidad básica; no equivale todas las aceitunas verdes a Gordal ni define la composición de Aceitunas con hueso.",
+      "records": [
+        {
+          "canonicalKey": "aceituna_gordal_sevillana",
+          "defaultName": "Aceituna Gordal sevillana",
+          "assignedFamily": "VERDURAS_SETAS_ALGAS"
+        }
+      ],
+      "exactNameOrAlias": false,
+      "evidenceUrls": [
+        "https://www.manzanillaolive.es/es/creciendo/variedades-aceitunas-manzanilla-olive/",
+        "https://www.manzanillaolive.es/wp-content/uploads/2019/05/FICHA-A15-ALINO-ABUELA.pdf"
+      ],
+      "searchFindsMappedRecord": true,
+      "nextAction": "Precisar variedad y aliño del suministro cuando se use en una receta; el genérico histórico con hueso permanece sin reinterpretar.",
+      "resolution": "EXISTING_DOCUMENTED_VARIANT",
+      "discoveryNote": "Gordal: una variedad con presentación verde documentada. Confirmar el aliño del suministro."
+    },
+    {
+      "family": "VERDURAS_SETAS_ALGAS",
+      "term": "Aceitunas negras",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "aceitunas_negras",
+          "defaultName": "Aceitunas negras",
+          "assignedFamily": "VERDURAS_SETAS_ALGAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "VERDURAS_SETAS_ALGAS",
+      "term": "Alcaparras",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "alcaparras",
+          "defaultName": "Alcaparras",
+          "assignedFamily": "VERDURAS_SETAS_ALGAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "VERDURAS_SETAS_ALGAS",
+      "term": "Alcachofa",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "alcachofa",
+          "defaultName": "Alcachofa",
+          "assignedFamily": "VERDURAS_SETAS_ALGAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "VERDURAS_SETAS_ALGAS",
+      "term": "Nori",
+      "status": "LOCALIZADO",
+      "note": "Correspondencia editorial de esta revisión; no se han añadido alias al catálogo. La ficha representa el ingrediente básico, no todas sus variantes.",
+      "records": [
+        {
+          "canonicalKey": "algas_nori",
+          "defaultName": "Algas nori",
+          "assignedFamily": "VERDURAS_SETAS_ALGAS"
+        }
+      ],
+      "exactNameOrAlias": false,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "FRUTAS",
+      "term": "Limón",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "limon",
+          "defaultName": "Limón",
+          "assignedFamily": "FRUTAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "FRUTAS",
+      "term": "Lima",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "lima",
+          "defaultName": "Lima",
+          "assignedFamily": "FRUTAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "FRUTAS",
+      "term": "Naranja",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "naranja",
+          "defaultName": "Naranja",
+          "assignedFamily": "FRUTAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "FRUTAS",
+      "term": "Manzana",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "manzana",
+          "defaultName": "Manzana",
+          "assignedFamily": "FRUTAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "FRUTAS",
+      "term": "Pera",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "pera",
+          "defaultName": "Pera",
+          "assignedFamily": "FRUTAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "FRUTAS",
+      "term": "Plátano",
+      "status": "LOCALIZADO",
+      "note": "Correspondencia editorial de esta revisión; no se han añadido alias al catálogo. La ficha representa el ingrediente básico, no todas sus variantes.",
+      "records": [
+        {
+          "canonicalKey": "bananas",
+          "defaultName": "Bananas",
+          "assignedFamily": "FRUTAS"
+        }
+      ],
+      "exactNameOrAlias": false,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "FRUTAS",
+      "term": "Fresa",
+      "status": "LOCALIZADO",
+      "note": "Correspondencia editorial de esta revisión; no se han añadido alias al catálogo. La ficha representa el ingrediente básico, no todas sus variantes.",
+      "records": [
+        {
+          "canonicalKey": "fresas",
+          "defaultName": "Fresas",
+          "assignedFamily": "FRUTAS"
+        }
+      ],
+      "exactNameOrAlias": false,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "FRUTAS",
+      "term": "Frambuesa",
+      "status": "LOCALIZADO",
+      "note": "Correspondencia editorial de esta revisión; no se han añadido alias al catálogo. La ficha representa el ingrediente básico, no todas sus variantes.",
+      "records": [
+        {
+          "canonicalKey": "frambuesas",
+          "defaultName": "Frambuesas",
+          "assignedFamily": "FRUTAS"
+        }
+      ],
+      "exactNameOrAlias": false,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "FRUTAS",
+      "term": "Arándanos",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "ar_ndanos",
+          "defaultName": "Arándanos",
+          "assignedFamily": "FRUTAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "FRUTAS",
+      "term": "Piña",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "pi_a",
+          "defaultName": "Piña",
+          "assignedFamily": "FRUTAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "FRUTAS",
+      "term": "Mango",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "mango",
+          "defaultName": "Mango",
+          "assignedFamily": "FRUTAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "FRUTAS",
+      "term": "Aguacate",
+      "status": "LOCALIZADO",
+      "note": " Localizado en otra familia culinaria; se conserva la asignación y se indica expresamente en los datos.",
+      "records": [
+        {
+          "canonicalKey": "aguacate",
+          "defaultName": "Aguacate",
+          "assignedFamily": "VERDURAS_SETAS_ALGAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "FRUTAS",
+      "term": "Melocotón",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "melocot_n",
+          "defaultName": "Melocotón",
+          "assignedFamily": "FRUTAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "FRUTAS",
+      "term": "Uva",
+      "status": "LOCALIZADO",
+      "note": "Correspondencia editorial de esta revisión; no se han añadido alias al catálogo. La ficha representa el ingrediente básico, no todas sus variantes.",
+      "records": [
+        {
+          "canonicalKey": "uvas",
+          "defaultName": "Uvas",
+          "assignedFamily": "FRUTAS"
+        }
+      ],
+      "exactNameOrAlias": false,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "FRUTAS",
+      "term": "Pasas",
+      "status": "LOCALIZADO",
+      "note": "Correspondencia editorial de esta revisión; no se han añadido alias al catálogo. La ficha representa el ingrediente básico, no todas sus variantes.",
+      "records": [
+        {
+          "canonicalKey": "uvas_pasas",
+          "defaultName": "Uvas pasas",
+          "assignedFamily": "FRUTAS"
+        }
+      ],
+      "exactNameOrAlias": false,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "FRUTAS",
+      "term": "Dátiles",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "d_tiles",
+          "defaultName": "Dátiles",
+          "assignedFamily": "FRUTAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "term": "Garbanzo",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "garbanzo",
+          "defaultName": "Garbanzo",
+          "assignedFamily": "LEGUMBRES_PROTEINAS_VEGETALES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "term": "Lentejas",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "lentejas",
+          "defaultName": "Lentejas",
+          "assignedFamily": "LEGUMBRES_PROTEINAS_VEGETALES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "term": "Lenteja Pardina",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "lenteja_pardina",
+          "defaultName": "Lenteja Pardina",
+          "assignedFamily": "LEGUMBRES_PROTEINAS_VEGETALES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "term": "Alubias blancas",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "alubias_blancas",
+          "defaultName": "Alubias blancas",
+          "assignedFamily": "LEGUMBRES_PROTEINAS_VEGETALES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "term": "Alubias rojas",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "alubias_rojas",
+          "defaultName": "Alubias rojas",
+          "assignedFamily": "LEGUMBRES_PROTEINAS_VEGETALES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "term": "Frijoles negros",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "frijoles_negros",
+          "defaultName": "Frijoles negros",
+          "assignedFamily": "LEGUMBRES_PROTEINAS_VEGETALES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "term": "Guisantes",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "guisantes",
+          "defaultName": "Guisantes",
+          "assignedFamily": "LEGUMBRES_PROTEINAS_VEGETALES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "term": "Habas tiernas",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "habas_tiernas",
+          "defaultName": "Habas tiernas",
+          "assignedFamily": "LEGUMBRES_PROTEINAS_VEGETALES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "term": "Edamame",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "edamame",
+          "defaultName": "Edamame",
+          "assignedFamily": "LEGUMBRES_PROTEINAS_VEGETALES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "term": "Tofu",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "tofu",
+          "defaultName": "Tofu",
+          "assignedFamily": "LEGUMBRES_PROTEINAS_VEGETALES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "term": "Tofu sedoso",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "tofu_sedoso",
+          "defaultName": "Tofu sedoso",
+          "assignedFamily": "LEGUMBRES_PROTEINAS_VEGETALES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "term": "Tempeh",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "tempeh",
+          "defaultName": "Tempeh",
+          "assignedFamily": "LEGUMBRES_PROTEINAS_VEGETALES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "term": "Seitán",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "seit_n",
+          "defaultName": "Seitán",
+          "assignedFamily": "LEGUMBRES_PROTEINAS_VEGETALES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "term": "Soja texturizada",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "soja_texturizada",
+          "defaultName": "Soja texturizada",
+          "assignedFamily": "LEGUMBRES_PROTEINAS_VEGETALES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "term": "Falafel",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "falafel",
+          "defaultName": "Falafel",
+          "assignedFamily": "LEGUMBRES_PROTEINAS_VEGETALES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "term": "Bebida de soja",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "bebida_de_soja",
+          "defaultName": "Bebida de soja",
+          "assignedFamily": "LEGUMBRES_PROTEINAS_VEGETALES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PASTAS_ARROCES_CEREALES",
+      "term": "Espaguetis",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "espaguetis",
+          "defaultName": "Espaguetis",
+          "assignedFamily": "PASTAS_ARROCES_CEREALES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PASTAS_ARROCES_CEREALES",
+      "term": "Macarrones",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "macarrones",
+          "defaultName": "Macarrones",
+          "assignedFamily": "PASTAS_ARROCES_CEREALES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PASTAS_ARROCES_CEREALES",
+      "term": "Pasta penne rigate",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "pasta_penne_rigate",
+          "defaultName": "Pasta penne rigate",
+          "assignedFamily": "PASTAS_ARROCES_CEREALES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PASTAS_ARROCES_CEREALES",
+      "term": "Pasta fusilli",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "pasta_fusilli",
+          "defaultName": "Pasta fusilli",
+          "assignedFamily": "PASTAS_ARROCES_CEREALES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PASTAS_ARROCES_CEREALES",
+      "term": "Pasta tagliatelle",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "pasta_tagliatelle",
+          "defaultName": "Pasta tagliatelle",
+          "assignedFamily": "PASTAS_ARROCES_CEREALES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PASTAS_ARROCES_CEREALES",
+      "term": "Láminas de lasaña",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "laminas_de_lasana",
+          "defaultName": "Láminas de lasaña",
+          "assignedFamily": "PASTAS_ARROCES_CEREALES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PASTAS_ARROCES_CEREALES",
+      "term": "Ñoquis de patata",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "noquis_de_patata",
+          "defaultName": "Ñoquis de patata",
+          "assignedFamily": "PASTAS_ARROCES_CEREALES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PASTAS_ARROCES_CEREALES",
+      "term": "Ravioli de ricotta",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "ravioli_de_ricotta",
+          "defaultName": "Ravioli de ricotta",
+          "assignedFamily": "PASTAS_ARROCES_CEREALES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PASTAS_ARROCES_CEREALES",
+      "term": "Arroz Bomba",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "arroz_bomba",
+          "defaultName": "Arroz Bomba",
+          "assignedFamily": "PASTAS_ARROCES_CEREALES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PASTAS_ARROCES_CEREALES",
+      "term": "Arroz Arborio",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "arroz_arborio",
+          "defaultName": "Arroz Arborio",
+          "assignedFamily": "PASTAS_ARROCES_CEREALES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PASTAS_ARROCES_CEREALES",
+      "term": "Arroz Basmati",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "arroz_basmati",
+          "defaultName": "Arroz Basmati",
+          "assignedFamily": "PASTAS_ARROCES_CEREALES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PASTAS_ARROCES_CEREALES",
+      "term": "Arroz integral",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "arroz_integral",
+          "defaultName": "Arroz integral",
+          "assignedFamily": "PASTAS_ARROCES_CEREALES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PASTAS_ARROCES_CEREALES",
+      "term": "Cuscús",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "couscous",
+          "defaultName": "Cuscús",
+          "assignedFamily": "PASTAS_ARROCES_CEREALES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PASTAS_ARROCES_CEREALES",
+      "term": "Quinoa",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "quinoa",
+          "defaultName": "Quinoa",
+          "assignedFamily": "PASTAS_ARROCES_CEREALES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PASTAS_ARROCES_CEREALES",
+      "term": "Copos de avena",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "copos_de_avena",
+          "defaultName": "Copos de avena",
+          "assignedFamily": "PASTAS_ARROCES_CEREALES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PASTAS_ARROCES_CEREALES",
+      "term": "Fideos de arroz",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "fideos_de_arroz",
+          "defaultName": "Fideos de arroz",
+          "assignedFamily": "PASTAS_ARROCES_CEREALES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PASTAS_ARROCES_CEREALES",
+      "term": "Bebida de avena",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "bebida_de_avena",
+          "defaultName": "Bebida de avena",
+          "assignedFamily": "PASTAS_ARROCES_CEREALES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PASTAS_ARROCES_CEREALES",
+      "term": "Canelones",
+      "status": "LOCALIZADO",
+      "note": "Placas de pasta de trigo sin relleno, documentadas por la ficha y el catálogo de placas del fabricante. No representa canelones rellenos ni variantes por grosor o marca. Composición completa pendiente del suministro.",
+      "records": [
+        {
+          "canonicalKey": "placas_para_canelones",
+          "defaultName": "Placas para canelones",
+          "assignedFamily": "PASTAS_ARROCES_CEREALES"
+        }
+      ],
+      "exactNameOrAlias": false,
+      "evidenceUrls": [
+        "https://www.pastasgallo.es/productos/placas-para-canelones-extrafinas/"
+      ],
+      "resolution": "ADDED_BATCH_31",
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PANES_MASAS_HARINAS",
+      "term": "Masa de pizza",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "masa_de_pizza",
+          "defaultName": "Masa de pizza",
+          "assignedFamily": "PANES_MASAS_HARINAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PANES_MASAS_HARINAS",
+      "term": "Harina de trigo",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "harina_de_trigo",
+          "defaultName": "Harina de trigo",
+          "assignedFamily": "PANES_MASAS_HARINAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PANES_MASAS_HARINAS",
+      "term": "Harina de fuerza",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "harina_de_fuerza",
+          "defaultName": "Harina de fuerza",
+          "assignedFamily": "PANES_MASAS_HARINAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PANES_MASAS_HARINAS",
+      "term": "Harina de arroz",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "harina_de_arroz",
+          "defaultName": "Harina de arroz",
+          "assignedFamily": "PANES_MASAS_HARINAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PANES_MASAS_HARINAS",
+      "term": "Fécula de maíz",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "f_cula_de_ma_z",
+          "defaultName": "Fécula de maíz",
+          "assignedFamily": "PANES_MASAS_HARINAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PANES_MASAS_HARINAS",
+      "term": "Sémola de trigo",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "semola_de_trigo",
+          "defaultName": "Sémola de trigo",
+          "assignedFamily": "PANES_MASAS_HARINAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PANES_MASAS_HARINAS",
+      "term": "Pan rallado",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "pan_rallado",
+          "defaultName": "Pan rallado",
+          "assignedFamily": "PANES_MASAS_HARINAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PANES_MASAS_HARINAS",
+      "term": "Panko",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "panko",
+          "defaultName": "Panko",
+          "assignedFamily": "PANES_MASAS_HARINAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PANES_MASAS_HARINAS",
+      "term": "Baguette",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "baguette",
+          "defaultName": "Baguette",
+          "assignedFamily": "PANES_MASAS_HARINAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PANES_MASAS_HARINAS",
+      "term": "Chapata",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "chapata",
+          "defaultName": "Chapata",
+          "assignedFamily": "PANES_MASAS_HARINAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PANES_MASAS_HARINAS",
+      "term": "Pan brioche",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "pan_brioche",
+          "defaultName": "Pan brioche",
+          "assignedFamily": "PANES_MASAS_HARINAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PANES_MASAS_HARINAS",
+      "term": "Mollete andaluz",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "mollete_andaluz",
+          "defaultName": "Mollete andaluz",
+          "assignedFamily": "PANES_MASAS_HARINAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PANES_MASAS_HARINAS",
+      "term": "Focaccia",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "focaccia",
+          "defaultName": "Focaccia",
+          "assignedFamily": "PANES_MASAS_HARINAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PANES_MASAS_HARINAS",
+      "term": "Pan de pita",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "pan_de_pita",
+          "defaultName": "Pan de pita",
+          "assignedFamily": "PANES_MASAS_HARINAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PANES_MASAS_HARINAS",
+      "term": "Pan de molde blanco",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "pan_de_molde_blanco",
+          "defaultName": "Pan de molde blanco",
+          "assignedFamily": "PANES_MASAS_HARINAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PANES_MASAS_HARINAS",
+      "term": "Tortilla de trigo",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "tortilla_de_trigo",
+          "defaultName": "Tortilla de trigo",
+          "assignedFamily": "PANES_MASAS_HARINAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PANES_MASAS_HARINAS",
+      "term": "Tortilla de maíz",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "tortilla_de_maiz",
+          "defaultName": "Tortilla de maíz",
+          "assignedFamily": "PANES_MASAS_HARINAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PANES_MASAS_HARINAS",
+      "term": "Masa de hojaldre",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "masa_de_hojaldre",
+          "defaultName": "Masa de hojaldre",
+          "assignedFamily": "PANES_MASAS_HARINAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PANES_MASAS_HARINAS",
+      "term": "Masa quebrada",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "masa_quebrada",
+          "defaultName": "Masa quebrada",
+          "assignedFamily": "PANES_MASAS_HARINAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PANES_MASAS_HARINAS",
+      "term": "Pan para hamburguesa",
+      "status": "LOCALIZADO",
+      "note": "Se mantiene la identidad conjunta de pan blanco sencillo de hamburguesa/perrito documentada por USDA 172796. No separar solo por forma. No equivale a toda formulación brioche o integral. La búsqueda por palabras encuentra la ficha conjunta.",
+      "records": [
+        {
+          "canonicalKey": "pan_para_hamburguesa_o_perrito_caliente",
+          "defaultName": "Pan para hamburguesa o perrito caliente",
+          "assignedFamily": "PANES_MASAS_HARINAS"
+        }
+      ],
+      "exactNameOrAlias": false,
+      "evidenceUrls": [
+        "https://fdc.nal.usda.gov/food-details/172796/nutrients"
+      ],
+      "resolution": "EXISTING_GROUPED_IDENTITY",
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "PANES_MASAS_HARINAS",
+      "term": "Pan para perrito caliente",
+      "status": "LOCALIZADO",
+      "note": "Misma ficha conjunta USDA 172796. El registro local original confirma ambos usos y la formulación plain; no hay alta ni alias nuevo. Se comprueba el buscador por palabras, sin certificar pantalla.",
+      "records": [
+        {
+          "canonicalKey": "pan_para_hamburguesa_o_perrito_caliente",
+          "defaultName": "Pan para hamburguesa o perrito caliente",
+          "assignedFamily": "PANES_MASAS_HARINAS"
+        }
+      ],
+      "exactNameOrAlias": false,
+      "evidenceUrls": [
+        "https://fdc.nal.usda.gov/food-details/172796/nutrients"
+      ],
+      "resolution": "EXISTING_GROUPED_IDENTITY",
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "FRUTOS_SECOS_SEMILLAS",
+      "term": "Almendra",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "almendra",
+          "defaultName": "Almendra",
+          "assignedFamily": "FRUTOS_SECOS_SEMILLAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "FRUTOS_SECOS_SEMILLAS",
+      "term": "Nuez",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "nuez",
+          "defaultName": "Nuez",
+          "assignedFamily": "FRUTOS_SECOS_SEMILLAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "FRUTOS_SECOS_SEMILLAS",
+      "term": "Avellana",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "avellana",
+          "defaultName": "Avellana",
+          "assignedFamily": "FRUTOS_SECOS_SEMILLAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "FRUTOS_SECOS_SEMILLAS",
+      "term": "Pistacho",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "pistacho",
+          "defaultName": "Pistacho",
+          "assignedFamily": "FRUTOS_SECOS_SEMILLAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "FRUTOS_SECOS_SEMILLAS",
+      "term": "Piñones",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "pi_ones",
+          "defaultName": "Piñones",
+          "assignedFamily": "FRUTOS_SECOS_SEMILLAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "FRUTOS_SECOS_SEMILLAS",
+      "term": "Cacahuete",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "cacahuete_man",
+          "defaultName": "Cacahuete",
+          "assignedFamily": "FRUTOS_SECOS_SEMILLAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "FRUTOS_SECOS_SEMILLAS",
+      "term": "Anacardos",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "anacardos",
+          "defaultName": "Anacardos",
+          "assignedFamily": "FRUTOS_SECOS_SEMILLAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "FRUTOS_SECOS_SEMILLAS",
+      "term": "Pecana",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "pecana",
+          "defaultName": "Pecana",
+          "assignedFamily": "FRUTOS_SECOS_SEMILLAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "FRUTOS_SECOS_SEMILLAS",
+      "term": "Castaña europea",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "castana_europea",
+          "defaultName": "Castaña europea",
+          "assignedFamily": "FRUTOS_SECOS_SEMILLAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "FRUTOS_SECOS_SEMILLAS",
+      "term": "Semillas de sésamo",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "semillas_de_s_samo",
+          "defaultName": "Semillas de sésamo",
+          "assignedFamily": "FRUTOS_SECOS_SEMILLAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "FRUTOS_SECOS_SEMILLAS",
+      "term": "Semillas de girasol",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "semillas_de_girasol",
+          "defaultName": "Semillas de girasol",
+          "assignedFamily": "FRUTOS_SECOS_SEMILLAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "FRUTOS_SECOS_SEMILLAS",
+      "term": "Semillas de calabaza",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "semillas_de_calabaza",
+          "defaultName": "Semillas de calabaza",
+          "assignedFamily": "FRUTOS_SECOS_SEMILLAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "FRUTOS_SECOS_SEMILLAS",
+      "term": "Semillas de chía",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "semillas_de_ch_a",
+          "defaultName": "Semillas de chía",
+          "assignedFamily": "FRUTOS_SECOS_SEMILLAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "FRUTOS_SECOS_SEMILLAS",
+      "term": "Semillas de lino",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "semillas_de_lino",
+          "defaultName": "Semillas de lino",
+          "assignedFamily": "FRUTOS_SECOS_SEMILLAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "FRUTOS_SECOS_SEMILLAS",
+      "term": "Tahini",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "tahini",
+          "defaultName": "Tahini",
+          "assignedFamily": "FRUTOS_SECOS_SEMILLAS"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "ACEITES_GRASAS_VINAGRES",
+      "term": "Aceite de oliva virgen extra",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "aceite_de_oliva_virgen_extra",
+          "defaultName": "Aceite de oliva virgen extra",
+          "assignedFamily": "ACEITES_GRASAS_VINAGRES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "ACEITES_GRASAS_VINAGRES",
+      "term": "Aceite de oliva",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "aceite_de_oliva",
+          "defaultName": "Aceite de oliva",
+          "assignedFamily": "ACEITES_GRASAS_VINAGRES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "ACEITES_GRASAS_VINAGRES",
+      "term": "Aceite de girasol",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "aceite_de_girasol",
+          "defaultName": "Aceite de girasol",
+          "assignedFamily": "ACEITES_GRASAS_VINAGRES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "ACEITES_GRASAS_VINAGRES",
+      "term": "Aceite de girasol alto oleico",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "aceite_de_girasol_alto_oleico",
+          "defaultName": "Aceite de girasol alto oleico",
+          "assignedFamily": "ACEITES_GRASAS_VINAGRES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "ACEITES_GRASAS_VINAGRES",
+      "term": "Aceite de sésamo",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "aceite_de_s_samo",
+          "defaultName": "Aceite de sésamo",
+          "assignedFamily": "ACEITES_GRASAS_VINAGRES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "ACEITES_GRASAS_VINAGRES",
+      "term": "Mantequilla",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "mantequilla",
+          "defaultName": "Mantequilla",
+          "assignedFamily": "ACEITES_GRASAS_VINAGRES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "ACEITES_GRASAS_VINAGRES",
+      "term": "Ghee",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "ghee",
+          "defaultName": "Ghee",
+          "assignedFamily": "ACEITES_GRASAS_VINAGRES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "ACEITES_GRASAS_VINAGRES",
+      "term": "Grasa de cerdo",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "grasa_de_cerdo",
+          "defaultName": "Grasa de cerdo",
+          "assignedFamily": "ACEITES_GRASAS_VINAGRES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "ACEITES_GRASAS_VINAGRES",
+      "term": "Vinagre de vino blanco",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "vinagre_de_vino_blanco",
+          "defaultName": "Vinagre de vino blanco",
+          "assignedFamily": "ACEITES_GRASAS_VINAGRES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "ACEITES_GRASAS_VINAGRES",
+      "term": "Vinagre de vino tinto",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "vinagre_de_vino_tinto",
+          "defaultName": "Vinagre de vino tinto",
+          "assignedFamily": "ACEITES_GRASAS_VINAGRES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "ACEITES_GRASAS_VINAGRES",
+      "term": "Vinagre de jerez",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "vinagre_de_jerez",
+          "defaultName": "Vinagre de jerez",
+          "assignedFamily": "ACEITES_GRASAS_VINAGRES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "ACEITES_GRASAS_VINAGRES",
+      "term": "Vinagre de manzana",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "vinagre_de_manzana",
+          "defaultName": "Vinagre de manzana",
+          "assignedFamily": "ACEITES_GRASAS_VINAGRES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "ACEITES_GRASAS_VINAGRES",
+      "term": "Vinagre balsámico",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "vinagre_bals_mico",
+          "defaultName": "Vinagre balsámico",
+          "assignedFamily": "ACEITES_GRASAS_VINAGRES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "ACEITES_GRASAS_VINAGRES",
+      "term": "Margarina",
+      "status": "LOCALIZADO",
+      "note": "Margarina convencional como emulsión grasa, documentada en SR Legacy 172346. Se agrupan envases y sal; no se presume composición vegetal exclusiva ni ausencia de leche. No se confunde con mantequilla, grasa anhidra o preparados reducidos en grasa.",
+      "records": [
+        {
+          "canonicalKey": "margarina",
+          "defaultName": "Margarina",
+          "assignedFamily": "ACEITES_GRASAS_VINAGRES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "evidenceUrls": [
+        "https://fdc.nal.usda.gov/food-details/172346/nutrients"
+      ],
+      "resolution": "ADDED_BATCH_31",
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "SALSAS_CONDIMENTOS_BASES",
+      "term": "Sal de mesa",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "sal_de_mesa",
+          "defaultName": "Sal de mesa",
+          "assignedFamily": "SALSAS_CONDIMENTOS_BASES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "SALSAS_CONDIMENTOS_BASES",
+      "term": "Pimienta negra",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "pimienta_negra",
+          "defaultName": "Pimienta negra",
+          "assignedFamily": "SALSAS_CONDIMENTOS_BASES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "SALSAS_CONDIMENTOS_BASES",
+      "term": "Orégano",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "or_gano",
+          "defaultName": "Orégano",
+          "assignedFamily": "SALSAS_CONDIMENTOS_BASES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "SALSAS_CONDIMENTOS_BASES",
+      "term": "Albahaca fresca",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "albahaca_fresca",
+          "defaultName": "Albahaca fresca",
+          "assignedFamily": "SALSAS_CONDIMENTOS_BASES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "SALSAS_CONDIMENTOS_BASES",
+      "term": "Perejil",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "perejil",
+          "defaultName": "Perejil",
+          "assignedFamily": "SALSAS_CONDIMENTOS_BASES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "SALSAS_CONDIMENTOS_BASES",
+      "term": "Ajo",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "ajo",
+          "defaultName": "Ajo",
+          "assignedFamily": "SALSAS_CONDIMENTOS_BASES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "SALSAS_CONDIMENTOS_BASES",
+      "term": "Pimentón",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "piment_n",
+          "defaultName": "Pimentón",
+          "assignedFamily": "SALSAS_CONDIMENTOS_BASES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "SALSAS_CONDIMENTOS_BASES",
+      "term": "Comino",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "comino",
+          "defaultName": "Comino",
+          "assignedFamily": "SALSAS_CONDIMENTOS_BASES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "SALSAS_CONDIMENTOS_BASES",
+      "term": "Concentrado de tomate",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "concentrado_de_tomate",
+          "defaultName": "Concentrado de tomate",
+          "assignedFamily": "SALSAS_CONDIMENTOS_BASES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "SALSAS_CONDIMENTOS_BASES",
+      "term": "Mayonesa",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "mayonesa",
+          "defaultName": "Mayonesa",
+          "assignedFamily": "SALSAS_CONDIMENTOS_BASES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "SALSAS_CONDIMENTOS_BASES",
+      "term": "Alioli",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "alioli",
+          "defaultName": "Alioli",
+          "assignedFamily": "SALSAS_CONDIMENTOS_BASES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "SALSAS_CONDIMENTOS_BASES",
+      "term": "Ketchup",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "ketchup",
+          "defaultName": "Ketchup",
+          "assignedFamily": "SALSAS_CONDIMENTOS_BASES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "SALSAS_CONDIMENTOS_BASES",
+      "term": "Mostaza de Dijon",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "mostaza_dijon",
+          "defaultName": "Mostaza de Dijon",
+          "assignedFamily": "SALSAS_CONDIMENTOS_BASES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "SALSAS_CONDIMENTOS_BASES",
+      "term": "Pesto de albahaca",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "pesto_de_albahaca",
+          "defaultName": "Pesto de albahaca",
+          "assignedFamily": "SALSAS_CONDIMENTOS_BASES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "SALSAS_CONDIMENTOS_BASES",
+      "term": "Bechamel",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "bechamel",
+          "defaultName": "Bechamel",
+          "assignedFamily": "SALSAS_CONDIMENTOS_BASES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "SALSAS_CONDIMENTOS_BASES",
+      "term": "Salsa barbacoa",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "bbq",
+          "defaultName": "Salsa barbacoa",
+          "assignedFamily": "SALSAS_CONDIMENTOS_BASES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "SALSAS_CONDIMENTOS_BASES",
+      "term": "Salsa de soja",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "salsa_de_soja",
+          "defaultName": "Salsa de soja",
+          "assignedFamily": "SALSAS_CONDIMENTOS_BASES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "SALSAS_CONDIMENTOS_BASES",
+      "term": "Fondo de pollo",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "fondo_de_pollo",
+          "defaultName": "Fondo de pollo",
+          "assignedFamily": "SALSAS_CONDIMENTOS_BASES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "SALSAS_CONDIMENTOS_BASES",
+      "term": "Fondo de vacuno",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "fondo_de_vacuno",
+          "defaultName": "Fondo de vacuno",
+          "assignedFamily": "SALSAS_CONDIMENTOS_BASES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "SALSAS_CONDIMENTOS_BASES",
+      "term": "Fondo de pescado",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "fondo_de_pescado",
+          "defaultName": "Fondo de pescado",
+          "assignedFamily": "SALSAS_CONDIMENTOS_BASES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "SALSAS_CONDIMENTOS_BASES",
+      "term": "Caldo de verduras",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "caldo_de_verduras",
+          "defaultName": "Caldo de verduras",
+          "assignedFamily": "SALSAS_CONDIMENTOS_BASES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "SALSAS_CONDIMENTOS_BASES",
+      "term": "Sofrito",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "sofrito",
+          "defaultName": "Sofrito",
+          "assignedFamily": "SALSAS_CONDIMENTOS_BASES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "SALSAS_CONDIMENTOS_BASES",
+      "term": "Tomate triturado",
+      "status": "LOCALIZADO",
+      "note": "Preparación de tomate triturado sin fritura incorporada a la identidad. No equivale a concentrado, coulis ni sofrito; el tratamiento y aditivos del suministro requieren ficha técnica. Tomate histórico permanece genérico.",
+      "records": [
+        {
+          "canonicalKey": "tomate_triturado",
+          "defaultName": "Tomate triturado",
+          "assignedFamily": "SALSAS_CONDIMENTOS_BASES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "evidenceUrls": [
+        "https://hida.es/diferencias-entre-tomate-frito-triturado-y-sofrito/"
+      ],
+      "searchFindsMappedRecord": true,
+      "nextAction": "Revisión editorial y de ficha técnica del suministro antes de uso operativo.",
+      "resolution": "SPECIFIC_VARIANT_AFTER_GENERIC_CLARIFICATION",
+      "historicalCandidates": [
+        {
+          "canonicalKey": "tomate",
+          "defaultName": "Tomate",
+          "assignedFamily": "SALSAS_CONDIMENTOS_BASES"
+        },
+        {
+          "canonicalKey": "coulis_de_tomate",
+          "defaultName": "Coulis de tomate",
+          "assignedFamily": "SALSAS_CONDIMENTOS_BASES"
+        },
+        {
+          "canonicalKey": "concentrado_de_tomate",
+          "defaultName": "Concentrado de tomate",
+          "assignedFamily": "SALSAS_CONDIMENTOS_BASES"
+        }
+      ]
+    },
+    {
+      "family": "SALSAS_CONDIMENTOS_BASES",
+      "term": "Tomate frito",
+      "status": "LOCALIZADO",
+      "note": "Preparación cocinada de tomate con aceite; no se adopta una receta comercial universal. Se conserva Tomate genérico y no se fusionan coulis ni sofrito.",
+      "records": [
+        {
+          "canonicalKey": "tomate_frito",
+          "defaultName": "Tomate frito",
+          "assignedFamily": "SALSAS_CONDIMENTOS_BASES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "evidenceUrls": [
+        "https://hida.es/productos/sofritos-caseros/tomate-frito/"
+      ],
+      "searchFindsMappedRecord": true,
+      "nextAction": "Revisión editorial y de ficha técnica del suministro antes de uso operativo.",
+      "resolution": "SPECIFIC_VARIANT_AFTER_GENERIC_CLARIFICATION",
+      "historicalCandidates": [
+        {
+          "canonicalKey": "tomate",
+          "defaultName": "Tomate",
+          "assignedFamily": "SALSAS_CONDIMENTOS_BASES"
+        },
+        {
+          "canonicalKey": "sofrito",
+          "defaultName": "Sofrito",
+          "assignedFamily": "SALSAS_CONDIMENTOS_BASES"
+        },
+        {
+          "canonicalKey": "coulis_de_tomate",
+          "defaultName": "Coulis de tomate",
+          "assignedFamily": "SALSAS_CONDIMENTOS_BASES"
+        }
+      ]
+    },
+    {
+      "family": "SALSAS_CONDIMENTOS_BASES",
+      "term": "Vino blanco para cocinar",
+      "status": "LOCALIZADO",
+      "note": "Vino blanco como ingrediente culinario; no es vinagre ni vino desalcoholizado. Cocinar es un uso y se registra como alias, sin otra alta. No se importa marca ni variedad de uva.",
+      "records": [
+        {
+          "canonicalKey": "vino_blanco",
+          "defaultName": "Vino blanco",
+          "assignedFamily": "SALSAS_CONDIMENTOS_BASES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "evidenceUrls": [
+        "https://garciacarrion.com/collections/vino-don-simon"
+      ],
+      "resolution": "ADDED_BATCH_31",
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "SALSAS_CONDIMENTOS_BASES",
+      "term": "Vino tinto para cocinar",
+      "status": "LOCALIZADO",
+      "note": "Vino tinto como ingrediente culinario; no es vinagre ni tinto de verano. Cocinar es un uso, sin otra identidad. No se presume ausencia de sulfitos ni eliminación de alcohol en una receta.",
+      "records": [
+        {
+          "canonicalKey": "vino_tinto",
+          "defaultName": "Vino tinto",
+          "assignedFamily": "SALSAS_CONDIMENTOS_BASES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "evidenceUrls": [
+        "https://garciacarrion.com/collections/vino-don-simon"
+      ],
+      "resolution": "ADDED_BATCH_31",
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "REPOSTERIA_AUXILIARES",
+      "term": "Azúcar",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "az_car",
+          "defaultName": "Azúcar",
+          "assignedFamily": "REPOSTERIA_AUXILIARES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "REPOSTERIA_AUXILIARES",
+      "term": "Azúcar glas",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "az_car_glas",
+          "defaultName": "Azúcar glas",
+          "assignedFamily": "REPOSTERIA_AUXILIARES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "REPOSTERIA_AUXILIARES",
+      "term": "Azúcar moreno",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "az_car_moreno",
+          "defaultName": "Azúcar moreno",
+          "assignedFamily": "REPOSTERIA_AUXILIARES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "REPOSTERIA_AUXILIARES",
+      "term": "Miel",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "miel",
+          "defaultName": "Miel",
+          "assignedFamily": "REPOSTERIA_AUXILIARES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "REPOSTERIA_AUXILIARES",
+      "term": "Chocolate negro",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "chocolate_negro",
+          "defaultName": "Chocolate negro",
+          "assignedFamily": "REPOSTERIA_AUXILIARES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "REPOSTERIA_AUXILIARES",
+      "term": "Chocolate con leche",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "chocolate_con_leche",
+          "defaultName": "Chocolate con leche",
+          "assignedFamily": "REPOSTERIA_AUXILIARES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "REPOSTERIA_AUXILIARES",
+      "term": "Chocolate blanco",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "chocolate_blanco",
+          "defaultName": "Chocolate blanco",
+          "assignedFamily": "REPOSTERIA_AUXILIARES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "REPOSTERIA_AUXILIARES",
+      "term": "Cacao sin azúcar",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "cacao_sin_az_car",
+          "defaultName": "Cacao sin azúcar",
+          "assignedFamily": "REPOSTERIA_AUXILIARES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "REPOSTERIA_AUXILIARES",
+      "term": "Extracto de vainilla",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "extracto_de_vainilla",
+          "defaultName": "Extracto de vainilla",
+          "assignedFamily": "REPOSTERIA_AUXILIARES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "REPOSTERIA_AUXILIARES",
+      "term": "Crema pastelera",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "crema_pastelera",
+          "defaultName": "Crema pastelera",
+          "assignedFamily": "REPOSTERIA_AUXILIARES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "REPOSTERIA_AUXILIARES",
+      "term": "Gelatina",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "gelatina",
+          "defaultName": "Gelatina",
+          "assignedFamily": "REPOSTERIA_AUXILIARES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "REPOSTERIA_AUXILIARES",
+      "term": "Agar-agar",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "agar_agar",
+          "defaultName": "Agar-agar",
+          "assignedFamily": "REPOSTERIA_AUXILIARES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "REPOSTERIA_AUXILIARES",
+      "term": "Levadura fresca de panadería",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "levadura_fresca_de_panaderia",
+          "defaultName": "Levadura fresca de panadería",
+          "assignedFamily": "REPOSTERIA_AUXILIARES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "REPOSTERIA_AUXILIARES",
+      "term": "Levadura seca de panadería",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "levadura_seca_de_panaderia",
+          "defaultName": "Levadura seca de panadería",
+          "assignedFamily": "REPOSTERIA_AUXILIARES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "REPOSTERIA_AUXILIARES",
+      "term": "Impulsor químico de repostería",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "impulsor_quimico_de_reposteria",
+          "defaultName": "Impulsor químico de repostería",
+          "assignedFamily": "REPOSTERIA_AUXILIARES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "REPOSTERIA_AUXILIARES",
+      "term": "Bicarbonato sódico alimentario",
+      "status": "LOCALIZADO",
+      "note": "",
+      "records": [
+        {
+          "canonicalKey": "bicarbonato_sodico_alimentario",
+          "defaultName": "Bicarbonato sódico alimentario",
+          "assignedFamily": "REPOSTERIA_AUXILIARES"
+        }
+      ],
+      "exactNameOrAlias": true,
+      "searchFindsMappedRecord": true
+    },
+    {
+      "family": "REPOSTERIA_AUXILIARES",
+      "term": "Café para repostería",
+      "status": "LOCALIZADO",
+      "note": "Café seco soluble para elaboración, distinto del extracto líquido aromático histórico de Nielsen-Massey, cuya fuente declara agua y alcohol. No representa café molido ni infusión preparada; se omiten mezclas comerciales y marca.",
+      "records": [
+        {
+          "canonicalKey": "cafe_soluble",
+          "defaultName": "Café soluble",
+          "assignedFamily": "REPOSTERIA_AUXILIARES"
+        }
+      ],
+      "exactNameOrAlias": false,
+      "evidenceUrls": [
+        "https://www.nestleprofessional.es/cafe-bebidas-hosteleria/cafe-soluble-y-molido/nescafe-classic-cafe-soluble-natural-500g"
+      ],
+      "resolution": "ADDED_BATCH_31",
+      "searchFindsMappedRecord": false
+    }
+  ],
+  "searchReview": [
+    {
+      "term": "Merluza",
+      "keys": [
+        "merluza_europea"
+      ],
+      "foundBefore": true,
+      "foundByCurrentSearch": true,
+      "decision": "ALREADY_SEARCHABLE",
+      "note": "El buscador por palabras ya encontraba una correspondencia editorial; no necesita un alias exacto."
+    },
+    {
+      "term": "Sardina",
+      "keys": [
+        "sardinas"
+      ],
+      "foundBefore": true,
+      "foundByCurrentSearch": true,
+      "decision": "ALREADY_SEARCHABLE",
+      "note": "El buscador por palabras ya encontraba una correspondencia editorial; no necesita un alias exacto."
+    },
+    {
+      "term": "Gambas",
+      "keys": [
+        "gamba_blanca",
+        "gamba_roja_del_mediterraneo"
+      ],
+      "foundBefore": false,
+      "foundByCurrentSearch": true,
+      "decision": "SEARCH_DISCOVERY_TERMS_ADDED",
+      "note": "Se amplía solo la búsqueda con términos relacionados; muestra varias candidatas y conserva sus nombres y claves. No crea equivalencias canónicas ni selecciona automáticamente una ficha."
+    },
+    {
+      "term": "Patata",
+      "keys": [
+        "patatas"
+      ],
+      "foundBefore": true,
+      "foundByCurrentSearch": true,
+      "decision": "ALREADY_SEARCHABLE",
+      "note": "El buscador por palabras ya encontraba una correspondencia editorial; no necesita un alias exacto."
+    },
+    {
+      "term": "Champiñones",
+      "keys": [
+        "champi_ones_blancos"
+      ],
+      "foundBefore": true,
+      "foundByCurrentSearch": true,
+      "decision": "ALREADY_SEARCHABLE",
+      "note": "El buscador por palabras ya encontraba una correspondencia editorial; no necesita un alias exacto."
+    },
+    {
+      "term": "Nori",
+      "keys": [
+        "algas_nori"
+      ],
+      "foundBefore": true,
+      "foundByCurrentSearch": true,
+      "decision": "ALREADY_SEARCHABLE",
+      "note": "El buscador por palabras ya encontraba una correspondencia editorial; no necesita un alias exacto."
+    },
+    {
+      "term": "Plátano",
+      "keys": [
+        "bananas"
+      ],
+      "foundBefore": false,
+      "foundByCurrentSearch": true,
+      "decision": "SEARCH_DISCOVERY_TERMS_ADDED",
+      "note": "Se amplía solo la búsqueda con términos relacionados; muestra varias candidatas y conserva sus nombres y claves. No crea equivalencias canónicas ni selecciona automáticamente una ficha."
+    },
+    {
+      "term": "Fresa",
+      "keys": [
+        "fresas"
+      ],
+      "foundBefore": true,
+      "foundByCurrentSearch": true,
+      "decision": "ALREADY_SEARCHABLE",
+      "note": "El buscador por palabras ya encontraba una correspondencia editorial; no necesita un alias exacto."
+    },
+    {
+      "term": "Frambuesa",
+      "keys": [
+        "frambuesas"
+      ],
+      "foundBefore": true,
+      "foundByCurrentSearch": true,
+      "decision": "ALREADY_SEARCHABLE",
+      "note": "El buscador por palabras ya encontraba una correspondencia editorial; no necesita un alias exacto."
+    },
+    {
+      "term": "Uva",
+      "keys": [
+        "uvas"
+      ],
+      "foundBefore": true,
+      "foundByCurrentSearch": true,
+      "decision": "ALREADY_SEARCHABLE",
+      "note": "El buscador por palabras ya encontraba una correspondencia editorial; no necesita un alias exacto."
+    },
+    {
+      "term": "Pasas",
+      "keys": [
+        "uvas_pasas"
+      ],
+      "foundBefore": true,
+      "foundByCurrentSearch": true,
+      "decision": "ALREADY_SEARCHABLE",
+      "note": "El buscador por palabras ya encontraba una correspondencia editorial; no necesita un alias exacto."
+    }
+  ],
+  "searchImplementationSha256": "090f3e7572ba46011c93bad550aa8a8f157a5cddc75d25cc216f5be269f7960a",
+  "visualVerification": false,
+  "localSourceEvidence": {
+    "file": "output/ingredient-expansion/sources/usda-sr-legacy-2018/FoodData_Central_sr_legacy_food_csv_2018-04/food.csv",
+    "sha256": "de8b0390058db4f102368c9fbdfde144790b480ff4cb0507c0e060ef99805dee",
+    "records": [
+      {
+        "id": "172346",
+        "description": "Margarine, regular, 80% fat, composite, stick, with salt",
+        "line": "\"172346\",\"sr_legacy_food\",\"Margarine, regular, 80% fat, composite, stick, with salt\",\"4\",\"2019-04-01\""
+      },
+      {
+        "id": "172796",
+        "description": "Rolls, hamburger or hotdog, plain",
+        "line": "\"172796\",\"sr_legacy_food\",\"Rolls, hamburger or hotdog, plain\",\"18\",\"2019-04-01\""
+      }
+    ]
+  },
+  "relatedReviewSources": {
+    "fdc-ribeye": {
+      "title": "USDA SR Legacy 170839",
+      "url": "https://fdc.nal.usda.gov/food-details/170839/nutrients",
+      "accessed": "2026-09-25",
+      "notes": "Identidad contrastada en el CSV local y en el lote 08; sin nuevas cifras nutricionales."
+    },
+    "fdc-veal-loin": {
+      "title": "USDA SR Legacy 173823",
+      "url": "https://fdc.nal.usda.gov/food-details/173823/nutrients",
+      "accessed": "2026-09-25",
+      "notes": "Registro del lote 07 comprobado en el CSV local. No es una ficha histórica sin fuente."
+    },
+    "goia-entrecot": {
+      "title": "Cárnicas Goia — Entrecot de lomo alto o bajo",
+      "url": "https://carnicasgoia.com/producto/entrecot/",
+      "accessed": "2026-09-25",
+      "notes": "Contenido indexado recuperado; apertura directa agotó tiempo. Documenta entrecot de lomo alto junto al costillar y lomo bajo. No se extraen precios."
+    },
+    "pozas-entrecot": {
+      "title": "Cárnicas Pozas — Entrecot de ternera",
+      "url": "https://carnicaspozas.com/es/vacuno/1707-entrecot-de-ternera-00718.html",
+      "accessed": "2026-09-25",
+      "notes": "Página recuperada; presenta entrecot de lomo bajo. No se deduce equivalencia universal entre entrecot y ribeye."
+    },
+    "manzanilla-varieties": {
+      "title": "Manzanilla Olive — Variedades",
+      "url": "https://www.manzanillaolive.es/es/creciendo/variedades-aceitunas-manzanilla-olive/",
+      "accessed": "2026-09-25",
+      "notes": "Fuente original del lote 15 recuperada: variedades de mesa, sin subdivisiones por color o hueso en esa política editorial."
+    },
+    "gordal-green": {
+      "title": "Manzanilla Olive — Aceitunas verdes Gordal aliñadas",
+      "url": "https://www.manzanillaolive.es/wp-content/uploads/2019/05/FICHA-A15-ALINO-ABUELA.pdf",
+      "accessed": "2026-09-25",
+      "notes": "PDF recuperado: presentación verde de mesa de la variedad Gordal. No se importa su receta como composición universal."
+    }
+  },
+  "provenanceFile": "ingredient-master-provenance-batch-32.json",
+  "discoveryPolicy": "Dos sugerencias acotadas por consulta completa y clave de maestra, con explicación visible en bolsa y catálogo del Global Manager. El resto de la cobertura se conserva del lote 32.",
+  "userClarification": {
+    "date": "2026-09-25",
+    "statement": "Eran nombres genéricos del catálogo",
+    "appliesTo": [
+      "Tomate",
+      "Anchoas",
+      "Atún",
+      "Crema de leche",
+      "Nata doble",
+      "Fibra de achicoria"
+    ],
+    "interpretation": "Permite documentar variantes explícitas, sin inferir composición de los genéricos ni aprobar fusiones."
+  },
+  "remainingIdentityReviews": [
+    "Fibra de achicoria / Inulina de achicoria",
+    "Equivalencias anteriores y cuatro asignaciones provisionales"
+  ],
+  "sources": {
+    "corunesas-boqueron": {
+      "title": "Pescaderías Coruñesas — Preparaciones de boquerón",
+      "url": "https://www.pescaderiascorunesas.es/preparaciones/boqueron",
+      "notes": "Página recuperada: boquerón fresco con preparaciones de limpieza y fileteado. No documenta una conserva ni un encurtido; no se asigna especie científica sin ficha del suministro.",
+      "accessed": "2026-09-25"
+    },
+    "calvo-natural": {
+      "title": "Calvo — Atún claro Supernatural",
+      "url": "https://calvo.es/producto/atun-claro-supernatural/",
+      "notes": "Página de producto recuperada: atún claro con agua y sal. La receta del fabricante citada como fuente complementaria lo identifica en latas. Se omiten marca, envase y porcentajes en la identidad.",
+      "accessed": "2026-09-25"
+    },
+    "calvo-latas": {
+      "title": "Calvo — Ensalada de lentejas con atún",
+      "url": "https://calvo.es/receta/ensalada-de-lentejas-con-atun-y-dressing-de-tahine-y-anacardos/",
+      "notes": "Resultado indexado del fabricante: utiliza latas de atún claro Supernatural. Evidencia del formato conserva, sin importar la receta.",
+      "accessed": "2026-09-25"
+    },
+    "asturiana-cocinar": {
+      "title": "Central Lechera Asturiana — Nata para cocinar textura espesa",
+      "url": "https://www.centrallecheraasturiana.es/productos/nata/nata-para-cocinar/nata-cocinar-500ml/",
+      "notes": "Página recuperada: nata láctea para cocina con almidón y proteínas de leche. No se generaliza el porcentaje graso ni la composición a todas las natas para cocinar.",
+      "accessed": "2026-09-25"
+    },
+    "asturiana-montar": {
+      "title": "Central Lechera Asturiana — Nata para montar",
+      "url": "https://www.centrallecheraasturiana.es/productos/nata/nata-para-montar/nata-montar-38mg-500ml/",
+      "notes": "Página recuperada: nata líquida destinada al montado, con un ejemplo de 38% de materia grasa. Se omiten porcentaje y marca; no equivale a nata ya montada.",
+      "accessed": "2026-09-25"
+    },
+    "hida-preparaciones": {
+      "title": "Hida — Diferencias entre tomate frito, triturado y sofrito",
+      "url": "https://hida.es/diferencias-entre-tomate-frito-triturado-y-sofrito/",
+      "notes": "Artículo recuperado: distingue tomate triturado de la preparación cocinada con aceite y del sofrito. La identidad triturada no presupone ausencia de tratamiento térmico en una conserva comercial.",
+      "accessed": "2026-09-25"
+    },
+    "hida-frito": {
+      "title": "Hida — Tomate frito",
+      "url": "https://hida.es/productos/sofritos-caseros/tomate-frito/",
+      "notes": "Página recuperada: tomate preparado mediante fritura con aceite. Se documenta la elaboración sin importar su fórmula como receta universal.",
+      "accessed": "2026-09-25"
+    }
+  },
+  "expansionSearchChecks": [
+    {
+      "canonicalKey": "pan_bataro",
+      "queries": [
+        "Pan batarö",
+        "Batarö"
+      ],
+      "found": true
+    },
+    {
+      "canonicalKey": "borlenghi_sin_relleno",
+      "queries": [
+        "Borlenghi sin relleno",
+        "Borlenghi"
+      ],
+      "found": true
+    },
+    {
+      "canonicalKey": "pan_coppia_ferrarese",
+      "queries": [
+        "Pan coppia ferrarese",
+        "Coppia ferrarese"
+      ],
+      "found": true
+    },
+    {
+      "canonicalKey": "crescente_bolonesa",
+      "queries": [
+        "Crescente boloñesa",
+        "Crescente bolognese"
+      ],
+      "found": true
+    },
+    {
+      "canonicalKey": "panecillos_tigelle",
+      "queries": [
+        "Panecillos tigelle",
+        "Tigelle",
+        "Crescentine de Módena"
+      ],
+      "found": true
+    },
+    {
+      "canonicalKey": "pan_col_bollo",
+      "queries": [
+        "Pan col bollo",
+        "Pane col bollo"
+      ],
+      "found": true
+    },
+    {
+      "canonicalKey": "pan_toscano_sin_sal",
+      "queries": [
+        "Pan toscano sin sal",
+        "Pane toscano"
+      ],
+      "found": true
+    },
+    {
+      "canonicalKey": "pan_marocca_de_casola",
+      "queries": [
+        "Pan marocca de Casola",
+        "Marocca di Casola"
+      ],
+      "found": true
+    },
+    {
+      "canonicalKey": "pan_de_altopascio",
+      "queries": [
+        "Pan de Altopascio",
+        "Pane di Altopascio"
+      ],
+      "found": true
+    },
+    {
+      "canonicalKey": "pan_marocco_de_montignoso",
+      "queries": [
+        "Pan marocco de Montignoso",
+        "Pane marocco di Montignoso"
+      ],
+      "found": true
+    },
+    {
+      "canonicalKey": "panigacci_de_podenzana",
+      "queries": [
+        "Panigacci de Podenzana",
+        "Panigaccio di Podenzana"
+      ],
+      "found": true
+    },
+    {
+      "canonicalKey": "pan_pistoccu",
+      "queries": [
+        "Pan pistoccu",
+        "Pistoccu"
+      ],
+      "found": true
+    },
+    {
+      "canonicalKey": "pan_civraxiu",
+      "queries": [
+        "Pan civraxiu",
+        "Civraxiu"
+      ],
+      "found": true
+    },
+    {
+      "canonicalKey": "pan_coccoi",
+      "queries": [
+        "Pan coccoi",
+        "Coccoi"
+      ],
+      "found": true
+    }
+  ],
+  "expansionPolicy": "Continuar expansión. Equivalencias históricas al final por indicación del usuario del 25 de septiembre."
+}

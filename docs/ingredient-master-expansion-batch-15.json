@@ -1,0 +1,603 @@
+{
+  "schemaVersion": 1,
+  "batchId": "2026-09-24-15",
+  "date": "2026-09-24",
+  "status": "EDITORIAL_REVIEW",
+  "targetTotal": 5000,
+  "policy": "Hortalizas, variedades de aceituna, encurtidos y fermentados documentados por identidad. Sin cuotas ni combinaciones automáticas; conservación íntegra del catálogo anterior.",
+  "allergenPolicy": "Candidatos NEEDS_REVIEW e imágenes MISSING. Alérgenos vacíos significa no aprobados, nunca ausencia; verificar ficha técnica del proveedor antes de uso operativo.",
+  "sources": {
+    "JOHNNYS_ASIAN_GREENS": {
+      "title": "Johnny’s Selected Seeds — Asian Greens: variedades y usos culinarios",
+      "url": "https://www.johnnyseeds.com/growers-library/vegetables/greens/johnnys-asian-greens-10-varieties-5-recipes.html",
+      "accessed": "2026-09-24",
+      "notes": "Secciones 1–4: mizuna, choi sum, tatsoi y komatsuna. Las variedades comerciales se agrupan por tipo culinario; no se copian recetas ni instrucciones de cultivo."
+    },
+    "JOHNNYS_ROMANESCO": {
+      "title": "Johnny’s Selected Seeds — Romanesco Cauliflower",
+      "url": "https://www.johnnyseeds.com/vegetables/cauliflower/romanesco-cauliflower/",
+      "accessed": "2026-09-24",
+      "notes": "La fuente diferencia el tipo romanesco y documenta su nombre alternativo de brócoli romanesco. No se separan los cultivares comerciales."
+    },
+    "JOHNNYS_DAIKON": {
+      "title": "Johnny’s Selected Seeds — Miyashige: daikon",
+      "url": "https://www.johnnyseeds.com/vegetables/radishes/miyashige-radish-seed-625.html?cgid=radishes",
+      "accessed": "2026-09-24",
+      "notes": "La ficha 625 identifica Miyashige como daikon japonés. Se usa como evidencia del tipo culinario, sin alta adicional de Miyashige."
+    },
+    "JOHNNYS_TOMATILLO": {
+      "title": "Johnny’s Selected Seeds — Tomatillos",
+      "url": "https://www.johnnyseeds.com/vegetables/tomatillos/",
+      "accessed": "2026-09-24",
+      "notes": "Catálogo de tomatillos y enlace botánico a Physalis philadelphica; distingue el ingrediente de la salsa preparada."
+    },
+    "CONCELLO_PADRON": {
+      "title": "Concello de Padrón — Los pimientos",
+      "url": "https://padron.gal/es/component/k2/item/358-los-pimientos?print=1&tmpl=component",
+      "accessed": "2026-09-24",
+      "notes": "La fuente distingue los ecotipos de la variedad Padrón y el producto certificado de Herbón. No se importa una certificación ni se garantiza un origen de suministro."
+    },
+    "MANZANILLA_OLIVE_VARIETIES": {
+      "title": "Manzanilla Olive — Variedades de aceituna de mesa",
+      "url": "https://www.manzanillaolive.es/es/creciendo/variedades-aceitunas-manzanilla-olive/",
+      "accessed": "2026-09-24",
+      "notes": "La cooperativa describe cinco variedades: Manzanilla Sevillana, Gordal Sevillana, Morona, Hojiblanca y Verdial de Huévar. Las cifras de producción históricas no se importan."
+    },
+    "RIOVERDE_CAPERBERRIES": {
+      "title": "Rioverde — Alcaparrones",
+      "url": "https://www.rioverde.es/producto/alcaparras-2-18-kg/",
+      "accessed": "2026-09-24",
+      "notes": "El título y descripción corresponden a alcaparrones, aunque el slug dice alcaparras. La fuente distingue fruto de botón floral. No se reproduce su grafía botánica."
+    },
+    "RIOVERDE_PICKLED_GARLIC": {
+      "title": "Rioverde — Ajos suaves con aceite de oliva",
+      "url": "https://www.rioverde.es/producto/ajos-suaves-con-aceite-de-oliva-200-g/",
+      "accessed": "2026-09-24",
+      "notes": "Preparado con ajo, agua y vinagre de vino; la referencia incluye aceite y declara sulfitos. La identidad no garantiza una receta universal ni ausencia de alérgenos."
+    },
+    "MAPA_ALMAGRO": {
+      "title": "MAPA — Pliego de Berenjena de Almagro",
+      "url": "https://www.mapa.gob.es/images/es/berenjena_almagro_2012_06_12_tcm30-210504.pdf",
+      "accessed": "2026-09-24",
+      "notes": "Página 1: variedad Dealmagro y elaboración mediante cocción, fermentación y aliño. Fuente de identidad tradicional, no certificación de una compra."
+    },
+    "EUSKADI_IBARRA": {
+      "title": "Gobierno Vasco — Guindillas de Ibarra",
+      "url": "https://www.euskadi.eus/gobierno-vasco/-/es/productos-vascos/guindillas-de-ibarra/",
+      "accessed": "2026-09-24",
+      "notes": "Describe la variedad autóctona y su preparación en vinagre. No acredita el sello de calidad de un lote adquirido."
+    },
+    "JONGGA_NAPA_KIMCHI": {
+      "title": "Jongga — Fermented Napa Cabbage Kimchi",
+      "url": "https://jonggaeurope.com/blog/product/fermented-napa-cabbage-kimchi-300g/",
+      "accessed": "2026-09-24",
+      "notes": "La referencia documenta col napa salada, sazonada y fermentada; incluye salsa de anchoa. No se importa como formulación universal ni se etiqueta como vegano."
+    },
+    "JONGGA_RADISH_KIMCHI": {
+      "title": "Jongga — Diced Radish Kimchi (Kkakdugi)",
+      "url": "https://jonggaeurope.com/blog/product/diced-radish-kimchi/",
+      "accessed": "2026-09-24",
+      "notes": "La referencia identifica el fermentado de rábano y declara pescado y gamba. Una mención de aditivo resulta inconsistente; no se importa ningún código ni formulación."
+    },
+    "JONGGA_MUSTARD_KIMCHI": {
+      "title": "Jongga — Mustard Leaf (GAT) Kimchi",
+      "url": "https://jonggaeurope.com/blog/product/mustard-leaf-gat-kimchi/",
+      "accessed": "2026-09-24",
+      "notes": "El producto documenta hojas de mostaza fermentadas y salsa de anchoa; las advertencias incluyen mostaza, pescado y crustáceos. No se aprueba una formulación ni una etiqueta dietética."
+    },
+    "JONGGA_ONION_KIMCHI": {
+      "title": "Jongga — Green Onion Kimchi",
+      "url": "https://jonggaeurope.com/blog/product/green-onion-kimchi/",
+      "accessed": "2026-09-24",
+      "notes": "Documenta fermentación de cebolla tierna condimentada; contiene salsa de anchoa y advierte pescado, sésamo y mostaza. No se infiere una receta universal."
+    },
+    "DANI_NORA": {
+      "title": "Dani — Ñoras y diferencia con pimiento choricero",
+      "url": "https://www.dani.es/es/catalog/especias/pimiento-rojo/noras-14g",
+      "accessed": "2026-09-24",
+      "notes": "La ficha documenta el pimiento redondo seco y distingue el choricero alargado. No se separan envases ni variantes trituradas."
+    },
+    "BARRACA_CHORICERO": {
+      "title": "La Barraca — Pimiento choricero y uso de su pulpa",
+      "url": "https://labarraca1912.es/carne-de-pimiento-choricero-2/",
+      "accessed": "2026-09-24",
+      "notes": "El fabricante describe el choricero como variedad roja conservada mediante secado. La ficha de pulpa se usa para documentar la materia prima, sin crear una segunda alta por pulpa."
+    }
+  },
+  "records": [
+    {
+      "canonicalKey": "mizuna",
+      "defaultName": "Mizuna",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Mizuna"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "JOHNNYS_ASIAN_GREENS",
+        "recordId": "mizuna",
+        "sourceName": "Johnny’s Selected Seeds — Asian Greens: variedades y usos culinarios",
+        "url": "https://www.johnnyseeds.com/growers-library/vegetables/greens/johnnys-asian-greens-10-varieties-5-recipes.html"
+      },
+      "identityReason": "Hortaliza de hoja identificada para ensaladas y cocina. Tipo diferenciado de las hojas de mostaza genéricas; no se crean altas por color, hoja baby o cultivar.",
+      "culinaryForm": "HORTALIZA"
+    },
+    {
+      "canonicalKey": "choi_sum",
+      "defaultName": "Choi sum",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Choi sum"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "JOHNNYS_ASIAN_GREENS",
+        "recordId": "choi_sum",
+        "sourceName": "Johnny’s Selected Seeds — Asian Greens: variedades y usos culinarios",
+        "url": "https://www.johnnyseeds.com/growers-library/vegetables/greens/johnnys-asian-greens-10-varieties-5-recipes.html"
+      },
+      "identityReason": "Hortaliza de tallos y brotes florales documentada para salteados. Se distingue del Pak choi y Brócoli chino históricos; no se cuenta el cultivar Green 70 D por separado.",
+      "culinaryForm": "HORTALIZA"
+    },
+    {
+      "canonicalKey": "tatsoi",
+      "defaultName": "Tatsoi",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Tatsoi"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "JOHNNYS_ASIAN_GREENS",
+        "recordId": "tatsoi",
+        "sourceName": "Johnny’s Selected Seeds — Asian Greens: variedades y usos culinarios",
+        "url": "https://www.johnnyseeds.com/growers-library/vegetables/greens/johnnys-asian-greens-10-varieties-5-recipes.html"
+      },
+      "identityReason": "Hortaliza de hoja documentada como tipo culinario propio para ensaladas y salteados. Se agrupan híbridos y hojas baby; no es un alias del Pak choi histórico.",
+      "culinaryForm": "HORTALIZA"
+    },
+    {
+      "canonicalKey": "komatsuna",
+      "defaultName": "Komatsuna",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Komatsuna",
+        "Espinaca japonesa"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "JOHNNYS_ASIAN_GREENS",
+        "recordId": "komatsuna",
+        "sourceName": "Johnny’s Selected Seeds — Asian Greens: variedades y usos culinarios",
+        "url": "https://www.johnnyseeds.com/growers-library/vegetables/greens/johnnys-asian-greens-10-varieties-5-recipes.html"
+      },
+      "identityReason": "Brásica de hoja con identidad culinaria propia. El nombre alternativo de espinaca japonesa sirve para búsqueda y no la identifica con la espinaca histórica.",
+      "culinaryForm": "HORTALIZA"
+    },
+    {
+      "canonicalKey": "romanesco",
+      "defaultName": "Romanesco",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Romanesco",
+        "Coliflor romanesco",
+        "Brócoli romanesco"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "JOHNNYS_ROMANESCO",
+        "recordId": "romanesco",
+        "sourceName": "Johnny’s Selected Seeds — Romanesco Cauliflower",
+        "url": "https://www.johnnyseeds.com/vegetables/cauliflower/romanesco-cauliflower/"
+      },
+      "identityReason": "Tipo de coliflor identificado por sus inflorescencias características; puede coexistir con la coliflor genérica sin modificarla. Los nombres coliflor y brócoli romanesco son alias de una sola alta.",
+      "culinaryForm": "HORTALIZA"
+    },
+    {
+      "canonicalKey": "rabano_daikon",
+      "defaultName": "Rábano daikon",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Rábano daikon",
+        "Daikon",
+        "Rábano japonés"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "JOHNNYS_DAIKON",
+        "recordId": "daikon_type",
+        "sourceName": "Johnny’s Selected Seeds — Miyashige: daikon",
+        "url": "https://www.johnnyseeds.com/vegetables/radishes/miyashige-radish-seed-625.html?cgid=radishes"
+      },
+      "identityReason": "Tipo de rábano japonés alargado, distinto del nabo. La ficha genérica Rábano se conserva; los cultivares de daikon se agrupan en esta identidad.",
+      "culinaryForm": "HORTALIZA"
+    },
+    {
+      "canonicalKey": "tomatillo",
+      "defaultName": "Tomatillo",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Tomatillo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "JOHNNYS_TOMATILLO",
+        "recordId": "tomatillo",
+        "sourceName": "Johnny’s Selected Seeds — Tomatillos",
+        "url": "https://www.johnnyseeds.com/vegetables/tomatillos/"
+      },
+      "identityReason": "Fruto de uso culinario distinto del tomate y de la uchuva. La Salsa de tomatillo existente es una elaboración y no representa la materia prima. No se usa tomate verde como alias por su ambigüedad.",
+      "culinaryForm": "HORTALIZA"
+    },
+    {
+      "canonicalKey": "pimiento_de_padron",
+      "defaultName": "Pimiento de Padrón",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Pimiento de Padrón",
+        "Pimientos de Padrón"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "CONCELLO_PADRON",
+        "recordId": "variedad_padron",
+        "sourceName": "Concello de Padrón — Los pimientos",
+        "url": "https://padron.gal/es/component/k2/item/358-los-pimientos?print=1&tmpl=component"
+      },
+      "identityReason": "Variedad culinaria identificada para consumo en fresco, distinta de los pimientos verdes genéricos y del shishito. No se crea una segunda identidad por el sello de Herbón.",
+      "culinaryForm": "HORTALIZA"
+    },
+    {
+      "canonicalKey": "aceituna_manzanilla_sevillana",
+      "defaultName": "Aceituna Manzanilla sevillana",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Aceituna Manzanilla sevillana",
+        "Aceitunas Manzanilla sevillana"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MANZANILLA_OLIVE_VARIETIES",
+        "recordId": "manzanilla_sevillana",
+        "sourceName": "Manzanilla Olive — Variedades de aceituna de mesa",
+        "url": "https://www.manzanillaolive.es/es/creciendo/variedades-aceitunas-manzanilla-olive/"
+      },
+      "identityReason": "Variedad de aceituna de mesa documentada. No se subdivide por hueso, relleno, color, aliño, calibre o envase; las fichas genéricas históricas se conservan.",
+      "culinaryForm": "ACEITUNA"
+    },
+    {
+      "canonicalKey": "aceituna_gordal_sevillana",
+      "defaultName": "Aceituna Gordal sevillana",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Aceituna Gordal sevillana",
+        "Aceitunas Gordal",
+        "Aceituna Gordal"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MANZANILLA_OLIVE_VARIETIES",
+        "recordId": "gordal_sevillana",
+        "sourceName": "Manzanilla Olive — Variedades de aceituna de mesa",
+        "url": "https://www.manzanillaolive.es/es/creciendo/variedades-aceitunas-manzanilla-olive/"
+      },
+      "identityReason": "Variedad de aceituna de mesa identificada, distinta de Manzanilla. El tamaño caracteriza la variedad, pero no crea altas por calibres comerciales.",
+      "culinaryForm": "ACEITUNA"
+    },
+    {
+      "canonicalKey": "aceituna_morona",
+      "defaultName": "Aceituna Morona",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Aceituna Morona",
+        "Aceitunas Morona"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MANZANILLA_OLIVE_VARIETIES",
+        "recordId": "morona",
+        "sourceName": "Manzanilla Olive — Variedades de aceituna de mesa",
+        "url": "https://www.manzanillaolive.es/es/creciendo/variedades-aceitunas-manzanilla-olive/"
+      },
+      "identityReason": "Variedad local identificada por la cooperativa; no es una mera denominación de procedencia añadida a una aceituna genérica.",
+      "culinaryForm": "ACEITUNA"
+    },
+    {
+      "canonicalKey": "aceituna_hojiblanca",
+      "defaultName": "Aceituna Hojiblanca",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Aceituna Hojiblanca",
+        "Aceitunas Hojiblanca"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MANZANILLA_OLIVE_VARIETIES",
+        "recordId": "hojiblanca",
+        "sourceName": "Manzanilla Olive — Variedades de aceituna de mesa",
+        "url": "https://www.manzanillaolive.es/es/creciendo/variedades-aceitunas-manzanilla-olive/"
+      },
+      "identityReason": "Variedad documentada para mesa y aceite. Esta ficha representa la aceituna de mesa; no duplica ni sustituye un aceite.",
+      "culinaryForm": "ACEITUNA"
+    },
+    {
+      "canonicalKey": "aceituna_verdial_de_huevar",
+      "defaultName": "Aceituna Verdial de Huévar",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Aceituna Verdial de Huévar",
+        "Aceitunas Verdial de Huévar"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MANZANILLA_OLIVE_VARIETIES",
+        "recordId": "verdial_huevar",
+        "sourceName": "Manzanilla Olive — Variedades de aceituna de mesa",
+        "url": "https://www.manzanillaolive.es/es/creciendo/variedades-aceitunas-manzanilla-olive/"
+      },
+      "identityReason": "Variedad identificada en el catálogo de la cooperativa. No se usa Verdial sin apellido como alias, ya que puede designar otras variedades.",
+      "culinaryForm": "ACEITUNA"
+    },
+    {
+      "canonicalKey": "alcaparrones",
+      "defaultName": "Alcaparrones",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Alcaparrones",
+        "Alcaparrón"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "RIOVERDE_CAPERBERRIES",
+        "recordId": "caperberries",
+        "sourceName": "Rioverde — Alcaparrones",
+        "url": "https://www.rioverde.es/producto/alcaparras-2-18-kg/"
+      },
+      "identityReason": "Fruto de la alcaparrera comercializado en conserva; las Alcaparras existentes son botones florales. La diferencia de órgano justifica la identidad, no el tamaño del envase.",
+      "culinaryForm": "ENCURTIDO"
+    },
+    {
+      "canonicalKey": "ajo_encurtido",
+      "defaultName": "Ajo encurtido",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Ajo encurtido",
+        "Ajos en vinagre"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "RIOVERDE_PICKLED_GARLIC",
+        "recordId": "pickled_garlic",
+        "sourceName": "Rioverde — Ajos suaves con aceite de oliva",
+        "url": "https://www.rioverde.es/producto/ajos-suaves-con-aceite-de-oliva-200-g/"
+      },
+      "identityReason": "Ajo macerado en medio ácido para uso culinario, distinto del ajo fresco y del ajo negro históricos. Se agrupan variantes de aliño; no se crean altas por diente entero o laminado.",
+      "culinaryForm": "ENCURTIDO"
+    },
+    {
+      "canonicalKey": "berenjena_de_almagro",
+      "defaultName": "Berenjena de Almagro",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Berenjena de Almagro",
+        "Berenjenas de Almagro"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MAPA_ALMAGRO",
+        "recordId": "berenjena_almagro_conserva",
+        "sourceName": "MAPA — Pliego de Berenjena de Almagro",
+        "url": "https://www.mapa.gob.es/images/es/berenjena_almagro_2012_06_12_tcm30-210504.pdf"
+      },
+      "identityReason": "Conserva tradicional con variedad y elaboración identificadas, distinta de berenjena fresca o asada. Se agrupan presentaciones enteras, troceadas y embuchadas; no se suman por formato.",
+      "culinaryForm": "ENCURTIDO"
+    },
+    {
+      "canonicalKey": "guindilla_de_ibarra_en_vinagre",
+      "defaultName": "Guindilla de Ibarra en vinagre",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Guindilla de Ibarra en vinagre",
+        "Piparra de Ibarra en vinagre"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "EUSKADI_IBARRA",
+        "recordId": "ibarra_vinegar",
+        "sourceName": "Gobierno Vasco — Guindillas de Ibarra",
+        "url": "https://www.euskadi.eus/gobierno-vasco/-/es/productos-vascos/guindillas-de-ibarra/"
+      },
+      "identityReason": "Encurtido de una variedad identificada; distinto del pimiento en vinagre genérico. Se limita el nombre a la forma conservada documentada y no se interpreta toda piparra como encurtida.",
+      "culinaryForm": "ENCURTIDO"
+    },
+    {
+      "canonicalKey": "kimchi_de_col_napa",
+      "defaultName": "Kimchi de col napa",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Kimchi de col napa",
+        "Kimchi de col china"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "JONGGA_NAPA_KIMCHI",
+        "recordId": "napa_kimchi",
+        "sourceName": "Jongga — Fermented Napa Cabbage Kimchi",
+        "url": "https://jonggaeurope.com/blog/product/fermented-napa-cabbage-kimchi-300g/"
+      },
+      "identityReason": "Fermentado condimentado de col napa, distinto del chucrut y de la col sin fermentar. Se agrupan cortes, envases y formulaciones de proveedor; el alias genérico Kimchi se evita para no ocultar otras bases.",
+      "culinaryForm": "FERMENTADO"
+    },
+    {
+      "canonicalKey": "kimchi_de_rabano",
+      "defaultName": "Kimchi de rábano",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Kimchi de rábano",
+        "Kkakdugi"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "JONGGA_RADISH_KIMCHI",
+        "recordId": "kkakdugi",
+        "sourceName": "Jongga — Diced Radish Kimchi (Kkakdugi)",
+        "url": "https://jonggaeurope.com/blog/product/diced-radish-kimchi/"
+      },
+      "identityReason": "Preparación fermentada condimentada de rábano documentada como Kkakdugi, distinta del nabo encurtido histórico y del kimchi de col. No se genera una segunda alta por su corte en dados.",
+      "culinaryForm": "FERMENTADO"
+    },
+    {
+      "canonicalKey": "kimchi_de_hojas_de_mostaza",
+      "defaultName": "Kimchi de hojas de mostaza",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Kimchi de hojas de mostaza",
+        "Gat kimchi"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "JONGGA_MUSTARD_KIMCHI",
+        "recordId": "gat_kimchi",
+        "sourceName": "Jongga — Mustard Leaf (GAT) Kimchi",
+        "url": "https://jonggaeurope.com/blog/product/mustard-leaf-gat-kimchi/"
+      },
+      "identityReason": "Fermentado de hojas de mostaza documentado como preparación culinaria propia, distinto de hojas frescas, salsas de mostaza y kimchi de col.",
+      "culinaryForm": "FERMENTADO"
+    },
+    {
+      "canonicalKey": "kimchi_de_cebolleta",
+      "defaultName": "Kimchi de cebolleta",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Kimchi de cebolleta",
+        "Kimchi de cebolla tierna"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "JONGGA_ONION_KIMCHI",
+        "recordId": "green_onion_kimchi",
+        "sourceName": "Jongga — Green Onion Kimchi",
+        "url": "https://jonggaeurope.com/blog/product/green-onion-kimchi/"
+      },
+      "identityReason": "Preparación fermentada y condimentada de cebolla tierna, distinta de cebolla encurtida y de cebolleta fresca. No resuelve ni modifica la ficha ambigua Cebolla de verdeo.",
+      "culinaryForm": "FERMENTADO"
+    },
+    {
+      "canonicalKey": "nora_seca",
+      "defaultName": "Ñora seca",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Ñora seca",
+        "Ñora",
+        "Ñoras"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DANI_NORA",
+        "recordId": "nora",
+        "sourceName": "Dani — Ñoras y diferencia con pimiento choricero",
+        "url": "https://www.dani.es/es/catalog/especias/pimiento-rojo/noras-14g"
+      },
+      "identityReason": "Pimiento de variedad redonda documentada en forma seca para cocina, distinto del pimiento rojo seco genérico. Se conserva en Verduras como los pimientos enteros secos históricos.",
+      "culinaryForm": "PIMIENTO_SECO"
+    },
+    {
+      "canonicalKey": "pimiento_choricero_seco",
+      "defaultName": "Pimiento choricero seco",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Pimiento choricero seco",
+        "Pimiento choricero"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "BARRACA_CHORICERO",
+        "recordId": "choricero_type",
+        "sourceName": "La Barraca — Pimiento choricero y uso de su pulpa",
+        "url": "https://labarraca1912.es/carne-de-pimiento-choricero-2/"
+      },
+      "identityReason": "Variedad de pimiento tradicionalmente secada al aire, diferenciada de ñora y del pimiento rojo seco genérico. No se contabiliza una ficha adicional de pulpa preparada.",
+      "culinaryForm": "PIMIENTO_SECO"
+    }
+  ],
+  "exclusions": [
+    {
+      "candidate": "Chucrut, pepinillos, cebollas y remolacha encurtidas",
+      "decision": "ALREADY_REPRESENTED",
+      "reason": "Las fichas existentes representan estas identidades. No añadir traducciones ni marcas como altas."
+    },
+    {
+      "candidate": "Pak choi, brócoli chino, espinaca de Malabar, lechuga espárrago y hojas de crisantemo",
+      "decision": "ALREADY_REPRESENTED",
+      "reason": "Se preservan las fichas históricas; baby, cultivar comercial y nombre extranjero no generan otra identidad."
+    },
+    {
+      "candidate": "Aceitunas en rodajas, deshuesadas, rellenas o por calibre",
+      "decision": "GROUPED",
+      "reason": "Las cinco altas son variedades identificadas, no combinaciones de formato, color, relleno o envase."
+    },
+    {
+      "candidate": "Tomate verde como alias de tomatillo",
+      "decision": "AMBIGUOUS_ALIAS",
+      "reason": "Puede designar un tomate inmaduro; se omite el alias. Tomatillo no es uchuva."
+    },
+    {
+      "candidate": "Kimchi genérico, blanco, salteado, de distintos cortes y marcas",
+      "decision": "DEFERRED",
+      "reason": "El lote delimita cuatro bases fermentadas. Se evita un alias genérico que pueda elegir silenciosamente una base; otras elaboraciones requieren revisión propia."
+    },
+    {
+      "candidate": "Nabo encurtido frente a takuan o daikon encurtido",
+      "decision": "EQUIVALENCE_PENDING",
+      "reason": "La ficha histórica carece de detalle suficiente para descartar una traducción imprecisa de rábano. No se añade takuan hasta delimitar su cobertura."
+    },
+    {
+      "candidate": "Alcachofas, palmitos, cardo y espárragos al natural",
+      "decision": "GROUPED",
+      "reason": "Envasar o cocer el ingrediente sin otra identidad diferenciada no justifica una nueva ficha."
+    },
+    {
+      "candidate": "Menestras, giardiniera, banderillas y platos completos",
+      "decision": "DEFERRED",
+      "reason": "Distinguir preparado comprado como ingrediente de receta de restaurante; no generar combinaciones de hortalizas."
+    },
+    {
+      "candidate": "Pimiento de Herbón certificado y Guindilla de Ibarra certificada",
+      "decision": "GROUPED",
+      "reason": "La certificación no suma otra identidad ni se atribuye automáticamente a un proveedor."
+    },
+    {
+      "candidate": "Pulpa de ñora y pulpa de pimiento choricero",
+      "decision": "DEFERRED",
+      "reason": "Se documentan los pimientos secos; revisar composición de las pastas comerciales antes de otra alta."
+    },
+    {
+      "candidate": "Alérgenos y alegaciones veganas de kimchis y encurtidos",
+      "decision": "NOT_IMPORTED",
+      "reason": "Las referencias incluyen formulaciones con pescado, crustáceos, mostaza, sésamo o sulfitos. La lista vacía del candidato significa no aprobada, nunca ausencia. Requiere ficha específica antes de uso operativo."
+    }
+  ]
+}

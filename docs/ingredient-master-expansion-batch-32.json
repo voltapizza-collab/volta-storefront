@@ -1,0 +1,181 @@
+{
+  "schemaVersion": 1,
+  "batchId": "2026-09-25-32",
+  "date": "2026-09-25",
+  "kind": "EDITORIAL_REVIEW_ONLY",
+  "status": "EDITORIAL_REVIEW",
+  "targetTotal": 5000,
+  "policy": "Revisión de procedencia y alcance. Cero altas. Dos correspondencias básicas resueltas con una variante existente documentada; seis necesidades y la equivalencia fibra/inulina siguen pendientes. No modifica identidades, alias, asignaciones ni datos operativos.",
+  "allergenPolicy": "Sin aprobación editorial ni de composición o alérgenos. Se conservan todos los estados existentes.",
+  "sources": {
+    "fdc-ribeye": {
+      "title": "USDA SR Legacy 170839",
+      "url": "https://fdc.nal.usda.gov/food-details/170839/nutrients",
+      "accessed": "2026-09-25",
+      "notes": "Identidad contrastada en el CSV local y en el lote 08; sin nuevas cifras nutricionales."
+    },
+    "fdc-veal-loin": {
+      "title": "USDA SR Legacy 173823",
+      "url": "https://fdc.nal.usda.gov/food-details/173823/nutrients",
+      "accessed": "2026-09-25",
+      "notes": "Registro del lote 07 comprobado en el CSV local. No es una ficha histórica sin fuente."
+    },
+    "goia-entrecot": {
+      "title": "Cárnicas Goia — Entrecot de lomo alto o bajo",
+      "url": "https://carnicasgoia.com/producto/entrecot/",
+      "accessed": "2026-09-25",
+      "notes": "Contenido indexado recuperado; apertura directa agotó tiempo. Documenta entrecot de lomo alto junto al costillar y lomo bajo. No se extraen precios."
+    },
+    "pozas-entrecot": {
+      "title": "Cárnicas Pozas — Entrecot de ternera",
+      "url": "https://carnicaspozas.com/es/vacuno/1707-entrecot-de-ternera-00718.html",
+      "accessed": "2026-09-25",
+      "notes": "Página recuperada; presenta entrecot de lomo bajo. No se deduce equivalencia universal entre entrecot y ribeye."
+    },
+    "manzanilla-varieties": {
+      "title": "Manzanilla Olive — Variedades",
+      "url": "https://www.manzanillaolive.es/es/creciendo/variedades-aceitunas-manzanilla-olive/",
+      "accessed": "2026-09-25",
+      "notes": "Fuente original del lote 15 recuperada: variedades de mesa, sin subdivisiones por color o hueso en esa política editorial."
+    },
+    "gordal-green": {
+      "title": "Manzanilla Olive — Aceitunas verdes Gordal aliñadas",
+      "url": "https://www.manzanillaolive.es/wp-content/uploads/2019/05/FICHA-A15-ALINO-ABUELA.pdf",
+      "accessed": "2026-09-25",
+      "notes": "PDF recuperado: presentación verde de mesa de la variedad Gordal. No se importa su receta como composición universal."
+    }
+  },
+  "records": [],
+  "decisions": [
+    {
+      "term": "Entrecot de vacuno",
+      "status": "LOCALIZADO",
+      "canonicalKeys": [
+        "ojo_de_lomo_de_vacuno"
+      ],
+      "reason": "La necesidad básica queda representada por la variante de entrecot de lomo alto: Ojo de lomo de vacuno, documentado como ribeye deshuesado en USDA 170839. Entrecot no se convierte en alias exclusivo: también existen cortes de lomo bajo. Lomo de ternera procede de USDA 173823 y se conserva distinto; no se renombra a lomo bajo ni se equipara toda ternera a vacuno adulto.",
+      "evidenceUrls": [
+        "https://fdc.nal.usda.gov/food-details/170839/nutrients",
+        "https://fdc.nal.usda.gov/food-details/173823/nutrients",
+        "https://carnicasgoia.com/producto/entrecot/",
+        "https://carnicaspozas.com/es/vacuno/1707-entrecot-de-ternera-00718.html"
+      ],
+      "nextAction": "Al seleccionar para una receta, elegir el corte requerido; esta correspondencia no cubre todas las variantes de entrecot ni aprueba un suministro.",
+      "sourceIds": [
+        "fdc-ribeye",
+        "fdc-veal-loin",
+        "goia-entrecot",
+        "pozas-entrecot"
+      ]
+    },
+    {
+      "term": "Boquerón",
+      "status": "REVISAR_ALCANCE",
+      "canonicalKeys": [
+        "anchoas"
+      ],
+      "reason": "Boquerón y anchoa designan Engraulis encrasicolus en la fuente europea, pero Anchoas carece de especie y preparación. No se presupone que sea pescado fresco, salazón o vinagre. Requiere procedencia de la ficha antigua.",
+      "evidenceUrls": [
+        "https://fish-commercial-names.ec.europa.eu/fish-names/species/engraulis-encrasicolus_es"
+      ],
+      "nextAction": "Precisar origen o formulación de la ficha histórica. No crear equivalencias, renombrar ni duplicar por suposición."
+    },
+    {
+      "term": "Atún en conserva",
+      "status": "REVISAR_ALCANCE",
+      "canonicalKeys": [
+        "at_n"
+      ],
+      "reason": "Calvo documenta atún claro con aceite de oliva y sal. Atún histórico no indica elaboración. Antes de añadir una conserva que pueda duplicarlo, precisar su suministro y líquido de cobertura; tampoco convertir Atún en alias de conserva.",
+      "evidenceUrls": [
+        "https://calvo.es/producto/atun-claro-en-aceite-de-oliva/"
+      ],
+      "nextAction": "Precisar origen o formulación de la ficha histórica. No crear equivalencias, renombrar ni duplicar por suposición."
+    },
+    {
+      "term": "Nata para cocinar",
+      "status": "REVISAR_ALCANCE",
+      "canonicalKeys": [
+        "crema_de_leche",
+        "nata_doble"
+      ],
+      "reason": "El fabricante distingue una nata líquida para cocinar de menor materia grasa. Crema de leche no declara porcentaje ni formulación. No se la renombra ni se añade una posible duplicación; obtener su ficha técnica y distinguirla de mezclas vegetales.",
+      "evidenceUrls": [
+        "https://www.centrallecheraasturiana.es/productos/nata/nata-para-cocinar/"
+      ],
+      "nextAction": "Precisar origen o formulación de la ficha histórica. No crear equivalencias, renombrar ni duplicar por suposición."
+    },
+    {
+      "term": "Nata para montar",
+      "status": "REVISAR_ALCANCE",
+      "canonicalKeys": [
+        "crema_de_leche",
+        "nata_doble",
+        "nata_montada"
+      ],
+      "reason": "La nata líquida para repostería se monta después; Nata montada ya es otra preparación. No puede asignarse exclusivamente a Crema de leche ni a Nata doble sin materia grasa y composición documentadas.",
+      "evidenceUrls": [
+        "https://www.centrallecheraasturiana.es/productos/nata/nata-reposteria/"
+      ],
+      "nextAction": "Precisar origen o formulación de la ficha histórica. No crear equivalencias, renombrar ni duplicar por suposición."
+    },
+    {
+      "term": "Aceitunas verdes",
+      "status": "LOCALIZADO",
+      "canonicalKeys": [
+        "aceituna_gordal_sevillana"
+      ],
+      "reason": "La variedad de mesa Gordal del lote 15 incluye presentaciones verdes documentadas por su proveedor original. La política de ese lote agrupa color, hueso y aliño, por lo que no se crea otra identidad de aceituna verde. Esta correspondencia cubre una opción documentada de la necesidad básica; no equivale todas las aceitunas verdes a Gordal ni define la composición de Aceitunas con hueso.",
+      "evidenceUrls": [
+        "https://www.manzanillaolive.es/es/creciendo/variedades-aceitunas-manzanilla-olive/",
+        "https://www.manzanillaolive.es/wp-content/uploads/2019/05/FICHA-A15-ALINO-ABUELA.pdf"
+      ],
+      "nextAction": "Precisar variedad y aliño del suministro cuando se use en una receta; el genérico histórico con hueso permanece sin reinterpretar.",
+      "sourceIds": [
+        "manzanilla-varieties",
+        "gordal-green"
+      ]
+    },
+    {
+      "term": "Tomate triturado",
+      "status": "REVISAR_ALCANCE",
+      "canonicalKeys": [
+        "tomate",
+        "coulis_de_tomate",
+        "concentrado_de_tomate"
+      ],
+      "reason": "Hida distingue el triturado del frito y del sofrito. La ficha histórica Tomate en Salsas no documenta procesamiento. No confundirlo con tomate fresco ni concentrado; identificar la receta o suministro original antes de sustituir o duplicar.",
+      "evidenceUrls": [
+        "https://hida.es/diferencias-entre-tomate-frito-triturado-y-sofrito/"
+      ],
+      "nextAction": "Precisar origen o formulación de la ficha histórica. No crear equivalencias, renombrar ni duplicar por suposición."
+    },
+    {
+      "term": "Tomate frito",
+      "status": "REVISAR_ALCANCE",
+      "canonicalKeys": [
+        "tomate",
+        "sofrito",
+        "coulis_de_tomate"
+      ],
+      "reason": "Hida documenta fritura con aceite; sofrito añade otras hortalizas. Tomate y Coulis no bastan para deducir equivalencia. Conservar claves mientras falta elaboración de la ficha antigua; no importar una receta comercial como formulación universal.",
+      "evidenceUrls": [
+        "https://hida.es/diferencias-entre-tomate-frito-triturado-y-sofrito/"
+      ],
+      "nextAction": "Precisar origen o formulación de la ficha histórica. No crear equivalencias, renombrar ni duplicar por suposición."
+    }
+  ],
+  "provenanceFile": "ingredient-master-provenance-batch-32.json",
+  "exclusions": [
+    {
+      "candidate": "Fibra de achicoria / Inulina de achicoria",
+      "decision": "REVIEW_EXISTING_SCOPE",
+      "reason": "La lista original solo dice Fibra de achicoria. Sin composición no se puede decidir inulina u otra fibra; se mantienen las dos claves y la duda del lote 31."
+    },
+    {
+      "candidate": "Seis preparaciones culinarias sin alcance histórico confirmado",
+      "decision": "DEFERRED",
+      "reason": "Boquerón, atún en conserva, dos usos de nata, tomate triturado y frito. Las fuentes comerciales describen candidatos, pero no identifican el significado de los registros antiguos."
+    }
+  ]
+}

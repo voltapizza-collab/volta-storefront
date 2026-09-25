@@ -1,0 +1,57 @@
+{
+  "date": "2026-09-24",
+  "batchId": "2026-09-24-29",
+  "baseline": 3669,
+  "added": 6,
+  "total": 3675,
+  "remainingTo5000": 1325,
+  "byCategory": {
+    "OTROS": 6
+  },
+  "byRestaurantFamily": {
+    "LEGUMBRES_PROTEINAS_VEGETALES": 4,
+    "PASTAS_ARROCES_CEREALES": 2
+  },
+  "byForm": {
+    "LEGUMBRE_SECA": 4,
+    "COPOS": 1,
+    "NIXTAMALIZADO_COCIDO": 1
+  },
+  "aliasesAdded": 7,
+  "exclusionGroups": 5,
+  "preservedMasterRows": 3669,
+  "preservedTaxonomyAssignments": 3669,
+  "pendingPreserved": 25,
+  "idempotentBatches": 29,
+  "historicalAuditsUnchanged": true,
+  "backendProjectionMatches": true,
+  "sourceSha256": "88f3aa0b99894f25a8d8d1d0cc63f4c2b495d5a07358254e0f4e24f39a5246b6",
+  "productionDeployment": false,
+  "databaseWrites": 0,
+  "validation": "Ingredient master OK: 3675 records, 14 categories; valid UTF-8/NFC, names, aliases and identifiers.\n11 consolidated keys preserved; 25 ambiguous records held separately. No duplicate names or shared exact aliases in the selectable source.",
+  "tests": {
+    "importer": {
+      "passed": 9,
+      "log": "tmp/ingredients-batch29-importer-tests.log"
+    },
+    "backend": {
+      "passed": 48,
+      "log": "tmp/ingredients-batch29-backend-tests.log"
+    },
+    "ui": {
+      "passed": 27,
+      "log": "tmp/ingredients-batch29-ui-tests.log"
+    },
+    "totalPassed": 84
+  },
+  "build": {
+    "status": "PASSED",
+    "artifact": "output/ingredients-batch29-build",
+    "bundle": "main.1817e37c.js",
+    "log": "tmp/ingredients-batch29-build.log"
+  },
+  "browser": {
+    "status": "PENDING",
+    "reason": "Verificación visual de lotes 16–29 pendiente; evitar navegador integrado durante el diagnóstico de los cierres de Codex."
+  }
+}

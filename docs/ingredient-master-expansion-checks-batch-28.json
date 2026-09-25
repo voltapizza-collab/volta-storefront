@@ -1,0 +1,58 @@
+{
+  "date": "2026-09-24",
+  "batchId": "2026-09-24-28",
+  "baseline": 3661,
+  "added": 8,
+  "total": 3669,
+  "remainingTo5000": 1331,
+  "byCategory": {
+    "OTROS": 8
+  },
+  "byRestaurantFamily": {
+    "FRUTOS_SECOS_SEMILLAS": 8
+  },
+  "byForm": {
+    "TOSTADO": 3,
+    "INFLADO": 1,
+    "PELADO": 1,
+    "NUEZ": 1,
+    "COCIDO": 2
+  },
+  "aliasesAdded": 6,
+  "exclusionGroups": 5,
+  "preservedMasterRows": 3661,
+  "preservedTaxonomyAssignments": 3661,
+  "pendingPreserved": 25,
+  "idempotentBatches": 28,
+  "historicalAuditsUnchanged": true,
+  "backendProjectionMatches": true,
+  "sourceSha256": "2e2f1f538491eef9e846f8b268e28d51ca9df6b9fd95ebace471a6cb2f84aa32",
+  "productionDeployment": false,
+  "databaseWrites": 0,
+  "validation": "Ingredient master OK: 3669 records, 14 categories; valid UTF-8/NFC, names, aliases and identifiers.\n11 consolidated keys preserved; 25 ambiguous records held separately. No duplicate names or shared exact aliases in the selectable source.",
+  "tests": {
+    "importer": {
+      "passed": 9,
+      "log": "tmp/ingredients-batch28-importer-tests.log"
+    },
+    "backend": {
+      "passed": 48,
+      "log": "tmp/ingredients-batch28-backend-tests.log"
+    },
+    "ui": {
+      "passed": 27,
+      "log": "tmp/ingredients-batch28-ui-tests.log"
+    },
+    "totalPassed": 84
+  },
+  "build": {
+    "status": "PASSED",
+    "artifact": "output/ingredients-batch28-build",
+    "bundle": "main.928a0a16.js",
+    "log": "tmp/ingredients-batch28-build.log"
+  },
+  "browser": {
+    "status": "PENDING",
+    "reason": "Verificación visual de lotes 16–28 pendiente; evitar navegador integrado durante el diagnóstico de los cierres de Codex."
+  }
+}

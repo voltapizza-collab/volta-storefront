@@ -1,0 +1,395 @@
+{
+  "schemaVersion": 1,
+  "batchId": "2026-09-24-22",
+  "date": "2026-09-24",
+  "status": "EDITORIAL_REVIEW",
+  "targetTotal": 5000,
+  "policy": "Panes, masas y harinas con identidad culinaria documentada. Sin cuotas ni altas por marca, forma, envase o combinaciones automáticas. Fichas anteriores intactas.",
+  "allergenPolicy": "NEEDS_REVIEW e imágenes MISSING. Alérgenos vacíos significa no aprobados, nunca ausencia. Revisar especialmente altramuz, trigo, gluten, composición y trazas según ficha técnica del suministro. No importar alegaciones sanitarias ni de ausencia de las fuentes.",
+  "sources": {
+    "bobs-cassava": {
+      "title": "Bob’s Red Mill — Cassava Flour",
+      "url": "https://www.bobsredmill.com/product/cassava-flour",
+      "accessed": "2026-09-24",
+      "notes": "Página recuperada: harina de raíz entera de yuca. No es el almidón aislado."
+    },
+    "shipton-chestnut": {
+      "title": "Shipton Mill — Chestnut Flour 812",
+      "url": "https://www.shipton-mill.com/products/gluten-free-organic-chestnut-flour-812",
+      "accessed": "2026-09-24",
+      "notes": "Contenido indexado del fabricante: harina de castaña para panadería y repostería; no se importa la certificación."
+    },
+    "lopino-lupin": {
+      "title": "Lopino Foods — Lupin Flour",
+      "url": "https://www.lopino.com/",
+      "accessed": "2026-09-24",
+      "notes": "Página recuperada: harina obtenida de semillas de altramuz descascarilladas. Se omiten todas las alegaciones sanitarias."
+    },
+    "natural-evolution-banana": {
+      "title": "Natural Evolution — Green Banana Baking Flour",
+      "url": "https://www.naturalevolutionfoods.com.au/products/green-banana-baking-flour",
+      "accessed": "2026-09-24",
+      "notes": "Página recuperada: banana Cavendish verde molida. No acredita harina de plátano macho ni se importan alegaciones sanitarias."
+    },
+    "pan-precooked-corn": {
+      "title": "P.A.N. — Pre-cooked White Corn Meal",
+      "url": "https://us.allofpan.com/nutritional-information-pre-cooked-white-corn-meal-500g/",
+      "accessed": "2026-09-24",
+      "notes": "Contenido indexado del fabricante: harina de maíz blanco precocida enriquecida. Revisar composición y trazas del suministro."
+    },
+    "joseph-lavash": {
+      "title": "Joseph’s Bakery — Lavash Flatbread",
+      "url": "https://www.josephsbakery.com/products/lavash/",
+      "accessed": "2026-09-24",
+      "notes": "Página recuperada: Lavash Flatbread separado de la mezcla de lino, avena y trigo integral."
+    },
+    "lapiadina-sottile": {
+      "title": "LaPiadina.com — Piadina La Sottile",
+      "url": "https://www.lapiadina.com/prodotti/piadina-la-sottile/",
+      "accessed": "2026-09-24",
+      "notes": "Contenido indexado del fabricante: pan plano con trigo, agua, manteca de cerdo, sal e impulsores. La fórmula es del producto de referencia."
+    },
+    "pan-arepa": {
+      "title": "P.A.N. — Original Pre-cooked Arepa",
+      "url": "https://us.allofpan.com/product/pre-cooked-arepa/",
+      "accessed": "2026-09-24",
+      "notes": "Contenido indexado: arepa precocida con harina de maíz, agua, sal y fibra vegetal, sin relleno."
+    },
+    "wmd-plain-bao": {
+      "title": "We Make Dumplings — Plain Gua Bao",
+      "url": "https://wemakedumplings.co.za/",
+      "accessed": "2026-09-24",
+      "notes": "Contenido indexado: fabricante distingue Plain Gua Bao de Stuffed Baos. Apertura directa agotó el tiempo; no se verificó ficha completa de composición."
+    },
+    "unibake-pretzel": {
+      "title": "Lantmännen Unibake — Pretzel Bun, sliced",
+      "url": "https://www.lantmannenunibake.com/all-products/pretzel-bun-sliced/",
+      "accessed": "2026-09-24",
+      "notes": "Página recuperada: panecillo tipo pretzel; referencia con trigo, malta e hidróxido sódico. No se crea una identidad por corte."
+    },
+    "jusrol-shortcrust": {
+      "title": "Jus-Rol — Shortcrust Pastry Block",
+      "url": "https://www.jusrol.co.uk/products/shortcrust-pastry/",
+      "accessed": "2026-09-24",
+      "notes": "Contenido indexado del fabricante: masa shortcrust para bases y rellenos. No se generaliza una fórmula a todos los proveedores."
+    },
+    "jusrol-pizza": {
+      "title": "Jus-Rol — Sourdough Pizza Kit",
+      "url": "https://www.jusrol.co.uk/products/sourdough-pizza-kit/",
+      "accessed": "2026-09-24",
+      "notes": "Página recuperada: identifica una bola de masa de pizza con masa madre, que se estira antes de añadir coberturas. El bloque Ingredients no devolvió composición."
+    },
+    "wulihao-gyoza": {
+      "title": "Wu Li Hao — Gyoza Wrappers",
+      "url": "https://www.wulihaofood.com/wrappers",
+      "accessed": "2026-09-24",
+      "notes": "Página recuperada: catálogo separa Gyoza Wrappers de Wanton Wrappers. Ofrece tamaños y espesores agrupados."
+    },
+    "golden-turtle-rice-paper": {
+      "title": "Golden Turtle for Chefs — Rice Paper",
+      "url": "https://www.goldenturtlechef.com/product/rice-paper-19-cm-square/",
+      "accessed": "2026-09-24",
+      "notes": "Contenido indexado del fabricante: envoltura de tapioca y harina de arroz (16%). Apertura directa mostró una comprobación de acceso. El nombre culinario no implica arroz puro."
+    }
+  },
+  "records": [
+    {
+      "canonicalKey": "harina_de_yuca",
+      "defaultName": "Harina de yuca",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Harina de yuca",
+        "Harina de mandioca"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "bobs-cassava",
+        "recordId": "harina_de_yuca",
+        "sourceName": "Bob’s Red Mill — Cassava Flour",
+        "url": "https://www.bobsredmill.com/product/cassava-flour"
+      },
+      "identityReason": "Materia prima molida distinta de la fécula de mandioca existente.",
+      "culinaryForm": "HARINA"
+    },
+    {
+      "canonicalKey": "harina_de_castana",
+      "defaultName": "Harina de castaña",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Harina de castaña"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "shipton-chestnut",
+        "recordId": "harina_de_castana",
+        "sourceName": "Shipton Mill — Chestnut Flour 812",
+        "url": "https://www.shipton-mill.com/products/gluten-free-organic-chestnut-flour-812"
+      },
+      "identityReason": "Harina diferenciada del fruto, del pan de castañas y de la crema.",
+      "culinaryForm": "HARINA"
+    },
+    {
+      "canonicalKey": "harina_de_altramuz",
+      "defaultName": "Harina de altramuz",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Harina de altramuz",
+        "Harina de lupino"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "lopino-lupin",
+        "recordId": "harina_de_altramuz",
+        "sourceName": "Lopino Foods — Lupin Flour",
+        "url": "https://www.lopino.com/"
+      },
+      "identityReason": "Harina de leguminosa diferenciada del altramuz entero; revisar alérgenos.",
+      "culinaryForm": "HARINA"
+    },
+    {
+      "canonicalKey": "harina_de_banana_verde",
+      "defaultName": "Harina de banana verde",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Harina de banana verde"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "natural-evolution-banana",
+        "recordId": "harina_de_banana_verde",
+        "sourceName": "Natural Evolution — Green Banana Baking Flour",
+        "url": "https://www.naturalevolutionfoods.com.au/products/green-banana-baking-flour"
+      },
+      "identityReason": "Forma culinaria diferenciada de la fruta fresca; identidad delimitada a banana.",
+      "culinaryForm": "HARINA"
+    },
+    {
+      "canonicalKey": "harina_de_maiz_precocida",
+      "defaultName": "Harina de maíz precocida",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Harina de maíz precocida"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "pan-precooked-corn",
+        "recordId": "harina_de_maiz_precocida",
+        "sourceName": "P.A.N. — Pre-cooked White Corn Meal",
+        "url": "https://us.allofpan.com/nutritional-information-pre-cooked-white-corn-meal-500g/"
+      },
+      "identityReason": "La precocción distingue este preparado de la harina cruda y de la nixtamalizada; no se multiplican colores.",
+      "culinaryForm": "HARINA"
+    },
+    {
+      "canonicalKey": "pan_lavash",
+      "defaultName": "Pan lavash",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Pan lavash",
+        "Lavash"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "joseph-lavash",
+        "recordId": "pan_lavash",
+        "sourceName": "Joseph’s Bakery — Lavash Flatbread",
+        "url": "https://www.josephsbakery.com/products/lavash/"
+      },
+      "identityReason": "Pan plano para envolver, diferenciado de pita y tortillas; no alta por mezcla o marca.",
+      "culinaryForm": "PAN"
+    },
+    {
+      "canonicalKey": "piadina",
+      "defaultName": "Piadina",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Piadina"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "lapiadina-sottile",
+        "recordId": "piadina",
+        "sourceName": "LaPiadina.com — Piadina La Sottile",
+        "url": "https://www.lapiadina.com/prodotti/piadina-la-sottile/"
+      },
+      "identityReason": "Elaboración de pan plano diferenciada; no se importa certificación geográfica ni espesor como nueva identidad.",
+      "culinaryForm": "PAN"
+    },
+    {
+      "canonicalKey": "arepa_de_maiz_sin_relleno",
+      "defaultName": "Arepa de maíz sin relleno",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Arepa de maíz sin relleno",
+        "Arepa para rellenar"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "pan-arepa",
+        "recordId": "arepa_de_maiz_sin_relleno",
+        "sourceName": "P.A.N. — Original Pre-cooked Arepa",
+        "url": "https://us.allofpan.com/product/pre-cooked-arepa/"
+      },
+      "identityReason": "Base de maíz para elaborar platos, distinta de tortilla y pan de maíz; no arepa rellena.",
+      "culinaryForm": "PAN"
+    },
+    {
+      "canonicalKey": "pan_bao_sin_relleno",
+      "defaultName": "Pan bao sin relleno",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Pan bao sin relleno",
+        "Gua bao sin relleno"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "wmd-plain-bao",
+        "recordId": "pan_bao_sin_relleno",
+        "sourceName": "We Make Dumplings — Plain Gua Bao",
+        "url": "https://wemakedumplings.co.za/"
+      },
+      "identityReason": "Pan para rellenar documentado como producto independiente; no plato con relleno.",
+      "culinaryForm": "PAN"
+    },
+    {
+      "canonicalKey": "panecillo_pretzel",
+      "defaultName": "Panecillo pretzel",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Panecillo pretzel",
+        "Panecillo bretzel"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "unibake-pretzel",
+        "recordId": "panecillo_pretzel",
+        "sourceName": "Lantmännen Unibake — Pretzel Bun, sliced",
+        "url": "https://www.lantmannenunibake.com/all-products/pretzel-bun-sliced/"
+      },
+      "identityReason": "Elaboración de pan pretzel, diferenciada del panecillo genérico; no snack seco.",
+      "culinaryForm": "PAN"
+    },
+    {
+      "canonicalKey": "masa_quebrada",
+      "defaultName": "Masa quebrada",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Masa quebrada",
+        "Masa brisa"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "jusrol-shortcrust",
+        "recordId": "masa_quebrada",
+        "sourceName": "Jus-Rol — Shortcrust Pastry Block",
+        "url": "https://www.jusrol.co.uk/products/shortcrust-pastry/"
+      },
+      "identityReason": "Masa no hojaldrada, diferenciada del hojaldre y de la masa filo existentes.",
+      "culinaryForm": "MASA"
+    },
+    {
+      "canonicalKey": "masa_de_pizza",
+      "defaultName": "Masa de pizza",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Masa de pizza"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "jusrol-pizza",
+        "recordId": "masa_de_pizza",
+        "sourceName": "Jus-Rol — Sourdough Pizza Kit",
+        "url": "https://www.jusrol.co.uk/products/sourdough-pizza-kit/"
+      },
+      "identityReason": "Se registra solo la masa cruda como base; no salsa, kit completo ni pizza terminada. La masa madre documenta una formulación sin crear otra alta.",
+      "culinaryForm": "MASA"
+    },
+    {
+      "canonicalKey": "laminas_para_gyoza",
+      "defaultName": "Láminas para gyoza",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Láminas para gyoza",
+        "Masa para gyoza"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "wulihao-gyoza",
+        "recordId": "laminas_para_gyoza",
+        "sourceName": "Wu Li Hao — Gyoza Wrappers",
+        "url": "https://www.wulihaofood.com/wrappers"
+      },
+      "identityReason": "Envoltura para gyoza, diferenciada de las láminas wonton existentes; sin relleno.",
+      "culinaryForm": "ENVOLTURA"
+    },
+    {
+      "canonicalKey": "papel_de_arroz_para_rollitos",
+      "defaultName": "Papel de arroz para rollitos",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Papel de arroz para rollitos",
+        "Láminas de arroz para rollitos"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "golden-turtle-rice-paper",
+        "recordId": "papel_de_arroz_para_rollitos",
+        "sourceName": "Golden Turtle for Chefs — Rice Paper",
+        "url": "https://www.goldenturtlechef.com/product/rice-paper-19-cm-square/"
+      },
+      "identityReason": "Envoltura comestible para rollitos, diferenciada de obleas de trigo; se agrupan formas y tamaños.",
+      "culinaryForm": "ENVOLTURA"
+    }
+  ],
+  "exclusions": [
+    {
+      "candidate": "Harina de arroz glutinoso",
+      "decision": "DEFERRED",
+      "reason": "Revisar el alcance de la ficha histórica Almidón de arroz glutinoso antes de añadir harina o modificar equivalencias."
+    },
+    {
+      "candidate": "Fécula de mandioca y harina de yuca",
+      "decision": "DISTINCT",
+      "reason": "Se conserva la fécula y se añade solo la harina de raíz; no son alias."
+    },
+    {
+      "candidate": "Harina de plátano macho verde",
+      "decision": "DEFERRED",
+      "reason": "La fuente recuperada identifica banana Cavendish, no plátano macho."
+    },
+    {
+      "candidate": "Arepas y baos rellenos, pizzas terminadas",
+      "decision": "NOT_IMPORTED",
+      "reason": "Solo se documentan bases para elaborar platos."
+    },
+    {
+      "candidate": "Papel de arroz puro",
+      "decision": "NOT_IMPORTED",
+      "reason": "La referencia incluye tapioca; no acredita una composición de arroz puro."
+    },
+    {
+      "candidate": "Variantes por color, marca, tamaño, corte y certificación",
+      "decision": "GROUPED",
+      "reason": "Sin multiplicación automática de harinas, panes y envolturas."
+    },
+    {
+      "candidate": "Pan pretzel y snack pretzel seco",
+      "decision": "DISTINCT",
+      "reason": "Solo se añade el panecillo; no se usa pretzel sin calificativo como alias."
+    }
+  ]
+}

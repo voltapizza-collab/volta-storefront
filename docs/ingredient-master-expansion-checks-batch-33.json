@@ -1,0 +1,33 @@
+{
+  "date": "2026-09-25",
+  "batchId": "2026-09-25-33",
+  "added": 0,
+  "total": 3694,
+  "preservedMasterRows": 3694,
+  "protectedFileCount": 170,
+  "protectedFilesUnchanged": true,
+  "historicalAuditsUnchanged": true,
+  "idempotentBatches": 33,
+  "pendingPreserved": 25,
+  "redirectsPreserved": 11,
+  "coverage": {
+    "referenceTotal": 248,
+    "located": 242,
+    "scopeReview": 6,
+    "noSpecificRecord": 0
+  },
+  "discoveryMappings": 2,
+  "tests": {
+    "importer": 11,
+    "ui": 30,
+    "failed": 0
+  },
+  "build": {
+    "passed": true,
+    "main": "/static/js/main.1b232b87.js"
+  },
+  "validation": "Ingredient master OK: 3694 records, 14 categories; valid UTF-8/NFC, names, aliases and identifiers.\n11 consolidated keys preserved; 25 ambiguous records held separately. No duplicate names or shared exact aliases in the selectable source.",
+  "visualVerification": false,
+  "productionDeployment": false,
+  "databaseWrites": 0
+}

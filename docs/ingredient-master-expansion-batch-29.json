@@ -1,0 +1,195 @@
+{
+  "schemaVersion": 1,
+  "batchId": "2026-09-24-29",
+  "date": "2026-09-24",
+  "status": "EDITORIAL_REVIEW",
+  "targetTotal": 5000,
+  "policy": "Legumbres por especie y cereales por transformación culinaria documentada. Sin cuotas, marcas ni duplicados por presentación comercial. Conservar todas las fichas previas.",
+  "allergenPolicy": "NEEDS_REVIEW e imágenes MISSING. Alérgenos vacíos significa no aprobados, nunca ausencia. Revisar ficha técnica del suministro y posibles trazas. No transferir alegaciones sanitarias.",
+  "sources": {
+    "fao-bambara": {
+      "title": "FAO Ecocrop — Vigna subterranea",
+      "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/cropView?id=10830",
+      "accessed": "2026-09-24",
+      "notes": "Ficha indexada de FAO: Vigna subterranea y semillas alimentarias, incluidas secas. Se excluyen vainas, aceite, harina y material de siembra."
+    },
+    "native-seeds-tepary": {
+      "title": "Native Seeds/SEARCH — Tepary Beans",
+      "url": "https://www.nativeseeds.org/collections/nasr-bean-tepary",
+      "accessed": "2026-09-24",
+      "notes": "Página recuperada: Phaseolus acutifolius y uso culinario como judía seca. El catálogo también vende semillas de siembra: estas no se aprueban como suministro alimentario. No se separan cultivares o colores."
+    },
+    "tnau-horsegram": {
+      "title": "TNAU — Composición de legumbres alimentarias",
+      "url": "https://agritech.tnau.ac.in/postharvest/pht_pulses_composition.html",
+      "accessed": "2026-09-24",
+      "notes": "Página recuperada: horse gram entero como legumbre alimentaria. Identidad botánica corroborada por TNAU en https://agritech.tnau.ac.in/agriculture/agri_seasonandvarieties_horsegram.html (Macrotyloma uniflorum). No se importan datos nutricionales."
+    },
+    "fosrin-ricebean": {
+      "title": "FOSRIN / Universidades de Bergen y Bangor — Ricebean food preparation and diets",
+      "url": "https://agris.fao.org/search/en/providers/125311/records/6748de6a7625988a372140c0",
+      "accessed": "2026-09-24",
+      "notes": "Resumen del informe de investigación recuperado en FAO AGRIS: Vigna umbellata, legumbre en grano usada en dhal y otras preparaciones. Se utiliza el resumen, no se afirma haber revisado el informe completo."
+    },
+    "wb-rice-flakes": {
+      "title": "Gobierno de Bengala Occidental — Poha or Rice Flakes",
+      "url": "https://wbfpih.wb.gov.in/assets/user_uploads/directorate_fpi/1381138318_1484835595.pdf",
+      "accessed": "2026-09-24",
+      "notes": "PDF recuperado: arroz transformado en copos como ingrediente para preparaciones dulces y saladas. Se excluyen platos preparados, cereales azucarados y separación por grosor."
+    },
+    "goya-hominy": {
+      "title": "Goya Foods — Mote blanco",
+      "url": "https://www.goya.com/es/products/white-hominy/",
+      "accessed": "2026-09-24",
+      "notes": "Página del fabricante: grano de maíz blanco tratado con cal y cocido. La ficha en https://shop.goya.com/products/white-hominy declara bisulfito sódico: revisar sulfitos y formulación del suministro. No se transfieren alegaciones de ausencia de alérgenos."
+    }
+  },
+  "records": [
+    {
+      "canonicalKey": "judias_bambara_secas",
+      "defaultName": "Judías bambara secas",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "aliases": [
+        "Judías bambara secas",
+        "Voandzou seco"
+      ],
+      "scientificName": "Vigna subterranea",
+      "allergens": [],
+      "evidence": {
+        "sourceId": "fao-bambara",
+        "recordId": "judias_bambara_secas",
+        "sourceName": "FAO Ecocrop — Vigna subterranea",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/cropView?id=10830"
+      },
+      "identityReason": "Legumbre de especie propia; no cacahuete ni judía de ojo negro.",
+      "culinaryForm": "LEGUMBRE_SECA"
+    },
+    {
+      "canonicalKey": "judias_tepary_secas",
+      "defaultName": "Judías tepary secas",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "aliases": [
+        "Judías tepary secas",
+        "Frijoles tepary secos"
+      ],
+      "scientificName": "Phaseolus acutifolius",
+      "allergens": [],
+      "evidence": {
+        "sourceId": "native-seeds-tepary",
+        "recordId": "judias_tepary_secas",
+        "sourceName": "Native Seeds/SEARCH — Tepary Beans",
+        "url": "https://www.nativeseeds.org/collections/nasr-bean-tepary"
+      },
+      "identityReason": "Especie distinta de las alubias comunes Phaseolus vulgaris.",
+      "culinaryForm": "LEGUMBRE_SECA"
+    },
+    {
+      "canonicalKey": "judias_horsegram_secas",
+      "defaultName": "Judías horsegram secas",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "aliases": [
+        "Judías horsegram secas",
+        "Horse gram en grano seco"
+      ],
+      "scientificName": "Macrotyloma uniflorum",
+      "allergens": [],
+      "evidence": {
+        "sourceId": "tnau-horsegram",
+        "recordId": "judias_horsegram_secas",
+        "sourceName": "TNAU — Composición de legumbres alimentarias",
+        "url": "https://agritech.tnau.ac.in/postharvest/pht_pulses_composition.html"
+      },
+      "identityReason": "Especie distinta de habas, judías moth, urd, mungo y jacinto.",
+      "culinaryForm": "LEGUMBRE_SECA"
+    },
+    {
+      "canonicalKey": "judias_arroz_secas",
+      "defaultName": "Judías arroz secas",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "aliases": [
+        "Judías arroz secas",
+        "Ricebean seco"
+      ],
+      "scientificName": "Vigna umbellata",
+      "allergens": [],
+      "evidence": {
+        "sourceId": "fosrin-ricebean",
+        "recordId": "judias_arroz_secas",
+        "sourceName": "FOSRIN / Universidades de Bergen y Bangor — Ricebean food preparation and diets",
+        "url": "https://agris.fao.org/search/en/providers/125311/records/6748de6a7625988a372140c0"
+      },
+      "identityReason": "Especie distinta de azuki y mungo; no arroz ni mezcla de arroz y judías.",
+      "culinaryForm": "LEGUMBRE_SECA"
+    },
+    {
+      "canonicalKey": "copos_de_arroz",
+      "defaultName": "Copos de arroz",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Copos de arroz",
+        "Arroz aplanado",
+        "Poha sin condimentar"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "wb-rice-flakes",
+        "recordId": "copos_de_arroz",
+        "sourceName": "Gobierno de Bengala Occidental — Poha or Rice Flakes",
+        "url": "https://wbfpih.wb.gov.in/assets/user_uploads/directorate_fpi/1381138318_1484835595.pdf"
+      },
+      "identityReason": "Transformación culinaria propia, diferente del arroz en grano, inflado o de su harina.",
+      "culinaryForm": "COPOS"
+    },
+    {
+      "canonicalKey": "maiz_blanco_nixtamalizado_cocido",
+      "defaultName": "Maíz blanco nixtamalizado cocido",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Maíz blanco nixtamalizado cocido",
+        "Hominy blanco cocido"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "goya-hominy",
+        "recordId": "maiz_blanco_nixtamalizado_cocido",
+        "sourceName": "Goya Foods — Mote blanco",
+        "url": "https://www.goya.com/es/products/white-hominy/"
+      },
+      "identityReason": "Grano nixtamalizado cocido, diferente de harina masa harina, maíz dulce, palomitas y maíz tostado. Mote sin especificar no se adopta como alias.",
+      "culinaryForm": "NIXTAMALIZADO_COCIDO"
+    }
+  ],
+  "exclusions": [
+    {
+      "candidate": "Alubias comunes, azuki, mungo, moth, urd, jacinto, gandules y cereales ya registrados",
+      "decision": "ALREADY_REPRESENTED",
+      "reason": "Conservar las fichas existentes; sin altas por sinónimos o nuevos colores."
+    },
+    {
+      "candidate": "Mijos por especie y trigo partido",
+      "decision": "DEFERRED",
+      "reason": "Delimitar primero Semilla de mijo y su alcance, y la diferencia de procesamiento respecto a Bulgur."
+    },
+    {
+      "candidate": "Adlay y judía de ñame africana",
+      "decision": "DEFERRED",
+      "reason": "Completar evidencia de la presentación alimentaria específica: grano de Coix comestible frente a material ornamental; semilla de Sphenostylis frente a tubérculo."
+    },
+    {
+      "candidate": "Mote sin especificar, platos poha, cultivares, calibres, marcas y envases",
+      "decision": "GROUPED",
+      "reason": "No se crean identidades adicionales. Mote amplio no se utiliza como alias; poha se limita al ingrediente sin condimentar."
+    },
+    {
+      "candidate": "Semillas de siembra, nutrición, recetas completas y ausencia de alérgenos",
+      "decision": "NOT_IMPORTED",
+      "reason": "Las fuentes documentan identidades culinarias candidatas, no homologación de un suministro. Revisar sulfitos en hominy preparado."
+    }
+  ]
+}

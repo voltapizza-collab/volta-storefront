@@ -1,0 +1,558 @@
+{
+  "schemaVersion": 1,
+  "batchId": "2026-09-24-16",
+  "date": "2026-09-24",
+  "status": "EDITORIAL_REVIEW",
+  "targetTotal": 5000,
+  "policy": "Hierbas, especias y chiles secos documentados por identidad. Sin cuotas ni altas por molienda, marca o envase; se preserva íntegramente la maestra anterior.",
+  "allergenPolicy": "Candidatos NEEDS_REVIEW e imágenes MISSING. Alérgenos vacíos significa no aprobados, nunca ausencia. El preparado de asafétida requiere verificar composición y soportes con el proveedor.",
+  "sources": {
+    "PFG_LATIN_HERBS": {
+      "title": "Performance Foodservice — Peak Fresh Produce Latin Herbs",
+      "url": "https://www.performancefoodservice.com/Get-Inspired/New-in-Stock/Peak-Fresh-Produce-Latin-Herbs",
+      "accessed": "2026-09-24",
+      "notes": "Catálogo del distribuidor: hoja santa y culantro como hierbas culinarias. Epazote ya existe y se excluye. Sin copiar recetas ni alegaciones."
+    },
+    "SPICEHOUSE_MEXICAN_OREGANO": {
+      "title": "The Spice House — Mexican Oregano",
+      "url": "https://www.thespicehouse.com/products/mexican-oregano",
+      "accessed": "2026-09-24",
+      "notes": "La fuente distingue esta planta del orégano griego y la relaciona con las verbenas. Se agrupan presentaciones comerciales."
+    },
+    "SPICEHOUSE_MAKRUT_LEAVES": {
+      "title": "The Spice House — What Are Makrut Lime Leaves?",
+      "url": "https://www.thespicehouse.com/blogs/news/what-are-makrut-lime-leaves",
+      "accessed": "2026-09-24",
+      "notes": "Documenta la hoja aromática y el nombre alternativo kaffir lime. No se importa el fruto ni la corteza, ni se separa por corte o secado."
+    },
+    "SPICEHOUSE_AJOWAN": {
+      "title": "The Spice House — Ajowan Seeds",
+      "url": "https://www.thespicehouse.com/products/ajowan-seeds",
+      "accessed": "2026-09-24",
+      "notes": "Documenta ajowan/ajwain para panes y legumbres. Semillas es el nombre comercial de sus frutos; no se importa la afirmación taxonómica imprecisa sobre parentesco con tomillo."
+    },
+    "SPICEHOUSE_NIGELLA": {
+      "title": "The Spice House — Charnushka Seeds / Kalonji",
+      "url": "https://www.thespicehouse.com/products/charnushka-seeds",
+      "accessed": "2026-09-24",
+      "notes": "Identifica Nigella sativa y los nombres kalonji y charnushka. No se usan semillas de cebolla ni comino negro como alias por ambigüedad."
+    },
+    "SPICEHOUSE_ASAFOETIDA": {
+      "title": "The Spice House — Asafoetida Powder",
+      "url": "https://www.thespicehouse.com/products/asafoetida-powder",
+      "accessed": "2026-09-24",
+      "notes": "La referencia es un preparado con harina de arroz, goma, asafétida y cúrcuma. Documenta hing; no acredita resina pura ni una formulación universal o ausencia de alérgenos."
+    },
+    "SPICESINC_ANCHO": {
+      "title": "Spices Inc. — What Are Ancho Chiles",
+      "url": "https://spicesinc.com/blogs/what-are-ancho-chiles",
+      "accessed": "2026-09-24",
+      "notes": "Identidad culinaria seca de ancho. El poblano fresco histórico se conserva; no se subdivide por molienda o envase."
+    },
+    "SPICESINC_GUAJILLO": {
+      "title": "Spices Inc. — Guajillo Chile",
+      "url": "https://spicesinc.com/guajillo-chile",
+      "accessed": "2026-09-24",
+      "notes": "Documenta guajillo seco y su uso en cocina. Mirasol se omite como alias, por posibles usos para otros chiles."
+    },
+    "SPICESINC_PASILLA": {
+      "title": "Spices Inc. — What Are Pasilla Peppers",
+      "url": "https://spicesinc.com/blogs/what-are-pasilla-peppers",
+      "accessed": "2026-09-24",
+      "notes": "Documenta Pasilla Negro como chilaca seco y distingue el Pasilla de Oaxaca ahumado. Solo se incorpora Negro; no se usa chile negro genérico."
+    },
+    "SPICESINC_MULATO": {
+      "title": "Spices Inc. — What Are Mulato Chiles",
+      "url": "https://spicesinc.com/blogs/what-are-mulato-chiles",
+      "accessed": "2026-09-24",
+      "notes": "Distingue mulato de ancho como tipo de chile seco. No se cuentan colores o grados de maduración automáticamente."
+    },
+    "SPICESINC_CASCABEL": {
+      "title": "Spices Inc. — What Are Cascabel Chiles",
+      "url": "https://spicesinc.com/blogs/what-are-cascabel-chiles",
+      "accessed": "2026-09-24",
+      "notes": "Distingue cascabel seco, redondo, del guajillo. Bola y mirasol se omiten como alias no exclusivos."
+    },
+    "SPICESINC_DRIED_FLAVORS": {
+      "title": "Spices Inc. — Dried Pepper Flavor Chart",
+      "url": "https://spicesinc.com/blogs/flavors-chiles",
+      "accessed": "2026-09-24",
+      "notes": "La tabla de chiles secos identifica de árbol, piquín (Pequin), costeño rojo, japonés, ají panca, ají amarillo y Byadgi. Se usa para identidad, sin importar escalas de picor ni descriptores como especificación de compra."
+    },
+    "SPICESINC_DRIED_CHILES": {
+      "title": "Spices Inc. — How Hot Are Dried Chile Peppers",
+      "url": "https://spicesinc.com/blogs/how-hot-are-dried-chile-peppers",
+      "accessed": "2026-09-24",
+      "notes": "Catálogo explicativo de chiles secos: Puya y Tien Tsin diferenciados. No se importan cifras de picor como propiedades garantizadas."
+    },
+    "SPICESINC_KASHMIRI": {
+      "title": "Spices Inc. — Kashmiri Pepper",
+      "url": "https://spicesinc.com/kashmiri-peppers",
+      "accessed": "2026-09-24",
+      "notes": "Ficha de Kashmiri seco. No se importa una mezcla sustitutiva comercial como si fuese el mismo chile."
+    }
+  },
+  "records": [
+    {
+      "canonicalKey": "hoja_santa",
+      "defaultName": "Hoja santa",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Hoja santa"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PFG_LATIN_HERBS",
+        "recordId": "hoja_santa",
+        "sourceName": "Performance Foodservice — Peak Fresh Produce Latin Herbs",
+        "url": "https://www.performancefoodservice.com/Get-Inspired/New-in-Stock/Peak-Fresh-Produce-Latin-Herbs"
+      },
+      "identityReason": "Hoja aromática identificada para cocina; no equivale a laurel ni a epazote. No se crean altas por hoja entera o picada.",
+      "culinaryForm": "HIERBA"
+    },
+    {
+      "canonicalKey": "culantro",
+      "defaultName": "Culantro",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Culantro"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PFG_LATIN_HERBS",
+        "recordId": "culantro",
+        "sourceName": "Performance Foodservice — Peak Fresh Produce Latin Herbs",
+        "url": "https://www.performancefoodservice.com/Get-Inspired/New-in-Stock/Peak-Fresh-Produce-Latin-Herbs"
+      },
+      "identityReason": "Hierba de hojas largas y dentadas diferenciada del cilantro en la fuente. No se modifica Cilantro ni la ficha apartada Coriandro.",
+      "culinaryForm": "HIERBA"
+    },
+    {
+      "canonicalKey": "oregano_mexicano",
+      "defaultName": "Orégano mexicano",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Orégano mexicano"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SPICEHOUSE_MEXICAN_OREGANO",
+        "recordId": "mexican_oregano",
+        "sourceName": "The Spice House — Mexican Oregano",
+        "url": "https://www.thespicehouse.com/products/mexican-oregano"
+      },
+      "identityReason": "Hierba identificada distinta del orégano mediterráneo. Se conservan las fichas Orégano y Orégano seco sin reinterpretar su cobertura.",
+      "culinaryForm": "HIERBA"
+    },
+    {
+      "canonicalKey": "hojas_de_lima_makrut",
+      "defaultName": "Hojas de lima makrut",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Hojas de lima makrut",
+        "Hojas de lima kaffir"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SPICEHOUSE_MAKRUT_LEAVES",
+        "recordId": "makrut_leaves",
+        "sourceName": "The Spice House — What Are Makrut Lime Leaves?",
+        "url": "https://www.thespicehouse.com/blogs/news/what-are-makrut-lime-leaves"
+      },
+      "identityReason": "Órgano culinario distinto de la lima y de su zumo. La forma entera, cortada o seca se agrupa en una sola ficha.",
+      "culinaryForm": "HIERBA"
+    },
+    {
+      "canonicalKey": "semillas_de_ajowan",
+      "defaultName": "Semillas de ajowan",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Semillas de ajowan",
+        "Ajowan",
+        "Ajwain"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SPICEHOUSE_AJOWAN",
+        "recordId": "ajowan",
+        "sourceName": "The Spice House — Ajowan Seeds",
+        "url": "https://www.thespicehouse.com/products/ajowan-seeds"
+      },
+      "identityReason": "Especia culinaria diferenciada de comino, alcaravea y tomillo. Ajwain se trata como alias y no como segunda identidad.",
+      "culinaryForm": "ESPECIA"
+    },
+    {
+      "canonicalKey": "semillas_de_nigella",
+      "defaultName": "Semillas de nigella",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Semillas de nigella",
+        "Nigella sativa",
+        "Kalonji",
+        "Charnushka"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SPICEHOUSE_NIGELLA",
+        "recordId": "nigella_sativa",
+        "sourceName": "The Spice House — Charnushka Seeds / Kalonji",
+        "url": "https://www.thespicehouse.com/products/charnushka-seeds"
+      },
+      "identityReason": "Semilla aromática identificada, distinta de comino, alcaravea y semillas de cebolla. Se clasifica como condimento, como las semillas de comino históricas.",
+      "culinaryForm": "ESPECIA"
+    },
+    {
+      "canonicalKey": "asafetida_en_polvo",
+      "defaultName": "Asafétida en polvo",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Asafétida en polvo",
+        "Hing en polvo",
+        "Asafoetida en polvo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SPICEHOUSE_ASAFOETIDA",
+        "recordId": "asafoetida_powder",
+        "sourceName": "The Spice House — Asafoetida Powder",
+        "url": "https://www.thespicehouse.com/products/asafoetida-powder"
+      },
+      "identityReason": "Condimento comercial de asafétida, no resina pura. Los soportes y su composición requieren ficha de proveedor; no se crean variantes por marca.",
+      "culinaryForm": "ESPECIA"
+    },
+    {
+      "canonicalKey": "chile_ancho_seco",
+      "defaultName": "Chile ancho seco",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Chile ancho seco",
+        "Chile ancho"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SPICESINC_ANCHO",
+        "recordId": "ancho",
+        "sourceName": "Spices Inc. — What Are Ancho Chiles",
+        "url": "https://spicesinc.com/blogs/what-are-ancho-chiles"
+      },
+      "identityReason": "Elaboración seca identificada, distinta del Pimiento poblano fresco. No se usa poblano como alias de la ficha seca.",
+      "culinaryForm": "CHILE_SECO"
+    },
+    {
+      "canonicalKey": "chile_guajillo_seco",
+      "defaultName": "Chile guajillo seco",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Chile guajillo seco",
+        "Chile guajillo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SPICESINC_GUAJILLO",
+        "recordId": "guajillo",
+        "sourceName": "Spices Inc. — Guajillo Chile",
+        "url": "https://spicesinc.com/guajillo-chile"
+      },
+      "identityReason": "Tipo culinario seco documentado; distinto de las salsas y del pimiento rojo genérico. Entero, hojuelas y polvo no suman altas.",
+      "culinaryForm": "CHILE_SECO"
+    },
+    {
+      "canonicalKey": "chile_pasilla_negro_seco",
+      "defaultName": "Chile pasilla negro seco",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Chile pasilla negro seco",
+        "Pasilla negro",
+        "Chilaca seco"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SPICESINC_PASILLA",
+        "recordId": "pasilla_negro",
+        "sourceName": "Spices Inc. — What Are Pasilla Peppers",
+        "url": "https://spicesinc.com/blogs/what-are-pasilla-peppers"
+      },
+      "identityReason": "Chilaca seco identificado; no es poblano ni ancho. Se delimita Negro para no absorber silenciosamente Pasilla de Oaxaca.",
+      "culinaryForm": "CHILE_SECO"
+    },
+    {
+      "canonicalKey": "chile_mulato_seco",
+      "defaultName": "Chile mulato seco",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Chile mulato seco",
+        "Chile mulato"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SPICESINC_MULATO",
+        "recordId": "mulato",
+        "sourceName": "Spices Inc. — What Are Mulato Chiles",
+        "url": "https://spicesinc.com/blogs/what-are-mulato-chiles"
+      },
+      "identityReason": "Identidad culinaria seca documentada junto a ancho, con cobertura separada. No se crea otra ficha por color o calibre.",
+      "culinaryForm": "CHILE_SECO"
+    },
+    {
+      "canonicalKey": "chile_cascabel_seco",
+      "defaultName": "Chile cascabel seco",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Chile cascabel seco",
+        "Chile cascabel"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SPICESINC_CASCABEL",
+        "recordId": "cascabel",
+        "sourceName": "Spices Inc. — What Are Cascabel Chiles",
+        "url": "https://spicesinc.com/blogs/what-are-cascabel-chiles"
+      },
+      "identityReason": "Chile seco identificado, distinto del guajillo pese al uso compartido de mirasol en ciertas descripciones.",
+      "culinaryForm": "CHILE_SECO"
+    },
+    {
+      "canonicalKey": "chile_de_arbol_seco",
+      "defaultName": "Chile de árbol seco",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Chile de árbol seco"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SPICESINC_DRIED_FLAVORS",
+        "recordId": "de_arbol",
+        "sourceName": "Spices Inc. — Dried Pepper Flavor Chart",
+        "url": "https://spicesinc.com/blogs/flavors-chiles"
+      },
+      "identityReason": "Tipo seco identificado; no equivale a chile rojo genérico ni cayena.",
+      "culinaryForm": "CHILE_SECO"
+    },
+    {
+      "canonicalKey": "chile_piquin_seco",
+      "defaultName": "Chile piquín seco",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Chile piquín seco",
+        "Chile pequin seco"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SPICESINC_DRIED_FLAVORS",
+        "recordId": "pequin",
+        "sourceName": "Spices Inc. — Dried Pepper Flavor Chart",
+        "url": "https://spicesinc.com/blogs/flavors-chiles"
+      },
+      "identityReason": "Tipo seco identificado como Pequin. Se omite chiltepín como alias y se difiere esa otra alta.",
+      "culinaryForm": "CHILE_SECO"
+    },
+    {
+      "canonicalKey": "chile_costeno_rojo_seco",
+      "defaultName": "Chile costeño rojo seco",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Chile costeño rojo seco"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SPICESINC_DRIED_FLAVORS",
+        "recordId": "costeno_rojo",
+        "sourceName": "Spices Inc. — Dried Pepper Flavor Chart",
+        "url": "https://spicesinc.com/blogs/flavors-chiles"
+      },
+      "identityReason": "Tipo culinario seco identificado, no un cambio de color del pimiento genérico.",
+      "culinaryForm": "CHILE_SECO"
+    },
+    {
+      "canonicalKey": "chile_japones_seco",
+      "defaultName": "Chile japonés seco",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Chile japonés seco"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SPICESINC_DRIED_FLAVORS",
+        "recordId": "japones",
+        "sourceName": "Spices Inc. — Dried Pepper Flavor Chart",
+        "url": "https://spicesinc.com/blogs/flavors-chiles"
+      },
+      "identityReason": "Nombre de un tipo de chile seco; no agrupa cualquier chile producido en Japón.",
+      "culinaryForm": "CHILE_SECO"
+    },
+    {
+      "canonicalKey": "aji_panca_seco",
+      "defaultName": "Ají panca seco",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Ají panca seco"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SPICESINC_DRIED_FLAVORS",
+        "recordId": "aji_panca",
+        "sourceName": "Spices Inc. — Dried Pepper Flavor Chart",
+        "url": "https://spicesinc.com/blogs/flavors-chiles"
+      },
+      "identityReason": "Ingrediente seco identificado; no representa una salsa ni una pasta formulada.",
+      "culinaryForm": "CHILE_SECO"
+    },
+    {
+      "canonicalKey": "aji_amarillo_seco",
+      "defaultName": "Ají amarillo seco",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Ají amarillo seco"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SPICESINC_DRIED_FLAVORS",
+        "recordId": "aji_amarillo",
+        "sourceName": "Spices Inc. — Dried Pepper Flavor Chart",
+        "url": "https://spicesinc.com/blogs/flavors-chiles"
+      },
+      "identityReason": "Ingrediente seco diferenciado de la Crema de ají amarillo histórica y del pimiento amarillo dulce.",
+      "culinaryForm": "CHILE_SECO"
+    },
+    {
+      "canonicalKey": "chile_byadgi_seco",
+      "defaultName": "Chile Byadgi seco",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Chile Byadgi seco"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SPICESINC_DRIED_FLAVORS",
+        "recordId": "byadgi",
+        "sourceName": "Spices Inc. — Dried Pepper Flavor Chart",
+        "url": "https://spicesinc.com/blogs/flavors-chiles"
+      },
+      "identityReason": "Tipo seco identificado por el proveedor; no se identifica automáticamente con Kashmiri.",
+      "culinaryForm": "CHILE_SECO"
+    },
+    {
+      "canonicalKey": "chile_puya_seco",
+      "defaultName": "Chile puya seco",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Chile puya seco",
+        "Chile puya"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SPICESINC_DRIED_CHILES",
+        "recordId": "puya",
+        "sourceName": "Spices Inc. — How Hot Are Dried Chile Peppers",
+        "url": "https://spicesinc.com/blogs/how-hot-are-dried-chile-peppers"
+      },
+      "identityReason": "Tipo seco identificado; no se toma su parecido con guajillo como equivalencia.",
+      "culinaryForm": "CHILE_SECO"
+    },
+    {
+      "canonicalKey": "chile_tien_tsin_seco",
+      "defaultName": "Chile Tien Tsin seco",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Chile Tien Tsin seco",
+        "Tien Tsin"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SPICESINC_DRIED_CHILES",
+        "recordId": "tien_tsin",
+        "sourceName": "Spices Inc. — How Hot Are Dried Chile Peppers",
+        "url": "https://spicesinc.com/blogs/how-hot-are-dried-chile-peppers"
+      },
+      "identityReason": "Tipo culinario seco identificado, distinto del chile rojo genérico.",
+      "culinaryForm": "CHILE_SECO"
+    },
+    {
+      "canonicalKey": "chile_kashmiri_seco",
+      "defaultName": "Chile Kashmiri seco",
+      "category": "VERDURAS",
+      "restaurantCategoryKey": "VERDURAS_SETAS_ALGAS",
+      "aliases": [
+        "Chile Kashmiri seco",
+        "Chile de Cachemira seco"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SPICESINC_KASHMIRI",
+        "recordId": "kashmiri",
+        "sourceName": "Spices Inc. — Kashmiri Pepper",
+        "url": "https://spicesinc.com/kashmiri-peppers"
+      },
+      "identityReason": "Tipo culinario seco documentado. Se mantiene separado de Byadgi; no se crean altas por polvo o envase.",
+      "culinaryForm": "CHILE_SECO"
+    }
+  ],
+  "exclusions": [
+    {
+      "candidate": "Jalapeño, habanero, serrano, Scotch bonnet, peri-peri y chipotle",
+      "decision": "ALREADY_REPRESENTED",
+      "reason": "Existen en la maestra; no sumar traducciones, cortes ni marcas."
+    },
+    {
+      "candidate": "Epazote, pápalo, hierba limón, pimienta larga y granos del paraíso",
+      "decision": "ALREADY_REPRESENTED",
+      "reason": "Identidades ya seleccionables, incluidos sus alias."
+    },
+    {
+      "candidate": "Morita y meco",
+      "decision": "DEFERRED",
+      "reason": "Revisar el alcance de Chile chipotle y Chipotle en polvo antes de subdividirlos."
+    },
+    {
+      "candidate": "Comino negro, semillas de cebolla, mirasol, chile negro y chile bola",
+      "decision": "AMBIGUOUS_ALIAS",
+      "reason": "No asignar nombres no exclusivos a una identidad sin revisión."
+    },
+    {
+      "candidate": "Coriandro y Hierba luisa / lemongrass",
+      "decision": "PENDING_PRESERVED",
+      "reason": "Permanecen apartadas; el nuevo culantro no resuelve la ambigüedad histórica de cilantro."
+    },
+    {
+      "candidate": "Resina pura de asafétida y mezclas por marca",
+      "decision": "DEFERRED",
+      "reason": "La evidencia corresponde a condimento formulado en polvo; no habilita otra alta de resina pura."
+    },
+    {
+      "candidate": "Pasilla de Oaxaca, chiltepín, Anaheim y Hatch",
+      "decision": "DEFERRED",
+      "reason": "Delimitar identidades y equivalencias en una investigación posterior; este lote no pretende agotar los catálogos."
+    },
+    {
+      "candidate": "Chiles frescos, molidos, en hojuelas o en envases distintos",
+      "decision": "GROUPED",
+      "reason": "Solo se añaden las identidades secas documentadas. No generar combinaciones automáticas de variedad, proceso y envase."
+    },
+    {
+      "candidate": "Certificaciones, picor, propiedades saludables y formulaciones",
+      "decision": "NOT_IMPORTED",
+      "reason": "Son atributos del proveedor o ajenos al alcance; las listas vacías de alérgenos no certifican ausencia."
+    }
+  ]
+}

@@ -19,6 +19,12 @@ const baseline = master.filter(row => row.researchBatch !== batch.batchId);
 const categories = new Map(baseline.map(row => [row.category, row.semanticCategoryKey]));
 assert.equal(categories.size, 14, 'Expansion must retain the existing 14 categories');
 assert.equal(batch.status, 'EDITORIAL_REVIEW');
+const reviewOnly = batch.kind === 'EDITORIAL_REVIEW_ONLY';
+if (reviewOnly) {
+  assert.equal(batch.records.length, 0, 'Review-only batches cannot add identities');
+  assert(Array.isArray(batch.decisions) && batch.decisions.length > 0, 'Review-only batches need documented decisions');
+}
+const reviewDigest = reviewOnly ? crypto.createHash('sha256').update(JSON.stringify(batch)).digest('hex') : null;
 const normalize = name => name.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
 const clean = value => typeof value === 'string' && value.length > 0 && value === value.normalize('NFC').trim().replace(/\s+/gu,' ') && !/[\uFFFD\p{Cc}\p{Cf}]/u.test(value);
 const usedKeys = new Set([...baseline, ...pending].flatMap(row => [row.canonicalKey, ...(row.legacyCanonicalKeys || [])]));
@@ -45,6 +51,10 @@ for (const record of batch.records) {
   assert(!usedKeys.has(key), `Canonical key already used or retired: ${key}`);
   usedKeys.add(key);
   assert(categories.has(record.category), `New category not allowed: ${record.category}`);
+  if (record.restaurantCategoryKey) {
+    const taxonomy = read('src/data/ingredientTaxonomy.json');
+    assert(taxonomy.categories.some(row => row.key === record.restaurantCategoryKey), `Unknown restaurant family: ${key}`);
+  }
   assert(clean(record.defaultName) && record.defaultName.length <= 120, `Invalid name: ${key}`);
   assert(Array.isArray(record.aliases) && record.aliases.includes(record.defaultName) && record.aliases.length <= 30);
   const localAliases = new Set();
@@ -67,11 +77,13 @@ for (const record of batch.records) {
     semanticCategoryKey:categories.get(record.category),defaultName:record.defaultName,allergens:record.allergens,
     translations:{es:record.defaultName},aliases:record.aliases,semanticStatus:'NEEDS_REVIEW',imageStatus:'MISSING',
     source:'RESEARCH_EXPANSION',researchBatch:batch.batchId,
+    ...(record.restaurantCategoryKey?{restaurantCategoryKey:record.restaurantCategoryKey}:{}),
     ...(record.scientificName?{scientificName:record.scientificName}:{})});
 }
-if (additionsInMaster.length) {
+if (additionsInMaster.length || (priorAudit && reviewOnly)) {
   assert.deepEqual(additionsInMaster,additions,'Previously applied batch differs; review the change explicitly');
   assert(priorAudit && priorAudit.batchId === batch.batchId, 'Applied batch is missing its historical audit');
+  if (reviewOnly) assert.equal(priorAudit.editorialReviewSha256, reviewDigest, 'Applied editorial decisions changed');
   const historicalKeys = new Set(priorAudit.baselineKeys);
   const historicalBaseline = master.filter(row => historicalKeys.has(row.canonicalKey));
   assert.equal(historicalBaseline.length, priorAudit.baselineKeys.length, 'An earlier ingredient was lost');
@@ -87,6 +99,8 @@ const summary = {
   baseline:baseline.length,added:additions.length,total:updated.length,categories:14,
   aliasesAdded:additions.reduce((sum,row)=>sum+row.aliases.length-1,0),pendingPreserved:pending.length,
   remainingTo3000:Math.max(0,3000-updated.length),
+  targetTotal:batch.targetTotal || 3000,
+  remainingToTarget:Math.max(0,(batch.targetTotal || 3000)-updated.length),
   byCategory:Object.fromEntries([...categories.keys()].map(category=>[category,{
     before:baseline.filter(row=>row.category===category).length,
     added:additions.filter(row=>row.category===category).length,
@@ -97,8 +111,9 @@ if(process.argv.includes('--apply')){
  const audit={schemaVersion:1,date:batch.date,batchId:batch.batchId,batchPath,
    baselineSha256:crypto.createHash('sha256').update(JSON.stringify(baseline)).digest('hex'),
    summary,baselineKeys:baseline.map(row=>row.canonicalKey),addedKeys:additions.map(row=>row.canonicalKey),
-   databaseWrites:0,generatedTranslations:0,publication:'LOCAL_ONLY'};
- fs.writeFileSync(path.join(root,masterPath),JSON.stringify(updated,null,2)+'\n');
+   databaseWrites:0,generatedTranslations:0,publication:'LOCAL_ONLY',
+   ...(reviewOnly ? {editorialReviewSha256:reviewDigest} : {})};
+ if (additions.length) fs.writeFileSync(path.join(root,masterPath),JSON.stringify(updated,null,2)+'\n');
  fs.writeFileSync(auditPath,JSON.stringify(audit,null,2)+'\n');
 }
 console.log(JSON.stringify(summary,null,2));

@@ -1,0 +1,102 @@
+{
+  "date": "2026-09-24",
+  "batchId": "2026-09-24-15",
+  "baseline": 3475,
+  "added": 23,
+  "total": 3498,
+  "remainingTo5000": 1502,
+  "byCategory": {
+    "VERDURAS": 23
+  },
+  "byRestaurantFamily": {
+    "VERDURAS_SETAS_ALGAS": 23
+  },
+  "byForm": {
+    "HORTALIZA": 8,
+    "ACEITUNA": 5,
+    "ENCURTIDO": 4,
+    "FERMENTADO": 4,
+    "PIMIENTO_SECO": 2
+  },
+  "aliasesAdded": 23,
+  "exclusionGroups": 11,
+  "preservedMasterRows": 3475,
+  "preservedTaxonomyAssignments": 3475,
+  "pendingPreserved": 25,
+  "idempotentBatches": 15,
+  "historicalAuditsUnchanged": true,
+  "backendProjectionMatches": true,
+  "sourceSha256": "f4eef422db35ad379de09f98b784688e8f0f0ce00c4f1232f171fec99b12a9a4",
+  "productionDeployment": false,
+  "databaseWrites": 0,
+  "validation": "Ingredient master OK: 3498 records, 14 categories; valid UTF-8/NFC, names, aliases and identifiers.\n11 consolidated keys preserved; 25 ambiguous records held separately. No duplicate names or shared exact aliases in the selectable source.",
+  "tests": {
+    "importer": 9,
+    "backend": 48,
+    "frontend": 27,
+    "total": 84,
+    "frontendScope": "3 suites: IngredientOnboardingModal, IngredientsSemantics y PosInventoryTaxonomy",
+    "logs": [
+      "tmp/ingredients-batch15-importer-tests.log",
+      "tmp/ingredients-batch15-backend-tests.log",
+      "tmp/ingredients-batch15-ui-tests.log"
+    ]
+  },
+  "build": {
+    "status": "passed",
+    "artifact": "output/ingredients-batch15-build",
+    "bundle": "main.8d382d05.js",
+    "log": "tmp/ingredients-batch15-build.log"
+  },
+  "browser": {
+    "date": "2026-09-24",
+    "status": "passed",
+    "environment": "Compiled application at 127.0.0.1:3021 with empty local API fixtures; writes rejected",
+    "masterCount": 3498,
+    "searches": [
+      {
+        "query": "romanesco",
+        "results": [
+          "Romanesco"
+        ]
+      },
+      {
+        "query": "rabanO japones",
+        "results": [
+          "Rábano daikon"
+        ]
+      },
+      {
+        "query": "alcaparr",
+        "results": [
+          "Salsa de alcaparras",
+          "Alcaparras",
+          "Alcaparrones"
+        ]
+      },
+      {
+        "query": "kimchi",
+        "results": [
+          "Kimchi de col napa",
+          "Kimchi de rábano",
+          "Kimchi de hojas de mostaza",
+          "Kimchi de cebolleta"
+        ]
+      },
+      {
+        "query": "aceitunas gordal",
+        "results": [
+          "Aceituna Gordal sevillana"
+        ]
+      },
+      {
+        "query": "nora",
+        "results": [
+          "Ñora seca"
+        ]
+      }
+    ],
+    "newRecordsFamily": "VERDURAS_SETAS_ALGAS",
+    "databaseWrites": 0
+  }
+}

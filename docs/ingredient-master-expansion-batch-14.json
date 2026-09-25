@@ -1,0 +1,525 @@
+{
+  "schemaVersion": 1,
+  "batchId": "2026-09-24-14",
+  "date": "2026-09-24",
+  "status": "EDITORIAL_REVIEW",
+  "targetTotal": 5000,
+  "policy": "Bebidas, cremas y fermentados vegetales documentados; familias explícitas por materia prima o elaboración. Sin cuotas ni combinaciones automáticas.",
+  "allergenPolicy": "Lista vacía significa no documentado, nunca ausencia. Todas las altas NEEDS_REVIEW e imágenes MISSING; verificar ficha técnica y alérgenos antes de uso operativo.",
+  "sources": {
+    "LIMA_SOYA_DRINK": {
+      "title": "Lima — Soya Drink Natural",
+      "url": "https://www.limafood.com/en/products/plant-based-drinks/soya-drink-natural/",
+      "accessed": "2026-09-24"
+    },
+    "LIMA_PUR_OAT": {
+      "title": "Lima — PUR Oat Drink",
+      "url": "https://www.limafood.com/en/products/plant-based-drinks/pur-oat-drink/",
+      "accessed": "2026-09-24"
+    },
+    "ECOMIL_RICE_DRINK": {
+      "title": "Ecomil — Bebida de arroz sin azúcares añadidos",
+      "url": "https://ecomil.com/producto/ecomil-bebida-de-arroz-sin-azucares-anadidos-bio-1-l/",
+      "accessed": "2026-09-24"
+    },
+    "LIMA_SPELT_DRINK": {
+      "title": "Lima — Spelt Drink Natural",
+      "url": "https://www.limafood.com/en/products/plant-based-drinks/spelt-drink-natural/",
+      "accessed": "2026-09-24"
+    },
+    "LIMA_MILLET_DRINK": {
+      "title": "Lima — Millet Drink",
+      "url": "https://www.limafood.com/en/products/plant-based-drinks/millet-drink/",
+      "accessed": "2026-09-24"
+    },
+    "LIMA_PUR_ALMOND": {
+      "title": "Lima — PUR Almond Drink",
+      "url": "https://www.limafood.com/en/products/plant-based-drinks/pur-almond-drink/",
+      "accessed": "2026-09-24"
+    },
+    "ECOMIL_HAZELNUT_DRINK": {
+      "title": "Ecomil — Bebida de avellana sin azúcares",
+      "url": "https://ecomil.com/producto/ecomil-bebida-de-avellana-sin-azucares-bio-1-l/",
+      "accessed": "2026-09-24"
+    },
+    "ECOMIL_CASHEW_DRINK": {
+      "title": "Ecomil — Bebida de anacardo sin azúcar",
+      "url": "https://ecomil.com/producto/ecomil-bebida-de-anacardo-sin-azucar-bio-1-l/",
+      "accessed": "2026-09-24"
+    },
+    "ECOMIL_HEMP_DRINK": {
+      "title": "Ecomil — Bebida de cáñamo sin azúcar",
+      "url": "https://ecomil.com/producto/ecomil-bebida-de-canamo-sin-azucar-bio-1-l/",
+      "accessed": "2026-09-24"
+    },
+    "RIPPLE_PEA_DRINK": {
+      "title": "Ripple — Refrigerated Unsweetened Original Milk",
+      "url": "https://ripplefoods.com/products/ripple-refrigerated-unsweetened-original-milk",
+      "accessed": "2026-09-24"
+    },
+    "ISOLA_SOY_CUISINE": {
+      "title": "Isola Bio — Crema de cocina de soja",
+      "url": "https://www.isolabio.com/es/prodotti/crema-de-cocina-de-soja/",
+      "accessed": "2026-09-24"
+    },
+    "LIMA_OAT_CUISINE": {
+      "title": "Lima — Oat Cuisine",
+      "url": "https://www.limafood.com/en/products/plant-based-cream-alternatives/oat-cuisine/",
+      "accessed": "2026-09-24"
+    },
+    "ISOLA_RICE_CUISINE": {
+      "title": "Isola Bio — Rice Cuisine Cream",
+      "url": "https://www.isolabio.com/en/products/rice-cuisine-cream/",
+      "accessed": "2026-09-24"
+    },
+    "ECOMIL_ALMOND_CUISINE": {
+      "title": "Ecomil — Cuisine Almond Nature",
+      "url": "https://ecomil.com/producto/ecomil-cuisine-almond-nature-bio-200-ml/",
+      "accessed": "2026-09-24"
+    },
+    "ECOMIL_CASHEW_CUISINE": {
+      "title": "Ecomil — Cuisine Cashew",
+      "url": "https://ecomil.com/producto/ecomil-cuisine-cashew-bio-200-ml/",
+      "accessed": "2026-09-24"
+    },
+    "SOJADE_NATURAL_YOG": {
+      "title": "Sojade — Natural Soya Yoghurt Alternative",
+      "url": "https://sojade.eu/en/produits/natural-soya-4x100/",
+      "accessed": "2026-09-24"
+    },
+    "OATLY_PLAIN_OATGURT": {
+      "title": "Oatly — Oatgurt Plain",
+      "url": "https://www.oatly.com/products/oatgurt/oatgurt-plain-1000g",
+      "accessed": "2026-09-24"
+    },
+    "ALPRO_COCO_NATURAL": {
+      "title": "Alpro — Absolutely coco natural",
+      "url": "https://www.alpro.com/es/productos/alternativas-de-origen-vegetal-al-yogur/absolutely-coco-natural",
+      "accessed": "2026-09-24"
+    },
+    "SOJADE_KEFIR_SOYA": {
+      "title": "Sojade — Natural with Kefir Cultures",
+      "url": "https://sojade.eu/en/produits/nas-natural-with-kefir-cultures/",
+      "accessed": "2026-09-24"
+    }
+  },
+  "records": [
+    {
+      "canonicalKey": "bebida_de_soja",
+      "defaultName": "Bebida de soja",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "aliases": [
+        "Bebida de soja",
+        "Leche de soja"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "LIMA_SOYA_DRINK",
+        "recordId": "lima_soya_drink_natural",
+        "sourceName": "Lima — Soya Drink Natural",
+        "url": "https://www.limafood.com/en/products/plant-based-drinks/soya-drink-natural/"
+      },
+      "identityReason": "Bebida acuosa de soja documentada para cocina; distinta de la legumbre, del tofu y del fermentado tipo yogur. Se agrupan marcas, envases y fortificaciones.",
+      "culinaryForm": "BEBIDA"
+    },
+    {
+      "canonicalKey": "bebida_de_avena",
+      "defaultName": "Bebida de avena",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Bebida de avena",
+        "Leche de avena"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "LIMA_PUR_OAT",
+        "recordId": "lima_pur_oat_drink",
+        "sourceName": "Lima — PUR Oat Drink",
+        "url": "https://www.limafood.com/en/products/plant-based-drinks/pur-oat-drink/"
+      },
+      "identityReason": "Bebida de cereal, distinta del grano y de la crema para cocinar. Se conserva una identidad por materia prima, sin altas por azúcar, certificación o versión barista.",
+      "culinaryForm": "BEBIDA"
+    },
+    {
+      "canonicalKey": "bebida_de_arroz",
+      "defaultName": "Bebida de arroz",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Bebida de arroz",
+        "Leche de arroz"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "ECOMIL_RICE_DRINK",
+        "recordId": "ecomil_bebida_de_arroz_sin_azucares_anadidos",
+        "sourceName": "Ecomil — Bebida de arroz sin azúcares añadidos",
+        "url": "https://ecomil.com/producto/ecomil-bebida-de-arroz-sin-azucares-anadidos-bio-1-l/"
+      },
+      "identityReason": "Bebida de arroz documentada para recetas; distinta de la crema de arroz y del cereal. No se incorpora la formulación como receta universal.",
+      "culinaryForm": "BEBIDA"
+    },
+    {
+      "canonicalKey": "bebida_de_espelta",
+      "defaultName": "Bebida de espelta",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Bebida de espelta",
+        "Leche de espelta"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "LIMA_SPELT_DRINK",
+        "recordId": "lima_spelt_drink_natural",
+        "sourceName": "Lima — Spelt Drink Natural",
+        "url": "https://www.limafood.com/en/products/plant-based-drinks/spelt-drink-natural/"
+      },
+      "identityReason": "Bebida de espelta, un trigo; distinta de las bebidas de avena y arroz por materia prima. No se declara ausencia de gluten.",
+      "culinaryForm": "BEBIDA"
+    },
+    {
+      "canonicalKey": "bebida_de_mijo",
+      "defaultName": "Bebida de mijo",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Bebida de mijo",
+        "Leche de mijo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "LIMA_MILLET_DRINK",
+        "recordId": "lima_millet_drink",
+        "sourceName": "Lima — Millet Drink",
+        "url": "https://www.limafood.com/en/products/plant-based-drinks/millet-drink/"
+      },
+      "identityReason": "Bebida de mijo identificada para postres y repostería; distinta del grano. No se generan altas por contenido de azúcar.",
+      "culinaryForm": "BEBIDA"
+    },
+    {
+      "canonicalKey": "bebida_de_almendra",
+      "defaultName": "Bebida de almendra",
+      "category": "OTROS",
+      "restaurantCategoryKey": "FRUTOS_SECOS_SEMILLAS",
+      "aliases": [
+        "Bebida de almendra",
+        "Leche de almendra",
+        "Bebida de almendras"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "LIMA_PUR_ALMOND",
+        "recordId": "lima_pur_almond_drink",
+        "sourceName": "Lima — PUR Almond Drink",
+        "url": "https://www.limafood.com/en/products/plant-based-drinks/pur-almond-drink/"
+      },
+      "identityReason": "Bebida acuosa de almendra, distinta de pasta pura y crema de cocina. Se agrupan concentraciones y versiones barista; el alias leche se utiliza solo para búsqueda.",
+      "culinaryForm": "BEBIDA"
+    },
+    {
+      "canonicalKey": "bebida_de_avellana",
+      "defaultName": "Bebida de avellana",
+      "category": "OTROS",
+      "restaurantCategoryKey": "FRUTOS_SECOS_SEMILLAS",
+      "aliases": [
+        "Bebida de avellana",
+        "Leche de avellana"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "ECOMIL_HAZELNUT_DRINK",
+        "recordId": "ecomil_bebida_de_avellana_sin_azucares",
+        "sourceName": "Ecomil — Bebida de avellana sin azúcares",
+        "url": "https://ecomil.com/producto/ecomil-bebida-de-avellana-sin-azucares-bio-1-l/"
+      },
+      "identityReason": "Bebida de avellana; no es la crema histórica de avellanas ni una bebida de arroz con avellana. No subdividir por marca o aroma propio de la materia prima.",
+      "culinaryForm": "BEBIDA"
+    },
+    {
+      "canonicalKey": "bebida_de_anacardo",
+      "defaultName": "Bebida de anacardo",
+      "category": "OTROS",
+      "restaurantCategoryKey": "FRUTOS_SECOS_SEMILLAS",
+      "aliases": [
+        "Bebida de anacardo",
+        "Leche de anacardo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "ECOMIL_CASHEW_DRINK",
+        "recordId": "ecomil_bebida_de_anacardo_sin_azucar",
+        "sourceName": "Ecomil — Bebida de anacardo sin azúcar",
+        "url": "https://ecomil.com/producto/ecomil-bebida-de-anacardo-sin-azucar-bio-1-l/"
+      },
+      "identityReason": "Bebida de anacardo para recetas, distinta de la crema pura de anacardo histórica y de la emulsión de cocina con aceite.",
+      "culinaryForm": "BEBIDA"
+    },
+    {
+      "canonicalKey": "bebida_de_canamo",
+      "defaultName": "Bebida de cáñamo",
+      "category": "OTROS",
+      "restaurantCategoryKey": "FRUTOS_SECOS_SEMILLAS",
+      "aliases": [
+        "Bebida de cáñamo",
+        "Leche de cáñamo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "ECOMIL_HEMP_DRINK",
+        "recordId": "ecomil_bebida_de_canamo_sin_azucar",
+        "sourceName": "Ecomil — Bebida de cáñamo sin azúcar",
+        "url": "https://ecomil.com/producto/ecomil-bebida-de-canamo-sin-azucar-bio-1-l/"
+      },
+      "identityReason": "Bebida alimentaria de semillas de cáñamo, distinta de semillas y aceites. La referencia acredita la identidad; no se importa su texto inconsistente sobre el aceite ni se infiere formulación.",
+      "culinaryForm": "BEBIDA"
+    },
+    {
+      "canonicalKey": "bebida_de_guisante",
+      "defaultName": "Bebida de guisante",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "aliases": [
+        "Bebida de guisante",
+        "Leche de guisante"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "RIPPLE_PEA_DRINK",
+        "recordId": "ripple_refrigerated_unsweetened_original_milk",
+        "sourceName": "Ripple — Refrigerated Unsweetened Original Milk",
+        "url": "https://ripplefoods.com/products/ripple-refrigerated-unsweetened-original-milk"
+      },
+      "identityReason": "Bebida formulada con proteína de guisante y aceite; distinta del ingrediente proteína de guisante y de texturizados. No se subdivide por fortificación o público infantil.",
+      "culinaryForm": "BEBIDA"
+    },
+    {
+      "canonicalKey": "crema_de_soja_para_cocinar",
+      "defaultName": "Crema de soja para cocinar",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Crema de soja para cocinar",
+        "Nata vegetal de soja"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "ISOLA_SOY_CUISINE",
+        "recordId": "isola_bio_crema_de_cocina_de_soja",
+        "sourceName": "Isola Bio — Crema de cocina de soja",
+        "url": "https://www.isolabio.com/es/prodotti/crema-de-cocina-de-soja/"
+      },
+      "identityReason": "Emulsión culinaria de soja con aceite y espesantes, distinta de bebida de soja y tofu sedoso; familia de bases de cocina según elaboración.",
+      "culinaryForm": "CREMA"
+    },
+    {
+      "canonicalKey": "crema_de_avena_para_cocinar",
+      "defaultName": "Crema de avena para cocinar",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Crema de avena para cocinar",
+        "Nata vegetal de avena"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "LIMA_OAT_CUISINE",
+        "recordId": "lima_oat_cuisine",
+        "sourceName": "Lima — Oat Cuisine",
+        "url": "https://www.limafood.com/en/products/plant-based-cream-alternatives/oat-cuisine/"
+      },
+      "identityReason": "Preparado culinario de avena y aceite para dar cremosidad; distinto de bebida de avena. La mención Almond Cuisine en usos de la página es inconsistente con título e ingredientes y no se importa.",
+      "culinaryForm": "CREMA"
+    },
+    {
+      "canonicalKey": "crema_de_arroz_para_cocinar",
+      "defaultName": "Crema de arroz para cocinar",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Crema de arroz para cocinar",
+        "Nata vegetal de arroz"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "ISOLA_RICE_CUISINE",
+        "recordId": "isola_bio_rice_cuisine_cream",
+        "sourceName": "Isola Bio — Rice Cuisine Cream",
+        "url": "https://www.isolabio.com/en/products/rice-cuisine-cream/"
+      },
+      "identityReason": "Preparado de arroz, aceite y espesantes para cocina, distinto de la bebida y de Crema de arroz basmati al curry ya existente.",
+      "culinaryForm": "CREMA"
+    },
+    {
+      "canonicalKey": "crema_de_almendra_para_cocinar",
+      "defaultName": "Crema de almendra para cocinar",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Crema de almendra para cocinar",
+        "Nata vegetal de almendra"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "ECOMIL_ALMOND_CUISINE",
+        "recordId": "ecomil_cuisine_almond_nature",
+        "sourceName": "Ecomil — Cuisine Almond Nature",
+        "url": "https://ecomil.com/producto/ecomil-cuisine-almond-nature-bio-200-ml/"
+      },
+      "identityReason": "Emulsión de almendra y aceite para cocinar, distinta de bebida, pasta pura y crema dulce. Se agrupan tamaños de envase y se difieren salsas sazonadas.",
+      "culinaryForm": "CREMA"
+    },
+    {
+      "canonicalKey": "crema_de_anacardo_para_cocinar",
+      "defaultName": "Crema de anacardo para cocinar",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Crema de anacardo para cocinar",
+        "Nata vegetal de anacardo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "ECOMIL_CASHEW_CUISINE",
+        "recordId": "ecomil_cuisine_cashew",
+        "sourceName": "Ecomil — Cuisine Cashew",
+        "url": "https://ecomil.com/producto/ecomil-cuisine-cashew-bio-200-ml/"
+      },
+      "identityReason": "Emulsión formulada con anacardo y aceite para cocinar; distinta de la Crema pura de anacardo histórica y de la bebida.",
+      "culinaryForm": "CREMA"
+    },
+    {
+      "canonicalKey": "fermentado_de_soja_natural",
+      "defaultName": "Fermentado de soja natural",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "aliases": [
+        "Fermentado de soja natural",
+        "Yogur de soja natural",
+        "Yogur de soja"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOJADE_NATURAL_YOG",
+        "recordId": "sojade_natural_soya_yoghurt_alternative",
+        "sourceName": "Sojade — Natural Soya Yoghurt Alternative",
+        "url": "https://sojade.eu/en/produits/natural-soya-4x100/"
+      },
+      "identityReason": "Base de soja con cultivos seleccionados, distinta de bebida sin fermentar y de kéfir de soja. Las variantes natural y estilo griego se agrupan provisionalmente, sin altas por textura.",
+      "culinaryForm": "FERMENTADO"
+    },
+    {
+      "canonicalKey": "alternativa_de_avena_al_yogur_natural",
+      "defaultName": "Alternativa de avena al yogur natural",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Alternativa de avena al yogur natural",
+        "Yogur de avena natural",
+        "Yogur de avena"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "OATLY_PLAIN_OATGURT",
+        "recordId": "oatly_oatgurt_plain",
+        "sourceName": "Oatly — Oatgurt Plain",
+        "url": "https://www.oatly.com/products/oatgurt/oatgurt-plain-1000g"
+      },
+      "identityReason": "Alternativa al yogur basada en avena documentada para aliños y repostería. La página global acredita identidad y uso, pero remite la formulación al mercado; no se importan cultivos concretos ni composición universal.",
+      "culinaryForm": "FERMENTADO"
+    },
+    {
+      "canonicalKey": "fermentado_de_coco_natural",
+      "defaultName": "Fermentado de coco natural",
+      "category": "OTROS",
+      "restaurantCategoryKey": "FRUTAS",
+      "aliases": [
+        "Fermentado de coco natural",
+        "Yogur de coco natural",
+        "Yogur de coco"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "ALPRO_COCO_NATURAL",
+        "recordId": "alpro_absolutely_coco_natural",
+        "sourceName": "Alpro — Absolutely coco natural",
+        "url": "https://www.alpro.com/es/productos/alternativas-de-origen-vegetal-al-yogur/absolutely-coco-natural"
+      },
+      "identityReason": "Base de coco con fermentos, distinta de leche, agua y crema de coco históricas. Familia Frutas por materia prima, en continuidad con las fichas de coco.",
+      "culinaryForm": "FERMENTADO"
+    },
+    {
+      "canonicalKey": "kefir_de_soja",
+      "defaultName": "Kéfir de soja",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "aliases": [
+        "Kéfir de soja",
+        "Bebida de soja con cultivos de kéfir"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOJADE_KEFIR_SOYA",
+        "recordId": "sojade_natural_with_kefir_cultures",
+        "sourceName": "Sojade — Natural with Kefir Cultures",
+        "url": "https://sojade.eu/en/produits/nas-natural-with-kefir-cultures/"
+      },
+      "identityReason": "Bebida de soja fermentada con cultivos de kéfir; distinta de los kéfires lácteos históricos. La referencia contiene zumo de manzana; no se presenta como soja pura ni sin otros ingredientes.",
+      "culinaryForm": "FERMENTADO"
+    }
+  ],
+  "exclusions": [
+    {
+      "candidate": "Leche de coco, crema de coco, agua de coco y leche de patata",
+      "decision": "ALREADY_REPRESENTED",
+      "reason": "Se conservan las fichas históricas; no añadir nombres alternativos como nuevas identidades."
+    },
+    {
+      "candidate": "Bebida de coco diluida frente a leche de coco",
+      "decision": "EQUIVALENCE_PENDING",
+      "reason": "Delimitar cobertura de la ficha histórica antes de separar concentraciones o usos."
+    },
+    {
+      "candidate": "Bebidas barista, sin azúcar, enriquecidas, infantiles o ecológicas",
+      "decision": "GROUPED",
+      "reason": "No multiplicar identidades por formulación comercial, certificación, público, envase o marca."
+    },
+    {
+      "candidate": "Bebidas de arroz con avellana, coco con almendra o multicereales",
+      "decision": "DEFERRED",
+      "reason": "Mezclas documentadas pero fuera del lote de bases por materia prima; no generar combinaciones."
+    },
+    {
+      "candidate": "Bebida de chufa y horchata",
+      "decision": "DEFERRED",
+      "reason": "Revisar alcance culinario y equivalencias de horchatas antes de otra alta."
+    },
+    {
+      "candidate": "Yogur de soja estilo griego, skyr vegetal y sabores de fruta",
+      "decision": "GROUPED",
+      "reason": "No sumar variantes por textura o sabores en este lote; delimitar procesos antes de separarlos."
+    },
+    {
+      "candidate": "Fermentados de almendra, anacardo y mezclas con habas o soja",
+      "decision": "DEFERRED",
+      "reason": "Las referencias consultadas mezclan materias primas o cambian de formulación; requieren selección y delimitación propias."
+    },
+    {
+      "candidate": "Quesos vegetales, untables y bechamel de almendra",
+      "decision": "EQUIVALENCE_PENDING",
+      "reason": "Cruzar con Queso vegano, Mozzarella vegetal y salsas históricas antes de añadir variantes."
+    },
+    {
+      "candidate": "Crema pura de anacardo y crema de cocina de anacardo",
+      "decision": "DISTINCT_IDENTITIES",
+      "reason": "Se preserva la pasta pura; la alta corresponde a emulsión acuosa con aceite para cocinar."
+    },
+    {
+      "candidate": "Afirmaciones nutricionales, sanitarias o ausencia de alérgenos",
+      "decision": "NOT_IMPORTED",
+      "reason": "La evidencia respalda identidad culinaria; no sustituye fichas técnicas ni aprueba formulaciones."
+    }
+  ]
+}

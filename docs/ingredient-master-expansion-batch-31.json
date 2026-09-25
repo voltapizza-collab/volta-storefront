@@ -1,0 +1,416 @@
+{
+  "schemaVersion": 1,
+  "batchId": "2026-09-25-31",
+  "date": "2026-09-25",
+  "status": "EDITORIAL_REVIEW",
+  "targetTotal": 5000,
+  "policy": "Bloque conjunto de cobertura cotidiana. Once altas confirmadas, revisión de las diez dudas y nombres de búsqueda. Conservar identidades históricas ambiguas hasta documentar su alcance; sin cuotas ni marcas.",
+  "allergenPolicy": "NEEDS_REVIEW e imágenes MISSING. Alérgenos vacíos significa no aprobados, nunca ausencia. Revisar ficha técnica del suministro y posibles trazas. No transferir alegaciones sanitarias.",
+  "sources": {
+    "solobuey-carrillera": {
+      "title": "Solobuey — Carrillera de cerdo ibérico",
+      "url": "https://www.solobuey.com/comprar/carrillera-de-cerdo-iberico/",
+      "accessed": "2026-09-25",
+      "notes": "Página recuperada; evidencia de identidad, sin importar imágenes, alegaciones o aprobación de suministro."
+    },
+    "discarlux-carrillera": {
+      "title": "Discarlux — Carrilleras de vacuno",
+      "url": "https://discarlux.es/carrilleras-de-ternera-dos-unidades-de-500-grs-1-kg-aprox",
+      "accessed": "2026-09-25",
+      "notes": "Página recuperada; evidencia de identidad, sin importar imágenes, alegaciones o aprobación de suministro."
+    },
+    "solobuey-secreto": {
+      "title": "Solobuey — Secreto de cerdo ibérico",
+      "url": "https://www.solobuey.com/comprar/secreto-de-cerdo-iberico/",
+      "accessed": "2026-09-25",
+      "notes": "Página recuperada; evidencia de identidad, sin importar imágenes, alegaciones o aprobación de suministro."
+    },
+    "solobuey-presa": {
+      "title": "Solobuey — Presa de cerdo ibérico",
+      "url": "https://www.solobuey.com/comprar/presa-de-cerdo-iberico/",
+      "accessed": "2026-09-25",
+      "notes": "Página recuperada; evidencia de identidad, sin importar imágenes, alegaciones o aprobación de suministro."
+    },
+    "solobuey-pluma": {
+      "title": "Solobuey — Pluma de cerdo ibérico",
+      "url": "https://www.solobuey.com/comprar/pluma-de-cerdo-iberico/",
+      "accessed": "2026-09-25",
+      "notes": "Página recuperada; evidencia de identidad, sin importar imágenes, alegaciones o aprobación de suministro."
+    },
+    "covap-salchichon": {
+      "title": "COVAP — Salchichón de bellota ibérico",
+      "url": "https://tienda.covap.es/ibericos/embutidos-de-bellota/piezas/salchichon-de-bellota-iberico-esenciaunica-sin-conservantes-anadidos/",
+      "accessed": "2026-09-25",
+      "notes": "Página recuperada; evidencia de identidad, sin importar imágenes, alegaciones o aprobación de suministro."
+    },
+    "gallo-canelones": {
+      "title": "Gallo — Placas para canelones",
+      "url": "https://www.pastasgallo.es/productos/placas-para-canelones-extrafinas/",
+      "accessed": "2026-09-25",
+      "notes": "Página recuperada; evidencia de identidad, sin importar imágenes, alegaciones o aprobación de suministro."
+    },
+    "FDC": {
+      "title": "Margarine, regular, 80% fat, composite, stick, with salt",
+      "url": "https://fdc.nal.usda.gov/food-details/172346/nutrients",
+      "accessed": "2026-09-25",
+      "notes": "Registro 172346 contrastado con food.csv local de SR Legacy; fuente histórica de identidad, no composición de un proveedor actual."
+    },
+    "garcia-carrion-blanco": {
+      "title": "García Carrión — Vinos blancos Don Simón",
+      "url": "https://garciacarrion.com/collections/vino-don-simon",
+      "accessed": "2026-09-25",
+      "notes": "Página recuperada; evidencia de identidad, sin importar imágenes, alegaciones o aprobación de suministro."
+    },
+    "garcia-carrion-tinto": {
+      "title": "García Carrión — Vinos tintos Don Simón",
+      "url": "https://garciacarrion.com/collections/vino-don-simon",
+      "accessed": "2026-09-25",
+      "notes": "Página recuperada; evidencia de identidad, sin importar imágenes, alegaciones o aprobación de suministro."
+    },
+    "nestle-cafe-soluble": {
+      "title": "Nestlé Professional — Café soluble natural",
+      "url": "https://www.nestleprofessional.es/cafe-bebidas-hosteleria/cafe-soluble-y-molido/nescafe-classic-cafe-soluble-natural-500g",
+      "accessed": "2026-09-25",
+      "notes": "Página recuperada; evidencia de identidad, sin importar imágenes, alegaciones o aprobación de suministro."
+    }
+  },
+  "records": [
+    {
+      "canonicalKey": "carrillera_de_cerdo",
+      "defaultName": "Carrillera de cerdo",
+      "category": "CARNES",
+      "restaurantCategoryKey": "CARNES_AVES",
+      "aliases": [
+        "Carrillera de cerdo",
+        "Carrillada de cerdo",
+        "Carrilleras de cerdo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "solobuey-carrillera",
+        "recordId": "carrillera_de_cerdo",
+        "sourceName": "Solobuey — Carrillera de cerdo ibérico",
+        "url": "https://www.solobuey.com/comprar/carrillera-de-cerdo-iberico/"
+      },
+      "identityReason": "Corte de cerdo documentado; se omite raza, crianza y envase. No representa el guiso preparado.",
+      "culinaryForm": "CORTE_CARNICO"
+    },
+    {
+      "canonicalKey": "carrillera_de_vacuno",
+      "defaultName": "Carrillera de vacuno",
+      "category": "CARNES",
+      "restaurantCategoryKey": "CARNES_AVES",
+      "aliases": [
+        "Carrillera de vacuno",
+        "Carrillada de vacuno",
+        "Carrilleras de vacuno"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "discarlux-carrillera",
+        "recordId": "carrillera_de_vacuno",
+        "sourceName": "Discarlux — Carrilleras de vacuno",
+        "url": "https://discarlux.es/carrilleras-de-ternera-dos-unidades-de-500-grs-1-kg-aprox"
+      },
+      "identityReason": "La ficha describe un corte fresco de vacuno para cocinar. No se importa edad, procedencia ni preparación en salsa.",
+      "culinaryForm": "CORTE_CARNICO"
+    },
+    {
+      "canonicalKey": "secreto_de_cerdo",
+      "defaultName": "Secreto de cerdo",
+      "category": "CARNES",
+      "restaurantCategoryKey": "CARNES_AVES",
+      "aliases": [
+        "Secreto de cerdo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "solobuey-secreto",
+        "recordId": "secreto_de_cerdo",
+        "sourceName": "Solobuey — Secreto de cerdo ibérico",
+        "url": "https://www.solobuey.com/comprar/secreto-de-cerdo-iberico/"
+      },
+      "identityReason": "Corte identificado separadamente de presa, pluma y solomillo en el catálogo del proveedor. La raza no crea otra identidad.",
+      "culinaryForm": "CORTE_CARNICO"
+    },
+    {
+      "canonicalKey": "presa_de_cerdo",
+      "defaultName": "Presa de cerdo",
+      "category": "CARNES",
+      "restaurantCategoryKey": "CARNES_AVES",
+      "aliases": [
+        "Presa de cerdo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "solobuey-presa",
+        "recordId": "presa_de_cerdo",
+        "sourceName": "Solobuey — Presa de cerdo ibérico",
+        "url": "https://www.solobuey.com/comprar/presa-de-cerdo-iberico/"
+      },
+      "identityReason": "Corte de cerdo comercializado como presa. No se añaden nombres genéricos sin especie ni variantes por fileteado.",
+      "culinaryForm": "CORTE_CARNICO"
+    },
+    {
+      "canonicalKey": "pluma_de_cerdo",
+      "defaultName": "Pluma de cerdo",
+      "category": "CARNES",
+      "restaurantCategoryKey": "CARNES_AVES",
+      "aliases": [
+        "Pluma de cerdo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "solobuey-pluma",
+        "recordId": "pluma_de_cerdo",
+        "sourceName": "Solobuey — Pluma de cerdo ibérico",
+        "url": "https://www.solobuey.com/comprar/pluma-de-cerdo-iberico/"
+      },
+      "identityReason": "Pieza de la parte posterior del lomo identificada por el proveedor. Se distingue de peces y pasta con nombres de pluma; sin alias pluma a secas.",
+      "culinaryForm": "CORTE_CARNICO"
+    },
+    {
+      "canonicalKey": "salchichon",
+      "defaultName": "Salchichón",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Salchichón",
+        "Salchichón de cerdo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "covap-salchichon",
+        "recordId": "salchichon",
+        "sourceName": "COVAP — Salchichón de bellota ibérico",
+        "url": "https://tienda.covap.es/ibericos/embutidos-de-bellota/piezas/salchichon-de-bellota-iberico-esenciaunica-sin-conservantes-anadidos/"
+      },
+      "identityReason": "Embutido curado de cerdo con especias. Se conserva la denominación culinaria salchichón, sin equiparar automáticamente los salamis regionales existentes. La ficha comercial declara posibles trazas de leche y soja; no se transfieren ausencia de alérgenos ni propiedades de la marca.",
+      "culinaryForm": "EMBUTIDO_CURADO"
+    },
+    {
+      "canonicalKey": "placas_para_canelones",
+      "defaultName": "Placas para canelones",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Placas para canelones",
+        "Pasta para canelones"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "gallo-canelones",
+        "recordId": "placas_para_canelones",
+        "sourceName": "Gallo — Placas para canelones",
+        "url": "https://www.pastasgallo.es/productos/placas-para-canelones-extrafinas/"
+      },
+      "identityReason": "Placas de pasta de trigo sin relleno, documentadas por la ficha y el catálogo de placas del fabricante. No representa canelones rellenos ni variantes por grosor o marca. Composición completa pendiente del suministro.",
+      "culinaryForm": "PASTA_SIN_RELLENO"
+    },
+    {
+      "canonicalKey": "margarina",
+      "defaultName": "Margarina",
+      "category": "ACEITES_GRASAS_VINAGRES",
+      "restaurantCategoryKey": "ACEITES_GRASAS_VINAGRES",
+      "aliases": [
+        "Margarina"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "172346",
+        "sourceName": "Margarine, regular, 80% fat, composite, stick, with salt",
+        "url": "https://fdc.nal.usda.gov/food-details/172346/nutrients"
+      },
+      "identityReason": "Margarina convencional como emulsión grasa, documentada en SR Legacy 172346. Se agrupan envases y sal; no se presume composición vegetal exclusiva ni ausencia de leche. No se confunde con mantequilla, grasa anhidra o preparados reducidos en grasa.",
+      "culinaryForm": "EMULSION_GRASA"
+    },
+    {
+      "canonicalKey": "vino_blanco",
+      "defaultName": "Vino blanco",
+      "category": "OTROS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Vino blanco",
+        "Vino blanco para cocinar"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "garcia-carrion-blanco",
+        "recordId": "vino_blanco",
+        "sourceName": "García Carrión — Vinos blancos Don Simón",
+        "url": "https://garciacarrion.com/collections/vino-don-simon"
+      },
+      "identityReason": "Vino blanco como ingrediente culinario; no es vinagre ni vino desalcoholizado. Cocinar es un uso y se registra como alias, sin otra alta. No se importa marca ni variedad de uva.",
+      "culinaryForm": "VINO"
+    },
+    {
+      "canonicalKey": "vino_tinto",
+      "defaultName": "Vino tinto",
+      "category": "OTROS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Vino tinto",
+        "Vino tinto para cocinar"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "garcia-carrion-tinto",
+        "recordId": "vino_tinto",
+        "sourceName": "García Carrión — Vinos tintos Don Simón",
+        "url": "https://garciacarrion.com/collections/vino-don-simon"
+      },
+      "identityReason": "Vino tinto como ingrediente culinario; no es vinagre ni tinto de verano. Cocinar es un uso, sin otra identidad. No se presume ausencia de sulfitos ni eliminación de alcohol en una receta.",
+      "culinaryForm": "VINO"
+    },
+    {
+      "canonicalKey": "cafe_soluble",
+      "defaultName": "Café soluble",
+      "category": "OTROS",
+      "restaurantCategoryKey": "REPOSTERIA_AUXILIARES",
+      "aliases": [
+        "Café soluble",
+        "Café instantáneo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "nestle-cafe-soluble",
+        "recordId": "cafe_soluble",
+        "sourceName": "Nestlé Professional — Café soluble natural",
+        "url": "https://www.nestleprofessional.es/cafe-bebidas-hosteleria/cafe-soluble-y-molido/nescafe-classic-cafe-soluble-natural-500g"
+      },
+      "identityReason": "Café seco soluble para elaboración, distinto del extracto líquido aromático histórico de Nielsen-Massey, cuya fuente declara agua y alcohol. No representa café molido ni infusión preparada; se omiten mezclas comerciales y marca.",
+      "culinaryForm": "CAFE_SOLUBLE"
+    }
+  ],
+  "exclusions": [
+    {
+      "candidate": "Entrecot de vacuno",
+      "decision": "REVIEW_EXISTING_SCOPE",
+      "reason": "La fuente ofrece entrecot de lomo alto y bajo. No es un alias exclusivo de Ojo de lomo. Conservar ambas fichas; falta especificar la región anatómica de Lomo de ternera y sus equivalencias antes de corregir nombres.",
+      "evidenceUrls": [
+        "https://carnicasgoia.com/producto/entrecot/"
+      ]
+    },
+    {
+      "candidate": "Boquerón",
+      "decision": "REVIEW_EXISTING_SCOPE",
+      "reason": "Boquerón y anchoa designan Engraulis encrasicolus en la fuente europea, pero Anchoas carece de especie y preparación. No se presupone que sea pescado fresco, salazón o vinagre. Requiere procedencia de la ficha antigua.",
+      "evidenceUrls": [
+        "https://fish-commercial-names.ec.europa.eu/fish-names/species/engraulis-encrasicolus_es"
+      ]
+    },
+    {
+      "candidate": "Atún en conserva",
+      "decision": "REVIEW_EXISTING_SCOPE",
+      "reason": "Calvo documenta atún claro con aceite de oliva y sal. Atún histórico no indica elaboración. Antes de añadir una conserva que pueda duplicarlo, precisar su suministro y líquido de cobertura; tampoco convertir Atún en alias de conserva.",
+      "evidenceUrls": [
+        "https://calvo.es/producto/atun-claro-en-aceite-de-oliva/"
+      ]
+    },
+    {
+      "candidate": "Nata para cocinar",
+      "decision": "REVIEW_EXISTING_SCOPE",
+      "reason": "El fabricante distingue una nata líquida para cocinar de menor materia grasa. Crema de leche no declara porcentaje ni formulación. No se la renombra ni se añade una posible duplicación; obtener su ficha técnica y distinguirla de mezclas vegetales.",
+      "evidenceUrls": [
+        "https://www.centrallecheraasturiana.es/productos/nata/nata-para-cocinar/"
+      ]
+    },
+    {
+      "candidate": "Nata para montar",
+      "decision": "REVIEW_EXISTING_SCOPE",
+      "reason": "La nata líquida para repostería se monta después; Nata montada ya es otra preparación. No puede asignarse exclusivamente a Crema de leche ni a Nata doble sin materia grasa y composición documentadas.",
+      "evidenceUrls": [
+        "https://www.centrallecheraasturiana.es/productos/nata/nata-reposteria/"
+      ]
+    },
+    {
+      "candidate": "Aceitunas verdes",
+      "decision": "REVIEW_EXISTING_SCOPE",
+      "reason": "Serpis documenta Manzanilla verde de mesa. Las fichas de variedad y Aceitunas con hueso no precisan suficientemente preparación y color. No asignar un alias amplio de aceitunas verdes a una única variedad. Obtener alcance de las fichas históricas.",
+      "evidenceUrls": [
+        "https://www.serpis.com/producto/verdes/"
+      ]
+    },
+    {
+      "candidate": "Pan para hamburguesa",
+      "decision": "ALREADY_REPRESENTED",
+      "reason": "Se mantiene la identidad conjunta de pan blanco sencillo de hamburguesa/perrito documentada por USDA 172796. No separar solo por forma. No equivale a toda formulación brioche o integral. La búsqueda por palabras encuentra la ficha conjunta.",
+      "evidenceUrls": [
+        "https://fdc.nal.usda.gov/food-details/172796/nutrients"
+      ]
+    },
+    {
+      "candidate": "Pan para perrito caliente",
+      "decision": "ALREADY_REPRESENTED",
+      "reason": "Misma ficha conjunta USDA 172796. El registro local original confirma ambos usos y la formulación plain; no hay alta ni alias nuevo. Se comprueba el buscador por palabras, sin certificar pantalla.",
+      "evidenceUrls": [
+        "https://fdc.nal.usda.gov/food-details/172796/nutrients"
+      ]
+    },
+    {
+      "candidate": "Tomate triturado",
+      "decision": "REVIEW_EXISTING_SCOPE",
+      "reason": "Hida distingue el triturado del frito y del sofrito. La ficha histórica Tomate en Salsas no documenta procesamiento. No confundirlo con tomate fresco ni concentrado; identificar la receta o suministro original antes de sustituir o duplicar.",
+      "evidenceUrls": [
+        "https://hida.es/diferencias-entre-tomate-frito-triturado-y-sofrito/"
+      ]
+    },
+    {
+      "candidate": "Tomate frito",
+      "decision": "REVIEW_EXISTING_SCOPE",
+      "reason": "Hida documenta fritura con aceite; sofrito añade otras hortalizas. Tomate y Coulis no bastan para deducir equivalencia. Conservar claves mientras falta elaboración de la ficha antigua; no importar una receta comercial como formulación universal.",
+      "evidenceUrls": [
+        "https://hida.es/diferencias-entre-tomate-frito-triturado-y-sofrito/"
+      ]
+    },
+    {
+      "candidate": "Fibra de achicoria / Inulina de achicoria",
+      "decision": "REVIEW_EXISTING_SCOPE",
+      "reason": "Sosa documenta tanto inulina como oligofructosa de achicoria. El nombre Fibra de achicoria por sí solo no prueba composición. Conservar las dos claves sin fusionar; solicitar composición de la ficha histórica antes de resolver equivalencia.",
+      "evidenceUrls": [
+        "https://www.sosa.cat/producto/inulina-caliente/",
+        "https://www.sosa.cat/producto/oligofruct/"
+      ]
+    },
+    {
+      "candidate": "Tomate / Tomates frescos",
+      "decision": "REVIEW_EXISTING_SCOPE",
+      "reason": "La búsqueda devuelve la ficha fresca y varias salsas; no existe ausencia de tomate fresco. El genérico de Salsas sigue ambiguo. No renombrarlo a frito o triturado por su categoría.",
+      "evidenceUrls": [
+        "https://hida.es/diferencias-entre-tomate-frito-triturado-y-sofrito/"
+      ]
+    },
+    {
+      "candidate": "Café molido, infusión preparada, descafeinado y mezclas instantáneas",
+      "decision": "OUTSIDE_CONFIRMED_FORM",
+      "reason": "La necesidad básica se acota al café soluble; no se crean automáticamente todas las presentaciones. Extracto de café se mantiene: su fuente describe una preparación líquida con agua y alcohol.",
+      "evidenceUrls": [
+        "https://nielsenmassey.com/products/pure-coffee-extract/"
+      ]
+    },
+    {
+      "candidate": "Margarinas por marca, envase, sal, grado de laminación o mezcla con mantequilla",
+      "decision": "GROUPED",
+      "reason": "Una identidad convencional sustentada en USDA 172346. Puratos confirma uso profesional y formulaciones variables. No usar la ficha Zas 75% como evidencia de margarina convencional 80% ni deducir ausencia de leche.",
+      "evidenceUrls": [
+        "https://www.puratos.es/es/bakery/categories/margarinas"
+      ]
+    },
+    {
+      "candidate": "Salchichón y salamis regionales",
+      "decision": "DISTINCT_CULINARY_NAME",
+      "reason": "Se conserva salchichón como denominación culinaria propia; la similitud de ingredientes no demuestra equivalencia con cada salami histórico. No se añaden alias salami ni referencias por raza o certificación."
+    },
+    {
+      "candidate": "Pluma, presa, secreto y carrillera sin especie",
+      "decision": "AMBIGUOUS_ALIAS_REJECTED",
+      "reason": "Los nombres y alias nuevos conservan especie; pluma aparece también en pescado y pasta. El formato entero o fileteado no genera fichas."
+    },
+    {
+      "candidate": "Crema de avellanas, crema de cacahuete, crema de pistacho y tempura",
+      "decision": "REVIEW_EXISTING_SCOPE",
+      "reason": "Se mantienen las cuatro asignaciones provisionales. Falta composición histórica para aprobar familia o separar pastas puras. Las equivalencias anteriores de huevo y lino siguen abiertas."
+    }
+  ]
+}

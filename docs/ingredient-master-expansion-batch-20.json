@@ -1,0 +1,353 @@
+{
+  "schemaVersion": 1,
+  "batchId": "2026-09-24-20",
+  "date": "2026-09-24",
+  "status": "EDITORIAL_REVIEW",
+  "targetTotal": 5000,
+  "policy": "Legumbres y derivados vegetales culinarios documentados, sin cuotas ni combinaciones artificiales. Variedades y elaboraciones diferenciadas; fichas anteriores intactas.",
+  "allergenPolicy": "NEEDS_REVIEW e imágenes MISSING. Alérgenos vacíos significa no aprobados, nunca ausencia. Revisar soja en sus derivados, trigo y gluten en yaki-fu, trazas y composición de cada suministro. No importar alegaciones de ausencia de las fuentes.",
+  "sources": {
+    "MAPA_GRANJA_ASTURIANA": {
+      "title": "MAPA — Faba Asturiana, descripción varietal",
+      "url": "https://www.mapa.gob.es/dam/mapa/contenido/alimentacion/temas/calidad-agroalimentaria/2017-calidad-diferenciada/nuevo_denominaciones/pliegos-de-condiciones/pliego-condiciones-agroalimentarios/faba_asturiana1996_06_12.pdf",
+      "accessed": "2026-09-24",
+      "notes": "El pliego histórico identifica la variedad Granja Asturiana de Phaseolus vulgaris. No acredita certificación del suministro."
+    },
+    "MAPA_FABA_GALAICA": {
+      "title": "MAPA — Faba de Lourenzá, descripción varietal",
+      "url": "https://www.mapa.gob.es/dam/mapa/contenido/alimentacion/temas/calidad-agroalimentaria/2017-calidad-diferenciada/nuevo_denominaciones/pliegos-de-condiciones/pliego-condiciones-agroalimentarios/fabadelourenza_2018_10_01.pdf",
+      "accessed": "2026-09-24",
+      "notes": "El pliego identifica la variedad local Faba Galaica. Se registra la variedad, sin atribuir origen protegido a todos sus suministros."
+    },
+    "MAPA_GANXET": {
+      "title": "MAPA — Inventario de biodiversidad agrícola, Mongeta del ganxet",
+      "url": "https://www.mapa.gob.es/dam/mapa/contenido/agricultura/temas/medios-de-produccion/semillas-y-plantas-de-vivero/recursos-fitogeneticos-para-la-agricultura-y-la-alimentacion/docs/iectba_1_capitulos/capitulo-3_fichas_variedades/tardio_etal2018_iectbavol1_330-332_phaseolusvulgarisl.pdf",
+      "accessed": "2026-09-24",
+      "notes": "Ficha varietal y nombres locales, páginas 330–332. No se generan altas por tamaño del grano."
+    },
+    "MAPA_FUENTESAUCO": {
+      "title": "MAPA — Garbanzo de Fuentesaúco, ecotipo",
+      "url": "https://www.mapa.gob.es/images/es/garbanzo_de_fuentesauco_2021_07_06_tcm30-210907.pdf",
+      "accessed": "2026-09-24",
+      "notes": "El pliego describe el ecotipo local Fuentesaúco y sus rasgos morfológicos. Se utiliza como evidencia de identidad, no de certificación o vigencia registral."
+    },
+    "RANCHO_CRANBERRY": {
+      "title": "Rancho Gordo — Cranberry Bean",
+      "url": "https://www.ranchogordo.com/products/cranberry-bean",
+      "accessed": "2026-09-24",
+      "notes": "El productor identifica esta alubia y su uso culinario. La página relaciona varias selecciones; no se convierten todas en alias exactos."
+    },
+    "BONDUELLE_FLAGEOLET": {
+      "title": "Bonduelle — Flageolets verts extra fins",
+      "url": "https://www.bonduelle.fr/legumes/p/flageolets-verts-extra-fins/03083681130522",
+      "accessed": "2026-09-24",
+      "notes": "La conserva acredita flageolets como ingrediente; su formulación incluye agua, sal y extracto de levadura. No se atribuye esta composición a toda la variedad."
+    },
+    "ROQUETTE_PEA_TEXTURED": {
+      "title": "Roquette — NUTRALYS T PEA 700 M",
+      "url": "https://www.roquette.com/food-nutrition/product-catalog/nutralys-t-pea-700-m",
+      "accessed": "2026-09-24",
+      "notes": "El fabricante identifica proteína de guisante texturizada para formulación alimentaria. Granulado, tiras y trozos quedan agrupados."
+    },
+    "ROQUETTE_FAVA_ISOLATE": {
+      "title": "Roquette — Fava Bean Protein Isolate",
+      "url": "https://www.roquette.com/food-nutrition/press-releases/innovation-fava-bean-protein-isolate",
+      "accessed": "2026-09-24",
+      "notes": "Comunicado del fabricante del 28 de mayo de 2024 sobre aislado de haba para alimentos. No se importan porcentajes, nutrición ni alegaciones de ausencia."
+    },
+    "MAFF_OKARA": {
+      "title": "MAFF — Sustainable Soy: Zero-Waste Cooking Class",
+      "url": "https://www.maff.go.jp/e/policies/rural_dev/eatmeetjapan/winners-2021/12.html",
+      "accessed": "2026-09-24",
+      "notes": "La fuente identifica la pulpa obtenida al elaborar tofu y su empleo como ingrediente culinario."
+    },
+    "MAFF_KOYADOFU": {
+      "title": "MAFF — Processed bean products, Kori-dofu",
+      "url": "https://www.maff.go.jp/e/policies/market/dento_syoku/bunrui/mamerui-kakou.html",
+      "accessed": "2026-09-24",
+      "notes": "El MAFF identifica kori-dofu y su nombre regional koyadofu, con textura transformada por congelación y secado."
+    },
+    "MAFF_ABURAAGE": {
+      "title": "MAFF — Processed bean products, Aburaage",
+      "url": "https://www.maff.go.jp/e/policies/market/dento_syoku/bunrui/mamerui-kakou.html",
+      "accessed": "2026-09-24",
+      "notes": "La clasificación general describe láminas finas de tofu fritas. Las acepciones regionales requieren revisión del suministro."
+    },
+    "MAFF_YAKIFU": {
+      "title": "MAFF — Grain products, Fu",
+      "url": "https://www.maff.go.jp/e/policies/market/dento_syoku/bunrui/kokurui.html",
+      "accessed": "2026-09-24",
+      "notes": "El MAFF describe una elaboración de gluten y harina horneados. No se crean fichas por molde o figura."
+    }
+  },
+  "records": [
+    {
+      "canonicalKey": "alubia_granja_asturiana",
+      "defaultName": "Alubia Granja Asturiana",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "aliases": [
+        "Alubia Granja Asturiana"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MAPA_GRANJA_ASTURIANA",
+        "recordId": "alubia_granja_asturiana",
+        "sourceName": "MAPA — Faba Asturiana, descripción varietal",
+        "url": "https://www.mapa.gob.es/dam/mapa/contenido/alimentacion/temas/calidad-agroalimentaria/2017-calidad-diferenciada/nuevo_denominaciones/pliegos-de-condiciones/pliego-condiciones-agroalimentarios/faba_asturiana1996_06_12.pdf"
+      },
+      "identityReason": "Variedad propia; distinta del Judión de la Granja ya existente. No se crea otra ficha por el sello Faba Asturiana.",
+      "culinaryForm": "LEGUMBRE_VARIETAL"
+    },
+    {
+      "canonicalKey": "faba_galaica",
+      "defaultName": "Faba Galaica",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "aliases": [
+        "Faba Galaica",
+        "Alubia Galaica"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MAPA_FABA_GALAICA",
+        "recordId": "faba_galaica",
+        "sourceName": "MAPA — Faba de Lourenzá, descripción varietal",
+        "url": "https://www.mapa.gob.es/dam/mapa/contenido/alimentacion/temas/calidad-agroalimentaria/2017-calidad-diferenciada/nuevo_denominaciones/pliegos-de-condiciones/pliego-condiciones-agroalimentarios/fabadelourenza_2018_10_01.pdf"
+      },
+      "identityReason": "Variedad identificada de alubia, no haba Vicia faba. Lourenzá no genera una segunda identidad.",
+      "culinaryForm": "LEGUMBRE_VARIETAL"
+    },
+    {
+      "canonicalKey": "alubia_del_ganxet",
+      "defaultName": "Alubia del Ganxet",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "aliases": [
+        "Alubia del Ganxet",
+        "Mongeta del ganxet",
+        "Judía de gancho"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MAPA_GANXET",
+        "recordId": "alubia_del_ganxet",
+        "sourceName": "MAPA — Inventario de biodiversidad agrícola, Mongeta del ganxet",
+        "url": "https://www.mapa.gob.es/dam/mapa/contenido/agricultura/temas/medios-de-produccion/semillas-y-plantas-de-vivero/recursos-fitogeneticos-para-la-agricultura-y-la-alimentacion/docs/iectba_1_capitulos/capitulo-3_fichas_variedades/tardio_etal2018_iectbavol1_330-332_phaseolusvulgarisl.pdf"
+      },
+      "identityReason": "Tipo varietal documentado, distinto de alubia blanca genérica; no se atribuye una certificación.",
+      "culinaryForm": "LEGUMBRE_VARIETAL"
+    },
+    {
+      "canonicalKey": "garbanzo_de_fuentesauco",
+      "defaultName": "Garbanzo de Fuentesaúco",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "aliases": [
+        "Garbanzo de Fuentesaúco"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MAPA_FUENTESAUCO",
+        "recordId": "garbanzo_de_fuentesauco",
+        "sourceName": "MAPA — Garbanzo de Fuentesaúco, ecotipo",
+        "url": "https://www.mapa.gob.es/images/es/garbanzo_de_fuentesauco_2021_07_06_tcm30-210907.pdf"
+      },
+      "identityReason": "Ecotipo documentado; la alta no se basa únicamente en procedencia ni reemplaza Garbanzo Castellano.",
+      "culinaryForm": "LEGUMBRE_VARIETAL"
+    },
+    {
+      "canonicalKey": "alubias_cranberry",
+      "defaultName": "Alubias cranberry",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "aliases": [
+        "Alubias cranberry"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "RANCHO_CRANBERRY",
+        "recordId": "alubias_cranberry",
+        "sourceName": "Rancho Gordo — Cranberry Bean",
+        "url": "https://www.ranchogordo.com/products/cranberry-bean"
+      },
+      "identityReason": "Tipo identificado distinto de Alubias pintas. Borlotti, Madeira y Tongues of Fire se difieren para delimitar equivalencias.",
+      "culinaryForm": "LEGUMBRE_VARIETAL"
+    },
+    {
+      "canonicalKey": "alubias_flageolet",
+      "defaultName": "Alubias flageolet",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "aliases": [
+        "Alubias flageolet",
+        "Flageolets verdes"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "BONDUELLE_FLAGEOLET",
+        "recordId": "alubias_flageolet",
+        "sourceName": "Bonduelle — Flageolets verts extra fins",
+        "url": "https://www.bonduelle.fr/legumes/p/flageolets-verts-extra-fins/03083681130522"
+      },
+      "identityReason": "Se registra el tipo de alubia; envase, calibre y conserva no generan otras altas.",
+      "culinaryForm": "LEGUMBRE_VARIETAL"
+    },
+    {
+      "canonicalKey": "proteina_texturizada_de_guisante",
+      "defaultName": "Proteína texturizada de guisante",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "aliases": [
+        "Proteína texturizada de guisante",
+        "Guisante texturizado"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "ROQUETTE_PEA_TEXTURED",
+        "recordId": "proteina_texturizada_de_guisante",
+        "sourceName": "Roquette — NUTRALYS T PEA 700 M",
+        "url": "https://www.roquette.com/food-nutrition/product-catalog/nutralys-t-pea-700-m"
+      },
+      "identityReason": "Forma texturizada documentada; se conserva Proteína de guisante genérica y se revisará su alcance antes de cualquier consolidación.",
+      "culinaryForm": "PROTEINA_TEXTURIZADA"
+    },
+    {
+      "canonicalKey": "proteina_aislada_de_haba",
+      "defaultName": "Proteína aislada de haba",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "aliases": [
+        "Proteína aislada de haba"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "ROQUETTE_FAVA_ISOLATE",
+        "recordId": "proteina_aislada_de_haba",
+        "sourceName": "Roquette — Fava Bean Protein Isolate",
+        "url": "https://www.roquette.com/food-nutrition/press-releases/innovation-fava-bean-protein-isolate"
+      },
+      "identityReason": "Aislado alimentario diferenciado del haba entera y de proteínas de soja, guisante y garbanzo.",
+      "culinaryForm": "PROTEINA_AISLADA"
+    },
+    {
+      "canonicalKey": "okara_de_soja",
+      "defaultName": "Okara de soja",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "aliases": [
+        "Okara de soja",
+        "Pulpa de soja para cocinar"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MAFF_OKARA",
+        "recordId": "okara_de_soja",
+        "sourceName": "MAFF — Sustainable Soy: Zero-Waste Cooking Class",
+        "url": "https://www.maff.go.jp/e/policies/rural_dev/eatmeetjapan/winners-2021/12.html"
+      },
+      "identityReason": "Pulpa de soja separada de bebida, tofu, harina y proteína aislada; no se añaden otras fichas por deshidratación.",
+      "culinaryForm": "DERIVADO_SOJA"
+    },
+    {
+      "canonicalKey": "tofu_deshidratado_por_congelacion",
+      "defaultName": "Tofu deshidratado por congelación",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "aliases": [
+        "Tofu deshidratado por congelación",
+        "Koya-dofu",
+        "Kori-dofu"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MAFF_KOYADOFU",
+        "recordId": "tofu_deshidratado_por_congelacion",
+        "sourceName": "MAFF — Processed bean products, Kori-dofu",
+        "url": "https://www.maff.go.jp/e/policies/market/dento_syoku/bunrui/mamerui-kakou.html"
+      },
+      "identityReason": "Elaboración tradicional distinta de tofu fresco y de tofu simplemente congelado para conservarlo.",
+      "culinaryForm": "DERIVADO_SOJA"
+    },
+    {
+      "canonicalKey": "aburaage",
+      "defaultName": "Aburaage",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "aliases": [
+        "Aburaage",
+        "Láminas de tofu fritas"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MAFF_ABURAAGE",
+        "recordId": "aburaage",
+        "sourceName": "MAFF — Processed bean products, Aburaage",
+        "url": "https://www.maff.go.jp/e/policies/market/dento_syoku/bunrui/mamerui-kakou.html"
+      },
+      "identityReason": "Ingrediente frito identificado; no yuba, atsuage grueso ni bolsas ya sazonadas para inari.",
+      "culinaryForm": "DERIVADO_SOJA"
+    },
+    {
+      "canonicalKey": "yaki_fu",
+      "defaultName": "Yaki-fu",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "aliases": [
+        "Yaki-fu",
+        "Gluten de trigo horneado japonés"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MAFF_YAKIFU",
+        "recordId": "yaki_fu",
+        "sourceName": "MAFF — Grain products, Fu",
+        "url": "https://www.maff.go.jp/e/policies/market/dento_syoku/bunrui/kokurui.html"
+      },
+      "identityReason": "Elaboración identificada, distinta de seitán, gluten seco como materia prima y fu fresco o frito.",
+      "culinaryForm": "DERIVADO_GLUTEN"
+    }
+  ],
+  "exclusions": [
+    {
+      "candidate": "Garbanzo de Escacena y Lenteja de Tierra de Campos",
+      "decision": "DEFERRED",
+      "reason": "No sumar denominaciones geográficas sin compararlas con Blanco lechoso y Pardina ya existentes."
+    },
+    {
+      "candidate": "Faba Asturiana y Faba de Lourenzá como sellos",
+      "decision": "GROUPED",
+      "reason": "Se registran Granja Asturiana y Galaica como variedades; no se atribuye certificación ni se duplica por sello."
+    },
+    {
+      "candidate": "Borlotti, Madeira y Tongues of Fire",
+      "decision": "DEFERRED",
+      "reason": "La fuente de cranberry relaciona selecciones. Delimitar equivalencia antes de añadir fichas o alias."
+    },
+    {
+      "candidate": "Proteína de guisante genérica frente a texturizada",
+      "decision": "HISTORICAL_REVIEW",
+      "reason": "Se preserva la ficha genérica y se delimita la nueva por texturización; revisar el alcance operativo histórico."
+    },
+    {
+      "candidate": "Tofu, tofu sedoso, yuba, natto y tempeh de soja, guisante o garbanzo",
+      "decision": "ALREADY_REPRESENTED",
+      "reason": "Se conservan sus claves y no se repiten por traducción o marca."
+    },
+    {
+      "candidate": "Atsuage, tofu frito regional y bolsas sazonadas para inari",
+      "decision": "DEFERRED",
+      "reason": "Revisar denominación, composición y diferencia con el aburaage fino documentado."
+    },
+    {
+      "candidate": "Tempeh de altramuz y nuevas mezclas de proteínas",
+      "decision": "DEFERRED",
+      "reason": "No se añaden sin evidencia e identidad suficientemente delimitadas."
+    },
+    {
+      "candidate": "Envase, calibre, forma, certificación y porcentaje proteico",
+      "decision": "GROUPED",
+      "reason": "No generan altas automáticas ni alegaciones importadas."
+    }
+  ]
+}

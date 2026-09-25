@@ -1,0 +1,1161 @@
+{
+  "schemaVersion": 1,
+  "batchId": "2026-09-24-10",
+  "date": "2026-09-24",
+  "status": "EDITORIAL_REVIEW",
+  "targetTotal": 5000,
+  "policy": "Selección explícita de variedades y transformaciones documentadas. No se generan combinaciones ni fichas por marcas, envases o traducciones.",
+  "allergenPolicy": "No se infieren alérgenos ni trazas. Lista vacía significa no documentado; todas las altas siguen NEEDS_REVIEW e imágenes MISSING.",
+  "sources": {
+    "MAPA_ARROZ": {
+      "title": "MAPA — pliego Arroz de Valencia, versión 18 de abril de 2024",
+      "url": "https://www.mapa.gob.es/images/es/arroz_de_valencia_2024_04_18_tcm30-211433.pdf",
+      "scope": "Identidades varietales, no certificación del producto ni afirmación de vigencia registral.",
+      "accessed": "2026-09-24"
+    },
+    "GALLO": {
+      "title": "Riso Gallo — Cultura e lavorazione del riso",
+      "url": "https://www.risogallo.it/pages/cultura-del-riso",
+      "accessed": "2026-09-24"
+    },
+    "MAPA_LEGUMBRES": {
+      "title": "Alimentos de España — Definición y variedades de legumbres",
+      "url": "https://www.alimentosdespana.es/es/turismo-agroalimentario-y-gastronomia/gastronomia/bloc/legumbres/definicion-y-variedades",
+      "accessed": "2026-09-24"
+    },
+    "BANEZA": {
+      "title": "Consejo Regulador Alubia de La Bañeza–León — Nuestros productos",
+      "url": "https://www.alubiadelabanezaleon.es/nuestros-productos/",
+      "accessed": "2026-09-24"
+    },
+    "GRANERO": {
+      "title": "El Granero — Harinas y usos culinarios",
+      "url": "https://elgranero.com/saborear/recetas-para-usar-todas-nuestras-harinas/",
+      "accessed": "2026-09-24"
+    },
+    "MOLINO_TEFF": {
+      "title": "Harinera El Molino — ficha técnica de harina de teff blanca, revisión 36",
+      "url": "https://harineraelmolino.com/wp-content/uploads/2020/11/ficha-tecnica-ecologica-harina-teff-blanca-36.pdf",
+      "accessed": "2026-09-24"
+    },
+    "ESTEBAN": {
+      "title": "Emilio Esteban — Copos",
+      "url": "https://emilioesteban.com/copos",
+      "accessed": "2026-09-24"
+    },
+    "SELECTA": {
+      "title": "Semilla Selecta — ficha de harina de coco",
+      "url": "https://semillaselecta.com/pages/informacion-nutricional-harina-de-coco",
+      "accessed": "2026-09-24"
+    },
+    "ECOSALIM": {
+      "title": "EcoSalim — catálogo de productos, arroz rojo",
+      "url": "https://int-salim.com/img/cms/catalogos/EcoSalim_CATALOGO-web.pdf",
+      "scope": "Página 5 consultada mediante índice web. Descarga posterior bloqueada con HTTP 403; no se usan secciones no verificadas.",
+      "accessed": "2026-09-24"
+    },
+    "FDC": {
+      "title": "USDA FoodData Central — SR Legacy",
+      "url": "https://fdc.nal.usda.gov/download-datasets/",
+      "dataset": "FoodData_Central_sr_legacy_food_csv_2018-04",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://fdc.nal.usda.gov/api-guide/"
+    }
+  },
+  "records": [
+    {
+      "canonicalKey": "arroz_senia",
+      "defaultName": "Arroz Senia",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Arroz Senia",
+        "Arroz Sénia"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MAPA_ARROZ",
+        "recordId": "senia",
+        "sourceName": "Senia",
+        "url": "https://www.mapa.gob.es/images/es/arroz_de_valencia_2024_04_18_tcm30-211433.pdf",
+        "page": 2
+      },
+      "identityReason": "Cultivar enumerado expresamente en el pliego de 2024. La similitud de comportamiento culinario con otro cultivar no se interpreta como sinonimia."
+    },
+    {
+      "canonicalKey": "arroz_bahia",
+      "defaultName": "Arroz Bahía",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Arroz Bahía"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MAPA_ARROZ",
+        "recordId": "bahia",
+        "sourceName": "Bahía",
+        "url": "https://www.mapa.gob.es/images/es/arroz_de_valencia_2024_04_18_tcm30-211433.pdf",
+        "page": 2
+      },
+      "identityReason": "Cultivar enumerado expresamente en el pliego de 2024. La similitud de comportamiento culinario con otro cultivar no se interpreta como sinonimia."
+    },
+    {
+      "canonicalKey": "arroz_bomba",
+      "defaultName": "Arroz Bomba",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Arroz Bomba"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MAPA_ARROZ",
+        "recordId": "bomba",
+        "sourceName": "Bomba",
+        "url": "https://www.mapa.gob.es/images/es/arroz_de_valencia_2024_04_18_tcm30-211433.pdf",
+        "page": 2
+      },
+      "identityReason": "Cultivar enumerado expresamente en el pliego de 2024. La similitud de comportamiento culinario con otro cultivar no se interpreta como sinonimia."
+    },
+    {
+      "canonicalKey": "arroz_bombon",
+      "defaultName": "Arroz Bombón",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Arroz Bombón"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MAPA_ARROZ",
+        "recordId": "bombon",
+        "sourceName": "Bombón",
+        "url": "https://www.mapa.gob.es/images/es/arroz_de_valencia_2024_04_18_tcm30-211433.pdf",
+        "page": 2
+      },
+      "identityReason": "Cultivar enumerado expresamente en el pliego de 2024. La similitud de comportamiento culinario con otro cultivar no se interpreta como sinonimia."
+    },
+    {
+      "canonicalKey": "arroz_j_sendra",
+      "defaultName": "Arroz J. Sendra",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Arroz J. Sendra"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MAPA_ARROZ",
+        "recordId": "j_sendra",
+        "sourceName": "J. Sendra",
+        "url": "https://www.mapa.gob.es/images/es/arroz_de_valencia_2024_04_18_tcm30-211433.pdf",
+        "page": 2
+      },
+      "identityReason": "Cultivar enumerado expresamente en el pliego de 2024. La similitud de comportamiento culinario con otro cultivar no se interpreta como sinonimia."
+    },
+    {
+      "canonicalKey": "arroz_copsemar_7",
+      "defaultName": "Arroz Copsemar 7",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Arroz Copsemar 7"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MAPA_ARROZ",
+        "recordId": "copsemar_7",
+        "sourceName": "Copsemar 7",
+        "url": "https://www.mapa.gob.es/images/es/arroz_de_valencia_2024_04_18_tcm30-211433.pdf",
+        "page": 2
+      },
+      "identityReason": "Cultivar enumerado expresamente en el pliego de 2024. La similitud de comportamiento culinario con otro cultivar no se interpreta como sinonimia."
+    },
+    {
+      "canonicalKey": "arroz_argila",
+      "defaultName": "Arroz Argila",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Arroz Argila"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MAPA_ARROZ",
+        "recordId": "argila",
+        "sourceName": "Argila",
+        "url": "https://www.mapa.gob.es/images/es/arroz_de_valencia_2024_04_18_tcm30-211433.pdf",
+        "page": 2
+      },
+      "identityReason": "Cultivar enumerado expresamente en el pliego de 2024. La similitud de comportamiento culinario con otro cultivar no se interpreta como sinonimia."
+    },
+    {
+      "canonicalKey": "arroz_montsianell",
+      "defaultName": "Arroz Montsianell",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Arroz Montsianell"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MAPA_ARROZ",
+        "recordId": "montsianell",
+        "sourceName": "Montsianell",
+        "url": "https://www.mapa.gob.es/images/es/arroz_de_valencia_2024_04_18_tcm30-211433.pdf",
+        "page": 2
+      },
+      "identityReason": "Cultivar enumerado expresamente en el pliego de 2024. La similitud de comportamiento culinario con otro cultivar no se interpreta como sinonimia."
+    },
+    {
+      "canonicalKey": "arroz_gleva",
+      "defaultName": "Arroz Gleva",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Arroz Gleva"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MAPA_ARROZ",
+        "recordId": "gleva",
+        "sourceName": "Gleva",
+        "url": "https://www.mapa.gob.es/images/es/arroz_de_valencia_2024_04_18_tcm30-211433.pdf",
+        "page": 2
+      },
+      "identityReason": "Cultivar enumerado expresamente en el pliego de 2024. La similitud de comportamiento culinario con otro cultivar no se interpreta como sinonimia."
+    },
+    {
+      "canonicalKey": "arroz_sarcet",
+      "defaultName": "Arroz Sarçet",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Arroz Sarçet"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MAPA_ARROZ",
+        "recordId": "sarcet",
+        "sourceName": "Sarçet",
+        "url": "https://www.mapa.gob.es/images/es/arroz_de_valencia_2024_04_18_tcm30-211433.pdf",
+        "page": 2
+      },
+      "identityReason": "Cultivar enumerado expresamente en el pliego de 2024. La similitud de comportamiento culinario con otro cultivar no se interpreta como sinonimia."
+    },
+    {
+      "canonicalKey": "arroz_albufera",
+      "defaultName": "Arroz Albufera",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Arroz Albufera"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MAPA_ARROZ",
+        "recordId": "albufera",
+        "sourceName": "Albufera",
+        "url": "https://www.mapa.gob.es/images/es/arroz_de_valencia_2024_04_18_tcm30-211433.pdf",
+        "page": 2
+      },
+      "identityReason": "Cultivar enumerado expresamente en el pliego de 2024. La similitud de comportamiento culinario con otro cultivar no se interpreta como sinonimia."
+    },
+    {
+      "canonicalKey": "arroz_campanar_pv",
+      "defaultName": "Arroz Campanar PV",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Arroz Campanar PV"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MAPA_ARROZ",
+        "recordId": "campanar_pv",
+        "sourceName": "Campanar PV",
+        "url": "https://www.mapa.gob.es/images/es/arroz_de_valencia_2024_04_18_tcm30-211433.pdf",
+        "page": 2
+      },
+      "identityReason": "Cultivar enumerado expresamente en el pliego de 2024. La similitud de comportamiento culinario con otro cultivar no se interpreta como sinonimia."
+    },
+    {
+      "canonicalKey": "arroz_regina",
+      "defaultName": "Arroz Regina",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Arroz Regina"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MAPA_ARROZ",
+        "recordId": "regina",
+        "sourceName": "Regina",
+        "url": "https://www.mapa.gob.es/images/es/arroz_de_valencia_2024_04_18_tcm30-211433.pdf",
+        "page": 2
+      },
+      "identityReason": "Cultivar enumerado expresamente en el pliego de 2024. La similitud de comportamiento culinario con otro cultivar no se interpreta como sinonimia."
+    },
+    {
+      "canonicalKey": "arroz_hispasur",
+      "defaultName": "Arroz Hispasur",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Arroz Hispasur"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MAPA_ARROZ",
+        "recordId": "hispasur",
+        "sourceName": "Hispasur",
+        "url": "https://www.mapa.gob.es/images/es/arroz_de_valencia_2024_04_18_tcm30-211433.pdf",
+        "page": 2
+      },
+      "identityReason": "Cultivar enumerado expresamente en el pliego de 2024. La similitud de comportamiento culinario con otro cultivar no se interpreta como sinonimia."
+    },
+    {
+      "canonicalKey": "arroz_arborio",
+      "defaultName": "Arroz Arborio",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Arroz Arborio"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "GALLO",
+        "recordId": "arborio",
+        "sourceName": "Arborio",
+        "url": "https://www.risogallo.it/pages/cultura-del-riso"
+      },
+      "identityReason": "Variedad documentada por nombre propio; una ficha independiente del ingrediente genérico, sin multiplicarla por origen, marca o envase."
+    },
+    {
+      "canonicalKey": "arroz_carnaroli",
+      "defaultName": "Arroz Carnaroli",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Arroz Carnaroli"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "GALLO",
+        "recordId": "carnaroli",
+        "sourceName": "Carnaroli",
+        "url": "https://www.risogallo.it/pages/cultura-del-riso"
+      },
+      "identityReason": "Variedad documentada por nombre propio; una ficha independiente del ingrediente genérico, sin multiplicarla por origen, marca o envase."
+    },
+    {
+      "canonicalKey": "arroz_vialone_nano",
+      "defaultName": "Arroz Vialone Nano",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Arroz Vialone Nano"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "GALLO",
+        "recordId": "vialone_nano",
+        "sourceName": "Vialone Nano",
+        "url": "https://www.risogallo.it/pages/cultura-del-riso"
+      },
+      "identityReason": "Variedad documentada por nombre propio; una ficha independiente del ingrediente genérico, sin multiplicarla por origen, marca o envase."
+    },
+    {
+      "canonicalKey": "arroz_baldo",
+      "defaultName": "Arroz Baldo",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Arroz Baldo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "GALLO",
+        "recordId": "baldo",
+        "sourceName": "Baldo",
+        "url": "https://www.risogallo.it/pages/cultura-del-riso"
+      },
+      "identityReason": "Variedad documentada por nombre propio; una ficha independiente del ingrediente genérico, sin multiplicarla por origen, marca o envase."
+    },
+    {
+      "canonicalKey": "arroz_roma",
+      "defaultName": "Arroz Roma",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Arroz Roma"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "GALLO",
+        "recordId": "roma",
+        "sourceName": "Roma",
+        "url": "https://www.risogallo.it/pages/cultura-del-riso"
+      },
+      "identityReason": "Variedad documentada por nombre propio; una ficha independiente del ingrediente genérico, sin multiplicarla por origen, marca o envase."
+    },
+    {
+      "canonicalKey": "arroz_europa",
+      "defaultName": "Arroz Europa",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Arroz Europa"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "GALLO",
+        "recordId": "europa",
+        "sourceName": "Europa",
+        "url": "https://www.risogallo.it/pages/cultura-del-riso"
+      },
+      "identityReason": "Variedad documentada por nombre propio; una ficha independiente del ingrediente genérico, sin multiplicarla por origen, marca o envase."
+    },
+    {
+      "canonicalKey": "arroz_sant_andrea",
+      "defaultName": "Arroz Sant’Andrea",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Arroz Sant’Andrea",
+        "Arroz S. Andrea",
+        "Arroz Sant Andrea"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "GALLO",
+        "recordId": "s_andrea",
+        "sourceName": "S. Andrea",
+        "url": "https://www.risogallo.it/pages/cultura-del-riso"
+      },
+      "identityReason": "Variedad documentada por nombre propio; una ficha independiente del ingrediente genérico, sin multiplicarla por origen, marca o envase."
+    },
+    {
+      "canonicalKey": "arroz_ribe",
+      "defaultName": "Arroz Ribe",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Arroz Ribe"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "GALLO",
+        "recordId": "ribe",
+        "sourceName": "Ribe",
+        "url": "https://www.risogallo.it/pages/cultura-del-riso"
+      },
+      "identityReason": "Variedad documentada por nombre propio; una ficha independiente del ingrediente genérico, sin multiplicarla por origen, marca o envase."
+    },
+    {
+      "canonicalKey": "arroz_padano",
+      "defaultName": "Arroz Padano",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Arroz Padano"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "GALLO",
+        "recordId": "padano",
+        "sourceName": "Padano",
+        "url": "https://www.risogallo.it/pages/cultura-del-riso"
+      },
+      "identityReason": "Variedad documentada por nombre propio; una ficha independiente del ingrediente genérico, sin multiplicarla por origen, marca o envase."
+    },
+    {
+      "canonicalKey": "arroz_basmati",
+      "defaultName": "Arroz Basmati",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Arroz Basmati"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "GALLO",
+        "recordId": "basmati",
+        "sourceName": "Basmati",
+        "url": "https://www.risogallo.it/pages/cultura-del-riso"
+      },
+      "identityReason": "Variedad documentada por nombre propio; una ficha independiente del ingrediente genérico, sin multiplicarla por origen, marca o envase."
+    },
+    {
+      "canonicalKey": "arroz_rojo",
+      "defaultName": "Arroz rojo",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Arroz rojo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "ECOSALIM",
+        "recordId": "220018",
+        "sourceName": "ARROZ ROJO",
+        "url": "https://int-salim.com/img/cms/catalogos/EcoSalim_CATALOGO-web.pdf",
+        "page": 5
+      },
+      "identityReason": "Tipo de arroz pigmentado documentado como ingrediente único; no se importa una mezcla, marca ni tamaño de bolsa."
+    },
+    {
+      "canonicalKey": "copos_de_avena",
+      "defaultName": "Copos de avena",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Copos de avena"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "ESTEBAN",
+        "recordId": "copos_de_avena_enteros",
+        "sourceName": "Copos de Avena Enteros",
+        "url": "https://emilioesteban.com/copos"
+      },
+      "identityReason": "Cereal transformado en copos, distinto del grano. Se agrupan tamaños y grosores bajo una sola ficha por cereal."
+    },
+    {
+      "canonicalKey": "copos_de_cebada",
+      "defaultName": "Copos de cebada",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Copos de cebada"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "ESTEBAN",
+        "recordId": "copos_de_cebada",
+        "sourceName": "Copos de Cebada",
+        "url": "https://emilioesteban.com/copos"
+      },
+      "identityReason": "Cereal transformado en copos, distinto del grano. Se agrupan tamaños y grosores bajo una sola ficha por cereal."
+    },
+    {
+      "canonicalKey": "copos_de_espelta",
+      "defaultName": "Copos de espelta",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Copos de espelta"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "ESTEBAN",
+        "recordId": "copos_de_espelta",
+        "sourceName": "Copos de Espelta",
+        "url": "https://emilioesteban.com/copos"
+      },
+      "identityReason": "Cereal transformado en copos, distinto del grano. Se agrupan tamaños y grosores bajo una sola ficha por cereal."
+    },
+    {
+      "canonicalKey": "copos_de_trigo",
+      "defaultName": "Copos de trigo",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Copos de trigo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "ESTEBAN",
+        "recordId": "copos_de_trigo",
+        "sourceName": "Copos de Trigo",
+        "url": "https://emilioesteban.com/copos"
+      },
+      "identityReason": "Cereal transformado en copos, distinto del grano. Se agrupan tamaños y grosores bajo una sola ficha por cereal."
+    },
+    {
+      "canonicalKey": "copos_de_centeno",
+      "defaultName": "Copos de centeno",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PASTAS_ARROCES_CEREALES",
+      "aliases": [
+        "Copos de centeno"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "ESTEBAN",
+        "recordId": "copos_de_centeno",
+        "sourceName": "Copos de Centeno",
+        "url": "https://emilioesteban.com/copos"
+      },
+      "identityReason": "Cereal transformado en copos, distinto del grano. Se agrupan tamaños y grosores bajo una sola ficha por cereal."
+    },
+    {
+      "canonicalKey": "harina_de_espelta",
+      "defaultName": "Harina de espelta",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Harina de espelta",
+        "Harina de trigo espelta"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "GRANERO",
+        "recordId": "harina_de_trigo_espelta_bio",
+        "sourceName": "Harina de Trigo Espelta Bio",
+        "url": "https://elgranero.com/saborear/recetas-para-usar-todas-nuestras-harinas/"
+      },
+      "identityReason": "Harina documentada a partir de una materia prima identificada; se retiran del nombre el sello ecológico y la marca. Espelta y espelta integral se enumeran separadamente en la fuente."
+    },
+    {
+      "canonicalKey": "harina_integral_de_espelta",
+      "defaultName": "Harina integral de espelta",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Harina integral de espelta",
+        "Harina de espelta integral"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "GRANERO",
+        "recordId": "harina_de_trigo_espelta_integral_bio",
+        "sourceName": "Harina de Trigo Espelta Integral Bio",
+        "url": "https://elgranero.com/saborear/recetas-para-usar-todas-nuestras-harinas/"
+      },
+      "identityReason": "Harina documentada a partir de una materia prima identificada; se retiran del nombre el sello ecológico y la marca. Espelta y espelta integral se enumeran separadamente en la fuente."
+    },
+    {
+      "canonicalKey": "harina_integral_de_trigo_khorasan",
+      "defaultName": "Harina integral de trigo khorasan",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Harina integral de trigo khorasan"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "GRANERO",
+        "recordId": "harina_de_trigo_khorasan_kamut_integral_bio",
+        "sourceName": "Harina de Trigo Khorasan Kamut Integral Bio",
+        "url": "https://elgranero.com/saborear/recetas-para-usar-todas-nuestras-harinas/"
+      },
+      "identityReason": "Harina documentada a partir de una materia prima identificada; se retiran del nombre el sello ecológico y la marca. Espelta y espelta integral se enumeran separadamente en la fuente."
+    },
+    {
+      "canonicalKey": "harina_de_amaranto",
+      "defaultName": "Harina de amaranto",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Harina de amaranto"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "GRANERO",
+        "recordId": "harina_de_amaranto_bio",
+        "sourceName": "Harina de Amaranto Bio",
+        "url": "https://elgranero.com/saborear/recetas-para-usar-todas-nuestras-harinas/"
+      },
+      "identityReason": "Harina documentada a partir de una materia prima identificada; se retiran del nombre el sello ecológico y la marca. Espelta y espelta integral se enumeran separadamente en la fuente."
+    },
+    {
+      "canonicalKey": "harina_de_guisantes_verdes",
+      "defaultName": "Harina de guisantes verdes",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Harina de guisantes verdes"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "GRANERO",
+        "recordId": "harina_de_guisantes_verdes_bio",
+        "sourceName": "Harina de Guisantes Verdes Bio",
+        "url": "https://elgranero.com/saborear/recetas-para-usar-todas-nuestras-harinas/"
+      },
+      "identityReason": "Harina documentada a partir de una materia prima identificada; se retiran del nombre el sello ecológico y la marca. Espelta y espelta integral se enumeran separadamente en la fuente."
+    },
+    {
+      "canonicalKey": "harina_de_lentejas_rojas",
+      "defaultName": "Harina de lentejas rojas",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Harina de lentejas rojas"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "GRANERO",
+        "recordId": "harina_de_lentejas_rojas_bio",
+        "sourceName": "Harina de Lentejas Rojas Bio",
+        "url": "https://elgranero.com/saborear/recetas-para-usar-todas-nuestras-harinas/"
+      },
+      "identityReason": "Harina documentada a partir de una materia prima identificada; se retiran del nombre el sello ecológico y la marca. Espelta y espelta integral se enumeran separadamente en la fuente."
+    },
+    {
+      "canonicalKey": "harina_de_quinoa",
+      "defaultName": "Harina de quinoa",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Harina de quinoa",
+        "Harina de quinua"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "GRANERO",
+        "recordId": "harina_de_quinoa_bio",
+        "sourceName": "Harina de Quinoa Bio",
+        "url": "https://elgranero.com/saborear/recetas-para-usar-todas-nuestras-harinas/"
+      },
+      "identityReason": "Harina documentada a partir de una materia prima identificada; se retiran del nombre el sello ecológico y la marca. Espelta y espelta integral se enumeran separadamente en la fuente."
+    },
+    {
+      "canonicalKey": "harina_de_teff",
+      "defaultName": "Harina de teff",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Harina de teff"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MOLINO_TEFF",
+        "recordId": "harina_de_teff_blanca_ecologica",
+        "sourceName": "HARINA DE TEFF BLANCA ECOLÓGICA",
+        "url": "https://harineraelmolino.com/wp-content/uploads/2020/11/ficha-tecnica-ecologica-harina-teff-blanca-36.pdf",
+        "page": 1
+      },
+      "identityReason": "La ficha documenta 100 % harina de teff. Una sola identidad, sin subdividir por color o certificación y sin incorporar mezclas con trigo sarraceno."
+    },
+    {
+      "canonicalKey": "harina_de_coco",
+      "defaultName": "Harina de coco",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Harina de coco"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SELECTA",
+        "recordId": "harina_de_coco",
+        "sourceName": "Harina de Coco",
+        "url": "https://semillaselecta.com/pages/informacion-nutricional-harina-de-coco"
+      },
+      "identityReason": "La ficha identifica harina de coco y declara coco pulverizado. Se diferencia de los copos históricos; no se generan variantes por marca o certificación."
+    },
+    {
+      "canonicalKey": "alubia_caparron",
+      "defaultName": "Alubia Caparrón",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "aliases": [
+        "Alubia Caparrón",
+        "Caparrón"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MAPA_LEGUMBRES",
+        "recordId": "caparron",
+        "sourceName": "Caparrón",
+        "url": "https://www.alimentosdespana.es/es/turismo-agroalimentario-y-gastronomia/gastronomia/bloc/legumbres/definicion-y-variedades"
+      },
+      "identityReason": "Variedad documentada por nombre propio; una ficha independiente del ingrediente genérico, sin multiplicarla por origen, marca o envase."
+    },
+    {
+      "canonicalKey": "judion_de_la_granja",
+      "defaultName": "Judión de la Granja",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "aliases": [
+        "Judión de la Granja"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MAPA_LEGUMBRES",
+        "recordId": "judion_de_la_granja",
+        "sourceName": "Judión de la Granja",
+        "url": "https://www.alimentosdespana.es/es/turismo-agroalimentario-y-gastronomia/gastronomia/bloc/legumbres/definicion-y-variedades"
+      },
+      "identityReason": "Variedad documentada por nombre propio; una ficha independiente del ingrediente genérico, sin multiplicarla por origen, marca o envase."
+    },
+    {
+      "canonicalKey": "alubia_palmena_jaspeada",
+      "defaultName": "Alubia Palmeña jaspeada",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "aliases": [
+        "Alubia Palmeña jaspeada"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MAPA_LEGUMBRES",
+        "recordId": "palmena_jaspeada",
+        "sourceName": "Palmeña jaspeada",
+        "url": "https://www.alimentosdespana.es/es/turismo-agroalimentario-y-gastronomia/gastronomia/bloc/legumbres/definicion-y-variedades"
+      },
+      "identityReason": "Variedad documentada por nombre propio; una ficha independiente del ingrediente genérico, sin multiplicarla por origen, marca o envase."
+    },
+    {
+      "canonicalKey": "alubia_tolosana",
+      "defaultName": "Alubia Tolosana",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "aliases": [
+        "Alubia Tolosana"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MAPA_LEGUMBRES",
+        "recordId": "tolosana",
+        "sourceName": "Tolosana",
+        "url": "https://www.alimentosdespana.es/es/turismo-agroalimentario-y-gastronomia/gastronomia/bloc/legumbres/definicion-y-variedades"
+      },
+      "identityReason": "Variedad documentada por nombre propio; una ficha independiente del ingrediente genérico, sin multiplicarla por origen, marca o envase."
+    },
+    {
+      "canonicalKey": "lenteja_beluga",
+      "defaultName": "Lenteja Beluga",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "aliases": [
+        "Lenteja Beluga"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MAPA_LEGUMBRES",
+        "recordId": "beluga",
+        "sourceName": "Beluga",
+        "url": "https://www.alimentosdespana.es/es/turismo-agroalimentario-y-gastronomia/gastronomia/bloc/legumbres/definicion-y-variedades"
+      },
+      "identityReason": "Variedad documentada por nombre propio; una ficha independiente del ingrediente genérico, sin multiplicarla por origen, marca o envase."
+    },
+    {
+      "canonicalKey": "lenteja_pardina",
+      "defaultName": "Lenteja Pardina",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "aliases": [
+        "Lenteja Pardina",
+        "Lenteja Pardiña"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MAPA_LEGUMBRES",
+        "recordId": "pardina",
+        "sourceName": "Pardiña",
+        "url": "https://www.alimentosdespana.es/es/turismo-agroalimentario-y-gastronomia/gastronomia/bloc/legumbres/definicion-y-variedades"
+      },
+      "identityReason": "Variedad documentada por nombre propio; una ficha independiente del ingrediente genérico, sin multiplicarla por origen, marca o envase."
+    },
+    {
+      "canonicalKey": "lenteja_verde_de_puy",
+      "defaultName": "Lenteja verde de Puy",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "aliases": [
+        "Lenteja verde de Puy",
+        "Lenteja de Puy"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MAPA_LEGUMBRES",
+        "recordId": "puy",
+        "sourceName": "Puy",
+        "url": "https://www.alimentosdespana.es/es/turismo-agroalimentario-y-gastronomia/gastronomia/bloc/legumbres/definicion-y-variedades"
+      },
+      "identityReason": "Variedad documentada por nombre propio; una ficha independiente del ingrediente genérico, sin multiplicarla por origen, marca o envase."
+    },
+    {
+      "canonicalKey": "lenteja_rubia_de_la_armuna",
+      "defaultName": "Lenteja Rubia de la Armuña",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "aliases": [
+        "Lenteja Rubia de la Armuña",
+        "Lenteja de la Armuña"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MAPA_LEGUMBRES",
+        "recordId": "armuna",
+        "sourceName": "Armuña",
+        "url": "https://www.alimentosdespana.es/es/turismo-agroalimentario-y-gastronomia/gastronomia/bloc/legumbres/definicion-y-variedades"
+      },
+      "identityReason": "Variedad documentada por nombre propio; una ficha independiente del ingrediente genérico, sin multiplicarla por origen, marca o envase."
+    },
+    {
+      "canonicalKey": "lenteja_rubia_castellana",
+      "defaultName": "Lenteja Rubia Castellana",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "aliases": [
+        "Lenteja Rubia Castellana"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MAPA_LEGUMBRES",
+        "recordId": "rubia_castellana",
+        "sourceName": "Rubia Castellana",
+        "url": "https://www.alimentosdespana.es/es/turismo-agroalimentario-y-gastronomia/gastronomia/bloc/legumbres/definicion-y-variedades"
+      },
+      "identityReason": "Variedad documentada por nombre propio; una ficha independiente del ingrediente genérico, sin multiplicarla por origen, marca o envase."
+    },
+    {
+      "canonicalKey": "garbanzo_castellano",
+      "defaultName": "Garbanzo Castellano",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "aliases": [
+        "Garbanzo Castellano"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MAPA_LEGUMBRES",
+        "recordId": "castellano",
+        "sourceName": "Castellano",
+        "url": "https://www.alimentosdespana.es/es/turismo-agroalimentario-y-gastronomia/gastronomia/bloc/legumbres/definicion-y-variedades"
+      },
+      "identityReason": "Variedad documentada por nombre propio; una ficha independiente del ingrediente genérico, sin multiplicarla por origen, marca o envase."
+    },
+    {
+      "canonicalKey": "garbanzo_blanco_lechoso",
+      "defaultName": "Garbanzo Blanco lechoso",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "aliases": [
+        "Garbanzo Blanco lechoso",
+        "Garbanzo lechoso"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MAPA_LEGUMBRES",
+        "recordId": "blanco_lechoso",
+        "sourceName": "Blanco lechoso",
+        "url": "https://www.alimentosdespana.es/es/turismo-agroalimentario-y-gastronomia/gastronomia/bloc/legumbres/definicion-y-variedades"
+      },
+      "identityReason": "Variedad documentada por nombre propio; una ficha independiente del ingrediente genérico, sin multiplicarla por origen, marca o envase."
+    },
+    {
+      "canonicalKey": "garbanzo_pedrosillano",
+      "defaultName": "Garbanzo Pedrosillano",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "aliases": [
+        "Garbanzo Pedrosillano"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MAPA_LEGUMBRES",
+        "recordId": "pedrosillano",
+        "sourceName": "Pedrosillano",
+        "url": "https://www.alimentosdespana.es/es/turismo-agroalimentario-y-gastronomia/gastronomia/bloc/legumbres/definicion-y-variedades"
+      },
+      "identityReason": "Variedad documentada por nombre propio; una ficha independiente del ingrediente genérico, sin multiplicarla por origen, marca o envase."
+    },
+    {
+      "canonicalKey": "garbanzo_venoso_andaluz",
+      "defaultName": "Garbanzo Venoso andaluz",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "aliases": [
+        "Garbanzo Venoso andaluz"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MAPA_LEGUMBRES",
+        "recordId": "venoso_andaluz",
+        "sourceName": "Venoso andaluz",
+        "url": "https://www.alimentosdespana.es/es/turismo-agroalimentario-y-gastronomia/gastronomia/bloc/legumbres/definicion-y-variedades"
+      },
+      "identityReason": "Variedad documentada por nombre propio; una ficha independiente del ingrediente genérico, sin multiplicarla por origen, marca o envase."
+    },
+    {
+      "canonicalKey": "garbanzo_chamad",
+      "defaultName": "Garbanzo Chamad",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "aliases": [
+        "Garbanzo Chamad"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "MAPA_LEGUMBRES",
+        "recordId": "chamad",
+        "sourceName": "Chamad",
+        "url": "https://www.alimentosdespana.es/es/turismo-agroalimentario-y-gastronomia/gastronomia/bloc/legumbres/definicion-y-variedades"
+      },
+      "identityReason": "Variedad documentada por nombre propio; una ficha independiente del ingrediente genérico, sin multiplicarla por origen, marca o envase."
+    },
+    {
+      "canonicalKey": "alubia_canela",
+      "defaultName": "Alubia Canela",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "aliases": [
+        "Alubia Canela"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "BANEZA",
+        "recordId": "canela",
+        "sourceName": "Canela",
+        "url": "https://www.alubiadelabanezaleon.es/nuestros-productos/"
+      },
+      "identityReason": "Variedad documentada por nombre propio; una ficha independiente del ingrediente genérico, sin multiplicarla por origen, marca o envase."
+    },
+    {
+      "canonicalKey": "alubia_plancheta",
+      "defaultName": "Alubia Plancheta",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "aliases": [
+        "Alubia Plancheta"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "BANEZA",
+        "recordId": "plancheta",
+        "sourceName": "Plancheta",
+        "url": "https://www.alubiadelabanezaleon.es/nuestros-productos/"
+      },
+      "identityReason": "Variedad documentada por nombre propio; una ficha independiente del ingrediente genérico, sin multiplicarla por origen, marca o envase."
+    },
+    {
+      "canonicalKey": "harina_de_patata",
+      "defaultName": "Harina de patata",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Harina de patata"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "168446",
+        "sourceName": "Potato flour",
+        "url": "https://fdc.nal.usda.gov/food-details/168446/nutrients"
+      },
+      "identityReason": "Harina de patata documentada por USDA; no se confunde con fécula ni con copos de patata."
+    },
+    {
+      "canonicalKey": "soja_seca",
+      "defaultName": "Soja seca",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "aliases": [
+        "Soja seca",
+        "Habas de soja secas"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "174270",
+        "sourceName": "Soybeans, mature seeds, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/174270/nutrients"
+      },
+      "identityReason": "Semilla madura seca, distinta de edamame y de proteínas, copos o fermentados de soja."
+    },
+    {
+      "canonicalKey": "judia_larga_seca",
+      "defaultName": "Judía larga seca",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "aliases": [
+        "Judía larga seca",
+        "Judía de metro seca"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "174281",
+        "sourceName": "Yardlong beans, mature seeds, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/174281/nutrients"
+      },
+      "identityReason": "Semilla madura seca documentada; no se importa la vaina tierna como equivalente."
+    },
+    {
+      "canonicalKey": "judia_alada_seca",
+      "defaultName": "Judía alada seca",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LEGUMBRES_PROTEINAS_VEGETALES",
+      "aliases": [
+        "Judía alada seca"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "FDC",
+        "recordId": "174283",
+        "sourceName": "Winged beans, mature seeds, raw",
+        "url": "https://fdc.nal.usda.gov/food-details/174283/nutrients"
+      },
+      "identityReason": "Semilla madura seca, distinta de la ficha existente de judías aladas tiernas."
+    }
+  ],
+  "exclusions": [
+    {
+      "candidate": "Garrafó",
+      "decision": "EQUIVALENCE_PENDING",
+      "reason": "Revisar solapamiento con Judiones de Lima secos; no sumar un nombre regional sin delimitar variedad y presentación."
+    },
+    {
+      "candidate": "Alubia blanca de riñón / Riñón Menudo",
+      "decision": "EQUIVALENCE_PENDING",
+      "reason": "Comprobar la delimitación frente a cannellini, alubias blancas y otras denominaciones de riñón."
+    },
+    {
+      "candidate": "Alubia Negrilla",
+      "decision": "EQUIVALENCE_PENDING",
+      "reason": "La descripción consultada por color no basta para separarla de Frijoles negros."
+    },
+    {
+      "candidate": "Lenteja Verdina",
+      "decision": "EQUIVALENCE_PENDING",
+      "reason": "No declarar equivalencia ni separar de Puy sin documentar la variedad concreta."
+    },
+    {
+      "candidate": "Alubia Pinta / carilla / azuki / soja verde",
+      "decision": "ALREADY_REPRESENTED",
+      "reason": "Pintas, guisantes de ojo negro, azuki y judías mungo ya existen. Soja verde en el catálogo consultado declara judía mungo."
+    },
+    {
+      "candidate": "Arroz blanco / integral / vaporizado / salvaje",
+      "decision": "ALREADY_REPRESENTED",
+      "reason": "Ya representados por fichas históricas. No crear una nueva identidad por marca, tamaño o certificación."
+    },
+    {
+      "candidate": "Arroz Originario / Patna",
+      "decision": "IDENTITY_PENDING",
+      "reason": "Posible uso como grupo comercial; se difiere hasta delimitar su identidad."
+    },
+    {
+      "candidate": "Copos de avena enteros / partidos / suaves",
+      "decision": "MERGED_FORMS",
+      "reason": "Una sola alta de copos de avena; el tamaño y grosor no suman fichas."
+    },
+    {
+      "candidate": "Harinas de trigo, arroz, avena, maíz, soja, mijo, garbanzo y algarroba",
+      "decision": "ALREADY_REPRESENTED",
+      "reason": "Revisadas contra la maestra; no repetir ingredientes existentes."
+    },
+    {
+      "candidate": "Harina integral de centeno / clara / media",
+      "decision": "EQUIVALENCE_PENDING",
+      "reason": "Revisar grados de extracción frente a la harina de centeno oscura ya existente."
+    },
+    {
+      "candidate": "Mezclas de teff y trigo sarraceno",
+      "decision": "COMPOSITION_PENDING",
+      "reason": "La harina pura se contrasta con ficha del molino; no inferir composición a partir del nombre comercial de una mezcla."
+    },
+    {
+      "candidate": "Otras páginas de EcoSalim",
+      "decision": "SOURCE_NOT_VERIFIED",
+      "reason": "La descarga directa devolvió 403. Solo se utiliza el arroz rojo cuyo bloque de ingredientes pudo consultarse en la página 5."
+    }
+  ]
+}

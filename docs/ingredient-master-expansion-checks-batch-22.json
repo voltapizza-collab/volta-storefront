@@ -1,0 +1,57 @@
+{
+  "date": "2026-09-24",
+  "batchId": "2026-09-24-22",
+  "baseline": 3589,
+  "added": 14,
+  "total": 3603,
+  "remainingTo5000": 1397,
+  "byCategory": {
+    "OTROS": 14
+  },
+  "byRestaurantFamily": {
+    "PANES_MASAS_HARINAS": 14
+  },
+  "byForm": {
+    "HARINA": 5,
+    "PAN": 5,
+    "MASA": 2,
+    "ENVOLTURA": 2
+  },
+  "aliasesAdded": 9,
+  "exclusionGroups": 7,
+  "preservedMasterRows": 3589,
+  "preservedTaxonomyAssignments": 3589,
+  "pendingPreserved": 25,
+  "idempotentBatches": 22,
+  "historicalAuditsUnchanged": true,
+  "backendProjectionMatches": true,
+  "sourceSha256": "4bd11ade0121998145a5ddac9de4c6fb4720e7605bcc019b4b81e90e53b4ea6a",
+  "productionDeployment": false,
+  "databaseWrites": 0,
+  "validation": "Ingredient master OK: 3603 records, 14 categories; valid UTF-8/NFC, names, aliases and identifiers.\n11 consolidated keys preserved; 25 ambiguous records held separately. No duplicate names or shared exact aliases in the selectable source.",
+  "tests": {
+    "importer": {
+      "passed": 9,
+      "log": "tmp/ingredients-batch22-importer-tests.log"
+    },
+    "backend": {
+      "passed": 48,
+      "log": "tmp/ingredients-batch22-backend-tests.log"
+    },
+    "ui": {
+      "passed": 27,
+      "log": "tmp/ingredients-batch22-ui-tests.log"
+    },
+    "totalPassed": 84
+  },
+  "build": {
+    "status": "PASSED",
+    "artifact": "output/ingredients-batch22-build",
+    "bundle": "main.a3332cdb.js",
+    "log": "tmp/ingredients-batch22-build.log"
+  },
+  "browser": {
+    "status": "PENDING",
+    "reason": "Verificación visual de lotes 16–22 pendiente; evitar navegador integrado durante el diagnóstico de los cierres de Codex."
+  }
+}

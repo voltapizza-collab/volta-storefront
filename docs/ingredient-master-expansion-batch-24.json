@@ -1,0 +1,301 @@
+{
+  "schemaVersion": 1,
+  "batchId": "2026-09-24-24",
+  "date": "2026-09-24",
+  "status": "EDITORIAL_REVIEW",
+  "targetTotal": 5000,
+  "policy": "Ingredientes de repostería y auxiliares con identidad documentada. Sin cuotas, altas por marca ni combinaciones automáticas. Distinguir preparados compuestos de sustancias puras y conservar fichas históricas.",
+  "allergenPolicy": "NEEDS_REVIEW e imágenes MISSING. Alérgenos vacíos significa no aprobados, nunca ausencia. Revisar especialmente leche, huevo, trigo, frutos secos, soja y trazas según ficha técnica del suministro. No transferir alegaciones sanitarias o de ausencia.",
+  "sources": {
+    "oetker-baking-powder": {
+      "title": "Dr. Oetker — Baking Powder",
+      "url": "https://www.oetker.co.uk/products/p/baking-powder",
+      "accessed": "2026-09-24",
+      "notes": "Página recuperada: mezcla de difosfatos, carbonatos sódicos y almidón. No es una levadura biológica ni bicarbonato puro."
+    },
+    "paneangeli-ammoniaca": {
+      "title": "Paneangeli — Ammoniaca per biscotti",
+      "url": "https://paneangeli.it/prodotti/lieviti-e-ingredienti-base/lieviti-dolci/ammoniaca-per-biscotti",
+      "accessed": "2026-09-24",
+      "notes": "Página recuperada: bicarbonato amónico con aroma, antiaglomerante y estabilizante. Referencia de uso en galletas secas; no sustancia pura."
+    },
+    "callebaut-nibs": {
+      "title": "Callebaut — Cocoa Nibs",
+      "url": "https://www.callebaut.com/en-GB/products/callebaut/nibs/NIBS-S502-X47",
+      "accessed": "2026-09-24",
+      "notes": "Página recuperada: semillas de cacao tostadas, quebradas y descascarilladas; referencia NIBS-S502-X47."
+    },
+    "barry-feuilletine": {
+      "title": "Barry Callebaut — Biscuit Crunch",
+      "url": "https://www.barry-callebaut.com/en-ID/manufacturers/products/barry-callebaut-biscuit-crunch/BIG-PF-1BO-761",
+      "accessed": "2026-09-24",
+      "notes": "Página recuperada: fragmentos crujientes de crêpe dentelle, denominados pailleté feuilletine. La composición completa no figura en la página."
+    },
+    "tiptree-lemon-curd": {
+      "title": "Tiptree — Lemon Curd",
+      "url": "https://www.tiptree.com/products/tiptree-lemon-curd-312g",
+      "accessed": "2026-09-24",
+      "notes": "Contenido indexado del fabricante: azúcar, mantequilla, zumo de limón, yema y huevo. No se transfieren porcentajes a todos los suministros."
+    },
+    "ellevire-anglaise": {
+      "title": "Elle & Vire — La Crème anglaise",
+      "url": "https://www.elle-et-vire.com/fr/fr/aides-culinaires/produits/creme-anglaise/",
+      "accessed": "2026-09-24",
+      "notes": "Contenido indexado: crema para acompañar postres con leche, azúcar, huevo y vainilla; la referencia contiene también fécula y pectina."
+    },
+    "funcakes-fondant": {
+      "title": "FunCakes — Fondant Bright White",
+      "url": "https://funcakes.com/product/fondant-bright-white/",
+      "accessed": "2026-09-24",
+      "notes": "Página recuperada: pasta flexible de azúcar que se extiende para cubrir y modelar; referencia con grasa de coco y espesantes."
+    },
+    "puratos-fondant": {
+      "title": "Puratos — Fondant",
+      "url": "https://www.puratos.es/es/products/fondant",
+      "accessed": "2026-09-24",
+      "notes": "Contenido indexado del fabricante: preparado de azúcar transformado, código 4105251, que se calienta para aplicar cubiertas. No se recuperó fórmula completa."
+    },
+    "funcakes-royal": {
+      "title": "FunCakes — Mix for Royal Icing",
+      "url": "https://funcakes.com/product/mix-for-royal-icing/",
+      "accessed": "2026-09-24",
+      "notes": "Contenido indexado: azúcar, jarabe de glucosa seco, clara de huevo seca y ácido cítrico. Se hidrata para formar una cobertura que endurece."
+    },
+    "valrhona-nappage": {
+      "title": "Valrhona — Absolu Cristal Nappage Neutre",
+      "url": "https://www.valrhona.com/es/nuestros-productos/para-profesionales/chocolate-co/productos-servicio/para-decorar/complementos-para-decorar-icing-y-nappage",
+      "accessed": "2026-09-24",
+      "notes": "Contenido indexado: referencia Absolu Cristal 5010 con agua, azúcar, glucosa, pectina, carragenano y ácido cítrico. Se excluye la otra referencia con cacao de la misma página."
+    }
+  },
+  "records": [
+    {
+      "canonicalKey": "impulsor_quimico_de_reposteria",
+      "defaultName": "Impulsor químico de repostería",
+      "category": "OTROS",
+      "restaurantCategoryKey": "REPOSTERIA_AUXILIARES",
+      "aliases": [
+        "Impulsor químico de repostería",
+        "Polvo de hornear",
+        "Levadura química"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "oetker-baking-powder",
+        "recordId": "impulsor_quimico_de_reposteria",
+        "sourceName": "Dr. Oetker — Baking Powder",
+        "url": "https://www.oetker.co.uk/products/p/baking-powder"
+      },
+      "identityReason": "Preparado gasificante independiente de las levaduras fresca y seca y de la harina autoleudante existentes.",
+      "culinaryForm": "GASIFICANTE"
+    },
+    {
+      "canonicalKey": "preparado_de_bicarbonato_amonico_para_galletas",
+      "defaultName": "Preparado de bicarbonato amónico para galletas",
+      "category": "OTROS",
+      "restaurantCategoryKey": "REPOSTERIA_AUXILIARES",
+      "aliases": [
+        "Preparado de bicarbonato amónico para galletas",
+        "Gasificante amónico para galletas"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "paneangeli-ammoniaca",
+        "recordId": "preparado_de_bicarbonato_amonico_para_galletas",
+        "sourceName": "Paneangeli — Ammoniaca per biscotti",
+        "url": "https://paneangeli.it/prodotti/lieviti-e-ingredienti-base/lieviti-dolci/ammoniaca-per-biscotti"
+      },
+      "identityReason": "Preparado basado en bicarbonato amónico, distinto del impulsor con carbonatos sódicos y del bicarbonato sódico existente.",
+      "culinaryForm": "GASIFICANTE"
+    },
+    {
+      "canonicalKey": "nibs_de_cacao_tostado",
+      "defaultName": "Nibs de cacao tostado",
+      "category": "OTROS",
+      "restaurantCategoryKey": "REPOSTERIA_AUXILIARES",
+      "aliases": [
+        "Nibs de cacao tostado",
+        "Trocitos de cacao tostado descascarillado"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "callebaut-nibs",
+        "recordId": "nibs_de_cacao_tostado",
+        "sourceName": "Callebaut — Cocoa Nibs",
+        "url": "https://www.callebaut.com/en-GB/products/callebaut/nibs/NIBS-S502-X47"
+      },
+      "identityReason": "Ingrediente crujiente de cacao, distinto del cacao en polvo, de la manteca y del chocolate.",
+      "culinaryForm": "INCLUSION"
+    },
+    {
+      "canonicalKey": "feuilletine_crujiente",
+      "defaultName": "Feuilletine crujiente",
+      "category": "OTROS",
+      "restaurantCategoryKey": "REPOSTERIA_AUXILIARES",
+      "aliases": [
+        "Feuilletine crujiente",
+        "Pailleté feuilletine"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "barry-feuilletine",
+        "recordId": "feuilletine_crujiente",
+        "sourceName": "Barry Callebaut — Biscuit Crunch",
+        "url": "https://www.barry-callebaut.com/en-ID/manufacturers/products/barry-callebaut-biscuit-crunch/BIG-PF-1BO-761"
+      },
+      "identityReason": "Elaboración de galleta fina para aportar textura, diferenciada de pan rallado y panko; no variante por calibre.",
+      "culinaryForm": "INCLUSION"
+    },
+    {
+      "canonicalKey": "crema_de_limon_con_huevo",
+      "defaultName": "Crema de limón con huevo",
+      "category": "CREMAS_DULCES",
+      "restaurantCategoryKey": "REPOSTERIA_AUXILIARES",
+      "aliases": [
+        "Crema de limón con huevo",
+        "Lemon curd"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "tiptree-lemon-curd",
+        "recordId": "crema_de_limon_con_huevo",
+        "sourceName": "Tiptree — Lemon Curd",
+        "url": "https://www.tiptree.com/products/tiptree-lemon-curd-312g"
+      },
+      "identityReason": "Relleno de limón con huevo y mantequilla, diferente de la mermelada de limón existente.",
+      "culinaryForm": "CREMA"
+    },
+    {
+      "canonicalKey": "crema_inglesa",
+      "defaultName": "Crema inglesa",
+      "category": "CREMAS_DULCES",
+      "restaurantCategoryKey": "REPOSTERIA_AUXILIARES",
+      "aliases": [
+        "Crema inglesa",
+        "Crème anglaise"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "ellevire-anglaise",
+        "recordId": "crema_inglesa",
+        "sourceName": "Elle & Vire — La Crème anglaise",
+        "url": "https://www.elle-et-vire.com/fr/fr/aides-culinaires/produits/creme-anglaise/"
+      },
+      "identityReason": "Crema fluida para acompañar o integrar postres, diferenciada de la crema pastelera; no salsa inglesa Worcestershire.",
+      "culinaryForm": "CREMA"
+    },
+    {
+      "canonicalKey": "fondant_para_extender",
+      "defaultName": "Fondant para extender",
+      "category": "ENDULZANTES",
+      "restaurantCategoryKey": "REPOSTERIA_AUXILIARES",
+      "aliases": [
+        "Fondant para extender",
+        "Pasta de azúcar para cubrir tartas"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "funcakes-fondant",
+        "recordId": "fondant_para_extender",
+        "sourceName": "FunCakes — Fondant Bright White",
+        "url": "https://funcakes.com/product/fondant-bright-white/"
+      },
+      "identityReason": "Preparado moldeable de cobertura, distinto del fondant de baño y de la pasta de almendra azucarada.",
+      "culinaryForm": "COBERTURA_AZUCAR"
+    },
+    {
+      "canonicalKey": "fondant_para_bano_de_pasteleria",
+      "defaultName": "Fondant para baño de pastelería",
+      "category": "ENDULZANTES",
+      "restaurantCategoryKey": "REPOSTERIA_AUXILIARES",
+      "aliases": [
+        "Fondant para baño de pastelería",
+        "Fondant para glasear en caliente"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "puratos-fondant",
+        "recordId": "fondant_para_bano_de_pasteleria",
+        "sourceName": "Puratos — Fondant",
+        "url": "https://www.puratos.es/es/products/fondant"
+      },
+      "identityReason": "Cobertura de azúcar para aplicar en caliente, diferenciada de la pasta para extender; no sirope ni azúcar glas.",
+      "culinaryForm": "COBERTURA_AZUCAR"
+    },
+    {
+      "canonicalKey": "preparado_en_polvo_para_glasa_real",
+      "defaultName": "Preparado en polvo para glasa real",
+      "category": "ENDULZANTES",
+      "restaurantCategoryKey": "REPOSTERIA_AUXILIARES",
+      "aliases": [
+        "Preparado en polvo para glasa real",
+        "Preparado para royal icing"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "funcakes-royal",
+        "recordId": "preparado_en_polvo_para_glasa_real",
+        "sourceName": "FunCakes — Mix for Royal Icing",
+        "url": "https://funcakes.com/product/mix-for-royal-icing/"
+      },
+      "identityReason": "Mezcla completa para glasa real; no azúcar glas, clara pura ni fondant.",
+      "culinaryForm": "COBERTURA_AZUCAR"
+    },
+    {
+      "canonicalKey": "glaseado_neutro_de_pasteleria",
+      "defaultName": "Glaseado neutro de pastelería",
+      "category": "CREMAS_DULCES",
+      "restaurantCategoryKey": "REPOSTERIA_AUXILIARES",
+      "aliases": [
+        "Glaseado neutro de pastelería",
+        "Nappage neutro"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "valrhona-nappage",
+        "recordId": "glaseado_neutro_de_pasteleria",
+        "sourceName": "Valrhona — Absolu Cristal Nappage Neutre",
+        "url": "https://www.valrhona.com/es/nuestros-productos/para-profesionales/chocolate-co/productos-servicio/para-decorar/complementos-para-decorar-icing-y-nappage"
+      },
+      "identityReason": "Glaseado gelificado listo para usar; no gelatina pura ni preparado de pectina.",
+      "culinaryForm": "GLASEADO"
+    }
+  ],
+  "exclusions": [
+    {
+      "candidate": "Manteca de cacao",
+      "decision": "ALREADY_REPRESENTED",
+      "reason": "Se conserva la ficha existente; no nueva alta."
+    },
+    {
+      "candidate": "Pasta o masa pura de cacao",
+      "decision": "DEFERRED",
+      "reason": "Delimitar primero la cobertura histórica de Cacao sin azúcar y Chocolate negro."
+    },
+    {
+      "candidate": "Praliné de avellana y mazapán",
+      "decision": "DEFERRED",
+      "reason": "Revisar el alcance de Crema de avellanas y Pasta de almendra azucarada antes de nuevas altas."
+    },
+    {
+      "candidate": "Frangipane",
+      "decision": "DEFERRED",
+      "reason": "El término puede usarse para crema de almendra o una mezcla con crema pastelera; se difiere hasta delimitar formulación."
+    },
+    {
+      "candidate": "Bicarbonato amónico puro",
+      "decision": "NOT_IMPORTED",
+      "reason": "La referencia disponible es un preparado aromatizado; no acredita pureza."
+    },
+    {
+      "candidate": "Fondant sin calificativo",
+      "decision": "AMBIGUOUS",
+      "reason": "Se diferencian pasta para extender y cobertura para aplicar en caliente."
+    },
+    {
+      "candidate": "Colores, aromas, porcentajes, envases y certificaciones",
+      "decision": "GROUPED",
+      "reason": "Sin multiplicación automática de fichas ni transferencia de alegaciones de ausencia."
+    }
+  ]
+}

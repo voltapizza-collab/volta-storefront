@@ -1,0 +1,55 @@
+{
+  "date": "2026-09-24",
+  "batchId": "2026-09-24-26",
+  "baseline": 3635,
+  "added": 15,
+  "total": 3650,
+  "remainingTo5000": 1350,
+  "byCategory": {
+    "FRUTAS": 15
+  },
+  "byRestaurantFamily": {
+    "FRUTAS": 15
+  },
+  "byForm": {
+    "FRUTO": 14,
+    "FRUTO_HIBRIDO": 1
+  },
+  "aliasesAdded": 6,
+  "exclusionGroups": 4,
+  "preservedMasterRows": 3635,
+  "preservedTaxonomyAssignments": 3635,
+  "pendingPreserved": 25,
+  "idempotentBatches": 26,
+  "historicalAuditsUnchanged": true,
+  "backendProjectionMatches": true,
+  "sourceSha256": "c7c6617bc82d06e2d4ebdfd2e1ea73c05e9682266e861332f6f0a258402c213d",
+  "productionDeployment": false,
+  "databaseWrites": 0,
+  "validation": "Ingredient master OK: 3650 records, 14 categories; valid UTF-8/NFC, names, aliases and identifiers.\n11 consolidated keys preserved; 25 ambiguous records held separately. No duplicate names or shared exact aliases in the selectable source.",
+  "tests": {
+    "importer": {
+      "passed": 9,
+      "log": "tmp/ingredients-batch26-importer-tests.log"
+    },
+    "backend": {
+      "passed": 48,
+      "log": "tmp/ingredients-batch26-backend-tests.log"
+    },
+    "ui": {
+      "passed": 27,
+      "log": "tmp/ingredients-batch26-ui-tests.log"
+    },
+    "totalPassed": 84
+  },
+  "build": {
+    "status": "PASSED",
+    "artifact": "output/ingredients-batch26-build",
+    "bundle": "main.fd7137b1.js",
+    "log": "tmp/ingredients-batch26-build.log"
+  },
+  "browser": {
+    "status": "PENDING",
+    "reason": "Verificación visual de lotes 16–26 pendiente; evitar navegador integrado durante el diagnóstico de los cierres de Codex."
+  }
+}

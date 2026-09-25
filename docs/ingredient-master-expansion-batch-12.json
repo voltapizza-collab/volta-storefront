@@ -1,0 +1,828 @@
+{
+  "schemaVersion": 1,
+  "batchId": "2026-09-24-12",
+  "date": "2026-09-24",
+  "status": "EDITORIAL_REVIEW",
+  "targetTotal": 5000,
+  "policy": "Selección explícita de frutos secos, derivados, semillas y auxiliares. Sin cuotas, combinaciones automáticas ni altas por marca o envase.",
+  "allergenPolicy": "Lista vacía significa no documentado, nunca ausencia. Todas las altas permanecen NEEDS_REVIEW e imágenes MISSING. No importar afirmaciones sanitarias ni dosis.",
+  "sources": {
+    "BORGES_ALMENDRA": {
+      "title": "Borges BAIN — Almendra, variedades",
+      "url": "https://borges-bain.com/almendra/",
+      "accessed": "2026-09-24"
+    },
+    "BORGES_NUEZ": {
+      "title": "Borges BAIN — Nuez, variedades y pasta",
+      "url": "https://borges-bain.com/nuez/",
+      "accessed": "2026-09-24"
+    },
+    "BORGES_HARINAS": {
+      "title": "Borges BAIN — Flours and Granules",
+      "url": "https://borges-bain.com/en/flours-and-granules/",
+      "accessed": "2026-09-24"
+    },
+    "BORGES_CREMOSOS": {
+      "title": "Borges BAIN — Cremosos de frutos secos",
+      "url": "https://borges-bain.com/cremosos-de-frutos-secos/",
+      "accessed": "2026-09-24"
+    },
+    "CLEARSPRING_BLACK": {
+      "title": "Clearspring — Organic Tahini Black Sesame",
+      "url": "https://www.clearspring.co.uk/products/organic-tahini-black-sesame-6-pack?variant=42000199680191",
+      "accessed": "2026-09-24"
+    },
+    "UNIPATIS_LECITINA": {
+      "title": "Unipatis — Lecitina de girasol",
+      "url": "https://www.unipatis.fr/es/produit/lecitina-de-girasol/",
+      "accessed": "2026-09-24"
+    },
+    "SOSA_PASTA_DE_PIPAS_DE_CALABAZA": {
+      "title": "Sosa — PASTA DE PIPAS DE CALABAZA",
+      "url": "https://www.sosa.cat/producto/pasta-de-pipas-de-calabaza/",
+      "accessed": "2026-09-24"
+    },
+    "SOSA_PASTA_DE_NUEZ_PECANA": {
+      "title": "Sosa — PASTA DE NUEZ PECANA",
+      "url": "https://www.sosa.cat/producto/pasta-de-nuez-pecana/",
+      "accessed": "2026-09-24"
+    },
+    "SOSA_METILGEL": {
+      "title": "Sosa — METILGEL",
+      "url": "https://www.sosa.cat/producto/metilgel/",
+      "accessed": "2026-09-24"
+    },
+    "SOSA_CMC": {
+      "title": "Sosa — CMC",
+      "url": "https://www.sosa.cat/producto/cmc/",
+      "accessed": "2026-09-24"
+    },
+    "SOSA_GOMA_KONJAC": {
+      "title": "Sosa — GOMA KONJAC",
+      "url": "https://www.sosa.cat/producto/goma-konjac/",
+      "accessed": "2026-09-24"
+    },
+    "SOSA_CITRATO": {
+      "title": "Sosa — CITRATO",
+      "url": "https://www.sosa.cat/producto/citrato/",
+      "accessed": "2026-09-24"
+    },
+    "SOSA_CLORURO": {
+      "title": "Sosa — CLORURO",
+      "url": "https://www.sosa.cat/producto/cloruro/",
+      "accessed": "2026-09-24"
+    },
+    "SOSA_GLUCONOLACTATO": {
+      "title": "Sosa — GLUCONOLACTATO",
+      "url": "https://www.sosa.cat/producto/gluconolactato/",
+      "accessed": "2026-09-24"
+    },
+    "SOSA_PECTINA_RAPID_SET": {
+      "title": "Sosa — PECTINA RAPID SET",
+      "url": "https://www.sosa.cat/producto/pectina-rapid-set/",
+      "accessed": "2026-09-24"
+    },
+    "SOSA_PECTINA_ACID_FREE": {
+      "title": "Sosa — PECTINA ACID FREE",
+      "url": "https://www.sosa.cat/producto/pectina-acid-free/",
+      "accessed": "2026-09-24"
+    }
+  },
+  "records": [
+    {
+      "canonicalKey": "almendra_antoneta",
+      "defaultName": "Almendra Antoñeta",
+      "category": "OTROS",
+      "restaurantCategoryKey": "FRUTOS_SECOS_SEMILLAS",
+      "aliases": [
+        "Almendra Antoñeta"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "BORGES_ALMENDRA",
+        "recordId": "antoneta",
+        "sourceName": "Antoñeta",
+        "url": "https://borges-bain.com/almendra/"
+      },
+      "identityReason": "Variedad identificada; conserva la ficha genérica anterior."
+    },
+    {
+      "canonicalKey": "almendra_belona",
+      "defaultName": "Almendra Belona",
+      "category": "OTROS",
+      "restaurantCategoryKey": "FRUTOS_SECOS_SEMILLAS",
+      "aliases": [
+        "Almendra Belona"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "BORGES_ALMENDRA",
+        "recordId": "belona",
+        "sourceName": "Belona",
+        "url": "https://borges-bain.com/almendra/"
+      },
+      "identityReason": "Variedad identificada; conserva la ficha genérica anterior."
+    },
+    {
+      "canonicalKey": "almendra_ferragnes",
+      "defaultName": "Almendra Ferragnes",
+      "category": "OTROS",
+      "restaurantCategoryKey": "FRUTOS_SECOS_SEMILLAS",
+      "aliases": [
+        "Almendra Ferragnes"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "BORGES_ALMENDRA",
+        "recordId": "ferragnes",
+        "sourceName": "Ferragnes",
+        "url": "https://borges-bain.com/almendra/"
+      },
+      "identityReason": "Variedad identificada; conserva la ficha genérica anterior."
+    },
+    {
+      "canonicalKey": "almendra_guara",
+      "defaultName": "Almendra Guara",
+      "category": "OTROS",
+      "restaurantCategoryKey": "FRUTOS_SECOS_SEMILLAS",
+      "aliases": [
+        "Almendra Guara"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "BORGES_ALMENDRA",
+        "recordId": "guara",
+        "sourceName": "Guara",
+        "url": "https://borges-bain.com/almendra/"
+      },
+      "identityReason": "Variedad identificada; conserva la ficha genérica anterior."
+    },
+    {
+      "canonicalKey": "almendra_largueta",
+      "defaultName": "Almendra Largueta",
+      "category": "OTROS",
+      "restaurantCategoryKey": "FRUTOS_SECOS_SEMILLAS",
+      "aliases": [
+        "Almendra Largueta"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "BORGES_ALMENDRA",
+        "recordId": "largueta",
+        "sourceName": "Largueta",
+        "url": "https://borges-bain.com/almendra/"
+      },
+      "identityReason": "Variedad identificada; conserva la ficha genérica anterior."
+    },
+    {
+      "canonicalKey": "almendra_lauranne",
+      "defaultName": "Almendra Lauranne",
+      "category": "OTROS",
+      "restaurantCategoryKey": "FRUTOS_SECOS_SEMILLAS",
+      "aliases": [
+        "Almendra Lauranne"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "BORGES_ALMENDRA",
+        "recordId": "lauranne",
+        "sourceName": "Lauranne",
+        "url": "https://borges-bain.com/almendra/"
+      },
+      "identityReason": "Variedad identificada; conserva la ficha genérica anterior."
+    },
+    {
+      "canonicalKey": "almendra_marcona",
+      "defaultName": "Almendra Marcona",
+      "category": "OTROS",
+      "restaurantCategoryKey": "FRUTOS_SECOS_SEMILLAS",
+      "aliases": [
+        "Almendra Marcona"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "BORGES_ALMENDRA",
+        "recordId": "marcona",
+        "sourceName": "Marcona",
+        "url": "https://borges-bain.com/almendra/"
+      },
+      "identityReason": "Variedad identificada; conserva la ficha genérica anterior."
+    },
+    {
+      "canonicalKey": "almendra_soleta",
+      "defaultName": "Almendra Soleta",
+      "category": "OTROS",
+      "restaurantCategoryKey": "FRUTOS_SECOS_SEMILLAS",
+      "aliases": [
+        "Almendra Soleta"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "BORGES_ALMENDRA",
+        "recordId": "soleta",
+        "sourceName": "Soleta",
+        "url": "https://borges-bain.com/almendra/"
+      },
+      "identityReason": "Variedad identificada; conserva la ficha genérica anterior."
+    },
+    {
+      "canonicalKey": "almendra_vairo",
+      "defaultName": "Almendra Vairo",
+      "category": "OTROS",
+      "restaurantCategoryKey": "FRUTOS_SECOS_SEMILLAS",
+      "aliases": [
+        "Almendra Vairo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "BORGES_ALMENDRA",
+        "recordId": "vairo",
+        "sourceName": "Vairo",
+        "url": "https://borges-bain.com/almendra/"
+      },
+      "identityReason": "Variedad identificada; conserva la ficha genérica anterior."
+    },
+    {
+      "canonicalKey": "almendra_butte",
+      "defaultName": "Almendra Butte",
+      "category": "OTROS",
+      "restaurantCategoryKey": "FRUTOS_SECOS_SEMILLAS",
+      "aliases": [
+        "Almendra Butte"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "BORGES_ALMENDRA",
+        "recordId": "butte",
+        "sourceName": "Butte",
+        "url": "https://borges-bain.com/almendra/"
+      },
+      "identityReason": "Variedad identificada; conserva la ficha genérica anterior."
+    },
+    {
+      "canonicalKey": "almendra_carmel",
+      "defaultName": "Almendra Carmel",
+      "category": "OTROS",
+      "restaurantCategoryKey": "FRUTOS_SECOS_SEMILLAS",
+      "aliases": [
+        "Almendra Carmel"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "BORGES_ALMENDRA",
+        "recordId": "carmel",
+        "sourceName": "Carmel",
+        "url": "https://borges-bain.com/almendra/"
+      },
+      "identityReason": "Variedad identificada; conserva la ficha genérica anterior."
+    },
+    {
+      "canonicalKey": "almendra_nonpareil",
+      "defaultName": "Almendra Nonpareil",
+      "category": "OTROS",
+      "restaurantCategoryKey": "FRUTOS_SECOS_SEMILLAS",
+      "aliases": [
+        "Almendra Nonpareil"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "BORGES_ALMENDRA",
+        "recordId": "nonpareil",
+        "sourceName": "Nonpareil",
+        "url": "https://borges-bain.com/almendra/"
+      },
+      "identityReason": "Variedad identificada; conserva la ficha genérica anterior."
+    },
+    {
+      "canonicalKey": "nuez_pizarro",
+      "defaultName": "Nuez Pizarro",
+      "category": "OTROS",
+      "restaurantCategoryKey": "FRUTOS_SECOS_SEMILLAS",
+      "aliases": [
+        "Nuez Pizarro"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "BORGES_NUEZ",
+        "recordId": "pizarro",
+        "sourceName": "Pizarro",
+        "url": "https://borges-bain.com/nuez/"
+      },
+      "identityReason": "Variedad identificada; conserva la ficha genérica anterior."
+    },
+    {
+      "canonicalKey": "nuez_chandler",
+      "defaultName": "Nuez Chandler",
+      "category": "OTROS",
+      "restaurantCategoryKey": "FRUTOS_SECOS_SEMILLAS",
+      "aliases": [
+        "Nuez Chandler"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "BORGES_NUEZ",
+        "recordId": "chandler",
+        "sourceName": "Chandler",
+        "url": "https://borges-bain.com/nuez/"
+      },
+      "identityReason": "Variedad identificada; conserva la ficha genérica anterior."
+    },
+    {
+      "canonicalKey": "nuez_hartley",
+      "defaultName": "Nuez Hartley",
+      "category": "OTROS",
+      "restaurantCategoryKey": "FRUTOS_SECOS_SEMILLAS",
+      "aliases": [
+        "Nuez Hartley"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "BORGES_NUEZ",
+        "recordId": "hartley",
+        "sourceName": "Hartley",
+        "url": "https://borges-bain.com/nuez/"
+      },
+      "identityReason": "Variedad identificada; conserva la ficha genérica anterior."
+    },
+    {
+      "canonicalKey": "nuez_howard",
+      "defaultName": "Nuez Howard",
+      "category": "OTROS",
+      "restaurantCategoryKey": "FRUTOS_SECOS_SEMILLAS",
+      "aliases": [
+        "Nuez Howard"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "BORGES_NUEZ",
+        "recordId": "howard",
+        "sourceName": "Howard",
+        "url": "https://borges-bain.com/nuez/"
+      },
+      "identityReason": "Variedad identificada; conserva la ficha genérica anterior."
+    },
+    {
+      "canonicalKey": "nuez_serr",
+      "defaultName": "Nuez Serr",
+      "category": "OTROS",
+      "restaurantCategoryKey": "FRUTOS_SECOS_SEMILLAS",
+      "aliases": [
+        "Nuez Serr"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "BORGES_NUEZ",
+        "recordId": "serr",
+        "sourceName": "Serr",
+        "url": "https://borges-bain.com/nuez/"
+      },
+      "identityReason": "Variedad identificada; conserva la ficha genérica anterior."
+    },
+    {
+      "canonicalKey": "harina_de_almendra",
+      "defaultName": "Harina de almendra",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Harina de almendra"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "BORGES_HARINAS",
+        "recordId": "almond_meal",
+        "sourceName": "ALMOND MEAL",
+        "url": "https://borges-bain.com/en/flours-and-granules/"
+      },
+      "identityReason": "Materia prima molida para masas; agrupa granulometrías, marcas y variedades."
+    },
+    {
+      "canonicalKey": "harina_de_pistacho",
+      "defaultName": "Harina de pistacho",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Harina de pistacho"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "BORGES_HARINAS",
+        "recordId": "pistachio_meal",
+        "sourceName": "PISTACHIO MEAL",
+        "url": "https://borges-bain.com/en/flours-and-granules/"
+      },
+      "identityReason": "Materia prima molida para masas; agrupa granulometrías, marcas y variedades."
+    },
+    {
+      "canonicalKey": "harina_de_avellana",
+      "defaultName": "Harina de avellana",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Harina de avellana"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "BORGES_HARINAS",
+        "recordId": "hazelnut_meal",
+        "sourceName": "HAZELNUT MEAL",
+        "url": "https://borges-bain.com/en/flours-and-granules/"
+      },
+      "identityReason": "Materia prima molida para masas; agrupa granulometrías, marcas y variedades."
+    },
+    {
+      "canonicalKey": "harina_de_nuez",
+      "defaultName": "Harina de nuez",
+      "category": "OTROS",
+      "restaurantCategoryKey": "PANES_MASAS_HARINAS",
+      "aliases": [
+        "Harina de nuez"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "BORGES_HARINAS",
+        "recordId": "walnut_meal",
+        "sourceName": "WALNUT MEAL",
+        "url": "https://borges-bain.com/en/flours-and-granules/"
+      },
+      "identityReason": "Materia prima molida para masas; agrupa granulometrías, marcas y variedades."
+    },
+    {
+      "canonicalKey": "pasta_pura_de_almendra",
+      "defaultName": "Pasta pura de almendra",
+      "category": "OTROS",
+      "restaurantCategoryKey": "FRUTOS_SECOS_SEMILLAS",
+      "aliases": [
+        "Pasta pura de almendra",
+        "Mantequilla de almendra"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "BORGES_CREMOSOS",
+        "recordId": "pasta_de_almendra_con_piel_tostada",
+        "sourceName": "PASTA DE ALMENDRA CON PIEL TOSTADA",
+        "url": "https://borges-bain.com/cremosos-de-frutos-secos/"
+      },
+      "identityReason": "Pasta 100% fruto seco; distinta de la pasta azucarada existente. Agrupa grados de tostado y piel."
+    },
+    {
+      "canonicalKey": "pasta_pura_de_nuez",
+      "defaultName": "Pasta pura de nuez",
+      "category": "OTROS",
+      "restaurantCategoryKey": "FRUTOS_SECOS_SEMILLAS",
+      "aliases": [
+        "Pasta pura de nuez",
+        "Mantequilla de nuez"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "BORGES_NUEZ",
+        "recordId": "pasta_de_nuez",
+        "sourceName": "PASTA DE NUEZ",
+        "url": "https://borges-bain.com/nuez/"
+      },
+      "identityReason": "Pasta 100% nuez; distinta del fruto y de su harina."
+    },
+    {
+      "canonicalKey": "pasta_pura_de_macadamia",
+      "defaultName": "Pasta pura de macadamia",
+      "category": "OTROS",
+      "restaurantCategoryKey": "FRUTOS_SECOS_SEMILLAS",
+      "aliases": [
+        "Pasta pura de macadamia",
+        "Mantequilla de macadamia"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "BORGES_CREMOSOS",
+        "recordId": "pasta_de_nuez_de_macadamia_tostada",
+        "sourceName": "PASTA DE NUEZ DE MACADAMIA TOSTADA",
+        "url": "https://borges-bain.com/cremosos-de-frutos-secos/"
+      },
+      "identityReason": "Pasta 100% macadamia; distinta del praliné existente."
+    },
+    {
+      "canonicalKey": "tahini_de_sesamo_negro",
+      "defaultName": "Tahini de sésamo negro",
+      "category": "OTROS",
+      "restaurantCategoryKey": "FRUTOS_SECOS_SEMILLAS",
+      "aliases": [
+        "Tahini de sésamo negro",
+        "Pasta pura de sésamo negro"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "CLEARSPRING_BLACK",
+        "recordId": "organic_tahini_black_sesame",
+        "sourceName": "Organic Tahini - Black Sesame",
+        "url": "https://www.clearspring.co.uk/products/organic-tahini-black-sesame-6-pack?variant=42000199680191"
+      },
+      "identityReason": "Pasta de sésamo negro al 100%; variante identificada del tahini genérico conservado."
+    },
+    {
+      "canonicalKey": "pasta_de_semillas_de_calabaza",
+      "defaultName": "Pasta de semillas de calabaza",
+      "category": "OTROS",
+      "restaurantCategoryKey": "FRUTOS_SECOS_SEMILLAS",
+      "aliases": [
+        "Pasta de semillas de calabaza",
+        "Pasta de pipas de calabaza"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA_PASTA_DE_PIPAS_DE_CALABAZA",
+        "recordId": "pasta_de_pipas_de_calabaza",
+        "sourceName": "PASTA DE PIPAS DE CALABAZA",
+        "url": "https://www.sosa.cat/producto/pasta-de-pipas-de-calabaza/"
+      },
+      "identityReason": "Preparado con semillas, aceite de girasol y sal; no se declara pasta pura."
+    },
+    {
+      "canonicalKey": "pasta_de_nuez_pecana",
+      "defaultName": "Pasta de nuez pecana",
+      "category": "OTROS",
+      "restaurantCategoryKey": "FRUTOS_SECOS_SEMILLAS",
+      "aliases": [
+        "Pasta de nuez pecana",
+        "Pasta de pacana"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA_PASTA_DE_NUEZ_PECANA",
+        "recordId": "pasta_de_nuez_pecana",
+        "sourceName": "PASTA DE NUEZ PECANA",
+        "url": "https://www.sosa.cat/producto/pasta-de-nuez-pecana/"
+      },
+      "identityReason": "Preparado de pacana con aceite y lecitina; no se declara puro. El texto introductorio menciona almendra por aparente error; se usa la lista de ingredientes y se exige revisión."
+    },
+    {
+      "canonicalKey": "praline_de_almendra",
+      "defaultName": "Praliné de almendra",
+      "category": "CREMAS_DULCES",
+      "restaurantCategoryKey": "REPOSTERIA_AUXILIARES",
+      "aliases": [
+        "Praliné de almendra"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "BORGES_CREMOSOS",
+        "recordId": "praline_de_almendra",
+        "sourceName": "PRALINÉ DE ALMENDRA",
+        "url": "https://borges-bain.com/cremosos-de-frutos-secos/"
+      },
+      "identityReason": "Preparado dulce distinto de la pasta pura; agrupa porcentajes de fruto seco."
+    },
+    {
+      "canonicalKey": "praline_de_nuez",
+      "defaultName": "Praliné de nuez",
+      "category": "CREMAS_DULCES",
+      "restaurantCategoryKey": "REPOSTERIA_AUXILIARES",
+      "aliases": [
+        "Praliné de nuez"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "BORGES_CREMOSOS",
+        "recordId": "praline_de_nuez",
+        "sourceName": "PRALINÉ DE NUEZ",
+        "url": "https://borges-bain.com/cremosos-de-frutos-secos/"
+      },
+      "identityReason": "Preparado dulce distinto de la pasta pura; agrupa porcentajes de fruto seco."
+    },
+    {
+      "canonicalKey": "metilcelulosa_alimentaria",
+      "defaultName": "Metilcelulosa alimentaria",
+      "category": "OTROS",
+      "restaurantCategoryKey": "REPOSTERIA_AUXILIARES",
+      "aliases": [
+        "Metilcelulosa alimentaria",
+        "Metilcelulosa"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA_METILGEL",
+        "recordId": "metilgel",
+        "sourceName": "METILGEL",
+        "url": "https://www.sosa.cat/producto/metilgel/"
+      },
+      "identityReason": "Auxiliar identificado por su composición E461; sin convertir la marca en otra ficha."
+    },
+    {
+      "canonicalKey": "carboximetilcelulosa_sodica_alimentaria",
+      "defaultName": "Carboximetilcelulosa sódica alimentaria",
+      "category": "OTROS",
+      "restaurantCategoryKey": "REPOSTERIA_AUXILIARES",
+      "aliases": [
+        "Carboximetilcelulosa sódica alimentaria",
+        "CMC alimentaria"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA_CMC",
+        "recordId": "cmc",
+        "sourceName": "CMC",
+        "url": "https://www.sosa.cat/producto/cmc/"
+      },
+      "identityReason": "Auxiliar E466; distinto de metilcelulosa E461."
+    },
+    {
+      "canonicalKey": "goma_konjac",
+      "defaultName": "Goma konjac",
+      "category": "OTROS",
+      "restaurantCategoryKey": "REPOSTERIA_AUXILIARES",
+      "aliases": [
+        "Goma konjac"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA_GOMA_KONJAC",
+        "recordId": "goma_konjac",
+        "sourceName": "GOMA KONJAC",
+        "url": "https://www.sosa.cat/producto/goma-konjac/"
+      },
+      "identityReason": "Auxiliar E425i; distinto de los fideos elaborados con konjac."
+    },
+    {
+      "canonicalKey": "citrato_trisodico_alimentario",
+      "defaultName": "Citrato trisódico alimentario",
+      "category": "OTROS",
+      "restaurantCategoryKey": "REPOSTERIA_AUXILIARES",
+      "aliases": [
+        "Citrato trisódico alimentario",
+        "Citrato de sodio alimentario"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA_CITRATO",
+        "recordId": "citrato",
+        "sourceName": "CITRATO",
+        "url": "https://www.sosa.cat/producto/citrato/"
+      },
+      "identityReason": "Sal E331iii; distinta del ácido cítrico existente."
+    },
+    {
+      "canonicalKey": "cloruro_de_calcio_alimentario",
+      "defaultName": "Cloruro de calcio alimentario",
+      "category": "OTROS",
+      "restaurantCategoryKey": "REPOSTERIA_AUXILIARES",
+      "aliases": [
+        "Cloruro de calcio alimentario",
+        "Cloruro cálcico alimentario"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA_CLORURO",
+        "recordId": "cloruro",
+        "sourceName": "CLORURO",
+        "url": "https://www.sosa.cat/producto/cloruro/"
+      },
+      "identityReason": "Sal E509 identificada; no confundir con sal común."
+    },
+    {
+      "canonicalKey": "gluconolactato_de_calcio",
+      "defaultName": "Gluconolactato de calcio",
+      "category": "OTROS",
+      "restaurantCategoryKey": "REPOSTERIA_AUXILIARES",
+      "aliases": [
+        "Gluconolactato de calcio"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA_GLUCONOLACTATO",
+        "recordId": "gluconolactato",
+        "sourceName": "GLUCONOLACTATO",
+        "url": "https://www.sosa.cat/producto/gluconolactato/"
+      },
+      "identityReason": "Mezcla documentada de lactato y gluconato cálcicos para cocina."
+    },
+    {
+      "canonicalKey": "preparado_de_pectina_hm_de_gelificacion_rapida",
+      "defaultName": "Preparado de pectina HM de gelificación rápida",
+      "category": "OTROS",
+      "restaurantCategoryKey": "REPOSTERIA_AUXILIARES",
+      "aliases": [
+        "Preparado de pectina HM de gelificación rápida",
+        "Pectina HM rapid set"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA_PECTINA_RAPID_SET",
+        "recordId": "pectina_rapid_set",
+        "sourceName": "PECTINA RAPID SET",
+        "url": "https://www.sosa.cat/producto/pectina-rapid-set/"
+      },
+      "identityReason": "Pectina de alto metoxilo con dextrosa; preparada, no sustancia pura."
+    },
+    {
+      "canonicalKey": "preparado_de_pectina_lma_con_calcio",
+      "defaultName": "Preparado de pectina LMA con calcio",
+      "category": "OTROS",
+      "restaurantCategoryKey": "REPOSTERIA_AUXILIARES",
+      "aliases": [
+        "Preparado de pectina LMA con calcio",
+        "Pectina LMA con calcio"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SOSA_PECTINA_ACID_FREE",
+        "recordId": "pectina_acid_free",
+        "sourceName": "PECTINA ACID FREE",
+        "url": "https://www.sosa.cat/producto/pectina-acid-free/"
+      },
+      "identityReason": "Pectina amidada de bajo metoxilo, dextrosa y sal cálcica; composición distinta de HM."
+    },
+    {
+      "canonicalKey": "lecitina_de_girasol",
+      "defaultName": "Lecitina de girasol",
+      "category": "OTROS",
+      "restaurantCategoryKey": "REPOSTERIA_AUXILIARES",
+      "aliases": [
+        "Lecitina de girasol"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "UNIPATIS_LECITINA",
+        "recordId": "lecitina_de_girasol",
+        "sourceName": "LECITINA DE GIRASOL",
+        "url": "https://www.unipatis.fr/es/produit/lecitina-de-girasol/"
+      },
+      "identityReason": "Emulgente de girasol, distinto de la lecitina de soja existente."
+    }
+  ],
+  "exclusions": [
+    {
+      "candidate": "Almendra ecológica / Standard / Valencia",
+      "decision": "DEFERRED",
+      "reason": "No sumar certificaciones, grados comerciales ni denominaciones colectivas como variedades."
+    },
+    {
+      "candidate": "Láminas, palitos, granillo, mitades, cuartos, calibres y envases",
+      "decision": "NOT_NEW_IDENTITY",
+      "reason": "Son cortes o presentaciones, no identidades nuevas."
+    },
+    {
+      "candidate": "Harinas monovarietales o extrafinas",
+      "decision": "GROUPED",
+      "reason": "Se agrupan bajo la harina del fruto seco; sin combinaciones automáticas."
+    },
+    {
+      "candidate": "Pasta pura de pistacho, avellana y cacahuete",
+      "decision": "EQUIVALENCE_PENDING",
+      "reason": "Las cremas históricas esperan composición. No añadir posibles duplicados."
+    },
+    {
+      "candidate": "Pasta de anacardo / crema de girasol / tahini genérico",
+      "decision": "ALREADY_REPRESENTED",
+      "reason": "Las fichas actuales cubren esas identidades; no crear alias como altas."
+    },
+    {
+      "candidate": "Pasta de sésamo negro Sosa",
+      "decision": "SOURCE_CONFLICT",
+      "reason": "La lista declara 84% sésamo y aceite, y el texto menciona almendras. Se usa Clearspring para una única ficha pura; se difiere la mezcla."
+    },
+    {
+      "candidate": "Pasta de almendra repelada: tostada o cruda",
+      "decision": "SOURCE_CONFLICT",
+      "reason": "El título y la descripción de Borges difieren en el tostado. Se agrupa en pasta pura sin subdividirlo."
+    },
+    {
+      "candidate": "Praliné de avellana Borges",
+      "decision": "SOURCE_CONFLICT",
+      "reason": "La descripción menciona almendra. Diferir hasta corroborar composición."
+    },
+    {
+      "candidate": "Agar, gellan, alginato, guar, garrofín, tara, xantana, goma arábiga, maltodextrina",
+      "decision": "ALREADY_REPRESENTED",
+      "reason": "Ya constan en la maestra; no repetir marcas ni grados."
+    },
+    {
+      "candidate": "Inulina / fibra de achicoria",
+      "decision": "EQUIVALENCE_PENDING",
+      "reason": "Revisar cobertura de la ficha histórica antes de añadir."
+    },
+    {
+      "candidate": "Gelatinas por fuerza Bloom o formato",
+      "decision": "NOT_NEW_IDENTITY",
+      "reason": "No crear fichas por hojas, polvo, envase o grados de gelificación."
+    },
+    {
+      "candidate": "Pectinas NH, nappage, low sugar y otras mezclas",
+      "decision": "DEFERRED",
+      "reason": "Este lote delimita HM rápida y LMA con calcio; faltan contrastes para otras formulaciones."
+    },
+    {
+      "candidate": "Semillas de lino / semillas de lino integral",
+      "decision": "HISTORICAL_OVERLAP",
+      "reason": "Posible solapamiento histórico detectado; conservar claves y revisar referencias antes de consolidar."
+    },
+    {
+      "candidate": "Huevo en polvo / huevo entero deshidratado",
+      "decision": "HISTORICAL_OVERLAP",
+      "reason": "Sigue pendiente el hallazgo del lote 11; sin fusiones en este lote."
+    },
+    {
+      "candidate": "Afirmaciones de ausencia de alérgenos en páginas de frutos secos",
+      "decision": "NOT_IMPORTED",
+      "reason": "No se trasladan afirmaciones comerciales; formulaciones y alérgenos requieren revisión por proveedor."
+    }
+  ]
+}

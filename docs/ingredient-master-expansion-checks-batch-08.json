@@ -1,0 +1,59 @@
+{
+  "date": "2026-09-24",
+  "batchId": "2026-09-24-08",
+  "total": 3206,
+  "added": 192,
+  "targetTotal": 5000,
+  "remaining": 1794,
+  "byFamily": {
+    "PANES_MASAS_HARINAS": 63,
+    "PASTAS_ARROCES_CEREALES": 99,
+    "CARNES_AVES": 9,
+    "SALSAS_CONDIMENTOS_BASES": 21
+  },
+  "preservedMasterRows": 3014,
+  "preservedTaxonomyAssignments": 3014,
+  "idempotentBatches": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "historicalAuditFilesUnchanged": true,
+  "backendTaxonomyIdentical": true,
+  "sourceSha256": "648458d57abde47c48d1bc9138b6e7b514cf48c336b96faeba4f1de326a969c9",
+  "pendingCount": 25,
+  "provisionalClassifications": [
+    "crema_de_avellanas",
+    "crema_de_cacahuete",
+    "crema_de_pistacho",
+    "tempura"
+  ],
+  "validation": "Ingredient master OK: 3206 records, 14 categories; valid UTF-8/NFC, names, aliases and identifiers.\n11 consolidated keys preserved; 25 ambiguous records held separately. No duplicate names or shared exact aliases in the selectable source.",
+  "tests": {
+    "importer": 9,
+    "backend": 42,
+    "frontend": 27
+  },
+  "build": {
+    "status": "passed",
+    "javascript": "main.e7662925.js",
+    "css": "main.6cd59d28.css",
+    "servedLocally": true
+  },
+  "browser": {
+    "url": "http://localhost:3000/global-manager",
+    "masterCount": 3206,
+    "search": "linguini",
+    "resultCount": 1,
+    "resultName": "Pasta linguine",
+    "category": "Pastas, arroces y cereales",
+    "otherLanguagesRemainEmpty": true,
+    "ingredientCreated": false
+  },
+  "productionDeployment": false
+}

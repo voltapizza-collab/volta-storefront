@@ -1,0 +1,447 @@
+{
+  "schemaVersion": 1,
+  "batchId": "2026-09-24-18",
+  "date": "2026-09-24",
+  "status": "EDITORIAL_REVIEW",
+  "targetTotal": 5000,
+  "policy": "Mezclas regionales y condimentos secos con identidad documentada; sin cuotas o combinaciones automáticas. Se preservan las fichas anteriores.",
+  "allergenPolicy": "NEEDS_REVIEW e imágenes MISSING; alérgenos vacíos significa no aprobados, nunca ausencia. Goda requiere revisar sésamo, aceite de cacahuete y soporte de asafétida. El preparado chai contiene azúcar en la referencia. Cada suministro necesita ficha técnica.",
+  "sources": {
+    "DUCROS_QUATRE_EPICES": {
+      "title": "Ducros Foodservice — Quatre Epices",
+      "url": "https://www.mccormickforchefs.com/fr-fr/products/ducros/ducros-quatre-epices",
+      "accessed": "2026-09-24",
+      "notes": "Mezcla francesa identificada. La descripción alude a pimienta pero la lista consultada no la incluye; no se importa una composición universal."
+    },
+    "DUCROS_FINES_HERBES": {
+      "title": "Ducros — Fines Herbes",
+      "url": "https://www.ducros.com/fr-fr/produits/herbes/herbes/fines-herbes",
+      "accessed": "2026-09-24",
+      "notes": "Mezcla de perejil, cebollino, estragón y perifollo; proporciones y formulación son específicas del proveedor."
+    },
+    "WORLDSPICE_ADVIEH": {
+      "title": "World Spice — Advieh",
+      "url": "https://worldspice.com/products/advieh",
+      "accessed": "2026-09-24",
+      "notes": "El proveedor documenta la mezcla persa. Se agrupan sus formatos entero y molido."
+    },
+    "BADSHAH_GODA": {
+      "title": "Badshah — Goda Masala",
+      "url": "https://badshahmasala.com/goda-masala/",
+      "accessed": "2026-09-24",
+      "notes": "Mezcla de Maharashtra; la ficha indexada declara sésamo, aceite de cacahuete y asafétida compuesta. Verificar la ficha técnica del suministro."
+    },
+    "WORLDSPICE_KHMELI": {
+      "title": "World Spice — Khmeli Suneli",
+      "url": "https://worldspice.com/products/khmeli-suneli",
+      "accessed": "2026-09-24",
+      "notes": "Mezcla georgiana documentada con especias y hierbas; entero y molido son presentaciones de la misma identidad."
+    },
+    "SPICEMOUNTAIN_TABIL": {
+      "title": "Spice Mountain — Tunisian Tabil",
+      "url": "https://www.spicemountain.co.uk/product/tunisian-tabil/",
+      "accessed": "2026-09-24",
+      "notes": "Mezcla tunecina documentada. El tostado y la molienda de esta referencia no generan otras altas."
+    },
+    "KINGARTHUR_SPECULAAS": {
+      "title": "King Arthur Baking — Speculaas Spiced Springerle",
+      "url": "https://www.kingarthurbaking.com/recipes/speculaas-spiced-springerle-recipe",
+      "accessed": "2026-09-24",
+      "notes": "La receta del fabricante usa Speculaas Spice como ingrediente separado. Se documenta la mezcla, sin copiar receta ni inferir una formulación."
+    },
+    "SPICEHOUSE_APPLE_PIE": {
+      "title": "The Spice House — Apple Pie Spice",
+      "url": "https://www.thespicehouse.com/products/apple-pie-spice",
+      "accessed": "2026-09-24",
+      "notes": "Mezcla seca documentada para repostería. No implica presencia de manzana en el condimento."
+    },
+    "SPICEHOUSE_AMCHOOR": {
+      "title": "The Spice House — Amchoor Powder",
+      "url": "https://www.thespicehouse.com/products/amchoor-powder",
+      "accessed": "2026-09-24",
+      "notes": "Condimento producido secando mango inmaduro. No se importan afirmaciones nutricionales o sanitarias."
+    },
+    "SPICEHOUSE_CHAI": {
+      "title": "The Spice House — Chai Spices",
+      "url": "https://www.thespicehouse.com/products/chai-spices",
+      "accessed": "2026-09-24",
+      "notes": "La referencia contiene azúcar y vainilla además de especias. Se documenta como preparado; no acredita mezcla pura ni ausencia de azúcar."
+    },
+    "WORLDSPICE_ANARDANA": {
+      "title": "World Spice — Anardana",
+      "url": "https://worldspice.com/products/anardana",
+      "accessed": "2026-09-24",
+      "notes": "El proveedor documenta granada seca usada como especia acidulante; se agrupan formas entera y molida."
+    },
+    "WORLDSPICE_BESAR": {
+      "title": "World Spice — Besar",
+      "url": "https://worldspice.com/products/besar",
+      "accessed": "2026-09-24",
+      "notes": "Mezcla emiratí identificada; la ficha distingue presentación entera o molida, no identidades separadas."
+    },
+    "SPICEHOUSE_ADOBO_DRY": {
+      "title": "The Spice House — Adobo Salt-Free Seasoning",
+      "url": "https://www.thespicehouse.com/products/salt-free-adobo-seasoning",
+      "accessed": "2026-09-24",
+      "notes": "Referencia de mezcla seca. No se generaliza la alegación comercial sin sal."
+    },
+    "SPICEHOUSE_MULLING": {
+      "title": "The Spice House — Mulling Spices",
+      "url": "https://www.thespicehouse.com/products/mulling-spices",
+      "accessed": "2026-09-24",
+      "notes": "Mezcla de especias para infusionar vino o sidra. No se copian cantidades ni receta."
+    },
+    "SPICEMOUNTAIN_CHERMOULA": {
+      "title": "Spice Mountain — Chermoula, Moroccan Seasoning",
+      "url": "https://www.spicemountain.co.uk/product/chermoula-moroccan-seasoning/",
+      "accessed": "2026-09-24",
+      "notes": "Mezcla de hierbas y especias que permite preparar una marinada añadiendo líquidos y ajo. No representa la salsa ya hidratada."
+    },
+    "BADSHAH_DHANSHAK": {
+      "title": "Badshah — Dhanshak Masala",
+      "url": "https://badshahmasala.com/dhanshak-masala/",
+      "accessed": "2026-09-24",
+      "notes": "El fabricante identifica un masala para cocina parsi en su catálogo de mezclas. No se infiere composición ni receta universal."
+    }
+  },
+  "records": [
+    {
+      "canonicalKey": "cuatro_especias_francesas",
+      "defaultName": "Cuatro especias francesas",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Cuatro especias francesas",
+        "Quatre épices"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DUCROS_QUATRE_EPICES",
+        "recordId": "cuatro_especias_francesas",
+        "sourceName": "Ducros Foodservice — Quatre Epices",
+        "url": "https://www.mccormickforchefs.com/fr-fr/products/ducros/ducros-quatre-epices"
+      },
+      "identityReason": "Mezcla con nombre culinario propio, distinta de cinco especias chinas y de las especias individuales.",
+      "culinaryForm": "MEZCLA_ESPECIAS"
+    },
+    {
+      "canonicalKey": "mezcla_de_finas_hierbas",
+      "defaultName": "Mezcla de finas hierbas",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Mezcla de finas hierbas",
+        "Fines herbes"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DUCROS_FINES_HERBES",
+        "recordId": "mezcla_de_finas_hierbas",
+        "sourceName": "Ducros — Fines Herbes",
+        "url": "https://www.ducros.com/fr-fr/produits/herbes/herbes/fines-herbes"
+      },
+      "identityReason": "Mezcla identificada distinta de Hierbas provenzales. No se crean altas por proporciones.",
+      "culinaryForm": "MEZCLA_HIERBAS"
+    },
+    {
+      "canonicalKey": "advieh",
+      "defaultName": "Advieh",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Advieh"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "WORLDSPICE_ADVIEH",
+        "recordId": "advieh",
+        "sourceName": "World Spice — Advieh",
+        "url": "https://worldspice.com/products/advieh"
+      },
+      "identityReason": "Se delimita el nombre como mezcla culinaria persa, no como cualquier especia ni como sinónimo de baharat.",
+      "culinaryForm": "MEZCLA_ESPECIAS"
+    },
+    {
+      "canonicalKey": "goda_masala",
+      "defaultName": "Goda masala",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Goda masala"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "BADSHAH_GODA",
+        "recordId": "goda_masala",
+        "sourceName": "Badshah — Goda Masala",
+        "url": "https://badshahmasala.com/goda-masala/"
+      },
+      "identityReason": "Mezcla regional identificada; Garam masala genérico se conserva. No se asigna kala masala como alias sin delimitar equivalencia.",
+      "culinaryForm": "MEZCLA_ESPECIAS"
+    },
+    {
+      "canonicalKey": "khmeli_suneli",
+      "defaultName": "Khmeli suneli",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Khmeli suneli"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "WORLDSPICE_KHMELI",
+        "recordId": "khmeli_suneli",
+        "sourceName": "World Spice — Khmeli Suneli",
+        "url": "https://worldspice.com/products/khmeli-suneli"
+      },
+      "identityReason": "Mezcla culinaria identificada distinta de fenogreco puro, sus hojas y otras mezclas regionales.",
+      "culinaryForm": "MEZCLA_ESPECIAS"
+    },
+    {
+      "canonicalKey": "tabil",
+      "defaultName": "Tabil",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Tabil",
+        "Tabil tunecino"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SPICEMOUNTAIN_TABIL",
+        "recordId": "tabil",
+        "sourceName": "Spice Mountain — Tunisian Tabil",
+        "url": "https://www.spicemountain.co.uk/product/tunisian-tabil/"
+      },
+      "identityReason": "Identidad culinaria diferenciada de ras el hanout y de las especias que la componen.",
+      "culinaryForm": "MEZCLA_ESPECIAS"
+    },
+    {
+      "canonicalKey": "especias_para_speculaas",
+      "defaultName": "Especias para speculaas",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Especias para speculaas",
+        "Speculaas spice"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "KINGARTHUR_SPECULAAS",
+        "recordId": "especias_para_speculaas",
+        "sourceName": "King Arthur Baking — Speculaas Spiced Springerle",
+        "url": "https://www.kingarthurbaking.com/recipes/speculaas-spiced-springerle-recipe"
+      },
+      "identityReason": "Mezcla para repostería identificada; no son galletas, crema de galletas ni masa preparada.",
+      "culinaryForm": "MEZCLA_ESPECIAS"
+    },
+    {
+      "canonicalKey": "especias_para_tarta_de_manzana",
+      "defaultName": "Especias para tarta de manzana",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Especias para tarta de manzana",
+        "Apple pie spice"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SPICEHOUSE_APPLE_PIE",
+        "recordId": "especias_para_tarta_de_manzana",
+        "sourceName": "The Spice House — Apple Pie Spice",
+        "url": "https://www.thespicehouse.com/products/apple-pie-spice"
+      },
+      "identityReason": "Identidad de mezcla diferenciada de Especias para tarta de calabaza; no se generan variantes de cada receta.",
+      "culinaryForm": "MEZCLA_ESPECIAS"
+    },
+    {
+      "canonicalKey": "amchur",
+      "defaultName": "Amchur",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Amchur",
+        "Amchoor",
+        "Mango verde seco en polvo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SPICEHOUSE_AMCHOOR",
+        "recordId": "amchur",
+        "sourceName": "The Spice House — Amchoor Powder",
+        "url": "https://www.thespicehouse.com/products/amchoor-powder"
+      },
+      "identityReason": "Elaboración acidulante identificada, distinta de Mango liofilizado y Mango seco azucarado. No se añade otra ficha por molienda.",
+      "culinaryForm": "CONDIMENTO_FRUTA"
+    },
+    {
+      "canonicalKey": "preparado_de_especias_para_chai",
+      "defaultName": "Preparado de especias para chai",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Preparado de especias para chai",
+        "Chai spices"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SPICEHOUSE_CHAI",
+        "recordId": "preparado_de_especias_para_chai",
+        "sourceName": "The Spice House — Chai Spices",
+        "url": "https://www.thespicehouse.com/products/chai-spices"
+      },
+      "identityReason": "Condimento compuesto para preparar chai o repostería; no representa té, bebida lista ni mezcla de leche instantánea.",
+      "culinaryForm": "CONDIMENTO_DULCE"
+    },
+    {
+      "canonicalKey": "anardana",
+      "defaultName": "Anardana",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Anardana",
+        "Granos de granada secos para condimentar"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "WORLDSPICE_ANARDANA",
+        "recordId": "anardana",
+        "sourceName": "World Spice — Anardana",
+        "url": "https://worldspice.com/products/anardana"
+      },
+      "identityReason": "Elaboración seca identificada, distinta de Granos de granada frescos, zumo y melaza.",
+      "culinaryForm": "CONDIMENTO_FRUTA"
+    },
+    {
+      "canonicalKey": "besar",
+      "defaultName": "Besar",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Besar"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "WORLDSPICE_BESAR",
+        "recordId": "besar",
+        "sourceName": "World Spice — Besar",
+        "url": "https://worldspice.com/products/besar"
+      },
+      "identityReason": "Mezcla regional documentada; no se convierte Baharat histórico en alias ni se crean variantes por marca.",
+      "culinaryForm": "MEZCLA_ESPECIAS"
+    },
+    {
+      "canonicalKey": "condimento_adobo_seco",
+      "defaultName": "Condimento adobo seco",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Condimento adobo seco",
+        "Adobo seco en polvo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SPICEHOUSE_ADOBO_DRY",
+        "recordId": "condimento_adobo_seco",
+        "sourceName": "The Spice House — Adobo Salt-Free Seasoning",
+        "url": "https://www.thespicehouse.com/products/salt-free-adobo-seasoning"
+      },
+      "identityReason": "Se delimita el preparado seco, no una salsa, una carne adobada ni el plato filipino.",
+      "culinaryForm": "MEZCLA_ESPECIAS"
+    },
+    {
+      "canonicalKey": "mezcla_de_especias_para_vino_caliente",
+      "defaultName": "Mezcla de especias para vino caliente",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Mezcla de especias para vino caliente",
+        "Mulling spices"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SPICEHOUSE_MULLING",
+        "recordId": "mezcla_de_especias_para_vino_caliente",
+        "sourceName": "The Spice House — Mulling Spices",
+        "url": "https://www.thespicehouse.com/products/mulling-spices"
+      },
+      "identityReason": "Ingrediente aromático seco; no vino preparado, jarabe o bebida terminada.",
+      "culinaryForm": "MEZCLA_ESPECIAS"
+    },
+    {
+      "canonicalKey": "mezcla_seca_para_chermoula",
+      "defaultName": "Mezcla seca para chermoula",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Mezcla seca para chermoula",
+        "Condimento seco chermoula"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "SPICEMOUNTAIN_CHERMOULA",
+        "recordId": "mezcla_seca_para_chermoula",
+        "sourceName": "Spice Mountain — Chermoula, Moroccan Seasoning",
+        "url": "https://www.spicemountain.co.uk/product/chermoula-moroccan-seasoning/"
+      },
+      "identityReason": "Condimento seco identificado, separado de una marinada lista. No se usa chermoula solo como alias.",
+      "culinaryForm": "MEZCLA_ESPECIAS"
+    },
+    {
+      "canonicalKey": "masala_para_dhansak",
+      "defaultName": "Masala para dhansak",
+      "category": "HIERBAS_ESPECIAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Masala para dhansak",
+        "Dhanshak masala"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "BADSHAH_DHANSHAK",
+        "recordId": "masala_para_dhansak",
+        "sourceName": "Badshah — Dhanshak Masala",
+        "url": "https://badshahmasala.com/dhanshak-masala/"
+      },
+      "identityReason": "Mezcla comercial identificada; no es el guiso preparado ni garam masala genérico.",
+      "culinaryForm": "MEZCLA_ESPECIAS"
+    }
+  ],
+  "exclusions": [
+    {
+      "candidate": "Garam masala, baharat, ras el hanout, hierbas provenzales y especias para tarta de calabaza",
+      "decision": "ALREADY_REPRESENTED",
+      "reason": "Se conservan sus claves y alcance histórico; no sumar traducciones o variantes comerciales."
+    },
+    {
+      "candidate": "Suya",
+      "decision": "ALREADY_REPRESENTED",
+      "reason": "Existe una ficha histórica; se difiere otra alta hasta revisar si cubre condimento o plato preparado."
+    },
+    {
+      "candidate": "Kala masala y variantes de advieh, besar o goda",
+      "decision": "DEFERRED",
+      "reason": "Delimitar equivalencias antes de sumar variantes regionales o tratarlas como alias."
+    },
+    {
+      "candidate": "Chhole masala",
+      "decision": "DEFERRED",
+      "reason": "Continúa pendiente la comparación con la mezcla para chana incorporada en el lote 17."
+    },
+    {
+      "candidate": "Chai masala puro, preparado lácteo para chai y chai preparado",
+      "decision": "NOT_IMPORTED",
+      "reason": "La evidencia seleccionada acredita preparado de especias con azúcar. No habilita otras altas ni un alias de té."
+    },
+    {
+      "candidate": "Biryani masala, mezclas para encurtir y everything bagel",
+      "decision": "DEFERRED",
+      "reason": "Quedan para otra investigación con evidencia e identidades delimitadas."
+    },
+    {
+      "candidate": "Marca, envase, molienda, proporciones, ausencia de sal y nivel de picante",
+      "decision": "GROUPED",
+      "reason": "No generan identidades adicionales; certificaciones y nutrición no se importan."
+    }
+  ]
+}

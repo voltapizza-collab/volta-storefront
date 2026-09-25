@@ -1,0 +1,80 @@
+{
+  "date": "2026-09-25",
+  "batchId": "2026-09-25-31",
+  "baseline": 3683,
+  "added": 11,
+  "total": 3694,
+  "remainingTo5000": 1306,
+  "byCategory": {
+    "CARNES": 5,
+    "EMBUTIDOS": 1,
+    "OTROS": 4,
+    "ACEITES_GRASAS_VINAGRES": 1
+  },
+  "byRestaurantFamily": {
+    "CARNES_AVES": 5,
+    "EMBUTIDOS_CHARCUTERIA": 1,
+    "PASTAS_ARROCES_CEREALES": 1,
+    "ACEITES_GRASAS_VINAGRES": 1,
+    "SALSAS_CONDIMENTOS_BASES": 2,
+    "REPOSTERIA_AUXILIARES": 1
+  },
+  "byForm": {
+    "CORTE_CARNICO": 5,
+    "EMBUTIDO_CURADO": 1,
+    "PASTA_SIN_RELLENO": 1,
+    "EMULSION_GRASA": 1,
+    "VINO": 2,
+    "CAFE_SOLUBLE": 1
+  },
+  "aliasesAdded": 9,
+  "exclusionGroups": 17,
+  "preservedMasterRows": 3683,
+  "preservedTaxonomyAssignments": 3683,
+  "pendingPreserved": 25,
+  "idempotentBatches": 31,
+  "historicalAuditsUnchanged": true,
+  "backendProjectionMatches": true,
+  "sourceSha256": "7ae1a44505bf86439cdf17653e680772869efea6269856385cca9a9054021577",
+  "productionDeployment": false,
+  "databaseWrites": 0,
+  "validation": "Ingredient master OK: 3694 records, 14 categories; valid UTF-8/NFC, names, aliases and identifiers.\n11 consolidated keys preserved; 25 ambiguous records held separately. No duplicate names or shared exact aliases in the selectable source.",
+  "tests": [
+    {
+      "name": "importer",
+      "passed": 9,
+      "log": "tmp/ingredients-batch31-importer-tests.log",
+      "sha256": "239319501fb11fcfbb5304b3f549f46cced774d77fde0351bd89d6599b3397e7"
+    },
+    {
+      "name": "backend",
+      "passed": 57,
+      "log": "tmp/ingredients-batch31-backend-tests.log",
+      "sha256": "db8823795d6333ac03138ee10df03caa7dd6bff0214bd5ce4843043dbac726d6"
+    },
+    {
+      "name": "ui",
+      "passed": 28,
+      "log": "tmp/ingredients-batch31-ui-tests.log",
+      "sha256": "be16695465717a735649217561762c2a70454d98b0d906754d929689f6daea9a"
+    }
+  ],
+  "testsPassed": 94,
+  "build": {
+    "passed": true,
+    "asset": "main.6220603a.js",
+    "log": "tmp/ingredients-batch31-build.log",
+    "sha256": "716ca4e6ab325886b87bca4b4a56a8889a42e7a651632a8150cf6a806af4eb33"
+  },
+  "coverage": {
+    "referenceTotal": 248,
+    "located": 240,
+    "scopeReview": 8,
+    "noSpecificRecord": 0,
+    "searchTermsChecked": 11,
+    "searchCorrections": 2
+  },
+  "visualVerification": false,
+  "databaseIntegrationTest": false,
+  "announcement": "Not applicable: internal Global Manager candidate catalogue only; not released to businesses."
+}

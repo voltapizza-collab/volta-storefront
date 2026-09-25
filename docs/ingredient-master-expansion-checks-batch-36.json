@@ -1,0 +1,75 @@
+{
+  "date": "2026-09-25",
+  "batchId": "2026-09-25-36",
+  "baseline": 3714,
+  "added": 14,
+  "total": 3728,
+  "remainingTo5000": 1272,
+  "byCategory": {
+    "OTROS": 14
+  },
+  "byRestaurantFamily": {
+    "PANES_MASAS_HARINAS": 14
+  },
+  "byForm": {
+    "PAN_PLANO": 3,
+    "BASE_FINA_PARA_RELLENAR": 1,
+    "PAN_REGIONAL": 7,
+    "PAN_ENRIQUECIDO": 2,
+    "PAN_SECO": 1
+  },
+  "aliasesAdded": 15,
+  "exclusionGroups": 2,
+  "preservedMasterRows": 3714,
+  "preservedTaxonomyAssignments": 3714,
+  "pendingPreserved": 25,
+  "idempotentBatches": 36,
+  "historicalAuditsUnchanged": true,
+  "backendProjectionMatches": true,
+  "sourceSha256": "392160acfeff4a4cb5ef0ef4737a4e79ec33dd816faf7ef63a7e7af33106c432",
+  "productionDeployment": false,
+  "databaseWrites": 0,
+  "validation": "Ingredient master OK: 3728 records, 14 categories; valid UTF-8/NFC, names, aliases and identifiers.\n11 consolidated keys preserved; 25 ambiguous records held separately. No duplicate names or shared exact aliases in the selectable source.",
+  "tests": [
+    {
+      "name": "ui",
+      "passed": 30,
+      "failed": 0,
+      "log": "tmp/ingredients-batch36-ui-tests.log",
+      "sha256": "bbc16384eb763cd2829a421296c544c0a71dbecec88f81c98df014050a5c4fe8"
+    },
+    {
+      "name": "backend",
+      "passed": 42,
+      "failed": 0,
+      "log": "tmp/ingredients-batch36-backend-tests.log",
+      "sha256": "071d3db74f481a800f498ed8df56fffdc41b2b69e12a3f57e02c8d60ff13bd59"
+    },
+    {
+      "name": "importer",
+      "passed": 11,
+      "failed": 0,
+      "log": "tmp/ingredients-batch36-importer-tests.log",
+      "sha256": "dc4610944b866c381085278e41ca4139f67e6dc81c7fc6c85ad2b397244a8293"
+    }
+  ],
+  "testsPassed": 83,
+  "build": {
+    "passed": true,
+    "main": "/static/js/main.01e55d4e.js",
+    "log": "tmp/ingredients-batch36-build.log",
+    "sha256": "b22be52b55bdc5a64a0e1345e0b75b111e8bdc2556f097a8b93d8d4dabf292e3"
+  },
+  "coverage": {
+    "referenceTotal": 248,
+    "located": 248,
+    "scopeReview": 0,
+    "newIdentitiesSearchable": 14,
+    "queriesChecked": 29,
+    "exhaustive": false
+  },
+  "historicalDocumentsUnchanged": true,
+  "visualVerification": false,
+  "databaseIntegrationTest": false,
+  "localDocumentationLinksValid": true
+}

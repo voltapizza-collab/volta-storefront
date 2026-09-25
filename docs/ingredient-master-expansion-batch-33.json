@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "batchId": "2026-09-25-33",
+  "date": "2026-09-25",
+  "kind": "EDITORIAL_REVIEW_ONLY",
+  "status": "EDITORIAL_REVIEW",
+  "targetTotal": 5000,
+  "policy": "Cero altas. Aplicación al buscador del Global Manager de las dos correspondencias delimitadas en el lote 32. Se conservan claves, alias y asignaciones. La selección mantiene la ficha original y no aprueba su composición.",
+  "allergenPolicy": "Sin cambios ni aprobación de formulación o alérgenos.",
+  "sources": {
+    "fdc-ribeye": {
+      "title": "USDA SR Legacy 170839",
+      "url": "https://fdc.nal.usda.gov/food-details/170839/nutrients",
+      "accessed": "2026-09-25",
+      "notes": "Identidad contrastada en el CSV local y en el lote 08; sin nuevas cifras nutricionales."
+    },
+    "fdc-veal-loin": {
+      "title": "USDA SR Legacy 173823",
+      "url": "https://fdc.nal.usda.gov/food-details/173823/nutrients",
+      "accessed": "2026-09-25",
+      "notes": "Registro del lote 07 comprobado en el CSV local. No es una ficha histórica sin fuente."
+    },
+    "goia-entrecot": {
+      "title": "Cárnicas Goia — Entrecot de lomo alto o bajo",
+      "url": "https://carnicasgoia.com/producto/entrecot/",
+      "accessed": "2026-09-25",
+      "notes": "Contenido indexado recuperado; apertura directa agotó tiempo. Documenta entrecot de lomo alto junto al costillar y lomo bajo. No se extraen precios."
+    },
+    "pozas-entrecot": {
+      "title": "Cárnicas Pozas — Entrecot de ternera",
+      "url": "https://carnicaspozas.com/es/vacuno/1707-entrecot-de-ternera-00718.html",
+      "accessed": "2026-09-25",
+      "notes": "Página recuperada; presenta entrecot de lomo bajo. No se deduce equivalencia universal entre entrecot y ribeye."
+    },
+    "manzanilla-varieties": {
+      "title": "Manzanilla Olive — Variedades",
+      "url": "https://www.manzanillaolive.es/es/creciendo/variedades-aceitunas-manzanilla-olive/",
+      "accessed": "2026-09-25",
+      "notes": "Fuente original del lote 15 recuperada: variedades de mesa, sin subdivisiones por color o hueso en esa política editorial."
+    },
+    "gordal-green": {
+      "title": "Manzanilla Olive — Aceitunas verdes Gordal aliñadas",
+      "url": "https://www.manzanillaolive.es/wp-content/uploads/2019/05/FICHA-A15-ALINO-ABUELA.pdf",
+      "accessed": "2026-09-25",
+      "notes": "PDF recuperado: presentación verde de mesa de la variedad Gordal. No se importa su receta como composición universal."
+    }
+  },
+  "records": [],
+  "decisions": [
+    {
+      "term": "Entrecot de vacuno",
+      "canonicalKeys": [
+        "ojo_de_lomo_de_vacuno"
+      ],
+      "status": "DOCUMENTED_DISCOVERY",
+      "queries": [
+        "entrecot",
+        "entrecot de vacuno",
+        "entrecot de lomo alto",
+        "entrecot lomo alto"
+      ],
+      "visibleNote": "Opción de entrecot de lomo alto (ribeye); no representa el lomo bajo.",
+      "evidenceFile": "ingredient-master-expansion-batch-32.json",
+      "sourceIds": [
+        "fdc-ribeye",
+        "fdc-veal-loin",
+        "goia-entrecot",
+        "pozas-entrecot"
+      ],
+      "reason": "Hacer localizable una opción documentada con una explicación visible; consultas completas acotadas, sin añadir alias ni descartar calificadores."
+    },
+    {
+      "term": "Aceitunas verdes",
+      "canonicalKeys": [
+        "aceituna_gordal_sevillana"
+      ],
+      "status": "DOCUMENTED_DISCOVERY",
+      "queries": [
+        "aceitunas verdes",
+        "aceituna verde"
+      ],
+      "visibleNote": "Gordal: una variedad con presentación verde documentada. Confirmar el aliño del suministro.",
+      "evidenceFile": "ingredient-master-expansion-batch-32.json",
+      "sourceIds": [
+        "manzanilla-varieties",
+        "gordal-green"
+      ],
+      "reason": "Hacer localizable una opción documentada con una explicación visible; consultas completas acotadas, sin añadir alias ni descartar calificadores."
+    }
+  ],
+  "exclusions": [
+    {
+      "candidate": "Fibra de achicoria / Inulina de achicoria",
+      "decision": "REVIEW_EXISTING_SCOPE",
+      "reason": "La lista original solo dice Fibra de achicoria. Sin composición no se puede decidir inulina u otra fibra; se mantienen las dos claves y la duda del lote 31."
+    },
+    {
+      "candidate": "Seis preparaciones culinarias sin alcance histórico confirmado",
+      "decision": "DEFERRED",
+      "reason": "Boquerón, atún en conserva, dos usos de nata, tomate triturado y frito. Las fuentes comerciales describen candidatos, pero no identifican el significado de los registros antiguos."
+    }
+  ],
+  "coverage": {
+    "referenceTotal": 248,
+    "located": 242,
+    "scopeReview": 6,
+    "noSpecificRecord": 0
+  }
+}

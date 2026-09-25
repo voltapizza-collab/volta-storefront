@@ -1,0 +1,52 @@
+{
+  "date": "2026-09-25",
+  "batchId": "2026-09-25-32",
+  "kind": "EDITORIAL_REVIEW_ONLY",
+  "baseline": 3694,
+  "added": 0,
+  "total": 3694,
+  "preservedMasterRows": 3694,
+  "preservedTaxonomyAssignments": 3694,
+  "protectedFileCount": 39,
+  "protectedFilesUnchanged": true,
+  "historicalAuditsUnchanged": true,
+  "idempotentBatches": 32,
+  "pendingPreserved": 25,
+  "redirectsPreserved": 11,
+  "tests": {
+    "importer": 11,
+    "failed": 0,
+    "log": "tmp/ingredients-batch32-importer-tests.log",
+    "sha256": "ad309aa986a48f4b4cf45733ed7788fd8fc7a700a00fd031697e4a921f9b1a9b"
+  },
+  "coverage": {
+    "referenceTotal": 248,
+    "located": 242,
+    "scopeReview": 6,
+    "noSpecificRecord": 0,
+    "resolvedUsingExistingVariants": 2
+  },
+  "searchLimitations": [
+    {
+      "query": "Entrecot de vacuno",
+      "selectByName": [
+        "Ojo de lomo de vacuno"
+      ]
+    },
+    {
+      "query": "Aceitunas verdes",
+      "selectByName": [
+        "Aceituna Gordal sevillana"
+      ]
+    }
+  ],
+  "validation": "Ingredient master OK: 3694 records, 14 categories; valid UTF-8/NFC, names, aliases and identifiers.\n11 consolidated keys preserved; 25 ambiguous records held separately. No duplicate names or shared exact aliases in the selectable source.",
+  "sourceSha256": "7ae1a44505bf86439cdf17653e680772869efea6269856385cca9a9054021577",
+  "productionDeployment": false,
+  "databaseWrites": 0,
+  "visualVerification": false,
+  "build": {
+    "run": false,
+    "reason": "No cambian datos de ejecución ni interfaz; se modifica el importador local y documentación. Última compilación funcional: lote 31, main.6220603a.js."
+  }
+}

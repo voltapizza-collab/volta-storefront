@@ -1,0 +1,79 @@
+{
+  "date": "2026-09-25",
+  "batchId": "2026-09-25-34",
+  "baseline": 3694,
+  "added": 6,
+  "total": 3700,
+  "remainingTo5000": 1300,
+  "byCategory": {
+    "PESCADOS_Y_MARISCOS": 2,
+    "OTROS": 2,
+    "SALSAS": 2
+  },
+  "byRestaurantFamily": {
+    "PESCADOS_Y_MARISCOS": 2,
+    "LACTEOS_HUEVOS": 2,
+    "SALSAS_CONDIMENTOS_BASES": 2
+  },
+  "byForm": {
+    "PESCADO_FRESCO": 1,
+    "CONSERVA_PESCADO": 1,
+    "NATA_LIQUIDA_COCINA": 1,
+    "NATA_LIQUIDA_MONTADO": 1,
+    "TOMATE_TRITURADO": 1,
+    "TOMATE_FRITO": 1
+  },
+  "aliasesAdded": 2,
+  "exclusionGroups": 2,
+  "preservedMasterRows": 3694,
+  "preservedTaxonomyAssignments": 3694,
+  "pendingPreserved": 25,
+  "idempotentBatches": 34,
+  "historicalAuditsUnchanged": true,
+  "backendProjectionMatches": true,
+  "sourceSha256": "3c7e759b01a91393412d1d283aa9a3e0f7c47fbf97387e890623e9a7244e6452",
+  "productionDeployment": false,
+  "databaseWrites": 0,
+  "validation": "Ingredient master OK: 3700 records, 14 categories; valid UTF-8/NFC, names, aliases and identifiers.\n11 consolidated keys preserved; 25 ambiguous records held separately. No duplicate names or shared exact aliases in the selectable source.",
+  "tests": [
+    {
+      "name": "ui",
+      "passed": 30,
+      "failed": 0,
+      "log": "tmp/ingredients-batch34-ui-tests.log",
+      "sha256": "e68068f90cae8beb4e60d561353a498a29eb2ba214e6b1f263be12d736e19eb1"
+    },
+    {
+      "name": "backend",
+      "passed": 42,
+      "failed": 0,
+      "log": "tmp/ingredients-batch34-backend-tests.log",
+      "sha256": "0697bf0bce3fc37f40a4c7429a3aa8e9d1ced75d092df91b2210d347c8d21fb9"
+    },
+    {
+      "name": "importer",
+      "passed": 11,
+      "failed": 0,
+      "log": "tmp/ingredients-batch34-importer-tests.log",
+      "sha256": "677ba919268f1068c316f38031b8291d98c3d510fec18c17f3da23eca6d73f20"
+    }
+  ],
+  "testsPassed": 83,
+  "build": {
+    "passed": true,
+    "main": "/static/js/main.d213caa0.js",
+    "log": "tmp/ingredients-batch34-build.log",
+    "sha256": "bbd9fc4d5f5964b1dd104763f1c6cc72c2e9d21b569fbcef71485457b8e718eb"
+  },
+  "coverage": {
+    "referenceTotal": 248,
+    "located": 248,
+    "scopeReview": 0,
+    "newSearchesVerified": 6,
+    "exhaustive": false
+  },
+  "historicalDocumentsUnchanged": true,
+  "visualVerification": false,
+  "databaseIntegrationTest": false,
+  "localDocumentationLinksValid": true
+}

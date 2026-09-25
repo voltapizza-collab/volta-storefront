@@ -1,0 +1,321 @@
+{
+  "schemaVersion": 1,
+  "batchId": "2026-09-24-23",
+  "date": "2026-09-24",
+  "status": "EDITORIAL_REVIEW",
+  "targetTotal": 5000,
+  "policy": "Salsas y bases culinarias con identidad documentada. Sin cuotas, altas por marca ni combinaciones automáticas. Preservar las fichas históricas y delimitar preparados frente a platos terminados.",
+  "allergenPolicy": "NEEDS_REVIEW e imágenes MISSING. Alérgenos vacíos significa no aprobados, nunca ausencia. Revisar soja, trigo, sésamo, cacahuete, huevo, mostaza, pescado, moluscos, sulfitos y trazas según ficha técnica de cada suministro; no se transfieren alegaciones de ausencia.",
+  "sources": {
+    "conimex-ketjap": {
+      "title": "Conimex — Ketjap Manis",
+      "url": "https://conimex.nl/producten/ketjap-manis-1000ml-b-67564021",
+      "accessed": "2026-09-24",
+      "notes": "Contenido indexado del fabricante: azúcar, salsa de soja con trigo y melaza. La apertura directa no devolvió texto."
+    },
+    "bulldog-tonkatsu": {
+      "title": "Bull-Dog — Tonkatsu Sauce",
+      "url": "https://www.bulldogsauce-global.com/products/47.html",
+      "accessed": "2026-09-24",
+      "notes": "Ficha recuperada: identidad Tonkatsu Sauce y código 4902551013156. Catálogo separa Worcestershire, Chuno y Tonkatsu; la ficha no muestra composición."
+    },
+    "otafuku-okonomi": {
+      "title": "Otafuku — Okonomi Sauce",
+      "url": "https://www.otafukusauce.com/e/products/retail/004.html",
+      "accessed": "2026-09-24",
+      "notes": "Página recuperada: mezcla de frutas, verduras y especias, con dátiles. La referencia incluye soja y extractos de ostra y carne; revisar ficha técnica."
+    },
+    "otafuku-yakisoba": {
+      "title": "Otafuku — Yakisoba Sauce",
+      "url": "https://www.otafukusauce.com/e/products/retail/006.html",
+      "accessed": "2026-09-24",
+      "notes": "Página recuperada: salsa para saltear con verduras, soja, especias y extractos de pescado, moluscos y carne. Formulación específica, no universal."
+    },
+    "belazu-chermoula": {
+      "title": "Belazu — Chermoula Paste",
+      "url": "https://belazu.com/chermoula/",
+      "accessed": "2026-09-24",
+      "notes": "Página recuperada: pasta para marinar con cilantro fresco, perejil y limón conservado. No es la mezcla seca de especias."
+    },
+    "galil-amba": {
+      "title": "Galil Brands — Bomba Amba",
+      "url": "https://galilbrands.com/bomba-amba",
+      "accessed": "2026-09-24",
+      "notes": "Contenido indexado de la marca: salsa de mango inmaduro encurtido. Apertura directa devolvió poco texto; no se recuperó una ficha completa de composición."
+    },
+    "paellalia-salmorreta": {
+      "title": "Paellalia — Salmorreta Clásica",
+      "url": "https://www.paellalia.com/producto/13_salmorreta-clasica-paellalia/",
+      "accessed": "2026-09-24",
+      "notes": "Página recuperada: base para arroces con tomate frito, ñora, aceite de oliva y ajo. No se incorporan variantes marineras."
+    },
+    "belleiloise-rouille": {
+      "title": "La belle-iloise — Sauce Rouille",
+      "url": "https://www.labelleiloise.fr/fr/sauce-rouille-2-verrines-de-95g-955.html",
+      "accessed": "2026-09-24",
+      "notes": "Página recuperada: salsa rouille para sopas y pescados, referencia S928D. No se incorpora la variante comercial con más ajo y pimiento."
+    },
+    "donamaria-mole": {
+      "title": "Doña María — Mole",
+      "url": "https://www.salsas.com/dona-maria/products/mole/mole/",
+      "accessed": "2026-09-24",
+      "notes": "Página recuperada: mole rojo con chiles, cacahuete, sésamo y cacao. Se ignora la frase incongruente sobre jalapeños HERDEZ; se usa la descripción específica y lista de ingredientes."
+    },
+    "donamaria-pipian": {
+      "title": "Doña María — Mole Pipian",
+      "url": "https://www.salsas.com/dona-maria/products/mole/mole-pipian/",
+      "accessed": "2026-09-24",
+      "notes": "Página recuperada: semillas de calabaza como primer ingrediente, con chile ancho, sésamo y cacahuete. Se ignora la frase incongruente sobre jalapeños HERDEZ."
+    },
+    "potspotes-gribiche": {
+      "title": "Pots Potes — Sauce Gribiche",
+      "url": "https://www.pots-potes.fr/products/sauce-gribiche",
+      "accessed": "2026-09-24",
+      "notes": "Página recuperada: salsa con huevo, aceite, mostaza, alcaparras, pepinillos y hierbas; declara huevo, mostaza y sulfitos. Ducros documenta el huevo cocido: https://www.ducros.com/fr-fr/recettes/sauces/sauce-gribiche ."
+    }
+  },
+  "records": [
+    {
+      "canonicalKey": "kecap_manis",
+      "defaultName": "Kecap manis",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Kecap manis",
+        "Ketjap manis",
+        "Salsa de soja dulce indonesia"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "conimex-ketjap",
+        "recordId": "kecap_manis",
+        "sourceName": "Conimex — Ketjap Manis",
+        "url": "https://conimex.nl/producten/ketjap-manis-1000ml-b-67564021"
+      },
+      "identityReason": "Condimento dulce diferenciado de la salsa de soja genérica y de teriyaki; no alta por marca.",
+      "culinaryForm": "SALSA"
+    },
+    {
+      "canonicalKey": "salsa_tonkatsu",
+      "defaultName": "Salsa tonkatsu",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Salsa tonkatsu"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "bulldog-tonkatsu",
+        "recordId": "salsa_tonkatsu",
+        "sourceName": "Bull-Dog — Tonkatsu Sauce",
+        "url": "https://www.bulldogsauce-global.com/products/47.html"
+      },
+      "identityReason": "Salsa para tonkatsu documentada por separado de Worcestershire; no carne empanada ni caldo tonkotsu.",
+      "culinaryForm": "SALSA"
+    },
+    {
+      "canonicalKey": "salsa_okonomiyaki",
+      "defaultName": "Salsa okonomiyaki",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Salsa okonomiyaki",
+        "Salsa okonomi"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "otafuku-okonomi",
+        "recordId": "salsa_okonomiyaki",
+        "sourceName": "Otafuku — Okonomi Sauce",
+        "url": "https://www.otafukusauce.com/e/products/retail/004.html"
+      },
+      "identityReason": "Salsa diferenciada para okonomiyaki; se registra el condimento sin importar el plato ni variantes por tamaño.",
+      "culinaryForm": "SALSA"
+    },
+    {
+      "canonicalKey": "salsa_yakisoba",
+      "defaultName": "Salsa yakisoba",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Salsa yakisoba"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "otafuku-yakisoba",
+        "recordId": "salsa_yakisoba",
+        "sourceName": "Otafuku — Yakisoba Sauce",
+        "url": "https://www.otafukusauce.com/e/products/retail/006.html"
+      },
+      "identityReason": "Condimento de salteado identificado por el fabricante separadamente de okonomi y teriyaki; no fideos preparados.",
+      "culinaryForm": "SALSA"
+    },
+    {
+      "canonicalKey": "chermoula_en_pasta",
+      "defaultName": "Chermoula en pasta",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Chermoula en pasta",
+        "Pasta chermoula"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "belazu-chermoula",
+        "recordId": "chermoula_en_pasta",
+        "sourceName": "Belazu — Chermoula Paste",
+        "url": "https://belazu.com/chermoula/"
+      },
+      "identityReason": "Preparación húmeda diferenciada de Mezcla seca para chermoula ya registrada; no se asigna el alias chermoula sin calificativo.",
+      "culinaryForm": "PASTA_CONDIMENTO"
+    },
+    {
+      "canonicalKey": "salsa_amba_de_mango",
+      "defaultName": "Salsa amba de mango",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Salsa amba de mango",
+        "Amba de mango"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "galil-amba",
+        "recordId": "salsa_amba_de_mango",
+        "sourceName": "Galil Brands — Bomba Amba",
+        "url": "https://galilbrands.com/bomba-amba"
+      },
+      "identityReason": "Condimento de mango encurtido distinto de chutney genérico y de salsa barbacoa de mango.",
+      "culinaryForm": "SALSA"
+    },
+    {
+      "canonicalKey": "salmorreta",
+      "defaultName": "Salmorreta",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Salmorreta",
+        "Salmoreta"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "paellalia-salmorreta",
+        "recordId": "salmorreta",
+        "sourceName": "Paellalia — Salmorreta Clásica",
+        "url": "https://www.paellalia.com/producto/13_salmorreta-clasica-paellalia/"
+      },
+      "identityReason": "Elaboración alicantina específica con ñora; coexiste con Sofrito genérico sin convertirlo en alias.",
+      "culinaryForm": "BASE_CULINARIA"
+    },
+    {
+      "canonicalKey": "salsa_rouille",
+      "defaultName": "Salsa rouille",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Salsa rouille"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "belleiloise-rouille",
+        "recordId": "salsa_rouille",
+        "sourceName": "La belle-iloise — Sauce Rouille",
+        "url": "https://www.labelleiloise.fr/fr/sauce-rouille-2-verrines-de-95g-955.html"
+      },
+      "identityReason": "Salsa con identidad propia; no se usa alioli como alias ni se incorpora una sopa terminada.",
+      "culinaryForm": "SALSA"
+    },
+    {
+      "canonicalKey": "mole_rojo_con_cacao",
+      "defaultName": "Mole rojo con cacao",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Mole rojo con cacao"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "donamaria-mole",
+        "recordId": "mole_rojo_con_cacao",
+        "sourceName": "Doña María — Mole",
+        "url": "https://www.salsas.com/dona-maria/products/mole/mole/"
+      },
+      "identityReason": "Base de mole rojo delimitada por cacao; no se atribuye origen poblano ni se confunde con el plato de carne en mole.",
+      "culinaryForm": "BASE_CULINARIA"
+    },
+    {
+      "canonicalKey": "pipian_de_semillas_de_calabaza",
+      "defaultName": "Pipián de semillas de calabaza",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Pipián de semillas de calabaza",
+        "Mole pipián"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "donamaria-pipian",
+        "recordId": "pipian_de_semillas_de_calabaza",
+        "sourceName": "Doña María — Mole Pipian",
+        "url": "https://www.salsas.com/dona-maria/products/mole/mole-pipian/"
+      },
+      "identityReason": "Salsa de semillas y chile diferenciada del mole rojo con cacao y de la pasta pura de semillas de calabaza.",
+      "culinaryForm": "BASE_CULINARIA"
+    },
+    {
+      "canonicalKey": "salsa_gribiche",
+      "defaultName": "Salsa gribiche",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Salsa gribiche"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "potspotes-gribiche",
+        "recordId": "salsa_gribiche",
+        "sourceName": "Pots Potes — Sauce Gribiche",
+        "url": "https://www.pots-potes.fr/products/sauce-gribiche"
+      },
+      "identityReason": "Salsa con huevo cocido documentada, diferenciada de la salsa tártara y la mayonesa existentes; no receta completa importada.",
+      "culinaryForm": "SALSA"
+    }
+  ],
+  "exclusions": [
+    {
+      "candidate": "Chermoula sin calificativo",
+      "decision": "AMBIGUOUS",
+      "reason": "Se distingue la pasta húmeda de la mezcla seca anterior; ninguna absorbe el nombre genérico como alias."
+    },
+    {
+      "candidate": "Pasta de gochujang y pastas de curry verde o massaman",
+      "decision": "DEFERRED",
+      "reason": "Delimitar primero el alcance de Salsa gochujang, Curry verde y Curry massaman históricos."
+    },
+    {
+      "candidate": "Zhoug y variantes de sahawiq",
+      "decision": "DEFERRED",
+      "reason": "Revisar equivalencia con Sahawiq antes de añadir otra ficha."
+    },
+    {
+      "candidate": "Picada catalana",
+      "decision": "DEFERRED",
+      "reason": "Pendiente referencia directa que delimite la base culinaria y su composición; no confundir con carne picada o aperitivo."
+    },
+    {
+      "candidate": "Sofrito genérico y salmorreta",
+      "decision": "DISTINCT",
+      "reason": "Se mantiene Sofrito y se documenta una elaboración específica con ñora; no son alias automáticos."
+    },
+    {
+      "candidate": "Platos de carne en mole, okonomiyaki y yakisoba preparados",
+      "decision": "NOT_IMPORTED",
+      "reason": "Se incorporan solamente salsas y bases."
+    },
+    {
+      "candidate": "Variantes por marca, envase, picante, certificación o exportación",
+      "decision": "GROUPED",
+      "reason": "No se multiplican identidades; la fórmula de referencia no certifica todos los suministros."
+    }
+  ]
+}

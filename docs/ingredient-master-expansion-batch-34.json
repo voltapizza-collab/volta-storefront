@@ -1,0 +1,197 @@
+{
+  "schemaVersion": 1,
+  "batchId": "2026-09-25-34",
+  "date": "2026-09-25",
+  "status": "EDITORIAL_REVIEW",
+  "targetTotal": 5000,
+  "policy": "Seis variantes específicas para la lista básica, conservando íntegros los nombres genéricos históricos. Las fuentes prueban identidad y uso, no una formulación universal. Sin marcas ni cuotas.",
+  "userClarification": {
+    "date": "2026-09-25",
+    "statement": "Eran nombres genéricos del catálogo",
+    "appliesTo": [
+      "Tomate",
+      "Anchoas",
+      "Atún",
+      "Crema de leche",
+      "Nata doble",
+      "Fibra de achicoria"
+    ],
+    "interpretation": "Permite documentar variantes explícitas, sin inferir composición de los genéricos ni aprobar fusiones."
+  },
+  "allergenPolicy": "NEEDS_REVIEW e imágenes MISSING. Alérgenos vacíos significa no aprobados, nunca ausencia. Revisar ficha técnica de suministro y trazas; pescado y leche requieren especial atención en estas identidades.",
+  "sources": {
+    "corunesas-boqueron": {
+      "title": "Pescaderías Coruñesas — Preparaciones de boquerón",
+      "url": "https://www.pescaderiascorunesas.es/preparaciones/boqueron",
+      "notes": "Página recuperada: boquerón fresco con preparaciones de limpieza y fileteado. No documenta una conserva ni un encurtido; no se asigna especie científica sin ficha del suministro.",
+      "accessed": "2026-09-25"
+    },
+    "calvo-natural": {
+      "title": "Calvo — Atún claro Supernatural",
+      "url": "https://calvo.es/producto/atun-claro-supernatural/",
+      "notes": "Página de producto recuperada: atún claro con agua y sal. La receta del fabricante citada como fuente complementaria lo identifica en latas. Se omiten marca, envase y porcentajes en la identidad.",
+      "accessed": "2026-09-25"
+    },
+    "calvo-latas": {
+      "title": "Calvo — Ensalada de lentejas con atún",
+      "url": "https://calvo.es/receta/ensalada-de-lentejas-con-atun-y-dressing-de-tahine-y-anacardos/",
+      "notes": "Resultado indexado del fabricante: utiliza latas de atún claro Supernatural. Evidencia del formato conserva, sin importar la receta.",
+      "accessed": "2026-09-25"
+    },
+    "asturiana-cocinar": {
+      "title": "Central Lechera Asturiana — Nata para cocinar textura espesa",
+      "url": "https://www.centrallecheraasturiana.es/productos/nata/nata-para-cocinar/nata-cocinar-500ml/",
+      "notes": "Página recuperada: nata láctea para cocina con almidón y proteínas de leche. No se generaliza el porcentaje graso ni la composición a todas las natas para cocinar.",
+      "accessed": "2026-09-25"
+    },
+    "asturiana-montar": {
+      "title": "Central Lechera Asturiana — Nata para montar",
+      "url": "https://www.centrallecheraasturiana.es/productos/nata/nata-para-montar/nata-montar-38mg-500ml/",
+      "notes": "Página recuperada: nata líquida destinada al montado, con un ejemplo de 38% de materia grasa. Se omiten porcentaje y marca; no equivale a nata ya montada.",
+      "accessed": "2026-09-25"
+    },
+    "hida-preparaciones": {
+      "title": "Hida — Diferencias entre tomate frito, triturado y sofrito",
+      "url": "https://hida.es/diferencias-entre-tomate-frito-triturado-y-sofrito/",
+      "notes": "Artículo recuperado: distingue tomate triturado de la preparación cocinada con aceite y del sofrito. La identidad triturada no presupone ausencia de tratamiento térmico en una conserva comercial.",
+      "accessed": "2026-09-25"
+    },
+    "hida-frito": {
+      "title": "Hida — Tomate frito",
+      "url": "https://hida.es/productos/sofritos-caseros/tomate-frito/",
+      "notes": "Página recuperada: tomate preparado mediante fritura con aceite. Se documenta la elaboración sin importar su fórmula como receta universal.",
+      "accessed": "2026-09-25"
+    }
+  },
+  "records": [
+    {
+      "canonicalKey": "boqueron_fresco",
+      "defaultName": "Boquerón fresco",
+      "category": "PESCADOS_Y_MARISCOS",
+      "restaurantCategoryKey": "PESCADOS_Y_MARISCOS",
+      "aliases": [
+        "Boquerón fresco"
+      ],
+      "allergens": [],
+      "culinaryForm": "PESCADO_FRESCO",
+      "evidence": {
+        "sourceId": "corunesas-boqueron",
+        "recordId": "boqueron_fresco",
+        "sourceName": "Pescaderías Coruñesas — Preparaciones de boquerón",
+        "url": "https://www.pescaderiascorunesas.es/preparaciones/boqueron"
+      },
+      "identityReason": "Presentación fresca para cocinar. Anchoas histórico es genérico según el usuario; se conserva sin atribuirle salazón, vinagre ni preparación fresca."
+    },
+    {
+      "canonicalKey": "atun_claro_en_conserva_al_natural",
+      "defaultName": "Atún claro en conserva al natural",
+      "category": "PESCADOS_Y_MARISCOS",
+      "restaurantCategoryKey": "PESCADOS_Y_MARISCOS",
+      "aliases": [
+        "Atún claro en conserva al natural"
+      ],
+      "allergens": [],
+      "culinaryForm": "CONSERVA_PESCADO",
+      "evidence": {
+        "sourceId": "calvo-natural",
+        "recordId": "atun_claro_en_conserva_al_natural",
+        "sourceName": "Calvo — Atún claro Supernatural",
+        "url": "https://calvo.es/producto/atun-claro-supernatural/"
+      },
+      "identityReason": "Opción documentada de conserva con agua y sal, no de atún fresco ni de conserva en aceite o escabeche. Atún histórico permanece genérico; no se convierte todo atún en conserva en alias de esta variante."
+    },
+    {
+      "canonicalKey": "nata_para_cocinar",
+      "defaultName": "Nata para cocinar",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LACTEOS_HUEVOS",
+      "aliases": [
+        "Nata para cocinar",
+        "Nata líquida para cocinar"
+      ],
+      "allergens": [],
+      "culinaryForm": "NATA_LIQUIDA_COCINA",
+      "evidence": {
+        "sourceId": "asturiana-cocinar",
+        "recordId": "nata_para_cocinar",
+        "sourceName": "Central Lechera Asturiana — Nata para cocinar textura espesa",
+        "url": "https://www.centrallecheraasturiana.es/productos/nata/nata-para-cocinar/nata-cocinar-500ml/"
+      },
+      "identityReason": "Uso culinario lácteo documentado; formulación y materia grasa dependen del suministro. No se equipara automáticamente con Crema de leche, Nata doble ni preparados vegetales."
+    },
+    {
+      "canonicalKey": "nata_para_montar",
+      "defaultName": "Nata para montar",
+      "category": "OTROS",
+      "restaurantCategoryKey": "LACTEOS_HUEVOS",
+      "aliases": [
+        "Nata para montar",
+        "Nata líquida para montar"
+      ],
+      "allergens": [],
+      "culinaryForm": "NATA_LIQUIDA_MONTADO",
+      "evidence": {
+        "sourceId": "asturiana-montar",
+        "recordId": "nata_para_montar",
+        "sourceName": "Central Lechera Asturiana — Nata para montar",
+        "url": "https://www.centrallecheraasturiana.es/productos/nata/nata-para-montar/nata-montar-38mg-500ml/"
+      },
+      "identityReason": "Nata láctea líquida destinada a montarse; se diferencia por estado y uso de Nata montada. No se atribuye una composición universal ni se fusiona Nata doble."
+    },
+    {
+      "canonicalKey": "tomate_triturado",
+      "defaultName": "Tomate triturado",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Tomate triturado"
+      ],
+      "allergens": [],
+      "culinaryForm": "TOMATE_TRITURADO",
+      "evidence": {
+        "sourceId": "hida-preparaciones",
+        "recordId": "tomate_triturado",
+        "sourceName": "Hida — Diferencias entre tomate frito, triturado y sofrito",
+        "url": "https://hida.es/diferencias-entre-tomate-frito-triturado-y-sofrito/"
+      },
+      "identityReason": "Preparación de tomate triturado sin fritura incorporada a la identidad. No equivale a concentrado, coulis ni sofrito; el tratamiento y aditivos del suministro requieren ficha técnica. Tomate histórico permanece genérico."
+    },
+    {
+      "canonicalKey": "tomate_frito",
+      "defaultName": "Tomate frito",
+      "category": "SALSAS",
+      "restaurantCategoryKey": "SALSAS_CONDIMENTOS_BASES",
+      "aliases": [
+        "Tomate frito"
+      ],
+      "allergens": [],
+      "culinaryForm": "TOMATE_FRITO",
+      "evidence": {
+        "sourceId": "hida-frito",
+        "recordId": "tomate_frito",
+        "sourceName": "Hida — Tomate frito",
+        "url": "https://hida.es/productos/sofritos-caseros/tomate-frito/"
+      },
+      "identityReason": "Preparación cocinada de tomate con aceite; no se adopta una receta comercial universal. Se conserva Tomate genérico y no se fusionan coulis ni sofrito."
+    }
+  ],
+  "exclusions": [
+    {
+      "names": [
+        "Fibra de achicoria",
+        "Inulina de achicoria"
+      ],
+      "reason": "La confirmación de un nombre genérico no demuestra equivalencia de composición. Se mantienen las dos fichas y sus claves."
+    },
+    {
+      "names": [
+        "Anchoas",
+        "Atún",
+        "Crema de leche",
+        "Nata doble",
+        "Tomate"
+      ],
+      "reason": "Se preservan como genéricos; ninguna nueva variante sustituye inventarios, recetas o claves históricas."
+    }
+  ]
+}

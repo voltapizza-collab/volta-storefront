@@ -1,0 +1,43 @@
+{
+  "date": "2026-09-24",
+  "batchId": "2026-09-24-09",
+  "baseline": 3206,
+  "added": 96,
+  "total": 3302,
+  "remainingTo5000": 1698,
+  "byCategory": {
+    "EMBUTIDOS": 60,
+    "QUESOS": 36
+  },
+  "preservedMasterRows": 3206,
+  "preservedTaxonomyAssignments": 3206,
+  "pendingPreserved": 25,
+  "sourceRowsVerifiedAgainstPatCache": 62,
+  "idempotentBatches": 9,
+  "historicalAuditsUnchanged": true,
+  "sourceSha256": "fb3fff67865061a4a98c374cf3b01d4de3d08825f8f33e9f1c7a9a28dba86955",
+  "tests": {
+    "importer": { "passed": 9, "failed": 0 },
+    "backend": { "passed": 42, "failed": 0 },
+    "frontend": { "passed": 27, "failed": 0 }
+  },
+  "build": {
+    "status": "passed",
+    "javascript": "main.ffcd48b6.js",
+    "css": "main.6cd59d28.css",
+    "servedLocally": true
+  },
+  "browser": {
+    "url": "http://localhost:3000/global-manager",
+    "masterCount": 3302,
+    "operationalCatalogueCount": 131,
+    "search": "Sfella",
+    "resultCount": 1,
+    "resultName": "Sfela",
+    "category": "Quesos",
+    "ingredientCreated": false
+  },
+  "productionDeployment": false,
+  "databaseWrites": 0,
+  "validation": "Ingredient master OK: 3302 records, 14 categories; valid UTF-8/NFC, names, aliases and identifiers.\n11 consolidated keys preserved; 25 ambiguous records held separately. No duplicate names or shared exact aliases in the selectable source."
+}

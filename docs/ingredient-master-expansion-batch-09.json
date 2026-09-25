@@ -1,0 +1,1912 @@
+{
+  "schemaVersion": 1,
+  "batchId": "2026-09-24-09",
+  "date": "2026-09-24",
+  "status": "EDITORIAL_REVIEW",
+  "targetTotal": 5000,
+  "policy": "Variedades y preparaciones documentadas para restaurantes. Sin importar automáticamente regiones, marcas, envases, edades ni categorías extraídas.",
+  "allergenPolicy": "No se infieren formulaciones ni alérgenos completos. Lista vacía significa no documentado, nunca ausencia. NEEDS_REVIEW e imágenes MISSING.",
+  "sources": {
+    "PAT_2024": {
+      "title": "MASAF — catálogo histórico de productos agroalimentarios tradicionales, anexo 2024",
+      "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+      "scope": "Identidad culinaria; no certifica estado registral actual. Se reutiliza la copia contrastada durante los lotes anteriores.",
+      "categoryPolicy": "La categoría extraída tiene errores de continuidad de cabeceras. No se importa: la asignación se revisa por identidad."
+    },
+    "DGADR_CHEESE": {
+      "title": "DGADR — Queijo e Produtos à base de Leite",
+      "url": "https://tradicional.dgadr.gov.pt/pt/cat/queijos-e-produtos-lacteos",
+      "accessed": "2026-09-24"
+    },
+    "GREEKFARMS": {
+      "title": "Greek Farms — Cheeses",
+      "url": "https://portal.greekfarms.gov.gr/en/cheeses/",
+      "accessed": "2026-09-24"
+    },
+    "ARSIAL": {
+      "title": "ARSIAL — fichas de productos agroalimentarios tradicionales",
+      "url": "https://www.arsial.it/prodotti/prodotti-agroalimentari-tradizionali-pat/",
+      "accessed": "2026-09-24"
+    }
+  },
+  "records": [
+    {
+      "canonicalKey": "mortadela_de_campotosto",
+      "defaultName": "Mortadela de Campotosto",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Mortadela de Campotosto",
+        "Mortadella di Campotosto"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE ABRUZZO-15",
+        "sourceName": "Mortadella di Campotosto, Coglioni di mulo",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 1
+      },
+      "identityReason": "Especialidad de charcutería identificada por nombre propio; no se equipara a la mortadela cocida genérica."
+    },
+    {
+      "canonicalKey": "salamella_de_higado_al_vino_cocido",
+      "defaultName": "Salamella de hígado al vino cocido",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Salamella de hígado al vino cocido",
+        "Salamelle di fegato al vino cotto"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE ABRUZZO-21",
+        "sourceName": "Salamelle di fegato al vino cotto",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 1
+      },
+      "identityReason": "Preparación de hígado con vino cocido explícita en la fuente."
+    },
+    {
+      "canonicalKey": "salsiccia_de_higado_con_miel",
+      "defaultName": "Salsiccia de hígado con miel",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Salsiccia de hígado con miel",
+        "Salsiccia di fegato con miele"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE ABRUZZO-23",
+        "sourceName": "Salsiccia di fegato con miele",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 1
+      },
+      "identityReason": "Formulación de hígado con miel, no una traducción de la salchicha de hígado genérica."
+    },
+    {
+      "canonicalKey": "pezzente",
+      "defaultName": "Pezzente",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Pezzente"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE BASILICATA-17",
+        "sourceName": "Pezzente",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 4
+      },
+      "identityReason": "Especialidad tradicional con denominación propia; se conserva una sola ficha sin multiplicar variantes locales."
+    },
+    {
+      "canonicalKey": "bel_e_cot",
+      "defaultName": "Bel e cot",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Bel e cot",
+        "Belecot"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE EMILIA-ROMAGNA-14",
+        "sourceName": "Bel e cot, Belecot",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 20,
+        "supportingUrls": [
+          "https://agricoltura.regione.emilia-romagna.it/dop-igp/altri-regimi-di-qualita/prodotti-tradizionali/pat-suddivisi-per-categoria/carni-e-frattaglie-fresche-e-loro-preparazione-1/bel-e-cot-belecot"
+        ]
+      },
+      "identityReason": "La ficha regional documenta una mezcla de carnes de cabeza, garganta y corteza con especias; se conserva como preparación tradicional nominada."
+    },
+    {
+      "canonicalKey": "embutido_cappello_del_prete",
+      "defaultName": "Embutido Cappello del prete",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Embutido Cappello del prete",
+        "Cappello del prete embutido",
+        "Cappel da pret"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE EMILIA-ROMAGNA-16",
+        "sourceName": "Cappello del prete, Cappel da pret*",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 20,
+        "supportingUrls": [
+          "https://agricoltura.regione.emilia-romagna.it/dop-igp/altri-regimi-di-qualita/prodotti-tradizionali/pat-suddivisi-per-categoria/carni-e-frattaglie-fresche-e-loro-preparazione-1/cappello-del-prete"
+        ]
+      },
+      "identityReason": "La ficha documenta una pieza de jarrete porcino salada y cerrada con su piel, destinada a cocción. El nombre se desambigua frente al corte bovino homónimo."
+    },
+    {
+      "canonicalKey": "violino_de_oveja",
+      "defaultName": "Violino de oveja",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Violino de oveja",
+        "Coshet",
+        "Violino coscia di pecora"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE EMILIA-ROMAGNA-24",
+        "sourceName": "Coshet, Violino coscia di pecora",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 20
+      },
+      "identityReason": "Preparación curada de pierna ovina; la especie permite distinguirla del violino de cabra."
+    },
+    {
+      "canonicalKey": "fiocchetto",
+      "defaultName": "Fiocchetto",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Fiocchetto"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE EMILIA-ROMAGNA-28",
+        "sourceName": "Fiocchetto",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 20
+      },
+      "identityReason": "Denominación propia de charcutería; no se convierte el nombre Fiocco en alias sin contraste adicional."
+    },
+    {
+      "canonicalKey": "salame_al_ajo",
+      "defaultName": "Salame al ajo",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Salame al ajo",
+        "Salame all’aglio",
+        "Salam da l’ai"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE EMILIA-ROMAGNA-45",
+        "sourceName": "Salame all'aglio, Salam da l'ai*",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 20
+      },
+      "identityReason": "Salame formulado con ajo; una sola identidad genérica para las denominaciones regionales."
+    },
+    {
+      "canonicalKey": "salsiccia_gialla_fina",
+      "defaultName": "Salsiccia gialla fina",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Salsiccia gialla fina",
+        "Sulzezza zala bouna e fina"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE EMILIA-ROMAGNA-50",
+        "sourceName": "Salsiccia gialla fina, Sulzezza zala bouna e fina",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 20,
+        "supportingUrls": [
+          "https://agricoltura.regione.emilia-romagna.it/dop-igp/altri-regimi-di-qualita/prodotti-tradizionali/pat-suddivisi-per-categoria/carni-e-frattaglie-fresche-e-loro-preparazione-1/salsiccia-gialla-fina-sulzezza-zala-bouna-e-fina"
+        ]
+      },
+      "identityReason": "La ficha regional documenta una mezcla porcina con parmesano y especias. La diferencia es de formulación, no de color comercial o tamaño."
+    },
+    {
+      "canonicalKey": "salame_para_cocer",
+      "defaultName": "Salame para cocer",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Salame para cocer",
+        "Salame da cuocere",
+        "Salam da cotta",
+        "Salcicciotto alla piacentina"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE EMILIA-ROMAGNA-52",
+        "sourceName": "Salcicciotto alla piacentina, Salame da cuocere, Salam da cotta",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 20
+      },
+      "identityReason": "Producto destinado a cocción, separado del salame ya cocido."
+    },
+    {
+      "canonicalKey": "fiambre_cocido_de_oca",
+      "defaultName": "Fiambre cocido de oca",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Fiambre cocido de oca",
+        "Cotto d’oca"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA FRIULI-VENEZIA GIULIA-15",
+        "sourceName": "Cotto d'oca",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 26
+      },
+      "identityReason": "Elaboración cocida de oca, diferente de las preparaciones curadas o ahumadas de esta especie."
+    },
+    {
+      "canonicalKey": "marcundela",
+      "defaultName": "Marcundela",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Marcundela"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA FRIULI-VENEZIA GIULIA-23",
+        "sourceName": "Marcundela",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 26
+      },
+      "identityReason": "Preparación tradicional nominada; no se añade como alias Mortandela, cuya equivalencia queda pendiente."
+    },
+    {
+      "canonicalKey": "musetto",
+      "defaultName": "Musetto",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Musetto"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA FRIULI-VENEZIA GIULIA-24",
+        "sourceName": "Musetto",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 26
+      },
+      "identityReason": "Especialidad de charcutería con identidad culinaria propia; no se traduce como cotechino."
+    },
+    {
+      "canonicalKey": "pancetta_con_lomo",
+      "defaultName": "Pancetta con lomo",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Pancetta con lomo",
+        "Pancetta con lonza"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA FRIULI-VENEZIA GIULIA-28",
+        "sourceName": "Pancetta con lonza",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 26
+      },
+      "identityReason": "Elaboración compuesta de pancetta y lomo; no corresponde a pancetta simplemente cortada."
+    },
+    {
+      "canonicalKey": "pechuga_de_oca_ahumada",
+      "defaultName": "Pechuga de oca ahumada",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Pechuga de oca ahumada",
+        "Petto d’oca affumicato"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA FRIULI-VENEZIA GIULIA-32",
+        "sourceName": "Petto d'oca affumicato",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 26
+      },
+      "identityReason": "Preparación ahumada de una especie y pieza identificadas."
+    },
+    {
+      "canonicalKey": "polmonarie",
+      "defaultName": "Polmonarie",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Polmonarie"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA FRIULI-VENEZIA GIULIA-34",
+        "sourceName": "Polmonarie",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 26
+      },
+      "identityReason": "Preparación tradicional nominada; la referencia no se usa para inferir formulación ni alérgenos."
+    },
+    {
+      "canonicalKey": "jamon_curado_de_oca",
+      "defaultName": "Jamón curado de oca",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Jamón curado de oca",
+        "Prosciuttino crudo d’oca"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA FRIULI-VENEZIA GIULIA-36",
+        "sourceName": "Prosciuttino crudo d'oca",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 26
+      },
+      "identityReason": "Elaboración curada de oca; no se confunde con la pechuga ni con el fiambre cocido."
+    },
+    {
+      "canonicalKey": "salam_di_cueste",
+      "defaultName": "Salam di cueste",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Salam di cueste"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE AUTONOMA FRIULI-VENEZIA GIULIA-41",
+        "sourceName": "Salam di cueste",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 26,
+        "supportingUrls": [
+          "https://www.regione.fvg.it/rafvg/export/sites/default/RAFVG/economia-imprese/agricoltura-foreste/allegati/CibarioERSAedizione2017-2.pdf"
+        ]
+      },
+      "identityReason": "La fuente regional documenta un embutido curado de carne de costilla porcina, no costilla fresca en otro formato de corte."
+    },
+    {
+      "canonicalKey": "mostardella",
+      "defaultName": "Mostardella",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Mostardella"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LIGURIA-15",
+        "sourceName": "Mostardella",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 36
+      },
+      "identityReason": "Denominación de una preparación cárnica tradicional, no de mostaza o salsa."
+    },
+    {
+      "canonicalKey": "pate_de_lardo",
+      "defaultName": "Paté de lardo",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Paté de lardo",
+        "Paté di lardo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LIGURIA-17",
+        "sourceName": "Paté di lardo",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 36
+      },
+      "identityReason": "Preparación untable identificada, distinta del lardo entero empleado como materia prima."
+    },
+    {
+      "canonicalKey": "salame_cocido",
+      "defaultName": "Salame cocido",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Salame cocido",
+        "Salame cotto"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LIGURIA-22",
+        "sourceName": "Salame cotto",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 36
+      },
+      "identityReason": "Elaboración cocida; no equivale al salame crudo vendido para cocer."
+    },
+    {
+      "canonicalKey": "bresaola_ahumada",
+      "defaultName": "Bresaola ahumada",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Bresaola ahumada",
+        "Bresaola affumicata"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-12",
+        "sourceName": "Bresaola affumicata",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 41
+      },
+      "identityReason": "La elaboración ahumada está documentada; no es una marca ni un envase."
+    },
+    {
+      "canonicalKey": "bresaola_de_caballo",
+      "defaultName": "Bresaola de caballo",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Bresaola de caballo",
+        "Bresaola di cavallo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-13",
+        "sourceName": "Bresaola di cavallo",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 41
+      },
+      "identityReason": "Materia prima equina diferenciada de la bresaola genérica."
+    },
+    {
+      "canonicalKey": "chicharrones_de_oca",
+      "defaultName": "Chicharrones de oca",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Chicharrones de oca",
+        "Ciccioli d’oca"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-18",
+        "sourceName": "Ciccioli d’oca",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 41
+      },
+      "identityReason": "Preparación de oca, distinta del chicharrón de cerdo histórico."
+    },
+    {
+      "canonicalKey": "luganega_de_caballo",
+      "defaultName": "Luganega de caballo",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Luganega de caballo",
+        "Luganega di cavallo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-30",
+        "sourceName": "Luganega di cavallo",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 41
+      },
+      "identityReason": "Salchicha equina nominada; se mantiene separada del salame curado de caballo."
+    },
+    {
+      "canonicalKey": "mortadela_de_higado_al_vino_especiado",
+      "defaultName": "Mortadela de hígado al vino especiado",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Mortadela de hígado al vino especiado",
+        "Mortadella di fegato al vin brulè"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-33",
+        "sourceName": "Mortadella di fegato al vin brulè",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 41
+      },
+      "identityReason": "Preparación de hígado con vino especiado explícita en la fuente."
+    },
+    {
+      "canonicalKey": "pechuga_de_oca_curada",
+      "defaultName": "Pechuga de oca curada",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Pechuga de oca curada",
+        "Petto d’oca stagionato"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-38",
+        "sourceName": "Petto d’oca stagionato",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 41
+      },
+      "identityReason": "Preparación curada de pechuga; no se genera una ficha por forma de corte."
+    },
+    {
+      "canonicalKey": "salame_milano",
+      "defaultName": "Salame Milano",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Salame Milano"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-62",
+        "sourceName": "Salame Milano",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 41
+      },
+      "identityReason": "Variedad de salame reconocida por denominación propia en la fuente, no marca comercial."
+    },
+    {
+      "canonicalKey": "salame_pancettato",
+      "defaultName": "Salame pancettato",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Salame pancettato"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-64",
+        "sourceName": "Salame pancettato",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 41,
+        "supportingUrls": [
+          "https://www.buonalombardia.regione.lombardia.it/wps/wcm/connect/9f0ea8b7-0a66-4e66-a104-7597a53d8797/Atlante%2Bprodotti%2Bdella%2BLombardia%2B2017.pdf?CACHEID=ROOTWORKSPACE-9f0ea8b7-0a66-4e66-a104-7597a53d8797-mpol9z9&MOD=AJPERES"
+        ]
+      },
+      "identityReason": "Mezcla de carnes magras y pancetta con elaboración ligeramente ahumada documentada; distinta de la pancetta con lomo entero."
+    },
+    {
+      "canonicalKey": "salame_de_cabra",
+      "defaultName": "Salame de cabra",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Salame de cabra",
+        "Salamini di capra"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-68",
+        "sourceName": "Salamini di capra",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 41
+      },
+      "identityReason": "Especie caprina diferenciada; el diminutivo comercial no genera otra ficha."
+    },
+    {
+      "canonicalKey": "salame_de_caballo",
+      "defaultName": "Salame de caballo",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Salame de caballo",
+        "Salamini di cavallo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-69",
+        "sourceName": "Salamini di cavallo",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 41
+      },
+      "identityReason": "Especie equina diferenciada; tamaños y diminutivos no se cuentan aparte."
+    },
+    {
+      "canonicalKey": "salame_de_ciervo",
+      "defaultName": "Salame de ciervo",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Salame de ciervo",
+        "Salamini di cervo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-70",
+        "sourceName": "Salamini di cervo",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 41
+      },
+      "identityReason": "Salame de cérvido diferenciado del chorizo y pepperoni de venado ya existentes."
+    },
+    {
+      "canonicalKey": "salsiccia_de_carnero",
+      "defaultName": "Salsiccia de carnero",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Salsiccia de carnero",
+        "Salsiccia di castrato ovino"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-72",
+        "sourceName": "Salsiccia di castrato ovino",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 42
+      },
+      "identityReason": "Preparación ovina identificada, diferente del salame curado de oveja."
+    },
+    {
+      "canonicalKey": "slinzega_de_vacuno",
+      "defaultName": "Slinzega de vacuno",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Slinzega de vacuno",
+        "Slinzega bovina"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-74",
+        "sourceName": "Slinzega bovina",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 42
+      },
+      "identityReason": "Especialidad curada nominada y diferenciada por especie; no se la convierte en alias de bresaola."
+    },
+    {
+      "canonicalKey": "slinzega_de_caballo",
+      "defaultName": "Slinzega de caballo",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Slinzega de caballo",
+        "Slinzega di cavallo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-75",
+        "sourceName": "Slinzega di cavallo",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 42
+      },
+      "identityReason": "Variante equina documentada de la elaboración slinzega."
+    },
+    {
+      "canonicalKey": "violino_de_cabra",
+      "defaultName": "Violino de cabra",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Violino de cabra",
+        "Violino di capra"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-79",
+        "sourceName": "Violino di capra",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 42
+      },
+      "identityReason": "Preparación caprina nominada; no se añade el nombre genérico Violino como ficha adicional."
+    },
+    {
+      "canonicalKey": "coppa_de_vallesina_con_pecorino",
+      "defaultName": "Coppa de Vallesina con pecorino",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Coppa de Vallesina con pecorino",
+        "Coppa della Vallesina con il pecorino"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE MARCHE-16",
+        "sourceName": "Coppa della Vallesina con il pecorino",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 45
+      },
+      "identityReason": "Elaboración compuesta con queso expresamente documentada."
+    },
+    {
+      "canonicalKey": "salame_di_fabriano",
+      "defaultName": "Salame di Fabriano",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Salame di Fabriano"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE MARCHE-30",
+        "sourceName": "Salame di Fabriano",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 45
+      },
+      "identityReason": "Especialidad de salame identificada por denominación tradicional propia."
+    },
+    {
+      "canonicalKey": "salame_de_oveja",
+      "defaultName": "Salame de oveja",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Salame de oveja",
+        "Salame di pecora"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE MARCHE-32",
+        "sourceName": "Salame di pecora",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 45
+      },
+      "identityReason": "Salame ovino, distinto de salchicha fresca y de materia prima ovina sin elaborar."
+    },
+    {
+      "canonicalKey": "fidighin_de_higado_crudo",
+      "defaultName": "Fidighin de hígado crudo",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Fidighin de hígado crudo",
+        "Fidighin",
+        "Fideghina",
+        "Mortadella di fegato cruda"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-30",
+        "sourceName": "Fidighin o Fideghina (Mortadella di fegato cruda)",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 51
+      },
+      "identityReason": "La fuente identifica mortadela de hígado cruda; no se confunde con patés cocidos de hígado."
+    },
+    {
+      "canonicalKey": "filetto_baciato_de_ponzone",
+      "defaultName": "Filetto baciato de Ponzone",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Filetto baciato de Ponzone",
+        "Filetto baciato di Ponzone",
+        "Salame filetto baciato"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-31",
+        "sourceName": "Filetto baciato di Ponzone o Salame filetto baciato",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 51
+      },
+      "identityReason": "Especialidad compuesta nominada; se conservan sus dos nombres como alias."
+    },
+    {
+      "canonicalKey": "mustardela",
+      "defaultName": "Mustardela",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Mustardela"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-45",
+        "sourceName": "Mustardela",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 51
+      },
+      "identityReason": "Preparación cárnica nominada, distinta de Mostardella ligur; no se deduce equivalencia por similitud ortográfica."
+    },
+    {
+      "canonicalKey": "salame_de_burro",
+      "defaultName": "Salame de burro",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Salame de burro",
+        "Salame d’asino"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-55",
+        "sourceName": "Salame d'asino",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 51
+      },
+      "identityReason": "Materia prima asnal explícita en la fuente."
+    },
+    {
+      "canonicalKey": "salame_de_jabali",
+      "defaultName": "Salame de jabalí",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Salame de jabalí",
+        "Salame di cinghiale"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-59",
+        "sourceName": "Salame di cinghiale",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 51
+      },
+      "identityReason": "Elaboración de jabalí identificada, no carne fresca ni salame de cerdo genérico."
+    },
+    {
+      "canonicalKey": "salame_de_patata",
+      "defaultName": "Salame de patata",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Salame de patata",
+        "Salame di patate"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-61",
+        "sourceName": "Salame di patate",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 51
+      },
+      "identityReason": "Preparación cárnica con patata; el nombre no se interpreta como alternativa vegetal."
+    },
+    {
+      "canonicalKey": "salame_de_callos",
+      "defaultName": "Salame de callos",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Salame de callos",
+        "Salame di trippa"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-63",
+        "sourceName": "Salame di trippa",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 51
+      },
+      "identityReason": "Embutido elaborado con callos; diferente de los callos como materia prima."
+    },
+    {
+      "canonicalKey": "salame_di_turgia",
+      "defaultName": "Salame di turgia",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Salame di turgia"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-64",
+        "sourceName": "Salame di turgia",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 51
+      },
+      "identityReason": "Preparación tradicional nominada; no se amplía con una ficha adicional de salamino de vaca sin contraste."
+    },
+    {
+      "canonicalKey": "salame_d_la_doja",
+      "defaultName": "Salame d’la doja",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Salame d’la doja"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-65",
+        "sourceName": "Salame d'la doja",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 51
+      },
+      "identityReason": "Especialidad conservada en grasa; se omite Salame sotto grasso como posible solapamiento."
+    },
+    {
+      "canonicalKey": "salsiccia_al_formentino",
+      "defaultName": "Salsiccia al formentino",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Salsiccia al formentino"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-71",
+        "sourceName": "Salsiccia al formentino",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 52
+      },
+      "identityReason": "Preparación nominada expresamente; no se traduce formentino a una composición no comprobada."
+    },
+    {
+      "canonicalKey": "salsiccia_di_bra",
+      "defaultName": "Salsiccia di Bra",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Salsiccia di Bra"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-72",
+        "sourceName": "Salsiccia di Bra",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 52
+      },
+      "identityReason": "Especialidad de charcutería identificada; no se cuenta por calibre ni envase."
+    },
+    {
+      "canonicalKey": "salsiccia_de_col",
+      "defaultName": "Salsiccia de col",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Salsiccia de col",
+        "Salsiccia di cavolo",
+        "Sautissa ’d coi",
+        "Salam ’d coi"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-73",
+        "sourceName": "Salsiccia di cavolo o Sautissa ‘d coi o Salam 'd coi",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 52
+      },
+      "identityReason": "Formulación cárnica con col, documentada bajo tres denominaciones equivalentes."
+    },
+    {
+      "canonicalKey": "salsiccia_de_arroz",
+      "defaultName": "Salsiccia de arroz",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Salsiccia de arroz",
+        "Salsiccia di riso"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE PIEMONTE-74",
+        "sourceName": "Salsiccia di riso",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 52
+      },
+      "identityReason": "Formulación con arroz; no se interpreta como proteína vegetal."
+    },
+    {
+      "canonicalKey": "ciuighe",
+      "defaultName": "Ciuighe",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Ciuighe"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "PROVINCIA AUTONOMA DI TRENTO-19",
+        "sourceName": "Ciuighe",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 58
+      },
+      "identityReason": "Preparación tradicional nominada; se mantiene fuera la salsiccia con nabos hasta contrastar equivalencias."
+    },
+    {
+      "canonicalKey": "mortandela_ahumada_de_val_di_non",
+      "defaultName": "Mortandela ahumada de Val di Non",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Mortandela ahumada de Val di Non",
+        "Mortandela affumicata della Val di Non"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "PROVINCIA AUTONOMA DI TRENTO-32",
+        "sourceName": "Mortandela affumicata della Val di Non (Valli di Non e di Sole)",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 58
+      },
+      "identityReason": "Elaboración ahumada nominada; no se añade una Mortandela genérica adicional."
+    },
+    {
+      "canonicalKey": "bardiccio",
+      "defaultName": "Bardiccio",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Bardiccio"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE TOSCANA-15",
+        "sourceName": "Bardiccio",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 73
+      },
+      "identityReason": "Especialidad de charcutería nominada e independiente de etiquetas comerciales."
+    },
+    {
+      "canonicalKey": "speck_de_caballo",
+      "defaultName": "Speck de caballo",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Speck de caballo",
+        "Speck di cavallo"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE VENETO-108",
+        "sourceName": "Speck di cavallo*",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 84
+      },
+      "identityReason": "Preparación de especie equina diferenciada del speck porcino."
+    },
+    {
+      "canonicalKey": "caciotta_de_mezcla_de_oveja_y_vaca",
+      "defaultName": "Caciotta de mezcla de oveja y vaca",
+      "category": "QUESOS",
+      "restaurantCategoryKey": "QUESOS",
+      "aliases": [
+        "Caciotta de mezcla de oveja y vaca",
+        "Caciotta mista ovi-vaccina del Lazio"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LAZIO-95",
+        "sourceName": "Caciotta mista ovi-vaccina del Lazio*",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 30
+      },
+      "identityReason": "Mezcla ovina y vacuna explícita, distinta de la caciotta vacuna y de búfala existentes."
+    },
+    {
+      "canonicalKey": "provolone_de_bufala_curado",
+      "defaultName": "Provolone de búfala curado",
+      "category": "QUESOS",
+      "restaurantCategoryKey": "QUESOS",
+      "aliases": [
+        "Provolone de búfala curado",
+        "Provolone invecchiato di bufala di Formello"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LAZIO-118",
+        "sourceName": "Provolone invecchiato di bufala di Formello",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 30
+      },
+      "identityReason": "Leche de búfala y elaboración provolone documentadas; una sola ficha sin edades comerciales."
+    },
+    {
+      "canonicalKey": "provola_de_bufala",
+      "defaultName": "Provola de búfala",
+      "category": "QUESOS",
+      "restaurantCategoryKey": "QUESOS",
+      "aliases": [
+        "Provola de búfala",
+        "Provola di bufala"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LAZIO-115",
+        "sourceName": "Provola di bufala (semplice e affumicata)*",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 30
+      },
+      "identityReason": "Se representa la preparación de leche de búfala sin desdoblarla automáticamente en ahumada y natural."
+    },
+    {
+      "canonicalKey": "caprino_de_coagulacion_lactica",
+      "defaultName": "Caprino de coagulación láctica",
+      "category": "QUESOS",
+      "restaurantCategoryKey": "QUESOS",
+      "aliases": [
+        "Caprino de coagulación láctica",
+        "Caprino a coagulazione lattica"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-85",
+        "sourceName": "Caprino a coagulazione lattica",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 42
+      },
+      "identityReason": "Método de coagulación identificado; no se atribuye una especie de leche sin ficha de formulación."
+    },
+    {
+      "canonicalKey": "caprino_de_leche_de_vaca",
+      "defaultName": "Caprino de leche de vaca",
+      "category": "QUESOS",
+      "restaurantCategoryKey": "QUESOS",
+      "aliases": [
+        "Caprino de leche de vaca",
+        "Caprino vaccino"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "PAT_2024",
+        "recordId": "REGIONE LOMBARDIA-87",
+        "sourceName": "Caprino vaccino",
+        "url": "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F0%252F1%252FD.8defca7102825640087e/P/BLOB:ID=21121/E/pdf?mode=download",
+        "page": 42
+      },
+      "identityReason": "La fuente especifica leche vacuna pese al nombre caprino."
+    },
+    {
+      "canonicalKey": "bresaola_de_bufala",
+      "defaultName": "Bresaola de búfala",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Bresaola de búfala",
+        "Bresaola di bufala"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "ARSIAL",
+        "recordId": "BRESAOLA-DI-BUFALA",
+        "sourceName": "BRESAOLA DI BUFALA",
+        "url": "https://www.arsial.it/wp-content/uploads/2025/06/BRESAOLA-DI-BUFALA.pdf"
+      },
+      "identityReason": "La ficha identifica charcutería curada de búfala, diferenciada por especie de la bresaola bovina y equina."
+    },
+    {
+      "canonicalKey": "jamon_cocido_al_vino_de_cori",
+      "defaultName": "Jamón cocido al vino de Cori",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Jamón cocido al vino de Cori",
+        "Prosciutto cotto al vino di Cori"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "ARSIAL",
+        "recordId": "PROSCIUTTO-COTTO-AL-VINO-DI-CORI",
+        "sourceName": "PROSCIUTTO COTTO AL VINO DI CORI",
+        "url": "https://www.arsial.it/wp-content/uploads/2025/06/PROSCIUTTO-COTTO-AL-VINO-DI-CORI.pdf"
+      },
+      "identityReason": "El jamón se cura y después se cocina con vino y hierbas: proceso distinto del jamón cocido genérico."
+    },
+    {
+      "canonicalKey": "susianella",
+      "defaultName": "Susianella",
+      "category": "EMBUTIDOS",
+      "restaurantCategoryKey": "EMBUTIDOS_CHARCUTERIA",
+      "aliases": [
+        "Susianella"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "ARSIAL",
+        "recordId": "SUSIANELLA",
+        "sourceName": "SUSIANELLA",
+        "url": "https://www.arsial.it/wp-content/uploads/2025/06/SUSIANELLA.pdf"
+      },
+      "identityReason": "La ficha describe una preparación de hígado y otras vísceras porcinas; no es una variante de tamaño de salchicha."
+    },
+    {
+      "canonicalKey": "queso_de_oveja_curado_en_aceite",
+      "defaultName": "Queso de oveja curado en aceite",
+      "category": "QUESOS",
+      "restaurantCategoryKey": "QUESOS",
+      "aliases": [
+        "Queso de oveja curado en aceite",
+        "Formaggio e caciotta di pecora sott’olio"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "ARSIAL",
+        "recordId": "FORMAGGIO-E-CACIOTTA-DI-PECORA-SOTTOLIO",
+        "sourceName": "FORMAGGIO E CACIOTTA DI PECORA SOTTOLIO",
+        "url": "https://www.arsial.it/wp-content/uploads/2025/06/FORMAGGIO-E-CACIOTTA-DI-PECORA-SOTTOLIO.pdf"
+      },
+      "identityReason": "Conservación prolongada en aceite tras maduración, documentada como elaboración propia."
+    },
+    {
+      "canonicalKey": "queso_de_azeitao",
+      "defaultName": "Queso de Azeitão",
+      "category": "QUESOS",
+      "restaurantCategoryKey": "QUESOS",
+      "aliases": [
+        "Queso de Azeitão",
+        "Queijo de Azeitão"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DGADR_CHEESE",
+        "recordId": "33",
+        "sourceName": "Queijo de Azeitão DOP",
+        "url": "https://tradicional.dgadr.gov.pt/pt/cat/queijos-e-produtos-lacteos/33-queijo-de-azeitao"
+      },
+      "identityReason": "Variedad de queso o requesón individualizada por DGADR; el sello, edad, peso y envase no crean fichas adicionales."
+    },
+    {
+      "canonicalKey": "queso_de_cabra_transmontano",
+      "defaultName": "Queso de Cabra Transmontano",
+      "category": "QUESOS",
+      "restaurantCategoryKey": "QUESOS",
+      "aliases": [
+        "Queso de Cabra Transmontano",
+        "Queijo de Cabra Transmontano"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DGADR_CHEESE",
+        "recordId": "32",
+        "sourceName": "Queijo de Cabra Transmontano DOP",
+        "url": "https://tradicional.dgadr.gov.pt/pt/cat/queijos-e-produtos-lacteos/32-queijo-de-cabra-transmontano"
+      },
+      "identityReason": "Variedad de queso o requesón individualizada por DGADR; el sello, edad, peso y envase no crean fichas adicionales."
+    },
+    {
+      "canonicalKey": "queso_de_evora",
+      "defaultName": "Queso de Évora",
+      "category": "QUESOS",
+      "restaurantCategoryKey": "QUESOS",
+      "aliases": [
+        "Queso de Évora",
+        "Queijo de Évora"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DGADR_CHEESE",
+        "recordId": "95",
+        "sourceName": "Queijo de Évora DOP",
+        "url": "https://tradicional.dgadr.gov.pt/pt/cat/queijos-e-produtos-lacteos/95-queijo-de-evora-dop"
+      },
+      "identityReason": "Variedad de queso o requesón individualizada por DGADR; el sello, edad, peso y envase no crean fichas adicionales."
+    },
+    {
+      "canonicalKey": "queso_de_nisa",
+      "defaultName": "Queso de Nisa",
+      "category": "QUESOS",
+      "restaurantCategoryKey": "QUESOS",
+      "aliases": [
+        "Queso de Nisa",
+        "Queijo de Nisa"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DGADR_CHEESE",
+        "recordId": "83",
+        "sourceName": "Queijo de Nisa DOP",
+        "url": "https://tradicional.dgadr.gov.pt/pt/cat/queijos-e-produtos-lacteos/83-queijo-de-nisa-dop"
+      },
+      "identityReason": "Variedad de queso o requesón individualizada por DGADR; el sello, edad, peso y envase no crean fichas adicionales."
+    },
+    {
+      "canonicalKey": "queso_do_pico",
+      "defaultName": "Queso do Pico",
+      "category": "QUESOS",
+      "restaurantCategoryKey": "QUESOS",
+      "aliases": [
+        "Queso do Pico",
+        "Queijo do Pico"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DGADR_CHEESE",
+        "recordId": "88",
+        "sourceName": "Queijo do Pico DOP",
+        "url": "https://tradicional.dgadr.gov.pt/pt/cat/queijos-e-produtos-lacteos/88-queijo-do-pico-dop"
+      },
+      "identityReason": "Variedad de queso o requesón individualizada por DGADR; el sello, edad, peso y envase no crean fichas adicionales."
+    },
+    {
+      "canonicalKey": "queso_mestico_de_tolosa",
+      "defaultName": "Queso Mestiço de Tolosa",
+      "category": "QUESOS",
+      "restaurantCategoryKey": "QUESOS",
+      "aliases": [
+        "Queso Mestiço de Tolosa",
+        "Queijo Mestiço de Tolosa"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DGADR_CHEESE",
+        "recordId": "91",
+        "sourceName": "Queijo Mestiço de Tolosa IGP",
+        "url": "https://tradicional.dgadr.gov.pt/pt/cat/queijos-e-produtos-lacteos/91-queijo-mestico-de-tolosa-igp"
+      },
+      "identityReason": "Variedad de queso o requesón individualizada por DGADR; el sello, edad, peso y envase no crean fichas adicionales."
+    },
+    {
+      "canonicalKey": "queso_rabacal",
+      "defaultName": "Queso Rabaçal",
+      "category": "QUESOS",
+      "restaurantCategoryKey": "QUESOS",
+      "aliases": [
+        "Queso Rabaçal",
+        "Queijo Rabaçal"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DGADR_CHEESE",
+        "recordId": "92",
+        "sourceName": "Queijo Rabaçal DOP",
+        "url": "https://tradicional.dgadr.gov.pt/pt/cat/queijos-e-produtos-lacteos/92-queijo-rabacal-dop"
+      },
+      "identityReason": "Variedad de queso o requesón individualizada por DGADR; el sello, edad, peso y envase no crean fichas adicionales."
+    },
+    {
+      "canonicalKey": "queso_sao_jorge",
+      "defaultName": "Queso São Jorge",
+      "category": "QUESOS",
+      "restaurantCategoryKey": "QUESOS",
+      "aliases": [
+        "Queso São Jorge",
+        "Queijo S. Jorge"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DGADR_CHEESE",
+        "recordId": "85",
+        "sourceName": "Queijo S. Jorge DOP",
+        "url": "https://tradicional.dgadr.gov.pt/pt/cat/queijos-e-produtos-lacteos/85-queijo-sao-jorge-dop"
+      },
+      "identityReason": "Variedad de queso o requesón individualizada por DGADR; el sello, edad, peso y envase no crean fichas adicionales."
+    },
+    {
+      "canonicalKey": "queso_serpa",
+      "defaultName": "Queso Serpa",
+      "category": "QUESOS",
+      "restaurantCategoryKey": "QUESOS",
+      "aliases": [
+        "Queso Serpa",
+        "Queijo Serpa"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DGADR_CHEESE",
+        "recordId": "237",
+        "sourceName": "Queijo Serpa DOP",
+        "url": "https://tradicional.dgadr.gov.pt/pt/cat/queijos-e-produtos-lacteos/237-queijo-de-serpa-dop"
+      },
+      "identityReason": "Variedad de queso o requesón individualizada por DGADR; el sello, edad, peso y envase no crean fichas adicionales."
+    },
+    {
+      "canonicalKey": "queso_serra_da_estrela",
+      "defaultName": "Queso Serra da Estrela",
+      "category": "QUESOS",
+      "restaurantCategoryKey": "QUESOS",
+      "aliases": [
+        "Queso Serra da Estrela",
+        "Queijo Serra da Estrela"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DGADR_CHEESE",
+        "recordId": "31",
+        "sourceName": "Queijo Serra da Estrela DOP",
+        "url": "https://tradicional.dgadr.gov.pt/pt/cat/queijos-e-produtos-lacteos/31-queijo-da-serra-da-estrela"
+      },
+      "identityReason": "Variedad de queso o requesón individualizada por DGADR; el sello, edad, peso y envase no crean fichas adicionales."
+    },
+    {
+      "canonicalKey": "queso_terrincho",
+      "defaultName": "Queso Terrincho",
+      "category": "QUESOS",
+      "restaurantCategoryKey": "QUESOS",
+      "aliases": [
+        "Queso Terrincho",
+        "Queijo Terrincho"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DGADR_CHEESE",
+        "recordId": "239",
+        "sourceName": "Queijo Terrincho DOP",
+        "url": "https://tradicional.dgadr.gov.pt/pt/cat/queijos-e-produtos-lacteos/239-queijo-terrincho-dop"
+      },
+      "identityReason": "Variedad de queso o requesón individualizada por DGADR; el sello, edad, peso y envase no crean fichas adicionales."
+    },
+    {
+      "canonicalKey": "requeijao_da_beira_baixa",
+      "defaultName": "Requeijão da Beira Baixa",
+      "category": "QUESOS",
+      "restaurantCategoryKey": "QUESOS",
+      "aliases": [
+        "Requeijão da Beira Baixa"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DGADR_CHEESE",
+        "recordId": "576",
+        "sourceName": "Requeijão da Beira Baixa DOP",
+        "url": "https://tradicional.dgadr.gov.pt/pt/cat/queijos-e-produtos-lacteos/576-requeijao-da-beira-baixa-dop"
+      },
+      "identityReason": "Variedad de queso o requesón individualizada por DGADR; el sello, edad, peso y envase no crean fichas adicionales."
+    },
+    {
+      "canonicalKey": "requeijao_da_madeira",
+      "defaultName": "Requeijão da Madeira",
+      "category": "QUESOS",
+      "restaurantCategoryKey": "QUESOS",
+      "aliases": [
+        "Requeijão da Madeira"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DGADR_CHEESE",
+        "recordId": "1116",
+        "sourceName": "Requeijão da Madeira IGP",
+        "url": "https://tradicional.dgadr.gov.pt/pt/cat/queijos-e-produtos-lacteos/1116-requeijao-da-madeira"
+      },
+      "identityReason": "Variedad de queso o requesón individualizada por DGADR; el sello, edad, peso y envase no crean fichas adicionales."
+    },
+    {
+      "canonicalKey": "requeijao_serra_da_estrela",
+      "defaultName": "Requeijão Serra da Estrela",
+      "category": "QUESOS",
+      "restaurantCategoryKey": "QUESOS",
+      "aliases": [
+        "Requeijão Serra da Estrela"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DGADR_CHEESE",
+        "recordId": "586",
+        "sourceName": "Requeijão Serra da Estrela DOP",
+        "url": "https://tradicional.dgadr.gov.pt/pt/cat/queijos-e-produtos-lacteos/586-requeijao-serra-da-estrela-dop"
+      },
+      "identityReason": "Variedad de queso o requesón individualizada por DGADR; el sello, edad, peso y envase no crean fichas adicionales."
+    },
+    {
+      "canonicalKey": "queso_de_castelo_branco",
+      "defaultName": "Queso de Castelo Branco",
+      "category": "QUESOS",
+      "restaurantCategoryKey": "QUESOS",
+      "aliases": [
+        "Queso de Castelo Branco",
+        "Queijo de Castelo Branco"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DGADR_CHEESE",
+        "recordId": "97:castelo-branco",
+        "sourceName": "Queijo de Castelo Branco",
+        "url": "https://tradicional.dgadr.gov.pt/pt/cat/queijos-e-produtos-lacteos/97-queijos-da-beira-baixa-dop-queijo-de-castelo-branco-queijo-picante-da-beira-baixa-e-queijo-amarelo-da-beira-baixa"
+      },
+      "identityReason": "Una de las tres variedades enumeradas por DGADR; no se crea además una ficha paraguas Beira Baixa."
+    },
+    {
+      "canonicalKey": "queso_amarelo_da_beira_baixa",
+      "defaultName": "Queso Amarelo da Beira Baixa",
+      "category": "QUESOS",
+      "restaurantCategoryKey": "QUESOS",
+      "aliases": [
+        "Queso Amarelo da Beira Baixa",
+        "Queijo Amarelo da Beira Baixa"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DGADR_CHEESE",
+        "recordId": "97:amarelo",
+        "sourceName": "Queijo Amarelo da Beira Baixa",
+        "url": "https://tradicional.dgadr.gov.pt/pt/cat/queijos-e-produtos-lacteos/97-queijos-da-beira-baixa-dop-queijo-de-castelo-branco-queijo-picante-da-beira-baixa-e-queijo-amarelo-da-beira-baixa"
+      },
+      "identityReason": "Una de las tres variedades enumeradas por DGADR; no se crea además una ficha paraguas Beira Baixa."
+    },
+    {
+      "canonicalKey": "queso_picante_da_beira_baixa",
+      "defaultName": "Queso Picante da Beira Baixa",
+      "category": "QUESOS",
+      "restaurantCategoryKey": "QUESOS",
+      "aliases": [
+        "Queso Picante da Beira Baixa",
+        "Queijo Picante da Beira Baixa"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "DGADR_CHEESE",
+        "recordId": "97:picante",
+        "sourceName": "Queijo Picante da Beira Baixa",
+        "url": "https://tradicional.dgadr.gov.pt/pt/cat/queijos-e-produtos-lacteos/97-queijos-da-beira-baixa-dop-queijo-de-castelo-branco-queijo-picante-da-beira-baixa-e-queijo-amarelo-da-beira-baixa"
+      },
+      "identityReason": "Una de las tres variedades enumeradas por DGADR; no se crea además una ficha paraguas Beira Baixa."
+    },
+    {
+      "canonicalKey": "manouri",
+      "defaultName": "Manouri",
+      "category": "QUESOS",
+      "restaurantCategoryKey": "QUESOS",
+      "aliases": [
+        "Manouri"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "GREEKFARMS",
+        "recordId": "manouri",
+        "sourceName": "Manouri",
+        "url": "https://portal.greekfarms.gov.gr/en/cheeses/"
+      },
+      "identityReason": "Variedad nominada en la fuente oficial griega, conservando una sola identidad y sus nombres de búsqueda; no se duplica por certificación."
+    },
+    {
+      "canonicalKey": "metsovone",
+      "defaultName": "Metsovone",
+      "category": "QUESOS",
+      "restaurantCategoryKey": "QUESOS",
+      "aliases": [
+        "Metsovone"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "GREEKFARMS",
+        "recordId": "metsovone",
+        "sourceName": "Metsovone",
+        "url": "https://portal.greekfarms.gov.gr/en/cheeses/"
+      },
+      "identityReason": "Variedad nominada en la fuente oficial griega, conservando una sola identidad y sus nombres de búsqueda; no se duplica por certificación."
+    },
+    {
+      "canonicalKey": "san_michali",
+      "defaultName": "San Michali",
+      "category": "QUESOS",
+      "restaurantCategoryKey": "QUESOS",
+      "aliases": [
+        "San Michali"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "GREEKFARMS",
+        "recordId": "san-michali",
+        "sourceName": "San Michali",
+        "url": "https://portal.greekfarms.gov.gr/en/cheeses/"
+      },
+      "identityReason": "Variedad nominada en la fuente oficial griega, conservando una sola identidad y sus nombres de búsqueda; no se duplica por certificación."
+    },
+    {
+      "canonicalKey": "kalathaki_de_limnos",
+      "defaultName": "Kalathaki de Limnos",
+      "category": "QUESOS",
+      "restaurantCategoryKey": "QUESOS",
+      "aliases": [
+        "Kalathaki de Limnos",
+        "Kalathaki of Limnos"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "GREEKFARMS",
+        "recordId": "kalathaki-de-limnos",
+        "sourceName": "Kalathaki of Limnos",
+        "url": "https://portal.greekfarms.gov.gr/en/cheeses/"
+      },
+      "identityReason": "Variedad nominada en la fuente oficial griega, conservando una sola identidad y sus nombres de búsqueda; no se duplica por certificación."
+    },
+    {
+      "canonicalKey": "katiki_de_domokos",
+      "defaultName": "Katiki de Domokos",
+      "category": "QUESOS",
+      "restaurantCategoryKey": "QUESOS",
+      "aliases": [
+        "Katiki de Domokos",
+        "Katiki of Domokos"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "GREEKFARMS",
+        "recordId": "katiki-de-domokos",
+        "sourceName": "Katiki of Domokos",
+        "url": "https://portal.greekfarms.gov.gr/en/cheeses/"
+      },
+      "identityReason": "Variedad nominada en la fuente oficial griega, conservando una sola identidad y sus nombres de búsqueda; no se duplica por certificación."
+    },
+    {
+      "canonicalKey": "xygalo_de_siteia",
+      "defaultName": "Xygalo de Siteia",
+      "category": "QUESOS",
+      "restaurantCategoryKey": "QUESOS",
+      "aliases": [
+        "Xygalo de Siteia",
+        "Xygalo of Siteia"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "GREEKFARMS",
+        "recordId": "xygalo-de-siteia",
+        "sourceName": "Xygalo of Siteia",
+        "url": "https://portal.greekfarms.gov.gr/en/cheeses/"
+      },
+      "identityReason": "Variedad nominada en la fuente oficial griega, conservando una sola identidad y sus nombres de búsqueda; no se duplica por certificación."
+    },
+    {
+      "canonicalKey": "anevato",
+      "defaultName": "Anevato",
+      "category": "QUESOS",
+      "restaurantCategoryKey": "QUESOS",
+      "aliases": [
+        "Anevato"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "GREEKFARMS",
+        "recordId": "anevato",
+        "sourceName": "Anevato",
+        "url": "https://portal.greekfarms.gov.gr/en/cheeses/"
+      },
+      "identityReason": "Variedad nominada en la fuente oficial griega, conservando una sola identidad y sus nombres de búsqueda; no se duplica por certificación."
+    },
+    {
+      "canonicalKey": "arseniko_de_naxos",
+      "defaultName": "Arseniko de Naxos",
+      "category": "QUESOS",
+      "restaurantCategoryKey": "QUESOS",
+      "aliases": [
+        "Arseniko de Naxos",
+        "Arseniko of Naxos"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "GREEKFARMS",
+        "recordId": "arseniko-de-naxos",
+        "sourceName": "Arseniko of Naxos",
+        "url": "https://portal.greekfarms.gov.gr/en/cheeses/"
+      },
+      "identityReason": "Variedad nominada en la fuente oficial griega, conservando una sola identidad y sus nombres de búsqueda; no se duplica por certificación."
+    },
+    {
+      "canonicalKey": "kopanisti_de_mykonos",
+      "defaultName": "Kopanisti de Mykonos",
+      "category": "QUESOS",
+      "restaurantCategoryKey": "QUESOS",
+      "aliases": [
+        "Kopanisti de Mykonos",
+        "Kopanisti from Mykonos"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "GREEKFARMS",
+        "recordId": "kopanisti-de-mykonos",
+        "sourceName": "Kopanisti from Mykonos",
+        "url": "https://portal.greekfarms.gov.gr/en/cheeses/"
+      },
+      "identityReason": "Variedad nominada en la fuente oficial griega, conservando una sola identidad y sus nombres de búsqueda; no se duplica por certificación."
+    },
+    {
+      "canonicalKey": "sfela",
+      "defaultName": "Sfela",
+      "category": "QUESOS",
+      "restaurantCategoryKey": "QUESOS",
+      "aliases": [
+        "Sfela",
+        "Sfella"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "GREEKFARMS",
+        "recordId": "sfela",
+        "sourceName": "Sfella",
+        "url": "https://portal.greekfarms.gov.gr/en/cheeses/",
+        "supportingUrls": [
+          "https://www.minagric.gr/images/stories/docs/agrotis/POP-PGE/fek25_1994.pdf"
+        ]
+      },
+      "identityReason": "Denominación Sfela contrastada con la fuente ministerial; Sfella se conserva como alias de la grafía del portal."
+    },
+    {
+      "canonicalKey": "ladotyri_de_mytilene",
+      "defaultName": "Ladotyri de Mytilene",
+      "category": "QUESOS",
+      "restaurantCategoryKey": "QUESOS",
+      "aliases": [
+        "Ladotyri de Mytilene",
+        "Ladotyri of Mytilene",
+        "Ladotyri Mytilinis"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "GREEKFARMS",
+        "recordId": "ladotyri-de-mytilene",
+        "sourceName": "Ladotyri of Mytilene",
+        "url": "https://portal.greekfarms.gov.gr/en/cheeses/",
+        "supportingUrls": [
+          "https://www.minagric.gr/images/stories/docs/agrotis/POP-PGE/fek25_1994.pdf"
+        ]
+      },
+      "identityReason": "Variedad nominada en la fuente oficial griega, conservando una sola identidad y sus nombres de búsqueda; no se duplica por certificación."
+    },
+    {
+      "canonicalKey": "kefalograviera",
+      "defaultName": "Kefalograviera",
+      "category": "QUESOS",
+      "restaurantCategoryKey": "QUESOS",
+      "aliases": [
+        "Kefalograviera"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "GREEKFARMS",
+        "recordId": "kefalograviera",
+        "sourceName": "Kefalograviera",
+        "url": "https://portal.greekfarms.gov.gr/en/cheeses/"
+      },
+      "identityReason": "Variedad nominada en la fuente oficial griega, conservando una sola identidad y sus nombres de búsqueda; no se duplica por certificación."
+    },
+    {
+      "canonicalKey": "graviera_de_naxos",
+      "defaultName": "Graviera de Naxos",
+      "category": "QUESOS",
+      "restaurantCategoryKey": "QUESOS",
+      "aliases": [
+        "Graviera de Naxos",
+        "Graviera of Naxos"
+      ],
+      "allergens": [],
+      "evidence": {
+        "sourceId": "GREEKFARMS",
+        "recordId": "graviera-de-naxos",
+        "sourceName": "Graviera of Naxos",
+        "url": "https://portal.greekfarms.gov.gr/en/cheeses/"
+      },
+      "identityReason": "Variedad nominada en la fuente oficial griega, conservando una sola identidad y sus nombres de búsqueda; no se duplica por certificación."
+    }
+  ],
+  "exclusions": [
+    {
+      "candidate": "Mariola",
+      "decision": "AMBIGUOUS_PREPARATION",
+      "reason": "Las fuentes regionales describen tanto un salame curado como un cotechino. Falta separar las identidades antes de añadir una ficha genérica.",
+      "urls": [
+        "https://agricoltura.regione.emilia-romagna.it/dop-igp/food-valley-news/news/2025/val-di-nure-i-profumi-del-vino-e-la-magia-dei-borghi",
+        "https://agricoltura.regione.emilia-romagna.it/dop-igp/strade-dei-vini-e-dei-sapori/la-strada-del-culatello"
+      ]
+    },
+    {
+      "candidate": "Coppa di testa / Testa in cassetta",
+      "decision": "POSSIBLE_SYNONYM",
+      "reason": "Posible equivalencia con Cabeza de cerdo en fiambre. No se añade otra identidad."
+    },
+    {
+      "candidate": "Stracchino / Crescenza / Fiordilatte / Provola / Fontal",
+      "decision": "ALREADY_REPRESENTED",
+      "reason": "Nombres italianos o variantes ortográficas de identidades históricas; no cuentan como altas."
+    },
+    {
+      "candidate": "Animaletti di provola / Treccia / Sfoglia di mozzarella",
+      "decision": "SHAPE_ONLY",
+      "reason": "Forma o presentación de una base ya representada."
+    },
+    {
+      "candidate": "Pecorino y caciotta de localidades sin diferencia documentada",
+      "decision": "REGION_ONLY",
+      "reason": "No basta añadir una localidad a una preparación genérica."
+    },
+    {
+      "candidate": "Caciocavallo podolico de distintas localidades",
+      "decision": "REVIEW_REQUIRED",
+      "reason": "Pendiente de contraste de identidad y equivalencias entre registros regionales."
+    },
+    {
+      "candidate": "Caprino presamico de Supino",
+      "decision": "POSSIBLE_SYNONYM",
+      "reason": "Puede solaparse con Caprino de leche de vaca. La ficha ARSIAL confirma además que puede emplear mezcla; no se crea una ficha por localidad.",
+      "url": "https://www.arsial.it/wp-content/uploads/2025/06/CAPRINO-PRESAMICO-DI-LATTE-VACCINO-DI-SUPINO.pdf"
+    },
+    {
+      "candidate": "Mortandela genérica",
+      "decision": "POSSIBLE_SYNONYM",
+      "reason": "Pendiente de contraste con Marcundela; solo se documenta por separado la preparación ahumada de Val di Non."
+    },
+    {
+      "candidate": "Salame sotto grasso",
+      "decision": "POSSIBLE_SYNONYM",
+      "reason": "Posible solapamiento con Salame d’la doja."
+    },
+    {
+      "candidate": "Pancetta con filetto",
+      "decision": "REVIEW_REQUIRED",
+      "reason": "Contrastar pieza anatómica y traducción antes de separarla de Pancetta con lomo."
+    },
+    {
+      "candidate": "Salsiccia con le rape",
+      "decision": "POSSIBLE_SYNONYM",
+      "reason": "Pendiente de distinguirla de Ciuighe; no se añade solo por nombre descriptivo."
+    },
+    {
+      "candidate": "Travia da Beira Baixa",
+      "decision": "REVIEW_REQUIRED",
+      "reason": "La textura y el rescaldão podrían diferenciarla del requeijão; se deja pendiente de revisión de identidad."
+    },
+    {
+      "candidate": "Queijo da Beira Baixa",
+      "decision": "UMBRELLA",
+      "reason": "Se incorporan sus tres variedades documentadas, no una cuarta ficha para el grupo."
+    },
+    {
+      "candidate": "Queijos de cabra das Beiras, Algarve, Guadiana y Pinhal Maior",
+      "decision": "REGION_ONLY",
+      "reason": "Fuera del lote hasta justificar la diferencia respecto de preparaciones caprinas ya representadas."
+    },
+    {
+      "candidate": "Feta, Kasseri y Graviera genérica",
+      "decision": "ALREADY_REPRESENTED",
+      "reason": "Identidades presentes en el catálogo anterior."
+    }
+  ]
+}

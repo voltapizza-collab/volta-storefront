@@ -1,10 +1,21 @@
-import { buildWindowsPrintTicketHtml } from './PosApp';
+import { buildWindowsPrintTicketHtml, TicketPreview } from './PosApp';
+import { render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom';
 import { buildOrderLines } from './printers/mockPrinter';
 import { isCashPaymentPending } from './orderPayment';
 
 jest.mock('../setupAxios', () => ({ __esModule: true, default: {} }));
 jest.mock('../components/Backoffice/EngineBackground', () => () => null);
 jest.mock('../assets/logo/pizza.svg', () => ({ __esModule: true, default: 'pizza.svg', ReactComponent: () => null }));
+
+test('manual delivery review is visible on Windows and Sunmi receipt content',()=>{
+  const order={id:1,code:'MANUAL',total:13,delivery:'COURIER',deliveryReviewRequired:true,products:[]};
+  expect(buildOrderLines(order)).toContain('REVISAR REPARTO - TARIFA BASE');
+  expect(buildWindowsPrintTicketHtml(order)).toContain('REVISAR REPARTO: tarifa base');
+  expect(buildOrderLines({...order,deliveryReviewRequired:false}).join('\n')).not.toContain('REVISAR REPARTO');
+  render(<TicketPreview order={order}/>);
+  expect(screen.getByRole('alert')).toHaveTextContent('Tarifa base aplicada. Confirmar dirección y cobertura con el cliente.');
+});
 
 test.each([
   ['confirmed card with stale pending status', { status: 'PAID', paymentMode: 'card', paymentStatus: 'awaiting_card_payment' }, 'Tarjeta pagada', false],

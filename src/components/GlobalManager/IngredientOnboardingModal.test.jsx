@@ -1,9 +1,11 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import IngredientOnboardingModal, { matchesIngredientSearch } from "./IngredientOnboardingModal";
+import IngredientOnboardingModal, { getIngredientDiscoveryNote, matchesIngredientSearch } from "./IngredientOnboardingModal";
+import ingredientDiscoveryHints from "../../data/ingredientDiscoveryHints.json";
 import ingredientMasterSource from "../../data/ingredientMasterSource.json";
 import IngredientsModule from "./IngredientsModule";
 import api from "../../setupAxios";
+import { getTaxonomyCategories, resolveIngredientTaxonomy } from '../../utils/ingredientTaxonomy';
 
 jest.mock("../../setupAxios", () => ({ get: jest.fn(), post: jest.fn(), patch: jest.fn() }));
 const chicken = { canonicalKey: "pollo_frito", defaultName: "Pollo frito", category: "CARNES", categoryLabel: "Carnes", aliases: [], semanticCategoryKey: "meats" };
@@ -23,6 +25,19 @@ beforeEach(() => {
   URL.revokeObjectURL = jest.fn();
   HTMLDialogElement.prototype.showModal = function () { this.setAttribute("open", ""); };
   HTMLDialogElement.prototype.close = function () { this.removeAttribute("open"); };
+});
+
+test("everyday discovery terms find multiple candidates without changing their identities", () => {
+  const search = query => ingredientMasterSource.filter(row => matchesIngredientSearch([row.defaultName, ...row.aliases], query));
+  expect(search("gambas").map(row => row.canonicalKey)).toEqual(expect.arrayContaining(["gamba_blanca", "gamba_roja_del_mediterraneo"]));
+  expect(search("gambas blanca").map(row => row.canonicalKey)).toContain("gamba_blanca");
+  expect(search("gambas blanca").map(row => row.canonicalKey)).not.toContain("gamba_roja_del_mediterraneo");
+  expect(search("plátano").map(row => row.canonicalKey)).toContain("bananas");
+  expect(search("plátano macho").map(row => row.canonicalKey)).not.toContain("bananas");
+  expect(search("plátano macho").map(row => row.canonicalKey)).toContain("platano_macho_verde");
+  expect(matchesIngredientSearch(["bananabread"], "plátano")).toBe(false);
+  expect(matchesIngredientSearch(["Gamba blanca"], "presa de cerdo")).toBe(false);
+  expect(ingredientMasterSource.find(row => row.canonicalKey === "bananas").aliases).toEqual(["Bananas"]);
 });
 
 test("searches across categories, accents and aliases and marks existing ingredients", () => {
@@ -137,6 +152,70 @@ test("successful onboarding opens the ingredient category and retains its image 
   expect(await screen.findByText("POLLO FRITO")).toBeVisible();
   expect(screen.getByRole("button", { name: "Editar" })).toBeVisible();
   expect(screen.getByRole("button", { name: "Eliminar" })).toBeVisible();
+});
+
+test.each(ingredientDiscoveryHints)("discovery for $canonicalKey shows its scope and preserves the selected identity", (hint) => {
+  const row = ingredientMasterSource.find(item => item.canonicalKey === hint.canonicalKey);
+  const before = JSON.stringify(row);
+  mount({ candidates: [{ ...row, categoryLabel: row.category }] });
+  fireEvent.change(screen.getByLabelText("Buscar en la lista maestra"), { target: { value: hint.queries[0] } });
+  expect(screen.getByText(hint.note)).toBeVisible();
+  fireEvent.click(screen.getByRole("button", { name: new RegExp(row.defaultName) }));
+  expect(screen.getByLabelText("Nombre en español")).toHaveValue(row.defaultName);
+  expect(screen.getByText(hint.note)).toBeVisible();
+  expect(JSON.stringify(row)).toBe(before);
+  fireEvent.change(screen.getByLabelText("Categoría"), { target: { value: "SALSAS" } });
+  expect(screen.queryByText(hint.note)).not.toBeInTheDocument();
+  expect(api.post).not.toHaveBeenCalled();
+});
+
+test("documented suggestions need the exact identity and do not discard preparation qualifiers", () => {
+  for (const hint of ingredientDiscoveryHints) {
+    for (const query of hint.queries) {
+      expect(getIngredientDiscoveryNote({ canonicalKey: hint.canonicalKey }, `  ${query.toUpperCase().replaceAll(' ', '  ')}  `)).toBe(hint.note);
+      expect(getIngredientDiscoveryNote({ canonicalKey: "unknown", name: hint.canonicalKey }, query)).toBe("");
+      expect(getIngredientDiscoveryNote({ canonicalKey: hint.canonicalKey }, `${query} ahumado`)).toBe("");
+    }
+    expect(getIngredientDiscoveryNote({ canonicalKey: hint.canonicalKey }, "")).toBe("");
+  }
+  expect(getIngredientDiscoveryNote({ canonicalKey: "ojo_de_lomo_de_vacuno" }, "entrecot de lomo bajo")).toBe("");
+  expect(getIngredientDiscoveryNote({ canonicalKey: "aceituna_gordal_sevillana" }, "aceitunas negras")).toBe("");
+  expect(getIngredientDiscoveryNote({ canonicalKey: "aceituna_gordal_sevillana" }, "aceitunas verdes rellenas")).toBe("");
+});
+
+test.each(ingredientDiscoveryHints)("saved catalogue finds $canonicalKey through its master link with a visible scope", async (hint) => {
+  const row = ingredientMasterSource.find(item => item.canonicalKey === hint.canonicalKey);
+  api.get.mockImplementation(async url => ({ data: url === '/ingredients' ? [
+    { id: 700, name: row.defaultName, category: row.category, canonicalKey: 'saved_local_key', catalogState: { masterCanonicalKey: row.canonicalKey } },
+    { id: 701, name: 'Otro ingrediente', category: row.category, canonicalKey: 'unrelated' },
+  ] : [] }));
+  render(<IngredientsModule />);
+  await waitFor(() => expect(screen.getByRole('button', { name: '+ Añadir ingrediente' })).toBeEnabled());
+  fireEvent.click(screen.getByRole('button', { name: 'Buscar ya añadidos' }));
+  fireEvent.change(screen.getByLabelText('Buscar ingredientes del catálogo'), { target: { value: hint.queries[0] } });
+  expect(screen.getByText(hint.note)).toBeVisible();
+  expect(screen.queryByText('OTRO INGREDIENTE')).not.toBeInTheDocument();
+  fireEvent.change(screen.getByLabelText('Buscar ingredientes del catálogo'), { target: { value: `${hint.queries[0]} ahumado` } });
+  expect(screen.queryByText(hint.note)).not.toBeInTheDocument();
+  expect(screen.getByText('No hay ingredientes que coincidan con la búsqueda.')).toBeVisible();
+});
+
+test('restaurant families filter the master while onboarding preserves each original category', async () => {
+  const restaurantCandidates = ingredientMasterSource.map(row => ({ ...row,
+    categoryLabel: resolveIngredientTaxonomy(row).label, taxonomyCategoryKey: resolveIngredientTaxonomy(row).categoryKey }));
+  mount({ candidates: restaurantCandidates, categories: getTaxonomyCategories() });
+  for (const key of ['PANES_MASAS_HARINAS', 'PASTAS_ARROCES_CEREALES']) {
+    fireEvent.change(screen.getByLabelText('Categoría'), { target: { value: key } });
+    const expected = restaurantCandidates.filter(row => row.taxonomyCategoryKey === key);
+    expect(screen.getByText(`${expected.length} resultados · ${expected.length} disponibles`)).toBeVisible();
+    expect(screen.getByText(expected[0].defaultName, { exact: true }).closest('button')).toBeVisible();
+  }
+  const selected = restaurantCandidates.find(row => row.taxonomyCategoryKey === 'PASTAS_ARROCES_CEREALES');
+  fireEvent.click(screen.getByText(selected.defaultName, { exact: true }).closest('button'));
+  ['inglés', 'italiano', 'francés', 'portugués', 'árabe', 'chino'].forEach(locale => fireEvent.change(screen.getByLabelText(`Nombre en ${locale}`), { target: { value: selected.defaultName } }));
+  api.post.mockResolvedValue({ data: { ...selected, id: 200 } });
+  fireEvent.click(screen.getByRole('button', { name: 'Añadir ingrediente' }));
+  await waitFor(() => expect(api.post).toHaveBeenCalledWith('/ingredients/onboarding', expect.objectContaining({ canonicalKey: selected.canonicalKey, category: selected.category })));
 });
 
 test("real master keeps synonyms on one identity and distinguishes preparations", () => {

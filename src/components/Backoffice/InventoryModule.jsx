@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { resolveIngredientTaxonomy, getIngredientTaxonomyKey, getTaxonomyCategoryLabel } from '../../utils/ingredientTaxonomy';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import api from "../../setupAxios";
 import InventoryIngredientDialog from "./InventoryIngredientDialog";
 import { ingredientAllergens, formatIngredientMoney } from "./ingredientDetails";
@@ -21,7 +22,7 @@ const normalizeSearchText = (value) =>
     .replace(/[^\p{L}\p{N}]+/gu, " ")
     .trim();
 
-const CATEGORY_GROUP_ALIASES = {
+const LEGACY_COST_GROUP_ALIASES = {
   AROMAS_Y_EXTRACTOS: "HIERBAS_ESPECIAS",
   CHEESE: "QUESOS",
   SAUCE: "SALSAS",
@@ -29,19 +30,22 @@ const CATEGORY_GROUP_ALIASES = {
   PROTEIN: "CARNES",
 };
 
-const getIngredientCategoryGroupKey = (ingredient) => {
+const getIngredientCategoryGroupKey = getIngredientTaxonomyKey;
+// Keep existing cost suggestion cohorts stable during the display reorganization.
+const getIngredientCostGroupKey = (ingredient) => {
   const rawCategory = String(ingredient?.category || "").toUpperCase().trim();
   if (!rawCategory) return "";
-  if (CATEGORY_GROUP_ALIASES[rawCategory]) {
-    return CATEGORY_GROUP_ALIASES[rawCategory];
+  if (LEGACY_COST_GROUP_ALIASES[rawCategory]) {
+    return LEGACY_COST_GROUP_ALIASES[rawCategory];
   }
 
   return rawCategory;
 };
 
-const getIngredientSearchText = (ing) =>
+const getIngredientSearchText = (ing, locale = "es") =>
   normalizeSearchText(
     [
+      resolveIngredientTaxonomy(ing, locale).label,
       ing?.searchText,
       ing?.semanticMapping?.globalIngredient?.searchText,
       ing?.displayName,
@@ -69,6 +73,8 @@ const getIngredientSearchText = (ing) =>
 export default function InventoryModule({ partner, language = "es" }) {
   const [ingredients, setIngredients] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [loadState, setLoadState] = useState("idle");
+  const loadRequest = useRef(0);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState("search"); // 🔥 clave
   const [search, setSearch] = useState("");
@@ -84,13 +90,15 @@ export default function InventoryModule({ partner, language = "es" }) {
   const activeLocale = String(language || "es").trim().toLowerCase();
 
   const fetchIngredients = useCallback(async () => {
+    if (!storeId) return;
+    const request = ++loadRequest.current;
+    setLoadState("loading");
     try {
       const res = await api.get(`/stores/${storeId}/ingredients`, {
         params: { locale: activeLocale },
       });
-      const data = Array.isArray(res.data) ? res.data : [];
-
-      setIngredients(data);
+      if (!Array.isArray(res.data)) throw new Error("Invalid inventory response");
+      const data = res.data;
 
       const uniqueCategories = [
         ...new Set(
@@ -99,27 +107,32 @@ export default function InventoryModule({ partner, language = "es" }) {
             .filter(Boolean)
         ),
       ].sort((left, right) => {
-        const leftLabel =
-          data.find((item) => getIngredientCategoryGroupKey(item) === left)
-            ?.displayCategory || left;
-        const rightLabel =
-          data.find((item) => getIngredientCategoryGroupKey(item) === right)
-            ?.displayCategory || right;
+        const leftLabel = getTaxonomyCategoryLabel(left, activeLocale);
+        const rightLabel = getTaxonomyCategoryLabel(right, activeLocale);
 
         return leftLabel.localeCompare(rightLabel, activeLocale, {
           sensitivity: "base",
         });
       });
 
+      if (request !== loadRequest.current) return;
+      setIngredients(data);
       setCategories(uniqueCategories);
+      setLoadState("ready");
     } catch (err) {
+      if (request !== loadRequest.current) return;
       console.error(err);
+      setLoadState("error");
     }
   }, [storeId, activeLocale]);
 
   useEffect(() => {
-    if (!storeId) return;
-    fetchIngredients();
+    setIngredients([]);
+    setCategories([]);
+    setDetailIngredient(null);
+    setLoadState("idle");
+    if (storeId) fetchIngredients();
+    return () => { loadRequest.current += 1; };
   }, [storeId, fetchIngredients]);
 
   const grouped = useMemo(() => {
@@ -135,41 +148,22 @@ export default function InventoryModule({ partner, language = "es" }) {
     return map;
   }, [ingredients, categories]);
 
-  const categoryDisplayNames = useMemo(() => {
-    const names = {};
-
-    ingredients.forEach((ing) => {
-      const category = getIngredientCategoryGroupKey(ing);
-      const rawCategory = String(ing.category || "").toUpperCase().trim();
-      const displayCategory = String(ing.displayCategory || "").trim();
-      if (
-        category &&
-        displayCategory &&
-        (!names[category] || rawCategory === category)
-      ) {
-        names[category] = displayCategory;
-      }
-    });
-
-    return names;
-  }, [ingredients]);
-
   const filteredIngredients = useMemo(() => {
     if (!search.trim()) return [];
     const q = normalizeSearchText(search);
 
-    return ingredients.filter((ing) => getIngredientSearchText(ing).includes(q));
-  }, [search, ingredients]);
+    return ingredients.filter((ing) => getIngredientSearchText(ing, activeLocale).includes(q));
+  }, [search, ingredients, activeLocale]);
 
   const getCategoryPriceSuggestion = (ingredient) => {
     if (!ingredient) return null;
 
-    const category = getIngredientCategoryGroupKey(ingredient);
+    const category = getIngredientCostGroupKey(ingredient);
     const prices = ingredients
       .filter(
         (candidate) =>
           candidate.id !== ingredient.id && candidate.exists && candidate.active &&
-          getIngredientCategoryGroupKey(candidate) === category
+          getIngredientCostGroupKey(candidate) === category
       )
       .map((candidate) => Number(candidate.costPrice))
       .filter((price) => Number.isFinite(price) && price > 0);
@@ -221,27 +215,6 @@ export default function InventoryModule({ partner, language = "es" }) {
     ingredient?.semanticMapping?.globalIngredient || null;
   const getIngredientImage = (ingredient) =>
     ingredient?.image || getMappedGlobalIngredient(ingredient)?.image || "";
-  const categoryLabels = {
-    ACEITES_GRASAS_VINAGRES: "Aceites, grasas y vinagres",
-    AROMAS_Y_EXTRACTOS: "Aromas y extractos",
-    CARNES: "Carnes",
-    CREMAS_DULCES: "Cremas dulces",
-    EMBUTIDOS: "Embutidos",
-    ENDULZANTES: "Endulzantes",
-    EXTRAS: "Extras",
-    FRUTAS: "Frutas",
-    FRUTOS_SECOS_Y_SEMILLAS: "Frutos secos y semillas",
-    HIERBAS_ESPECIAS: "Hierbas y especias",
-    OTROS: "Otros",
-    PESCADOS_Y_MARISCOS: "Pescados y mariscos",
-    PROTEINA_VEGANA: "Proteina vegana",
-    QUESOS: "Quesos",
-    SALSAS: "Salsas",
-    SETAS: "Setas",
-    TOPPINGS_DULCES: "Toppings dulces",
-    VERDURAS: "Verduras",
-  };
-
   const getIngredientInitials = (name) =>
     String(name || "IN")
       .split(/\s+/)
@@ -265,7 +238,7 @@ export default function InventoryModule({ partner, language = "es" }) {
   const getFilteredCategoryIngredients = (list, query) => {
     const q = normalizeSearchText(query);
     if (!q) return list;
-    return list.filter((ing) => getIngredientSearchText(ing).includes(q));
+    return list.filter((ing) => getIngredientSearchText(ing, activeLocale).includes(q));
   };
 
   const getIngredientStatusLabel = (ingredient) => {
@@ -307,19 +280,11 @@ export default function InventoryModule({ partner, language = "es" }) {
     );
   };
 
-  const getCategoryDisplayName = (category) =>
-    categoryDisplayNames[category] ||
-    categoryLabels[category] ||
-    String(category || "")
-      .toLowerCase()
-      .split("_")
-      .filter(Boolean)
-      .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-      .join(" ");
+  const getCategoryDisplayName = (category) => getTaxonomyCategoryLabel(category, activeLocale);
   const getIngredientCategoryDisplayName = (ingredient) =>
     getCategoryDisplayName(getIngredientCategoryGroupKey(ingredient));
   const getCategorySubmissionKey = (category) =>
-    grouped[category]?.[0]?.category || category;
+    category;
 
   const highlightMatch = (text, query) => {
     if (!query) return <span>{text}</span>;
@@ -382,6 +347,7 @@ export default function InventoryModule({ partner, language = "es" }) {
         <button
           className="inv-addBtn"
           type="button"
+          disabled={loadState !== "ready"}
           onClick={() => {
             setModalOpen(true);
             setModalMode("search");
@@ -392,13 +358,26 @@ export default function InventoryModule({ partner, language = "es" }) {
         </button>
       </div>
 
+      {!storeId ? (
+        <div className="inv-loadStatus" role="alert">{detailText("inventoryMissingStore")}</div>
+      ) : loadState === "error" ? (
+        <div className="inv-loadStatus inv-loadStatus--error" role="alert">
+          <span>{detailText("inventoryLoadError")}</span>
+          <button type="button" onClick={fetchIngredients}>{detailText("inventoryRetry")}</button>
+        </div>
+      ) : loadState === "loading" ? (
+        <div className="inv-loadStatus" role="status">{detailText("inventoryLoading")}</div>
+      ) : loadState === "ready" && ingredients.length === 0 ? (
+        <div className="inv-loadStatus" role="status">{detailText("inventoryEmpty")}</div>
+      ) : null}
+
       {detailIngredient && <InventoryIngredientDialog key={detailIngredient.id}
         ingredient={detailIngredient} category={getIngredientCategoryDisplayName(detailIngredient)}
         language={language} currency={currency} suggestedPrice={getCategoryPriceSuggestion(detailIngredient)}
         onSave={saveIngredientDetail} onDeactivate={deactivateIngredient} onClose={closeIngredientDetail} />}
 
       {/* LIST */}
-      {ingredients.length > 0 && (
+      {loadState === "ready" && ingredients.length > 0 && (
         <DndContext
           collisionDetection={closestCenter}
           onDragEnd={handleDragEnd}

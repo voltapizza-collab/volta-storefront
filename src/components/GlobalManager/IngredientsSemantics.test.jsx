@@ -42,10 +42,14 @@ test("stored names count as complete and reopen with all seven names and descrip
   expect(document.querySelector(".gm-categoryIssueBadge")).not.toBeInTheDocument();
   fireEvent.click(button);
   expect(await screen.findByLabelText("Nombre en inglés")).toHaveValue("Grilled chicken");
+  expect(screen.getByLabelText('Categoría')).toHaveValue('Carnes, aves y otras proteínas animales');
+  expect(screen.getByLabelText('Categoría')).toHaveAttribute('readonly');
   translations.forEach((row) => expect(screen.getByLabelText(`Nombre en ${{ es: "español", en: "inglés", it: "italiano", fr: "francés", pt: "portugués", ar: "árabe", zh: "chino" }[row.locale]}`)).toHaveValue(row.name));
   expect(screen.getByRole("button", { name: "Traducir idiomas pendientes" })).toBeDisabled();
   fireEvent.click(screen.getByRole("button", { name: "Guardar cambios" }));
   await waitFor(() => expect(api.patch).toHaveBeenCalledWith("/ingredients/143/editor", expect.objectContaining({
+    category: 'CARNES',
+    preserveClassification: true,
     confirmTranslations: true, translations: translations.map(({ locale, name, description }) => ({ locale, name, description })),
   })));
   await waitFor(() => expect(screen.queryByLabelText("Nombre en inglés")).not.toBeInTheDocument());

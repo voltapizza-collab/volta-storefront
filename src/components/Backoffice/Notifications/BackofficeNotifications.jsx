@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import useBackofficeNotifications, { notificationKey } from "./useBackofficeNotifications";
+import useBackofficeNotifications, { mergeNotificationHistory, notificationKey } from "./useBackofficeNotifications";
 import { localizeNotification } from "./notificationContent";
 import { createBackofficeTranslator, normalizeBackofficeLanguage } from "../../../constants/i18n";
 import "../../../styles/BackofficeNotifications.css";
@@ -33,12 +33,12 @@ export default function BackofficeNotifications({ partnerId, onNavigate, languag
   const dialogRef = useRef(null);
   const triggerRef = useRef(null);
   const pending = notifications.filter(item => item.requiresAction || !read.includes(notificationKey(item)));
-  const archived = [...new Map([...history, ...notifications.filter(item => !item.requiresAction && read.includes(notificationKey(item)))].map(item => [notificationKey(item), item])).values()]
-    .sort((a, b) => (Date.parse(b.publishedAt) || 0) - (Date.parse(a.publishedAt) || 0));
+  const archived = mergeNotificationHistory(history, notifications.filter(item => !item.requiresAction && read.includes(notificationKey(item))));
   const current = localizeNotification(manualOpen ? [...notifications, ...archived].find(item => notificationKey(item) === selectedKey)
     : queue.map(key => pending.find(item => notificationKey(item) === key)).find(Boolean), locale, t);
   const open = Boolean(current) || manualOpen;
-  const pendingCount = notifications.filter((item) => item.requiresAction || !read.includes(notificationKey(item))).length;
+  const pendingCount = pending.length;
+  const unreadCount = pending.filter(item => !item.requiresAction).length;
 
   useEffect(() => {
     const liveKeys = new Set(notifications.map(notificationKey));
@@ -47,6 +47,10 @@ export default function BackofficeNotifications({ partnerId, onNavigate, languag
     const fresh = notifications.filter((item) => !surfaced.current.has(notificationKey(item)) &&
       (item.requiresAction || !read.includes(notificationKey(item))));
     fresh.forEach((item) => surfaced.current.add(notificationKey(item)));
+    if (fresh.length) {
+      setManualOpen(false);
+      setSelectedKey(null);
+    }
     setQueue((previous) => {
       const remaining = previous.filter(key => notifications.some(item => notificationKey(item) === key && (item.requiresAction || !read.includes(key))));
       if (!fresh.length && remaining.length === previous.length) return previous;
@@ -71,14 +75,33 @@ export default function BackofficeNotifications({ partnerId, onNavigate, languag
     };
   }, [open]);
 
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (open && dialog?.open && !dialog.contains(document.activeElement)) {
+      dialog.querySelector('button')?.focus();
+    }
+  }, [open, current?.id, current?.revision, manualOpen, folder]);
+
   const close = () => { setQueue([]); setManualOpen(false); setSelectedKey(null); };
   const advance = () => {
-    if (current) markRead(current);
-    setQueue((previous) => previous.filter((key) => key !== notificationKey(current)));
-    if (manualOpen) setSelectedKey(null);
+    if (!current) return;
+    if (manualOpen) { setSelectedKey(null); return; }
+    markRead(current);
+    const remaining = queue.filter(key => key !== notificationKey(current) && pending.some(item => notificationKey(item) === key));
+    setQueue(remaining);
+    if (!remaining.length && !current.requiresAction && unreadCount === 1) {
+      setFolder('inbox');
+      setManualOpen(true);
+    }
   };
   const openFolder = (next = 'inbox') => {
     setQueue([]); setFolder(next); setSelectedKey(null); setManualOpen(true);
+  };
+  const openNotices = () => {
+    if (!pending.length) { openFolder(); return; }
+    setSelectedKey(null);
+    setManualOpen(false);
+    setQueue(pending.map(notificationKey));
   };
   const navigate = (event) => {
     if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
@@ -87,7 +110,7 @@ export default function BackofficeNotifications({ partnerId, onNavigate, languag
     close();
     onNavigate(current.action.target);
   };
-  const remainingCount = queue.filter((key) => notifications.some((item) => notificationKey(item) === key)).length;
+  const remainingCount = queue.filter(key => pending.some(item => notificationKey(item) === key)).length;
   const keepFocusInDialog = (event) => {
     if (event.key !== "Tab") return;
     const controls = [...event.currentTarget.querySelectorAll("button:not(:disabled), a[href]")];
@@ -102,7 +125,7 @@ export default function BackofficeNotifications({ partnerId, onNavigate, languag
 
   return (
     <>
-      <button type="button" ref={triggerRef} className="bo-notices-trigger" onClick={() => openFolder()} aria-haspopup="dialog"
+      <button type="button" ref={triggerRef} className="bo-notices-trigger" onClick={openNotices} aria-haspopup="dialog"
         aria-label={`${t("notices.title")}${pendingCount ? `: ${t("notices.pending", { count: pendingCount })}` : ""}${error ? `. ${t("notices.checkFailed")}` : ""}`}>
         <NoticeIcon />
         <span>{t("notices.title")}<small>{t(error ? "notices.checkFailed" : loading ? "notices.checking" : pendingCount ? "notices.somethingNew" : updatesUnavailable ? "notices.updatesPending" : "notices.upToDate")}</small></span>
@@ -117,31 +140,26 @@ export default function BackofficeNotifications({ partnerId, onNavigate, languag
             <div className="bo-notices-brand"><img src="/favicon.svg" alt="" /><span>VOLTA<small>{t("notices.tagline")}</small></span></div>
             <button className="bo-notices-close" type="button" onClick={close} aria-label={t("notices.close")}>×</button>
           </div>
-          <nav className="bo-notices-folders" aria-label={t('notices.folders')}>
-            <button type="button" aria-pressed={manualOpen && folder === 'inbox'} onClick={() => openFolder('inbox')}>{t('notices.inbox')} <span>{pending.length}</span></button>
-            <button type="button" aria-pressed={manualOpen && folder === 'history'} onClick={() => openFolder('history')}>{t('notices.history')} <span>{archived.length}</span></button>
-          </nav>
           <div className="bo-notices-body">
             {(error || updatesUnavailable) && <div className="bo-notices-error" role="status">
               {error ? `${t("notices.refreshFailed")} ${notifications.length > 0 ? t("notices.staleBalance") : ""}` : t("notices.updatesUnavailable")}{" "}
               <button type="button" onClick={refresh} disabled={loading}>{t(loading ? "notices.checking" : "notices.retry")}</button>
             </div>}
-            {manualOpen && !current ? <>
-              <h2 id="bo-notice-title">{t(error && !notifications.length && folder === 'inbox' ? 'notices.errorTitle' : folder === 'history' ? 'notices.history' : 'notices.inbox')}</h2>
-              <p id="bo-notice-message">{t(folder === 'history' ? 'notices.historyHelp' : 'notices.inboxHelp')}</p>
+            {manualOpen && folder === 'history' && !current ? <>
+              <h2 id="bo-notice-title">{t('notices.history')}</h2>
+              <p id="bo-notice-message">{t('notices.historyHelp')}</p>
               <ul className="bo-notices-list">
-                {(folder === 'history' ? archived : pending).map(item => {
+                {archived.map(item => {
                   const notice = localizeNotification(item, locale, t);
                   return <li key={notificationKey(item)}>
                     <button type="button" className="bo-notices-open-item" onClick={() => setSelectedKey(notificationKey(item))}>
                       <span className={`bo-notices-dot is-${notice.severity}`} /><strong>{notice.title}</strong>
-                      <small>{t(item.requiresAction ? 'notices.critical' : folder === 'history' ? 'notices.read' : 'notices.unread')}</small>
+                      <small>{t('notices.read')}</small>
                     </button>
-                    {folder === 'inbox' && !item.requiresAction && <button type="button" className="bo-notices-file-item" onClick={() => markRead(item)} aria-label={`${t('notices.markRead')}: ${notice.title}`}>{t('notices.markRead')}</button>}
                   </li>;
                 })}
               </ul>
-              {(folder === 'history' ? archived : pending).length === 0 && <p className="bo-notices-list-empty">{t(folder === 'history' ? 'notices.historyEmpty' : 'notices.inboxEmpty')}</p>}
+              {archived.length === 0 && <p className="bo-notices-list-empty">{t('notices.historyEmpty')}</p>}
             </> : current ? <>
               <div className="bo-notices-eyebrow"><span className={`bo-notices-dot is-${current.severity}`} />{t(["critical", "urgent", "warning", "info"].includes(current.severity) ? `notices.${current.severity}` : "notices.important")}</div>
               <div className="bo-notices-symbol"><NoticeIcon sms={current.category === "sms"} /></div>
@@ -158,15 +176,17 @@ export default function BackofficeNotifications({ partnerId, onNavigate, languag
                   {current.action.label}<span aria-hidden="true">↗</span>
                 </a>}
                 <button className={current.action ? "bo-notices-secondary" : "bo-notices-primary"} type="button" onClick={advance}>
-                  {t(manualOpen && read.includes(notificationKey(current)) ? 'notices.backToList' : current.requiresAction ? "notices.remind" : "notices.markRead")}
+                  {t(manualOpen ? 'notices.backToList' : current.requiresAction ? "notices.remind" : "notices.markRead")}
                 </button>
-                {manualOpen && !read.includes(notificationKey(current)) && <button className="bo-notices-secondary" type="button" onClick={() => setSelectedKey(null)}>{t('notices.backToList')}</button>}
               </div>
             </> : <>
               <div className="bo-notices-symbol"><NoticeIcon /></div>
-              <h2 id="bo-notice-title">{t(error ? "notices.errorTitle" : loading ? "notices.checkingTitle" : updatesUnavailable ? "notices.title" : "notices.upToDate")}</h2>
-              <p id="bo-notice-message">{t(error ? "notices.errorMessage" : "notices.emptyMessage")}</p>
-              <button className="bo-notices-primary" type="button" onClick={close}>{t("notices.back")}</button>
+              <h2 id="bo-notice-title">{t(error ? "notices.errorTitle" : loading ? "notices.checkingTitle" : updatesUnavailable || pendingCount ? "notices.title" : "notices.upToDate")}</h2>
+              <p id="bo-notice-message">{t(error ? "notices.errorMessage" : pendingCount ? "notices.pendingRecharge" : loading || updatesUnavailable ? "notices.emptyMessage" : "notices.inboxEmpty")}</p>
+              <div className="bo-notices-actions">
+                {unreadCount === 0 && archived.length > 0 && <button className="bo-notices-primary" type="button" onClick={() => openFolder('history')}>{t('notices.history')} <span>{archived.length}</span></button>}
+                <button className={archived.length > 0 ? "bo-notices-secondary" : "bo-notices-primary"} type="button" onClick={close}>{t("notices.back")}</button>
+              </div>
             </>}
           </div>
           <div className="bo-notices-footer"><span>{t(current?.requiresAction ? "notices.pendingRecharge" : "notices.footer")}</span>

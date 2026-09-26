@@ -253,6 +253,7 @@ export function buildOrderLines(order) {
       ...(isDeliveryOrder(order)
         ? [`Direccion: ${deliveryAddress || "FALTA - CONFIRMAR CON CLIENTE"}`]
         : []),
+      ...(order?.deliveryReviewRequired ? ["REVISAR REPARTO - TARIFA BASE", "Confirmar direccion y cobertura", "con el cliente antes del reparto"] : []),
       "------------------------------",
       ...items.flatMap((item) => {
         const size = item?.size || item?.selectedSize || "";

@@ -1,3 +1,4 @@
+import { getIngredientTaxonomyKey, getTaxonomyCategoryLabel, resolveIngredientTaxonomy } from '../utils/ingredientTaxonomy';
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import api from "../setupAxios";
 import {
@@ -378,6 +379,7 @@ export const buildWindowsPrintTicketHtml = (order) => {
         <div>Pago: ${escapeHtml(getPaymentLabel(order))}</div>
         ${isCashPaymentPending(order) ? `<div class="cashAlert">PENDIENTE DE PAGO EN EFECTIVO</div>` : ""}
         ${showAddress ? `<div>Direccion: ${escapeHtml(customer.address_1)}</div>` : ""}
+        ${order?.deliveryReviewRequired ? '<div class="cashAlert">REVISAR REPARTO: tarifa base. Confirmar dirección y cobertura con el cliente.</div>' : ""}
       </section>
       <section class="block">
         <div class="sectionTitle">Pedido</div>
@@ -900,7 +902,7 @@ export function PosLogin({ onStart }) {
   );
 }
 
-function TicketPreview({ order }) {
+export function TicketPreview({ order }) {
   if (!order) {
     return (
       <div className="pos-ticketPreview pos-ticketPreview--empty">
@@ -953,6 +955,7 @@ function TicketPreview({ order }) {
           <strong>{address}</strong>
         </div>
       )}
+      {order.deliveryReviewRequired && <div className="pos-ticketBlock" role="alert"><strong>Revisar reparto</strong><small>Tarifa base aplicada. Confirmar dirección y cobertura con el cliente.</small></div>}
       <div className="pos-ticketItems">
         <span>Pedido</span>
         <OrderItems order={order} />
@@ -1007,7 +1010,7 @@ function PosInventory({ session, ingredients, setIngredients }) {
     const grouped = new Map();
 
     ingredients.forEach((ingredient) => {
-      const category = String(ingredient.category || "OTROS").toUpperCase().trim();
+      const category = getIngredientTaxonomyKey(ingredient);
       if (!grouped.has(category)) grouped.set(category, []);
       grouped.get(category).push(ingredient);
     });
@@ -1029,6 +1032,7 @@ function PosInventory({ session, ingredients, setIngredients }) {
       [
         ingredient.name,
         ingredient.category,
+        resolveIngredientTaxonomy(ingredient).label,
         ingredient.status,
         ...(ingredient.affectedProductNames || []),
       ]
@@ -1160,7 +1164,7 @@ function PosInventory({ session, ingredients, setIngredients }) {
                   className="pos-invCategoryBtn"
                   onClick={() => setOpenCategory(isOpen ? "" : category)}
                 >
-                  <span>{category}</span>
+                  <span>{getTaxonomyCategoryLabel(category)}</span>
                   <strong>{activeCount}/{items.length}</strong>
                 </button>
 
@@ -2697,6 +2701,7 @@ export default function PosApp() {
                         <div className="pos-orderAddress">
                           {address || getOrderContext(order) || "Sin direccion"}
                         </div>
+                        {order.deliveryReviewRequired && <div className="pos-orderCashPayment">Revisar reparto · tarifa base</div>}
                       </div>
 
                       <div className="pos-orderSummary">

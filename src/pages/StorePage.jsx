@@ -1,3 +1,4 @@
+import { getIngredientTaxonomyKey, getTaxonomyCategoryLabel, getTaxonomyCategories } from '../utils/ingredientTaxonomy';
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import OrderPortalTransition from "../components/Storefront/OrderPortalTransition";
@@ -297,17 +298,7 @@ const NON_INCENTIVE_LINE_TYPES = new Set([
   "COUPON",
   "DISCOUNT",
 ]);
-const CUSTOM_CATEGORY_ORDER = [
-  "SALSAS",
-  "QUESOS",
-  "FIAMBRES",
-  "CARNES",
-  "PESCADOS",
-  "DEL MAR",
-  "VEGETALES",
-  "SETAS",
-  "COMPLEMENTOS",
-];
+const CUSTOM_CATEGORY_ORDER = ["SALSAS_CONDIMENTOS_BASES", "QUESOS", ...getTaxonomyCategories().map(row => row.key).filter(key => !["SALSAS_CONDIMENTOS_BASES", "QUESOS"].includes(key))];
 const INGREDIENT_BASE_SIZE = "M";
 const INGREDIENT_SIZE_DIAMETERS_CM = {
   XS: 20,
@@ -2482,6 +2473,10 @@ export default function StorePage() {
     if (state.serviceMode) return state;
     return readDeliverySelection({ partnerSlug, storeSlug }) || state;
   }, [location.state, partnerSlug, storeSlug]);
+  const deliverySelectionKey = JSON.stringify([partnerSlug, storeSlug, orderSelection?.serviceMode, orderSelection?.deliveryAddress || orderSelection?.deliveryResolution?.formattedAddress]);
+  const [deliveryQuoteUpdate, setDeliveryQuoteUpdate] = useState(null);
+  const [deliveryNeedsReview, setDeliveryNeedsReview] = useState(false);
+  const confirmedDeliveryQuote = deliveryQuoteUpdate?.key === deliverySelectionKey ? deliveryQuoteUpdate.quote : null;
 
   const [menu, setMenu] = useState([]);
   // Category structure changes with a menu load, not with live price updates.
@@ -2689,15 +2684,24 @@ export default function StorePage() {
     }
   }, []);
 
+  const refreshMenuRef = useRef(null);
+  const refreshMenu = useCallback(() => refreshMenuRef.current?.(), []);
+
   useEffect(() => {
     if (!partnerSlug || !storeSlug) return;
 
-    const loadStorefront = async () => {
+    let cancelled = false;
+    let pending = null;
+    let initialized = false;
+    const loadStorefront = () => {
+      if (pending) return pending;
+      pending = (async () => {
       try {
         const [menuData, partnerData] = await Promise.all([
           api.get(`/stores/${partnerSlug}/${storeSlug}/menu`),
-          api.get(`/partners/${partnerSlug}`),
+          initialized ? Promise.resolve(null) : api.get(`/partners/${partnerSlug}`),
         ]);
+        if (cancelled) return;
 
         const rawMenu = Array.isArray(menuData?.menu) ? menuData.menu : [];
         const nextTrending = Array.isArray(menuData?.trending)
@@ -2715,25 +2719,46 @@ export default function StorePage() {
         setTrending(nextTrending);
         setUpcoming(nextUpcoming);
         setPromos(nextPromos);
-        setActiveTab("");
         setStore(menuData?.store || null);
-        setPartner(partnerData || null);
         setBoostSettings(menuData?.boostSettings || DEFAULT_BOOST_SETTINGS);
-        setActiveIncentive(null);
-        setNextIncentive(null);
         setStoreAverageTicket(num(menuData?.incentiveStats?.averageTicket));
-
-        const partnerId = partnerData?.id;
-
-        await fetchIncentiveSnapshot(partnerId);
+        setError("");
+        if (!initialized) {
+          initialized = true;
+          setActiveTab("");
+          setPartner(partnerData || null);
+          setActiveIncentive(null);
+          setNextIncentive(null);
+          await fetchIncentiveSnapshot(partnerData?.id);
+        }
 
       } catch (err) {
         console.error(err);
-        setError("Error loading menu");
+        if (!cancelled && !initialized) setError("Error loading menu");
+      } finally {
+        pending = null;
       }
+      })();
+      return pending;
     };
 
+    const refreshVisible = () => {
+      if (document.visibilityState !== "hidden") loadStorefront();
+    };
+    refreshMenuRef.current = loadStorefront;
     loadStorefront();
+    const interval = window.setInterval(refreshVisible, 15000);
+    window.addEventListener("focus", refreshVisible);
+    window.addEventListener("online", refreshVisible);
+    document.addEventListener("visibilitychange", refreshVisible);
+    return () => {
+      cancelled = true;
+      refreshMenuRef.current = null;
+      window.clearInterval(interval);
+      window.removeEventListener("focus", refreshVisible);
+      window.removeEventListener("online", refreshVisible);
+      document.removeEventListener("visibilitychange", refreshVisible);
+    };
   }, [fetchIncentiveSnapshot, partnerSlug, storeSlug]);
 
   useEffect(() => {
@@ -3906,7 +3931,7 @@ export default function StorePage() {
     const grouped = {};
 
     scopedCustomIngredientsCatalog.forEach((ingredient) => {
-      const category = String(ingredient?.category || "OTROS").trim().toUpperCase();
+      const category = getIngredientTaxonomyKey(ingredient);
       if (!grouped[category]) grouped[category] = [];
       grouped[category].push(ingredient);
     });
@@ -3916,7 +3941,7 @@ export default function StorePage() {
         const leftName = normalizeSearchText(left.name);
         const rightName = normalizeSearchText(right.name);
 
-        if (category === "SALSAS") {
+        if (category === "SALSAS_CONDIMENTOS_BASES") {
           if (leftName.includes("tomate")) return -1;
           if (rightName.includes("tomate")) return 1;
         }
@@ -4612,6 +4637,7 @@ export default function StorePage() {
     const resolution = orderSelection?.deliveryResolution || {};
 
     if (serviceMode !== "delivery") return 0;
+    if (confirmedDeliveryQuote) return confirmedDeliveryQuote.deliveryFee;
 
     const resolvedFee = parseNonNegativeMoney(resolution.deliveryFee);
     if (resolvedFee > 0) return resolvedFee;
@@ -4621,7 +4647,7 @@ export default function StorePage() {
     }
 
     return parseNonNegativeMoney(partner?.deliveryFeeFixed);
-  }, [orderSelection, partner?.deliveryFeeBase, partner?.deliveryFeeFixed, partner?.deliveryPricingMode, store]);
+  }, [confirmedDeliveryQuote, orderSelection, partner?.deliveryFeeBase, partner?.deliveryFeeFixed, partner?.deliveryPricingMode, store]);
   const paymentPolicySettings = useMemo(
     () => normalizePaymentPolicySettings(partner?.paymentPolicySettings),
     [partner?.paymentPolicySettings]
@@ -4946,6 +4972,7 @@ export default function StorePage() {
 
       setCheckoutMessage("");
       const deliveryResolution = orderSelection?.deliveryResolution || {};
+      setDeliveryNeedsReview(false);
       const deliveryMethod = serviceMode === "delivery" ? "COURIER" : "PICKUP";
       const deliveryCoords = deliveryResolution?.coords || {};
       const deliveryAddress =
@@ -4979,6 +5006,7 @@ export default function StorePage() {
           lng: deliveryCoords?.lng,
           deliveryFee: deliveryCheckoutFee,
           distanceKm: deliveryResolution?.nearestStore?.distanceKm,
+          manualReviewAccepted: confirmedDeliveryQuote?.manualReviewRequired === true,
         },
         frontendOrigin: window.location.origin,
         returnPath: window.location.pathname,
@@ -5054,6 +5082,7 @@ export default function StorePage() {
       setCashConfirmationOpen(false);
       console.error(err);
       const errorCode = err.response?.data?.error;
+      setDeliveryNeedsReview(["delivery_address_required", "delivery_outside_area", "delivery_unavailable"].includes(errorCode));
       const messages = {
         stripe_not_configured: "El pago online no está disponible en esta tienda.",
         payment_method_not_available: "Este método ya no está disponible. Elige otra opción de pago.",
@@ -5062,6 +5091,13 @@ export default function StorePage() {
         schedule_invalid: "La fecha ya no esta disponible. Elige otra franja.",
         cash_payment_not_allowed: "Esta tienda no tiene efectivo activo para pedidos online.",
         delivery_method_not_allowed: "Esta tienda no tiene activo ese metodo de entrega.",
+        delivery_address_required: "Confirma la dirección de entrega antes de pagar.",
+        delivery_outside_area: "La dirección está fuera del área de reparto de esta tienda. Revisa la dirección o elige recogida.",
+        delivery_unavailable: "No podemos confirmar el reparto ahora. Revisa la dirección o elige recogida.",
+        delivery_policy_changed: "Las condiciones de reparto han cambiado. Vuelve a confirmar para revisar la tarifa actualizada.",
+        delivery_price_changed: err.response?.data?.deliveryQuote?.manualReviewRequired
+          ? "No pudimos validar la ruta. Se aplicará la tarifa base y la tienda deberá confirmar el reparto contigo. Revisa el total antes de volver a confirmar."
+          : "Hemos actualizado el coste del reparto. Revisa el total antes de volver a confirmar el pedido.",
         coupon_not_available: "El cupon ya no esta disponible. Quitalo y valida de nuevo.",
         coupon_not_applicable: "El cupon ya no aplica a este carrito.",
         coupon_reserved: "El cupón está reservado en un pago pendiente. Vuelve a ese pago o espera a que caduque.",
@@ -5078,6 +5114,10 @@ export default function StorePage() {
         ingredient_removals_not_supported: "Esta opción solo está disponible para pizzas enteras de carta. Revisa el carrito.",
         ingredient_removal_unavailable: "La receta ha cambiado. Revisa las retiradas de ingredientes en el carrito antes de pagar.",
         ingredient_removal_extra_conflict: "Un ingrediente no puede estar como extra y como retirado. Revisa el carrito.",
+        cart_item_unavailable: "Un producto o ingrediente de tu carrito ya no está disponible. Revisa el artículo señalado antes de volver a pagar.",
+        cart_price_changed: "El precio de un artículo ha cambiado. Elimínalo del carrito y vuelve a añadirlo con el precio actualizado.",
+        cart_offer_unavailable: "Una oferta del carrito ya no cumple sus condiciones. Revisa el artículo señalado y vuelve a añadirlo desde la carta.",
+        cart_line_invalid: "No podemos confirmar la composición de un artículo. Elimínalo del carrito y vuelve a añadirlo.",
         amount_too_low: "El importe es demasiado bajo para procesar el pago.",
         minimum_payment_not_met: `El pago minimo es ${formatMoney(
           err.response?.data?.minimumPaymentAmount || minimumPaymentAmount,
@@ -5088,6 +5128,18 @@ export default function StorePage() {
         checkout_failed: "No pudimos iniciar el pago. Inténtalo de nuevo.",
       };
       if (err.response?.data?.availability) setAvailability(err.response.data.availability);
+      const quotedDelivery = err.response?.data?.deliveryQuote;
+      if (errorCode === "delivery_price_changed" && quotedDelivery && Number.isFinite(Number(quotedDelivery.deliveryFee)) && Number(quotedDelivery.deliveryFee) >= 0) {
+        setDeliveryQuoteUpdate({ key: deliverySelectionKey, quote: { ...quotedDelivery, deliveryFee: Number(quotedDelivery.deliveryFee) } });
+      }
+      if (errorCode === "delivery_policy_changed") setDeliveryQuoteUpdate(null);
+      if (["cart_item_unavailable", "cart_price_changed", "cart_offer_unavailable", "cart_line_invalid"].includes(errorCode)) {
+        const rejectedId = err.response?.data?.cartLineId;
+        setCart(current => current.map((line, index) =>
+          String(line.cartLineId || `line-${index}`) === rejectedId
+            ? { ...line, availabilityRejected: true } : line));
+        refreshMenu();
+      }
       if (["schedule_required", "schedule_invalid"].includes(errorCode)) {
         setPendingScheduleCheckout({ mode: paymentMode });
         setCheckoutProfileOpen(false);
@@ -5114,6 +5166,8 @@ export default function StorePage() {
     cashPaymentEnabled,
     customerProfileStorageKey,
     deliveryCheckoutFee,
+    confirmedDeliveryQuote,
+    deliverySelectionKey,
     minimumPaymentAmount,
     minimumPaymentMissing,
     couponBlocksPayment,
@@ -5125,6 +5179,7 @@ export default function StorePage() {
     repeatPhone,
     scheduledAt,
     refreshAvailability,
+    refreshMenu,
     openPaymentMethodPicker,
     savedCustomerProfile,
     store?.id,
@@ -5781,7 +5836,11 @@ export default function StorePage() {
     );
   };
 
-  const renderProductTags = item => <ProductNoticeBadge tags={item?.productTags} />;
+  const renderProductTags = (item) => {
+    // Offer labels take priority on cards; the product detail keeps every notice.
+    if (hasTopDealPolicy(item) || hasTrendingPolicy(item)) return null;
+    return <ProductNoticeBadge tags={item?.productTags} />;
+  };
 
   const renderProductCard = (item) => {
     const flipped = flippedId === item.pizzaId;
@@ -5878,7 +5937,6 @@ export default function StorePage() {
               <span className="lsf-topDealBadge">Top Deal</span>
               {renderTrendingBadge(item)}
               {renderTrendingKpis(item) || renderOfferRibbon(countdownLabel, "Termina en:", "deal")}
-              {renderProductTags(item)}
               {discountSticker && (
                 <span className="lsf-topDealDiscountSticker">
                   <strong>{discountSticker}</strong>
@@ -6549,7 +6607,6 @@ export default function StorePage() {
                                 "Comienza en:",
                                 "upcoming"
                               )}
-                              {renderProductTags(item)}
 
                               <button
                                 type="button"
@@ -7264,12 +7321,16 @@ export default function StorePage() {
                   : ""
               }`}>
                 {checkoutMessage}
+                {deliveryNeedsReview && <Link to={`/${partnerSlug}/order`} className="sf-trackingInlineLink">Revisar dirección de entrega</Link>}
                 {checkoutTrackingCode && (
                   <Link to={`/seguimiento/${checkoutTrackingCode}`} className="sf-trackingInlineLink">
                     Ver seguimiento
                   </Link>
                 )}
               </div>
+            )}
+            {cart.length > 0 && confirmedDeliveryQuote?.manualReviewRequired && (
+              <div className="sf-reservationMessage" role="status">Reparto pendiente de confirmación por la tienda. El total incluye la tarifa base.</div>
             )}
 
             {cart.length === 0 ? (
@@ -7333,6 +7394,9 @@ export default function StorePage() {
                           <span>
                             {line.size} x {line.qty}
                           </span>
+                        )}
+                        {line.availabilityRejected && (
+                          <small role="alert">Revisa este artículo antes de pagar: su disponibilidad, precio o condiciones han cambiado.</small>
                         )}
                         {line.source === "queue_boost" && (
                           <small>
@@ -8102,7 +8166,7 @@ export default function StorePage() {
                             );
                           }}
                         >
-                          <span>{categoryName}</span>
+                          <span>{getTaxonomyCategoryLabel(categoryName)}</span>
                           <strong>
                             {selectedCount > 0
                               ? `${selectedCount} seleccionado${selectedCount === 1 ? "" : "s"}`

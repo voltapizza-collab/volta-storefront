@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import api from "../../setupAxios";
+import ingredientDiscoveryHints from "../../data/ingredientDiscoveryHints.json";
 import "../../styles/IngredientOnboarding.css";
 
 export const INGREDIENT_LANGUAGES = [
@@ -22,8 +23,19 @@ export const normalizeIngredientSearch = (value) => String(value || "")
 
 export const matchesIngredientSearch = (values, query) => {
   const text = normalizeIngredientSearch(values.join(" "));
+  // Discovery terms can return several identities; they never change canonical aliases.
+  const terms = text.split(/\s+/);
+  const relatedTerms = [["gamba", "gambas"], ["platano", "platanos", "banana", "bananas"]];
   return normalizeIngredientSearch(query).split(/\s+/).filter(Boolean)
-    .every((word) => text.includes(word));
+    .every((word) => text.includes(word) || relatedTerms.some((group) =>
+      group.includes(word) && group.some((term) => terms.includes(term))));
+};
+
+// These suggestions explain a documented option, without adding identity aliases.
+export const getIngredientDiscoveryNote = (ingredient, query) => {
+  const key = ingredient.catalogState?.masterCanonicalKey || ingredient.masterCanonicalKey || ingredient.canonicalKey;
+  const normalizedQuery = normalizeIngredientSearch(query).trim().replace(/\s+/g, " ");
+  return ingredientDiscoveryHints.find(hint => hint.canonicalKey === key && hint.queries.includes(normalizedQuery))?.note || "";
 };
 
 export function IngredientSearchIcon() {
@@ -98,9 +110,9 @@ export default function IngredientOnboardingModal({ candidates = [], categories 
 
   const availableCount = useMemo(() => candidates.filter((candidate) => !candidate.isExisting).length, [candidates]);
   const results = useMemo(() => candidates.filter((candidate) =>
-    (!category || candidate.category === category) &&
-    matchesIngredientSearch([candidate.defaultName, candidate.categoryLabel,
-      candidate.canonicalKey, ...(candidate.aliases || [])], query)
+    (!category || (candidate.taxonomyCategoryKey || candidate.category) === category) &&
+    (matchesIngredientSearch([candidate.defaultName, candidate.categoryLabel,
+      candidate.canonicalKey, ...(candidate.aliases || [])], query) || getIngredientDiscoveryNote(candidate, query))
   ), [candidates, category, query]);
 
   const close = () => { if (!busyRef.current) onClose(); };
@@ -177,6 +189,7 @@ export default function IngredientOnboardingModal({ candidates = [], categories 
           return { locale, name: names[locale].trim(), ...(original?.description != null ? { description: original.description } : {}) };
         }),
         ...(editing || selected.savedIngredient ? { status: catalogStatus } : {}),
+        ...(editing || selected.savedIngredient ? { preserveClassification: true } : {}),
         confirmTranslations: true,
       };
       let requestBody = payload;
@@ -211,11 +224,8 @@ export default function IngredientOnboardingModal({ candidates = [], categories 
           {editing ? <div className="gm-onboarding-edit-context">
             <h3>{ingredient.displayName || ingredient.name}</h3>
             <p>Estás editando la ficha del catálogo global. La lista maestra permanece protegida.</p>
-            <label>Categoría<select value={selected?.category || ""} disabled={saving || !detailsLoaded}
-              onChange={event => setSelected(current => ({ ...current, category: event.target.value,
-                categoryLabel: categories.find(row => row.key === event.target.value)?.label }))}>
-              {categories.map(row => <option key={row.key} value={row.key}>{row.label}</option>)}
-            </select></label>
+            <label>Categoría<input value={selected?.categoryLabel || ""} readOnly /></label>
+            <small>La categoría sigue la organización de la lista maestra.</small>
             <label>Estado general<select value={catalogStatus} disabled={saving || !detailsLoaded} onChange={event => setCatalogStatus(event.target.value)}>
               <option value="ACTIVE">Activo</option><option value="INACTIVE">Inactivo</option>
             </select></label>
@@ -247,7 +257,8 @@ export default function IngredientOnboardingModal({ candidates = [], categories 
               className={`gm-onboarding-option ${selected?.canonicalKey === candidate.canonicalKey ? "is-selected" : ""}`}
               aria-pressed={selected?.canonicalKey === candidate.canonicalKey} disabled={candidate.isExisting || saving}
               onClick={() => select(candidate)}>
-              <span><strong>{candidate.defaultName}</strong><small>{candidate.categoryLabel}</small></span>
+              <span><strong>{candidate.defaultName}</strong><small>{candidate.categoryLabel}</small>
+                {getIngredientDiscoveryNote(candidate, query) && <small>{getIngredientDiscoveryNote(candidate, query)}</small>}</span>
               <span className="gm-onboarding-option-status">{candidate.isExisting ? "Ya añadido" : selected?.canonicalKey === candidate.canonicalKey ? "✓" : "+"}</span>
             </button>)}
             {!results.length && <p className="gm-onboarding-empty">No hay coincidencias. Prueba otro nombre o selecciona todas las categorías.</p>}

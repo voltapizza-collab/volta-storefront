@@ -3,25 +3,9 @@ import { createPortal } from "react-dom";
 import "../../styles/IngredientsModule.css";
 import api from "../../setupAxios";
 import ingredientMasterSource from "../../data/ingredientMasterSource.json";
-import IngredientOnboardingModal, { INGREDIENT_LANGUAGES, IngredientSearchIcon, matchesIngredientSearch, normalizeIngredientSearch } from "./IngredientOnboardingModal";
+import { resolveIngredientTaxonomy, getIngredientTaxonomyKey, getTaxonomyCategoryLabel, getTaxonomyCategories } from '../../utils/ingredientTaxonomy';
+import IngredientOnboardingModal, { INGREDIENT_LANGUAGES, IngredientSearchIcon, getIngredientDiscoveryNote, matchesIngredientSearch, normalizeIngredientSearch } from "./IngredientOnboardingModal";
 
-const CATEGORY_LABELS = {
-  ACEITES_GRASAS_VINAGRES: "Aceites, grasas y vinagres",
-  AROMAS_Y_EXTRACTOS: "Aromas y extractos",
-  CARNES: "Carnes",
-  CREMAS_DULCES: "Cremas dulces",
-  EMBUTIDOS: "Embutidos",
-  ENDULZANTES: "Endulzantes",
-  EXTRAS: "Extras",
-  FRUTAS: "Frutas",
-  HIERBAS_ESPECIAS: "Hierbas y especias",
-  OTROS: "Otros",
-  PESCADOS_Y_MARISCOS: "Pescados y mariscos",
-  QUESOS: "Quesos",
-  SALSAS: "Salsas",
-  SETAS: "Setas",
-  VERDURAS: "Verduras",
-};
 
 const normalizeCategory = (category) =>
   String(category || "OTROS")
@@ -49,8 +33,7 @@ const getCanonicalCategory = (category) => {
   return aliases[normalized] || normalized;
 };
 
-const getCategoryLabel = (category) =>
-  CATEGORY_LABELS[getCanonicalCategory(category)] || getCanonicalCategory(category);
+const getCategoryLabel = getTaxonomyCategoryLabel;
 
 const getDisplayName = (name) => String(name || "").toUpperCase();
 const getIngredientDisplayName = (ingredient = {}) => {
@@ -141,17 +124,21 @@ export default function IngredientsModule() {
   const catalog = useMemo(() => ingredients.filter(item => item.isSystem !== false && !item.catalogState?.archivedAt), [ingredients]);
   const existingKeys = useMemo(() => new Set(catalog.flatMap(item => [item.name, item.displayName, item.canonicalKey,
     item.catalogState?.masterCanonicalKey, ...translationsOf(item).map(row => row.name), ...aliasesOf(item)]).filter(Boolean).map(normalizeIngredientSearch)), [catalog]);
-  const categories = useMemo(() => Object.keys(CATEGORY_LABELS).filter(key => ingredientMasterSource.some(row => row.category === key))
-    .map(key => ({ key, label: getCategoryLabel(key) })), []);
-  const masterCandidates = useMemo(() => ingredientMasterSource.map(item => ({ ...item, categoryLabel: getCategoryLabel(item.category),
+  const categories = useMemo(() => getTaxonomyCategories(), []);
+  const masterCounts = useMemo(() => ingredientMasterSource.reduce((counts, item) => {
+    const key = getIngredientTaxonomyKey(item); counts[key] = (counts[key] || 0) + 1; return counts;
+  }, {}), []);
+  const masterCandidates = useMemo(() => ingredientMasterSource.map(item => ({ ...item,
+    taxonomyCategoryKey: getIngredientTaxonomyKey(item), categoryLabel: resolveIngredientTaxonomy(item).label,
+    taxonomy: resolveIngredientTaxonomy(item),
     isExisting: [item.canonicalKey, ...(item.legacyCanonicalKeys || []), item.defaultName, ...item.aliases].some(value => existingKeys.has(normalizeIngredientSearch(value))),
     savedIngredient: pool.find(saved => saved.masterCanonicalKey === item.canonicalKey),
   })), [existingKeys, pool]);
   const groups = useMemo(() => {
     const grouped = new Map();
     for (const item of catalog) {
-      if (!matchesIngredientSearch([item.name, item.displayName, getCategoryLabel(item.category), ...translationsOf(item).map(row => row.name), ...aliasesOf(item)], catalogQuery)) continue;
-      const key = getCanonicalCategory(item.category);
+      if (!matchesIngredientSearch([item.name, item.displayName, resolveIngredientTaxonomy(item).label, ...translationsOf(item).map(row => row.name), ...aliasesOf(item)], catalogQuery) && !getIngredientDiscoveryNote(item, catalogQuery)) continue;
+      const key = getIngredientTaxonomyKey(item);
       if (!grouped.has(key)) grouped.set(key, []);
       grouped.get(key).push(item);
     }
@@ -165,7 +152,7 @@ export default function IngredientsModule() {
     setNotice(`${getIngredientDisplayName(item)}: ${editing ? 'cambios guardados' : 'añadido al catálogo'}.`);
     setSavedIngredient(item); setEditing(null); setOnboardingOpen(false); setCatalogQuery('');
     setIngredients(current => [...current.filter(row => ingredientId(row) !== ingredientId(item)), item]);
-    setOpenCategories(current => new Set([...current, getCanonicalCategory(item.category)]));
+    setOpenCategories(current => new Set([...current, getIngredientTaxonomyKey(item)]));
     loadCatalog();
   };
   const remove = async () => {
@@ -206,18 +193,20 @@ export default function IngredientsModule() {
           <button type="button" className="gm-categoryHeader" onClick={() => toggleCategory(category)} aria-expanded={isOpen}>
             <strong>{isOpen ? '▾' : '▸'} {getDisplayName(getCategoryLabel(category))}</strong>
             <span className="gm-categoryCounters">{needsNames > 0 && <span className="gm-categoryIssueBadge" title="Ingredientes con idiomas pendientes">{needsNames}</span>}
-              <em>{items.length} / {ingredientMasterSource.filter(row => row.category === category).length}</em></span>
+              <em>{items.length}{masterCounts[category] ? ` / ${masterCounts[category]}` : ''}</em></span>
           </button>
           {isOpen && <div className="gm-categoryItems">{items.map(item => {
             const id = ingredientId(item); const usage = usageOf(item); const missing = missingLanguages(item);
             return <div className={`gm-node ${savedIngredient && ingredientId(savedIngredient) === id ? 'is-new' : ''}`} key={id} data-ingredient-id={id}>
               <div className="gm-node-left"><span className={`gm-imageThumb ${item.image ? '' : 'gm-imageThumb--empty'}`}>{item.image ? <img src={item.image} alt={getIngredientDisplayName(item)} /> : 'IMG'}</span>
-                <span>{getDisplayName(getIngredientDisplayName(item))}</span></div>
+                <span>{getDisplayName(getIngredientDisplayName(item))}
+                  {getIngredientDiscoveryNote(item, catalogQuery) && <small className="gm-ingredient-discovery-note">{getIngredientDiscoveryNote(item, catalogQuery)}</small>}</span></div>
               <div className="gm-node-right">
+                {resolveIngredientTaxonomy(item).reviewRequired && <span className="gm-taxonomy-review">Clasificación por revisar</span>}
                 <span className={`gm-availabilityBadge ${item.status === 'INACTIVE' ? 'is-inactive' : 'is-active'}`}>{item.status === 'INACTIVE' ? 'Inactivo' : 'Activo'}</span>
                 <span className={`gm-usageBadge ${item.usageStorePercent > 0 ? 'is-medium' : 'is-low'}`} title={usage.title}><small>Uso global</small><strong>{usage.label}</strong></span>
                 <button type="button" className="gm-catalog-action" title={missing.length ? `Completar idiomas: ${missing.map(([locale]) => locale.toUpperCase()).join(', ')}. Editar nombres y foto.` : 'Editar nombres, idiomas y foto'}
-                  disabled={!catalogLoaded || loading || !semanticAvailable} onClick={() => setEditing({ ...item, id, category: getCanonicalCategory(item.category), categoryLabel: getCategoryLabel(item.category) })}>Editar</button>
+                  disabled={!catalogLoaded || loading || !semanticAvailable} onClick={() => setEditing({ ...item, id, category: getCanonicalCategory(item.category), categoryLabel: resolveIngredientTaxonomy(item).label })}>Editar</button>
                 <button type="button" className="gm-catalog-action gm-catalog-action--delete" disabled={!catalogLoaded || loading} onClick={() => { setRemoving(item); setRemoveError(''); }}>Eliminar</button>
               </div>
             </div>;

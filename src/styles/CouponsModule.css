@@ -1192,6 +1192,24 @@
   cursor: not-allowed;
 }
 
+.cp-topDealsTable th,
+.cp-topDealsTable td:not(:first-child) {
+  white-space: nowrap;
+}
+
+.cp-topDealsTable td:nth-child(3),
+.cp-topDealsTable td:nth-child(4),
+.cp-topDealsTable td:nth-child(5) {
+  font-variant-numeric: tabular-nums;
+}
+
+.cp-topDealsTable .cp-rowActions button {
+  min-height: 36px;
+  padding: 8px 10px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
 .cp-incentivesLayout,
 .cp-incentivesList {
   display: grid;

@@ -15,6 +15,19 @@ afterEach(() => { document.body.removeAttribute("style"); window.innerWidth = 10
 const location = { pathname: "/pizza/store", search: "?coupon=VOLTA", hash: "", state: null };
 const options = (changes = {}) => ({ location, navigate, rootRef, stageRef, ready: true, suspended: false, ...changes });
 
+test("short categories fill the viewport without growing when the page scrolls", () => {
+  jest.useFakeTimers();
+  const previousScroll = window.scrollY;
+  window.scrollY = 0;
+  stageRef.current.getBoundingClientRect = () => ({ top: 220 - window.scrollY });
+  const { unmount } = renderHook(props => useCatalogFocus(props), { initialProps: options() });
+  const expected = `${window.innerHeight - 220}px`;
+  expect(rootRef.current.style.getPropertyValue('--catalog-surface-min-height')).toBe(expected);
+  act(() => { window.scrollY = 400; window.dispatchEvent(new Event('resize')); jest.advanceTimersByTime(32); });
+  expect(rootRef.current.style.getPropertyValue('--catalog-surface-min-height')).toBe(expected);
+  unmount(); window.scrollY = previousScroll; jest.useRealTimers();
+});
+
 test("desktop deep links are replaced without locking the page or losing the coupon", () => {
   window.innerWidth = 1440;
   const { result } = renderHook(props => useCatalogFocus(props), { initialProps: options({

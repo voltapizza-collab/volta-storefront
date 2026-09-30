@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import ReactDOM from "react-dom";
 import api from "../../setupAxios";
 import ProductNoticeSelector from "./ProductNoticeSelector";
+import ProductLinksAlert from "./ProductLinksAlert";
 import { productNoticeLabels } from "../../constants/productNotices";
 import "../../styles/PizzaCreator.css";
 import { DndContext, closestCenter } from "@dnd-kit/core";
@@ -344,6 +345,8 @@ export default function PizzaCreator({ partner, language = "es" }) {
   const [loadingInventory, setLoadingInventory] = useState(false);
   const [inventoryLoadError, setInventoryLoadError] = useState("");
   const [savingProduct, setSavingProduct] = useState(false);
+  const [blockedDeletion, setBlockedDeletion] = useState(null);
+  const closeBlockedDeletion = useCallback(() => setBlockedDeletion(null), []);
   const [originalIngredientIds, setOriginalIngredientIds] = useState([]);
   const [randomSelectionModal, setRandomSelectionModal] = useState(null);
   const ingredientsListRef = useRef(null);
@@ -957,14 +960,18 @@ export default function PizzaCreator({ partner, language = "es" }) {
   };
 
   const deletePizza = async (id) => {
-    if (!window.confirm(t("alert.deleteConfirm"))) return;
-
+    let errorPhase = 'check';
     try {
+      const preview = await api.get(`/api/pizzas/${id}/links`);
+      if (preview.data.links?.length) { setBlockedDeletion(preview.data); return; }
+      if (!window.confirm(t("alert.deleteConfirm"))) return;
+      errorPhase = 'delete';
       await api.delete(`/api/pizzas/${id}`);
       setPizzas((p) => p.filter((x) => x.id !== id));
     } catch (e) {
+      if (e.response?.data?.error === "product_linked") { setBlockedDeletion(e.response.data); return; }
       console.error(e);
-      alert(t("alert.deleteError"));
+      setBlockedDeletion({ productName: pizzas.find(product => product.id === id)?.name, errorPhase });
     }
   };
 
@@ -1664,6 +1671,7 @@ export default function PizzaCreator({ partner, language = "es" }) {
           </DndContext>
         </div>
       </Modal>
+      <ProductLinksAlert data={blockedDeletion} language={language} onClose={closeBlockedDeletion} />
     </>
   );
 }

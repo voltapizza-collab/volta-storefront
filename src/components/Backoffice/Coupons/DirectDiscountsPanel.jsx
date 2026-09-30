@@ -14,6 +14,7 @@ const WEEK_DAYS = [
 
 const createInitialForm = () => ({
   title: "",
+  isClearance: false,
   discountType: "PERCENT",
   value: "",
   targetType: "CATEGORY",
@@ -131,14 +132,14 @@ const formatTopDealValue = (discount) => {
 
 const formatTopDealUsage = (discount) => {
   const isDaily = discount?.usageLimitScope === "DAILY";
-  const usageLimit = Number(isDaily ? discount?.todayUsageLimit ?? discount?.usageLimit : discount?.usageLimit);
-  if (!Number.isInteger(usageLimit) || usageLimit < 0) return "Ilimitado";
-
+  const rawLimit = isDaily ? discount?.todayUsageLimit ?? discount?.usageLimit : discount?.usageLimit;
+  const usageLimit = Number(rawLimit);
   const usedCount = Math.max(0, Number(discount?.usedCount || 0));
+  if (rawLimit == null || rawLimit === "" || !Number.isInteger(usageLimit) || usageLimit < 0) {
+    return `∞ / ${usedCount}`;
+  }
   const remaining = Math.max(0, Number(discount?.remainingQuantity ?? usageLimit - usedCount));
-  const suffix = isDaily ? " hoy" : "";
-
-  return `${remaining} disponibles${suffix} / ${usedCount} usados${suffix}`;
+  return `${remaining} / ${usedCount}`;
 };
 
 const isPubliclyLaunched = (pizza) => {
@@ -354,6 +355,7 @@ export default function DirectDiscountsPanel({ partnerId }) {
   const buildDiscountPayload = (discount, dailyOverrides) => ({
     partnerId,
     title: discount.title || "",
+    isClearance: discount.isClearance === true,
     discountType: discount.discountType || "PERCENT",
     value: Number(discount.baseValue ?? discount.value ?? 0),
     targetType: discount.targetType || "CATEGORY",
@@ -429,6 +431,7 @@ export default function DirectDiscountsPanel({ partnerId }) {
     setStoresTouched(true);
     setForm({
       title: discount.title || "",
+      isClearance: discount.isClearance === true,
       discountType: discount.discountType || "PERCENT",
       value: discount.baseValue ?? discount.value ?? "",
       targetType: discount.targetType || "CATEGORY",
@@ -485,6 +488,7 @@ export default function DirectDiscountsPanel({ partnerId }) {
     const payload = {
       partnerId,
       title: form.title.trim(),
+      isClearance: form.isClearance === true,
       discountType: form.discountType,
       value: Number(form.value || 0),
       targetType: hasCategoryTargets ? "CATEGORY" : "PRODUCT",
@@ -504,8 +508,10 @@ export default function DirectDiscountsPanel({ partnerId }) {
 
     try {
       if (editingId) {
-        await api.put(`/api/direct-discounts/${editingId}`, payload);
-        setMessage("Top Deal actualizado.");
+        const response = await api.put(`/api/direct-discounts/${editingId}`, payload);
+        setMessage(response.data?.removedProductIds?.length
+          ? "Top Deal actualizado. Se han retirado las referencias a productos que ya no existen."
+          : "Top Deal actualizado.");
       } else {
         await api.post("/api/direct-discounts", payload);
         setMessage("Top Deal creado.");
@@ -515,7 +521,9 @@ export default function DirectDiscountsPanel({ partnerId }) {
       loadAll();
     } catch (error) {
       console.error(error);
-      setMessage(error.response?.data?.error || "No se pudo guardar el Top Deal.");
+      setMessage(error.response?.data?.message ||
+        (error.response?.data?.error === "bad_product_ids" ? "Algún producto seleccionado ya no está disponible para este negocio. Revisa la selección y vuelve a guardar." :
+          error.response?.data?.error || "No se pudo guardar el Top Deal."));
     } finally {
       setSaving(false);
     }
@@ -674,6 +682,12 @@ export default function DirectDiscountsPanel({ partnerId }) {
         </div>
 
         <label className="cp-checkRow">
+          <input type="checkbox" checked={form.isClearance} onChange={event => updateForm("isClearance", event.target.checked)} />
+          Producto en liquidación
+        </label>
+        <p className="cp-clearanceHelp">Recogida sin pedido mínimo. Sin descuentos adicionales. Para delivery se mantiene el mínimo y los portes por bloques.</p>
+
+        <label className="cp-checkRow">
           <input checked={form.isTemporal} onChange={(event) => updateForm("isTemporal", event.target.checked)} type="checkbox" />
           Limitar por dias y horas
         </label>
@@ -728,12 +742,12 @@ export default function DirectDiscountsPanel({ partnerId }) {
           <div className="cp-stateCard">Cargando Top Deals...</div>
         ) : (
           <div className="cp-tableWrap">
-            <table className="cp-table">
+            <table className="cp-table cp-topDealsTable">
               <thead>
                 <tr>
                   <th>Nombre</th>
                   <th>Top Deal</th>
-                  <th>Cantidad</th>
+                  <th title="Cantidad disponible / unidades usadas">Cantidad / usados</th>
                   <th>Productos</th>
                   <th>Tiendas</th>
                   <th>Acciones</th>
@@ -742,15 +756,17 @@ export default function DirectDiscountsPanel({ partnerId }) {
               <tbody>
                 {discounts.map((discount) => (
                   <tr key={discount.id}>
-                    <td>{discount.title}</td>
+                    <td>{discount.title}{discount.isClearance && <small className="cp-clearanceLabel"> · Liquidación</small>}</td>
                     <td>{formatTopDealValue(discount)}</td>
-                    <td>{formatTopDealUsage(discount)}</td>
+                    <td title={discount.usageLimitScope === "DAILY" ? "Disponibles hoy / usados hoy (∞ = ilimitado)" : "Disponibles / usados (∞ = ilimitado)"}>
+                      {formatTopDealUsage(discount)}
+                    </td>
                     <td>
                       {discount.targetType === "PRODUCT"
-                        ? `${discount.productIds?.length || 0} productos`
-                        : `${(discount.categoryIds?.length || 0) + (discount.categoryNames?.length || 0)} categorias`}
+                        ? discount.productIds?.length || 0
+                        : `${(discount.categoryIds?.length || 0) + (discount.categoryNames?.length || 0)} categorías`}
                     </td>
-                    <td>{discount.storeIds?.length ? `${discount.storeIds.length} tiendas` : "Todas"}</td>
+                    <td>{discount.storeIds?.length || "Todas"}</td>
                     <td>
                       <div className="cp-rowActions">
                         <button type="button" onClick={() => openTodayModalForDiscount(discount)}>

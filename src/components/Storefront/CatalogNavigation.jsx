@@ -88,12 +88,12 @@ export function CatalogSearch({ value, onChange, onClose, resultCount = 0, autoF
 
 export function CatalogTools({ children, showCoupons = false, freeDelivery = false, showCustomPizza = false, showHalfAndHalf = false }) {
   const ref = useRef(null);
-  const discover = { theme: "discover", lead: "Descubre", label: "más", icon: "M12 3l2.4 6.6L21 12l-6.6 2.4L12 21l-2.4-6.6L3 12l6.6-2.4Z" };
+  const discover = { theme: "discover", lead: "Descubre", label: "más" };
   const benefits = [
-    ...(showCoupons ? [{ theme: "coupons", lead: "Tus", label: "cupones", icon: "M4 5h16v5a2 2 0 0 0 0 4v5H4v-5a2 2 0 0 0 0-4ZM14 5v3m0 3v2m0 3v3" }] : []),
-    ...(showCoupons && freeDelivery ? [{ theme: "delivery", lead: "Envío", label: "gratis", icon: "M3 5h11v11H3Zm11 4h4l3 4v3h-7M8 18a2 2 0 1 0-4 0 2 2 0 0 0 4 0Zm12 0a2 2 0 1 0-4 0 2 2 0 0 0 4 0Z" }] : []),
-    ...(showCustomPizza ? [{ theme: "custom", lead: "Arma tu", label: "pizza", icon: "M4 4a21 21 0 0 1 16 16L4 20ZM4 8a16 16 0 0 1 12 12M7 12h.01M8 17h.01M12 16h.01" }] : []),
-    ...(showHalfAndHalf ? [{ theme: "halves", lead: "Mitad y", label: "mitad", icon: "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Zm0 0v18M7 9h.01M7 15h.01M16 12h.01" }] : []),
+    ...(showCoupons ? [{ theme: "coupons", lead: "Tus", label: "cupones" }] : []),
+    ...(showCoupons && freeDelivery ? [{ theme: "delivery", lead: "Envío", label: "gratis" }] : []),
+    ...(showCustomPizza ? [{ theme: "custom", lead: "Arma tu", label: "pizza" }] : []),
+    ...(showHalfAndHalf ? [{ theme: "halves", lead: "Mitad y", label: "mitad" }] : []),
   ];
   // Separate each pair of available benefits with the invitation to open the menu.
   const messages = [discover];
@@ -119,7 +119,6 @@ export function CatalogTools({ children, showCoupons = false, freeDelivery = fal
       <span className="sf-catalogTools__window" aria-hidden="true">
         <span key={messages.map(message => message.theme).join("-")} className={`sf-catalogTools__track sf-catalogTools__track--${messages.length}`}>
           {slides.map((message, index) => <span className={`sf-catalogTools__label sf-catalogTools__label--${message.theme}`} key={`${message.theme}-${index}`}>
-            <svg className="sf-catalogTools__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d={message.icon} /></svg>
             <span className="sf-catalogTools__copy"><span>{message.lead}</span><strong>{message.label}</strong></span>
             <svg className="sf-catalogTools__chevron" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="m3 4.5 3 3 3-3" /></svg>
           </span>)}

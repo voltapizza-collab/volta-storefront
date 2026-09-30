@@ -3,11 +3,15 @@ import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react"
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import OrderPortalTransition from "../components/Storefront/OrderPortalTransition";
 import api from "../services/api";
+import { getDeliveryBlocks, getShippingBenefitFee, getOrderMinimum, isClearanceLine, prepareFulfillmentLines } from "../utils/fulfillmentPolicy";
 import ProductNoticeBadge from "../components/Storefront/ProductNoticeBadge";
+import CardSizePrice from "../components/Storefront/CardSizePrice";
+import { STOREFRONT_PRICE_REFRESH_MS as TRENDING_PRICE_REFRESH_MS } from "../constants/storefrontTiming";
 import { productNoticeLabels, normalizeProductNotices } from "../constants/productNotices";
 import "../styles/Storefront.css";
 import "../styles/CatalogLayout.css";
 import "../styles/CatalogDesktop.css";
+import DeliveryMethodSelector from "../components/Storefront/DeliveryMethodSelector";
 import CatalogNavigation, { CatalogFocusCategory, CatalogSearch, CatalogTools } from "../components/Storefront/CatalogNavigation";
 import useCatalogSwipe from "../components/Storefront/useCatalogSwipe";
 import useCatalogFocus from "../components/Storefront/useCatalogFocus";
@@ -48,7 +52,6 @@ const DEFAULT_BOOST_SETTINGS = {
   partnerSharePercent: 75,
 };
 const DEFAULT_TRENDING_PRICE_BAND = 0.5;
-const TRENDING_PRICE_REFRESH_MS = 5000;
 const PRODUCT_TAG_LABELS = productNoticeLabels("es");
 const RANDOM_SELECTION_CANONICAL_KEYS = new Set([
   "random_selection_1",
@@ -95,53 +98,6 @@ const readDeliverySelection = ({ partnerSlug, storeSlug }) => {
   } catch {
     return null;
   }
-};
-
-const compactTickerText = (value, maxLength = 34) => {
-  const text = String(value || "").replace(/\s+/g, " ").trim();
-  if (text.length <= maxLength) return text;
-  return `${text.slice(0, maxLength - 3).trimEnd()}...`;
-};
-
-const cleanDeliveryAddressTickerText = (value) => {
-  const parts = String(value || "")
-    .replace(/\s+/g, " ")
-    .split(",")
-    .map((part) => part.trim())
-    .filter(Boolean);
-  const streetLikePart =
-    parts.find((part) => !/^\d{5}\b/.test(part) && !/^(spain|espana)$/i.test(part)) || "";
-  const cleaned = streetLikePart
-    .replace(/\b\d{5}\b/g, "")
-    .replace(/\b(spain|espana)\b/gi, "")
-    .replace(/[,\s]+$/g, "")
-    .trim();
-
-  return compactTickerText(cleaned, 30);
-};
-
-const getDeliveryDestinationTickerLabel = (selection) => {
-  if (String(selection?.serviceMode || "").toLowerCase() !== "delivery") return "";
-
-  const address = selection?.deliveryAddress || selection?.deliveryResolution?.formattedAddress || "";
-  const addressLine2 = selection?.deliveryAddressLine2 || "";
-  const formattedAddress = selection?.deliveryResolution?.formattedAddress || "";
-  const postalCode =
-    [addressLine2, address, formattedAddress]
-      .map((value) => String(value || "").match(/\b\d{5}\b/)?.[0])
-      .find(Boolean) || "";
-  const destination =
-    cleanDeliveryAddressTickerText(address) ||
-    cleanDeliveryAddressTickerText(formattedAddress) ||
-    cleanDeliveryAddressTickerText(addressLine2) ||
-    postalCode;
-
-  return destination;
-};
-
-const getPickupDestinationTickerLabel = (selection, store) => {
-  const storeName = selection?.storeName || store?.storeName || store?.slug || "tienda";
-  return compactTickerText(storeName, 30);
 };
 
 const storeAllowsPickup = (store) => store?.pickupEnabled !== false;
@@ -675,10 +631,8 @@ const renderTopDealAvailabilityPill = (item) => {
   if (remaining == null) return null;
 
   return (
-    <span className="lsf-topDealAvailabilityPill" aria-label={`${remaining} Top Deals disponibles`}>
-      <span>hoy</span>
-      <strong>{remaining}</strong>
-      <span>disp.</span>
+    <span className="lsf-topDealAvailabilityPill" aria-label={`${remaining} unidades disponibles`}>
+      <span>hoy</span><strong>{remaining}</strong><span>disp.</span>
     </span>
   );
 };
@@ -1211,13 +1165,14 @@ const renderDiscountPrice = ({
   discountPercent = 0,
   isTicking = false,
   className = "",
+  sizeLabel = "",
 }) => {
   const hasDiscount = originalPrice > price && price > 0 && discountPercent > 0;
 
   if (!hasDiscount) {
     return (
       <span className={`lsf-card__priceCurrent ${isTicking ? "is-ticking" : ""} ${className}`}>
-        EUR {price.toFixed(2)}
+        EUR {price.toFixed(2)}{sizeLabel && ` (${sizeLabel})`}
       </span>
     );
   }
@@ -1228,22 +1183,22 @@ const renderDiscountPrice = ({
     >
       <span className="lsf-card__priceOld">EUR {originalPrice.toFixed(2)}</span>
       <span className="lsf-card__priceRow">
-        <strong className="lsf-card__priceCurrent">EUR {price.toFixed(2)}</strong>
+        <strong className="lsf-card__priceCurrent">EUR {price.toFixed(2)}{sizeLabel && ` (${sizeLabel})`}</strong>
         <em>-{discountPercent}%</em>
       </span>
     </span>
   );
 };
 
-const renderStorefrontPrice = (item, size = "M") => {
+const renderStorefrontPrice = (item, size = "M", showSize = false) => {
   const price = priceForSize(item?.priceBySize, size);
   const originalPrice = getOriginalPriceForSize(item, size);
   const discountPercent = getDiscountPercentForSize(item, size);
 
-  return renderDiscountPrice({ price, originalPrice, discountPercent });
+  return renderDiscountPrice({ price, originalPrice, discountPercent, sizeLabel: showSize ? size : "" });
 };
 
-const renderTrendingPrice = (item, size = "M", isTicking = false) => {
+const renderTrendingPrice = (item, size = "M", isTicking = false, showSize = false) => {
   const price = priceForSize(item?.priceBySize, size);
   const basePrice = priceForSize(getTrendingBasePriceBySize(item), size);
   const adjustment = roundMoney(price - basePrice);
@@ -1262,14 +1217,14 @@ const renderTrendingPrice = (item, size = "M", isTicking = false) => {
     >
       <span className="lsf-card__priceOld">BASE EUR {basePrice.toFixed(2)}</span>
       <span className="lsf-card__priceRow">
-        <strong className="lsf-card__priceCurrent">EUR {price.toFixed(2)}</strong>
+        <strong className="lsf-card__priceCurrent">EUR {price.toFixed(2)}{showSize && ` (${size})`}</strong>
         <em>{adjustmentLabel}</em>
       </span>
     </span>
   );
 };
 
-const renderTopDealPrice = (item, size = "M", isTicking = false) => {
+const renderTopDealPrice = (item, size = "M", isTicking = false, showSize = false) => {
   const price = priceForSize(item?.priceBySize, size);
   const originalPrice = getOriginalPriceForSize(item, size);
   const discountPercent = getDiscountPercentForSize(item, size);
@@ -1282,6 +1237,7 @@ const renderTopDealPrice = (item, size = "M", isTicking = false) => {
       discountPercent,
       isTicking,
       className: "lsf-topDealPrice",
+      sizeLabel: showSize ? size : "",
     })
   );
 };
@@ -1506,7 +1462,8 @@ const getTopDealId = (item) => {
 const getTopDealRemainingQuantity = (item) => {
   if (!hasTopDealPolicy(item)) return null;
 
-  const remaining = Number(item?.directDiscount?.remainingQuantity);
+  if (item?.directDiscount?.remainingQuantity == null) return null;
+  const remaining = Number(item.directDiscount.remainingQuantity);
   return Number.isInteger(remaining) && remaining >= 0 ? remaining : null;
 };
 
@@ -2110,7 +2067,7 @@ const getLowestPriceBySize = (items = []) => {
 };
 
 const isHalfPizzaCandidate = (item) => {
-  if (item?.categoryHalfAndHalf !== true) {
+  if (isClearanceLine(item) || item?.categoryHalfAndHalf !== true) {
     return false;
   }
 
@@ -2588,7 +2545,8 @@ export default function StorePage() {
   const [bootsTargetPosition, setBootsTargetPosition] = useState("1");
   const [bootsMessage, setBootsMessage] = useState("");
   const [boostSettings, setBoostSettings] = useState(DEFAULT_BOOST_SETTINGS);
-  const [activeIncentive, setActiveIncentive] = useState(null);
+  const [incentiveSnapshot, setActiveIncentive] = useState(null);
+  const activeIncentive = isClearanceLine(menu.find(item => Number(item.pizzaId) === Number(incentiveSnapshot?.rewardPizzaId || incentiveSnapshot?.rewardPizza?.id))) ? null : incentiveSnapshot;
   const [nextIncentive, setNextIncentive] = useState(null);
   const [storeAverageTicket, setStoreAverageTicket] = useState(0);
   const [now, setNow] = useState(() => new Date());
@@ -3077,8 +3035,10 @@ export default function StorePage() {
   }, [menu, trending]);
 
   const visiblePromos = useMemo(
-    () => promos.filter(promoHasProducts),
-    [promos]
+    () => promos.filter(promoHasProducts).filter(promo => (promo.items || []).every(item =>
+      !isPromoCategoryItem(item) || getPromoCategoryOptions(item, menu).length >= getPromoRequiredChoiceCount(item)
+    )),
+    [promos, menu]
   );
 
   const commercialTabs = useMemo(
@@ -4632,22 +4592,22 @@ export default function StorePage() {
     () => cart.filter((item) => !isCouponCartLine(item)).reduce((sum, item) => sum + getCartLineQty(item), 0),
     [cart]
   );
+  const fulfillmentLines = useMemo(() => prepareFulfillmentLines(cart, menu, incentiveNowMs), [cart, menu, incentiveNowMs]);
+  const deliveryBlockSize = confirmedDeliveryQuote?.deliveryFeeBlockSize ?? partner?.deliveryFeeBlockSize;
   const deliveryCheckoutFee = useMemo(() => {
     const serviceMode = getStoreServiceMode(store, orderSelection);
     const resolution = orderSelection?.deliveryResolution || {};
 
     if (serviceMode !== "delivery") return 0;
-    if (confirmedDeliveryQuote) return confirmedDeliveryQuote.deliveryFee;
-
-    const resolvedFee = parseNonNegativeMoney(resolution.deliveryFee);
-    if (resolvedFee > 0) return resolvedFee;
-
-    if (partner?.deliveryPricingMode === "VARIABLE") {
-      return parseNonNegativeMoney(partner.deliveryFeeBase);
+    if (partner?.deliveryPricingMode !== "VARIABLE") {
+      const baseFee = confirmedDeliveryQuote?.baseFee ?? partner?.deliveryFeeFixed ?? resolution.deliveryFee ?? 0;
+      return roundMoney(parseNonNegativeMoney(baseFee) * getDeliveryBlocks(fulfillmentLines, deliveryBlockSize).totalBlocks);
     }
-
-    return parseNonNegativeMoney(partner?.deliveryFeeFixed);
-  }, [confirmedDeliveryQuote, orderSelection, partner?.deliveryFeeBase, partner?.deliveryFeeFixed, partner?.deliveryPricingMode, store]);
+    if (confirmedDeliveryQuote) return confirmedDeliveryQuote.deliveryFee;
+    const resolvedFee = parseNonNegativeMoney(resolution.deliveryFee);
+    return resolvedFee > 0 ? resolvedFee : parseNonNegativeMoney(partner?.deliveryFeeBase);
+  }, [confirmedDeliveryQuote, fulfillmentLines, deliveryBlockSize, orderSelection, partner, store]);
+  const shippingBenefitFee = useMemo(() => getShippingBenefitFee(fulfillmentLines, { ...partner, deliveryFeeBlockSize: deliveryBlockSize }, deliveryCheckoutFee), [fulfillmentLines, partner, deliveryBlockSize, deliveryCheckoutFee]);
   const paymentPolicySettings = useMemo(
     () => normalizePaymentPolicySettings(partner?.paymentPolicySettings),
     [partner?.paymentPolicySettings]
@@ -4728,7 +4688,9 @@ export default function StorePage() {
     const value = Number(partner?.minimumPaymentAmount || 0);
     return Number.isFinite(value) && value > 0 ? value : 0;
   }, [partner?.minimumPaymentAmount]);
-  const minimumPaymentMissing = Math.max(0, minimumPaymentAmount - cartTotal);
+  const shippingCouponDiscount = cart.filter(line => isCouponCartLine(line) && isDeliveryFreeCouponData(line.coupon)).reduce((sum, line) => sum + Math.abs(num(line.subtotal)), 0);
+  const orderMinimum = getOrderMinimum(fulfillmentLines, getStoreServiceMode(store, orderSelection) === "delivery" ? "COURIER" : "PICKUP", minimumPaymentAmount, shippingCouponDiscount);
+  const minimumPaymentMissing = orderMinimum.missingAmount;
   const cartBelowMinimumPayment =
     cartCount > 0 && minimumPaymentAmount > 0 && minimumPaymentMissing > 0.004;
   const couponEligibleSubtotal = useMemo(
@@ -4752,7 +4714,7 @@ export default function StorePage() {
   }, [couponDiscountTotal, couponEligibleSubtotal]);
   const couponCart = useMemo(() => cart.filter(line => !isCouponCartLine(line)), [cart]);
   const activeCouponCode = selectedCouponCode || cart.find(isCouponCartLine)?.couponCode || "";
-  const couponContextKey = JSON.stringify([partner?.id || store?.partnerId, store?.id, deliveryCheckoutFee, couponCart]);
+  const couponContextKey = JSON.stringify([partner?.id || store?.partnerId, store?.id, shippingBenefitFee, couponCart]);
   const currentCouponKey = activeCouponCode ? activeCouponCode + ":" + couponContextKey : "";
   couponContextRef.current = currentCouponKey;
   const couponNeedsValidation = Boolean(activeCouponCode && (couponLoading || couponResultKey !== currentCouponKey));
@@ -4786,7 +4748,7 @@ export default function StorePage() {
       try {
         const response = await api.post("/api/coupons/validate", {
           partnerId: Number(partner?.id || store?.partnerId), storeId: Number(store?.id),
-          code, cart: couponCart, subtotal: couponEligibleSubtotal, deliveryFee: deliveryCheckoutFee,
+          code, cart: couponCart, subtotal: couponEligibleSubtotal, deliveryFee: shippingBenefitFee,
         });
         return response?.data || response || {};
       } catch {
@@ -4809,7 +4771,7 @@ export default function StorePage() {
       });
       if (data.valid && openCartOnValid) setCartOpen(true);
     }, () => couponContextRef.current === key);
-  }, [couponContextKey, couponCart, couponEligibleSubtotal, deliveryCheckoutFee, partner?.id, store?.id, store?.partnerId]);
+  }, [couponContextKey, couponCart, couponEligibleSubtotal, shippingBenefitFee, partner?.id, store?.id, store?.partnerId]);
 
   const validateCouponCode = async event => {
     event.preventDefault();
@@ -4914,7 +4876,7 @@ export default function StorePage() {
         return;
       }
       if (cartBelowMinimumPayment) {
-        setCheckoutMessage(`El pago mínimo es ${formatMoney(minimumPaymentAmount, partner?.currency || "EUR")}. Faltan ${formatMoney(minimumPaymentMissing, partner?.currency || "EUR")}.`);
+        setCheckoutMessage(`El pedido mínimo en productos, sin portes, es ${formatMoney(minimumPaymentAmount, partner?.currency || "EUR")}. Faltan ${formatMoney(minimumPaymentMissing, partner?.currency || "EUR")}.`);
         setCartOpen(true);
         return;
       }
@@ -5119,7 +5081,7 @@ export default function StorePage() {
         cart_offer_unavailable: "Una oferta del carrito ya no cumple sus condiciones. Revisa el artículo señalado y vuelve a añadirlo desde la carta.",
         cart_line_invalid: "No podemos confirmar la composición de un artículo. Elimínalo del carrito y vuelve a añadirlo.",
         amount_too_low: "El importe es demasiado bajo para procesar el pago.",
-        minimum_payment_not_met: `El pago minimo es ${formatMoney(
+        minimum_payment_not_met: `El pedido mínimo en productos, después de descuentos y sin portes, es ${formatMoney(
           err.response?.data?.minimumPaymentAmount || minimumPaymentAmount,
           partner?.currency || "EUR"
         )}.`,
@@ -5233,9 +5195,9 @@ export default function StorePage() {
         .filter(isIncentiveEligibleCartLine)
         .reduce((sum, item) => sum + num(item.subtotal), 0);
 
-      return Math.max(0, roundMoney(eligibleGross - couponDiscountTotal));
+      return Math.max(0, roundMoney(eligibleGross - couponDiscountTotal + shippingCouponDiscount));
     },
-    [cart, couponDiscountTotal]
+    [cart, couponDiscountTotal, shippingCouponDiscount]
   );
   const cartHasBoost = useMemo(
     () => cart.some((line) => line?.source === "queue_boost"),
@@ -5793,7 +5755,11 @@ export default function StorePage() {
     );
   };
 
+  const renderClearanceRibbon = (item, className = "lsf-offerRibbon lsf-offerRibbon--deal") =>
+    isClearanceLine(item) ? <div className={`${className} lsf-clearanceRibbon`}><span className="lsf-clearanceRibbonText">Liquidación</span></div> : null;
+
   const renderCategoryDealCountdown = (item) => {
+    if (isClearanceLine(item)) return renderClearanceRibbon(item, "lsf-categoryDealCountdown");
     const label = hasTopDealPolicy(item)
       ? formatOfferCountdown(item.directDiscount, incentiveNowMs)
       : "";
@@ -5821,14 +5787,14 @@ export default function StorePage() {
         {showTrustMeta && renderProductApprovalMeta(item)}
         {availabilityPill ? (
           <div className="lsf-card__dealMeta">
-            {renderTopDealPrice(item, baseSize)}
+            <CardSizePrice item={item} fallbackSize={baseSize} renderPrice={(size, showSize) => renderTopDealPrice(item, size, false, showSize)}/>
             {availabilityPill}
           </div>
         ) : (
           <div className="lsf-card__price">
-            {hasTrendingPolicy(item)
-              ? renderTrendingPrice(item, baseSize)
-              : renderStorefrontPrice(item, baseSize)}
+            <CardSizePrice item={item} fallbackSize={baseSize} renderPrice={(size, showSize) => hasTrendingPolicy(item)
+              ? renderTrendingPrice(item, size, false, showSize)
+              : renderStorefrontPrice(item, size, showSize)}/>
           </div>
         )}
         {showTrustMeta && renderProductBuyMessage(item)}
@@ -5936,7 +5902,7 @@ export default function StorePage() {
 
               <span className="lsf-topDealBadge">Top Deal</span>
               {renderTrendingBadge(item)}
-              {renderTrendingKpis(item) || renderOfferRibbon(countdownLabel, "Termina en:", "deal")}
+              {renderClearanceRibbon(item) || renderTrendingKpis(item) || renderOfferRibbon(countdownLabel, "Termina en:", "deal")}
               {discountSticker && (
                 <span className="lsf-topDealDiscountSticker">
                   <strong>{discountSticker}</strong>
@@ -5963,7 +5929,7 @@ export default function StorePage() {
                   </div>
                 </div>
                 <div className="lsf-card__dealMeta">
-                  {renderTopDealPrice(item, baseSize)}
+                  <CardSizePrice item={item} fallbackSize={baseSize} renderPrice={(size, showSize) => renderTopDealPrice(item, size, false, showSize)}/>
                   {renderTopDealAvailabilityPill(item)}
                 </div>
               </div>
@@ -5971,7 +5937,7 @@ export default function StorePage() {
 
             <div className="lsf-flip__back">
               <div className="lsf-flip-desc">
-                <div className="lsf-flip-title">Top Deal</div>
+                <div className="lsf-flip-title">{isClearanceLine(item) ? "Liquidación" : "Top Deal"}</div>
                 <div className="lsf-flip-line">{line}</div>
                 <div className="lsf-flip-closer">{closer}</div>
               </div>
@@ -6002,99 +5968,27 @@ export default function StorePage() {
     );
   }
 
-  const renderStoreInfoTicker = (compact = false) => {
-    const showSelectProductsPrompt = isStorefrontButtonVisible("selectProducts");
+  const renderStoreInfoTicker = () => {
     const serviceMode = getStoreServiceMode(store, orderSelection);
-    const deliveryDestinationLabel = getDeliveryDestinationTickerLabel(orderSelection);
-    const orderModeLabel =
-      serviceMode === "delivery"
-        ? deliveryDestinationLabel || "Direccion pendiente"
-        : getPickupDestinationTickerLabel(orderSelection, store);
-    const orderModeCaption =
-      serviceMode === "delivery" ? "Enviaremos a:" : "Pedido a recoger:";
-    const orderModeAria =
-      serviceMode === "delivery"
-        ? `${orderModeCaption} ${orderModeLabel}`
-        : `${orderModeCaption} ${orderSelection?.storeName || store.storeName}`;
-    const changeModeLabel =
-      serviceMode === "delivery" ? "Cambiar a recogida" : "Cambiar a delivery";
-    const tickerLabel = [
-      `Bienvenidos a ${partner?.name || store.storeName}`,
-      store?.city || "Ciudad",
-      store.storeName,
-      orderModeAria,
-      showSelectProductsPrompt ? "Selecciona productos" : "",
-      changeModeLabel,
-    ].filter(Boolean).join(", ");
-
-    if (compact) return <button type="button" className="sf-catalogStore" aria-label={orderModeAria + ". " + changeModeLabel}
-      onClick={() => navigate(`/${partnerSlug}/order`, { state: { orderTrail: "change-service", partnerName: partner?.name || store?.storeName, storeName: store?.storeName, currentStoreSlug: storeSlug, currentServiceMode: serviceMode, returnToStorePath: `/${partnerSlug}/${storeSlug}` } })}>
-      <strong>{orderModeLabel}</strong><span>{serviceMode === "delivery" ? "Delivery" : "Recogida"} ↗</span>
-    </button>;
+    const destination = serviceMode === "delivery"
+      ? orderSelection?.deliveryAddress || orderSelection?.deliveryResolution?.formattedAddress || "Dirección pendiente"
+      : orderSelection?.storeName || store.storeName || storeSlug;
 
     return (
-      <button
-        type="button"
-        className={`sf-engineUtilityPill sf-lsfStoreTicker ${
-          orderModeLabel ? "has-order-mode" : ""
-        } ${
-          deliveryDestinationLabel ? "has-delivery-destination" : ""
-        } sf-lsfStoreTicker--${serviceMode}`}
-        aria-label={tickerLabel}
-        data-mobile-label={orderModeLabel || `${store?.city || "Ciudad"} - ${store.storeName}`}
-        title={changeModeLabel}
-        onClick={() =>
-          navigate(`/${partnerSlug}/order`, {
-            state: {
-              orderTrail: "change-service",
-              partnerName: partner?.name || store?.partnerName || store?.storeName,
-              storeName: store?.storeName,
-              currentStoreSlug: storeSlug,
-              currentServiceMode: serviceMode,
-              returnToStorePath: `/${partnerSlug}/${storeSlug}`,
-            },
-          })
-        }
-      >
-        <span className={`sf-orderModeStatic sf-orderModeStatic--${serviceMode}`}>
-          <span className="sf-orderModeTicker">
-            <span className="sf-orderModeTickerTrack">
-              <span className="sf-orderModeTickerLine">{orderModeCaption}</span>
-              <strong className="sf-orderModeTickerLine">{orderModeLabel}</strong>
-            </span>
-          </span>
-        </span>
-        <span className="sf-engineUtilityPillTicker">
-          <span className="sf-engineUtilityPillTrack">
-            <span className="sf-engineUtilityPillLine">
-              Bienvenidos a
-            </span>
-            <span className="sf-engineUtilityPillLine">
-              {partner?.name || store.storeName}
-            </span>
-            <span className="sf-engineUtilityPillLine">
-              {store?.city || "Ciudad"}
-            </span>
-            <span className="sf-engineUtilityPillLine">
-              <span className="sf-engineUtilityPillInline">
-                <CountryFlag countryCode={partner?.country} />
-                <span>{store.storeName}</span>
-              </span>
-            </span>
-            <span className={`sf-engineUtilityPillLine sf-engineUtilityPillLine--mode sf-engineUtilityPillLine--mode-${serviceMode}`}>
-              {orderModeLabel}
-            </span>
-            {showSelectProductsPrompt && (
-              <span className="sf-engineUtilityPillLine sf-engineUtilityPillLine--select">
-                Selecciona productos
-              </span>
-            )}
-          </span>
-        </span>
-        <span className="sf-orderModeSwitch" aria-hidden="true">
-          <span className="sf-orderModeSwitchText">Cambiar</span>
-        </span>
-      </button>
+      <DeliveryMethodSelector
+        serviceMode={serviceMode}
+        destination={destination}
+        onChange={() => navigate(`/${partnerSlug}/order`, {
+          state: {
+            orderTrail: "change-service",
+            partnerName: partner?.name || store?.partnerName || store?.storeName,
+            storeName: store?.storeName,
+            currentStoreSlug: storeSlug,
+            currentServiceMode: serviceMode,
+            returnToStorePath: `/${partnerSlug}/${storeSlug}`,
+          },
+        })}
+      />
     );
   };
 
@@ -6302,7 +6196,7 @@ export default function StorePage() {
         >
           <div className="sf-lsfNavCeiling">
             <div className="sf-catalogMobileToolbar">
-              {renderStoreInfoTicker(true)}
+              {renderStoreInfoTicker()}
               {renderCartButtonSafe()}
               <button type="button" className="sf-catalogSearchToggle" aria-label="Buscar productos" aria-expanded={catalogSearchOpen} onClick={toggleCatalogSearch}><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" strokeWidth="2" /><path d="m16 16 5 5" stroke="currentColor" strokeWidth="2" /></svg></button>
               {renderCatalogTools()}
@@ -6675,7 +6569,7 @@ export default function StorePage() {
                             </div>
                             {renderDirectDiscountBadge(item, incentiveNowMs)}
                             {renderTrendingBadge(item)}
-                            {renderTrendingKpis(item) ||
+                            {renderClearanceRibbon(item) || renderTrendingKpis(item) ||
                               renderOfferRibbon(
                                 hasTopDealPolicy(item) ? formatOfferCountdown(item.directDiscount, incentiveNowMs) : "",
                                 "Termina en:",
@@ -7012,8 +6906,10 @@ export default function StorePage() {
                 </div>
 
                 {hasTopDealPolicy(selectedProduct) && (
-                  <div className="sf-directDiscountNotice">
-                    <strong>{getDirectDiscountLabel(selectedProduct.directDiscount)}</strong>
+                  <div className={`sf-directDiscountNotice ${isClearanceLine(selectedProduct) ? "sf-directDiscountNotice--clearance" : ""}`}>
+                    <strong>{isClearanceLine(selectedProduct) ? "Liquidación" : getDirectDiscountLabel(selectedProduct.directDiscount)}</strong>
+                    {isClearanceLine(selectedProduct) && <small>Recogida sin pedido mínimo. A domicilio si el carrito alcanza el mínimo después de descuentos. Precio sin cupones ni ofertas adicionales.</small>}
+                    {isClearanceLine(selectedProduct) && formatOfferCountdown(selectedProduct.directDiscount, incentiveNowMs) && <small>Termina en: {formatOfferCountdown(selectedProduct.directDiscount, incentiveNowMs)}</small>}
                     {selectedTopDealRemainingQty != null && (
                       <small>{selectedProductMaxQty} disponibles para agregar</small>
                     )}
@@ -7367,6 +7263,7 @@ export default function StorePage() {
                             ? `${line.name} GRATIS`
                             : line.name}
                         </strong>
+                        {isClearanceLine(line) && <span className="sf-clearanceBadge">Liquidación · Recogida sin pedido mínimo</span>}
                         {isIncentiveRewardCartLine(line) && (
                           <span>Incentivo #{line.incentiveId} - {line.size} x {line.qty}</span>
                         )}
@@ -7480,16 +7377,24 @@ export default function StorePage() {
                       <strong>EUR {deliveryCheckoutFee.toFixed(2)}</strong>
                     </div>
                   )}
+                  {hasDeliveryFreeCouponApplied && deliveryCheckoutFee > shippingBenefitFee && (
+                    <div className="sf-cartMinimumNotice">Se conserva tu envío gratis. El reparto adicional por la liquidación cuesta {formatMoney(deliveryCheckoutFee - shippingBenefitFee, partner?.currency || "EUR")}.</div>
+                  )}
                   <div className="sf-cartFootLine sf-cartFootLine--total">
                     <span>Total</span>
                     <strong>EUR {cartTotal.toFixed(2)}</strong>
                   </div>
                   {cartBelowMinimumPayment && (
                     <div className="sf-cartMinimumNotice">
-                      Pago minimo {formatMoney(minimumPaymentAmount, partner?.currency || "EUR")}.
+                      Pedido mínimo {formatMoney(minimumPaymentAmount, partner?.currency || "EUR")} en productos, después de descuentos y sin portes.
                       Faltan {formatMoney(minimumPaymentMissing, partner?.currency || "EUR")}.
+                      <div className="sf-cartMinimumActions">
+                        <button type="button" className="sf-primaryBtn" onClick={() => setCartOpen(false)}>Seguir comprando</button>
+                        {getStoreServiceMode(store, orderSelection) === "delivery" && storeAllowsPickup(store) && <button type="button" className="sf-secondaryBtn" onClick={() => navigate(`/${partnerSlug}/order`, { state: { orderTrail: "change-service", currentStoreSlug: storeSlug, currentServiceMode: "delivery", startServiceMode: "pickup", returnToStorePath: `/${partnerSlug}/${storeSlug}` } })}>Cambiar a recogida</button>}
+                      </div>
                     </div>
                   )}
+                  {orderMinimum.pickupExempt && <div className="sf-cartMinimumNotice">Tu pedido incluye liquidación: recogida sin pedido mínimo.</div>}
                   {activeCouponCode && (
                     <div className="sf-cartMinimumNotice" role="status">
                       {couponNeedsValidation ? "Comprobando tu descuento..." : couponStatus}

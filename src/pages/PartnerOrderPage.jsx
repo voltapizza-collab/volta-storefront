@@ -268,12 +268,17 @@ export default function PartnerOrderPage() {
   }, [singleServiceMode]);
 
   useEffect(() => {
+    if (location.state?.startServiceMode === "pickup" && pickupAvailable && !serviceMode) {
+      setServiceMode("pickup");
+      setPickupModalOpen(true);
+      return;
+    }
     if (location.state?.startServiceMode !== "delivery") return;
     if (singleServiceMode !== "delivery" || serviceMode) return;
 
     setServiceMode("delivery");
     setDeliveryModalOpen(true);
-  }, [location.state, serviceMode, singleServiceMode]);
+  }, [location.state, serviceMode, singleServiceMode, pickupAvailable]);
 
   const pickupReady = pickupAvailable && serviceMode === "pickup" && Boolean(selectedStoreSlug);
   const deliveryReady =

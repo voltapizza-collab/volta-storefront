@@ -82,6 +82,7 @@ export default function useCatalogFocus({ location, navigate, suspended, rootRef
     let frame;
     const viewport = window.visualViewport;
     const footer = root.querySelector(".sf-stickyFooterShell");
+    const stage = stageRef.current;
     const update = () => {
       frame = null;
       const height = viewport?.height || window.innerHeight;
@@ -90,10 +91,17 @@ export default function useCatalogFocus({ location, navigate, suspended, rootRef
       root.style.setProperty("--catalog-viewport-height", `${height}px`);
       root.style.setProperty("--catalog-viewport-top", `${viewport?.offsetTop || 0}px`);
       root.style.setProperty("--catalog-footer-height", `${keyboard ? 0 : footer?.getBoundingClientRect().height || 0}px`);
+      if (!open && stage) {
+        // Use its document position, not its scrolled position: scrolling must not
+        // grow the surface. Header/footer resizes still update the available area.
+        const stageTop = stage.getBoundingClientRect().top + window.scrollY;
+        root.style.setProperty("--catalog-surface-min-height", `${Math.max(0, height - stageTop)}px`);
+      }
     };
     const schedule = () => { if (frame == null) frame = window.requestAnimationFrame(update); };
     const observer = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(schedule);
     if (footer) observer?.observe(footer);
+    root.querySelectorAll('.sf-lsfSurface, .sf-storeHeader--desktop').forEach(header => observer?.observe(header));
     update();
     window.addEventListener("resize", schedule);
     viewport?.addEventListener("resize", schedule);
@@ -109,6 +117,6 @@ export default function useCatalogFocus({ location, navigate, suspended, rootRef
       document.removeEventListener("focusin", schedule);
       document.removeEventListener("focusout", schedule);
     };
-  }, [open, ready, rootRef]);
+  }, [open, ready, rootRef, stageRef]);
   return [open, setOpen, available];
 }

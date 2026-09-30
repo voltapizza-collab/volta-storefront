@@ -20,7 +20,7 @@
   }
 
   /* Grid and flex cards share the image's right edge for offer countdowns. */
-  .sf-shell.sf-catalog.sf-shell--mode-commercial-light .lsf-card :is(.lsf-offerRibbon, .lsf-categoryDealCountdown) {
+  .sf-shell.sf-catalog.sf-shell--mode-commercial-light .lsf-card :is(.lsf-offerRibbon, .lsf-categoryDealCountdown):not(.lsf-clearanceRibbon) {
     align-self: flex-end;
     justify-self: end;
     margin-left: auto;

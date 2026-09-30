@@ -51,6 +51,9 @@
 .bo-notices-open-item small { grid-column: 2; font-size: 11px; }
 .bo-notices-open-item:hover { background: rgba(255,255,255,.3); }
 .bo-notices-dialog .bo-notices-list-empty { padding: 24px 0; font-weight: 600; }
+.bo-productLinks-dialog .bo-productLinks-name { font-weight: 800; margin: 0 0 12px; }
+.bo-productLinks-list li { display: grid; gap: 6px; padding: 14px 16px; color: #310075; overflow-wrap: anywhere; }
+.bo-productLinks-list li span { font-size: 13px; line-height: 1.5; }
 @media (max-width: 420px) {
   .bo-notices-header { padding: 14px 18px; }
   .bo-notices-body { padding: 22px 22px 18px; }

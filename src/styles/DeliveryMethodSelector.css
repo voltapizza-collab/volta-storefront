@@ -1,0 +1,102 @@
+.sf-shell .sf-deliveryChoice {
+  --delivery-line-height: 20px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--sf-custom-pizza-orange);
+  font: inherit;
+  text-align: left;
+  text-transform: none;
+  cursor: pointer;
+}
+
+.sf-deliveryChoice__window {
+  flex: 1;
+  min-width: 0;
+  height: var(--delivery-line-height);
+  overflow: hidden;
+}
+
+.sf-deliveryChoice__track {
+  display: block;
+  animation: sfDeliveryChoiceCycle 8s ease-in-out infinite;
+}
+
+.sf-deliveryChoice__line {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: var(--delivery-line-height);
+  overflow: hidden;
+  font-size: 13px;
+  font-weight: 750;
+  line-height: var(--delivery-line-height);
+}
+
+.sf-deliveryChoice__text {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.sf-deliveryChoice__static { display: none; }
+
+.sf-deliveryChoice__change {
+  flex: 0 0 13px;
+  align-self: flex-start;
+  display: grid;
+  place-items: center;
+  width: 13px;
+  height: 13px;
+  color: inherit;
+}
+
+.sf-shell .sf-deliveryChoice:hover { background: #fff5ed; }
+.sf-shell .sf-deliveryChoice:focus-visible { outline: 3px solid var(--sf-custom-pizza-orange); outline-offset: 3px; }
+.sf-deliveryChoice:is(:hover, :focus-visible) .sf-deliveryChoice__track { animation-play-state: paused; }
+
+@keyframes sfDeliveryChoiceCycle {
+  0%, 36% { transform: translateY(0); }
+  42%, 94% { transform: translateY(calc(-1 * var(--delivery-line-height))); }
+  100% { transform: translateY(calc(-2 * var(--delivery-line-height))); }
+}
+
+@media (max-width: 560px) {
+  .sf-catalog .sf-catalogMobileToolbar { grid-template-columns: minmax(0, 1fr) auto 40px 76px; }
+  .sf-catalog .sf-catalogMobileToolbar .sf-catalogSearchToggle { min-width: 40px; }
+}
+
+@media (max-width: 360px) {
+  .sf-catalog .sf-catalogMobileToolbar { grid-template-columns: minmax(0, 1fr) auto 36px 64px; gap: 3px; }
+  .sf-catalog .sf-catalogMobileToolbar .sf-catalogSearchToggle { min-width: 36px; }
+  .sf-catalog .sf-catalogMobileToolbar .lsf-cartbtn { padding-inline: 2px; }
+}
+
+@media (min-width: 761px) {
+  .sf-shell .sf-storeHeader--desktop .lsf-top__actions > .sf-deliveryChoice {
+    display: flex;
+    width: 340px;
+    max-width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sf-deliveryChoice__window { display: none; }
+  .sf-deliveryChoice__track { animation: none; }
+  .sf-deliveryChoice__static {
+    display: block;
+    flex: 1;
+    min-width: 0;
+  }
+}

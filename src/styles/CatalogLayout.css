@@ -316,10 +316,22 @@
 .sf-sizePriceSlide.is-current { opacity: 1; visibility: visible; }
 .sf-sizePriceSlide.is-current.has-started { animation: sf-sizePriceEnter .35s ease-out both; }
 .sf-sizePriceSlide.is-previous { visibility: visible; animation: sf-sizePriceExit .35s ease-out both; }
-.sf-sizePriceTicker .lsf-card__priceCurrent { white-space: nowrap; }
-.lsf-card__dealMeta:has(.sf-sizePriceTicker) { flex-wrap: wrap; }
-.lsf-card__dealMeta > .sf-sizePriceTicker { flex: 1 0 115px; }
-.lsf-card__dealMeta:has(.sf-sizePriceTicker) > .lsf-topDealAvailabilityPill { margin-left: auto; }
+.sf-catalog :is(.lsf-card__priceCurrent, .lsf-card__priceOld) { white-space: nowrap; }
+/* Keep each amount intact; availability can use the next row on narrow cards. */
+.sf-catalog .lsf-card__dealMeta { flex-wrap: wrap; }
+.sf-catalog .lsf-card__dealMeta > :is(.lsf-card__price, .lsf-topDealPrice) {
+  flex: 1 0 auto;
+  width: auto;
+  min-width: min-content;
+}
+.lsf-card__dealMeta > .sf-sizePriceTicker { flex: 1 0 auto; width: max-content; }
+.sf-catalog .lsf-card__dealMeta > .lsf-topDealAvailabilityPill { margin-left: auto; }
+@media (max-width: 560px) {
+  /* Leave room for the size suffix as well as the currency and amount. */
+  .sf-shell.sf-catalog .lsf-card .sf-sizePriceTicker .lsf-card__priceCurrent {
+    font-size: clamp(.8rem, 3.8vw, 1.02rem);
+  }
+}
 @keyframes sf-sizePriceEnter { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 @keyframes sf-sizePriceExit { from { transform: translateY(0); opacity: 1; } to { transform: translateY(-100%); opacity: 0; } }
 @media (prefers-reduced-motion: reduce) {

@@ -20,7 +20,6 @@ import PaymentMethodModal from "../components/Storefront/PaymentMethodModal";
 import IngredientRemovalPicker from "../components/Storefront/IngredientRemovalPicker";
 import { getRemovableIngredients, normalizeRemovedIngredients, ingredientRemovalRows, supportsIngredientRemovals } from "../utils/ingredientRemovals";
 import flagEs from "../assets/flags/es.svg";
-import gridWatermarkLogo from "../assets/logo/the pizza sale enganine.png";
 import {
   BRANDING_DEFAULTS,
   buildBrandThemeVars,
@@ -2989,7 +2988,6 @@ export default function StorePage() {
         "--sf-theme-on-accent": theme.onAccent,
         "--sf-theme-on-surface": theme.onSurface,
         "--sf-font-family": theme.fontFamily,
-        "--sf-grid-watermark-logo": `url("${partner?.brandLogoUrl || gridWatermarkLogo}")`,
       };
     },
     [partner]
@@ -6908,10 +6906,12 @@ export default function StorePage() {
                 {hasTopDealPolicy(selectedProduct) && (
                   <div className={`sf-directDiscountNotice ${isClearanceLine(selectedProduct) ? "sf-directDiscountNotice--clearance" : ""}`}>
                     <strong>{isClearanceLine(selectedProduct) ? "Liquidación" : getDirectDiscountLabel(selectedProduct.directDiscount)}</strong>
-                    {isClearanceLine(selectedProduct) && <small>Recogida sin pedido mínimo. A domicilio si el carrito alcanza el mínimo después de descuentos. Precio sin cupones ni ofertas adicionales.</small>}
+                    {isClearanceLine(selectedProduct) && <small>Recogida sin pedido mínimo</small>}
                     {isClearanceLine(selectedProduct) && formatOfferCountdown(selectedProduct.directDiscount, incentiveNowMs) && <small>Termina en: {formatOfferCountdown(selectedProduct.directDiscount, incentiveNowMs)}</small>}
                     {selectedTopDealRemainingQty != null && (
-                      <small>{selectedProductMaxQty} disponibles para agregar</small>
+                      <small>{isClearanceLine(selectedProduct)
+                        ? `${selectedProductMaxQty} ${selectedProductMaxQty === 1 ? "unidad disponible" : "unidades disponibles"}`
+                        : `${selectedProductMaxQty} disponibles para agregar`}</small>
                     )}
                   </div>
                 )}

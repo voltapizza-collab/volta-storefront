@@ -6,4 +6,6 @@ Los documentos fechados son registros históricos: sus estados «pendiente de pu
 
 La fuente del icono aprobado está en `design/volta-icon/approved.svg`. Mantener las claves y los códigos de alta fuera de Git. Las migraciones y herramientas administrativas se versionan en el repositorio volta-backend.
 
-El preset no automatiza todavía el alta de nuevos equipos. Continúan pendientes el acceso guiado de aprovisionamiento, kiosco, inicio automático, recepción en segundo plano y distribución definitiva.
+Desde 0.3.12 el primer inicio abre el registro por código de alta y devuelve al POS normal tras autorizar el dispositivo. Véase [alta de la segunda unidad](alta-sunmi-2026-10-02.md). El operador sigue generando un código por equipo. Continúan pendientes kiosco, inicio automático, recepción en segundo plano y distribución definitiva.
+
+El actualizador mediante `PackageInstaller` está en validación técnica. Estado, comandos y límites en [actualizaciones del SUNMI](actualizaciones-packageinstaller-2026-10-02.md). No dar por demostrada la instalación silenciosa ni la reapertura hasta completar la prueba física.

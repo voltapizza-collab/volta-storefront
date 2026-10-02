@@ -1,7 +1,10 @@
+import PartnerLogo from "../PartnerLogo";
+
 export default function OrderPortalTransition({
   title = "Welcome",
   eyebrow = "Volta Arcade",
-  partnerName = "MyCrushPizza",
+  partnerName = "",
+  partnerLogoUrl,
   mode = "order",
 }) {
   const beams = [-42, -31, -20, -9, 8, 19, 30, 41];
@@ -44,6 +47,7 @@ export default function OrderPortalTransition({
           <span />
         </div>
         <div className="sf-orderPortal__core">
+          {mode === "brand" && <PartnerLogo src={partnerLogoUrl} name={partnerName} />}
           <p>{mode === "brand" ? partnerName : eyebrow}</p>
           <h1>
             {headlineWords.map((word, index) => (

@@ -79,6 +79,13 @@ public class SessionActivity extends Activity {
         if (client.deviceId().isEmpty()) { ui(this::enrollmentScreen); return; }
         JSONObject device = client.device();
         android.util.Log.i("VoltaIdentity", "DEVICE_AUTHORIZED");
+        if (getIntent().getBooleanExtra("return_to_pos", false)) {
+            ui(() -> {
+                startActivity(new Intent(this, PosActivity.class));
+                finish();
+            });
+            return;
+        }
         if (client.hasSession()) {
             try { showStore(client.bootstrap()); return; }
             catch (PosClient.ApiException e) {
@@ -95,7 +102,7 @@ public class SessionActivity extends Activity {
         int pad = (int)(24 * getResources().getDisplayMetrics().density);
         root.setPadding(pad,pad,pad,pad); scroll.addView(root); setContentView(scroll);
         label("VOLTA POS", 30); label(subtitle, 18);
-        label("Piloto de conexión por USB", 12);
+        label(PosClient.BASE_URL.startsWith("https://") ? "Configuración del terminal" : "Conexión local por USB", 12);
     }
     private void label(String text, int size) {
         TextView v = new TextView(this); v.setText(text); v.setTextSize(size); v.setTextColor(Color.rgb(60,30,90));
@@ -154,7 +161,9 @@ public class SessionActivity extends Activity {
     private void error(Exception error) {
         android.util.Log.w("VoltaIdentity", error instanceof PosClient.ApiException ?
             ((PosClient.ApiException) error).code : "connection_or_local_storage_error");
-        String message = "No se pudo conectar. Comprueba el cable USB y el servidor de prueba.";
+        String message = PosClient.BASE_URL.startsWith("https://")
+            ? "No se pudo conectar con Volta. Comprueba la conexión a internet."
+            : "No se pudo conectar. Comprueba el cable USB y el servidor local.";
         if (error instanceof PosClient.ApiException) {
             String code = ((PosClient.ApiException) error).code;
             if (code.equals("invalid_credentials")) message = "Usuario o PIN incorrectos.";

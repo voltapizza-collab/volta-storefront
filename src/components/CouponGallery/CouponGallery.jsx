@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import api from "../../setupAxios";
+import PartnerLogo from "../PartnerLogo";
 import "../../styles/CouponGallery.css";
 
 const normalizeZipCode = (value = "") => {
@@ -822,6 +823,7 @@ export default function CouponGallery({ partner }) {
     <div className="cg-shell" data-build={COUPON_GALLERY_BUILD_MARK}>
       <div className="cg-wrap">
         <header className="cg-hero">
+          <PartnerLogo src={partner?.brandLogoUrl} name={partner?.name} />
           <div className="cg-kicker">Coupon Gallery</div>
           <h1>{partner?.name || "Coupon Gallery"}</h1>
           <p>Explora cupones publicos y reclama solo los disponibles en tu zona.</p>

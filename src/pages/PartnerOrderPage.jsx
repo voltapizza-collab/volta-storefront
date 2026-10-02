@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import OrderPortalTransition from "../components/Storefront/OrderPortalTransition";
 import { ReactComponent as PizzaBg } from "../assets/logo/pizza.svg";
+import PartnerLogo from "../components/PartnerLogo";
 import api from "../services/api";
 import "../styles/Storefront.css";
 import { buildPartnerSeo, usePublicSeo } from "../utils/seo";
@@ -106,18 +107,22 @@ export default function PartnerOrderPage() {
 
   useEffect(() => {
     if (!partnerSlug) return;
+    let cancelled = false;
+    setPartner(null);
+    setError("");
 
     const loadPartner = async () => {
       try {
         const data = await api.get(`/partners/${partnerSlug}`);
-        setPartner(data);
+        if (!cancelled) setPartner(data);
       } catch (err) {
         console.error(err);
-        setError("Partner not found");
+        if (!cancelled) setError("Partner not found");
       }
     };
 
     loadPartner();
+    return () => { cancelled = true; };
   }, [partnerSlug]);
 
   const activeStores = useMemo(() => {
@@ -538,6 +543,7 @@ export default function PartnerOrderPage() {
         title="Welcome"
         eyebrow="Order here"
         mode="brand"
+        partnerLogoUrl={partner?.brandLogoUrl}
         partnerName={location.state?.partnerName || partner?.name || partnerSlug}
       />
     );
@@ -559,6 +565,7 @@ export default function PartnerOrderPage() {
 
             <div className="sf-entryHeader sf-entryHeader--orderStart">
               <div className="sf-kicker">Pedido online</div>
+              <PartnerLogo src={partner.brandLogoUrl} name={partner.name} />
               <span className="sf-orderBrand">{partner.name}</span>
             {!isStorefrontClosed && (
               <h1 className="sf-entryTitle">

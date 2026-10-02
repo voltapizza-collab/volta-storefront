@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import api from "../../setupAxios";
+import PartnerLogoUpload from "./PartnerLogoUpload";
 
 const DEFAULT_FORM = {
   minimumPaymentAmount: "0",
@@ -308,7 +309,6 @@ export default function SettingsPoliciesModule({ partner }) {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [savingRules, setSavingRules] = useState(false);
-  const [uploadingLogo, setUploadingLogo] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [partnerData, setPartnerData] = useState(null);
@@ -551,39 +551,6 @@ export default function SettingsPoliciesModule({ partner }) {
 
   const clearPaymentStores = () => {
     setPaymentStoreSelection([]);
-  };
-
-  const handleLogoUpload = async (event) => {
-    const file = event.target.files?.[0];
-    if (!file || !partner?.partnerId) return;
-
-    try {
-      setUploadingLogo(true);
-      setError("");
-      setSuccess("");
-
-      const formData = new FormData();
-      formData.append("logo", file);
-
-      const response = await api.post(
-        `/partners/by-id/${partner.partnerId}/logo`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-
-      setPartnerData(response.data);
-      setSuccess("Logo actualizado.");
-    } catch (uploadError) {
-      console.error("Error uploading logo", uploadError);
-      setError("No pudimos subir el logo.");
-    } finally {
-      setUploadingLogo(false);
-      event.target.value = "";
-    }
   };
 
   const handleSubmit = async (event) => {
@@ -844,27 +811,8 @@ export default function SettingsPoliciesModule({ partner }) {
           <aside className="bo-settingsSummaryCard bo-rulesLogoCard">
             <div className="bo-settingsEyebrow">Identidad base</div>
             <h3 className="bo-settingsSectionTitle">Logo del partner</h3>
-            <div className="bo-brandingPreviewLogo bo-rulesLogoPreview">
-              {partnerData?.brandLogoUrl ? (
-                <img src={partnerData.brandLogoUrl} alt={partnerData?.name || "Partner"} />
-              ) : (
-                <span>Sin logo</span>
-              )}
-            </div>
-            <div className="bo-logoUploadRow bo-rulesLogoUpload">
-              <label className="bo-settingsMiniCta bo-settingsMiniCta--file">
-                {uploadingLogo ? "Subiendo..." : "Subir logo"}
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleLogoUpload}
-                  hidden
-                />
-              </label>
-              <span className="bo-logoUploadHint">
-                El look completo se controla desde modos de personalizacion.
-              </span>
-            </div>
+            <PartnerLogoUpload key={partner?.partnerId} partnerId={partner?.partnerId} partner={partnerData}
+              onSaved={(data) => { setPartnerData(data); setSuccess("Logo actualizado."); }} />
           </aside>
         </div>
 

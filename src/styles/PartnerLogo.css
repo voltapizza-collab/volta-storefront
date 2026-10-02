@@ -1,0 +1,25 @@
+.sf-partnerLogo {
+  display: block;
+  width: 180px;
+  max-width: 100%;
+  height: 100px;
+  margin: 0 auto 16px;
+  object-fit: contain;
+}
+
+.sf-partnerLogo--entry {
+  width: 280px;
+  height: auto;
+  max-height: 180px;
+}
+
+.sf-entryHeader .sf-partnerLogo,
+.cg-hero .sf-partnerLogo {
+  margin-left: 0;
+}
+
+.sf-partnerLogo.mcp-logo {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}

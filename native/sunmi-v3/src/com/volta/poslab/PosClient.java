@@ -75,34 +75,41 @@ public final class PosClient {
         String body = payload == null ? "" : payload.toString();
         String authorization = withSession ? "Bearer " + token() : "";
         String id = enrollment ? "enroll" : deviceId();
+        HttpURLConnection connection = (HttpURLConnection) new URL(BASE_URL + path).openConnection();
+        connection.setInstanceFollowRedirects(false);
+        connection.setConnectTimeout(10000); connection.setReadTimeout(60000);
+        connection.setRequestMethod(method);
+        connection.setRequestProperty("Content-Type", "application/json");
+        signConnection(connection, method, path, body, authorization, id);
+        try {
+            if (payload != null) {
+                connection.setDoOutput(true);
+                try (OutputStream out = connection.getOutputStream()) { out.write(bytes(body)); }
+            }
+            return readJson(connection, 4_000_000);
+        } finally { connection.disconnect(); }
+    }
+    private void signConnection(HttpURLConnection connection, String method, String path, String body, String authorization, String id) throws Exception {
         String timestamp = Long.toString(System.currentTimeMillis() / 1000);
         byte[] random = new byte[24]; new SecureRandom().nextBytes(random);
         String nonce = Base64.encodeToString(random, Base64.NO_WRAP | Base64.NO_PADDING | Base64.URL_SAFE);
         String canonical = id + "\n" + timestamp + "\n" + nonce + "\n" + method + "\n" + path + "\n" + hash(body) + "\n" + hash(authorization);
         Signature signer = Signature.getInstance("SHA256withECDSA");
         signer.initSign((PrivateKey) keys.getKey(SIGN_KEY, null)); signer.update(bytes(canonical));
-        HttpURLConnection connection = (HttpURLConnection) new URL(BASE_URL + path).openConnection();
-        connection.setInstanceFollowRedirects(false);
-        connection.setConnectTimeout(10000); connection.setReadTimeout(60000);
-        connection.setRequestMethod(method);
-        connection.setRequestProperty("Content-Type", "application/json");
         connection.setRequestProperty("X-Volta-Device", id);
         connection.setRequestProperty("X-Volta-Time", timestamp);
         connection.setRequestProperty("X-Volta-Nonce", nonce);
         connection.setRequestProperty("X-Volta-Signature", b64(signer.sign()));
         if (!authorization.isEmpty()) connection.setRequestProperty("Authorization", authorization);
-        try {
-            if (payload != null) {
-                connection.setDoOutput(true);
-                try (OutputStream out = connection.getOutputStream()) { out.write(bytes(body)); }
-            }
+    }
+    private Object readJson(HttpURLConnection connection, int limit) throws Exception {
             int status = connection.getResponseCode();
             InputStream stream = status >= 400 ? connection.getErrorStream() : connection.getInputStream();
             ByteArrayOutputStream content = new ByteArrayOutputStream();
             if (stream != null) try (InputStream in = stream) {
                 byte[] buffer = new byte[4096]; int size;
                 while ((size = in.read(buffer)) != -1) {
-                    if (content.size() + size > 4_000_000) throw new IOException("Respuesta demasiado grande");
+                    if (content.size() + size > limit) throw new IOException("Respuesta demasiado grande");
                     content.write(buffer, 0, size);
                 }
             }
@@ -110,6 +117,47 @@ public final class PosClient {
             Object result = raw.isEmpty() ? new JSONObject() : new org.json.JSONTokener(raw).nextValue();
             if (status < 200 || status >= 300) throw new ApiException(status, result instanceof JSONObject ? ((JSONObject)result).optString("error", "server_error") : "server_error");
             return result;
+    }
+    private HttpURLConnection updateConnection(String method, String suffix, String body) throws Exception {
+        if (!ConnectionConfig.UPDATE_SERVER_URL.startsWith("https://")) throw new IOException("updates_not_configured");
+        String path = "/api/pos/updates" + suffix;
+        HttpURLConnection connection = (HttpURLConnection) new URL(ConnectionConfig.UPDATE_SERVER_URL + path).openConnection();
+        connection.setInstanceFollowRedirects(false);
+        connection.setConnectTimeout(4000); connection.setReadTimeout(4000);
+        connection.setRequestMethod(method);
+        connection.setRequestProperty("Content-Type", "application/json");
+        signConnection(connection, method, path, body, "", deviceId());
+        return connection;
+    }
+    public JSONObject updateRequest(String method, String suffix, JSONObject payload) throws Exception {
+        if (!suffix.matches("/(check|prepare|report)")) throw new IOException("invalid_update_path");
+        String body = payload == null ? "" : payload.toString();
+        HttpURLConnection connection = updateConnection(method, suffix, body);
+        try {
+            if (payload != null) {
+                connection.setDoOutput(true);
+                try (OutputStream out = connection.getOutputStream()) { out.write(bytes(body)); }
+            }
+            return (JSONObject) readJson(connection, 16000);
+        } finally { connection.disconnect(); }
+    }
+    public void downloadUpdate(String sha, File output, long expectedSize) throws Exception {
+        if (!sha.matches("[a-f0-9]{64}") || expectedSize <= 0 || expectedSize > 100 * 1024 * 1024) throw new IOException("invalid_update_artifact");
+        HttpURLConnection connection = updateConnection("GET", "/apk/" + sha, "");
+        connection.setReadTimeout(15000);
+        try {
+            if (connection.getResponseCode() != 200) throw new IOException("update_download_rejected");
+            long count = 0;
+            try (InputStream input = connection.getInputStream(); FileOutputStream out = new FileOutputStream(output)) {
+                byte[] buffer = new byte[32768]; int size;
+                while ((size = input.read(buffer)) != -1) {
+                    count += size;
+                    if (count > expectedSize) throw new IOException("update_size_mismatch");
+                    out.write(buffer, 0, size);
+                }
+                out.getFD().sync();
+            }
+            if (count != expectedSize) throw new IOException("update_size_mismatch");
         } finally { connection.disconnect(); }
     }
     public JSONObject enroll(String code) throws Exception {

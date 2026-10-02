@@ -2495,6 +2495,11 @@ export default function PosApp() {
                 setMessage('Ticket de prueba confirmado por SUNMI. Comprueba CAMBIOS, las retiradas en negrita y Receta original en la segunda pizza.');
               } catch (_) { setMessage('No se confirmó la impresión. Comprueba el papel antes de repetir.'); }
             }}><strong>Impresión de prueba</strong><small>Imprimir un ticket de comprobación</small></button>
+            {isNativePos && <button type="button" onClick={async () => {
+              setMenuOpen(false);
+              try { await nativeCall('updateSettings'); }
+              catch (_) { setMessage('No se pudo consultar el estado de las actualizaciones.'); }
+            }}><strong>Actualizaciones</strong><small>Versión del terminal y autorización de Android</small></button>}
             </div>
             <footer className="pos-menuFooter">{session.storeName} · Volta POS</footer>
           </dialog>

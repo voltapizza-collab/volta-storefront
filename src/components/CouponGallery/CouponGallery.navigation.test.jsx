@@ -40,6 +40,16 @@ async function returnToStore(nextPartner = partner) {
   fireEvent.click(screen.getByRole("button", { name: "Volver a tienda" }));
 }
 
+test("the gallery uses the business logo and keeps its name if the image fails", async () => {
+  render(<CouponGallery partner={{ ...partner, name: "Pizzería Nueva", brandLogoUrl: "https://example.com/nueva.png" }} />);
+  await screen.findByText(/No hay cupones publicos disponibles/);
+  const logo = screen.getByRole("img", { name: "Pizzería Nueva" });
+  expect(logo).toHaveAttribute("src", "https://example.com/nueva.png");
+  fireEvent.error(logo);
+  expect(screen.queryByRole("img", { name: "Pizzería Nueva" })).not.toBeInTheDocument();
+  expect(screen.getByRole("heading", { name: "Pizzería Nueva" })).toBeVisible();
+});
+
 test("direct QR entry opens the active public store even when the store list starts with inactive Vigo", async () => {
   await returnToStore();
   expect(navigate).toHaveBeenCalledWith("/mycrushpizza/plaza-diario");

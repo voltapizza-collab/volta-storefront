@@ -4,7 +4,8 @@ param(
     [string]$BuildTools = '36.0.0',
     [ValidateSet('usb', 'https')][string]$Connection = 'usb',
     [string]$VersionName = '0.3.9',
-    [int]$VersionCode = 12
+    [int]$VersionCode = 12,
+    [string]$UpdateServerUrl = ''
 )
 $ErrorActionPreference = 'Stop'
 Set-Location $PSScriptRoot
@@ -20,8 +21,11 @@ $variantResources = Join-Path $variantRoot 'res'
 New-Item -ItemType Directory -Force -Path $variantClasses,$variantResources | Out-Null
 Copy-Item -Path res\* -Destination $variantResources -Recurse -Force
 $serverUrl = if ($Connection -eq 'https') { 'https://api.voltapizza.com' } else { 'http://127.0.0.1:8091' }
+if ($UpdateServerUrl -and $UpdateServerUrl -notmatch '^https://[a-zA-Z0-9.-]+(?::[0-9]+)?$') {
+    throw 'UpdateServerUrl must be an HTTPS origin without path, credentials or query.'
+}
 $configSource = Join-Path $variantRoot 'ConnectionConfig.java'
-[System.IO.File]::WriteAllText($configSource, "package com.volta.poslab; public final class ConnectionConfig { public static final String SERVER_URL = `"$serverUrl`"; }", (New-Object System.Text.UTF8Encoding($false)))
+[System.IO.File]::WriteAllText($configSource, "package com.volta.poslab; public final class ConnectionConfig { public static final String SERVER_URL = `"$serverUrl`"; public static final String UPDATE_SERVER_URL = `"$UpdateServerUrl`"; }", (New-Object System.Text.UTF8Encoding($false)))
 if ($Connection -eq 'https') {
     Set-Content -LiteralPath (Join-Path $variantResources 'xml/network_security_config.xml') -Encoding utf8 -Value '<network-security-config><base-config cleartextTrafficPermitted="false" /></network-security-config>'
 }

@@ -2,7 +2,7 @@
 
 Identificador: `VOLTA-SUNMI-V3-01` · Revisión 1 · 6 septiembre 2026.
 
-Estado: procedimiento operativo documentado a partir del primer terminal. No es una imagen de sistema ni un instalador automático. El alta de nuevos equipos todavía necesita un flujo técnico accesible; ver paso 4. No considerar completada la preparación sin superar todos los controles de entrega.
+Estado: procedimiento operativo documentado a partir del primer terminal. No es una imagen de sistema ni un instalador automático. Actualización del 2 de octubre: la APK 0.3.12 habilita el registro inicial por código; véase [alta de la segunda unidad](../alta-sunmi-2026-10-02.md). Los valores de referencia de esta revisión describen el primer equipo. No considerar completada la preparación sin superar todos los controles de entrega.
 
 ## Qué recibe el restaurante
 
@@ -82,7 +82,7 @@ node scripts/posAdmin.js enroll-code "SUNMI V3 002" "OPERADOR" "pos-private/sunm
 
 El código es de un solo uso y caduca a los 15 minutos. No es el PIN de la tienda. Usar nombre de archivo nuevo para cada intento; la herramienta no sobrescribe archivos existentes. No publicar su contenido.
 
-**Limitación actual:** existe `SessionActivity` con pantalla de alta y existe el endpoint de registro, pero la actividad no está exportada ni tiene un acceso desde la pantalla principal `PosActivity`. Instalar el APK de entrega en un aparato virgen no completa por sí solo el registro. Antes de preparar el siguiente lote hay que habilitar un flujo de aprovisionamiento interno controlado y probarlo de principio a fin. No documentar como solución un comando ADB que abra una actividad no exportada ni exponerla públicamente sin diseñar el acceso.
+**Desde 0.3.12:** abrir Volta en una unidad sin registrar muestra la pantalla de alta. Introducir el código administrativo de un solo uso y pulsar «Registrar terminal». Tras verificar la identidad con el backend se abre el login normal de tienda. `SessionActivity` permanece sin exportar; no requiere abrirse desde ADB. Las APK anteriores siguen sin ese acceso inicial.
 
 Una vez completado el alta mediante el flujo técnico habilitado, verificar:
 
@@ -128,7 +128,7 @@ Son ejemplos para ejecutar cuando corresponda, no pasos automáticos de entrega.
 
 ## Pendientes que no deben confundirse con funciones terminadas
 
-1. Flujo accesible y probado de registro para terminales nuevos.
+1. Distribuir la APK 0.3.12 o posterior para disponer del registro inicial probado en la segunda unidad.
 2. Firma definitiva, repositorio de versiones y distribución/actualización de flota.
 3. Modo kiosco y arranque automático.
 4. Recepción garantizada en segundo plano o con la app cerrada.

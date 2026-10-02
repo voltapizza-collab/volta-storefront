@@ -6,12 +6,16 @@ Reutiliza el POS existente de React dentro del APK: pantalla de usuario/PIN, coc
 
 ## Compilar e instalar
 
+Actualizador en validación: parámetro opcional `-UpdateServerUrl https://origen-del-canal` al compilar. Sin él no se realizan consultas de actualización. Usar versiones crecientes y la misma clave de firma. El menú «Actualizaciones» abre el estado y la autorización de Android. Véase `../../docs/pos/actualizaciones-packageinstaller-2026-10-02.md`; el canal temporal de comprobación no sustituye al servicio de distribución de producción.
+
 1. En `volta-storefront`, ejecutar `node scripts/build-native-pos.cjs`.
-2. Para conexión directa, ejecutar `./build.ps1 -Connection https` e instalar `build/volta-pos-connected-0.3.8.apk` con `adb install -r`.
+2. Para conexión directa, ejecutar `./build.ps1 -Connection https -VersionName 0.3.12 -VersionCode 15` e instalar `build/volta-pos-connected-0.3.12.apk` con `adb install -r`.
 3. Esta variante usa `https://api.voltapizza.com`, prohíbe HTTP y deshabilita la depuración WebView. Requiere las rutas `/api/pos` publicadas con `POS_IDENTITY_ENABLED=true`.
 4. Para el piloto local, ejecutar `./build.ps1 -Connection usb` e instalar `build/volta-pos-pilot-0.2.0.apk`. Solo esta variante requiere `volta-backend/scripts/posPilotServer.js` y `adb reverse tcp:8091 tcp:8091`.
 
-El terminal ya registrado conserva su identidad y sesión al actualizar. El registro de nuevas unidades sigue usando la pantalla administrativa `SessionActivity`; la distribución definitiva aún debe completar ese flujo. El acceso de tienda requiere solo usuario y PIN.
+El terminal ya registrado conserva su identidad y sesión al actualizar. Desde 0.3.12, una instalación nueva abre automáticamente `SessionActivity` para introducir el código administrativo de alta, de un solo uso. Tras verificar la identidad con el servidor vuelve al POS normal. La actividad de alta continúa sin exportarse; el acceso de tienda requiere solo usuario y PIN.
+
+La entrega 0.3.12-https (código 15) habilita ese acceso inicial y conserva los assets de interfaz verificados de 0.3.11. Se construye con `./build.ps1 -Connection https -VersionName 0.3.12 -VersionCode 15`. Registro de la unidad nueva: `../../docs/pos/alta-sunmi-2026-10-02.md`.
 
 La versión 0.3.8 muestra `CAMBIOS:` bajo cada pizza con retiradas o extras, y `Receta original` para pizzas de carta sin modificaciones. El ticket imprime en negrita el título y las retiradas `SIN ...`. La opción del menú `Impresión de prueba` compara dos pizzas iguales, una modificada y otra con receta original, sin crear una venta.
 

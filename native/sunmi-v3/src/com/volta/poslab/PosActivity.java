@@ -21,12 +21,22 @@ public class PosActivity extends Activity {
     private final java.util.concurrent.atomic.AtomicBoolean printing = new java.util.concurrent.atomic.AtomicBoolean();
     private WebView web;
     private PosClient client;
+    private PosUpdater updater;
+    private android.widget.FrameLayout root;
+    private android.widget.TextView maintenance;
     private volatile PrinterSdk.Printer printer;
     private volatile boolean destroyed;
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         try { client = new PosClient(this); } catch (Exception e) { finish(); return; }
+        if (client.deviceId().isEmpty()) {
+            startActivity(new android.content.Intent(this, SessionActivity.class)
+                .putExtra("return_to_pos", true));
+            finish();
+            return;
+        }
+        updater = PosUpdater.get(this); updater.attach(this);
         web = new WebView(this);
         // Development inspection over the already-authorized USB connection only.
         WebView.setWebContentsDebuggingEnabled(PosClient.BASE_URL.equals("http://127.0.0.1:8091"));
@@ -40,10 +50,17 @@ public class PosActivity extends Activity {
         web.addJavascriptInterface(new Bridge(), "VoltaNative");
         web.setWebViewClient(new WebViewClient() {
             @Override public void onPageFinished(WebView view, String url) {
-                view.postDelayed(() -> {
+                view.postDelayed(new Runnable() { public void run() {
                     if (!destroyed) view.evaluateJavascript("JSON.stringify({login:!!document.querySelector('.pos-loginPanel'),pos:!!document.querySelector('.pos-shell'),inputs:document.querySelectorAll('.pos-loginPanel input').length,overflow:document.documentElement.scrollWidth>innerWidth+2,cardsFit:[...document.querySelectorAll('.pos-orderCard')].every(e=>e.getBoundingClientRect().right<=e.parentElement.getBoundingClientRect().right+1&&e.scrollWidth<=e.clientWidth+1),inventory:!!document.querySelector('.pos-inventoryFab')})",
-                        value -> android.util.Log.i("VoltaUi", "UI_CHECK " + value));
-                }, 25000);
+                        value -> {
+                            android.util.Log.i("VoltaUi", "UI_CHECK " + value);
+                            try {
+                                JSONObject ui = new JSONObject((String)new JSONTokener(value).nextValue());
+                                updater.uiReady(ui.optBoolean("pos") || (!client.hasSession() && ui.optBoolean("login")));
+                            } catch (Exception ignored) { updater.uiReady(false); }
+                        });
+                    if (!destroyed) view.postDelayed(this,30000);
+                } }, 25000);
             }
             @Override public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest req) { return true; }
             @Override public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest req) {
@@ -60,7 +77,8 @@ public class PosActivity extends Activity {
                 } catch (Exception e) { return new WebResourceResponse("text/plain", "UTF-8", 404, "Not Found", new HashMap<>(), new ByteArrayInputStream(new byte[0])); }
             }
         });
-        setContentView(web); web.loadUrl(ORIGIN + "/index.html");
+        root = new android.widget.FrameLayout(this); root.addView(web);
+        setContentView(root); web.loadUrl(ORIGIN + "/index.html");
         android.content.pm.ShortcutManager shortcuts = getSystemService(android.content.pm.ShortcutManager.class);
         if (shortcuts != null && shortcuts.isRequestPinShortcutSupported()) {
             android.content.Intent open = new android.content.Intent(this, PosActivity.class).setAction(android.content.Intent.ACTION_MAIN);
@@ -90,7 +108,14 @@ public class PosActivity extends Activity {
     private class Bridge {
         @JavascriptInterface public void call(String id, String operation, String raw) {
             if (raw == null || raw.length() > 100000 || destroyed) return;
-            worker.execute(() -> {
+            if (!PosUpdater.GATE.enter()) {
+                try { respond(id,503,new JSONObject().put("error","terminal_updating")); } catch(Exception ignored) { }
+                return;
+            }
+            java.util.concurrent.atomic.AtomicBoolean released = new java.util.concurrent.atomic.AtomicBoolean();
+            Runnable release = () -> { if (released.compareAndSet(false,true)) PosUpdater.GATE.leave(); };
+            try { worker.execute(() -> {
+                boolean asynchronous = false;
                 try {
                     JSONObject body = new JSONObject(raw);
                     Object result;
@@ -100,7 +125,9 @@ public class PosActivity extends Activity {
                         if (!client.hasSession()) result = JSONObject.NULL;
                         else try { result = sessionData(client.bootstrap()); }
                         catch (PosClient.ApiException e) { if (e.status != 401) throw e; client.logout(); result = JSONObject.NULL; }
-                    } else if (operation.equals("logout")) { client.logout(); result = new JSONObject(); }
+                        updater.restored(result instanceof JSONObject ? (JSONObject)result : null);
+                    } else if (operation.equals("logout")) { client.logout(); updater.restored(null); result = new JSONObject(); }
+                    else if (operation.equals("updateSettings")) { showUpdateSettings(); result = new JSONObject(); }
                     else if (operation.equals("request")) {
                         String path = body.getString("path"), method = body.getString("method");
                         JSONObject payload = body.optJSONObject("body");
@@ -108,6 +135,7 @@ public class PosActivity extends Activity {
                             if (client.logoutPending()) client.logout();
                             client.login(payload.getString("username"), payload.getString("pin"));
                             result = sessionData(client.bootstrap());
+                            updater.restored((JSONObject)result);
                         } else {
                             JSONObject params = body.optJSONObject("params");
                             if (params != null && params.length()>0) {
@@ -117,24 +145,27 @@ public class PosActivity extends Activity {
                                 path += "?" + query;
                             }
                             result = client.uiRequest(method,path,payload);
+                            if (method.equals("GET") && path.split("\\?",2)[0].equals("/api/myorders/pending")) updater.ordersRead();
                         }
                     } else if (operation.equals("printerStatus")) {
                         boolean ready = printer != null && printer.queryApi().getStatus() == Status.READY;
+                        updater.printerReady(ready);
                         result = new JSONObject().put("realConnected",ready).put("virtualReady",false).put("label", ready ? "SUNMI V3" : "Comprueba papel e impresora");
                     } else if (operation.equals("print")) {
-                        print(id, body, false); return;
+                        asynchronous = true; print(id, body, false, release); return;
                     } else if (operation.equals("printTest")) {
-                        client.bootstrap(); print(id, body, true); return;
+                        client.bootstrap(); asynchronous = true; print(id, body, true, release); return;
                     } else throw new IOException("Unsupported operation");
                     respond(id,200,result);
                 } catch (Exception e) {
+                    release.run();
                     try { respond(id, e instanceof PosClient.ApiException ? ((PosClient.ApiException)e).status : 503,
                         new JSONObject().put("error",e instanceof PosClient.ApiException ? ((PosClient.ApiException)e).code : "terminal_operation_failed")); } catch (Exception ignored) { }
-                }
-            });
+                } finally { if (!asynchronous) release.run(); }
+            }); } catch (RejectedExecutionException e) { release.run(); }
         }
     }
-    private void print(String id, JSONObject data, boolean test) throws Exception {
+    private void print(String id, JSONObject data, boolean test, Runnable release) throws Exception {
         // Validate active store and ownership before sending this ticket to hardware.
         if (!test) client.uiRequest("GET", "/api/myorders/"+data.getInt("orderId")+"/messages", null);
         if (!printing.compareAndSet(false,true)) throw new IOException("Printer busy");
@@ -160,16 +191,57 @@ public class PosActivity extends Activity {
                 @Override public void onResult(int code,String message) {
                     android.util.Log.i("VoltaPrint", "PRINT_RESULT code="+code);
                     printing.set(false);
+                    release.run();
                     try { respond(id,code==0 ? 200 : 503,new JSONObject().put("confirmed",code==0)); } catch(Exception ignored) { }
                 }
             });
         } catch(Exception e) { printing.set(false); throw e; }
     }
-    @Override protected void onPause() { super.onPause(); web.onPause(); }
-    @Override protected void onResume() { super.onResume(); if (web != null) web.onResume(); }
-    @Override public void onBackPressed() { moveTaskToBack(true); }
+    public void showUpdateMaintenance(boolean visible) {
+        runOnUiThread(() -> {
+            if (destroyed || root == null) return;
+            if (maintenance == null) {
+                maintenance = new android.widget.TextView(this);
+                maintenance.setText("Actualizando Volta POS…\nEspera a que termine la instalación.");
+                maintenance.setGravity(android.view.Gravity.CENTER); maintenance.setTextSize(22);
+                maintenance.setPadding(24,24,24,24); maintenance.setTextColor(0xff222222);
+                maintenance.setBackgroundColor(0xfffaf6ef); maintenance.setClickable(true);
+                root.addView(maintenance, new android.widget.FrameLayout.LayoutParams(-1,-1));
+            }
+            maintenance.setVisibility(visible ? android.view.View.VISIBLE : android.view.View.GONE);
+        });
+    }
+    private void showUpdateSettings() throws Exception {
+        JSONObject status = updater.status();
+        java.util.Map<String,String> labels = new HashMap<>();
+        labels.put("idle","Sin actualizaciones pendientes"); labels.put("healthy","Actualización comprobada");
+        labels.put("downloading","Descargando"); labels.put("ready","Preparada para instalar");
+        labels.put("waiting_safe","Esperando condiciones de mantenimiento"); labels.put("waiting_permission","Falta autorización de Android");
+        labels.put("installing","Instalando"); labels.put("installed","Comprobando funcionamiento");
+        labels.put("confirmation_required","Android solicita confirmación; instalación detenida"); labels.put("failed","La actualización no se completó");
+        String state = status.optString("state");
+        String text = "Versión " + status.getString("versionName") + "\n\n" +
+            (status.optBoolean("configured") ? labels.getOrDefault(state,"Comprobando actualizaciones") : "Actualizaciones remotas pendientes de configuración");
+        runOnUiThread(() -> {
+            if (destroyed) return;
+            android.app.AlertDialog.Builder dialog = new android.app.AlertDialog.Builder(this)
+                .setTitle("Actualizaciones de Volta POS").setMessage(text).setNegativeButton("Cerrar",null);
+            if (status.optBoolean("configured")) {
+                if (!status.optBoolean("canInstall")) dialog.setPositiveButton("Autorizar",(d,w) -> updater.permission());
+                else dialog.setPositiveButton("Comprobar",(d,w) -> updater.checkSoon());
+            }
+            dialog.show();
+        });
+    }
+    @Override protected void onPause() { super.onPause(); if (updater != null) updater.visibility(this,false); if (web != null) web.onPause(); }
+    @Override protected void onResume() { super.onResume(); if (updater != null) updater.visibility(this,true); if (web != null) web.onResume(); }
+    @Override public void onBackPressed() { if (!PosUpdater.GATE.isMaintenance()) moveTaskToBack(true); }
     @Override protected void onDestroy() {
-        destroyed=true; worker.shutdown(); web.removeJavascriptInterface("VoltaNative"); web.destroy();
-        PrinterSdk.getInstance().destroy(); super.onDestroy();
+        destroyed=true; worker.shutdown();
+        if (web != null) {
+            web.removeJavascriptInterface("VoltaNative"); web.destroy();
+            PrinterSdk.getInstance().destroy();
+        }
+        super.onDestroy();
     }
 }

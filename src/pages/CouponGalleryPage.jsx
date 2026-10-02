@@ -19,18 +19,22 @@ export default function CouponGalleryPage() {
 
   useEffect(() => {
     if (!partnerSlug) return;
+    let cancelled = false;
+    setPartner(null);
+    setError("");
 
     const loadPartner = async () => {
       try {
         const data = await api.get(`/partners/${partnerSlug}`);
-        setPartner(data);
+        if (!cancelled) setPartner(data);
       } catch (requestError) {
         console.error(requestError);
-        setError("No se pudo cargar la galeria.");
+        if (!cancelled) setError("No se pudo cargar la galeria.");
       }
     };
 
     loadPartner();
+    return () => { cancelled = true; };
   }, [partnerSlug]);
 
   if (error && portalReady) {

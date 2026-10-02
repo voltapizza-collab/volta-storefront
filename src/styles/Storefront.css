@@ -223,11 +223,26 @@
 .sf-shell--partnerGate {
   min-height: 100vh;
   padding: 18px;
-  background: transparent;
+  background: #fffaf1;
 }
 
-.sf-gate--buttonOnly {
+.sf-gate--branded {
   min-height: calc(100vh - 36px);
+  align-content: center;
+  justify-items: center;
+  gap: 28px;
+  text-align: center;
+}
+
+.sf-partnerIdentity {
+  width: min(420px, 100%);
+  overflow-wrap: anywhere;
+}
+
+.sf-partnerIdentity .sf-gateTitle {
+  margin: 0;
+  font-size: clamp(1.6rem, 6vw, 2.4rem);
+  line-height: 1.15;
 }
 
 .sf-partnerOrderButton {
@@ -300,7 +315,8 @@
   position: relative;
   z-index: 1;
   color: #2a005f;
-  font-size: clamp(2rem, 8vw, 3.8rem);
+  font-size: clamp(1.65rem, 7.5vw, 2.7rem);
+  white-space: nowrap;
   font-weight: 950;
   letter-spacing: 0;
   line-height: 0.9;
@@ -411,6 +427,28 @@
     drop-shadow(0 16px 28px rgba(42, 0, 95, 0.12))
     saturate(1.06)
     contrast(1.02);
+}
+
+.sf-storeGateName,
+.sf-storeGateStatus {
+  position: relative;
+  z-index: 1;
+  max-width: 100%;
+  margin: 0;
+  padding: 12px;
+  text-align: center;
+  overflow-wrap: anywhere;
+  color: #2a005f;
+}
+
+.sf-storeGateName {
+  font-size: clamp(2rem, 7vw, 3.5rem);
+  line-height: 1.1;
+}
+
+.mcp-orderButton:disabled {
+  cursor: wait;
+  opacity: 0.6;
 }
 
 .mcp-orderButton {
@@ -8592,19 +8630,6 @@
   box-shadow: none;
 }
 
-.sf-engineGridStage--lsf::before {
-  content: "";
-  position: absolute;
-  inset: 24px 42px;
-  z-index: 0;
-  pointer-events: none;
-  background: rgba(17, 17, 17, 0.055);
-  opacity: 0.9;
-  transform: rotate(-2deg);
-  mask: var(--sf-grid-watermark-logo) center / min(68%, 560px) no-repeat;
-  -webkit-mask: var(--sf-grid-watermark-logo) center / min(68%, 560px) no-repeat;
-}
-
 .sf-engineGridStage--lsf > * {
   position: relative;
   z-index: 1;
@@ -12551,11 +12576,6 @@
     margin-top: -4px;
   }
 
-  .sf-engineGridStage--lsf::before {
-    inset: 24px;
-    opacity: 0.45;
-  }
-
   .lsf-grid,
   .lsf-grid--trending,
   .lsf-grid--promos,
@@ -14411,7 +14431,6 @@
 
 .sf-shell--mode-commercial-light .lsf-top__actions::before,
 .sf-shell--mode-commercial-light .sf-lsfStoreTicker::before,
-.sf-shell--mode-commercial-light .sf-engineGridStage--lsf::before,
 .sf-shell--mode-commercial-light .sf-stickyFooter::before,
 .sf-shell--mode-commercial-light .sf-engineBottomBtn::after,
 .sf-shell--mode-commercial-light .lsf-callbtn {
@@ -20074,45 +20093,15 @@
   }
 }
 
-/* Desktop product grid: use the available viewport and keep uploaded logos subtle. */
+/* Desktop product grid: use the available viewport. */
 @media (min-width: 761px) {
   .sf-engineGridStage--lsf {
     min-height: clamp(560px, calc(100vh - 365px), 760px);
   }
 
-  .sf-engineGridStage--lsf::before {
-    inset: 42px 70px;
-    background-color: transparent;
-    background-image: var(--sf-grid-watermark-logo);
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: min(42%, 420px) auto;
-    opacity: 0.1;
-    filter: grayscale(1);
-    mix-blend-mode: multiply;
-    transform: none;
-    mask: none;
-    -webkit-mask: none;
-  }
-
   .sf-shell--mode-commercial-light .sf-engineGridStage--lsf {
     min-height: clamp(560px, calc(100vh - 365px), 760px);
     padding: 22px 26px 32px;
-  }
-
-  .sf-shell--mode-commercial-light .sf-engineGridStage--lsf::before {
-    inset: 42px 70px;
-    background-color: transparent;
-    background-image: var(--sf-grid-watermark-logo);
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: min(42%, 420px) auto;
-    opacity: 0.1;
-    filter: grayscale(1);
-    mix-blend-mode: multiply;
-    transform: none;
-    mask: none;
-    -webkit-mask: none;
   }
 
   .sf-shell--mode-commercial-light .lsf-grid-wrap {

@@ -1,5 +1,37 @@
 # Actualizaciones de Volta POS mediante PackageInstaller
 
+## Canal permanente — 3 de octubre
+
+**Resultado físico:** actualización 0.3.16 → 0.3.17 completada mediante el servidor permanente con el USB desconectado. Código 20 reportado como `healthy`, misma identidad y sesión de vigoCity, impresora lista. El usuario corrigió posteriormente esa observación: vuelve al escritorio y debe tocar el icono de Volta; la reapertura automática no está verificada. Evidencia en `../../../output/pos-permanent-2026-10-03/final-verification.json`. Las limitaciones de las secciones antiguas siguientes describen la prueba con túnel, no este resultado.
+
+La implementación nueva usa `https://api.voltapizza.com/api/pos/updates`, registro MySQL y almacenamiento privado Railway, en lugar del catálogo y túnel locales descritos en las secciones históricas. La APK 0.3.16-https/código 19 incorpora el origen permanente por defecto y la versión instalada en el pie. El procedimiento y los límites actuales están en `../../../volta-backend/docs/pos-permanent-updates.md`. El usuario establece el alta inicial por USB y las siguientes actualizaciones por internet. Se instaló 0.3.16 mediante `adb install -r` sobre 0.3.14 en el SUNMI VA08253N40979 y se abrió Volta. Queda asignada 0.3.17/código 20 únicamente a este terminal para comprobarla con el USB desconectado y la aceptación del usuario en el POS.
+
+## Revisión posterior del 3 de octubre: versión visible y canal caducado
+
+El registro `volta-backend/pos-private/update-events.jsonl` contiene evidencia posterior a `verification.json`: a las 01:04:13 del 3 de octubre (Europe/Madrid) el terminal informó `installed`, código 17 (0.3.14-https), tras `apk_sent`; a las 01:05:58 informó `healthy`, tienda 2, primer plano e impresora listos. Por tanto, la versión más reciente confirmada por estos registros es 0.3.14. El reporte `healthy` no demuestra por sí solo la reapertura automática ni que el USB estuviera desconectado.
+
+En esta revisión el origen temporal `manchester-engineering-ate-above.trycloudflare.com` ya no resuelve y el servicio local 8096 no está escuchando. El origen está fijado en la APK; arrancar un túnel con otra dirección no reconecta el terminal instalado. La prueba siguiente por servidor queda pendiente de recuperar el origen anterior o migrar el terminal a un canal estable. No se ha instalado ninguna APK por USB en esta revisión.
+
+Se sustituye el texto fijo «POS v01» por `versionName` leído de Android mediante `updateStatus`, compartiendo la consulta existente del panel de actualizaciones. El pie muestra la versión instalada, nunca la disponible; en navegador muestra «POS Virtual». La corrección queda preparada en el código y su nota ES/EN/IT/FR/PT queda en borrador hasta distribuir la APK correspondiente.
+
+## Cambio del 3 de octubre: decisión desde el POS
+
+La asignación de una APK **ya no autoriza su instalación**. El POS conserva los detalles y muestra un aviso persistente, sin abrir un diálogo por cada consulta. «Ver detalles» presenta título, versión y notas de publicación como texto, con tres caminos: Actualizar ahora, Ahora no → Programar fecha y hora, o Ahora no → Dejar pendiente. Se puede cambiar o cancelar una programación desde ese mismo aviso.
+
+`UpdateConsent` exige autorización para el SHA-256 exacto y la tienda actual. La decisión, fecha absoluta y vencimiento se guardan en SharedPreferences privadas. Cambiar de tienda, cerrar sesión, retirar la versión o sustituir la APK elimina la autorización anterior. Se comprueba antes de descargar, después de descargar y justo antes de `PackageInstaller.commit`; una pulsación de interfaz por sí sola no evita estos controles nativos.
+
+«Actualizar ahora» autoriza durante 15 minutos; programar permite elegir hasta 30 días y autoriza durante la hora siguiente a la fecha elegida. El diálogo explica ambos plazos. Si el plazo termina sin condiciones seguras, vuelve a pendiente y solicita otra decisión, sin instalar por sorpresa horas o días después. La programación funciona con Volta abierto y en primer plano: no se ha añadido un servicio en segundo plano, alarma exacta ni arranque automático. La elección sobrevive a reinicios; al volver al POS se reevalúa el plazo y se avisa si venció.
+
+Las notas son obligatorias en el catálogo (`title`: 1–160 caracteres; `releaseNotes`: 1–6000). También se devuelven con la tienda activa para poder leer y decidir sin cerrarla. La descarga y la instalación siguen sujetas a la ventana de mantenimiento, tienda cerrada, cola vacía, batería y bloqueo de operaciones. La autorización inicial de Android es independiente de aceptar una versión. La interfaz utiliza la sesión de tienda existente; no introduce un nuevo rol de administrador ni diferencia empleados que compartan esa sesión.
+
+Pruebas del cambio: 6 pruebas React del aviso, detalles, negativa, fecha, cancelación, cambio de APK y errores; 30 pruebas backend de identidad/rutas/actualizaciones; 8 de avisos; pruebas Java puras de `UpdateConsent` y `OperationGate`. Compilar y ejecutar las pruebas Java con los cuatro archivos `OperationGate.java`, `UpdateConsent.java`, `OperationGateTest.java` y `UpdateConsentTest.java`.
+
+El 3 de octubre se comprobó el SUNMI por USB al 100 % y se instaló 0.3.13-https/código 16 con la firma original. El registro siguiente describe el trabajo anterior del 2 de octubre; sus pendientes de carga y artefactos antiguos no describen la instalación actual. El canal HTTPS de comprobación continúa siendo temporal y depende del ordenador; todavía no es el servicio estable de distribución para todas las tiendas. Evidencias de esta sesión en `../../../output/pos-updates-2026-10-03/`.
+
+Se verificó en el SUNMI el aviso visible, sin desbordamiento, con la versión siguiente pendiente y sin instalación automática. La identidad criptográfica y el ID de sesión coinciden con el registro previo de `vigoCity`. No se cambió el estado activo de la tienda ni se aceptó una actualización en nombre del administrador. La instalación silenciosa por Wi-Fi y la reapertura siguen pendientes de prueba física.
+
+La validación detectó consultas lentas desde el canal local a la base remota: el catálogo usa ahora hasta 15 segundos de lectura; los reportes desde receivers conservan un presupuesto corto. El permiso de instalación devuelve una duración relativa, limitada por la ventana de mantenimiento. Android descuenta el viaje completo de la petición con su reloj monotónico y comprueba otra vez antes del commit, evitando depender de que coincidan los relojes de servidor y terminal.
+
 ## Alcance y estado
 
 Implementación de la primera puerta técnica: descargar una APK firmada, sustituir la aplicación mediante Android y comprobar su recuperación. La tienda sigue siendo una tienda normal de Volta; no hay modo demo, credenciales especiales ni un paquete diferente.

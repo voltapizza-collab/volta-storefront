@@ -123,22 +123,26 @@ public final class PosClient {
         String path = "/api/pos/updates" + suffix;
         HttpURLConnection connection = (HttpURLConnection) new URL(ConnectionConfig.UPDATE_SERVER_URL + path).openConnection();
         connection.setInstanceFollowRedirects(false);
-        connection.setConnectTimeout(4000); connection.setReadTimeout(4000);
+        connection.setConnectTimeout(5000); connection.setReadTimeout(15000);
         connection.setRequestMethod(method);
         connection.setRequestProperty("Content-Type", "application/json");
         signConnection(connection, method, path, body, "", deviceId());
         return connection;
     }
     public JSONObject updateRequest(String method, String suffix, JSONObject payload) throws Exception {
+        return updateRequest(method,suffix,payload,15000);
+    }
+    public JSONObject updateRequest(String method, String suffix, JSONObject payload, int timeout) throws Exception {
         if (!suffix.matches("/(check|prepare|report)")) throw new IOException("invalid_update_path");
         String body = payload == null ? "" : payload.toString();
         HttpURLConnection connection = updateConnection(method, suffix, body);
+        connection.setConnectTimeout(Math.min(timeout,5000)); connection.setReadTimeout(timeout);
         try {
             if (payload != null) {
                 connection.setDoOutput(true);
                 try (OutputStream out = connection.getOutputStream()) { out.write(bytes(body)); }
             }
-            return (JSONObject) readJson(connection, 16000);
+            return (JSONObject) readJson(connection, 64000);
         } finally { connection.disconnect(); }
     }
     public void downloadUpdate(String sha, File output, long expectedSize) throws Exception {

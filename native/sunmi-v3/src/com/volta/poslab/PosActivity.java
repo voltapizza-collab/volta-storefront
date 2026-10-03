@@ -51,7 +51,7 @@ public class PosActivity extends Activity {
         web.setWebViewClient(new WebViewClient() {
             @Override public void onPageFinished(WebView view, String url) {
                 view.postDelayed(new Runnable() { public void run() {
-                    if (!destroyed) view.evaluateJavascript("JSON.stringify({login:!!document.querySelector('.pos-loginPanel'),pos:!!document.querySelector('.pos-shell'),inputs:document.querySelectorAll('.pos-loginPanel input').length,overflow:document.documentElement.scrollWidth>innerWidth+2,cardsFit:[...document.querySelectorAll('.pos-orderCard')].every(e=>e.getBoundingClientRect().right<=e.parentElement.getBoundingClientRect().right+1&&e.scrollWidth<=e.clientWidth+1),inventory:!!document.querySelector('.pos-inventoryFab')})",
+                    if (!destroyed) view.evaluateJavascript("JSON.stringify({login:!!document.querySelector('.pos-loginPanel'),pos:!!document.querySelector('.pos-shell'),inputs:document.querySelectorAll('.pos-loginPanel input').length,overflow:document.documentElement.scrollWidth>innerWidth+2,cardsFit:[...document.querySelectorAll('.pos-orderCard')].every(e=>e.getBoundingClientRect().right<=e.parentElement.getBoundingClientRect().right+1&&e.scrollWidth<=e.clientWidth+1),inventory:!!document.querySelector('.pos-inventoryFab'),updateNotice:!!document.querySelector('.pos-updateNotice'),updateDialog:!!document.querySelector('.pos-updateDialog[open]'),updateFits:[...document.querySelectorAll('.pos-updateNotice,.pos-updateDialog')].every(e=>e.scrollWidth<=e.clientWidth+1),updateDetailsBounds:(()=>{const e=document.querySelector('.pos-updateNotice button');if(!e)return null;const r=e.getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height,scale:devicePixelRatio};})()})",
                         value -> {
                             android.util.Log.i("VoltaUi", "UI_CHECK " + value);
                             try {
@@ -128,6 +128,14 @@ public class PosActivity extends Activity {
                         updater.restored(result instanceof JSONObject ? (JSONObject)result : null);
                     } else if (operation.equals("logout")) { client.logout(); updater.restored(null); result = new JSONObject(); }
                     else if (operation.equals("updateSettings")) { showUpdateSettings(); result = new JSONObject(); }
+                    else if (operation.equals("updateStatus")) { result = updater.status(); }
+                    else if (operation.equals("updateNoticeSeen")) { result = updater.noticeSeen(body.getString("sha256")); }
+                    else if (operation.equals("updatePermission")) { updater.permission(); result = new JSONObject(); }
+                    else if (operation.equals("updateCheck")) { updater.checkSoon(); result = updater.status(); }
+                    else if (operation.equals("updateDecision")) {
+                        JSONObject session = client.bootstrap();
+                        result = updater.decide(body,session.getJSONObject("store").getInt("id"));
+                    }
                     else if (operation.equals("request")) {
                         String path = body.getString("path"), method = body.getString("method");
                         JSONObject payload = body.optJSONObject("body");
@@ -160,7 +168,8 @@ public class PosActivity extends Activity {
                 } catch (Exception e) {
                     release.run();
                     try { respond(id, e instanceof PosClient.ApiException ? ((PosClient.ApiException)e).status : 503,
-                        new JSONObject().put("error",e instanceof PosClient.ApiException ? ((PosClient.ApiException)e).code : "terminal_operation_failed")); } catch (Exception ignored) { }
+                        new JSONObject().put("error",e instanceof PosClient.ApiException ? ((PosClient.ApiException)e).code :
+                            operation.equals("updateDecision") && e.getMessage() != null && e.getMessage().matches("[a-z_]{1,80}") ? e.getMessage() : "terminal_operation_failed")); } catch (Exception ignored) { }
                 } finally { if (!asynchronous) release.run(); }
             }); } catch (RejectedExecutionException e) { release.run(); }
         }

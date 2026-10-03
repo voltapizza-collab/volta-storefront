@@ -15,6 +15,7 @@ import { buildOrderLines } from './printers/mockPrinter';
 import { isNativePos, nativeCall } from './nativeBridge';
 import PosNotice, { usePosNotice } from './PosNotice';
 import PosLogoutDialog from './PosLogoutDialog';
+import PosUpdates from './PosUpdates';
 import { shouldShowCheckoutAlert } from '../utils/checkoutPresence';
 import "../styles/PosApp.css";
 import { ingredientRemovalRows } from "../utils/ingredientRemovals";
@@ -1254,6 +1255,8 @@ export default function PosApp() {
   const [pauseStateKnown, setPauseStateKnown] = useState(false);
   const [savingStore, setSavingStore] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [updatesOpen, setUpdatesOpen] = useState(false);
+  const [installedVersion, setInstalledVersion] = useState('');
   const menuPanelRef = useRef(null);
   const menuButtonRef = useRef(null);
   useEffect(() => {
@@ -2495,17 +2498,16 @@ export default function PosApp() {
                 setMessage('Ticket de prueba confirmado por SUNMI. Comprueba CAMBIOS, las retiradas en negrita y Receta original en la segunda pizza.');
               } catch (_) { setMessage('No se confirmó la impresión. Comprueba el papel antes de repetir.'); }
             }}><strong>Impresión de prueba</strong><small>Imprimir un ticket de comprobación</small></button>
-            {isNativePos && <button type="button" onClick={async () => {
-              setMenuOpen(false);
-              try { await nativeCall('updateSettings'); }
-              catch (_) { setMessage('No se pudo consultar el estado de las actualizaciones.'); }
-            }}><strong>Actualizaciones</strong><small>Versión del terminal y autorización de Android</small></button>}
+            {isNativePos && <button type="button" onClick={() => {
+              setMenuOpen(false); setUpdatesOpen(true);
+            }}><strong>Actualizaciones</strong><small>Consultar novedades y elegir cuándo actualizar</small></button>}
             </div>
             <footer className="pos-menuFooter">{session.storeName} · Volta POS</footer>
           </dialog>
         )}
       </header>}
 
+      {isNativePos && <PosUpdates open={updatesOpen} onOpen={() => setUpdatesOpen(true)} onClose={() => setUpdatesOpen(false)} onVersionChange={setInstalledVersion} />}
       <PosNotice message={message} onDismiss={dismissMessage} />
       {logoutOpen && <PosLogoutDialog onCancel={() => setLogoutOpen(false)} onConfirm={logoutSession} />}
       {operationsPaused && activePanel !== "dayOrders" && (
@@ -3068,7 +3070,7 @@ export default function PosApp() {
       )}
 
       {activePanel !== "dayOrders" && <footer className="pos-footer">
-        <span>© {new Date().getFullYear()} voltaPizza · POS v01</span>
+        <span>© {new Date().getFullYear()} voltaPizza · {isNativePos ? `POS${installedVersion ? ` v${installedVersion}` : ''}` : 'POS Virtual'}</span>
         <div className={`pos-printInline ${printerTone}`}>
           <span />
           {printerLabel}

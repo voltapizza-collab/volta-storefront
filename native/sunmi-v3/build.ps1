@@ -3,9 +3,10 @@ param(
     [string]$Jdk = 'C:\Program Files\Android\Android Studio\jbr',
     [string]$BuildTools = '36.0.0',
     [ValidateSet('usb', 'https')][string]$Connection = 'usb',
-    [string]$VersionName = '0.3.9',
-    [int]$VersionCode = 12,
-    [string]$UpdateServerUrl = ''
+    [string]$VersionName = '0.3.20',
+    [int]$VersionCode = 23,
+    [string]$UpdateServerUrl = '',
+    [switch]$AllowTemporaryUpdateChannel
 )
 $ErrorActionPreference = 'Stop'
 Set-Location $PSScriptRoot
@@ -21,6 +22,10 @@ $variantResources = Join-Path $variantRoot 'res'
 New-Item -ItemType Directory -Force -Path $variantClasses,$variantResources | Out-Null
 Copy-Item -Path res\* -Destination $variantResources -Recurse -Force
 $serverUrl = if ($Connection -eq 'https') { 'https://api.voltapizza.com' } else { 'http://127.0.0.1:8091' }
+if ($Connection -eq 'https' -and !$UpdateServerUrl) { $UpdateServerUrl = 'https://api.voltapizza.com' }
+if ($Connection -eq 'https' -and $UpdateServerUrl -ne 'https://api.voltapizza.com' -and !$AllowTemporaryUpdateChannel) {
+    throw 'Connected releases must use the permanent Volta update service. Temporary channels require explicit test opt-in.'
+}
 if ($UpdateServerUrl -and $UpdateServerUrl -notmatch '^https://[a-zA-Z0-9.-]+(?::[0-9]+)?$') {
     throw 'UpdateServerUrl must be an HTTPS origin without path, credentials or query.'
 }
@@ -30,7 +35,7 @@ if ($Connection -eq 'https') {
     Set-Content -LiteralPath (Join-Path $variantResources 'xml/network_security_config.xml') -Encoding utf8 -Value '<network-security-config><base-config cleartextTrafficPermitted="false" /></network-security-config>'
 }
 $variantManifest = Join-Path $variantRoot 'AndroidManifest.xml'
-$manifestText = (Get-Content AndroidManifest.xml -Raw).Replace('android:versionCode="2"',"android:versionCode=`"$VersionCode`"").Replace('android:versionName="0.2.0"', "android:versionName=`"$VersionName-$Connection`"")
+$manifestText = (Get-Content AndroidManifest.xml -Raw).Replace('android:versionCode="2"',"android:versionCode=`"$VersionCode`"").Replace('android:versionName="0.2.0"', "android:versionName=`"$VersionName`"")
 Set-Content -LiteralPath $variantManifest -Encoding utf8 -Value $manifestText
 $apkOutput = if ($Connection -eq 'https') { "build\volta-pos-connected-$VersionName.apk" } else { "build\volta-pos-pilot-$VersionName.apk" }
 if (!(Test-Path libs\printerx-1.0.20.aar)) {

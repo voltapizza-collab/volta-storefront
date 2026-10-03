@@ -1,0 +1,30 @@
+.pos-updateNotice { display:flex; align-items:center; justify-content:space-between; gap:12px; margin:12px 0; padding:14px 16px; border:1px solid #d9bb80; border-radius:14px; background:#fff8e9; color:#342713; }
+.pos-updateNotice span { display:grid; gap:4px; min-width:0; }
+.pos-updateNotice small { font-size:12px; overflow-wrap:anywhere; }
+.pos-updateNotice strong { font-size:14px; }
+.pos-updateNotice button, .pos-updateDialog button { min-height:44px; padding:10px 14px; border:1px solid #d2c9b8; border-radius:10px; background:#fff; color:#332b21; font:inherit; cursor:pointer; }
+.pos-updateNotice button { flex-shrink:0; font-size:13px; }
+.pos-updateDialog { box-sizing:border-box; width:min(560px,calc(100vw - 24px)); max-height:calc(100dvh - 32px); overflow-y:auto; border:1px solid #dfd5c4; border-radius:20px; padding:22px; background:#fffcf7; color:#302b24; box-shadow:0 20px 80px #0004; }
+.pos-updateDialog::backdrop { background:#17130d99; }
+.pos-updateDialog header { display:flex; justify-content:space-between; gap:12px; align-items:flex-start; }
+.pos-updateDialog header small { font-size:10px; letter-spacing:.1em; color:#796647; }
+.pos-updateDialog header button { flex-shrink:0; font-size:22px; line-height:1; }
+.pos-updateDialog h2 { font-size:22px; line-height:1.25; margin:8px 0 14px; overflow-wrap:anywhere; }
+.pos-updateDialog h3 { font-size:16px; }
+.pos-updateDialog p { font-size:14px; line-height:1.5; }
+.pos-updateDialog .pos-updateVersion { color:#766c5b; font-size:12px; }
+.pos-updateNotes { white-space:pre-wrap; overflow-wrap:anywhere; font-size:14px; line-height:1.6; padding:14px; border-radius:12px; background:#f3eee4; }
+.pos-updateDialog .pos-updateHelp { color:#746a5b; font-size:12px; }
+.pos-updateActions { display:flex; flex-wrap:wrap; gap:8px; margin:16px 0; }
+.pos-updateActions button { flex:1 1 150px; }
+.pos-updateDialog .pos-updatePrimary { background:var(--pos-brand-1,#3b008b); color:#fff; border-color:var(--pos-brand-1,#3b008b); }
+.pos-updateDialog button:disabled { opacity:.5; cursor:wait; }
+.pos-updateDialog > button { margin:8px 6px 0 0; font-size:12px; }
+.pos-updateDialog label { display:block; margin:16px 0 8px; }
+.pos-updateDialog input { box-sizing:border-box; width:100%; min-width:0; font:inherit; padding:12px; min-height:48px; border:1px solid #c7bcaa; border-radius:10px; }
+.pos-updateDialog .pos-updateError { color:#ae3027; }
+.pos-updateFeedback { padding:14px; border:1px solid #b7d5b6; border-radius:12px; background:#eff8ee; }
+.pos-updateFeedback p { margin:8px 0; }
+.pos-updateFeedback small { font-size:12px; }
+.pos-updateSuccess { color:#37583c; font-size:12px; padding:8px 12px; }
+@media(max-width:380px) { .pos-updateDialog { padding:16px; } .pos-updateNotice { padding:12px; gap:8px; } }

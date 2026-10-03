@@ -14,7 +14,7 @@ import java.util.concurrent.*;
 
 /** Self-update uses platform TLS, device proofs and the installed APK signer.
  * The initial validation channel installs only during an operator-authorized
- * maintenance window while the assigned store is closed and its queue empty.
+ * release window after the operator approves and local operations finish.
  */
 public final class PosUpdater {
     public static final String RESULT_ACTION = "com.volta.poslab.UPDATE_RESULT";
@@ -29,8 +29,10 @@ public final class PosUpdater {
     private volatile boolean busy;
     private int failures;
     private long nextAttempt;
+    private volatile boolean checkOnOpen = true, noticeOnOpen = true;
     private volatile long lastOrdersRead, lastPrinterRead;
     private long lastHealthReport;
+    private final Object decisionLock = new Object();
 
     private PosUpdater(Context value) {
         context = value.getApplicationContext(); prefs = preferences(context);
@@ -59,22 +61,75 @@ public final class PosUpdater {
     }
     public void attach(PosActivity value) { activity = new WeakReference<>(value); restored = ordersRead = uiReady = printerReady = false; }
     public void visibility(PosActivity value, boolean visible) {
-        if (activity.get() == value) foreground = visible;
+        if (activity.get() == value) {
+            if (visible && !foreground) { checkOnOpen = true; noticeOnOpen = true; }
+            foreground = visible;
+        }
     }
     public void restored(JSONObject session) {
-        storeId = session == null ? null : session.optInt("storeId");
+        Integer nextStore = session == null ? null : session.optInt("storeId");
+        synchronized (decisionLock) {
+            if (nextStore == null || prefs.getInt("approvedStore", -1) != nextStore)
+                prefs.edit().remove("approvedSha").remove("approvedStore").remove("decision").remove("scheduledAt").remove("authorizedUntil").commit();
+            storeId = nextStore;
+        }
         restored = true;
         ordersRead = session == null;
     }
     public void ordersRead() { ordersRead = true; lastOrdersRead = System.currentTimeMillis(); }
     public void uiReady(boolean value) { uiReady = value; }
     public void printerReady(boolean value) { printerReady = value; lastPrinterRead = System.currentTimeMillis(); }
-    public void checkSoon() { if (configured()) worker.execute(this::tick); }
+    public void checkSoon() { if (configured()) worker.execute(() -> { checkOnOpen = true; nextAttempt = 0; tick(); }); }
     public JSONObject status() throws Exception {
+        JSONObject target = new JSONObject(prefs.getString("availableTarget", "{}"));
+        boolean available = target.optLong("versionCode", 0) > version(context);
         return new JSONObject().put("configured", configured()).put("versionCode", version(context))
             .put("versionName", context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName)
             .put("state", prefs.getString("state", "idle")).put("error", prefs.getString("error", ""))
-            .put("canInstall", Build.VERSION.SDK_INT >= 31 && context.getPackageManager().canRequestPackageInstalls());
+            .put("canInstall", Build.VERSION.SDK_INT >= 31 && context.getPackageManager().canRequestPackageInstalls())
+            .put("available", available).put("target", target.length() == 0 ? JSONObject.NULL : target)
+            .put("reminderDue", UpdateCadence.reminderDue(available, prefs.getString("decision", "pending"),
+                prefs.getLong("authorizedUntil", 0), noticeOnOpen, prefs.getString("lastNoticeDay", ""), java.util.Calendar.getInstance()))
+            .put("blocked", available && target.optString("sha256").equals(prefs.getString("blockedSha", "")))
+            .put("decision", prefs.getString("decision", "pending")).put("scheduledAt", prefs.getLong("scheduledAt", 0))
+            .put("authorizedUntil", prefs.getLong("authorizedUntil", 0));
+    }
+    public JSONObject noticeSeen(String sha) throws Exception {
+        synchronized (decisionLock) {
+            JSONObject current = status();
+            boolean claimed = foreground && current.optBoolean("reminderDue") &&
+                sha.equals(current.getJSONObject("target").optString("sha256"));
+            if (claimed) {
+                if (!prefs.edit().putString("lastNoticeDay", UpdateCadence.day(java.util.Calendar.getInstance())).commit())
+                    throw new IOException("update_state_not_saved");
+                noticeOnOpen = false;
+            }
+            return new JSONObject().put("claimed", claimed);
+        }
+    }
+    public JSONObject decide(JSONObject body, int verifiedStore) throws Exception {
+        synchronized (decisionLock) {
+            if (!foreground || storeId == null || storeId != verifiedStore) throw new IOException("update_session_changed");
+            JSONObject target = new JSONObject(prefs.getString("availableTarget", "{}"));
+            String sha = body.getString("sha256");
+            if (!sha.equals(target.optString("sha256")) || target.optLong("versionCode") <= version(context))
+                throw new IOException("update_target_changed");
+            String decision = body.getString("decision");
+            long now = System.currentTimeMillis();
+            long at = "scheduled".equals(decision) ? body.getLong("scheduledAt") : now;
+            long until = UpdateConsent.deadline(decision, at, now);
+            if (!prefs.edit().putString("approvedSha",sha).putInt("approvedStore",verifiedStore)
+                .putString("decision",decision).putLong("scheduledAt","pending".equals(decision) ? 0 : at)
+                .putLong("authorizedUntil",until).commit()) throw new IOException("update_state_not_saved");
+            save("scheduled".equals(decision) ? "scheduled" : "pending".equals(decision) ? "pending" : "waiting_safe", "");
+        }
+        worker.execute(() -> { report(prefs.getString("state","pending"), ""); nextAttempt = 0; checkOnOpen = true; tick(); });
+        return status();
+    }
+    private boolean consentAllows(String sha, Integer actualStore) {
+        return UpdateConsent.allows(sha, actualStore == null ? -1 : actualStore,
+            prefs.getString("approvedSha", ""), prefs.getInt("approvedStore", -1), prefs.getString("decision", "pending"),
+            prefs.getLong("scheduledAt", 0), prefs.getLong("authorizedUntil", 0), System.currentTimeMillis());
     }
     public void permission() {
         PosActivity current = activity.get();
@@ -88,12 +143,16 @@ public final class PosUpdater {
     }
     private void report(String state, String error) {
         try { sendReport(context, new JSONObject().put("state", state).put("error", error.isEmpty() ? JSONObject.NULL : error)
-            .put("foreground", foreground).put("printerReady", printerReady).put("storeId", storeId == null ? JSONObject.NULL : storeId)); }
+            .put("foreground", foreground).put("printerReady", printerReady).put("storeId", storeId == null ? JSONObject.NULL : storeId)
+            .put("decision",prefs.getString("decision","pending")).put("scheduledAt",prefs.getLong("scheduledAt",0))
+            .put("authorizedUntil",prefs.getLong("authorizedUntil",0)).put("approvedSha",prefs.getString("approvedSha", ""))); }
         catch (Exception e) { android.util.Log.w("VoltaUpdate", "report_pending"); }
     }
     static void sendReport(Context context, JSONObject body) throws Exception {
         body.put("versionCode", version(context)).put("targetVersionCode", preferences(context).getLong("targetVersion", 0));
-        new PosClient(context).updateRequest("POST", "/report", body);
+        // BroadcastReceiver.goAsync has a short execution budget. Reports are
+        // best effort; normal catalogue/download requests use longer timeouts.
+        new PosClient(context).updateRequest("POST", "/report", body, 4000);
     }
     private void transition(String state, String error) {
         if (!state.equals(prefs.getString("state", "")) || !error.equals(prefs.getString("error", ""))) {
@@ -112,11 +171,12 @@ public final class PosUpdater {
             long installed = version(context);
             long previousTarget = prefs.getLong("targetVersion", 0);
             String state = prefs.getString("state", "idle");
-            if (previousTarget > 0 && installed == previousTarget && restored && ordersRead && uiReady && foreground && printerReady &&
+            if (("installed".equals(state) || "installing".equals(state) || "healthy".equals(state)) &&
+                previousTarget > 0 && installed == previousTarget && restored && ordersRead && uiReady && foreground && printerReady &&
                 (storeId == null || System.currentTimeMillis() - lastOrdersRead < 45000) && System.currentTimeMillis() - lastPrinterRead < 45000) {
                 if (!"healthy".equals(state)) { save("healthy", ""); releaseMaintenance(); cleanOldApks(); }
                 // A lost report must not permanently hide a successful update.
-                if (System.currentTimeMillis() - lastHealthReport > 60000) { report("healthy", ""); lastHealthReport = System.currentTimeMillis(); }
+                if (System.currentTimeMillis() - lastHealthReport > 300000) { report("healthy", ""); lastHealthReport = System.currentTimeMillis(); }
             }
             if ("installing".equals(state) && installed < previousTarget) {
                 if (System.currentTimeMillis() - prefs.getLong("stateAt", 0) < 180000) return;
@@ -126,12 +186,52 @@ public final class PosUpdater {
                 transition("failed", "installation_timeout"); releaseMaintenance(); return;
             }
             if (!foreground || !restored || !ordersRead || !uiReady) return;
+            // Discover on opening or once per local day from 15:00. Explicit
+            // approvals remain evaluated every tick, independently of discovery.
+            boolean due = ("now".equals(prefs.getString("decision", "")) || "scheduled".equals(prefs.getString("decision", ""))) &&
+                System.currentTimeMillis() >= prefs.getLong("scheduledAt", 0) &&
+                System.currentTimeMillis() < prefs.getLong("authorizedUntil", 0);
+            if (!due && !UpdateCadence.discoveryDue(checkOnOpen, prefs.getString("lastDiscoveryDay", ""), java.util.Calendar.getInstance())) return;
+            checkOnOpen = false;
             PosClient client = new PosClient(context);
-            JSONObject response = client.updateRequest("GET", "/check", null);
+            JSONObject response;
+            try { response = client.updateRequest("GET", "/check", null); }
+            catch (Exception e) { checkOnOpen = true; throw e; }
+            prefs.edit().putString("lastDiscoveryDay", UpdateCadence.day(java.util.Calendar.getInstance())).commit();
+            failures = 0;
+            if (System.currentTimeMillis() - lastHealthReport > 300000) {
+                report(prefs.getString("state", "idle"), prefs.getString("error", ""));
+                lastHealthReport = System.currentTimeMillis();
+            }
             JSONObject target = response.optJSONObject("target");
-            if (target == null || target.getLong("versionCode") <= installed) return;
+            if (target == null || target.getLong("versionCode") <= installed) {
+                synchronized (decisionLock) {
+                    prefs.edit().remove("approvedSha").remove("decision").remove("scheduledAt").remove("authorizedUntil").commit();
+                    if (target == null) prefs.edit().remove("availableTarget").commit();
+                }
+                if (!"healthy".equals(prefs.getString("state","")) && !"installed".equals(prefs.getString("state",""))) transition("idle", "");
+                return;
+            }
             String sha = target.getString("sha256");
             if (!sha.matches("[a-f0-9]{64}") || !context.getPackageName().equals(target.getString("packageName"))) throw new IOException("invalid_target");
+            synchronized (decisionLock) {
+                SharedPreferences.Editor edit = prefs.edit().putString("availableTarget", target.toString());
+                if (!sha.equals(new JSONObject(prefs.getString("availableTarget", "{}")).optString("sha256")))
+                    edit.putString("error", "").putString("state", "pending");
+                if (!sha.equals(prefs.getString("approvedSha", "")))
+                    edit.remove("approvedSha").remove("approvedStore").remove("decision").remove("scheduledAt").remove("authorizedUntil");
+                if (!edit.commit()) throw new IOException("update_state_not_saved");
+                if (!consentAllows(sha, storeId)) {
+                    String decision = prefs.getString("decision", "pending");
+                    if ("scheduled".equals(decision) && System.currentTimeMillis() < prefs.getLong("scheduledAt",0)) save("scheduled", "");
+                    else {
+                        boolean expired = prefs.getLong("authorizedUntil",0) > 0 && System.currentTimeMillis() >= prefs.getLong("authorizedUntil",0);
+                        if (expired) prefs.edit().putString("decision","pending").remove("approvedSha").putLong("authorizedUntil",0).commit();
+                        save("pending", expired ? "authorization_expired" : prefs.getString("error", "").equals("authorization_expired") ? "authorization_expired" : "");
+                    }
+                    return;
+                }
+            }
             if (sha.equals(prefs.getString("blockedSha", ""))) return;
             if (response.isNull("maintenance")) { transition("waiting_safe", "maintenance_not_authorized"); return; }
             if (!context.getPackageManager().canRequestPackageInstalls()) { transition("waiting_permission", "install_permission_required"); return; }
@@ -153,6 +253,7 @@ public final class PosUpdater {
                 if (!part.renameTo(apk)) throw new IOException("update_storage_unavailable");
             }
             verifyApk(apk, target);
+            synchronized (decisionLock) { if (!consentAllows(sha, storeId)) return; }
             transition("ready", "");
             if (!foreground || !GATE.beginMaintenance()) { transition("waiting_safe", "operations_in_progress"); return; }
             PosActivity current = activity.get();
@@ -160,16 +261,15 @@ public final class PosUpdater {
             current.showUpdateMaintenance(true);
             try {
                 if (batteryPercent() < 30) throw new IOException("battery_below_30");
-                // Revalidate store scope and outstanding orders after draining
-                // the local gate. A stale or expired session fails closed.
+                // Revalidate store scope after draining local operations.
+                // Pending server orders survive replacement and are reloaded.
                 JSONObject session = client.hasSession() ? client.bootstrap() : null;
                 Integer actualStore = session == null ? null : session.getJSONObject("store").getInt("id");
-                if (session != null && (session.getJSONObject("store").optBoolean("active", true) ||
-                    client.orders().getJSONArray("items").length() != 0)) throw new IOException("store_not_safe");
                 install(apk, target, client, actualStore);
                 failures = 0;
             } catch (Exception e) { releaseMaintenance(); throw e; }
         } catch (Exception e) {
+            checkOnOpen = true; // Preserve retries after a failed daily check or validation.
             String code = e instanceof PosClient.ApiException ? ((PosClient.ApiException)e).code : e.getMessage();
             if (code == null || !code.matches("[a-zA-Z0-9_:-]{1,100}")) code = "update_connection_or_validation_failed";
             transition("failed", code);
@@ -219,18 +319,27 @@ public final class PosUpdater {
             }
             // Obtain the short-lived maintenance permission after the potentially
             // slow session copy, immediately before committing the replacement.
+            long prepareStarted = SystemClock.elapsedRealtime();
             JSONObject permit = client.updateRequest("POST", "/prepare", new JSONObject().put("sha256", target.getString("sha256"))
                 .put("storeId", actualStore == null ? JSONObject.NULL : actualStore));
-            if (!permit.optBoolean("allowed") || java.time.Instant.parse(permit.getString("expiresAt")).toEpochMilli() <= System.currentTimeMillis())
+            long validForMs = permit.optLong("validForMs",0);
+            // Use elapsed time, not equality of two wall clocks. Deducting the
+            // whole round trip is conservative relative to server issuance.
+            if (!permit.optBoolean("allowed") || validForMs <= 0 || validForMs > 10000 ||
+                SystemClock.elapsedRealtime() - prepareStarted >= validForMs)
                 throw new IOException("maintenance_expired");
             if (!foreground || batteryPercent() < 30) throw new IOException("terminal_not_safe");
+            synchronized (decisionLock) {
+            if (!consentAllows(target.getString("sha256"),actualStore)) throw new IOException("update_consent_required");
             if (!prefs.edit().putInt("sessionId", id).putLong("targetVersion", target.getLong("versionCode"))
                 .putString("state", "installing").putString("error", "").putLong("stateAt", System.currentTimeMillis()).commit())
                 throw new IOException("update_state_not_saved");
             Intent result = new Intent(context, UpdateResultReceiver.class).setAction(RESULT_ACTION)
                 .setData(Uri.parse("volta-update:" + id));
             PendingIntent callback = PendingIntent.getBroadcast(context, id, result, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
+            if (SystemClock.elapsedRealtime() - prepareStarted >= validForMs) throw new IOException("maintenance_expired");
             session.commit(callback.getIntentSender()); committed = true;
+            }
             android.util.Log.i("VoltaUpdate", "install_committed session=" + id);
         } finally { if (!committed) installer.abandonSession(id); }
     }

@@ -740,7 +740,7 @@ export default function OnboardingFormPage() {
             <h1>{request.commercialClosurePending ? 'Condiciones en preparación' : 'Contrato de adhesion comercial'}</h1>
             <p>
               {request.commercialClosurePending
-                ? `Revisa la elección enviada para ${request.businessName}. Volta preparará la oferta completa antes del pago y la firma.`
+                ? `Revisa la elección enviada para ${request.businessName}. Volta revisará tus datos y te enviará el enlace para firmar el contrato y pagar.`
                 : `Revisa el contrato completo de ${request.businessName}. Para continuar con la activacion del backoffice debes confirmar la aceptacion y firmarlo electronicamente.`}
             </p>
             <strong>{statusCopy[request.status] || request.status}</strong>
@@ -761,7 +761,7 @@ export default function OnboardingFormPage() {
             </div>
 
             {request.commercialClosurePending ? <>
-              <p className="onb-message">Estamos preparando tus condiciones completas. El contrato definitivo y su firma estarán disponibles en el cierre.</p>
+              <p className="onb-message">Estamos revisando tus datos. Recibirás un correo para firmar el contrato y realizar el pago inicial.</p>
               <CommercialSummary selection={request.formalData?.commercialSelection || request.formalData?.onboardingDraft?.commercialSelection} />
             </> : <ContractDocument contract={contract} request={request} />}
 

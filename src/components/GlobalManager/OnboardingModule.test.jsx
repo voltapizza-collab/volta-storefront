@@ -13,8 +13,8 @@ test('signed financial record shows correct email numbering and cannot be delete
   render(<OnboardingModule />);
   expect(await screen.findByRole('button', { name: 'Eliminar solicitud de Mi comercio' })).toBeDisabled();
   expect(screen.getByRole('button', { name: 'Guardar fase' })).toBeDisabled();
-  expect(screen.getByText('Correo 2: oferta y cierre')).toBeInTheDocument();
+  expect(screen.getByText('Correo 2: contrato y pago')).toBeInTheDocument();
   expect(screen.getByText('Correo 3: bienvenida y accesos')).toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Reenviar bienvenida y acceso' })).toBeEnabled();
-  expect(screen.getByRole('link', { name: 'Abrir cierre del comercio' })).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: 'Abrir contrato y pago' })).toBeInTheDocument();
 });

@@ -34,13 +34,13 @@ const phaseMeta = {
     next: "Esperar datos fiscales, negocio, IBAN y documentos.",
   },
   FORM_COMPLETED: {
-    step: "Fase 3",
+    step: "Revisión",
     title: "Datos recibidos",
     description: "El partner completo el formulario. Hay que revisar la informacion.",
     next: "Validar documentos y preparar revision interna.",
   },
   IN_REVIEW: {
-    step: "Fase 3",
+    step: "Revisión",
     title: "Revision interna",
     description: "Datos y documentos recibidos. Volta revisa si puede generar contrato.",
     next: "Validar datos para contrato o pedir informacion adicional.",
@@ -49,12 +49,12 @@ const phaseMeta = {
     step: "Fase 4",
     title: "Contrato enviado",
     description: "El contrato ya fue enviado al partner para revision y firma.",
-    next: "Esperar aceptacion del contrato para activar credenciales.",
+    next: "Esperar la firma y la confirmación del pago para completar el alta.",
   },
   ACTIVATED: {
     step: "Activada",
     title: "Credenciales enviadas",
-    description: "El contrato fue aceptado y se enviaron las credenciales iniciales de backoffice.",
+    description: "Contrato firmado y pago confirmado. Comprueba el estado del correo de bienvenida.",
     next: "Acompanar la configuracion inicial del partner.",
   },
   NEEDS_INFO: {
@@ -77,18 +77,13 @@ const phaseMeta = {
   },
 };
 
-const getPhase = (status, closure) =>
-  closure ? {
-    step: closure.signed ? 'Preparación de tienda' : 'Pago y firma',
-    title: closure.signed ? 'Contrato firmado' : closure.canSign ? 'Pago confirmado; pendiente de firma' : closure.overdue || closure.cancelRequested ? 'Revisar cancelación o devolución' : closure.status === 'OFFERED' ? 'Oferta preparada' : 'Cierre en curso',
-    description: closure.signed ? 'Accesos creados. Comprueba el envío de bienvenida y prepara la tienda antes de abrir pedidos.' : 'El comercio debe revisar la oferta, aceptar el pago previo, pagar y firmar con el cobro confirmado.',
-    next: closure.signed ? 'Configurar tienda y POS; verificar un pedido antes de la apertura.' : 'Consulta la oferta y el estado del pago en el expediente.',
-  } : phaseMeta[status] || {
-    step: "Onboarding",
-    title: status || "Sin estado",
-    description: "Estado de onboarding sin descripcion operativa.",
-    next: "Revisar internamente.",
-  };
+const getPhase = (status, closure) => {
+  if (!closure) return phaseMeta[status] || { step: 'Onboarding', title: status, description: '', next: 'Revisar internamente.' };
+  if (status === 'ACTIVATED') return { step: 'Alta completada', title: 'Contrato firmado y pago confirmado', description: 'Comprueba el correo de bienvenida y prepara la tienda antes de abrir pedidos.', next: 'Configurar tienda y POS.' };
+  if (closure.cancelRequested || closure.overdue || ['CANCELLED','REFUNDED','REFUND_PENDING','REVERSED'].includes(closure.status)) return { step: 'Revisión', title: 'Revisar cancelación o devolución', description: 'Consulta el estado del pago.', next: 'Resolver la incidencia desde el expediente.' };
+  if (closure.offer.workflow === 'SIGN_PAY_ACTIVATE') return { step: 'Firma y pago', title: closure.payment?.status === 'PAID' ? 'Preparando alta' : closure.signed ? 'Pendiente de pago' : 'Pendiente de firma y pago', description: 'El comercio firma y paga desde el enlace del correo. El alta y la bienvenida se completan al confirmarse el cobro.', next: 'Puedes comprobar el pago o reenviar el correo desde aquí.' };
+  return { step: 'Contrato anterior', title: closure.canSign ? 'Pendiente de firma' : 'Pendiente de pago', description: 'Este expediente conserva las condiciones del contrato ya enviado.', next: 'Consulta el contrato y el estado del pago.' };
+};
 
 const getStatusTone = (status) => {
   if (["RECEIVED", "EMAIL_SENT"].includes(status)) return "waiting";
@@ -479,24 +474,24 @@ export default function OnboardingModule() {
                   <p>{selectedPhase.description}</p>
                 </div>
                 <a href={selected.formalUrl} target="_blank" rel="noreferrer">
-                  {selected.closure ? 'Abrir cierre del comercio' : 'Abrir fase 2'}
+                  {selected.closure ? 'Abrir contrato y pago' : 'Abrir fase 2'}
                 </a>
               </div>
 
-              <div className="gmon-contractActions">
+              {!formalData.commercialSelection && !selected.closure && <div className="gmon-contractActions">
                 <div>
                   <span>Contrato</span>
                   <strong>{selected.status === "ACTIVATED" ? "Contrato firmado y backoffice activado" : "Revision y envio a firma"}</strong>
                   <small>
                     {contractNotification?.emailStatus
-                      ? `Correo de cierre: ${notificationLabels[contractNotification.emailStatus] || contractNotification.emailStatus}`
-                      : selected.commercialClosurePending ? 'Prepara y revisa la oferta antes de enviar el correo de cierre.' : 'Abre el borrador con los datos recibidos y revisa el contrato antes de enviarlo.'}
+                      ? `Correo de pago: ${notificationLabels[contractNotification.emailStatus] || contractNotification.emailStatus}`
+                      : selected.commercialClosurePending ? 'Revisa el contrato y envía el correo de pago desde el expediente.' : 'Abre el borrador con los datos recibidos y revisa el contrato antes de enviarlo.'}
                   </small>
                 </div>
                 <button type="button" disabled={!selected.formalData || selected.commercialClosurePending} onClick={openContractPreview}>
                   Ver contrato
                 </button>
-              </div>
+              </div>}
 
               <OnboardingOffer key={selected.id} request={selected} onUpdate={updated => setRequests(current => current.map(row => row.id === updated.id ? updated : row))} />
               {!selected.closure && (formalData.commercialSelection || formalData.onboardingDraft?.commercialSelection) && <details className="onb-managerAdvanced">
@@ -582,7 +577,7 @@ export default function OnboardingModule() {
                     )}
                     {contractNotification && (
                       <div className="gmon-wide">
-                        <span>Correo 2: oferta y cierre</span>
+                        <span>Correo 2: contrato y pago</span>
                         <strong>{notificationLabels[contractNotification.emailStatus] || contractNotification.emailStatus}</strong>
                         {contractNotification.contractUrl && (
                           <small>
@@ -598,7 +593,7 @@ export default function OnboardingModule() {
                       <div className="gmon-wide">
                         <span>Activacion backoffice</span>
                         <strong>{activation.partnerName} - {activation.partnerSlug}</strong>
-                        <small>Usuario: {activation.username} - Contrasena: {activation.password}</small>
+                        <small>Usuario: {activation.username}. La contraseña se crea desde el enlace del correo de bienvenida.</small>
                       </div>
                     )}
                     {credentialsNotification && (

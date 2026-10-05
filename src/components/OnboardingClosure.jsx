@@ -4,6 +4,13 @@ import { euro } from './OnboardingCommercial';
 const paymentLabel = status => ({ CREATING: 'Preparando pago', PENDING: 'Pendiente de confirmación', PAID: 'Confirmado', EXPIRED: 'Enlace vencido', REFUND_PENDING: 'Devolución en trámite', REFUNDED: 'Devuelto', REVERSED: 'Requiere revisión por Volta' })[status] || status;
 
 export const closureErrorText = code => ({
+  review_confirmation_required: 'Confirma la revisión de los datos, los documentos, el contrato y el suministro del POS.',
+  review_changed: 'El contrato ha cambiado. Revisa la versión actualizada antes de enviarla.',
+  review_load_failed: 'No se pudo cargar el contrato. Vuelve a intentarlo.',
+  rent_price_required: 'Falta definir la cuota de renting en las tarifas vigentes. Se configura una vez en Global Manager.',
+  submitted_selection_required: 'El comercio debe enviar primero sus datos y su elección de pago.',
+  contract_signature_required: 'Firma el contrato antes de continuar al pago.',
+  welcome_delivery_failed: 'El pago está conservado. Se reintentará completar el alta y enviar el correo de acceso.',
   invalid_sms_price: 'Introduce una tarifa SMS mayor que cero, con hasta cuatro decimales.',
   offer_changed: 'La oferta ha cambiado. Actualiza y revisa la nueva versión antes de continuar.',
   initial_payment_required: 'El pago todavía no está confirmado o ha vencido el plazo de firma.',
@@ -43,7 +50,7 @@ export function ClosureDocument({ closure, compact = false }) {
     {offer.pos.delivery && <p>Entrega prevista: {offer.pos.delivery.expected} · Fecha límite: {offer.pos.delivery.latest}. Suministro sujeto a stock; pagar o firmar no garantiza entrega inmediata.</p>}
     {compact ? <details className="onb-managerAdvanced"><summary>Leer contrato completo</summary><pre className="onb-closureDocument" tabIndex="0" aria-label="Contrato completo">{offer.documentText}</pre></details>
       : <pre className="onb-closureDocument" tabIndex="0" aria-label="Contrato completo">{offer.documentText}</pre>}
-    <button type="button" onClick={download}>Descargar contrato y justificante</button>
+    <button type="button" onClick={download}>{payment?.paidAt ? 'Descargar contrato y justificante' : 'Descargar contrato'}</button>
     {payment && <p role="status">Estado del pago: {paymentLabel(payment.status)}. {payment.paidAt && <>Recibido: {euro(payment.amountCents)} · Justificante: {payment.receipt}</>}</p>}
     {closure.signatureDeadline && !closure.signed && <p>Plazo de firma: {new Date(closure.signatureDeadline).toLocaleString('es-ES')}.</p>}
     {closure.refundDueAt && !closure.signed && <p>Fecha límite para tramitar la devolución: {new Date(closure.refundDueAt).toLocaleDateString('es-ES')}.</p>}
@@ -56,6 +63,8 @@ export default function OnboardingClosure({ request, onUpdate }) {
   const working = useRef(false);
   const sequence = useRef(0);
   const c = request.closure, prefix = `/api/onboarding/form/${request.token}`;
+  const first = c.offer.workflow === 'SIGN_PAY_ACTIVATE';
+  const activated = c.activated || request.status === 'ACTIVATED' || c.status === 'SIGNED';
   useEffect(() => { setAccepted(false); setSigned(false); }, [c.offer.hash]);
   const action = async (path, body = {}) => {
     if (working.current) return;
@@ -87,30 +96,32 @@ export default function OnboardingClosure({ request, onUpdate }) {
   }, [prefix, onUpdate]);
   const cancelled = c.cancelRequested || ['CANCELLED','REFUNDED','REFUND_PENDING','REVERSED'].includes(c.status);
   return <main className="onb-page"><div className="onb-shell">
-    <h1>{request.businessName} · Cierre de incorporación</h1>
+    <h1>{request.businessName} · Contrato y pago</h1>
     <ClosureDocument closure={c} />
-    {!c.signed && <section className="onb-commercial">
-      {!c.consented && !cancelled && <>
+    {!activated && <section className="onb-commercial">
+      {!first && !c.consented && !cancelled && <>
         <label className="onb-choice"><input type="checkbox" checked={accepted} onChange={e => setAccepted(e.target.checked)} />
           <span>He revisado el contrato completo y acepto las condiciones del pago previo, su importe, el plazo de firma y la devolución si no completo el alta.</span></label>
         <button type="button" disabled={!accepted || busy} onClick={() => action('/closure/consent', { accepted: true })}>Aceptar condiciones y continuar</button>
       </>}
-      {c.consented && !cancelled && !c.overdue && !c.canSign && <>
+      {c.consented && (!first || c.signed) && !cancelled && !c.overdue && !c.canSign && c.payment?.status !== 'PAID' && <>
+        {first && <p>Contrato firmado. Completa el pago para recibir tu acceso y el QR.</p>}
         <button type="button" disabled={busy} onClick={() => action('/closure/checkout')}>Pagar {euro(c.offer.totalCents)} y continuar</button>
         {c.offer.pos.mode === 'PURCHASE' && <p>Si pagas en efectivo, Volta debe registrar el recibo y confirmar que recibió el importe completo. No necesitas pagar otra vez online.</p>}
       </>}
-      {c.canSign && <>
-        <p>Pago recibido. Ya puedes firmar.</p>
+      {c.canSign && !cancelled && <>
+        <p>{first ? 'Firma el contrato y después completa el pago inicial.' : 'Pago recibido. Ya puedes firmar.'}</p>
         <label className="onb-choice"><input type="checkbox" checked={signed} onChange={e => setSigned(e.target.checked)} />
           <span>Acepto y firmo electrónicamente este contrato completo, y declaro que puedo representar al negocio.</span></label>
-        <button type="button" disabled={!signed || busy} onClick={() => action('/sign-contract', { acceptedContract: true })}>Firmar contrato y preparar mi tienda</button>
+        <button type="button" disabled={!signed || busy} onClick={() => action('/sign-contract', { acceptedContract: true })}>{first ? 'Firmar contrato y continuar al pago' : 'Firmar contrato y preparar mi tienda'}</button>
       </>}
       {c.overdue && <p role="alert">Ha vencido el plazo de firma. El alta está bloqueada; Volta debe resolver la devolución del pago.</p>}
       {cancelled && <p role="status">Cancelación o devolución en seguimiento. La firma está bloqueada.</p>}
+      {first && c.payment?.status === 'PAID' && !cancelled && <p role="status">Pago confirmado. Estamos preparando tu acceso y el correo de bienvenida con el QR. No necesitas volver a pagar.</p>}
       <button type="button" disabled={busy} onClick={() => action('/closure/refresh')}>Actualizar estado</button>
       {!cancelled && <button type="button" disabled={busy} onClick={() => action('/closure/cancel')}>Solicitar cancelación antes del alta</button>}
     </section>}
-    {c.signed && <p>Contrato firmado. {['FAILED', 'NOT_CONFIGURED'].includes(request.formalData?.credentialsNotification?.emailStatus)
+    {activated && <p>Contrato firmado y pago confirmado. {['FAILED', 'NOT_CONFIGURED'].includes(request.formalData?.credentialsNotification?.emailStatus)
       ? 'El correo de acceso no se ha entregado; Volta debe reenviarlo desde tu expediente. El contrato y el pago están conservados.'
       : 'Revisa tu correo para configurar el acceso.'} La tienda debe prepararse antes de abrir pedidos.</p>}
     {message && <p role="alert">{message}</p>}

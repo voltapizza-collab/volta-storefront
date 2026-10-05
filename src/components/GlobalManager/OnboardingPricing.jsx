@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import api from '../../setupAxios';
 import { closureErrorText } from '../OnboardingClosure';
 import { euro } from '../OnboardingCommercial';
-import { termFields, asCents, amountInput } from './onboardingOfferFields';
+import { asCents, amountInput } from './onboardingOfferFields';
 import '../../styles/OnboardingManager.css';
 
 export default function OnboardingPricing() {
@@ -43,8 +43,8 @@ export default function OnboardingPricing() {
   const rent = defaults.rentMode === 'PRICE_24' ? Math.round(asCents(price) / 24)
     : defaults.rentMode === 'PRICE_36' ? Math.round(asCents(price) / 36) : defaults.rentCents;
   return <details id="onboarding-defaults" className="onb-commercial onb-managerSettings" open={open} onToggle={e => setOpen(e.currentTarget.open)}>
-    <summary>Tarifas vigentes del POS y SMS · condiciones generales</summary>
-    <p>Estos valores rellenan las ofertas. En cada comercio solo revisas los importes y confirmas la entrega. Completa las condiciones comunes antes de preparar la primera oferta.</p>
+    <summary>Tarifas vigentes del POS y SMS</summary>
+    <p>Configura aquí las tarifas. El contrato se genera con la modalidad y los importes del comercio; durante la revisión solo tendrás que comprobarlo y enviar el correo de pago.</p>
     <form onSubmit={save} className="onb-managerForm">
       <div className="onb-managerGrid">
         <label>Precio predeterminado del POS, IVA incluido (€)<input required inputMode="decimal" disabled={!pricing || busy} value={price} onChange={e => setPrice(e.target.value)} /></label>
@@ -55,14 +55,8 @@ export default function OnboardingPricing() {
         {(!defaults.rentMode || defaults.rentMode === 'FIXED') && <label>Cuota mensual fija, IVA incluido (€)<input inputMode="decimal" value={rentInput} onChange={e => { setRentInput(e.target.value); setDefaults(d => ({ ...d, rentCents: asCents(e.target.value) })); }} /></label>}
         <label>Fianza del renting (€; 0 si no se exige)<input inputMode="decimal" value={depositInput} onChange={e => { setDepositInput(e.target.value); setDefaults(d => ({ ...d, depositCents: asCents(e.target.value) })); }} /></label>
         <div><strong>Paquetes a la tarifa vigente guardada</strong><p>{packs.map(pack => `${euro(pack.cents)}: ${pack.credits} partes`).join(' · ')}</p></div>
-        <label>Días para firmar después del pago<input type="number" min="1" max="60" value={defaults.signatureDays ?? ''} onChange={change('signatureDays')} /></label>
-        <label>Máximo de días para tramitar la devolución antes del alta<input type="number" min="1" max="30" value={defaults.refundDays ?? ''} onChange={change('refundDays')} /></label>
       </div>
       <p>Renting: <strong>36 × {euro(rent)}</strong> · Total: <strong>{euro(Number.isInteger(rent) ? rent * 36 : null)}</strong>. Cuota redondeada a céntimos. El POS se transmite al finalizar los 36 meses y completar todos los pagos.</p>
-      <details className="onb-managerAdvanced"><summary>Condiciones comunes del contrato</summary>
-        <p>Se guardan una vez para reutilizarlas. El contrato general con los datos del comercio se genera automáticamente.</p>
-        {termFields.map(([key, label]) => <label key={key}>{label}<textarea rows="3" minLength="30" maxLength={key === 'equipmentTerms' ? 8000 : 4000} value={defaults[key] || ''} onChange={change(key)} /></label>)}
-      </details>
       <button type="submit" disabled={!pricing || busy}>Guardar configuración general</button>
     </form>{message && <p role="status">{message}</p>}
   </details>;

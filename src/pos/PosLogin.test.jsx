@@ -16,7 +16,7 @@ beforeEach(() => {
   HTMLDialogElement.prototype.close = function () { this.open = false; };
 });
 
-test('remembers successful credentials only when selected and restores them masked', async () => {
+test('remembers only the username and never persists or restores the PIN', async () => {
   api.post.mockResolvedValue({ data: { partnerId: 1, storeId: 2 } });
   const onStart = jest.fn();
   const view = render(<PosLogin onStart={onStart} />);
@@ -28,7 +28,8 @@ test('remembers successful credentials only when selected and restores them mask
   view.unmount();
   render(<PosLogin onStart={onStart} />);
   expect(screen.getByLabelText('Usuario')).toHaveValue('partner');
-  expect(screen.getByLabelText('PIN de tienda')).toHaveValue('123456');
+  expect(screen.getByLabelText('PIN de tienda')).toHaveValue('');
+  expect(JSON.parse(localStorage.getItem(key))).toEqual({ username: 'partner' });
   expect(screen.getByLabelText('PIN de tienda')).toHaveAttribute('type', 'password');
   fireEvent.click(screen.getByRole('checkbox'));
   expect(localStorage.getItem(key)).toBeNull();

@@ -1543,3 +1543,7 @@
     display: none;
   }
 }
+.sc-reception { min-width: 190px; max-width: 270px; display: grid; gap: 8px; text-align: left; }
+.sc-reception small { display: block; }
+.sc-reception ul { margin: 0; padding-left: 18px; font-size: 12px; line-height: 1.45; }
+.sc-reception button:disabled { opacity: .55; cursor: not-allowed; }

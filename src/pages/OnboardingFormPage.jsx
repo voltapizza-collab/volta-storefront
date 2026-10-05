@@ -1,10 +1,15 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../setupAxios";
+import OnboardingCommercial, { CommercialSummary, commercialPreview } from '../components/OnboardingCommercial';
+import OnboardingClosure from '../components/OnboardingClosure';
 import voltaSignature from "../assets/signatures/volta-signature.png";
 import "../styles/OnboardingForm.css";
 
 const initialForm = {
+  posChoice: '',
+  posInstallments: 6,
+  commercialAcknowledged: false,
   partnerType: "",
   legalName: "",
   taxId: "",
@@ -58,6 +63,10 @@ const documentFields = [
 ];
 
 const requiredFieldLabels = {
+  posChoice: 'la modalidad del POS',
+  posInstallments: 'el número de cuotas',
+  commercialAcknowledged: 'la confirmación de las condiciones',
+  commercialVersion: 'la versión de las condiciones',
   partnerType: "Tipo de titular",
   legalName: "Razon social o nombre fiscal",
   taxId: "CIF / NIF / NIE",
@@ -479,7 +488,7 @@ function ContractDocument({ contract, request }) {
         <div className="onb-activationBox">
           <span>Backoffice activado</span>
           <strong>{activation.partnerName}</strong>
-          <small>Usuario: {activation.username} - Contrasena: {activation.password}</small>
+          <small>Usuario: {activation.username}. Revisa tu correo para crear tu contraseña con el enlace seguro.</small>
         </div>
       )}
     </article>
@@ -498,6 +507,9 @@ export default function OnboardingFormPage() {
   const [message, setMessage] = useState("");
   const [documents, setDocuments] = useState({});
   const [invalidFields, setInvalidFields] = useState({});
+  const [step, setStep] = useState(0);
+  const [savingDraft, setSavingDraft] = useState(false);
+  const draftBusy = useRef(false);
 
   const isLocked = useMemo(
     () => ["IN_REVIEW", "CONTRACT_SENT", "ACTIVATED", "APPROVED", "REJECTED"].includes(request?.status),
@@ -513,7 +525,7 @@ export default function OnboardingFormPage() {
     );
   }, [request]);
 
-  const canSignContract = request?.status === "CONTRACT_SENT";
+  const canSignContract = request?.status === "CONTRACT_SENT" && !request?.commercialClosurePending;
 
   const existingDocuments = useMemo(
     () => request?.formalData?.supportingDocuments || [],
@@ -543,6 +555,7 @@ export default function OnboardingFormPage() {
           businessEmail: nextRequest?.email || "",
           businessPhone: nextRequest?.phone || "",
           ...(nextRequest?.formalData || {}),
+          ...(nextRequest?.formalData?.onboardingDraft || {}),
         });
         setDocuments({});
       } catch (error) {
@@ -559,7 +572,9 @@ export default function OnboardingFormPage() {
   const updateField = (field) => (event) => {
     const value =
       event.target.type === "checkbox" ? event.target.checked : event.target.value;
-    setForm((current) => ({ ...current, [field]: value }));
+    setForm((current) => ({ ...current, [field]: value,
+      ...(field === 'posChoice' && value === 'INSTALLMENTS' && ![2,3,4,5,6].includes(Number(current.posInstallments)) ? { posInstallments: 6 } : {}),
+    }));
     setInvalidFields((current) => {
       if (!current[field]) return current;
       const { [field]: _removed, ...next } = current;
@@ -596,6 +611,10 @@ export default function OnboardingFormPage() {
 
   const showInvalidFields = (nextInvalid) => {
     setInvalidFields({});
+    const first = Object.keys(nextInvalid)[0];
+    setStep(first?.startsWith('document:') || ['accountHolder', 'iban'].includes(first) ? 1
+      : ['posChoice', 'posInstallments', 'commercialAcknowledged', 'commercialVersion'].includes(first) ? 2
+      : ['acceptedTerms', 'acceptedCompliance'].includes(first) ? 3 : 0);
     window.requestAnimationFrame(() => {
       setInvalidFields(nextInvalid);
       const firstInvalidField = Object.keys(nextInvalid)[0];
@@ -607,8 +626,14 @@ export default function OnboardingFormPage() {
 
   const submit = async (event) => {
     event.preventDefault();
+    if (isLocked || saving || savingDraft) return;
+    if (step !== 3) { setStep(current => Math.min(3, current + 1)); return; }
 
     const nextInvalid = buildInvalidFormalFields(form, documents, existingDocumentsByType);
+    if (!form.posChoice) nextInvalid.posChoice = true;
+    if (form.posChoice === 'INSTALLMENTS' && ![2, 3, 4, 5, 6].includes(Number(form.posInstallments))) nextInvalid.posInstallments = true;
+    if (!form.commercialAcknowledged) nextInvalid.commercialAcknowledged = true;
+    if (!request.commercialCatalog?.version) nextInvalid.commercialVersion = true;
     const invalidKeys = Object.keys(nextInvalid);
 
     if (invalidKeys.length) {
@@ -623,8 +648,9 @@ export default function OnboardingFormPage() {
       setMessage("");
       const payload = new FormData();
       Object.entries(form).forEach(([key, value]) => {
-        payload.append(key, value == null ? "" : String(value));
+        if (key in initialForm) payload.append(key, value == null ? "" : String(value));
       });
+      payload.append('commercialVersion', request.commercialCatalog.version);
       documentFields.forEach(({ key }) => {
         (documents[key] || []).forEach((file) => {
           payload.append("documents", file);
@@ -636,12 +662,14 @@ export default function OnboardingFormPage() {
         headers: { "Content-Type": "multipart/form-data" },
       });
       setRequest(response.data?.request);
+      setForm(current => ({ ...current, ...response.data?.request?.formalData }));
       setDocuments({});
       setMessage("Informacion recibida. Tu onboarding ya esta en proceso de revision.");
     } catch (error) {
       console.error(error);
       const missing = error.response?.data?.missing;
       const errorCode = error.response?.data?.error;
+      if (Array.isArray(missing)) showInvalidFields(Object.fromEntries(missing.map(key => [key, true])));
       setMessage(
         Array.isArray(missing) && missing.length
           ? "Faltan datos obligatorios o documentos requeridos para validar el alta."
@@ -652,6 +680,19 @@ export default function OnboardingFormPage() {
     } finally {
       setSaving(false);
     }
+  };
+
+  const saveDraft = async () => {
+    if (draftBusy.current || isLocked || saving) return;
+    draftBusy.current = true; setSavingDraft(true); setMessage('');
+    try {
+      const body = Object.fromEntries(Object.keys(initialForm).map(key => [key, form[key]]));
+      const response = await api.post(`/api/onboarding/form/${token}/draft`, body);
+      setRequest(response.data.request);
+      setMessage('Avance guardado. Puedes volver con este enlace. Los archivos seleccionados se subirán al enviar a revisión; si cierras esta página, tendrás que seleccionarlos de nuevo.');
+    } catch {
+      setMessage('No se pudo guardar el avance. Mantén esta página abierta y vuelve a intentarlo.');
+    } finally { draftBusy.current = false; setSavingDraft(false); }
   };
 
   const signContract = async (event) => {
@@ -669,7 +710,7 @@ export default function OnboardingFormPage() {
         acceptedContract: true,
       });
       setRequest(response.data?.request);
-      setMessage("Contrato aceptado. Hemos enviado tus credenciales iniciales por email.");
+      setMessage("Contrato aceptado. Revisa tu correo para crear tu contraseña y consultar el acceso al POS.");
     } catch (error) {
       console.error(error);
       setMessage("No pudimos completar la firma del contrato. Contacta con Volta Pizza.");
@@ -688,17 +729,19 @@ export default function OnboardingFormPage() {
 
   const contract = buildContractData(request);
 
+  if (request.closure) return <OnboardingClosure request={request} onUpdate={setRequest} />;
+
   if (shouldShowContract) {
     return (
       <main className="onb-page onb-page--contract">
         <section className="onb-shell">
           <div className="onb-header onb-header--contract">
             <span>Volta Pizza Onboarding</span>
-            <h1>Contrato de adhesion comercial</h1>
+            <h1>{request.commercialClosurePending ? 'Condiciones en preparación' : 'Contrato de adhesion comercial'}</h1>
             <p>
-              Revisa el contrato completo de {request.businessName}. Para continuar
-              con la activacion del backoffice debes confirmar la aceptacion y firmarlo
-              electronicamente.
+              {request.commercialClosurePending
+                ? `Revisa la elección enviada para ${request.businessName}. Volta preparará la oferta completa antes del pago y la firma.`
+                : `Revisa el contrato completo de ${request.businessName}. Para continuar con la activacion del backoffice debes confirmar la aceptacion y firmarlo electronicamente.`}
             </p>
             <strong>{statusCopy[request.status] || request.status}</strong>
           </div>
@@ -706,18 +749,21 @@ export default function OnboardingFormPage() {
           <section className="onb-contractPanel">
             <div className="onb-contractHead">
               <div>
-                <span>Firma electronica</span>
+                <span>{request.commercialClosurePending ? 'Próximo paso' : 'Firma electronica'}</span>
                 <h2>{contract.commercialName}</h2>
               </div>
               <div className="onb-contractHeadActions">
-                <button type="button" onClick={() => downloadContractPdf(contract)}>
+                <button type="button" disabled={request.commercialClosurePending} onClick={() => downloadContractPdf(contract)}>
                   Descargar PDF
                 </button>
                 <strong>{statusCopy[request.status] || request.status}</strong>
               </div>
             </div>
 
-            <ContractDocument contract={contract} request={request} />
+            {request.commercialClosurePending ? <>
+              <p className="onb-message">Estamos preparando tus condiciones completas. El contrato definitivo y su firma estarán disponibles en el cierre.</p>
+              <CommercialSummary selection={request.formalData?.commercialSelection || request.formalData?.onboardingDraft?.commercialSelection} />
+            </> : <ContractDocument contract={contract} request={request} />}
 
             {canSignContract && (
               <form className="onb-signForm" onSubmit={signContract}>
@@ -774,7 +820,11 @@ export default function OnboardingFormPage() {
         </div>
 
         <form className="onb-form" onSubmit={submit} noValidate>
-          <div className="onb-section">
+          {!isLocked && <nav className="onb-steps" aria-label="Pasos de incorporación">
+            {['Datos del negocio', 'Cuenta y documentos', 'Equipo y SMS', 'Resumen'].map((label, index) =>
+              <button type="button" key={label} aria-current={step === index ? 'step' : undefined} onClick={() => setStep(index)}>{index + 1}. {label}</button>)}
+          </nav>}
+          <div className="onb-section" hidden={!isLocked && step !== 0}>
             <h2>Datos legales</h2>
             <label className={fieldClassName("partnerType")}>
               <span>Tipo de titular</span>
@@ -806,7 +856,7 @@ export default function OnboardingFormPage() {
             </label>
           </div>
 
-          <div className="onb-section">
+          <div className="onb-section" hidden={!isLocked && step !== 0}>
             <h2>Negocio</h2>
             <label className={fieldClassName("commercialName")}>
               <span>Nombre comercial</span>
@@ -834,8 +884,8 @@ export default function OnboardingFormPage() {
             </label>
           </div>
 
-          <div className="onb-section">
-            <h2>Cobros</h2>
+          <div className="onb-section" hidden={!isLocked && step !== 1}>
+            <h2>Cuenta para liquidaciones</h2>
             <label className={fieldClassName("accountHolder")}>
               <span>Titular de la cuenta</span>
               <input value={form.accountHolder} onChange={updateField("accountHolder")} required disabled={isLocked} {...fieldProps("accountHolder")} />
@@ -851,7 +901,7 @@ export default function OnboardingFormPage() {
             </div>
           </div>
 
-          <div className="onb-section">
+          <div className="onb-section" hidden={!isLocked && step !== 1}>
             <h2>Documentacion basica</h2>
             <p className="onb-sectionIntro">
               Sube solo lo necesario para validar quien firma y la empresa/autonomo.
@@ -888,7 +938,16 @@ export default function OnboardingFormPage() {
             })}
           </div>
 
-          <div className="onb-section onb-checks">
+          <div hidden={(!isLocked && step !== 2) || (isLocked && !request.formalData?.commercialSelection)}>
+            <OnboardingCommercial form={form} catalog={request.commercialCatalog} updateField={updateField} disabled={isLocked || saving || savingDraft} fieldProps={fieldProps} invalidFields={invalidFields} />
+          </div>
+          <div hidden={!isLocked && step !== 3}>
+            <h2>Revisa tu incorporación</h2>
+            <p><strong>{form.commercialName || request.businessName}</strong> · {form.legalName} · {form.taxId}</p>
+            <p>{form.businessAddress} · {form.city} · {form.businessEmail}</p>
+            <CommercialSummary selection={isLocked ? request.formalData?.commercialSelection : commercialPreview(form, request.commercialCatalog)} />
+          </div>
+          <div className="onb-section onb-checks" hidden={!isLocked && step !== 3}>
             <label className={fieldClassName("acceptedTerms")}>
               <input type="checkbox" checked={form.acceptedTerms} onChange={updateField("acceptedTerms")} required disabled={isLocked} {...fieldProps("acceptedTerms")} />
               <span>Declaro que la informacion enviada es real y que estoy autorizado para representar este negocio.</span>
@@ -900,9 +959,12 @@ export default function OnboardingFormPage() {
           </div>
 
           {!isLocked && (
-            <button type="submit" disabled={saving}>
-              {saving ? "Enviando..." : "Enviar a revision"}
-            </button>
+            <div className="onb-navigation">
+              {step > 0 && <button type="button" disabled={saving || savingDraft} onClick={() => setStep(step - 1)}>Anterior</button>}
+              <button type="button" disabled={saving || savingDraft} onClick={saveDraft}>{savingDraft ? 'Guardando…' : 'Guardar y continuar después'}</button>
+              {step < 3 ? <button type="button" disabled={saving || savingDraft} onClick={() => setStep(step + 1)}>Continuar</button>
+                : <button type="submit" disabled={saving || savingDraft}>{saving ? "Enviando..." : "Enviar a revisión"}</button>}
+            </div>
           )}
 
           {message && <div className="onb-message">{message}</div>}

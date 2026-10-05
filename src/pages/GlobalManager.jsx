@@ -1,3 +1,5 @@
+import api from '../setupAxios';
+import useWebSession from '../auth/useWebSession';
 import React, { useState } from "react";
 import "../styles/GlobalManager.css";
 
@@ -17,10 +19,7 @@ import AppFooter from "../components/Layout/AppFooter";
 export default function GlobalManager() {
   const [activeModule, setActiveModule] = useState("myorders");
 
-  const [auth, setAuth] = useState(() => {
-    const saved = localStorage.getItem("volta_gm_auth");
-    return saved ? JSON.parse(saved) : null;
-  });
+  const [auth, setAuth, checkingSession] = useWebSession("global_admin");
 
   const [loginForm, setLoginForm] = useState({
     username: "",
@@ -39,36 +38,26 @@ export default function GlobalManager() {
     setLoginError("");
   };
 
-  // 🔥 LOGIN (HARDCODED)
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-
-    const username = loginForm.username.trim();
-    const password = loginForm.password.trim();
-
-    if (username !== "admin" || password !== "7676") {
-      setLoginError("Credenciales inválidas.");
-      return;
+    try {
+      const response = await api.post('/api/auth/admin-login', loginForm);
+      setAuth(response.data);
+      setLoginForm({ username: "", password: "" });
+      setLoginError("");
+    } catch (error) {
+      setLoginError(error.response?.status === 503 ? "El acceso de administración necesita configuración en el servidor." : "Credenciales inválidas.");
     }
-
-    const session = {
-      role: "global_admin",
-    };
-
-    setAuth(session);
-    localStorage.setItem("volta_gm_auth", JSON.stringify(session));
-
-    setLoginForm({ username: "", password: "" });
-    setLoginError("");
   };
 
   const handleLogout = () => {
     setAuth(null);
-    localStorage.removeItem("volta_gm_auth");
+
     setActiveModule("myorders");
   };
 
   // 🔥 LOGIN SCREEN
+  if (checkingSession) return <div className="gm-loginScreen">Comprobando acceso…</div>;
   if (!auth) {
     return (
       <div className="gm-loginScreen">

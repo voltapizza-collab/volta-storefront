@@ -237,18 +237,18 @@ export default function PartnerOrderPage() {
   }, [pickupCityFilter, pickupStores]);
 
   const closedCopy = useMemo(() => {
-    if (activeStores.length === 0) {
+    if (!partner?.stores?.some(store => store.active !== false)) {
       return {
-        title: "Cerrado",
-        body: "No hay tiendas activas para recibir pedidos ahora.",
+        title: "En preparación",
+        body: "La tienda todavía no está habilitada para recibir pedidos online.",
       };
     }
 
     return {
       title: "Cerrado",
-      body: "No hay tiendas disponibles para recibir pedidos ahora.",
+      body: "La recepción de pedidos online está cerrada temporalmente. Vuelve más tarde.",
     };
-  }, [activeStores]);
+  }, [partner]);
 
   const singleServiceCopy = useMemo(() => {
     if (singleServiceMode === "delivery") {

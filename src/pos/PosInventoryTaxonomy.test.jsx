@@ -10,7 +10,9 @@ const originalFetch = global.fetch;
 let items;
 beforeEach(() => {
   jest.useFakeTimers(); jest.clearAllMocks(); localStorage.clear();
-  localStorage.setItem('volta_pos_virtual_session', JSON.stringify({ partnerId: 1, storeId: 2, storeName: 'Auditoría' }));
+  window.history.replaceState(null, '', '/pos/test/central');
+  sessionStorage.clear();
+  sessionStorage.setItem('volta_web_session:pos:test:central', JSON.stringify({ role: 'pos', partnerId: 1, partnerSlug: 'test', storeSlug: 'central', storeId: 2, storeName: 'Test', sessionToken: 'a'.repeat(64) }));
   global.fetch = jest.fn().mockResolvedValue({ ok: false });
   HTMLDialogElement.prototype.showModal = function () { this.open = true; };
   HTMLDialogElement.prototype.close = function () { this.open = false; };
@@ -20,6 +22,7 @@ beforeEach(() => {
     { id: 12, name: 'Pan local', canonicalKey: 'pollo_frito', category: 'PANES_MASAS_HARINAS', isSystem: false, exists: true, active: false, affectedProducts: 1 },
   ];
   api.get.mockImplementation(async url => {
+    if (url === '/api/auth/session') return { data: { role: 'pos', partnerId: 1, partnerSlug: 'test', storeSlug: 'central', storeId: 2, storeName: 'Test' } };
     if (url === '/api/stores/2') return { data: { active: true, operationsPaused: false } };
     if (url === '/api/myorders/pending') return { data: { items: [] } };
     if (url === '/api/presence/stores/2/status') return { data: { presence: {} } };

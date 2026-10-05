@@ -1,3 +1,4 @@
+import { rememberRepeatReceipt, readRepeatReceipts } from '../auth/repeatReceipts';
 import { getIngredientTaxonomyKey, getTaxonomyCategoryLabel, getTaxonomyCategories } from '../utils/ingredientTaxonomy';
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
@@ -2796,7 +2797,7 @@ export default function StorePage() {
         storeId: String(store.id),
         take: "200",
       });
-      const data = await api.get(`/api/myorders/pending?${params.toString()}`);
+      const data = await api.get(`/api/myorders/queue-size?${params.toString()}`);
       const pendingCount = Number(
         data?.queueSize ?? (Array.isArray(data?.items) ? data.items.length : 0)
       );
@@ -2914,6 +2915,7 @@ export default function StorePage() {
             });
             if (!cancelled && confirmation?.orderCode) {
               setCheckoutTrackingCode(confirmation.orderCode);
+              if (confirmation.repeatReceipt) rememberRepeatReceipt(partnerSlug, storeSlug, confirmation.repeatReceipt);
             }
           }
 
@@ -5497,7 +5499,14 @@ export default function StorePage() {
         storeId: String(store?.id || ""),
         phone,
       });
-      const data = await api.get(`/api/myorders/repeat/recent?${params.toString()}`);
+      const receipts = readRepeatReceipts(partnerSlug, storeSlug);
+      if (!receipts.length) {
+        setRepeatOptions([]);
+        setRepeatSearched(true);
+        setRepeatMessage("Para proteger tus datos, aquí aparecen los pedidos pagados desde este navegador con el nuevo acceso seguro. Puedes hacer un pedido nuevo desde la carta.");
+        return;
+      }
+      const data = await api.get(`/api/myorders/repeat/recent?${params.toString()}`, { headers: { "X-Volta-Receipts": JSON.stringify(receipts) } });
       const orders = Array.isArray(data?.orders) ? data.orders : [];
       const drafts = orders.map((item) => item?.cartDraft).filter(Boolean).slice(0, 3);
 
@@ -8242,8 +8251,7 @@ export default function StorePage() {
           <div className="sf-modalCard sf-repeatModal" onClick={(event) => event.stopPropagation()}>
             <h3>Repetir pedido</h3>
             <p>
-              Busca el ultimo pedido con tu telefono, revisa el contenido y
-              repitelo cuando este correcto.
+              Consulta tus pedidos guardados en este navegador con tu teléfono, revisa el contenido y repítelo cuando esté correcto.
             </p>
 
             <form className="sf-repeatForm" onSubmit={loadRepeatOrder}>

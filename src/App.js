@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import PartnerPage from "./pages/PartnerPage";
 import PartnerOrderPage from "./pages/PartnerOrderPage";
 import StorePage from "./pages/StorePage";
@@ -16,6 +16,11 @@ import OnboardingFormPage from "./pages/OnboardingFormPage";
 import CouponShortRedirect from "./pages/CouponShortRedirect";
 import AppLayout from "./components/Layout/AppLayout";
 import PosApp from "./pos/PosApp";
+
+function BusinessAccess({ component: Component }) {
+  const { pathname } = useLocation();
+  return <Component key={pathname} />;
+}
 
 function App() {
   return (
@@ -40,12 +45,12 @@ function App() {
         <Route path="/:partnerSlug/:storeSlug/menu" element={<MenuPage />} />
 
         {/* GLOBAL MANAGER */}
-        <Route path="/global-manager/*" element={<GlobalManager />} />
+        <Route path="/global-manager/*" element={<BusinessAccess component={GlobalManager} />} />
 
         {/* BACKOFFICE */}
-        <Route path="/Backoffice/*" element={<Backoffice />} />
-        <Route path="/backoffice/*" element={<Backoffice />} />
-        <Route path="/pos" element={<PosApp />} />
+        <Route path="/Backoffice/*" element={<BusinessAccess component={Backoffice} />} />
+        <Route path="/backoffice/*" element={<BusinessAccess component={Backoffice} />} />
+        <Route path="/pos/*" element={<BusinessAccess component={PosApp} />} />
         <Route path="/jugar" element={<GamePage fixedGameSlug="winning-number" />} />
         <Route path="/perfect-timing" element={<GamePage fixedGameSlug="perfect-timing" />} />
       </Routes>

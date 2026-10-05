@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import api from "../setupAxios";
+import StoreReception from '../components/Backoffice/StoreReception';
+import { receptionText } from '../utils/storeReception';
 import OfferCreatePanelCustomer from "../components/Backoffice/Coupons/OfferCreatePanelCustomer";
 import {
   CUSTOMER_SEGMENTS,
@@ -2147,7 +2149,7 @@ export default function AdminStoresPage({
       const response = await api.patch(`/api/stores/${store.id}/active`, { active: next });
       const nextActive = Boolean(response.data?.active ?? next);
       setStores((current) =>
-        current.map((row) => (row.id === store.id ? { ...row, active: nextActive } : row))
+        current.map((row) => (row.id === store.id ? { ...row, active: nextActive, acceptingOrders: response.data.acceptingOrders } : row))
       );
     } catch (requestError) {
       console.error("TOGGLE STORE ACTIVE ERROR:", requestError);
@@ -2341,6 +2343,7 @@ export default function AdminStoresPage({
                 <th>{t("table.city")}</th>
                 <th>{t("table.address")}</th>
                 <th>{t("table.status")}</th>
+                <th>{receptionText(activeLocale).heading}</th>
                 <th>{t("form.deliveryMethods")}</th>
                 <th>PIN POS</th>
                 <th>{t("table.menu")}</th>
@@ -2396,12 +2399,13 @@ export default function AdminStoresPage({
                       }
                     >
                       {isOperationalActive
-                        ? t("status.active")
+                        ? receptionText(activeLocale).enabled
                         : isCoordinateBlocked
                         ? t("status.coords")
-                      : t("status.inactive")}
+                      : receptionText(activeLocale).disabled}
                     </button>
                   </td>
+                  <td><StoreReception store={store} language={activeLocale} refreshKey={`${Boolean(stockModal)}:${Boolean(hoursModal)}:${Boolean(showAdd)}`} /></td>
                   <td>
                     {[
                       store.pickupEnabled !== false ? t("form.pickupEnabled") : "",
@@ -2452,7 +2456,7 @@ export default function AdminStoresPage({
 
               {stores.length === 0 && (
                 <tr>
-                  <td colSpan="12">
+                  <td colSpan="13">
                     <div className="sc-emptyState">{t("state.noStores")}</div>
                   </td>
                 </tr>

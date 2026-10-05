@@ -19,12 +19,14 @@ beforeEach(() => {
   jest.useFakeTimers();
   jest.clearAllMocks();
   localStorage.clear();
-  localStorage.setItem('volta_pos_virtual_session', JSON.stringify({ partnerId: 1, storeId: 2, storeName: 'Test' }));
+  window.history.replaceState(null, '', '/pos/test/central');
+  sessionStorage.clear();
+  sessionStorage.setItem('volta_web_session:pos:test:central', JSON.stringify({ role: 'pos', partnerId: 1, partnerSlug: 'test', storeSlug: 'central', storeId: 2, storeName: 'Test', sessionToken: 'a'.repeat(64) }));
   localStorage.setItem('volta_pos_accepted_order_notices:2', JSON.stringify(['42']));
   global.fetch = jest.fn().mockResolvedValue({ ok: false });
   HTMLDialogElement.prototype.showModal = function () { this.open = true; };
   HTMLDialogElement.prototype.close = function () { this.open = false; };
-  store = { active: true, operationsPaused: true };
+  store = { active: true, acceptingOrders: true, operationsPaused: true };
 });
 
 afterEach(() => {
@@ -34,6 +36,7 @@ afterEach(() => {
 
 function mockPos(orders) {
   api.get.mockImplementation(async (url) => {
+    if (url === '/api/auth/session') return { data: { role: 'pos', partnerId: 1, partnerSlug: 'test', storeSlug: 'central', storeId: 2, storeName: 'Test' } };
     if (url === '/api/stores/2') return { data: { ...store } };
     if (url === '/api/myorders/pending') return { data: { items: orders } };
     if (url === '/api/presence/stores/2/status') return { data: { presence: {} } };
@@ -45,6 +48,29 @@ function mockPos(orders) {
     return { data: { ...store } };
   });
 }
+
+test('POS opens reception rather than store activation, retains pause and explains rejected opening', async () => {
+  store.acceptingOrders = false;
+  mockPos([]);
+  api.patch.mockImplementationOnce(async (_, body) => {
+    store = { ...store, ...body };
+    return { data: { ...store } };
+  });
+  render(<PosApp />);
+  const open = await screen.findByRole('button', { name: 'Abrir pedidos' });
+  await waitFor(() => expect(open).toBeEnabled());
+  fireEvent.click(open);
+  await screen.findByRole('button', { name: 'Cerrar pedidos' });
+  expect(api.patch).toHaveBeenCalledWith('/api/stores/2/order-reception', { acceptingOrders: true });
+  expect(screen.getByText('En pausa · programados')).toBeInTheDocument();
+  api.patch.mockImplementationOnce(async (_, body) => { store = { ...store, ...body }; return { data: store }; });
+  fireEvent.click(screen.getByRole('button', { name: 'Cerrar pedidos' }));
+  await screen.findByRole('button', { name: 'Abrir pedidos' });
+  api.patch.mockRejectedValueOnce({ response: { data: { blockers: ['hours'] } } });
+  fireEvent.click(screen.getByRole('button', { name: 'Abrir pedidos' }));
+  await screen.findByText('Configura los horarios.');
+  expect(screen.queryByRole('button', { name: 'Cerrar pedidos' })).not.toBeInTheDocument();
+});
 
 test.each([
   ['an empty queue', []],

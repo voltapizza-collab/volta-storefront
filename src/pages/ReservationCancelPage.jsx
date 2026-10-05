@@ -12,7 +12,7 @@ export default function ReservationCancelPage() {
 
     const cancelReservation = async () => {
       try {
-        await api.patch(`/api/reservations/${id}/cancel`);
+        await api.patch(`/api/reservations/${id}/cancel`, { cancelToken: new URLSearchParams(window.location.search).get("token") || "" });
         if (!cancelled) setStatus("success");
       } catch (error) {
         console.error(error);

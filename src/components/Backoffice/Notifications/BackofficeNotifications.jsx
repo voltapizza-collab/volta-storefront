@@ -1,3 +1,4 @@
+import { accessDestination } from '../../../auth/webSession';
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import useBackofficeNotifications, { mergeNotificationHistory, notificationKey } from "./useBackofficeNotifications";
@@ -172,7 +173,7 @@ export default function BackofficeNotifications({ partnerId, onNavigate, languag
                 {read.includes(notificationKey(current)) && ` · ${t("notices.read")}`}
               </time>}
               <div className="bo-notices-actions">
-                {destinations[current.action?.target] && <a className="bo-notices-primary" href={destinations[current.action.target]} onClick={navigate}>
+                {destinations[current.action?.target] && <a className="bo-notices-primary" href={accessDestination().partnerSlug ? `/backoffice/${encodeURIComponent(accessDestination().partnerSlug)}?section=${encodeURIComponent(current.action.target)}` : destinations[current.action.target]} onClick={navigate}>
                   {current.action.label}<span aria-hidden="true">↗</span>
                 </a>}
                 <button className={current.action ? "bo-notices-secondary" : "bo-notices-primary"} type="button" onClick={advance}>

@@ -1,5 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import api from "../../setupAxios";
+import { CommercialSummary } from '../OnboardingCommercial';
+import OnboardingOffer from './OnboardingOffer';
+import OnboardingPricing from './OnboardingPricing';
 import voltaSignature from "../../assets/signatures/volta-signature.png";
 
 const statuses = [
@@ -74,8 +77,13 @@ const phaseMeta = {
   },
 };
 
-const getPhase = (status) =>
-  phaseMeta[status] || {
+const getPhase = (status, closure) =>
+  closure ? {
+    step: closure.signed ? 'Preparación de tienda' : 'Pago y firma',
+    title: closure.signed ? 'Contrato firmado' : closure.canSign ? 'Pago confirmado; pendiente de firma' : closure.overdue || closure.cancelRequested ? 'Revisar cancelación o devolución' : closure.status === 'OFFERED' ? 'Oferta preparada' : 'Cierre en curso',
+    description: closure.signed ? 'Accesos creados. Comprueba el envío de bienvenida y prepara la tienda antes de abrir pedidos.' : 'El comercio debe revisar la oferta, aceptar el pago previo, pagar y firmar con el cobro confirmado.',
+    next: closure.signed ? 'Configurar tienda y POS; verificar un pedido antes de la apertura.' : 'Consulta la oferta y el estado del pago en el expediente.',
+  } : phaseMeta[status] || {
     step: "Onboarding",
     title: status || "Sin estado",
     description: "Estado de onboarding sin descripcion operativa.",
@@ -138,6 +146,7 @@ const documentTypeLabels = {
 };
 
 const notificationLabels = {
+  SENDING: "Envío en curso",
   SENT: "Email enviado",
   NOT_CONFIGURED: "Email no configurado",
   FAILED: "Email fallido",
@@ -362,10 +371,11 @@ export default function OnboardingModule() {
   const contractNotification = formalData.contractNotification || null;
   const credentialsNotification = formalData.credentialsNotification || null;
   const activation = formalData.activation || null;
-  const selectedPhase = getPhase(selected?.status);
+  const selectedPhase = getPhase(selected?.status, selected?.closure);
   const contract = buildContractData(selected, formalData);
   const canSendContract = Boolean(
     selected?.formalData &&
+    !selected?.commercialClosurePending &&
     !["ACTIVATED", "REJECTED"].includes(selected?.status)
   );
 
@@ -375,6 +385,7 @@ export default function OnboardingModule() {
         <div>
           <span>Volta Global</span>
           <h2>Onboarding</h2>
+          <OnboardingPricing />
         </div>
         <button type="button" onClick={() => loadRequests(activeStatus)}>
           Actualizar
@@ -418,7 +429,7 @@ export default function OnboardingModule() {
             <div className="gmon-empty">No hay solicitudes en este filtro.</div>
           ) : (
             requests.map((item) => {
-              const itemPhase = getPhase(item.status);
+              const itemPhase = getPhase(item.status, item.closure);
               const tone = getStatusTone(item.status);
               const isDone = item.status === "ACTIVATED";
 
@@ -438,14 +449,14 @@ export default function OnboardingModule() {
                     </div>
                     <span>{item.name} - {item.email}</span>
                     <small>{itemPhase.title} - {formatDate(item.createdAt)}</small>
-                    {isDone ? <em>Proceso completado: puedes quitarla de esta lista.</em> : null}
+                    {isDone ? <em>{item.closure ? 'Contrato y pagos conservados en el expediente.' : 'Proceso completado.'}</em> : null}
                   </div>
                   <button
                     type="button"
                     className="gmon-deleteRequest"
                     aria-label={`Eliminar solicitud de ${item.businessName}`}
-                    title="Eliminar solicitud"
-                    disabled={deletingId === item.id}
+                    title={item.closure ? 'Se conserva el expediente con contrato o pagos' : 'Eliminar solicitud'}
+                    disabled={deletingId === item.id || Boolean(item.closure)}
                     onClick={(event) => deleteRequest(event, item)}
                   >
                     X
@@ -468,7 +479,7 @@ export default function OnboardingModule() {
                   <p>{selectedPhase.description}</p>
                 </div>
                 <a href={selected.formalUrl} target="_blank" rel="noreferrer">
-                  Abrir fase 2
+                  {selected.closure ? 'Abrir cierre del comercio' : 'Abrir fase 2'}
                 </a>
               </div>
 
@@ -478,15 +489,21 @@ export default function OnboardingModule() {
                   <strong>{selected.status === "ACTIVATED" ? "Contrato firmado y backoffice activado" : "Revision y envio a firma"}</strong>
                   <small>
                     {contractNotification?.emailStatus
-                      ? `Correo 3: ${notificationLabels[contractNotification.emailStatus] || contractNotification.emailStatus}`
-                      : "Abre el borrador con los datos recibidos. Si esta correcto, envia el correo 3 al partner."}
+                      ? `Correo de cierre: ${notificationLabels[contractNotification.emailStatus] || contractNotification.emailStatus}`
+                      : selected.commercialClosurePending ? 'Prepara y revisa la oferta antes de enviar el correo de cierre.' : 'Abre el borrador con los datos recibidos y revisa el contrato antes de enviarlo.'}
                   </small>
                 </div>
-                <button type="button" disabled={!selected.formalData} onClick={openContractPreview}>
+                <button type="button" disabled={!selected.formalData || selected.commercialClosurePending} onClick={openContractPreview}>
                   Ver contrato
                 </button>
               </div>
 
+              <OnboardingOffer key={selected.id} request={selected} onUpdate={updated => setRequests(current => current.map(row => row.id === updated.id ? updated : row))} />
+              {selected.commercialClosurePending && !selected.closure && <div className="gmon-phaseBox">
+                <p>Elección económica pendiente de revisión. Completa precio del POS, disponibilidad, condiciones de renting si corresponde, SMS y calendario de liquidaciones antes del cierre.</p>
+              </div>}
+              {!selected.closure && <CommercialSummary selection={formalData.commercialSelection || formalData.onboardingDraft?.commercialSelection} />}
+              {formalData.onboardingDraft && <p>Avance guardado por el cliente; todavía no enviado a revisión.</p>}
               <div className="gmon-phaseBox">
                 <div>
                   <span>Estado operativo</span>
@@ -512,7 +529,7 @@ export default function OnboardingModule() {
               <form className="gmon-review" onSubmit={updateStatus}>
                 <label>
                   <span>Cambiar fase</span>
-                  <select value={statusDraft} onChange={(event) => setStatusDraft(event.target.value)}>
+                  <select disabled={Boolean(selected.closure)} value={statusDraft} onChange={(event) => setStatusDraft(event.target.value)}>
                     {reviewStatuses.map(([value, label]) => (
                       <option key={value} value={value}>{label}</option>
                     ))}
@@ -520,9 +537,9 @@ export default function OnboardingModule() {
                 </label>
                 <label>
                   <span>Nota interna para el equipo</span>
-                  <textarea rows="3" value={reviewerNote} onChange={(event) => setReviewerNote(event.target.value)} placeholder="Ej: falta certificado bancario, CIF ilegible o responsable no coincide." />
+                  <textarea disabled={Boolean(selected.closure)} rows="3" value={reviewerNote} onChange={(event) => setReviewerNote(event.target.value)} placeholder="Ej: falta certificado bancario, CIF ilegible o responsable no coincide." />
                 </label>
-                <button type="submit" disabled={saving}>
+                <button type="submit" disabled={saving || Boolean(selected.closure)}>
                   {saving ? "Guardando..." : "Guardar fase"}
                 </button>
               </form>
@@ -565,7 +582,7 @@ export default function OnboardingModule() {
                     )}
                     {contractNotification && (
                       <div className="gmon-wide">
-                        <span>Correo 3 contrato</span>
+                        <span>Correo 2: oferta y cierre</span>
                         <strong>{notificationLabels[contractNotification.emailStatus] || contractNotification.emailStatus}</strong>
                         {contractNotification.contractUrl && (
                           <small>
@@ -586,7 +603,7 @@ export default function OnboardingModule() {
                     )}
                     {credentialsNotification && (
                       <div className="gmon-wide">
-                        <span>Correo 4 credenciales</span>
+                        <span>Correo 3: bienvenida y accesos</span>
                         <strong>{notificationLabels[credentialsNotification.emailStatus] || credentialsNotification.emailStatus}</strong>
                         {credentialsNotification.emailError && <small>{credentialsNotification.emailError}</small>}
                       </div>

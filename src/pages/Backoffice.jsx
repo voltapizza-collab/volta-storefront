@@ -1,3 +1,5 @@
+import useWebSession from '../auth/useWebSession';
+import { accessDestination } from '../auth/webSession';
 import React, { useEffect, useMemo, useState } from "react";
 import "../styles/Backoffice.css";
 import voltaLogo from "../assets/logo/the pizza sale enganine.png";
@@ -28,17 +30,6 @@ import {
   getInitialBackofficeLanguage,
   normalizeBackofficeLanguage,
 } from "../constants/i18n";
-
-const readSavedBackofficeAuth = () => {
-  try {
-    const saved = localStorage.getItem("volta_backoffice_auth");
-    const parsed = saved ? JSON.parse(saved) : null;
-    return parsed?.partnerId ? parsed : null;
-  } catch {
-    localStorage.removeItem("volta_backoffice_auth");
-    return null;
-  }
-};
 
 const normalizeLoginValue = (value) =>
   String(value || "")
@@ -100,10 +91,11 @@ export default function Backoffice() {
     stores: false,
     settings: initialNoticeModule?.group === "settings",
   });
-  const [auth, setAuth] = useState(readSavedBackofficeAuth);
+  const [auth, setAuth, checkingSession] = useWebSession("backoffice");
+  const { partnerSlug: targetPartner } = accessDestination();
 
   const [loginForm, setLoginForm] = useState({
-    username: "",
+    username: targetPartner,
     password: "",
   });
 
@@ -133,7 +125,7 @@ export default function Backoffice() {
   }, [language]);
 
   useEffect(() => {
-    if (!isDemoLinkRequest() || auth?.isDemo) return undefined;
+    if (checkingSession || targetPartner || !isDemoLinkRequest() || auth?.isDemo) return undefined;
 
     let isActive = true;
 
@@ -145,15 +137,10 @@ export default function Backoffice() {
         if (!isActive) return;
 
         setAuth(session);
-        localStorage.setItem(
-          "volta_backoffice_auth",
-          JSON.stringify(session)
-        );
         setLoginForm({ username: "", password: "" });
         setLoginError("");
       } catch (err) {
         if (!isActive) return;
-        console.error("Error starting demo session", err);
         setLoginError(t("auth.demoError"));
       } finally {
         if (isActive) setLoginLoading(false);
@@ -165,7 +152,7 @@ export default function Backoffice() {
     return () => {
       isActive = false;
     };
-  }, [auth?.isDemo, t]);
+  }, [auth?.isDemo, checkingSession, targetPartner, t]);
 
   useEffect(() => {
     const hydrateStore = async () => {
@@ -182,13 +169,7 @@ export default function Backoffice() {
           storeId: store.id,
         };
 
-        console.log("REHYDRATED AUTH:", updated);
-
         setAuth(updated);
-        localStorage.setItem(
-          "volta_backoffice_auth",
-          JSON.stringify(updated)
-        );
       } catch (err) {
         console.error("Error hydrating store", err);
       }
@@ -210,7 +191,7 @@ export default function Backoffice() {
     e.preventDefault();
 
     const username = normalizeLoginValue(loginForm.username);
-    const password = String(loginForm.password || "").trim();
+    const password = String(loginForm.password || "");
     const demoPassword = normalizeLoginValue(password);
 
     if (!username || !password) {
@@ -221,14 +202,10 @@ export default function Backoffice() {
     try {
       setLoginLoading(true);
 
-      if (isDemoLoginCredential(username, demoPassword)) {
+      if ((!targetPartner || targetPartner === 'volta-demo') && isDemoLoginCredential(username, demoPassword)) {
         const session = await createDemoSession();
 
         setAuth(session);
-        localStorage.setItem(
-          "volta_backoffice_auth",
-          JSON.stringify(session)
-        );
 
         setLoginForm({ username: "", password: "" });
         setLoginError("");
@@ -238,21 +215,15 @@ export default function Backoffice() {
       const loginResponse = await api.post("/partners/backoffice-login", {
         username,
         password,
+        partnerSlug: targetPartner || undefined,
       });
       const session = loginResponse.data;
 
-      console.log("SESSION:", session);
-
       setAuth(session);
-      localStorage.setItem(
-        "volta_backoffice_auth",
-        JSON.stringify(session)
-      );
 
       setLoginForm({ username: "", password: "" });
       setLoginError("");
     } catch (err) {
-      console.error("Error starting demo session", err);
       const message = isDemoLoginCredential(username, demoPassword) && err.response?.status >= 500
         ? t("auth.demoError")
         : t("auth.invalid");
@@ -277,7 +248,6 @@ export default function Backoffice() {
       await api.post("/partners/backoffice-password/request", { identifier });
       setResetMessage("Si encontramos una cuenta asociada, enviaremos un enlace para restablecer la contrasena.");
     } catch (error) {
-      console.error("PASSWORD RESET REQUEST ERROR:", error);
       setResetMessage("No pudimos procesar la solicitud. Intentalo de nuevo.");
     } finally {
       setLoginLoading(false);
@@ -288,14 +258,14 @@ export default function Backoffice() {
     event.preventDefault();
     const params = new URLSearchParams(window.location.search);
     const token = params.get("reset") || "";
-    const password = resetForm.password.trim();
+    const password = resetForm.password;
 
-    if (password.length < 6) {
-      setResetMessage("La nueva contrasena debe tener al menos 6 caracteres.");
+    if (password.length < 12) {
+      setResetMessage("La nueva contrasena debe tener al menos 12 caracteres.");
       return;
     }
 
-    if (password !== resetForm.confirmPassword.trim()) {
+    if (password !== resetForm.confirmPassword) {
       setResetMessage("Las contrasenas no coinciden.");
       return;
     }
@@ -303,13 +273,12 @@ export default function Backoffice() {
     try {
       setLoginLoading(true);
       setResetMessage("");
-      await api.post("/partners/backoffice-password/reset", { token, password });
+      await api.post("/partners/backoffice-password/reset", { token, password, partnerSlug: targetPartner || undefined });
       window.history.replaceState(null, "", window.location.pathname);
       setAuthView("login");
       setResetForm({ password: "", confirmPassword: "" });
       setLoginError("Contrasena actualizada. Ya puedes entrar con la nueva contrasena.");
     } catch (error) {
-      console.error("PASSWORD RESET ERROR:", error);
       setResetMessage("El enlace no es valido o ha caducado. Solicita uno nuevo.");
     } finally {
       setLoginLoading(false);
@@ -318,7 +287,7 @@ export default function Backoffice() {
 
   const handleLogout = () => {
     setAuth(null);
-    localStorage.removeItem("volta_backoffice_auth");
+
     setActiveModule("inventory");
     setActiveModuleGroup("inventory");
     setExpandedModules((prev) => getExclusiveExpandedModules(prev));
@@ -430,6 +399,8 @@ export default function Backoffice() {
     isStoresLocationsActive ||
     isStoresReviewsActive;
 
+  if (checkingSession) return <div className="bo-loginScreen">Comprobando acceso…</div>;
+
   if (!auth) {
     return (
       <div className="bo-loginScreen">
@@ -446,6 +417,7 @@ export default function Backoffice() {
           />
 
           <h1 className="bo-loginTitlePro">{t("auth.title")}</h1>
+          {targetPartner && <p role="status">Acceso a <strong>{targetPartner}</strong>. Inicia sesión con la cuenta de este negocio.</p>}
 
           <p className="bo-loginSubtitle">
             {authView === "reset"

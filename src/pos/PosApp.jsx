@@ -1,6 +1,9 @@
+import useWebSession from '../auth/useWebSession';
+import { accessDestination } from '../auth/webSession';
 import { getIngredientTaxonomyKey, getTaxonomyCategoryLabel, resolveIngredientTaxonomy } from '../utils/ingredientTaxonomy';
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import api from "../setupAxios";
+import { receptionText } from '../utils/storeReception';
 import {
   customerSegmentMeta,
   normalizeCustomerSegment,
@@ -22,13 +25,15 @@ import { ingredientRemovalRows } from "../utils/ingredientRemovals";
 import { getLineChangeRows } from './orderLineChanges';
 import { getOrderPayment, getPaymentLabel, isCashPaymentOrder, isCashPaymentPending } from './orderPayment';
 
-const POS_SESSION_KEY = "volta_pos_virtual_session";
 const POS_REMEMBERED_LOGIN_KEY = "volta_pos_remembered_login";
 
 function readRememberedLogin() {
   try {
     const saved = JSON.parse(localStorage.getItem(POS_REMEMBERED_LOGIN_KEY));
-    if (typeof saved?.username === 'string' && typeof saved?.pin === 'string' && /^\d{6}$/.test(saved.pin)) return saved;
+    if (typeof saved?.username === 'string') {
+      localStorage.setItem(POS_REMEMBERED_LOGIN_KEY, JSON.stringify({ username: saved.username }));
+      return { username: saved.username };
+    }
   } catch (_) { /* Login remains available when storage is unavailable. */ }
   return null;
 }
@@ -762,9 +767,13 @@ export function DayOrderCard({ order, onOpen }) {
 }
 
 export function PosLogin({ onStart }) {
-  const [savedLogin] = useState(readRememberedLogin);
-  const [username, setUsername] = useState(savedLogin?.username || "");
-  const [password, setPassword] = useState(savedLogin?.pin || "");
+  const target = accessDestination();
+  const [savedLogin] = useState(() => {
+    const saved = readRememberedLogin();
+    return target.partnerSlug ? null : saved;
+  });
+  const [username, setUsername] = useState(target.partnerSlug || savedLogin?.username || "");
+  const [password, setPassword] = useState("");
   const [rememberPin, setRememberPin] = useState(Boolean(savedLogin));
   const [storageError, setStorageError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -783,6 +792,8 @@ export function PosLogin({ onStart }) {
       const response = await api.post("/partners/pos-login", {
         username: username.trim(),
         pin: password.trim(),
+        partnerSlug: target.partnerSlug || undefined,
+        storeSlug: target.storeSlug || undefined,
       });
       const data = response.data || {};
 
@@ -792,11 +803,12 @@ export function PosLogin({ onStart }) {
       }
 
       try {
-        if (rememberPin) localStorage.setItem(POS_REMEMBERED_LOGIN_KEY, JSON.stringify({ username: username.trim(), pin: password.trim() }));
+        if (rememberPin) localStorage.setItem(POS_REMEMBERED_LOGIN_KEY, JSON.stringify({ username: username.trim() }));
         else localStorage.removeItem(POS_REMEMBERED_LOGIN_KEY);
       } catch (_) { /* A storage failure must not prevent a successful login. */ }
 
       onStart({
+        ...data,
         partnerId: data.partnerId,
         partnerName: data.partnerName || data.partnerSlug || "Partner",
         storeId: data.storeId,
@@ -805,7 +817,6 @@ export function PosLogin({ onStart }) {
         pairedAt: new Date().toISOString(),
       });
     } catch (loginError) {
-      console.error(loginError);
       setError("Usuario o PIN incorrectos.");
     } finally {
       setSubmitting(false);
@@ -831,6 +842,7 @@ export function PosLogin({ onStart }) {
 
         <section className="pos-loginFormPanel">
           <h1>Entrar al POS</h1>
+          {target.partnerSlug && <p>Negocio: <strong>{target.partnerSlug}</strong>{target.storeSlug ? ` · Tienda: ${target.storeSlug}` : ""}. Utiliza el PIN de esta tienda.</p>}
           <p>Usa el usuario del partner y el PIN de 6 digitos de tu tienda.</p>
 
           <div className="pos-loginField">
@@ -880,16 +892,16 @@ export function PosLogin({ onStart }) {
               setStorageError("");
               if (!checked) {
                 try { localStorage.removeItem(POS_REMEMBERED_LOGIN_KEY); }
-                catch (_) { setStorageError("No se pudo borrar el PIN guardado. Inténtalo de nuevo."); return; }
+                catch (_) { setStorageError("No se pudo borrar el usuario guardado. Inténtalo de nuevo."); return; }
                 setPassword("");
                 setShowPassword(false);
               }
               setRememberPin(checked);
             }} />
-            Recordar el PIN en este dispositivo
+            Recordar el usuario en este dispositivo
           </label>
           <p id="pos-pin-help" className="pos-pinHelp">
-            {rememberPin ? "El usuario y el PIN se guardarán al entrar. Desmarca la opción para olvidarlos." : "Marca la opción para conservar tu usuario y PIN al salir del POS."}
+            {rememberPin ? "El usuario se guardará al entrar. El PIN no se guarda." : "Marca la opción para conservar tu usuario al salir del POS."}
           </p>
           {storageError && <div className="pos-loginError" role="alert">{storageError}</div>}
           {error ? <div className="pos-loginError">{error}</div> : null}
@@ -1213,14 +1225,7 @@ function PosInventory({ session, ingredients, setIngredients }) {
 }
 
 export default function PosApp() {
-  const [session, setSession] = useState(() => {
-    if (isNativePos) return window.__voltaSession || null;
-    try {
-      return JSON.parse(localStorage.getItem(POS_SESSION_KEY) || "null");
-    } catch {
-      return null;
-    }
-  });
+  const [session, setSession, checkingSession] = useWebSession("pos", isNativePos);
   const [orders, setOrders] = useState([]);
   const [activePanel, setActivePanel] = useState("orders");
   const [inventoryItems, setInventoryItems] = useState([]);
@@ -1249,7 +1254,7 @@ export default function PosApp() {
   const [dayOrdersLoading, setDayOrdersLoading] = useState(false);
   const [dayOrdersError, setDayOrdersError] = useState("");
   const [loadingOrders, setLoadingOrders] = useState(false);
-  const [storeActive, setStoreActive] = useState(true);
+  const [storeActive, setStoreActive] = useState(false);
   const [operationsPaused, setOperationsPaused] = useState(false);
   const [savingPause, setSavingPause] = useState(false);
   const [pauseStateKnown, setPauseStateKnown] = useState(false);
@@ -1851,7 +1856,7 @@ export default function PosApp() {
         if (cancelled) return;
         const store = response?.data || response;
         setStoreMeta(store || null);
-        setStoreActive(store?.active !== false);
+        setStoreActive(store?.active !== false && store?.acceptingOrders !== false);
         setOperationsPaused(store?.operationsPaused === true);
         setPauseStateKnown(typeof store?.operationsPaused === "boolean");
       })
@@ -2095,7 +2100,6 @@ export default function PosApp() {
 
   const startSession = (nextSession) => {
     unlockAudioContext();
-    if (!isNativePos) localStorage.setItem(POS_SESSION_KEY, JSON.stringify(nextSession));
     setSession(nextSession);
     setMessage(isNativePos ? "Terminal Volta conectado." : "POS virtual emparejado.");
   };
@@ -2105,7 +2109,6 @@ export default function PosApp() {
       try { await nativeCall('logout'); }
       catch (_) { window.location.reload(); return; }
     }
-    localStorage.removeItem(POS_SESSION_KEY);
     setLogoutOpen(false);
     setSession(null);
     setOrders([]);
@@ -2141,14 +2144,16 @@ export default function PosApp() {
 
     try {
       setSavingStore(true);
-      await api.patch(`/api/stores/${session.storeId}/active`, {
-        active: nextActive,
+      const { data } = await api.patch(`/api/stores/${session.storeId}/order-reception`, {
+        acceptingOrders: nextActive,
       });
-      setStoreActive(nextActive);
-      setMessage(nextActive ? "Tienda abierta para pedidos." : "Tienda cerrada manualmente.");
+      setStoreActive(data.active !== false && data.acceptingOrders === true);
+      setOperationsPaused(data.operationsPaused === true);
+      setMessage(nextActive ? data.operationsPaused ? "Pedidos programados abiertos. Se mantiene la pausa." : "Pedidos abiertos según los horarios de la tienda." : "Pedidos online cerrados.");
     } catch (error) {
       console.error(error);
-      setMessage("No se pudo cambiar el estado de la tienda.");
+      const blockers = error.response?.data?.blockers;
+      setMessage(blockers?.length ? blockers.map(code => receptionText('es').blockers[code]).join(' ') : "No se pudo confirmar el cambio. Inténtalo de nuevo.");
     } finally {
       setSavingStore(false);
     }
@@ -2359,6 +2364,8 @@ export default function PosApp() {
     setMessage("Sonido de pedidos activado.");
   };
 
+  if (checkingSession) return <main className="pos-loginScreen">Comprobando acceso…</main>;
+
   if (!session) {
     return (
       <PosLogin
@@ -2378,13 +2385,14 @@ export default function PosApp() {
 
         <div className="app-toggle pos-storeToggle">
           <span className="app-toggle-label">
-            {storeActive ? operationsPaused ? "En pausa" : "Store open" : "Store closed"}
+            {storeActive ? operationsPaused ? "En pausa · programados" : storeMeta?.orderStatus === 'outside_hours' ? "Fuera de horario · programados" : "Pedidos abiertos" : "Pedidos cerrados"}
           </span>
           <button
             type="button"
             onClick={toggleStore}
+            aria-label={storeActive ? 'Cerrar pedidos' : 'Abrir pedidos'}
             aria-pressed={storeActive}
-            disabled={savingStore}
+            disabled={savingStore || !storeMeta}
             className={`app-toggle-btn ${storeActive ? "on" : "off"}`}
           >
             <span className="app-toggle-knob" />

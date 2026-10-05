@@ -2,12 +2,16 @@ import React from 'react';
 
 export const euro = cents => Number.isInteger(cents)
   ? new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(cents / 100) : 'Pendiente de oferta';
+export const smsTariff = sms => sms?.unitPriceEur
+  ? `${new Intl.NumberFormat('es-ES', { maximumFractionDigits: 4 }).format(Number(sms.unitPriceEur))} € por parte de SMS` : 'Tarifa por parte pendiente de confirmar';
 
 export function commercialPreview(form, catalog) {
   const payments = form.posChoice === 'PURCHASE' ? [catalog?.posTotalCents]
     : form.posChoice === 'INSTALLMENTS' ? catalog?.installments?.[form.posInstallments] : null;
   return { pos: { mode: form.posChoice, totalCents: payments ? catalog?.posTotalCents : null,
-    installmentCents: payments, firstPaymentCents: payments?.[0] ?? null } };
+    installmentCents: payments, firstPaymentCents: payments?.[0] ?? (form.posChoice === 'RENT_QUOTE' ? catalog?.rental?.monthlyCents : null),
+    monthlyRentCents: form.posChoice === 'RENT_QUOTE' ? catalog?.rental?.monthlyCents : null,
+    depositCents: form.posChoice === 'RENT_QUOTE' ? catalog?.rental?.depositCents : null }, sms: catalog?.sms };
 }
 
 export function CommercialSummary({ selection }) {
@@ -18,17 +22,18 @@ export function CommercialSummary({ selection }) {
     <h3>Tu elección, pendiente de revisión</h3>
     <dl>
       <div><dt>POS</dt><dd>{labels[pos.mode] || 'Elige una modalidad'}</dd></div>
-      <div><dt>{pos.mode === 'RENT_QUOTE' ? 'Renting y fianza' : 'Precio propuesto del POS, IVA incluido'}</dt><dd>{euro(pos.totalCents)}</dd></div>
+      <div><dt>{pos.mode === 'RENT_QUOTE' ? 'Cuota de renting, IVA incluido' : 'Precio propuesto del POS, IVA incluido'}</dt><dd>{euro(pos.mode === 'RENT_QUOTE' ? pos.monthlyRentCents : pos.totalCents)}{pos.mode === 'RENT_QUOTE' && Number.isInteger(pos.monthlyRentCents) ? '/mes' : ''}</dd></div>
+      {pos.mode === 'RENT_QUOTE' && Number.isInteger(pos.monthlyRentCents) && <div><dt>Total de las 36 mensualidades</dt><dd>{euro(pos.monthlyRentCents * 36)} · Fianza: {euro(pos.depositCents)}</dd></div>}
       {pos.installmentCents?.length > 1 && <div><dt>Calendario de cuotas</dt><dd><ol>{pos.installmentCents.map((amount, index) => <li key={index}>
         {index === 0 ? 'Primer pago, antes de la firma' : `Mes ${index} después del primer pago`}: {euro(amount)}
       </li>)}</ol></dd></div>}
       <div><dt>Primer pago del POS previsto</dt><dd>{euro(pos.firstPaymentCents)}</dd></div>
-      <div><dt>Recarga inicial de SMS</dt><dd>Pendiente de oferta: importe y número de mensajes por confirmar.</dd></div>
+      <div><dt>Notificaciones SMS opcionales</dt><dd>Uso opcional de la herramienta de Volta. Recargas por paquetes desde el backoffice. {smsTariff(selection.sms)} (tarifa vigente, puede variar). No se añade una recarga al alta.</dd></div>
       <div><dt>Total inicial a pagar</dt><dd>Pendiente de completar la oferta. Hoy no se cobra nada.</dd></div>
     </dl>
     {pos.mode === 'RENT_QUOTE' && <p>Renting de 36 meses desde la entrega operativa. El POS pertenece a Volta durante el plazo y pasa a ser tuyo al finalizarlo y completar las 36 mensualidades, sin pago residual. La oferta concretará cuota, posible fianza, cancelación anticipada y responsabilidad por daños o extravío. Solicitarla no supone aceptarla.</p>}
     <p>Suministro sujeto al stock de Volta. El contado pagado tiene prioridad entre asignaciones pendientes, respetando entregas comprometidas. Volta confirmará disponibilidad y plazo antes de pedir el pago.</p>
-    <p>Los pagos del POS y de SMS se realizan por separado de las ventas. No se descuentan del 90 % del comercio.</p>
+    <p>Los pagos del POS y de SMS, si los solicitas, se realizan por separado de las ventas. No se descuentan del 90 % del comercio.</p>
     <p>Liquidaciones: 90 % del ticket para el comercio; 9 % para Volta y 1 % para el embajador. El calendario se acordará antes del cierre, sobre fondos cobrados y disponibles, sin anticipos de Volta.</p>
     <p>Volta revisará esta elección y te presentará las condiciones completas antes del pago y la firma.</p>
   </section>;
@@ -44,7 +49,7 @@ export default function OnboardingCommercial({ form, catalog, updateField, disab
       {[
         ['PURCHASE', `Comprar al contado · ${euro(catalog?.posTotalCents)}`],
         ['INSTALLMENTS', `Comprar en cuotas · ${euro(catalog?.posTotalCents)} en total, sin intereses`],
-        ['RENT_QUOTE', 'Solicitar renting de 36 meses · cuota pendiente'],
+        ['RENT_QUOTE', `Solicitar renting de 36 meses · ${Number.isInteger(catalog?.rental?.monthlyCents) ? `${euro(catalog.rental.monthlyCents)}/mes` : 'cuota pendiente'}`],
       ].map(([value, label], index) => <label key={value} className="onb-choice">
         <input type="radio" name="posChoice" value={value} checked={form.posChoice === value} onChange={updateField('posChoice')}
           {...(index === 0 ? fieldProps('posChoice') : {})} /><span>{label}</span>
@@ -55,12 +60,15 @@ export default function OnboardingCommercial({ form, catalog, updateField, disab
         </select>
       </label>}
     </fieldset>
-    <h3>Notificaciones de texto</h3>
-    <p>La recarga inicial de SMS se incluirá en la oferta con su precio y número de mensajes. No activaremos un cobro ni una recarga al enviar este formulario.</p>
+    <h3>Notificaciones y comunicación por SMS</h3>
+    <p>Volta incluye una herramienta de notificaciones SMS. Puedes utilizarla cuando la necesites recargando saldo; su uso es opcional y no requiere contratarla durante el alta.</p>
+    <p><strong>Tarifa vigente: {smsTariff(catalog?.sms)}</strong>. Un mensaje puede consumir varias partes según su longitud y caracteres.</p>
+    {catalog?.sms?.packages?.length > 0 && <p>Por ejemplo, el paquete de {euro(Math.round(catalog.sms.packages[0].amount * 100))} incluye actualmente {catalog.sms.packages[0].credits} partes de SMS.</p>}
+    <p>La tarifa puede cambiar. Antes de cada recarga verás su precio y las partes incluidas. El alta no incluye una recarga automática; podrás recargar desde el backoffice.</p>
     <label className="onb-choice">
       <input type="checkbox" checked={Boolean(form.commercialAcknowledged)} onChange={updateField('commercialAcknowledged')} disabled={disabled}
         {...fieldProps('commercialAcknowledged')} />
-      <span>Entiendo que estoy enviando una elección para revisión y que el POS y los SMS se pagan aparte de las ventas. Revisaré los importes y condiciones definitivos antes de pagar y firmar.</span>
+      <span>Acepto las condiciones de pago y entiendo que el uso de notificaciones SMS es opcional, mediante recargas por paquetes a la tarifa vigente mostrada antes de cada compra. El POS y las recargas se pagan aparte de las ventas. Revisaré los importes definitivos antes de pagar y firmar.</span>
     </label>
   </div>;
 }

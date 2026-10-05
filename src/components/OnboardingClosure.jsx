@@ -4,6 +4,7 @@ import { euro } from './OnboardingCommercial';
 const paymentLabel = status => ({ CREATING: 'Preparando pago', PENDING: 'Pendiente de confirmación', PAID: 'Confirmado', EXPIRED: 'Enlace vencido', REFUND_PENDING: 'Devolución en trámite', REFUNDED: 'Devuelto', REVERSED: 'Requiere revisión por Volta' })[status] || status;
 
 export const closureErrorText = code => ({
+  invalid_sms_price: 'Introduce una tarifa SMS mayor que cero, con hasta cuatro decimales.',
   offer_changed: 'La oferta ha cambiado. Actualiza y revisa la nueva versión antes de continuar.',
   initial_payment_required: 'El pago todavía no está confirmado o ha vencido el plazo de firma.',
   prepayment_consent_required: 'Debes aceptar las condiciones del pago previo.',
@@ -18,12 +19,13 @@ export const closureErrorText = code => ({
   delivery_date_required: 'Indica fechas de entrega válidas, desde hoy y con la fecha límite igual o posterior a la prevista.',
   delivery_offer_expired: 'El plazo de entrega de esta oferta ha vencido. Volta debe revisar el suministro antes de cobrar.',
   pricing_changed: 'Otro administrador ha actualizado la tarifa. Vuelve a abrir Onboarding antes de guardarla.',
+  invalid_onboarding_defaults: 'Revisa los importes, los plazos y las condiciones generales. Los textos deben tener al menos 30 caracteres.',
   offer_text_required: 'Completa los textos de condiciones de la oferta.',
   email_send_in_progress: 'El correo se está enviando. Actualiza el expediente antes de reintentarlo.',
   offer_integrity_failed: 'La oferta no supera la comprobación de integridad. Volta debe revisar esta versión antes de continuar.',
 })[code] || 'No se pudo confirmar la operación. Actualiza el estado antes de repetirla.';
 
-export function ClosureDocument({ closure }) {
+export function ClosureDocument({ closure, compact = false }) {
   const { offer, payment } = closure;
   const download = () => {
     const content = `${offer.documentText}\n\nVersión: ${offer.id}\nSHA-256: ${offer.hash}\nEstado: ${closure.status}\n${closure.signed ? `Firma: ${closure.signerName || '-'} · ${closure.signedAt || '-'}\n` : ''}${payment?.paidAt ? `Pago: ${euro(payment.amountCents)}. ${payment.paidAt}. Justificante: ${payment.receipt || '-'}\n` : ''}`;
@@ -39,7 +41,8 @@ export function ClosureDocument({ closure }) {
     {offer.pos.mode !== 'RENT_QUOTE' && offer.pos.payments?.length > 1 && <p>Quedarán {offer.pos.payments.length - 1} cuotas mensuales: {offer.pos.payments.slice(1).map(euro).join(' · ')}.</p>}
     {offer.pos.mode === 'RENT_QUOTE' && <p>{offer.pos.durationMonths === 36 ? <>Renting: 36 mensualidades de {euro(offer.pos.firstCents)} · Total {euro(offer.pos.totalCents)}. El plazo empieza con la entrega operativa. El POS pertenece a Volta hasta finalizar los 36 meses y completar los pagos; entonces pasa a ser tuyo sin pago adicional.</> : <>Alquiler: {euro(offer.pos.firstCents)} al mes. Consulta las condiciones de esta versión.</>}</p>}
     {offer.pos.delivery && <p>Entrega prevista: {offer.pos.delivery.expected} · Fecha límite: {offer.pos.delivery.latest}. Suministro sujeto a stock; pagar o firmar no garantiza entrega inmediata.</p>}
-    <pre className="onb-closureDocument" tabIndex="0" aria-label="Contrato completo">{offer.documentText}</pre>
+    {compact ? <details className="onb-managerAdvanced"><summary>Leer contrato completo</summary><pre className="onb-closureDocument" tabIndex="0" aria-label="Contrato completo">{offer.documentText}</pre></details>
+      : <pre className="onb-closureDocument" tabIndex="0" aria-label="Contrato completo">{offer.documentText}</pre>}
     <button type="button" onClick={download}>Descargar contrato y justificante</button>
     {payment && <p role="status">Estado del pago: {paymentLabel(payment.status)}. {payment.paidAt && <>Recibido: {euro(payment.amountCents)} · Justificante: {payment.receipt}</>}</p>}
     {closure.signatureDeadline && !closure.signed && <p>Plazo de firma: {new Date(closure.signatureDeadline).toLocaleString('es-ES')}.</p>}

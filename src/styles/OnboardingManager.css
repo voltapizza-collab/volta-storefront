@@ -1,0 +1,17 @@
+.onb-managerSettings { max-width: 960px; }
+.onb-managerSettings summary, .onb-managerAdvanced summary { cursor: pointer; font-weight: 700; color: #3b008b; }
+.onb-managerForm { display: grid; gap: 16px; }
+.onb-managerForm label, .onb-managerAdvanced label { display: grid; gap: 6px; font-size: 14px; }
+.onb-managerForm input:not([type="checkbox"]), .onb-managerForm select, .onb-managerForm textarea { width: 100%; box-sizing: border-box; border: 1px solid #d9cbea; border-radius: 8px; background: white; padding: 10px 12px; font: inherit; color: #251536; }
+.onb-managerGrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.onb-managerAdvanced { border-top: 1px solid #e8dff2; padding: 14px 0; }
+.onb-managerAdvanced label { margin-top: 12px; }
+.onb-offerOverview { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; margin: 14px 0; }
+.onb-offerOverview > div { background: #f8f5ff; padding: 14px; border-radius: 10px; }
+.onb-offerOverview span { display: block; color: #655873; font-size: 13px; }
+.onb-offerOverview strong { display: block; color: #3b008b; font-size: 20px; margin-top: 6px; }
+.onb-managerNotice { background: #fff8e7; padding: 12px 16px; border-radius: 9px; }
+.onb-managerForm p { margin: 0; }
+.onb-managerForm .onb-choice { display: flex; }
+.onb-managerSettings p, .onb-managerForm p { font-size: 14px; line-height: 1.55; }
+@media (max-width: 640px) { .onb-managerGrid, .onb-offerOverview { grid-template-columns: 1fr; } }

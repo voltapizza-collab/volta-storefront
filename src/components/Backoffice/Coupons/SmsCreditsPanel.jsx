@@ -78,6 +78,7 @@ export default function SmsCreditsPanel({ partnerId, focusRequest = 0 }) {
       setMessage("");
       const { data } = await api.post(`/api/sms-credits/${partnerId}/checkout-session`, {
         packageAmount: selectedPackage.amount,
+        smsUnitPriceEur: balance?.sellPrice,
         successUrl: buildReturnUrl("success"),
         cancelUrl: buildReturnUrl("cancel"),
       });
@@ -92,11 +93,13 @@ export default function SmsCreditsPanel({ partnerId, focusRequest = 0 }) {
       console.error(error);
       const errorCode = error.response?.data?.error;
       const messages = {
+        sms_price_changed: 'La tarifa SMS ha cambiado. Revisa los paquetes actualizados antes de recargar.',
         stripe_not_configured: "Stripe no esta configurado en el backend.",
         insufficient_volta_sms_inventory: "No hay suficientes SMS cortos disponibles para vender este paquete.",
         bad_recharge_amount: "Paquete invalido.",
       };
       setMessage(messages[errorCode] || "No se pudo iniciar la compra.");
+      if (errorCode === 'sms_price_changed') await loadBalance();
     } finally {
       setPurchasing(false);
     }
@@ -110,6 +113,7 @@ export default function SmsCreditsPanel({ partnerId, focusRequest = 0 }) {
         <p>
           {formatNumber(balance?.smsConsumed)} consumidos - {formatNumber(balance?.smsRecharged)} recargados
         </p>
+        {balance?.sellPrice != null && <p>Tarifa vigente: {new Intl.NumberFormat('es-ES', { maximumFractionDigits: 4 }).format(balance.sellPrice)} € por parte de SMS. Un mensaje puede consumir varias partes.</p>}
       </div>
 
       <form className="cp-smsRecharge" onSubmit={submitRecharge}>

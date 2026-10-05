@@ -385,13 +385,13 @@ export default function OnboardingModule() {
         <div>
           <span>Volta Global</span>
           <h2>Onboarding</h2>
-          <OnboardingPricing />
         </div>
         <button type="button" onClick={() => loadRequests(activeStatus)}>
           Actualizar
         </button>
       </div>
 
+      <OnboardingPricing />
       <div className="gmon-stats">
         <article><span>Total</span><strong>{stats.total}</strong></article>
         <article><span>Esperando partner</span><strong>{stats.awaitingPartner}</strong></article>
@@ -499,10 +499,10 @@ export default function OnboardingModule() {
               </div>
 
               <OnboardingOffer key={selected.id} request={selected} onUpdate={updated => setRequests(current => current.map(row => row.id === updated.id ? updated : row))} />
-              {selected.commercialClosurePending && !selected.closure && <div className="gmon-phaseBox">
-                <p>Elección económica pendiente de revisión. Completa precio del POS, disponibilidad, condiciones de renting si corresponde, SMS y calendario de liquidaciones antes del cierre.</p>
-              </div>}
-              {!selected.closure && <CommercialSummary selection={formalData.commercialSelection || formalData.onboardingDraft?.commercialSelection} />}
+              {!selected.closure && (formalData.commercialSelection || formalData.onboardingDraft?.commercialSelection) && <details className="onb-managerAdvanced">
+                <summary>Consultar la elección original del comercio</summary>
+                <CommercialSummary selection={formalData.commercialSelection || formalData.onboardingDraft?.commercialSelection} />
+              </details>}
               {formalData.onboardingDraft && <p>Avance guardado por el cliente; todavía no enviado a revisión.</p>}
               <div className="gmon-phaseBox">
                 <div>

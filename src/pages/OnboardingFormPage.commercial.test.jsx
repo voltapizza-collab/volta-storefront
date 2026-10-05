@@ -26,6 +26,7 @@ test('resumes server draft, defaults installments when switching, submits prices
   await screen.findByDisplayValue('Mi tienda');
   fireEvent.click(screen.getByRole('button', { name: '3. Equipo y SMS' }));
   expect(screen.getByRole('radio', { name: /Comprar al contado/ })).toBeChecked();
+  expect(screen.queryByRole('checkbox', { name: /Quiero notificaciones/ })).not.toBeInTheDocument();
   fireEvent.click(screen.getByRole('radio', { name: /Comprar en cuotas/ }));
   expect(screen.getByRole('combobox', { name: /Número de cuotas/ })).toHaveValue('6');
   fireEvent.click(screen.getByRole('button', { name: '4. Resumen' }));
@@ -36,6 +37,7 @@ test('resumes server draft, defaults installments when switching, submits prices
   expect(url).toBe('/api/onboarding/form/test-token');
   expect(body.get('commercialVersion')).toBe('v1');
   expect(body.get('posChoice')).toBe('INSTALLMENTS');
+  expect(body.get('smsRequested')).toBeNull();
   expect(body.get('commercialSelection')).toBeNull();
   expect(screen.queryByRole('button', { name: 'Enviar a revisión' })).not.toBeInTheDocument();
   expect(screen.getByRole('radio', { name: /Comprar en cuotas/ })).toBeDisabled();
@@ -50,6 +52,7 @@ test('save progress works with partial data and does not submit files or signed 
   await screen.findByText(/Avance guardado/);
   expect(api.post.mock.calls[0][0]).toBe('/api/onboarding/form/test-token/draft');
   expect(api.post.mock.calls[0][1].commercialName).toBe('Nueva');
+  expect(api.post.mock.calls[0][1].smsRequested).toBeUndefined();
   expect(api.post.mock.calls[0][1].supportingDocuments).toBeUndefined();
 });
 test('missing choice moves back to equipment and new applications cannot sign the old contract', async () => {

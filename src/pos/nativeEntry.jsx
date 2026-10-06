@@ -2,6 +2,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import PosApp from './PosApp';
 import { nativeCall } from './nativeBridge';
+import { nativeStartupError } from './nativeStartupError';
 import '../styles/index.css';
 import '../styles/theme.css';
 import './native.css';
@@ -12,8 +13,13 @@ async function start() {
   try {
     window.__voltaSession = await nativeCall('restore');
     root.render(<PosApp />);
-  } catch (_) {
-    root.render(<div style={{padding:32}}>No se pudo validar el terminal. Comprueba la conexión a internet.<p><button onClick={start}>Reintentar</button></p></div>);
+  } catch (error) {
+    const failure = nativeStartupError(error);
+    root.render(<main style={{ padding: 28, lineHeight: 1.5, maxWidth: 520 }}>
+      <h1 style={{ fontSize: 23 }}>{failure.title}</h1><p>{failure.message}</p>
+      <p style={{ fontSize: 13 }}>Código: {failure.code}</p>
+      <button style={{ padding: '12px 18px', font: 'inherit' }} onClick={start}>Reintentar</button>
+    </main>);
   }
 }
 start();

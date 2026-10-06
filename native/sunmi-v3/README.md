@@ -6,6 +6,8 @@ Reutiliza el POS existente de React dentro del APK: pantalla de usuario/PIN, coc
 
 ## Compilar e instalar
 
+Versión preparada: **0.3.21 (código 24)**. Compilar desde este proyecto canónico; no usar la carpeta histórica `volta-pos-android` del workspace. Desde la raíz de `volta-storefront`, ejecutar `node scripts/build-native-pos.cjs` sin sobrescribir `VOLTA_ANDROID_PROJECT`, y después `./build.ps1 -Connection https` desde `native/sunmi-v3`. Actualizar sin desinstalar. La instalación operativa de 0.3.21 está pendiente; véase [revisión de VigoCity](../../docs/pos/recuperacion-vigocity-2026-10-06.md).
+
 Actualizador en validación: parámetro opcional `-UpdateServerUrl https://origen-del-canal` al compilar. Sin él no se realizan consultas de actualización. Usar versiones crecientes y la misma clave de firma. El menú «Actualizaciones» abre el estado y la autorización de Android. Véase `../../docs/pos/actualizaciones-packageinstaller-2026-10-02.md`; el canal temporal de comprobación no sustituye al servicio de distribución de producción.
 
 Desde el cambio del 3 de octubre, el aviso permite leer novedades, aceptar esa versión, programarla o dejarla pendiente. La asignación del servidor no basta para instalar. La decisión se conserva en el terminal, vinculada a APK y tienda, y caduca si no puede ejecutarse en el plazo mostrado. La programación requiere el POS abierto; no utiliza un servicio de fondo ni arranca el terminal.

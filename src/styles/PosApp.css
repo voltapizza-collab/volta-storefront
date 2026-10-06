@@ -2319,6 +2319,8 @@
 }
 
 .pos-ticketPreview {
+  min-width: 0;
+  overflow-wrap: anywhere;
   background: #fbfbfc;
   border: 1px solid #e5e8ee;
   border-radius: 8px;
@@ -2470,6 +2472,8 @@
 }
 
 .pos-ticketFocus {
+  width: 100%;
+  min-width: 0;
   max-width: 560px;
   margin: 0 auto;
 }
@@ -2477,6 +2481,14 @@
 .pos-ticketFocus .pos-ticketPreview {
   min-height: 360px;
 }
+
+.pos-ticketFocus .pos-sectionHead > div { min-width: 0; overflow-wrap: anywhere; }
+.pos-ticketFocus .pos-sectionHead > button { flex-shrink: 0; }
+.pos-ticketMeta > *, .pos-ticketTotal > * { min-width: 0; }
+.pos-printStatus { min-height: 1.5em; margin: 10px 0 0; padding: 8px; overflow-wrap: anywhere; font-size: 14px; line-height: 1.5; }
+.pos-printStatus--idle { padding-block: 0; }
+.pos-printStatus--success { background: #e7f6ed; color: #155e35; border-radius: 8px; }
+.pos-printStatus--error { background: #fff3c4; color: #713f12; border-radius: 8px; }
 
 .pos-actionGrid--ticket {
   position: sticky;

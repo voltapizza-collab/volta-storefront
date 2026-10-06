@@ -17,6 +17,7 @@ import { mockPrinter } from "./printers/mockPrinter";
 import { buildOrderLines } from './printers/mockPrinter';
 import { isNativePos, nativeCall } from './nativeBridge';
 import PosNotice, { usePosNotice } from './PosNotice';
+import PosPrintStatus, { usePosPrinting } from './PosPrintStatus';
 import PosLogoutDialog from './PosLogoutDialog';
 import PosUpdates from './PosUpdates';
 import { shouldShowCheckoutAlert } from '../utils/checkoutPresence';
@@ -1277,6 +1278,7 @@ export default function PosApp() {
     };
   }, [menuOpen]);
   const [logoutOpen, setLogoutOpen] = useState(false);
+  const [printStatus, printNative] = usePosPrinting();
   const [message, setMessage, dismissMessage] = usePosNotice();
   const [newOrderNotice, setNewOrderNotice] = useState(null);
   useEffect(() => { if (newOrderNotice) setMenuOpen(false); }, [newOrderNotice]);
@@ -2162,10 +2164,8 @@ export default function PosApp() {
   const printOrder = async (order) => {
     if (!order) return;
     if (isNativePos) {
-      try {
-        await nativeCall('print', { orderId: order.id, lines: buildOrderLines(order) });
-        setMessage(`Ticket ${order.code || order.id}: impresión confirmada por SUNMI.`);
-      } catch (_) { setMessage('Impresión sin confirmar. Comprueba papel y ticket antes de repetir.'); }
+      await printNative('print', { orderId: order.id, lines: buildOrderLines(order) },
+        `Ticket ${order.code || order.id}: impresión confirmada por SUNMI.`);
       return;
     }
 
@@ -2488,7 +2488,7 @@ export default function PosApp() {
             >
               <strong>Probar sonido</strong><small>Comprobar el aviso de nuevos pedidos</small>
             </button>
-            <button type="button" onClick={async () => {
+            <button type="button" disabled={printStatus?.phase === 'printing'} onClick={async () => {
               setMenuOpen(false);
               try {
                 const sample = { code: 'PRUEBA-58MM', storeName: session.storeName, total: 25.50, currency: 'EUR',
@@ -2502,8 +2502,8 @@ export default function PosApp() {
                   await printOrder(sample);
                   return;
                 }
-                await nativeCall('printTest',{lines:[...buildOrderLines(sample),'Direccion de prueba: calle larga numero 123, piso 4','Caracteres: á é í ó ú ñ €']});
-                setMessage('Ticket de prueba confirmado por SUNMI. Comprueba CAMBIOS, las retiradas en negrita y Receta original en la segunda pizza.');
+                await printNative('printTest',{lines:[...buildOrderLines(sample),'Direccion de prueba: calle larga numero 123, piso 4','Caracteres: á é í ó ú ñ €']},
+                  'Ticket de prueba confirmado por SUNMI. Comprueba CAMBIOS, las retiradas en negrita y Receta original en la segunda pizza.');
               } catch (_) { setMessage('No se confirmó la impresión. Comprueba el papel antes de repetir.'); }
             }}><strong>Impresión de prueba</strong><small>Imprimir un ticket de comprobación</small></button>
             {isNativePos && <button type="button" onClick={() => {
@@ -2517,6 +2517,7 @@ export default function PosApp() {
 
       {isNativePos && <PosUpdates open={updatesOpen} onOpen={() => setUpdatesOpen(true)} onClose={() => setUpdatesOpen(false)} onVersionChange={setInstalledVersion} />}
       <PosNotice message={message} onDismiss={dismissMessage} />
+      {isNativePos && printStatus?.orderId === null && <PosPrintStatus status={printStatus} />}
       {logoutOpen && <PosLogoutDialog onCancel={() => setLogoutOpen(false)} onConfirm={logoutSession} />}
       {operationsPaused && activePanel !== "dayOrders" && (
         <section className={`pos-pauseBanner ${showPauseScreen ? "pos-pauseBanner--full" : ""}`} aria-label="Estado de operaciones">
@@ -2556,8 +2557,8 @@ export default function PosApp() {
               <TicketPreview order={selectedOrder} />
 
               <div className="pos-actionGrid pos-actionGrid--ticket">
-                <button type="button" className="pos-button--secondary" onClick={() => printOrder(selectedOrder)}>
-                  Imprimir
+                <button type="button" className="pos-button--secondary" disabled={printStatus?.phase === 'printing'} onClick={() => printOrder(selectedOrder)}>
+                  {printStatus?.phase === 'printing' && printStatus.orderId === selectedOrder.id ? 'Imprimiendo…' : 'Imprimir'}
                 </button>
                 <div className="pos-readyButtonWrap">
                   <button
@@ -2572,6 +2573,7 @@ export default function PosApp() {
                   </button>
                 </div>
               </div>
+              {isNativePos && <PosPrintStatus status={printStatus?.orderId === selectedOrder.id ? printStatus : null} />}
             </div>
           ) : orders.length === 0 ? (
             <>

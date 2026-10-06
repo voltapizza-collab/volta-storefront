@@ -1,3 +1,4 @@
+import SettingsAccountModule from "../components/Backoffice/SettingsAccountModule";
 import useWebSession from '../auth/useWebSession';
 import { accessDestination } from '../auth/webSession';
 import React, { useEffect, useMemo, useState } from "react";
@@ -70,6 +71,7 @@ const noticeModules = {
   communications: { module: "customersCommunications", group: "customers" },
   settings: { module: "settings", group: "settings" },
   "settings-tracking": { module: "settingsTracking", group: "settings" },
+  "settings-account": { module: "settingsAccount", group: "settings" },
 };
 
 export default function Backoffice() {
@@ -99,6 +101,7 @@ export default function Backoffice() {
     password: "",
   });
 
+  const [rememberDevice, setRememberDevice] = useState(true);
   const [loginError, setLoginError] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -215,6 +218,7 @@ export default function Backoffice() {
       const loginResponse = await api.post("/partners/backoffice-login", {
         username,
         password,
+        rememberDevice,
         partnerSlug: targetPartner || undefined,
       });
       const session = loginResponse.data;
@@ -260,8 +264,8 @@ export default function Backoffice() {
     const token = params.get("reset") || "";
     const password = resetForm.password;
 
-    if (password.length < 12) {
-      setResetMessage("La nueva contrasena debe tener al menos 12 caracteres.");
+    if (!password.length) {
+      setResetMessage(t("account.required"));
       return;
     }
 
@@ -357,7 +361,7 @@ export default function Backoffice() {
     isSettingsPoliciesActive ||
     isSettingsDeliveryActive ||
     isSettingsBrandingActive ||
-    isSettingsTrackingActive;
+    isSettingsTrackingActive || activeModule === "settingsAccount";
   const isCustomersOverviewActive = activeModule === "customers";
   const isCustomersCommunicationsActive = activeModule === "customersCommunications";
   const isCustomersGroupActive =
@@ -503,6 +507,7 @@ export default function Backoffice() {
                 <input
                   type="text"
                   name="username"
+                  autoComplete="username"
                   value={loginForm.username}
                   onChange={handleLoginChange}
                   placeholder={t("auth.username")}
@@ -513,6 +518,7 @@ export default function Backoffice() {
                 <input
                   type={showPassword ? "text" : "password"}
                   name="password"
+                  autoComplete="current-password"
                   value={loginForm.password}
                   onChange={handleLoginChange}
                   placeholder={t("auth.password")}
@@ -528,6 +534,7 @@ export default function Backoffice() {
                 </button>
               </div>
 
+              <label className="bo-rememberDevice"><input type="checkbox" checked={rememberDevice} onChange={event => setRememberDevice(event.target.checked)} />{t("account.remember")}</label>
               {loginError && (
                 <div className="bo-loginErrorPro">
                   {loginError}
@@ -976,6 +983,7 @@ export default function Backoffice() {
                   >
                     {t("nav.tracking")}
                   </button>
+                  <button type="button" className={`bo-subbtn ${activeModule === "settingsAccount" ? "active" : ""}`} onClick={() => { setActiveModule("settingsAccount"); setActiveModuleGroup("settings"); }}>{t("account.title")}</button>
                 </div>
               )}
             </div>
@@ -1039,6 +1047,8 @@ export default function Backoffice() {
 
           {activeModule === "settings" && auth.partnerId && (
             <SettingsModule
+              t={t}
+              onOpenAccount={() => { setActiveModule("settingsAccount"); setActiveModuleGroup("settings"); }}
               partner={auth}
               onOpenDelivery={() => {
                 setExpandedModules((prev) => getExclusiveExpandedModules(prev, "settings"));
@@ -1062,6 +1072,8 @@ export default function Backoffice() {
               }}
             />
           )}
+
+          {activeModule === "settingsAccount" && auth.partnerId && <SettingsAccountModule partner={auth} onSessionChanged={setAuth} t={t} />}
 
           {activeModule === "settingsPolicies" && auth.partnerId && (
             <SettingsPoliciesModule partner={auth} />

@@ -2640,3 +2640,11 @@
     transform: scale(1.4);
   }
 }
+
+.bo-accountForm { display: grid; gap: 18px; max-width: 440px; margin-top: 24px; }
+.bo-accountCard, .bo-accountForm label, .bo-loginCardPro > p[role="status"], .bo-rememberDevice { color: #201332; }
+.bo-accountForm label { display: grid; gap: 8px; font-weight: 600; }
+.bo-accountForm input { width: 100%; box-sizing: border-box; border: 1px solid #b8a9c9; border-radius: 10px; padding: 12px; color: #201332; background: #fff; font: inherit; }
+.bo-accountResponsibility { margin-top: 24px; max-width: 660px; }
+.bo-rememberDevice { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+.bo-rememberDevice input { width: 18px; height: 18px; flex: 0 0 auto; }

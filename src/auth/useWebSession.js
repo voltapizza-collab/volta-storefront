@@ -19,8 +19,12 @@ export default function useWebSession(role, native = false) {
           params: { role, partnerSlug: target.partnerSlug, storeSlug: target.storeSlug },
         });
         const verified = { ...response.data, sessionToken: saved.sessionToken };
-        if (alive && matchesDestination(verified, target)) { storeSession(verified); updateSession(verified); }
-      } catch { if (alive) forgetSession(saved); }
+        if (alive && matchesDestination(verified, target)) {
+          storeSession(verified);
+          window.history.replaceState(window.history.state, '', `${businessAccessPath(verified)}${window.location.search}`);
+          updateSession(verified);
+        }
+      } catch (error) { if (alive && [401, 403].includes(error.response?.status)) forgetSession(saved); }
       finally { if (alive) setChecking(false); }
     };
     restore();

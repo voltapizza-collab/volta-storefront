@@ -3,7 +3,7 @@ import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom';
 import api from '../setupAxios';
 import useWebSession from './useWebSession';
-import { accessDestination, sessionKey, matchesDestination, getCurrentSession, setCurrentSession, storeSession } from './webSession';
+import { accessDestination, sessionKey, matchesDestination, getCurrentSession, setCurrentSession, storeSession, readSavedSession } from './webSession';
 
 jest.mock('../setupAxios', () => ({ __esModule: true, default: { get: jest.fn(), delete: jest.fn(() => Promise.resolve()) } }));
 const a = { role: 'backoffice', partnerId: 1, partnerSlug: 'a', partnerName: 'Business A', sessionToken: 'a'.repeat(64) };
@@ -87,4 +87,36 @@ test('native POS keeps hardware bootstrap and does not call web authentication',
   expect(screen.getByText('Native business')).toBeInTheDocument();
   expect(api.get).not.toHaveBeenCalled();
   delete window.__voltaSession;
+});
+
+test('remembered backoffice survives closing the tab and restores from the common entry', async () => {
+  const remembered = { ...b, rememberDevice: true };
+  storeSession(remembered);
+  sessionStorage.clear(); setCurrentSession(null);
+  window.history.replaceState(null, '', '/backoffice');
+  api.get.mockResolvedValue({ data: remembered });
+  render(<Probe />);
+  expect(await screen.findByText('Business B')).toBeInTheDocument();
+  expect(window.location.pathname).toBe('/backoffice/b');
+  fireEvent.click(screen.getByText('Logout'));
+  expect(localStorage.getItem(sessionKey(b))).toBeNull();
+  expect(localStorage.getItem('volta_remembered_backoffice')).toBeNull();
+});
+
+test('remembered sessions stay isolated and temporary sessions do not persist', () => {
+  storeSession({ ...a, rememberDevice: true });
+  sessionStorage.clear();
+  expect(readSavedSession(accessDestination('/backoffice/b'))).toBeNull();
+  expect(readSavedSession(accessDestination('/backoffice/a')).partnerSlug).toBe('a');
+  storeSession({ ...a, rememberDevice: false });
+  sessionStorage.clear();
+  expect(readSavedSession(accessDestination('/backoffice/a'))).toBeNull();
+});
+
+test('a temporary network failure does not erase the remembered device', async () => {
+  storeSession({ ...b, rememberDevice: true }); sessionStorage.clear();
+  api.get.mockRejectedValue(new Error('Network unavailable'));
+  render(<Probe />);
+  expect(await screen.findByText('Login')).toBeInTheDocument();
+  expect(localStorage.getItem(sessionKey(b))).not.toBeNull();
 });

@@ -22,7 +22,10 @@ export function sessionKey(target) {
 export function readSavedSession(target) {
   // Legacy values are unsigned, shared between businesses and must never be restored.
   try {
-    const session = JSON.parse(sessionStorage.getItem(sessionKey(target)) || 'null');
+    const destination = target.role === 'backoffice' && !target.partnerSlug
+      ? { ...target, partnerSlug: localStorage.getItem('volta_remembered_backoffice') || '' } : target;
+    const key = sessionKey(destination);
+    const session = JSON.parse(sessionStorage.getItem(key) || (target.role === 'backoffice' && localStorage.getItem(key)) || 'null');
     return matchesDestination(session, target) ? session : null;
   } catch { return null; }
 }
@@ -33,11 +36,21 @@ export function getCurrentSession() { return matchesDestination(currentSession) 
 export function storeSession(session) {
   currentSession = session;
   try { sessionStorage.setItem(sessionKey(session), JSON.stringify(session)); } catch { /* Memory-only access still works. */ }
+  try {
+    if (session.role === 'backoffice' && session.rememberDevice) {
+      localStorage.setItem(sessionKey(session), JSON.stringify(session));
+      localStorage.setItem('volta_remembered_backoffice', session.partnerSlug);
+    } else localStorage.removeItem(sessionKey(session));
+  } catch { /* Session storage still works if persistent storage is unavailable. */ }
 }
 
 export function forgetSession(session = currentSession) {
   currentSession = null;
   try { if (session) sessionStorage.removeItem(sessionKey(session)); } catch { /* Storage may be disabled. */ }
+  try {
+    if (session) localStorage.removeItem(sessionKey(session));
+    if (session?.partnerSlug === localStorage.getItem('volta_remembered_backoffice')) localStorage.removeItem('volta_remembered_backoffice');
+  } catch { /* Storage may be disabled. */ }
 }
 
 export function businessAccessPath(session) {

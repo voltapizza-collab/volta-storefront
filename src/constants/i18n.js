@@ -1,3 +1,4 @@
+import { ACCOUNT_TRANSLATIONS } from "./accountTranslations";
 import { NOTIFICATION_TRANSLATIONS } from "./notificationTranslations";
 
 export const BACKOFFICE_LANGUAGE_STORAGE_KEY = "volta_backoffice_language";
@@ -13,6 +14,7 @@ export const BACKOFFICE_LANGUAGES = [
 const BACKOFFICE_TRANSLATIONS = {
   en: {
     ...NOTIFICATION_TRANSLATIONS.en,
+    ...ACCOUNT_TRANSLATIONS.en,
     "app.title": "Volta - Backoffice",
     "auth.title": "Backoffice",
     "auth.subtitle": "Access with your partner account or demo credentials",
@@ -59,6 +61,7 @@ const BACKOFFICE_TRANSLATIONS = {
   },
   es: {
     ...NOTIFICATION_TRANSLATIONS.es,
+    ...ACCOUNT_TRANSLATIONS.es,
     "app.title": "Volta - Backoffice",
     "auth.title": "Backoffice",
     "auth.subtitle": "Accede con tu partner o con credenciales demo",
@@ -105,6 +108,7 @@ const BACKOFFICE_TRANSLATIONS = {
   },
   it: {
     ...NOTIFICATION_TRANSLATIONS.it,
+    ...ACCOUNT_TRANSLATIONS.it,
     "app.title": "Volta - Backoffice",
     "auth.title": "Backoffice",
     "auth.subtitle": "Accedi con il tuo partner o con credenziali demo",
@@ -151,6 +155,7 @@ const BACKOFFICE_TRANSLATIONS = {
   },
   fr: {
     ...NOTIFICATION_TRANSLATIONS.fr,
+    ...ACCOUNT_TRANSLATIONS.fr,
     "app.title": "Volta - Backoffice",
     "auth.title": "Backoffice",
     "auth.subtitle": "Connectez-vous avec votre compte partenaire ou demo",
@@ -197,6 +202,7 @@ const BACKOFFICE_TRANSLATIONS = {
   },
   pt: {
     ...NOTIFICATION_TRANSLATIONS.pt,
+    ...ACCOUNT_TRANSLATIONS.pt,
     "app.title": "Volta - Backoffice",
     "auth.title": "Backoffice",
     "auth.subtitle": "Acesse com seu parceiro ou credenciais demo",

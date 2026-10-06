@@ -59,6 +59,8 @@ export default function SettingsModule({
   onOpenBranding,
   onOpenPolicies,
   onOpenTracking,
+  onOpenAccount,
+  t,
 }) {
   const [loading, setLoading] = useState(true);
   const [partnerData, setPartnerData] = useState(null);
@@ -150,6 +152,7 @@ export default function SettingsModule({
         </div>
 
         <div className="bo-settingsOverviewGrid">
+          <article className="bo-settingsSummaryCard"><h3 className="bo-settingsSectionTitle">{t("account.title")}</h3><p className="bo-settingsCardHint">{t("account.hint")}</p><button type="button" className="bo-settingsMiniCta" onClick={onOpenAccount}>{t("account.title")}</button></article>
           <article className="bo-settingsSummaryCard">
             <div className="bo-settingsSummaryTop">
               <div>

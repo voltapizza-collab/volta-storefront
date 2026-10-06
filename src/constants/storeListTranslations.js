@@ -1,0 +1,7 @@
+export const STORE_LIST_TRANSLATIONS = {
+  es: { 'table.store': 'Tienda', 'table.actions': 'Gestión', 'action.manage': 'Gestionar', 'section.count': '{count} tiendas', 'section.manage': 'Gestionar tienda', 'section.access': 'Estado de la tienda', 'action.pos': 'Acceso POS', 'form.deliveryShort': 'Entrega', 'action.retry': 'Reintentar' },
+  en: { 'table.store': 'Store', 'table.actions': 'Management', 'action.manage': 'Manage', 'section.count': '{count} stores', 'section.manage': 'Manage store', 'section.access': 'Store status', 'action.pos': 'POS access', 'form.deliveryShort': 'Fulfillment', 'action.retry': 'Retry' },
+  it: { 'table.store': 'Negozio', 'table.actions': 'Gestione', 'action.manage': 'Gestisci', 'section.count': '{count} negozi', 'section.manage': 'Gestisci negozio', 'section.access': 'Stato del negozio', 'action.pos': 'Accesso POS', 'form.deliveryShort': 'Consegna', 'action.retry': 'Riprova' },
+  fr: { 'table.store': 'Boutique', 'table.actions': 'Gestion', 'action.manage': 'Gérer', 'section.count': '{count} boutiques', 'section.manage': 'Gérer la boutique', 'section.access': 'État de la boutique', 'action.pos': 'Accès POS', 'form.deliveryShort': 'Livraison', 'action.retry': 'Réessayer' },
+  pt: { 'table.store': 'Loja', 'table.actions': 'Gestão', 'action.manage': 'Gerir', 'section.count': '{count} lojas', 'section.manage': 'Gerir loja', 'section.access': 'Estado da loja', 'action.pos': 'Acesso POS', 'form.deliveryShort': 'Entrega', 'action.retry': 'Tentar novamente' },
+};

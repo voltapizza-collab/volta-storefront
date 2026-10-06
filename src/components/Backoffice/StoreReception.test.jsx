@@ -52,3 +52,19 @@ test('unknown status cannot open, can retry, and a double click sends only one m
   expect(api.patch).toHaveBeenCalledTimes(1);
   await act(async () => finish({ data: state }));
 });
+
+test('compact list shows only a status and never changes reception', async () => {
+  state = { ...state, acceptingOrders: true, status: 'outside_hours', scheduledOrdersAvailable: true };
+  render(<StoreReception store={store} compact />);
+  expect(await screen.findByText('Fuera de horario')).toBeInTheDocument();
+  expect(screen.queryByRole('button')).toBeNull();
+  expect(screen.queryByText('Puedes recibir pedidos programados.')).toBeNull();
+  expect(api.patch).not.toHaveBeenCalled();
+});
+
+test('compact failed status is unknown instead of claiming the store is closed', async () => {
+  api.get.mockRejectedValueOnce(new Error('offline'));
+  render(<StoreReception store={store} compact />);
+  expect(await screen.findByText('Sin confirmar')).toBeInTheDocument();
+  expect(screen.queryByText('Pedidos cerrados')).toBeNull();
+});

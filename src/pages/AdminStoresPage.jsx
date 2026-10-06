@@ -1,3 +1,5 @@
+import StoreManagementDialog from "../components/Backoffice/StoreManagementDialog";
+import { STORE_LIST_TRANSLATIONS } from "../constants/storeListTranslations";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import api from "../setupAxios";
 import StoreReception from '../components/Backoffice/StoreReception';
@@ -437,7 +439,7 @@ const STORE_COPY = {
 
 const translateStore = (locale, key, values = {}) => {
   const dictionary = STORE_COPY[locale] || STORE_COPY.en;
-  const template = dictionary[key] || STORE_COPY.en[key] || key;
+  const template = STORE_LIST_TRANSLATIONS[locale]?.[key] || dictionary[key] || STORE_COPY.en[key] || key;
   return template.replace(/\{(\w+)\}/g, (_, name) =>
     values[name] == null ? "" : String(values[name])
   );
@@ -1812,8 +1814,11 @@ export default function AdminStoresPage({
     [activeLocale]
   );
   const [partners, setPartners] = useState([]);
-  const [selectedPartnerId, setSelectedPartnerId] = useState("");
+  const [selectedPartnerId, setSelectedPartnerId] = useState(String(initialPartnerId || ""));
   const [stores, setStores] = useState([]);
+  const [managedStoreId, setManagedStoreId] = useState(null);
+  const [loadRevision, setLoadRevision] = useState(0);
+  const storeRequest = useRef(0);
   const [customers, setCustomers] = useState([]);
   const [showCust, setShowCust] = useState(false);
   const [customerPostalCode, setCustomerPostalCode] = useState("all");
@@ -1835,27 +1840,21 @@ export default function AdminStoresPage({
   const [pageError, setPageError] = useState("");
   const [resettingCredentialId, setResettingCredentialId] = useState(null);
   const [posCredentialModal, setPosCredentialModal] = useState(null);
-  const [loadingCredentialId, setLoadingCredentialId] = useState(null);
+
 
   const loadPartners = useCallback(async () => {
-    const response = await api.get("/partners");
-    const data = Array.isArray(response.data) ? response.data : [];
+    const response = await api.get(lockPartner ? `/partners/by-id/${initialPartnerId}` : '/partners');
+    const data = lockPartner ? [response.data].filter(partner => partner?.id) : Array.isArray(response.data) ? response.data : [];
     setPartners(data);
-
-    if (!selectedPartnerId) {
-      const nextPartnerId = initialPartnerId || String(data[0]?.id || "");
-      if (nextPartnerId) {
-        setSelectedPartnerId(String(nextPartnerId));
-      }
-    }
-
+    setSelectedPartnerId(current => current || String(initialPartnerId || data[0]?.id || ''));
     return data;
-  }, [initialPartnerId, selectedPartnerId]);
+  }, [initialPartnerId, lockPartner]);
 
   const loadStores = useCallback(async (partnerId) => {
-    const path = partnerId ? `/api/stores?partnerId=${partnerId}` : "/api/stores";
+    const version = ++storeRequest.current;
+    const path = partnerId ? `/api/stores?partnerId=${partnerId}` : '/api/stores';
     const response = await api.get(path);
-    setStores(Array.isArray(response.data) ? response.data : []);
+    if (version === storeRequest.current) setStores(Array.isArray(response.data) ? response.data : []);
   }, []);
 
   const loadCustomers = useCallback(async (partnerId) => {
@@ -1870,10 +1869,12 @@ export default function AdminStoresPage({
   }, []);
 
   useEffect(() => {
+    let alive = true;
     const bootstrap = async () => {
       try {
         setLoading(true);
         const loadedPartners = await loadPartners();
+        if (!alive) return;
         const nextPartnerId =
           selectedPartnerId ||
           initialPartnerId ||
@@ -1882,33 +1883,24 @@ export default function AdminStoresPage({
           loadStores(nextPartnerId),
           isLocationsView ? loadCustomers(nextPartnerId) : Promise.resolve(),
         ]);
-        setPageError("");
+        if (alive) setPageError("");
       } catch (requestError) {
         console.error("ADMIN STORES BOOTSTRAP ERROR:", requestError);
-        setPageError(t("error.loadModule"));
+        if (alive) setPageError(t("error.loadModule"));
       } finally {
-        setLoading(false);
+        if (alive) setLoading(false);
       }
     };
 
     bootstrap();
-  }, [initialPartnerId, isLocationsView, loadCustomers, loadPartners, loadStores, selectedPartnerId, t]);
+    return () => { alive = false; ++storeRequest.current; };
+  }, [initialPartnerId, isLocationsView, loadCustomers, loadPartners, loadStores, selectedPartnerId, t, loadRevision]);
 
   useEffect(() => {
     if (!initialPartnerId) return;
     setSelectedPartnerId(String(initialPartnerId));
   }, [initialPartnerId]);
 
-  useEffect(() => {
-    if (!selectedPartnerId) return;
-    Promise.all([
-      loadStores(selectedPartnerId),
-      isLocationsView ? loadCustomers(selectedPartnerId) : Promise.resolve(),
-    ]).catch((requestError) => {
-      console.error("FILTER STORES ERROR:", requestError);
-      setPageError(t("error.filterStores"));
-    });
-  }, [isLocationsView, loadCustomers, loadStores, selectedPartnerId, t]);
 
   useEffect(() => {
     if (!stores.length) {
@@ -2206,7 +2198,7 @@ export default function AdminStoresPage({
     });
 
     try {
-      setLoadingCredentialId(store.id);
+
       const response = await api.get(`/api/stores/${store.id}/pos-credentials`);
       const credential = response.data?.posCredentials || {};
       const safeStore = response.data?.store || store;
@@ -2233,8 +2225,6 @@ export default function AdminStoresPage({
         loading: false,
         error: t("feedback.pinLoadError"),
       });
-    } finally {
-      setLoadingCredentialId(null);
     }
   };
 
@@ -2270,6 +2260,17 @@ export default function AdminStoresPage({
     setShowAdd(true);
   };
 
+  const managedStore = stores.find(store => store.id === managedStoreId);
+  const manageAction = action => {
+    const store = managedStore;
+    if (!store) return;
+    setManagedStoreId(null);
+    const actions = { edit: () => editStore(store), menu: () => setStockModal(store), hours: () => setHoursModal(store),
+      pos: () => openPosPinModal(store), report: () => setReportModal(store), reservations: () => setReservationsModal(store),
+      active: () => toggleActive(store, !(store.active && hasUsableStoreCoordinates(store))), delete: () => deleteStore(store.id) };
+    actions[action]?.();
+  };
+
   const pickupToggleLocked = form.pickupEnabled && !form.deliveryEnabled;
   const deliveryToggleLocked = form.deliveryEnabled && !form.pickupEnabled;
 
@@ -2286,6 +2287,8 @@ export default function AdminStoresPage({
 
   return (
     <>
+      {managedStore && <StoreManagementDialog store={managedStore} language={activeLocale} t={t} onClose={() => setManagedStoreId(null)} onAction={manageAction}
+        enabled={Boolean(managedStore.active && hasUsableStoreCoordinates(managedStore))} coordinateBlocked={Boolean(managedStore.active && !hasUsableStoreCoordinates(managedStore))} />}
       <div className={`sc-page ${isLocationsView ? "sc-page--locations" : ""}`}>
         <header className="sc-header">
           <div>
@@ -2298,8 +2301,9 @@ export default function AdminStoresPage({
           </div>
 
           <div className="sc-headerActions">
-            <select
+            {!lockPartner && <select
               className="sc-select"
+              aria-label={t("title.stores")}
               value={selectedPartnerId}
               onChange={(event) => setSelectedPartnerId(event.target.value)}
               disabled={lockPartner}
@@ -2309,7 +2313,7 @@ export default function AdminStoresPage({
                   {partner.name}
                 </option>
               ))}
-            </select>
+            </select>}
 
             {!isLocationsView && (
               <button
@@ -2327,140 +2331,23 @@ export default function AdminStoresPage({
         {(feedback || pageError) && (
           <div className={`sc-banner ${pageError ? "is-error" : ""}`}>
             {pageError || feedback}
+            {pageError && <button type="button" className="sc-btn" onClick={() => setLoadRevision(value => value + 1)}>{t("action.retry")}</button>}
           </div>
         )}
 
         {!isLocationsView && (
-        <section className="sc-card">
-          <h3>{t("section.storesList")}</h3>
-
-          <table className="store-table">
-            <thead>
-              <tr>
-                <th>{t("table.del")}</th>
-                <th>{t("table.edit")}</th>
-                <th>{t("table.name")}</th>
-                <th>{t("table.city")}</th>
-                <th>{t("table.address")}</th>
-                <th>{t("table.status")}</th>
-                <th>{receptionText(activeLocale).heading}</th>
-                <th>{t("form.deliveryMethods")}</th>
-                <th>PIN POS</th>
-                <th>{t("table.menu")}</th>
-                <th>{t("table.report")}</th>
-                <th>{t("table.hours")}</th>
-                <th>{t("table.reservations")}</th>
-              </tr>
-            </thead>
+        <section className="sc-card sc-storeListCard">
+          <div className="sc-storeListHeading"><h3>{t('section.storesList')}</h3><span>{t('section.count', { count: stores.length })}</span></div>
+          <table className="store-table sc-storeList">
+            <thead><tr><th>{t('table.store')}</th><th>{receptionText(activeLocale).heading}</th><th>{t('form.deliveryShort')}</th><th><span className="sc-srOnly">{t('table.actions')}</span></th></tr></thead>
             <tbody>
-              {stores.map((store) => {
-                const storeHasCoordinates = hasUsableStoreCoordinates(store);
-                const isOperationalActive = Boolean(store.active && storeHasCoordinates);
-                const isCoordinateBlocked = Boolean(store.active && !storeHasCoordinates);
-
-                return (
-                <tr key={store.id}>
-                  <td>
-                    <button
-                      className="table-btn table-btn-icon danger"
-                      onClick={() => deleteStore(store.id)}
-                      type="button"
-                      aria-label={`${t("action.delete")} ${store.storeName}`}
-                      title={`${t("action.delete")} ${store.storeName}`}
-                    >
-                      x
-                    </button>
-                  </td>
-                  <td>
-                    <button
-                      className="table-btn table-btn-icon edit"
-                      onClick={() => editStore(store)}
-                      type="button"
-                      aria-label={`${t("action.edit")} ${store.storeName}`}
-                      title={`${t("action.edit")} ${store.storeName}`}
-                    >
-                      ✎
-                    </button>
-                  </td>
-                  <td>{store.storeName}</td>
-                  <td>{store.city || "-"}</td>
-                  <td>{store.address || "-"}</td>
-                  <td>
-                    <button
-                      className={`table-btn status ${
-                        isOperationalActive ? "active" : isCoordinateBlocked ? "blocked" : "inactive"
-                      }`}
-                      onClick={() => toggleActive(store, !isOperationalActive)}
-                      type="button"
-                      title={
-                        storeHasCoordinates
-                          ? t("status.changeTitle")
-                          : t("status.coordsTitle")
-                      }
-                    >
-                      {isOperationalActive
-                        ? receptionText(activeLocale).enabled
-                        : isCoordinateBlocked
-                        ? t("status.coords")
-                      : receptionText(activeLocale).disabled}
-                    </button>
-                  </td>
-                  <td><StoreReception store={store} language={activeLocale} refreshKey={`${Boolean(stockModal)}:${Boolean(hoursModal)}:${Boolean(showAdd)}`} /></td>
-                  <td>
-                    {[
-                      store.pickupEnabled !== false ? t("form.pickupEnabled") : "",
-                      store.deliveryEnabled !== false ? t("form.deliveryEnabled") : "",
-                    ].filter(Boolean).join(" / ") || "-"}
-                  </td>
-                  <td>
-                    <button
-                      className={`sc-posPinMask ${store.posCredentialsConfigured ? "is-ready" : "is-missing"}`}
-                      onClick={() => openPosPinModal(store)}
-                      type="button"
-                      disabled={loadingCredentialId === store.id}
-                    >
-                      {loadingCredentialId === store.id
-                        ? "..."
-                        : store.posCredentialsConfigured
-                          ? "******"
-                          : t("pin.none")}
-                    </button>
-                  </td>
-                  <td>
-                    <button className="table-btn stock" onClick={() => setStockModal(store)} type="button">
-                      {t("table.menu")}
-                    </button>
-                  </td>
-                  <td>
-                    <button className="table-btn report" onClick={() => setReportModal(store)} type="button">
-                      {t("table.report")}
-                    </button>
-                  </td>
-                  <td>
-                    <button className="table-btn hours" onClick={() => setHoursModal(store)} type="button">
-                      {t("table.hours")}
-                    </button>
-                  </td>
-                  <td>
-                    <button
-                      className="table-btn reservations"
-                      onClick={() => setReservationsModal(store)}
-                      type="button"
-                    >
-                      {t("table.reservations")}
-                    </button>
-                  </td>
-                </tr>
-                );
-              })}
-
-              {stores.length === 0 && (
-                <tr>
-                  <td colSpan="13">
-                    <div className="sc-emptyState">{t("state.noStores")}</div>
-                  </td>
-                </tr>
-              )}
+              {stores.map(store => <tr key={store.id}>
+                <td className="sc-storeIdentity"><strong>{store.storeName}</strong><span>{[store.city, store.address].filter(Boolean).join(' · ') || '—'}</span></td>
+                <td className="sc-storeOrders"><StoreReception compact store={store} language={activeLocale} refreshKey={`${Boolean(stockModal)}:${Boolean(hoursModal)}:${Boolean(showAdd)}:${Boolean(managedStoreId)}`} /></td>
+                <td className="sc-storeDelivery"><div>{[store.pickupEnabled !== false && t('form.pickupEnabled'), store.deliveryEnabled !== false && t('form.deliveryEnabled')].filter(Boolean).map(method => <span key={method}>{method}</span>)}</div></td>
+                <td className="sc-storeActions"><button type="button" className="sc-manageStore" onClick={() => setManagedStoreId(store.id)} aria-label={`${t('action.manage')} ${store.storeName}`}>{t('action.manage')}<span aria-hidden="true">→</span></button></td>
+              </tr>)}
+              {stores.length === 0 && <tr><td colSpan="4"><div className="sc-emptyState">{t('state.noStores')}</div></td></tr>}
             </tbody>
           </table>
         </section>

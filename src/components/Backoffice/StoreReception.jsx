@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import api from '../../setupAxios';
 import { receptionText } from '../../utils/storeReception';
 
-export default function StoreReception({ store, language = 'es', refreshKey = '' }) {
+export default function StoreReception({ store, language = 'es', refreshKey = '', compact = false }) {
   const text = receptionText(language);
   const [state, setState] = useState(null);
   const [error, setError] = useState('');
@@ -40,6 +40,11 @@ export default function StoreReception({ store, language = 'es', refreshKey = ''
       saving.current = false; setBusy(false); load();
     }
   };
+  if (compact) return <span className={`sc-orderStatus sc-orderStatus--${error ? 'unknown' : state?.status || 'loading'}`}
+    aria-label={`${text.heading}: ${store.storeName}`} title={error || (state?.scheduledOrdersAvailable ? text.scheduled : undefined)}>
+    <span className="sc-orderStatusDot" aria-hidden="true" />
+    {error ? text.unknown : state ? text.status[state.status] || text.closed : text.checking}
+  </span>;
   return <div className="sc-reception" aria-label={`${text.heading}: ${store.storeName}`}>
     <strong>{state ? text.status[state.status] || text.closed : text.checking}</strong>
     {state?.scheduledOrdersAvailable && ['paused', 'outside_hours'].includes(state.status) && <small>{text.scheduled}</small>}

@@ -9,6 +9,7 @@ import "../styles/OnboardingForm.css";
 const initialForm = {
   posChoice: '',
   posInstallments: 6,
+  posRentalMonths: '',
   commercialAcknowledged: false,
   partnerType: "",
   legalName: "",
@@ -65,6 +66,7 @@ const documentFields = [
 const requiredFieldLabels = {
   posChoice: 'la modalidad del POS',
   posInstallments: 'el número de cuotas',
+  posRentalMonths: 'el plazo del renting',
   commercialAcknowledged: 'la confirmación de las condiciones',
   commercialVersion: 'la versión de las condiciones',
   partnerType: "Tipo de titular",
@@ -613,7 +615,7 @@ export default function OnboardingFormPage() {
     setInvalidFields({});
     const first = Object.keys(nextInvalid)[0];
     setStep(first?.startsWith('document:') || ['accountHolder', 'iban'].includes(first) ? 1
-      : ['posChoice', 'posInstallments', 'commercialAcknowledged', 'commercialVersion'].includes(first) ? 2
+      : ['posChoice', 'posInstallments', 'posRentalMonths', 'commercialAcknowledged', 'commercialVersion'].includes(first) ? 2
       : ['acceptedTerms', 'acceptedCompliance'].includes(first) ? 3 : 0);
     window.requestAnimationFrame(() => {
       setInvalidFields(nextInvalid);
@@ -632,6 +634,8 @@ export default function OnboardingFormPage() {
     const nextInvalid = buildInvalidFormalFields(form, documents, existingDocumentsByType);
     if (!form.posChoice) nextInvalid.posChoice = true;
     if (form.posChoice === 'INSTALLMENTS' && ![2, 3, 4, 5, 6].includes(Number(form.posInstallments))) nextInvalid.posInstallments = true;
+    if (form.posChoice === 'RENT_QUOTE' && request.commercialCatalog?.rental?.calculation === 'PRICE_BY_TERM'
+      && !request.commercialCatalog.rental.termOptions.some(plan => plan.months === Number(form.posRentalMonths))) nextInvalid.posRentalMonths = true;
     if (!form.commercialAcknowledged) nextInvalid.commercialAcknowledged = true;
     if (!request.commercialCatalog?.version) nextInvalid.commercialVersion = true;
     const invalidKeys = Object.keys(nextInvalid);

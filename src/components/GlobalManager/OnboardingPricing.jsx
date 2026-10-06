@@ -50,13 +50,15 @@ export default function OnboardingPricing() {
         <label>Precio predeterminado del POS, IVA incluido (€)<input required inputMode="decimal" disabled={!pricing || busy} value={price} onChange={e => setPrice(e.target.value)} /></label>
         <label>Tarifa vigente del SMS (€ por parte)<input required inputMode="decimal" disabled={!pricing || busy} value={smsPriceInput} onChange={e => setSmsPriceInput(e.target.value)} /><span>Se aplica a nuevas recargas de toda Volta. Un mensaje puede consumir varias partes.</span></label>
         <label>Cálculo de la cuota de renting<select value={defaults.rentMode || 'FIXED'} onChange={change('rentMode')}>
-          <option value="FIXED">Cuota mensual fija</option><option value="PRICE_24">Precio del POS dividido entre 24</option><option value="PRICE_36">Precio del POS dividido entre 36</option>
+          <option value="CUSTOMER_TERM">El cliente elige el plazo, hasta 36 meses</option><option value="FIXED">Cuota mensual fija · 36 meses</option><option value="PRICE_24">Precio del POS dividido entre 24 · 36 meses</option><option value="PRICE_36">Precio del POS dividido entre 36 · 36 meses</option>
         </select></label>
         {(!defaults.rentMode || defaults.rentMode === 'FIXED') && <label>Cuota mensual fija, IVA incluido (€)<input inputMode="decimal" value={rentInput} onChange={e => { setRentInput(e.target.value); setDefaults(d => ({ ...d, rentCents: asCents(e.target.value) })); }} /></label>}
         <label>Fianza del renting (€; 0 si no se exige)<input inputMode="decimal" value={depositInput} onChange={e => { setDepositInput(e.target.value); setDefaults(d => ({ ...d, depositCents: asCents(e.target.value) })); }} /></label>
         <div><strong>Paquetes a la tarifa vigente guardada</strong><p>{packs.map(pack => `${euro(pack.cents)}: ${pack.credits} partes`).join(' · ')}</p></div>
       </div>
-      <p>Renting: <strong>36 × {euro(rent)}</strong> · Total: <strong>{euro(Number.isInteger(rent) ? rent * 36 : null)}</strong>. Cuota redondeada a céntimos. El POS se transmite al finalizar los 36 meses y completar todos los pagos.</p>
+      {defaults.rentMode === 'CUSTOMER_TERM'
+        ? <p>Cada cliente elige hasta 36 mensualidades. Cuota = precio del POS ÷ meses elegidos, redondeada a céntimos. El formulario muestra cuota y total antes de enviar. El POS se transmite al terminar el plazo elegido y completar todos los pagos.</p>
+        : <p>Renting: <strong>36 × {euro(rent)}</strong> · Total: <strong>{euro(Number.isInteger(rent) ? rent * 36 : null)}</strong>. Cuota redondeada a céntimos. El POS se transmite al finalizar los 36 meses y completar todos los pagos.</p>}
       <button type="submit" disabled={!pricing || busy}>Guardar configuración general</button>
     </form>{message && <p role="status">{message}</p>}
   </details>;

@@ -5,8 +5,24 @@ const catalog = { posTotalCents: 25000, installments: { 6: [4167,4167,4167,4167,
 test('six-installment preview displays exact schedule and never claims a final initial total', () => {
   render(<CommercialSummary selection={commercialPreview({ posChoice: 'INSTALLMENTS', posInstallments: 6 }, catalog)} />);
   expect(screen.getByText(/Mes 5 después del primer pago: 41,65/)).toBeInTheDocument();
-  expect(screen.getByText(/Primer pago, antes de la firma: 41,67/)).toBeInTheDocument();
+  expect(screen.getByText(/Primer pago, después de la firma: 41,67/)).toBeInTheDocument();
   expect(screen.getByText(/Hoy no se cobra nada/)).toBeInTheDocument();
+});
+
+test('rental preview and summary use the selected term and rounded total', () => {
+  const rentalCatalog = { ...catalog, rental: { calculation: 'PRICE_BY_TERM', depositCents: 0,
+    termOptions: [{ months: 12, monthlyCents: 2083, totalCents: 24996 }, { months: 36, monthlyCents: 694, totalCents: 24984 }] } };
+  const props = { form: { posChoice: 'RENT_QUOTE', posRentalMonths: '' }, catalog: rentalCatalog, updateField: () => jest.fn(), fieldProps: () => ({}), invalidFields: {} };
+  const { rerender } = render(<OnboardingCommercial {...props} />);
+  expect(screen.getByRole('combobox', { name: 'Plazo del renting' })).toHaveValue('');
+  expect(screen.queryByRole('status')).not.toBeInTheDocument();
+  rerender(<OnboardingCommercial {...props} form={{ ...props.form, posRentalMonths: '12' }} />);
+  expect(screen.getByRole('status')).toHaveTextContent('12 × 20,83');
+  expect(screen.getByRole('status')).toHaveTextContent('249,96');
+  rerender(<CommercialSummary selection={commercialPreview({ posChoice: 'RENT_QUOTE', posRentalMonths: '12' }, rentalCatalog)} />);
+  expect(screen.getByText('Solicitud de renting de 12 meses')).toBeInTheDocument();
+  expect(screen.getByText('Total de las 12 mensualidades')).toBeInTheDocument();
+  expect(screen.queryByText(/36 mensualidades/)).not.toBeInTheDocument();
 });
 test('rental remains a quote request with no invented monthly price', () => {
   render(<CommercialSummary selection={commercialPreview({ posChoice: 'RENT_QUOTE' }, catalog)} />);

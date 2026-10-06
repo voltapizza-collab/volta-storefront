@@ -8,6 +8,8 @@ export const closureErrorText = code => ({
   review_changed: 'El contrato ha cambiado. Revisa la versión actualizada antes de enviarla.',
   review_load_failed: 'No se pudo cargar el contrato. Vuelve a intentarlo.',
   rent_price_required: 'Falta definir la cuota de renting en las tarifas vigentes. Se configura una vez en Global Manager.',
+  invalid_rental_months: 'Revisa el plazo del renting: debe ser un número entero de meses, con un máximo de 36.',
+  rental_selection_changed: 'Los importes del renting deben coincidir con el plazo y la cuota elegidos por el comercio.',
   submitted_selection_required: 'El comercio debe enviar primero sus datos y su elección de pago.',
   contract_signature_required: 'Firma el contrato antes de continuar al pago.',
   welcome_delivery_failed: 'El pago está conservado. Se reintentará completar el alta y enviar el correo de acceso.',
@@ -46,7 +48,7 @@ export function ClosureDocument({ closure, compact = false }) {
     <p><strong>Total inicial: {euro(offer.totalCents)}</strong></p>
     {offer.pos.priceChanged && <p role="alert">El precio del POS ha cambiado desde tu elección: de {euro(offer.pos.previousPriceCents)} a {euro(offer.pos.totalCents)}. Revisa el nuevo precio antes de aceptar y pagar.</p>}
     {offer.pos.mode !== 'RENT_QUOTE' && offer.pos.payments?.length > 1 && <p>Quedarán {offer.pos.payments.length - 1} cuotas mensuales: {offer.pos.payments.slice(1).map(euro).join(' · ')}.</p>}
-    {offer.pos.mode === 'RENT_QUOTE' && <p>{offer.pos.durationMonths === 36 ? <>Renting: 36 mensualidades de {euro(offer.pos.firstCents)} · Total {euro(offer.pos.totalCents)}. El plazo empieza con la entrega operativa. El POS pertenece a Volta hasta finalizar los 36 meses y completar los pagos; entonces pasa a ser tuyo sin pago adicional.</> : <>Alquiler: {euro(offer.pos.firstCents)} al mes. Consulta las condiciones de esta versión.</>}</p>}
+    {offer.pos.mode === 'RENT_QUOTE' && <p>{Number.isInteger(offer.pos.durationMonths) && offer.pos.durationMonths >= 1 && offer.pos.durationMonths <= 36 ? <>Renting: {offer.pos.durationMonths} mensualidades de {euro(offer.pos.firstCents)} · Total {euro(offer.pos.totalCents)}. El plazo empieza con la entrega operativa. El POS pertenece a Volta hasta finalizar los {offer.pos.durationMonths} meses y completar los pagos; entonces pasa a ser tuyo sin pago adicional.</> : <>Alquiler: {euro(offer.pos.firstCents)} al mes. Consulta las condiciones de esta versión.</>}</p>}
     {offer.pos.delivery && <p>Entrega prevista: {offer.pos.delivery.expected} · Fecha límite: {offer.pos.delivery.latest}. Suministro sujeto a stock; pagar o firmar no garantiza entrega inmediata.</p>}
     {compact ? <details className="onb-managerAdvanced"><summary>Leer contrato completo</summary><pre className="onb-closureDocument" tabIndex="0" aria-label="Contrato completo">{offer.documentText}</pre></details>
       : <pre className="onb-closureDocument" tabIndex="0" aria-label="Contrato completo">{offer.documentText}</pre>}

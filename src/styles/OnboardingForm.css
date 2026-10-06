@@ -630,6 +630,9 @@
 .onb-commercial .onb-choice { display: flex; align-items: flex-start; gap: 12px; margin: 14px 0; }
 .onb-commercial input[type="radio"], .onb-commercial input[type="checkbox"] { width: 20px; height: 20px; flex: 0 0 20px; margin-top: 3px; }
 .onb-commercial [aria-invalid="true"] { outline: 2px solid #b42318; }
+.onb-termChoice { display: grid; gap: 8px; max-width: 360px; margin: 18px 0; font-weight: 700; }
+.onb-termChoice select { width: 100%; min-height: 46px; box-sizing: border-box; padding: 10px 12px; border: 1px solid #bda6dc; border-radius: 8px; background: #fff; color: #251536; font: inherit; font-weight: 400; }
+.onb-termChoice select:focus-visible { outline: 3px solid #6a3df0; outline-offset: 2px; }
 .onb-commercialSummary dl > div { padding: 10px 0; border-bottom: 1px solid #eee; }
 .onb-commercialSummary dt { font-weight: 700; }
 .onb-commercialSummary dd { margin: 4px 0; }

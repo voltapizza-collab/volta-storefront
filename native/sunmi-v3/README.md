@@ -6,7 +6,7 @@ Reutiliza el POS existente de React dentro del APK: pantalla de usuario/PIN, coc
 
 ## Compilar e instalar
 
-Versión preparada: **0.3.22 (código 25)**. Compilar desde este proyecto canónico; no usar la carpeta histórica `volta-pos-android` del workspace. Desde la raíz de `volta-storefront`, ejecutar `node scripts/build-native-pos.cjs` sin sobrescribir `VOLTA_ANDROID_PROJECT`, y después `./build.ps1 -Connection https` desde `native/sunmi-v3`. Actualizar sin desinstalar. Corrige el desbordamiento del ticket y sustituye el modal de impresión por un estado en la página. Pendiente validación física: [impresión en VigoCity](../../docs/pos/impresion-vigocity-2026-10-07.md).
+Versión preparada: **0.3.23 (código 26)**. Compilar desde este proyecto canónico; no usar la carpeta histórica `volta-pos-android` del workspace. Desde la raíz de `volta-storefront`, ejecutar `node scripts/build-native-pos.cjs` sin sobrescribir `VOLTA_ANDROID_PROJECT`, y después `./build.ps1 -Connection https` desde `native/sunmi-v3`. Actualizar sin desinstalar. Corrige el desbordamiento del ticket, sustituye el modal de impresión por un estado en la página y muestra un número corto para los pedidos web. Pendiente validación física: [impresión en VigoCity](../../docs/pos/impresion-vigocity-2026-10-07.md).
 
 Actualizador en validación: parámetro opcional `-UpdateServerUrl https://origen-del-canal` al compilar. Sin él no se realizan consultas de actualización. Usar versiones crecientes y la misma clave de firma. El menú «Actualizaciones» abre el estado y la autorización de Android. Véase `../../docs/pos/actualizaciones-packageinstaller-2026-10-02.md`; el canal temporal de comprobación no sustituye al servicio de distribución de producción.
 

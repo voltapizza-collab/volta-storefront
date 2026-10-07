@@ -3,8 +3,8 @@ param(
     [string]$Jdk = 'C:\Program Files\Android\Android Studio\jbr',
     [string]$BuildTools = '36.0.0',
     [ValidateSet('usb', 'https')][string]$Connection = 'usb',
-    [string]$VersionName = '0.3.22',
-    [int]$VersionCode = 25,
+    [string]$VersionName = '0.3.23',
+    [int]$VersionCode = 26,
     [string]$UpdateServerUrl = '',
     [switch]$AllowTemporaryUpdateChannel
 )

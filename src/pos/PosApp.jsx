@@ -18,6 +18,7 @@ import { buildOrderLines } from './printers/mockPrinter';
 import { isNativePos, nativeCall } from './nativeBridge';
 import PosNotice, { usePosNotice } from './PosNotice';
 import PosPrintStatus, { usePosPrinting } from './PosPrintStatus';
+import { getPosOrderCode } from './orderDisplayCode';
 import PosLogoutDialog from './PosLogoutDialog';
 import PosUpdates from './PosUpdates';
 import { shouldShowCheckoutAlert } from '../utils/checkoutPresence';
@@ -324,7 +325,7 @@ const escapeHtml = (value) =>
 export const buildWindowsPrintTicketHtml = (order) => {
   const items = asArray(order?.products);
   const customer = order?.customerData || {};
-  const orderCode = order?.code || order?.id || "-";
+  const orderCode = getPosOrderCode(order);
   const schedule = getScheduledOrderState(order);
   const priority = getOrderPriority(order);
   const showAddress = isDeliveryOrder(order) && customer.address_1;
@@ -753,7 +754,7 @@ function PosPizzaMark() {
 export function DayOrderCard({ order, onOpen }) {
   return (
     <button type="button" className="pos-dayOrderTicket" onClick={onOpen}>
-      <strong>{order.code || `Pedido ${order.id}`}</strong>
+      <strong>{getPosOrderCode(order)}</strong>
       <b>{formatMoney(order.total, order.currency || "EUR")}</b>
       <small className="pos-dayOrderCustomer">{getCustomerName(order)}</small>
       <small className="pos-dayOrderDate">{formatTime(order.date || order.createdAt)}</small>
@@ -933,7 +934,7 @@ export function TicketPreview({ order }) {
   return (
     <div className="pos-ticketPreview">
       <div className="pos-ticketBrand">VOLTA POS</div>
-      <div className="pos-ticketCode">{order.code}</div>
+      <div className="pos-ticketCode">{getPosOrderCode(order)}</div>
       <div className="pos-ticketMeta">
         <span>{order.storeName || "-"}</span>
         <span>{formatTime(order.date || order.createdAt)}</span>
@@ -1463,7 +1464,7 @@ export default function PosApp() {
           time: formatClockTime(scheduledDate),
           sortAt: scheduledDate.getTime(),
           title: getCustomerName(order),
-          subtitle: `${order.code || `Pedido ${order.id}`} - ${formatMoney(order.total, order.currency || "EUR")}`,
+          subtitle: `${getPosOrderCode(order)} - ${formatMoney(order.total, order.currency || "EUR")}`,
           meta: items.length ? `${lineQty(items[0])} x ${lineName(items[0])}` : "Pedido programado",
           schedule,
           order,
@@ -2165,18 +2166,18 @@ export default function PosApp() {
     if (!order) return;
     if (isNativePos) {
       await printNative('print', { orderId: order.id, lines: buildOrderLines(order) },
-        `Ticket ${order.code || order.id}: impresión confirmada por SUNMI.`);
+        `Ticket ${getPosOrderCode(order)}: impresión confirmada por SUNMI.`);
       return;
     }
 
     const openedWindowsPrint = printOrderWithWindowsDialog(order);
 
     try {
-      const job = await mockPrinter.printOrder(order);
+      await mockPrinter.printOrder(order);
       setMessage(
         openedWindowsPrint
-          ? `Ticket ${job.code || job.orderId} abierto para imprimir en Windows.`
-          : `Ticket ${job.code || job.orderId} guardado en impresora virtual. El navegador bloqueo la ventana de impresion.`
+          ? `Ticket ${getPosOrderCode(order)} abierto para imprimir en Windows.`
+          : `Ticket ${getPosOrderCode(order)} guardado en impresora virtual. El navegador bloqueo la ventana de impresion.`
       );
     } catch (error) {
       console.error(error);
@@ -2210,8 +2211,8 @@ export default function PosApp() {
       setReadyCashReminderOrder(null);
       setMessage(
         notification?.ok
-          ? `Pedido ${order.code || order.id} marcado como listo. Cliente notificado.`
-          : `Pedido ${order.code || order.id} marcado como listo. Revisa la notificacion al cliente.`
+          ? `Pedido ${getPosOrderCode(order)} marcado como listo. Cliente notificado.`
+          : `Pedido ${getPosOrderCode(order)} marcado como listo. Revisa la notificacion al cliente.`
       );
     } catch (error) {
       console.error(error);
@@ -2305,7 +2306,7 @@ export default function PosApp() {
       setCustomerHelpText("");
       setMessage(
         response.data?.notification?.ok
-          ? `Mensaje enviado al cliente de ${customerHelpOrder.code || customerHelpOrder.id}.`
+          ? `Mensaje enviado al cliente de ${getPosOrderCode(customerHelpOrder)}.`
           : `Mensaje guardado, pero revisa el envio SMS.`
       );
     } catch (error) {
@@ -2341,7 +2342,7 @@ export default function PosApp() {
     setActivePanel("orders");
     setSelectedOrderId(null);
     if (newOrderNotice?.order) {
-      setMessage(`Pedido ${newOrderNotice.order.code || newOrderNotice.order.id} aceptado en POS.`);
+      setMessage(`Pedido ${getPosOrderCode(newOrderNotice.order)} aceptado en POS.`);
     }
   };
 
@@ -2547,7 +2548,7 @@ export default function PosApp() {
               <div className="pos-sectionHead">
                 <div>
                   <span>Ticket</span>
-                  <h2>{selectedOrder.code || "Pedido"}</h2>
+                  <h2>{getPosOrderCode(selectedOrder)}</h2>
                 </div>
                 <button type="button" onClick={() => setSelectedOrderId(null)}>
                   Cola
@@ -2686,7 +2687,7 @@ export default function PosApp() {
                       <div className="pos-orderIdRow">
                         <div>
                           <span>Pedido</span>
-                          <strong>{order.code}</strong>
+                          <strong>{getPosOrderCode(order)}</strong>
                         </div>
                         <em>#{order.queuePosition || "-"}</em>
                       </div>
@@ -2926,7 +2927,7 @@ export default function PosApp() {
                   >
                     {orders.map((order) => (
                       <option key={order.id} value={order.id}>
-                        {order.code || `Pedido ${order.id}`} - {getCustomerName(order)}
+                        {getPosOrderCode(order)} - {getCustomerName(order)}
                       </option>
                     ))}
                   </select>
@@ -3014,7 +3015,7 @@ export default function PosApp() {
                     ? "Recuerda cobrar este pedido"
                     : "Estas seguro de marcar como listo?"}
                 </h2>
-                <small>{readyConfirmOrder.code || `Pedido ${readyConfirmOrder.id}`}</small>
+                <small>{getPosOrderCode(readyConfirmOrder)}</small>
               </div>
             </div>
 
@@ -3063,7 +3064,7 @@ export default function PosApp() {
             </div>
 
             <div className="pos-newOrderNoticeTicket">
-              <span>{newOrderNotice.order.code || `Pedido ${newOrderNotice.order.id}`}</span>
+              <span>{getPosOrderCode(newOrderNotice.order)}</span>
               <strong>{formatMoney(newOrderNotice.order.total, newOrderNotice.order.currency || "EUR")}</strong>
               <small>
                 {getOrderType(newOrderNotice.order)} ·{" "}

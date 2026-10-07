@@ -1,5 +1,6 @@
 import { getLineChangeRows } from '../orderLineChanges';
 import { getPaymentLabel } from '../orderPayment';
+import { getPosOrderCode } from '../orderDisplayCode';
 const PRINT_LOG_KEY = "volta_pos_virtual_print_log";
 
 const parseLog = () => {
@@ -245,7 +246,7 @@ export function buildOrderLines(order) {
       "VOLTA POS",
       `Tienda: ${order?.storeName || "-"}`,
       getFulfilmentLabel(order),
-      `Pedido: ${order?.code || order?.id || "-"}`,
+      `Pedido: ${getPosOrderCode(order)}`,
       ...(formatScheduledFor(order?.date || order?.createdAt) ? [`Realizado: ${formatScheduledFor(order?.date || order?.createdAt)}`] : []),
       ...(scheduledFor ? [`PROGRAMADO: ${scheduledFor}`] : []),
       `Cliente: ${order?.customerData?.name || "-"}`,

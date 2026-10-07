@@ -1,5 +1,17 @@
 # Impresión y pantalla recortada en VigoCity
 
+## Seguimiento: 0.3.23 publicada y asignada
+
+Las siguientes fotos del usuario muestran explícitamente 0.3.20 y el modal antiguo. La consulta de producción confirmó código 23 instalado y 0.3.20 asignada: 0.3.22 nunca se había distribuido, solo enlazado como archivo local. Por tanto, estas fotos no verifican ni refutan la corrección de 0.3.22.
+
+Se añade en 0.3.23/código 26 un número operativo corto para referencias web de 32 caracteres hexadecimales: `WEB-<Sale.id>`. Se usa igual en cola, avisos, historial, ticket en pantalla e impresión SUNMI/Windows. No se alteran `Sale.code`, enlaces, consultas ni identificadores de API. Se conservan códigos anteriores cortos y tickets de prueba. No se acorta por truncamiento, evitando colisiones entre pedidos distintos.
+
+Validación adicional: 15 pruebas de numeración, impresión y pago; ocho pruebas de avisos; navegador a 360 px con código web nuevo y a 320 px con código legado largo, impresión doble y retorno a cola. Compilación y firma correctas. APK `native/sunmi-v3/build/volta-pos-connected-0.3.23.apk`, SHA256 `c67c0c989d3c64ffcfbc823023d0e0cc3b7227b0415ea504f0850a83fba49bc0`, certificado aprobado sin cambios.
+
+Publicada mediante `scripts/posReleases.js`, que verifica firma, manifiesto y lectura del objeto almacenado. Asignada únicamente al SUNMI V3 002 (`c68ea9fd-04bb-4b96-8b1b-1d700488b473`). Comprobación posterior: versión objetivo 0.3.23/código 26 habilitada; instalada reportada código 23, último reporte `2026-10-07T07:29:02.882Z`. La asignación no instala por sí sola: el operador debe aceptar la versión desde la app. Pendiente verificación física del ticket y de la pantalla; el anuncio general de backoffice permanece en borrador.
+
+La sección siguiente documenta la investigación y compilación local anteriores.
+
 El usuario identifica el disparador: pulsar Imprimir. El ticket sale y el aviso dice «impresión confirmada por SUNMI», pero la pantalla queda desplazada y debe cerrar y abrir la aplicación. Esta evidencia es distinta del anterior mensaje genérico de validación; no demuestra un fallo de credenciales ni de la impresora.
 
 ## Evidencia reproducible

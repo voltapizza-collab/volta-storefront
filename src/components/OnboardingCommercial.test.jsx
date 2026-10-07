@@ -17,7 +17,7 @@ test('rental preview and summary use the selected term and rounded total', () =>
   expect(screen.getByRole('combobox', { name: 'Plazo del renting' })).toHaveValue('');
   expect(screen.queryByRole('status')).not.toBeInTheDocument();
   rerender(<OnboardingCommercial {...props} form={{ ...props.form, posRentalMonths: '12' }} />);
-  expect(screen.getByRole('status')).toHaveTextContent('12 × 20,83');
+  expect(screen.getByRole('status')).toHaveTextContent('12 cuotas de 20,83');
   expect(screen.getByRole('status')).toHaveTextContent('249,96');
   rerender(<CommercialSummary selection={commercialPreview({ posChoice: 'RENT_QUOTE', posRentalMonths: '12' }, rentalCatalog)} />);
   expect(screen.getByText('Solicitud de renting de 12 meses')).toBeInTheDocument();
@@ -42,4 +42,20 @@ test('choice is explicit and read-only after submission', () => {
   rerender(<OnboardingCommercial {...props} disabled />);
   expect(screen.getByRole('radio', { name: /renting/ })).toBeDisabled();
   expect(screen.getByRole('checkbox', { name: /Acepto las condiciones/ })).toBeDisabled();
+});
+
+test('financed renting uses frozen payments including the adjusted last instalment and short maximum', () => {
+  const plan = { months: 12, monthlyCents: 2199, totalCents: 26390, interestCents: 1390, monthlyInterestPercent: 1,
+    payments: [...Array(11).fill(2199), 2201], principalCents: 25000 };
+  const financed = { ...catalog, rental: { calculation: 'AMORTIZED_RENTAL', depositCents: 0, termOptions: [plan] } };
+  const form = { posChoice: 'RENT_QUOTE', posRentalMonths: 12 };
+  const { rerender } = render(<OnboardingCommercial form={form} catalog={financed} updateField={() => jest.fn()} fieldProps={() => ({})} invalidFields={{}} />);
+  expect(screen.getByRole('radio', { name: /Renting/ })).toHaveAccessibleName(/hasta 12 meses/);
+  expect(screen.getByRole('status')).toHaveTextContent('última de 22,01');
+  expect(screen.getByRole('status')).toHaveTextContent('263,90');
+  rerender(<CommercialSummary selection={commercialPreview(form, financed)} />);
+  expect(screen.getByText(/Mes 11 desde la entrega operativa: 22,01/)).toBeInTheDocument();
+  expect(screen.getByText(/Intereses totales: 13,90/)).toBeInTheDocument();
+  expect(screen.getByText(/Primera cuota después de firmar, antes de activar: 21,99/)).toBeInTheDocument();
+  expect(screen.queryByText(/36 meses/)).not.toBeInTheDocument();
 });

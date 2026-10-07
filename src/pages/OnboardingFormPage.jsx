@@ -640,7 +640,7 @@ export default function OnboardingFormPage() {
     const nextInvalid = buildInvalidFormalFields(form, documents, existingDocumentsByType);
     if (!form.posChoice) nextInvalid.posChoice = true;
     if (form.posChoice === 'INSTALLMENTS' && ![2, 3, 4, 5, 6].includes(Number(form.posInstallments))) nextInvalid.posInstallments = true;
-    if (form.posChoice === 'RENT_QUOTE' && request.commercialCatalog?.rental?.calculation === 'PRICE_BY_TERM'
+    if (form.posChoice === 'RENT_QUOTE' && ['PRICE_BY_TERM', 'AMORTIZED_RENTAL'].includes(request.commercialCatalog?.rental?.calculation)
       && !request.commercialCatalog.rental.termOptions.some(plan => plan.months === Number(form.posRentalMonths))) nextInvalid.posRentalMonths = true;
     if (!form.commercialAcknowledged) nextInvalid.commercialAcknowledged = true;
     if (!request.commercialCatalog?.version) nextInvalid.commercialVersion = true;

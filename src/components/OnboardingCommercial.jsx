@@ -6,7 +6,7 @@ export const smsTariff = sms => sms?.unitPriceEur
   ? `${new Intl.NumberFormat('es-ES', { maximumFractionDigits: 4 }).format(Number(sms.unitPriceEur))} € por parte de SMS` : 'Tarifa por parte pendiente de confirmar';
 
 export function commercialPreview(form, catalog) {
-  const flexibleRental = catalog?.rental?.calculation === 'PRICE_BY_TERM';
+  const flexibleRental = ['PRICE_BY_TERM', 'AMORTIZED_RENTAL'].includes(catalog?.rental?.calculation);
   const rentalPlan = flexibleRental ? catalog.rental.termOptions.find(plan => plan.months === Number(form.posRentalMonths)) : null;
   const monthlyRent = flexibleRental ? rentalPlan?.monthlyCents : catalog?.rental?.monthlyCents;
   const payments = form.posChoice === 'PURCHASE' ? [catalog?.posTotalCents]
@@ -15,6 +15,9 @@ export function commercialPreview(form, catalog) {
     installmentCents: payments, firstPaymentCents: payments?.[0] ?? (form.posChoice === 'RENT_QUOTE' ? monthlyRent : null),
     monthlyRentCents: form.posChoice === 'RENT_QUOTE' ? monthlyRent : null,
     durationMonths: form.posChoice === 'RENT_QUOTE' ? (flexibleRental ? rentalPlan?.months : catalog?.rental?.durationMonths ?? 36) : null,
+    rentalTotalCents: rentalPlan?.totalCents, rentalPayments: rentalPlan?.payments,
+    monthlyInterestPercent: rentalPlan?.monthlyInterestPercent, interestCents: rentalPlan?.interestCents,
+    principalCents: rentalPlan?.principalCents, maxRentalMonths: Math.max(...(catalog?.rental?.termOptions || []).map(plan => plan.months), catalog?.rental?.durationMonths || 0) || 36,
     depositCents: form.posChoice === 'RENT_QUOTE' ? catalog?.rental?.depositCents : null }, sms: catalog?.sms };
 }
 
@@ -28,7 +31,8 @@ export function CommercialSummary({ selection }) {
     <dl>
       <div><dt>POS</dt><dd>{labels[pos.mode] || 'Elige una modalidad'}</dd></div>
       <div><dt>{pos.mode === 'RENT_QUOTE' ? 'Cuota de renting, IVA incluido' : 'Precio propuesto del POS, IVA incluido'}</dt><dd>{euro(pos.mode === 'RENT_QUOTE' ? pos.monthlyRentCents : pos.totalCents)}{pos.mode === 'RENT_QUOTE' && Number.isInteger(pos.monthlyRentCents) ? '/mes' : ''}</dd></div>
-      {pos.mode === 'RENT_QUOTE' && Number.isInteger(pos.monthlyRentCents) && Number.isInteger(rentalMonths) && <div><dt>Total de las {rentalMonths} mensualidades</dt><dd>{euro(pos.monthlyRentCents * rentalMonths)} · Fianza: {euro(pos.depositCents)}</dd></div>}
+      {pos.mode === 'RENT_QUOTE' && Number.isInteger(pos.monthlyRentCents) && Number.isInteger(rentalMonths) && <div><dt>Total de las {rentalMonths} mensualidades</dt><dd>{euro(pos.rentalTotalCents ?? pos.monthlyRentCents * rentalMonths)} · Fianza: {euro(pos.depositCents)}</dd></div>}
+      {pos.monthlyInterestPercent != null && <><div><dt>Interés del renting</dt><dd>{pos.monthlyInterestPercent} % mensual sobre saldo pendiente · 12 % nominal anual · equivalente anual aproximado 12,68 %, sin comisiones. Intereses totales: {euro(pos.interestCents)}.</dd></div><div><dt>Calendario del renting</dt><dd><ol>{pos.rentalPayments?.map((amount, index) => <li key={index}>{index === 0 ? 'Primera cuota después de firmar, antes de activar' : `Mes ${index} desde la entrega operativa`}: {euro(amount)}</li>)}</ol></dd></div></>}
       {pos.installmentCents?.length > 1 && <div><dt>Calendario de cuotas</dt><dd><ol>{pos.installmentCents.map((amount, index) => <li key={index}>
         {index === 0 ? 'Primer pago, después de la firma' : `Mes ${index} después del primer pago`}: {euro(amount)}
       </li>)}</ol></dd></div>}
@@ -36,7 +40,7 @@ export function CommercialSummary({ selection }) {
       <div><dt>Notificaciones SMS opcionales</dt><dd>Uso opcional de la herramienta de Volta. Recargas por paquetes desde el backoffice. {smsTariff(selection.sms)} (tarifa vigente, puede variar). No se añade una recarga al alta.</dd></div>
       <div><dt>Total inicial a pagar</dt><dd>Pendiente de completar la oferta. Hoy no se cobra nada.</dd></div>
     </dl>
-    {pos.mode === 'RENT_QUOTE' && <p>Renting {Number.isInteger(rentalMonths) ? `de ${rentalMonths} meses` : 'con el plazo que elijas, hasta 36 meses'} desde la entrega operativa. El POS pertenece a Volta durante el plazo y pasa a ser tuyo al finalizarlo y completar todas las mensualidades, sin pago residual. Revisa en el contrato la cuota, posible fianza, cancelación anticipada y responsabilidad por daños o extravío.</p>}
+    {pos.mode === 'RENT_QUOTE' && <p>Renting {Number.isInteger(rentalMonths) ? `de ${rentalMonths} meses` : `con el plazo que elijas, hasta ${pos.maxRentalMonths || 36} meses`} desde la entrega operativa. El POS pertenece a Volta durante el plazo y pasa a ser tuyo al finalizarlo y completar todas las mensualidades, sin pago residual. Revisa en el contrato la cuota, posible fianza, cancelación anticipada y responsabilidad por daños o extravío.</p>}
     <p>Suministro sujeto al stock de Volta. El contado pagado tiene prioridad entre asignaciones pendientes, respetando entregas comprometidas. Volta confirmará disponibilidad y plazo antes de pedir el pago.</p>
     <p>Los pagos del POS y de SMS, si los solicitas, se realizan por separado de las ventas. No se descuentan del 90 % del comercio.</p>
     <p>Liquidaciones: 90 % del ticket para el comercio; 9 % para Volta y 1 % para el embajador. El calendario se acordará antes del cierre, sobre fondos cobrados y disponibles, sin anticipos de Volta.</p>
@@ -45,8 +49,10 @@ export function CommercialSummary({ selection }) {
 }
 
 export default function OnboardingCommercial({ form, catalog, updateField, disabled, fieldProps, invalidFields }) {
-  const flexibleRental = catalog?.rental?.calculation === 'PRICE_BY_TERM';
+  const flexibleRental = ['PRICE_BY_TERM', 'AMORTIZED_RENTAL'].includes(catalog?.rental?.calculation);
   const rentalPlan = flexibleRental ? catalog.rental.termOptions.find(plan => plan.months === Number(form.posRentalMonths)) : null;
+  const maxMonths = Math.max(...(catalog?.rental?.termOptions || []).map(plan => plan.months), catalog?.rental?.durationMonths || 0) || 36;
+  const financed = catalog?.rental?.calculation === 'AMORTIZED_RENTAL';
   return <div className="onb-commercial">
     <h2>Tu equipo y notificaciones</h2>
     <p>Elige cómo prefieres incorporar el POS. Los importes indicados incluyen IVA.</p>
@@ -56,7 +62,7 @@ export default function OnboardingCommercial({ form, catalog, updateField, disab
       {[
         ['PURCHASE', `Comprar al contado · ${euro(catalog?.posTotalCents)}`],
         ['INSTALLMENTS', `Comprar en cuotas · ${euro(catalog?.posTotalCents)} en total, sin intereses`],
-        ['RENT_QUOTE', flexibleRental ? 'Renting · elige el plazo, hasta 36 meses' : `Solicitar renting de 36 meses · ${Number.isInteger(catalog?.rental?.monthlyCents) ? `${euro(catalog.rental.monthlyCents)}/mes` : 'cuota pendiente'}`],
+        ['RENT_QUOTE', flexibleRental ? `Renting · elige el plazo, hasta ${maxMonths} meses` : `Solicitar renting de 36 meses · ${Number.isInteger(catalog?.rental?.monthlyCents) ? `${euro(catalog.rental.monthlyCents)}/mes` : 'cuota pendiente'}`],
       ].map(([value, label], index) => <label key={value} className="onb-choice">
         <input type="radio" name="posChoice" value={value} checked={form.posChoice === value} onChange={updateField('posChoice')}
           {...(index === 0 ? fieldProps('posChoice') : {})} /><span>{label}</span>
@@ -73,8 +79,8 @@ export default function OnboardingCommercial({ form, catalog, updateField, disab
             {catalog.rental.termOptions.map(plan => <option key={plan.months} value={plan.months}>{plan.months} {plan.months === 1 ? 'mes' : 'meses'} · {euro(plan.monthlyCents)}/mes</option>)}
           </select>
         </label>
-        <p>La cuota es el precio del POS dividido entre el plazo elegido, redondeada a céntimos.</p>
-        {rentalPlan && <p role="status"><strong>{rentalPlan.months} × {euro(rentalPlan.monthlyCents)}</strong> · Total: <strong>{euro(rentalPlan.totalCents)}</strong>, IVA incluido. Fianza: {euro(catalog.rental.depositCents)}. El primer pago se realiza después de firmar; el plazo comienza con la entrega operativa del POS.</p>}
+        <p>{financed ? '1 % mensual sobre saldo pendiente. Primera cuota después de firmar, antes de activar. Las siguientes se pagan mensualmente desde la entrega operativa. Sin intereses durante la espera de entrega; última cuota ajustada a céntimos.' : 'La cuota es el precio del POS dividido entre el plazo elegido, redondeada a céntimos.'}</p>
+        {rentalPlan && <p role="status"><strong>{rentalPlan.months} cuotas de {euro(rentalPlan.monthlyCents)}{financed ? `, salvo la última de ${euro(rentalPlan.payments.at(-1))}` : ''}</strong> · Total: <strong>{euro(rentalPlan.totalCents)}</strong>, IVA incluido. Fianza: {euro(catalog.rental.depositCents)}. El primer pago se realiza después de firmar; el plazo comienza con la entrega operativa del POS.</p>}
       </>}
     </fieldset>
     <h3>Notificaciones y comunicación por SMS</h3>

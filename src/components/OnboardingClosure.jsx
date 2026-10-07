@@ -8,7 +8,7 @@ export const closureErrorText = code => ({
   review_changed: 'El contrato ha cambiado. Revisa la versión actualizada antes de enviarla.',
   review_load_failed: 'No se pudo cargar el contrato. Vuelve a intentarlo.',
   rent_price_required: 'Falta definir la cuota de renting en las tarifas vigentes. Se configura una vez en Global Manager.',
-  invalid_rental_months: 'Revisa el plazo del renting: debe ser un número entero de meses, con un máximo de 36.',
+  invalid_rental_months: 'Revisa el plazo del renting: debe coincidir con uno de los plazos del catálogo de esta solicitud.',
   rental_selection_changed: 'Los importes del renting deben coincidir con el plazo y la cuota elegidos por el comercio.',
   submitted_selection_required: 'El comercio debe enviar primero sus datos y su elección de pago.',
   contract_signature_required: 'Firma el contrato antes de continuar al pago.',

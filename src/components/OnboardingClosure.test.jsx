@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import OnboardingClosure from './OnboardingClosure';
+import OnboardingClosure, { ClosureDocument } from './OnboardingClosure';
 import OnboardingOffer from './GlobalManager/OnboardingOffer';
 import OnboardingPricing from './GlobalManager/OnboardingPricing';
 import api from '../setupAxios';
@@ -9,6 +9,16 @@ const offer = { id: 'test', hash: 'test-hash', revision: 1, documentText: 'Contr
   pos: { mode: 'PURCHASE', payments: [28000], totalCents: 28000, firstCents: 28000, priceChanged: true, previousPriceCents: 25000,
     delivery: { expected: '2099-01-01', latest: '2099-01-10' } }, lines: [{ code: 'POS', label: 'POS', amountCents: 28000 }, { code: 'SMS', label: 'SMS', amountCents: 1000 }] };
 const request = closure => ({ token: 'token', id: 1, businessName: 'Test', closure: { offer, status: 'OFFERED', ...closure } });
+
+test('contract reference replaces the revision label while preserving the signed document', () => {
+  const current = { ...offer, contractNumber: 'VLT-2026-000123-01' };
+  const { rerender } = render(<ClosureDocument closure={{ offer: current }} />);
+  expect(screen.getByText('VLT-2026-000123-01')).toBeInTheDocument();
+  expect(screen.queryByText(/Versión 1/)).not.toBeInTheDocument();
+  rerender(<ClosureDocument closure={{ offer, contractNumber: 'VLT-2026-000122-01', signed: true }} />);
+  expect(screen.getByText('VLT-2026-000122-01')).toBeInTheDocument();
+  expect(screen.getByLabelText('Contrato completo')).toHaveTextContent(offer.documentText);
+});
 test('review shows generated contract and sends payment email with one approval, without financial input fields', async () => {
   api.get.mockResolvedValue({ data: { offer: { ...offer, workflow: 'SIGN_PAY_ACTIVATE' }, fingerprint: 'review-1' } });
   render(<OnboardingOffer request={{ id: 1, submittedAt: '2026-10-05', formalData: { commercialSelection: { pos: { mode: 'PURCHASE' } } } }} onUpdate={jest.fn()} />);

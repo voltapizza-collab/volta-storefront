@@ -36,14 +36,15 @@ export const closureErrorText = code => ({
 
 export function ClosureDocument({ closure, compact = false }) {
   const { offer, payment } = closure;
+  const contractNumber = offer.contractNumber || closure.contractNumber || offer.id;
   const download = () => {
-    const content = `${offer.documentText}\n\nVersión: ${offer.id}\nSHA-256: ${offer.hash}\nEstado: ${closure.status}\n${closure.signed ? `Firma: ${closure.signerName || '-'} · ${closure.signedAt || '-'}\n` : ''}${payment?.paidAt ? `Pago: ${euro(payment.amountCents)}. ${payment.paidAt}. Justificante: ${payment.receipt || '-'}\n` : ''}`;
+    const content = `${offer.documentText}\n\nReferencia del contrato: ${contractNumber}\nSHA-256: ${offer.hash}\nEstado: ${closure.status}\n${closure.signed ? `Firma: ${closure.signerName || '-'} · ${closure.signedAt || '-'}\n` : ''}${payment?.paidAt ? `Pago: ${euro(payment.amountCents)}. ${payment.paidAt}. Justificante: ${payment.receipt || '-'}\n` : ''}`;
     const url = URL.createObjectURL(new Blob([content], { type: 'text/plain;charset=utf-8' }));
-    const link = document.createElement('a'); link.href = url; link.download = `volta-contrato-${offer.revision}.txt`; link.click(); URL.revokeObjectURL(url);
+    const link = document.createElement('a'); link.href = url; link.download = `contrato-${String(contractNumber).replace(/[^a-zA-Z0-9-]/g, '')}.txt`; link.click(); URL.revokeObjectURL(url);
   };
   return <section className="onb-commercialSummary">
     <h2>{closure.signed ? 'Tu contrato firmado' : 'Revisa tu contrato y el pago inicial'}</h2>
-    <p>Versión {offer.revision}. Podrás conservar una copia antes de pagar.</p>
+    <p>Contrato n.º <strong>{contractNumber}</strong>. Podrás conservar una copia antes de pagar.</p>
     <ul>{offer.lines.map(line => <li key={line.code}>{line.label}: <strong>{euro(line.amountCents)}</strong></li>)}</ul>
     <p><strong>Total inicial: {euro(offer.totalCents)}</strong></p>
     {offer.pos.priceChanged && <p role="alert">El precio del POS ha cambiado desde tu elección: de {euro(offer.pos.previousPriceCents)} a {euro(offer.pos.totalCents)}. Revisa el nuevo precio antes de aceptar y pagar.</p>}

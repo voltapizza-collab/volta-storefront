@@ -552,13 +552,19 @@ export default function OnboardingFormPage() {
         const response = await api.get(`/api/onboarding/form/${token}`);
         const nextRequest = response.data?.request;
         setRequest(nextRequest);
-        setForm({
+        const nextForm = {
           ...initialForm,
           businessEmail: nextRequest?.email || "",
           businessPhone: nextRequest?.phone || "",
           ...(nextRequest?.formalData || {}),
           ...(nextRequest?.formalData?.onboardingDraft || {}),
-        });
+        };
+        const suggestedChoice = new URLSearchParams(window.location.search).get('posChoice');
+        if (!nextForm.posChoice && ['PURCHASE', 'INSTALLMENTS', 'RENT_QUOTE'].includes(suggestedChoice)) {
+          nextForm.posChoice = suggestedChoice;
+          if (suggestedChoice === 'INSTALLMENTS') nextForm.posInstallments = 6;
+        }
+        setForm(nextForm);
         setDocuments({});
       } catch (error) {
         console.error(error);

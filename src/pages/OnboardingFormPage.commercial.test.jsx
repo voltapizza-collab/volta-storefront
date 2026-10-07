@@ -9,6 +9,21 @@ const fields = { partnerType: 'AUTONOMO', legalName: 'Titular', taxId: 'TEST', l
   businessPhone: '600000000', businessEmail: 'test@example.com', accountHolder: 'Titular', iban: 'ES0012341234123412341234',
   acceptedTerms: true, acceptedCompliance: true, posChoice: 'PURCHASE', posInstallments: null, commercialAcknowledged: true };
 let request;
+test('email method prefills a new selection without overwriting a saved choice or accepting terms', async () => {
+  window.history.replaceState(null, '', '/onboarding/test-token?posChoice=INSTALLMENTS');
+  request.formalData.onboardingDraft = { ...fields, posChoice: '', commercialAcknowledged: false };
+  const { unmount } = render(<OnboardingFormPage />);
+  await screen.findByDisplayValue('Mi tienda');
+  fireEvent.click(screen.getByRole('button', { name: '3. Equipo y SMS' }));
+  expect(screen.getByRole('radio', { name: /Comprar en cuotas/ })).toBeChecked();
+  expect(screen.getByRole('checkbox', { name: /Acepto las condiciones de pago/ })).not.toBeChecked();
+  unmount();
+  request.formalData.onboardingDraft = fields;
+  render(<OnboardingFormPage />);
+  await screen.findByDisplayValue('Mi tienda');
+  fireEvent.click(screen.getByRole('button', { name: '3. Equipo y SMS' }));
+  expect(screen.getByRole('radio', { name: /Comprar al contado/ })).toBeChecked();
+});
 beforeEach(() => {
   jest.clearAllMocks();
   window.history.replaceState(null, '', '/onboarding/test-token');

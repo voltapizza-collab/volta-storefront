@@ -1,5 +1,7 @@
 # Impresión y pantalla recortada en VigoCity
 
+Confirmación posterior del usuario, 7 de octubre: el terminal quedó actualizado y «ya no se rompe al imprimir el ticket». Es una comprobación física comunicada por el usuario; no una impresión realizada por el agente.
+
 ## Seguimiento: 0.3.23 publicada y asignada
 
 Las siguientes fotos del usuario muestran explícitamente 0.3.20 y el modal antiguo. La consulta de producción confirmó código 23 instalado y 0.3.20 asignada: 0.3.22 nunca se había distribuido, solo enlazado como archivo local. Por tanto, estas fotos no verifican ni refutan la corrección de 0.3.22.

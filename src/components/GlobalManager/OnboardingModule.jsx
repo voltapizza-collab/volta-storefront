@@ -3,6 +3,7 @@ import api from "../../setupAxios";
 import { CommercialSummary } from '../OnboardingCommercial';
 import OnboardingOffer from './OnboardingOffer';
 import OnboardingPricing from './OnboardingPricing';
+import DemoRequestPanel from './DemoRequestPanel';
 import voltaSignature from "../../assets/signatures/volta-signature.png";
 
 const statuses = [
@@ -206,6 +207,7 @@ export default function OnboardingModule() {
   const stats = useMemo(() => {
     const base = {
       total: requests.length,
+      demos: 0,
       awaitingPartner: 0,
       inReview: 0,
       needsInfo: 0,
@@ -213,6 +215,7 @@ export default function OnboardingModule() {
     };
 
     requests.forEach((item) => {
+      if (item.requestKind === 'DEMO') { base.demos += 1; return; }
       if (["RECEIVED", "EMAIL_SENT"].includes(item.status)) base.awaitingPartner += 1;
       if (["FORM_COMPLETED", "IN_REVIEW"].includes(item.status)) base.inReview += 1;
       if (item.status === "NEEDS_INFO") base.needsInfo += 1;
@@ -389,6 +392,7 @@ export default function OnboardingModule() {
       <OnboardingPricing />
       <div className="gmon-stats">
         <article><span>Total</span><strong>{stats.total}</strong></article>
+        <article><span>Demostraciones</span><strong>{stats.demos}</strong></article>
         <article><span>Esperando partner</span><strong>{stats.awaitingPartner}</strong></article>
         <article><span>En revision</span><strong>{stats.inReview}</strong></article>
         <article><span>Falta info</span><strong>{stats.needsInfo}</strong></article>
@@ -424,7 +428,7 @@ export default function OnboardingModule() {
             <div className="gmon-empty">No hay solicitudes en este filtro.</div>
           ) : (
             requests.map((item) => {
-              const itemPhase = getPhase(item.status, item.closure);
+              const itemPhase = item.requestKind === 'DEMO' ? { step: 'Demo', title: item.status === 'REJECTED' ? 'Demo cerrada' : item.status === 'IN_REVIEW' ? 'Contacto o demo en curso' : 'Pendiente de contactar' } : getPhase(item.status, item.closure);
               const tone = getStatusTone(item.status);
               const isDone = item.status === "ACTIVATED";
 
@@ -465,6 +469,8 @@ export default function OnboardingModule() {
         <section className="gmon-detail">
           {!selected ? (
             <div className="gmon-empty">Selecciona una solicitud.</div>
+          ) : selected.requestKind === 'DEMO' ? (
+            <DemoRequestPanel key={selected.id} request={selected} onUpdate={updated => setRequests(current => current.map(row => row.id === updated.id ? updated : row))} />
           ) : (
             <>
               <div className="gmon-detailHead">

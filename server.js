@@ -221,7 +221,12 @@ const resolveSeo = async (req) => {
   const segments = url.pathname.split("/").filter(Boolean);
   const [partnerSlug, secondSegment] = segments;
 
-  if (!partnerSlug || segments.length > 2) return null;
+  if (!partnerSlug) return {
+    title: 'Volta Pizza — El motor para vender pizzas por Internet',
+    description: 'Motor de venta online para pizzerías. Pedidos directos, promociones y datos de clientes para impulsar la compra directa y la repetición.',
+    canonicalUrl: buildAbsoluteUrl(requestUrl, '/'),
+  };
+  if (segments.length > 2) return null;
 
   const lowerPartnerSlug = partnerSlug.toLowerCase();
   if (

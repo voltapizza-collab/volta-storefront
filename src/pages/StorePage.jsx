@@ -1,4 +1,5 @@
 import { rememberRepeatReceipt, readRepeatReceipts } from '../auth/repeatReceipts';
+import { getPosOrderCode as getOrderDisplayCode } from '../pos/orderDisplayCode';
 import { getIngredientTaxonomyKey, getTaxonomyCategoryLabel, getTaxonomyCategories } from '../utils/ingredientTaxonomy';
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
@@ -997,7 +998,7 @@ export function CouponInfoModal({ open, onClose, onRemove, onValidate, onChooseP
 
           {coupon ? (
             <>
-              <div className="sf-couponCodeHero">
+              <div className={`sf-couponCodeHero${String(coupon.code || "").length > 16 ? " sf-couponCodeHero--long" : ""}`}>
                 <span>Codigo del cupon</span>
                 <strong>{coupon.code}</strong>
               </div>
@@ -2224,6 +2225,7 @@ function formatPromoDate(value) {
 
 const formatCouponBenefit = (coupon) => {
   if (!coupon) return "Sin beneficio disponible";
+  if (isDeliveryFreeCouponData(coupon)) return "Envío gratis";
 
   if (coupon.kind === "AMOUNT") {
     return `Descuento fijo (-EUR ${num(coupon.amount).toFixed(2)})`;
@@ -5065,6 +5067,7 @@ export default function StorePage() {
         coupon_reserved: "El cupón está reservado en un pago pendiente. Vuelve a ese pago o espera a que caduque.",
         coupon_changed: "Las condiciones del cupón cambiaron. Valídalo de nuevo.",
         coupon_not_stackable: "Solo puedes usar un cupon por pedido.",
+        coupon_customer_mismatch: "Usa el teléfono que recibió este cupón de envío gratis o quita el cupón para continuar.",
         top_deal_not_available: "Ese Top Deal ya no esta disponible. Quitalo y vuelve a elegirlo.",
         top_deal_quantity_unavailable: `Quedan ${
           err.response?.data?.remainingQuantity ?? 0
@@ -8304,7 +8307,7 @@ export default function StorePage() {
                       onClick={() => repeatFoundOrder(draft)}
                       disabled={lines.length === 0}
                     >
-                      <span>Pedido {draft.sourceOrderCode || `#${index + 1}`}</span>
+                      <span>Pedido {getOrderDisplayCode({ id: draft.sourceOrderId, code: draft.sourceOrderCode || `#${index + 1}` })}</span>
                       <strong>{formatMoney(total, draft.currency)}</strong>
                       <small>{formatRepeatDate(draft.createdFromOrderAt)}</small>
                       <div className="sf-repeatChoiceLines">
@@ -8326,7 +8329,7 @@ export default function StorePage() {
 
             {repeatDraft && (
               <div className="sf-repeatSummary">
-                <span>Pedido {repeatDraft.sourceOrderCode}</span>
+                <span>Pedido {getOrderDisplayCode({ id: repeatDraft.sourceOrderId, code: repeatDraft.sourceOrderCode })}</span>
                 <div className="sf-repeatLines">
                   {repeatPreviewLines.map((line, index) => (
                     <div key={line.cartLineId || index} className="sf-repeatLine">

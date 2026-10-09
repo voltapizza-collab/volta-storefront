@@ -148,7 +148,7 @@ export default function ProductReviewPage() {
           <span>{review?.storeName || "Pedido"}</span>
           <h1>Valora tus pizzas</h1>
           <p>
-            Pedido <b>{review?.orderCode}</b>
+            Pedido <b>{review?.displayCode || review?.orderCode}</b>
             {review?.customerName ? ` para ${review.customerName}` : ""}
           </p>
         </div>

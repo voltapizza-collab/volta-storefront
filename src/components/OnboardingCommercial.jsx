@@ -43,7 +43,7 @@ export function CommercialSummary({ selection }) {
     {pos.mode === 'RENT_QUOTE' && <p>Renting {Number.isInteger(rentalMonths) ? `de ${rentalMonths} meses` : `con el plazo que elijas, hasta ${pos.maxRentalMonths || 36} meses`} desde la entrega operativa. El POS pertenece a Volta durante el plazo y pasa a ser tuyo al finalizarlo y completar todas las mensualidades, sin pago residual. Revisa en el contrato la cuota, posible fianza, cancelación anticipada y responsabilidad por daños o extravío.</p>}
     <p>Suministro sujeto al stock de Volta. El contado pagado tiene prioridad entre asignaciones pendientes, respetando entregas comprometidas. Volta confirmará disponibilidad y plazo antes de pedir el pago.</p>
     <p>Los pagos del POS y de SMS, si los solicitas, se realizan por separado de las ventas. No se descuentan del 90 % del comercio.</p>
-    <p>Liquidaciones: 90 % del ticket para el comercio; 9 % para Volta y 1 % para el embajador. El calendario se acordará antes del cierre, sobre fondos cobrados y disponibles, sin anticipos de Volta.</p>
+    <p>Comisión de servicio del 10 %: 9 % para Volta y 1 % para el embajador. El comercio conserva el 90 % del ticket, conforme a las condiciones del servicio. El calendario y la base de liquidación se acordarán antes del cierre, sobre fondos cobrados y disponibles, sin anticipos de Volta.</p>
     <p>Volta revisará esta elección y te presentará las condiciones completas para firmar y después pagar.</p>
   </section>;
 }

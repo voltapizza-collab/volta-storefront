@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import api from "../../setupAxios";
+import { getPosOrderCode as getOrderDisplayCode } from "../../pos/orderDisplayCode";
 import "../../styles/BillingModule.css";
 
 const formatMoney = (value, currency = "EUR") =>
@@ -426,7 +427,7 @@ export function FinanceBillingModule({ partner }) {
     const receivedRows = (data?.recentSales || []).map((sale) => ({
       id: `sale-${sale.id}`,
       category: "received",
-      reference: sale.code || sale.id,
+      reference: getOrderDisplayCode(sale),
       type: `Pago recibido${sale.storeName ? ` - ${sale.storeName}` : ""}`,
       date: sale.date,
       dateLabel: formatDate(sale.date),

@@ -75,7 +75,7 @@ export default function PartnerOrderPage() {
   const [portalReady, setPortalReady] = useState(false);
   const [serviceMode, setServiceMode] = useState("");
   const [pickupModalOpen, setPickupModalOpen] = useState(false);
-  const [pickupCityFilter, setPickupCityFilter] = useState("");
+  const [pickupCityFilter, setPickupCityFilter] = useState(null);
   const [recentStoreSlugs, setRecentStoreSlugs] = useState([]);
   const [deliveryModalOpen, setDeliveryModalOpen] = useState(false);
   const [deliveryAddress, setDeliveryAddress] = useState("");
@@ -189,20 +189,10 @@ export default function PartnerOrderPage() {
     }
   }, [pickupHistoryKey]);
 
-  const recentPickupStores = useMemo(
-    () =>
-      recentStoreSlugs
-        .map((slug) => stores.find((store) => store.slug === slug))
-        .filter(storeAllowsPickup)
-        .filter(Boolean),
-    [recentStoreSlugs, stores]
-  );
-
   const pickupCities = useMemo(() => {
     const seen = new Set();
     return pickupStores
       .map((store) => String(store.city || "").trim())
-      .filter(Boolean)
       .filter((city) => {
         const key = normalizeSearchText(city);
         if (seen.has(key)) return false;
@@ -212,29 +202,16 @@ export default function PartnerOrderPage() {
       .sort((left, right) => left.localeCompare(right, "es"));
   }, [pickupStores]);
 
-  useEffect(() => {
-    if (!pickupModalOpen || !pickupCities.length) return;
-
-    const currentCityStillExists = pickupCities.some(
-      (city) => normalizeSearchText(city) === normalizeSearchText(pickupCityFilter)
-    );
-
-    if (currentCityStillExists) return;
-
-    const recentCity = recentPickupStores.find((store) => store.city)?.city;
-    setPickupCityFilter(recentCity || pickupCities[0]);
-  }, [pickupCities, pickupCityFilter, pickupModalOpen, recentPickupStores]);
-
   const filteredPickupStores = useMemo(() => {
+    if (pickupCities.length <= 1) return pickupStores;
+    if (pickupCityFilter === null) return [];
     const cityFilter = normalizeSearchText(pickupCityFilter);
-
-    if (!cityFilter) return pickupStores;
 
     return pickupStores.filter((store) => {
       const city = normalizeSearchText(store.city);
       return city === cityFilter;
     });
-  }, [pickupCityFilter, pickupStores]);
+  }, [pickupCities, pickupCityFilter, pickupStores]);
 
   const closedCopy = useMemo(() => {
     if (!partner?.stores?.some(store => store.active !== false)) {
@@ -271,19 +248,6 @@ export default function PartnerOrderPage() {
 
     return null;
   }, [singleServiceMode]);
-
-  useEffect(() => {
-    if (location.state?.startServiceMode === "pickup" && pickupAvailable && !serviceMode) {
-      setServiceMode("pickup");
-      setPickupModalOpen(true);
-      return;
-    }
-    if (location.state?.startServiceMode !== "delivery") return;
-    if (singleServiceMode !== "delivery" || serviceMode) return;
-
-    setServiceMode("delivery");
-    setDeliveryModalOpen(true);
-  }, [location.state, serviceMode, singleServiceMode, pickupAvailable]);
 
   const pickupReady = pickupAvailable && serviceMode === "pickup" && Boolean(selectedStoreSlug);
   const deliveryReady =
@@ -323,7 +287,7 @@ export default function PartnerOrderPage() {
   );
 
   const goToPickupStore = useCallback(
-    (store) => {
+    (store, { replace = false } = {}) => {
       if (!store?.slug || !partner) return;
 
       rememberPickupStore(store.slug);
@@ -336,6 +300,7 @@ export default function PartnerOrderPage() {
       }
 
       navigate(`/${partnerSlug}/${store.slug}`, {
+        replace,
         state: {
           orderTrail: "store",
           partnerName: partner.name,
@@ -364,9 +329,43 @@ export default function PartnerOrderPage() {
         goToPickupStore(singlePickupStore);
         return;
       }
+      setPickupCityFilter(null);
       setPickupModalOpen(true);
     }
   }, [goToPickupStore, resetDelivery, singlePickupStore, singleServiceMode]);
+
+  const startPickup = useCallback(({ replaceSingle = false } = {}) => {
+    setServiceMode("pickup");
+    setDeliveryModalOpen(false);
+    resetDelivery();
+    if (singlePickupStore) {
+      goToPickupStore(singlePickupStore, { replace: replaceSingle });
+      return;
+    }
+    setPickupCityFilter(null);
+    setPickupModalOpen(true);
+  }, [goToPickupStore, resetDelivery, singlePickupStore]);
+
+  useEffect(() => {
+    if (serviceMode || !partner) return;
+    if (location.state?.startServiceMode === "pickup" && pickupAvailable) {
+      startPickup({ replaceSingle: true });
+    } else if (location.state?.startServiceMode === "delivery" && deliveryAvailable) {
+      setServiceMode("delivery");
+      setDeliveryModalOpen(true);
+    }
+  }, [location.state, serviceMode, partner, pickupAvailable, deliveryAvailable, startPickup]);
+
+  const choosePickupCity = (city) => {
+    const cityStores = pickupStores.filter(
+      (store) => normalizeSearchText(store.city) === normalizeSearchText(city)
+    );
+    if (cityStores.length === 1) {
+      goToPickupStore(cityStores[0]);
+    } else {
+      setPickupCityFilter(city);
+    }
+  };
 
   useEffect(() => {
     if (!deliveryModalOpen || serviceMode !== "delivery") return undefined;
@@ -600,15 +599,7 @@ export default function PartnerOrderPage() {
                     className={`sf-serviceCard ${
                       serviceMode === "pickup" ? "is-active" : ""
                     }`}
-                    onClick={() => {
-                      setServiceMode("pickup");
-                      resetDelivery();
-                      if (singlePickupStore) {
-                        goToPickupStore(singlePickupStore);
-                        return;
-                      }
-                      setPickupModalOpen(true);
-                    }}
+                    onClick={startPickup}
                   >
                     <span className="sf-serviceMark" aria-hidden="true">01</span>
                     <span className="sf-serviceEyebrow">Recoger</span>
@@ -721,24 +712,29 @@ export default function PartnerOrderPage() {
         <div className="sf-modalOverlay" onClick={() => setPickupModalOpen(false)}>
           <div
             className="sf-modalCard sf-pickupModal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="pickup-selection-title"
+            onKeyDown={(event) => { if (event.key === "Escape") setPickupModalOpen(false); }}
             onClick={(event) => event.stopPropagation()}
           >
             <div className="sf-cartModalHead">
               <div>
                 <span>Recoger</span>
-                <h3>Elige una tienda</h3>
+                <h3 id="pickup-selection-title">{pickupCities.length > 1 && pickupCityFilter === null ? "Elige una ciudad" : "Elige una tienda"}</h3>
               </div>
               <button
                 type="button"
                 className="sf-modalCloseBtn"
                 onClick={() => setPickupModalOpen(false)}
                 aria-label="Cerrar"
+                autoFocus
               >
                 x
               </button>
             </div>
 
-            {pickupCities.length > 0 && (
+            {pickupCities.length > 1 && (
               <div className="sf-pickupCityPanel">
                 <span>Ciudades disponibles</span>
                 <div className="sf-pickupCityRow" aria-label="Ciudades disponibles">
@@ -752,13 +748,13 @@ export default function PartnerOrderPage() {
                         key={city}
                         type="button"
                         className={
-                          normalizeSearchText(pickupCityFilter) === normalizeSearchText(city)
+                          pickupCityFilter !== null && normalizeSearchText(pickupCityFilter) === normalizeSearchText(city)
                             ? "is-active"
                             : ""
                         }
-                        onClick={() => setPickupCityFilter(city)}
+                        onClick={() => choosePickupCity(city)}
                       >
-                        <strong>{formatCityName(city)}</strong>
+                        <strong>{formatCityName(city) || "Otras tiendas"}</strong>
                         <small>
                           {cityCount} tienda{cityCount === 1 ? "" : "s"} activa
                           {cityCount === 1 ? "" : "s"}
@@ -770,7 +766,7 @@ export default function PartnerOrderPage() {
               </div>
             )}
 
-            <div className="sf-pickupList">
+            {(pickupCities.length <= 1 || pickupCityFilter !== null) && <div className="sf-pickupList">
               {filteredPickupStores.length ? (
                 filteredPickupStores.map((store) => (
                   <button
@@ -783,6 +779,7 @@ export default function PartnerOrderPage() {
                       {recentStoreSlugs.includes(store.slug) ? "Reciente" : "Disponible"}
                     </span>
                     <strong>{store.storeName}</strong>
+                    {store.address && <small>{store.address}</small>}
                     <small>
                       {store.city ? `${formatCityName(store.city)} - tienda activa` : "Tienda activa"}
                     </small>
@@ -794,11 +791,11 @@ export default function PartnerOrderPage() {
                   <span>Prueba con otra ciudad disponible de la lista.</span>
                 </div>
               )}
-            </div>
+            </div>}
 
             {pickupCities.length > 1 && (
               <p className="sf-pickupHint">
-                Elige la ciudad y luego toca la tienda activa donde quieres recoger.
+                Si la ciudad tiene una sola tienda, entrarás directamente. Si tiene varias, elige dónde recoger.
               </p>
             )}
           </div>
@@ -895,11 +892,7 @@ export default function PartnerOrderPage() {
                   <button
                     type="button"
                     className="sf-secondaryBtn"
-                    onClick={() => {
-                      setServiceMode("pickup");
-                      setDeliveryModalOpen(false);
-                      resetDelivery();
-                    }}
+                    onClick={startPickup}
                     disabled={isResolvingDelivery}
                   >
                     Recoger

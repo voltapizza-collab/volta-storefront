@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import api from "../../setupAxios";
 import PartnerLogo from "../PartnerLogo";
@@ -488,13 +488,21 @@ function CouponCard({ card, onClaim }) {
   );
 }
 
-function ClaimModal({ card, partnerId, zipCode, redeemBasePath, onClose, onClaimed, onGoToRedeem }) {
-  const normalizedCard = normalizeGalleryCard(card);
+export function ClaimModal({ card, campaign, partnerId, zipCode, redeemBasePath, onClose, onClaimed, onGoToRedeem }) {
+  const normalizedCard = normalizeGalleryCard(card || { type: "DELIVERY_FREE", title: campaign?.title });
   const [form, setForm] = useState({ name: "", phone: "" });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [result, setResult] = useState(null);
   const [copiedCoupon, setCopiedCoupon] = useState(false);
+  const [accepted, setAccepted] = useState(false);
+
+  const modalRef = useRef(null);
+  useEffect(() => {
+    const previous = document.activeElement;
+    modalRef.current?.querySelector("input, button")?.focus();
+    return () => previous?.focus?.();
+  }, []);
   const couponCode = result?.coupon?.code || "";
   const redeemPath = result?.coupon
     ? localizeRedeemUrl(result.delivery?.redeemUrl, redeemBasePath, couponCode)
@@ -516,12 +524,15 @@ function ClaimModal({ card, partnerId, zipCode, redeemBasePath, onClose, onClaim
   };
 
   const submit = async (event) => {
-    event.preventDefault();
+    event?.preventDefault();
+    if (saving) return;
     setSaving(true);
     setError("");
 
     try {
-      const { data } = await api.post("/api/coupons/direct-claim", {
+      const { data } = await api.post(campaign ? `/api/coupons/qr-claim/${encodeURIComponent(campaign.code)}` : "/api/coupons/direct-claim", campaign ? {
+        name: form.name, phone: form.phone, termsVersion: accepted ? campaign.termsVersion : null,
+      } : {
         partnerId,
         type: normalizedCard.type,
         key: normalizedCard.key,
@@ -530,16 +541,30 @@ function ClaimModal({ card, partnerId, zipCode, redeemBasePath, onClose, onClaim
         zipCode,
       });
 
+      if (campaign) {
+        onClaimed?.(data);
+        onClose();
+        return;
+      }
       setResult({
         coupon: data.coupon || null,
         delivery: data.delivery || null,
       });
-      onClaimed();
+      onClaimed?.();
     } catch (requestError) {
       console.error(requestError);
       const nextError = requestError.response?.data?.error || "No se pudo reclamar el cupon.";
+      const claimErrors = {
+        invalid_phone: "Introduce un teléfono español válido, con 9 dígitos o prefijo +34.",
+        name_required: "Escribe tu nombre.", terms_required: "Acepta las condiciones de esta promoción.",
+        campaign_unavailable: "La campaña ya no admite nuevas reclamaciones. Los cupones entregados mantienen su validez.",
+        coupon_already_used: "Ya has utilizado el beneficio de esta campaña.", coupon_expired: "El beneficio que reclamaste ya ha caducado.",
+        coupon_unavailable: "Este beneficio no está disponible.", coupon_not_found: "No encontramos esta campaña.",
+        claim_rate_limited: "Has realizado varios intentos. Espera una hora antes de volver a solicitar el mensaje.",
+        server: "No pudimos completar la solicitud. Vuelve a intentarlo; conservarás el mismo beneficio.",
+      };
       setError(
-        nextError === "unavailable_in_area"
+        campaign ? claimErrors[nextError] || "No pudimos enviar la solicitud. Inténtalo de nuevo." : nextError === "unavailable_in_area"
           ? "Este cupon no esta disponible para tu codigo postal."
           : nextError === "segment_not_eligible"
             ? "Este cupon no aplica a tu perfil de cliente en este momento."
@@ -552,11 +577,19 @@ function ClaimModal({ card, partnerId, zipCode, redeemBasePath, onClose, onClaim
 
   return (
     <div className="cg-modalBack cg-modalBack-claim" onMouseDown={onClose}>
-      <div className="cg-modalCard cg-claimModalCard" onMouseDown={(event) => event.stopPropagation()}>
+      <div className="cg-modalCard cg-claimModalCard" ref={modalRef} role="dialog" aria-modal="true" aria-label={campaign?.title || normalizedCard.title} onMouseDown={(event) => event.stopPropagation()}
+        onKeyDown={event => {
+          if (event.key === "Escape" && !saving) onClose();
+          if (event.key !== "Tab") return;
+          const elements = [...modalRef.current.querySelectorAll('button:not(:disabled), input:not(:disabled), a[href], summary')];
+          const first = elements[0], last = elements[elements.length - 1];
+          if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+          else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+        }}>
         <div className="cg-modalHead">
           <div>
-            <div className="cg-kicker">Volta Coupon Gallery</div>
-            <h3>{normalizedCard.title}</h3>
+            <div className="cg-kicker">{campaign?.partnerName || "Volta Coupon Gallery"}</div>
+            <h3>{campaign?.title || normalizedCard.title}</h3>
           </div>
           <button className="cg-ghostBtn" onClick={onClose} type="button">
             Cerrar
@@ -599,6 +632,9 @@ function ClaimModal({ card, partnerId, zipCode, redeemBasePath, onClose, onClaim
             <label className="cg-field">
               <span>Nombre</span>
               <input
+                autoComplete="given-name"
+                required={Boolean(campaign)}
+                maxLength={100}
                 value={form.name}
                 onChange={(event) => setForm((prev) => ({ ...prev, name: event.target.value }))}
                 placeholder="Tu nombre"
@@ -608,20 +644,36 @@ function ClaimModal({ card, partnerId, zipCode, redeemBasePath, onClose, onClaim
             <label className="cg-field">
               <span>Telefono</span>
               <input
+                type="tel"
+                inputMode="tel"
+                autoComplete="tel"
+                required={Boolean(campaign)}
+                maxLength={20}
                 value={form.phone}
                 onChange={(event) => setForm((prev) => ({ ...prev, phone: event.target.value }))}
                 placeholder="600111222"
               />
             </label>
 
-            <div className="cg-helperBox">
+            {campaign ? <div className="cg-helperBox">
+              <p>{campaign.available ? `Recibe por SMS un envío gratis para tu próxima compra directa. Tienes ${campaign.claimValidityDays} días desde la reclamación.` : "Esta campaña no admite nuevas solicitudes. Los cupones que ya recibiste por SMS mantienen su validez."}</p>
+              <p>Válido en: {campaign.stores?.map(store => store.name).join(", ")}. Un uso por teléfono. Se mantienen el pedido mínimo y la zona de reparto. No acumulable con otros cupones. Las liquidaciones y sus portes adicionales quedan excluidos.</p>
+              <label className="cg-claimConsent"><input type="checkbox" checked={accepted} onChange={event => setAccepted(event.target.checked)} required />
+                <span>Acepto las condiciones de esta promoción y solicito el SMS con mi cupón.</span>
+              </label>
+              <p>Esta solicitud no te suscribe a publicidad. Pediremos la dirección cuando hagas tu pedido.</p>
+              <details><summary>Cómo usamos tus datos</summary>
+                <p>{campaign.partnerName} utiliza tu nombre y teléfono para gestionar esta promoción, entregar y recuperar el cupón y evitar usos duplicados. Volta y el proveedor de mensajería intervienen para prestar el servicio. Se conservan durante la gestión del beneficio y los plazos necesarios para atender incidencias y obligaciones aplicables.</p>
+                <p>Puedes solicitar acceso, rectificación o supresión contactando con la pizzería{campaign.storeUrl && <> desde <a href={campaign.storeUrl} target="_blank" rel="noreferrer">su página de contacto</a></>}. La solicitud del cupón no autoriza futuros mensajes comerciales.</p>
+              </details>
+            </div> : <div className="cg-helperBox">
               Reclamas este cupon para el codigo postal <strong>{zipCode}</strong>. Al reservarlo podras copiar el codigo e ir al pedido con el cupon listo.
-            </div>
+            </div>}
 
             {error && <div className="cg-error">{error}</div>}
 
-            <button className="cg-primaryBtn" type="submit" disabled={saving}>
-              {saving ? "Reservando..." : "Canjear"}
+            <button className="cg-primaryBtn" type="submit" disabled={saving || Boolean(campaign && !campaign.available)}>
+              {saving ? "Reservando..." : campaign ? campaign.available ? "Recibir mi envío gratis" : "Campaña finalizada" : "Canjear"}
             </button>
           </form>
         )}

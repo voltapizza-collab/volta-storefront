@@ -128,6 +128,7 @@ export default function OfferCreatePanelCustomer({ partnerId, customer, onDone, 
       console.error(requestError);
       const errorCode = requestError.response?.data?.error;
       const errorMessages = {
+        customer_marketing_suppressed: "Este cliente solicitó su cupón QR, pero no autorizó recibir nuevas promociones.",
         invalid_recipient_phone: "El telefono del cliente no es valido para SMS. Corrige el numero antes de crear el boost.",
         insufficient_sms_credits: `Saldo de SMS insuficiente. Disponibles: ${requestError.response?.data?.balance || 0}.`,
       };

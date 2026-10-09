@@ -10,11 +10,25 @@ export default function StoreGate({ partner: suppliedPartner, store, loading = f
 
   const handleOrder = () => {
     if (!canOrder) return;
-    navigate(store ? `/${partner.slug}/${store.slug}/menu` : `/${partner.slug}/order`, {
+    const availableStores = (partner.stores || []).filter(
+      (candidate) => candidate.active !== false && candidate.acceptingOrders !== false &&
+        (candidate.pickupEnabled !== false || candidate.deliveryEnabled !== false)
+    );
+    const targetStore = store || (availableStores.length === 1 ? availableStores[0] : null);
+    const deliveryOnly = targetStore?.pickupEnabled === false && targetStore?.deliveryEnabled !== false;
+    const directPickup = targetStore?.slug && !deliveryOnly;
+    if (directPickup) {
+      try { window.sessionStorage.removeItem("volta_storefront_delivery_selection"); } catch {}
+    }
+    navigate(directPickup ? `/${partner.slug}/${targetStore.slug}` : `/${partner.slug}/order`, {
       state: {
-        orderTrail: store ? "menu" : "landing",
+        orderTrail: directPickup ? "store" : "landing",
         partnerName: name,
-        ...(store ? { storeName: store.storeName } : {}),
+        ...(directPickup ? {
+          storeName: targetStore.storeName, serviceMode: "pickup",
+          deliveryAddress: "", deliveryAddressLine2: "", deliveryResolution: null,
+        } : {}),
+        ...(deliveryOnly ? { startServiceMode: "delivery" } : {}),
       },
     });
   };

@@ -28,6 +28,10 @@ const formatDate = (value) => {
 const qrFileName = (coupon) =>
   `volta-token-qr-${String(coupon?.code || "token").toLowerCase().replace(/[^a-z0-9_-]+/g, "-")}.png`;
 
+const benefitLabel = coupon => coupon?.benefitType === "DELIVERY_FREE"
+  ? `Envío gratis · ${coupon.claimValidityDays || 30} días desde la reclamación`
+  : `EUR ${Number(coupon?.amount || 0).toFixed(2)}`;
+
 const buildQrDataUrl = (value) =>
   QRCode.toDataURL(value, {
     errorCorrectionLevel: "H",
@@ -63,6 +67,8 @@ export default function ChannelShiftQrPanel({ partnerId }) {
     campaignName: "",
     code: "",
     amount: "5",
+    benefitType: "FIXED_AMOUNT",
+    claimValidityDays: 30,
     storeIds: [],
     activeFrom: "",
     expiresAt: "",
@@ -234,7 +240,9 @@ export default function ChannelShiftQrPanel({ partnerId }) {
 
   const stopCoupon = async (coupon) => {
     if (!coupon?.id) return;
-    const confirmed = window.confirm(`Detener el token QR "${coupon.code}"? El enlace dejara de aplicar descuento.`);
+    const confirmed = window.confirm(coupon.benefitType === "DELIVERY_FREE"
+      ? `¿Detener el token QR "${coupon.code}"? No admitirá nuevas reclamaciones. Los cupones ya recibidos conservarán su validez.`
+      : `Detener el token QR "${coupon.code}"? El enlace dejara de aplicar descuento.`);
     if (!confirmed) return;
 
     try {
@@ -298,7 +306,7 @@ export default function ChannelShiftQrPanel({ partnerId }) {
       const messages = {
         bad_delete_payload: "Escribe el token exacto antes de eliminar.",
         confirm_code_mismatch: "El token escrito no coincide.",
-        coupon_has_redemptions: "Este token ya tiene usos registrados. Lo detuve, pero no se elimina para conservar el historial.",
+        coupon_has_redemptions: "Este token ya tiene usos o cupones emitidos. Lo detuve, pero no se elimina para conservar el historial.",
         coupon_not_found: "No encontramos este token QR.",
       };
       if (errorCode === "coupon_has_redemptions") {
@@ -326,6 +334,8 @@ export default function ChannelShiftQrPanel({ partnerId }) {
         campaignName: form.campaignName,
         code: form.code,
         amount: Number(form.amount || 0),
+        benefitType: form.benefitType,
+        claimValidityDays: Number(form.claimValidityDays),
         storeIds: form.storeIds.map(Number),
         activeFrom: form.activeFrom || "",
         expiresAt: form.expiresAt || "",
@@ -348,6 +358,7 @@ export default function ChannelShiftQrPanel({ partnerId }) {
         bad_date_range: "La fecha de fin debe ser posterior a la fecha de inicio.",
         code_already_exists: "Ya existe un token con ese codigo.",
         store_not_found: "Alguna tienda seleccionada no pertenece a este partner.",
+        bad_claim_validity: "Selecciona una validez de 15, 20 o 30 días.",
       };
       setMessage(messages[errorCode] || errorCode || "No se pudo crear el token QR.");
     } finally {
@@ -360,7 +371,7 @@ export default function ChannelShiftQrPanel({ partnerId }) {
   }
 
   return (
-    <div className="cp-promosLayout">
+    <div className="cp-promosLayout cp-qrPanel">
       <form className="cp-card cp-form" onSubmit={submit}>
         <div>
           <div className="cp-kicker">Tokens QR</div>
@@ -390,6 +401,16 @@ export default function ChannelShiftQrPanel({ partnerId }) {
 
         <div className="cp-formGrid">
           <label className="cp-field">
+            <span>Tipo de token</span>
+            <select value={form.benefitType} onChange={event => updateForm("benefitType", event.target.value)}>
+              <option value="FIXED_AMOUNT">Descuento fijo · ir a la compra</option>
+              <option value="DELIVERY_FREE">Envío gratis · recibir cupón por SMS</option>
+            </select>
+          </label>
+        </div>
+
+        {form.benefitType === "FIXED_AMOUNT" ? <div className="cp-formGrid">
+          <label className="cp-field">
             <span>Descuento EUR</span>
             <input
               type="number"
@@ -400,7 +421,16 @@ export default function ChannelShiftQrPanel({ partnerId }) {
               required
             />
           </label>
-        </div>
+        </div> : <div className="cp-targetPanel">
+          <label className="cp-field">
+            <span>Validez de cada cupón</span>
+            <select value={form.claimValidityDays} onChange={event => updateForm("claimValidityDays", Number(event.target.value))}>
+              {[15, 20, 30].map(days => <option key={days} value={days}>{days} días desde la reclamación</option>)}
+            </select>
+          </label>
+          <p>El QR pide nombre y teléfono y envía un cupón individual por SMS. Un uso por teléfono y campaña. Volver a reclamar recupera el mismo cupón.</p>
+          <p>Requiere saldo SMS y el servicio de envío de cupones activado. La dirección se solicita al realizar el pedido.</p>
+        </div>}
 
         <div className="cp-targetPanel">
           <div className="cp-kicker">Tiendas</div>
@@ -435,7 +465,7 @@ export default function ChannelShiftQrPanel({ partnerId }) {
 
         <div className="cp-formGrid">
           <label className="cp-field">
-            <span>Inicio</span>
+            <span>Inicio del token</span>
             <input
               type="datetime-local"
               value={form.activeFrom}
@@ -444,7 +474,7 @@ export default function ChannelShiftQrPanel({ partnerId }) {
           </label>
 
           <label className="cp-field">
-            <span>Fin</span>
+            <span>Fin del token · vacío para mantenerlo activo</span>
             <input
               type="datetime-local"
               value={form.expiresAt}
@@ -496,9 +526,9 @@ export default function ChannelShiftQrPanel({ partnerId }) {
               <tr>
                 <th>Token</th>
                 <th>Tienda</th>
-                <th>Descuento</th>
+                <th>Beneficio</th>
                 <th>Vigencia</th>
-                <th>Usos</th>
+                <th>Resultados</th>
                 <th>Estado</th>
                 <th>Gestion</th>
               </tr>
@@ -508,9 +538,27 @@ export default function ChannelShiftQrPanel({ partnerId }) {
                 <tr key={item.id}>
                   <td>{item.code}</td>
                   <td>{storeSummary(item.targetStores, item.storeIds)}</td>
-                  <td>EUR {Number(item.amount || 0).toFixed(2)}</td>
+                  <td>{benefitLabel(item)}</td>
                   <td>{formatDate(item.activeFrom)} - {formatDate(item.expiresAt)}</td>
-                  <td>{item.usedCount || 0} uso{Number(item.usedCount || 0) === 1 ? "" : "s"}</td>
+                  <td>{item.benefitType === "DELIVERY_FREE" ? <div className="cp-qrResults">
+                    <dl>
+                      <div title="Aperturas del enlace del QR. Incluye visitas repetidas; no son personas únicas."><dt>Escaneos / visitas</dt><dd>{item.qrViewCount || 0}</dd></div>
+                      <div title="Clientes que no existían en este negocio y se registraron al solicitar el cupón."><dt>Clientes nuevos en BD</dt><dd>{item.claimStats?.newCustomers ?? '—'}</dd></div>
+                    </dl>
+                    <details>
+                      <summary>Ver detalle</summary>
+                      <dl>
+                        <div><dt>Clientes ya existentes</dt><dd>{item.claimStats?.existingCustomers ?? '—'}</dd></div>
+                        <div><dt>Cupones emitidos</dt><dd>{item.claimStats?.issued || 0}</dd></div>
+                        <div title="Cupones cuyo último SMS fue aceptado por el proveedor o entregado. Los reenvíos no suman otro cliente."><dt>SMS enviados</dt><dd>{item.claimStats?.smsSent ?? '—'}</dd></div>
+                        <div><dt>Cupones utilizados</dt><dd>{item.claimStats?.redeemed || 0}</dd></div>
+                      </dl>
+                      {!!item.claimStats?.smsFailed && <p>{item.claimStats.smsFailed} SMS sin enviar. Revisa saldo y configuración; los clientes ya están guardados.</p>}
+                      {!!item.claimStats?.smsPending && <p>{item.claimStats.smsPending} SMS pendientes de confirmación.</p>}
+                      {!!item.claimStats?.unclassifiedCustomers && <p>{item.claimStats.unclassifiedCustomers} registros anteriores sin clasificación de alta nueva o cliente existente.</p>}
+                      <p>Los escaneos cuentan aperturas del enlace, incluidas las visitas repetidas.</p>
+                    </details>
+                  </div> : <>{item.usedCount || 0} uso{Number(item.usedCount || 0) === 1 ? "" : "s"}</>}</td>
                   <td>{statusLabel(item.status)}</td>
                   <td>
                     <div className="cp-tableActions cp-tokenActions">
@@ -581,7 +629,7 @@ export default function ChannelShiftQrPanel({ partnerId }) {
 
             <div className="cp-qrMeta">
               <span>{storeSummary(qrModalItem.targetStores, qrModalItem.storeIds)}</span>
-              <strong>EUR {Number(qrModalItem.amount || 0).toFixed(2)}</strong>
+              <strong>{benefitLabel(qrModalItem)}</strong>
               <small>{formatDate(qrModalItem.activeFrom)} - {formatDate(qrModalItem.expiresAt)}</small>
               <code>{qrModalItem.redeemUrl}</code>
             </div>
@@ -605,7 +653,7 @@ export default function ChannelShiftQrPanel({ partnerId }) {
               <div className="cp-kicker">Eliminar token QR</div>
               <h3>{deleteCandidate.code}</h3>
               <p>
-                Esta accion elimina el token solo si no tiene usos registrados. Si ya fue usado, el sistema lo detendra y conservara el historial.
+                Esta acción elimina el token solo si no tiene usos ni cupones emitidos. Si ya tiene actividad, el sistema lo detendrá y conservará el historial.
               </p>
             </div>
 

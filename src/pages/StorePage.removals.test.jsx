@@ -59,17 +59,23 @@ test('all six special notices reach the card and the product detail without trun
   for (const label of ['Picante','Vegano','Vegetariano','Sin gluten','Kosher','Halal']) expect(notices.getByText(label)).toBeVisible();
 });
 
-test("repeating an order preserves its removals in the preview and the new cart", async () => {
+test.each([
+  { sourceOrderId: 775, sourceOrderCode: `WEB-${'A'.repeat(32)}`, displayed: 'WEB-775' },
+  { sourceOrderId: 776, sourceOrderCode: 'DEMO-1', displayed: 'DEMO-1' },
+])("repeating $displayed preserves its removals in the preview and the new cart", async ({ sourceOrderId, sourceOrderCode, displayed }) => {
+  localStorage.setItem('volta_repeat_receipts:test:centro', JSON.stringify(['private-repeat-receipt']));
   const previousGet = api.get.getMockImplementation();
   api.get.mockImplementation(async (path) => path.includes("/repeat/recent") ? { orders: [{ cartDraft: {
-    sourceOrderCode: "DEMO-1", currency: "EUR", items: [{ pizzaId: 1, name: "Barbacoa", size: "M", qty: 1, price: 10, subtotal: 10,
+    sourceOrderId, sourceOrderCode, currency: "EUR", items: [{ pizzaId: 1, name: "Barbacoa", size: "M", qty: 1, price: 10, subtotal: 10,
       removedIngredients: [{ ingredientId: 10, name: "Cebolla" }] }],
   } }] } : previousGet(path));
   render(<StorePage />);
   fireEvent.click((await screen.findAllByRole("button", { name: "Repetir pedido anterior" }))[0]);
   fireEvent.change(screen.getByLabelText("Telefono"), { target: { value: "612345678" } });
   fireEvent.click(screen.getByRole("button", { name: "Ver ultimos 3" }));
-  const choice = await screen.findByRole("button", { name: /Pedido DEMO-1/ });
+  const choice = await screen.findByRole("button", { name: new RegExp(`Pedido ${displayed}`) });
+  expect(api.get).toHaveBeenCalledWith(expect.stringContaining('/repeat/recent?'), { headers: { 'X-Volta-Receipts': JSON.stringify(['private-repeat-receipt']) } });
+  if (displayed !== sourceOrderCode) expect(screen.queryByText(`Pedido ${sourceOrderCode}`)).not.toBeInTheDocument();
   expect(choice).toHaveTextContent("SIN CEBOLLA");
   fireEvent.click(choice);
   await waitFor(() => expect(cartDraft()[0].removedIngredients).toEqual([{ ingredientId: 10, name: "Cebolla" }]));

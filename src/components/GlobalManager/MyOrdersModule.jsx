@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import api from "../../setupAxios";
+import { getPosOrderCode as getOrderDisplayCode } from "../../pos/orderDisplayCode";
 import {
   customerSegmentMeta,
   customerSegmentLabel,
@@ -693,7 +694,7 @@ export default function MyOrdersModule({ partner = null }) {
             <header className="gmo-modalHead">
               <div>
                 <span>Pedido</span>
-                <h3>{selectedOrder.code}</h3>
+                <h3>{getOrderDisplayCode(selectedOrder)}</h3>
               </div>
               <button type="button" onClick={() => setSelectedOrder(null)}>
                 x
@@ -855,6 +856,7 @@ export function OrdersMovementsModule({ partner = null }) {
             sale.customerData?.email,
             sale.customerData?.code,
             sale.code,
+            getOrderDisplayCode(sale),
             sale.paymentChannelLabel,
           ]
             .filter(Boolean)
@@ -962,7 +964,7 @@ export function OrdersMovementsModule({ partner = null }) {
               {filteredMovements.map((sale) => (
                 <tr key={sale.id}>
                   <td>
-                    <strong>{sale.code}</strong>
+                    <strong>{getOrderDisplayCode(sale)}</strong>
                   </td>
                   <td>
                     <strong title={sale.customerLabel}>{sale.customerDisplayLabel}</strong>
@@ -1009,7 +1011,7 @@ export function OrdersMovementsModule({ partner = null }) {
             <header className="gmo-modalHead">
               <div>
                 <span>Ticket</span>
-                <h3>{selectedMovement.code}</h3>
+                <h3>{getOrderDisplayCode(selectedMovement)}</h3>
               </div>
               <button type="button" onClick={() => setSelectedMovement(null)}>
                 x

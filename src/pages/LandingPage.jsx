@@ -1,36 +1,48 @@
 import { useState } from "react";
-import { ReactComponent as PizzaBg } from "../assets/logo/pizza.svg";
-import voltaSystemsLogo from "../assets/logo/the pizza sale enganine.png";
+import { usePublicSeo } from "../utils/seo";
+import LandingProductPreview from "../components/LandingProductPreview";
 import EngineBackground from "../components/Backoffice/EngineBackground";
+import { ReactComponent as PizzaBg } from "../assets/logo/pizza.svg";
 import api from "../setupAxios";
 import "../styles/LandingPage.css";
 
 const modules = [
   {
     name: "Storefront",
-    text: "La tienda online publica: menu, reservas, delivery, cupones y pedidos listos para convertir visitas en ventas.",
+    text: "Tu carta y tus pedidos, con la identidad de tu pizzería. Comparte el acceso desde tu web y tus canales propios.",
   },
   {
     name: "Backoffice",
-    text: "El centro de mando para operar locales, ventas, clientes, mensajes, configuracion y actividad diaria.",
+    text: "Gestiona pedidos, clientes y tiendas desde un mismo backoffice.",
   },
   {
     name: "Pizza Creator",
-    text: "Construye pizzas, tamanos, bases, toppings, extras y combos con una carta preparada para vender.",
+    text: "Una carta preparada para pizzas: tamaños, ingredientes, extras y combinaciones.",
   },
   {
     name: "CRM & Promos",
-    text: "Segmenta clientes, lanza ofertas, mide redenciones y convierte cada pedido en una nueva oportunidad.",
+    text: "Segmentación, promociones y datos para orientar tu estrategia comercial, fidelizar clientes y fomentar la repetición de compra.",
   },
 ];
 
-const metrics = [
-  ["01", "backoffice central"],
-  ["24/7", "storefront activo"],
-  ["SMS", "motor comercial"],
+const pillars = [
+  ["Migración de clientes", "Estrategias para atraer compradores de marketplaces al canal directo de la pizzería."],
+  ["Tecnología de venta", "Un motor online para vender desde la web, Instagram, QR y enlaces."],
+  ["Inteligencia comercial", "Promociones, datos y herramientas para aumentar la conversión y fidelizar clientes."],
 ];
 
-const partnerBrands = ["Nonna Pizza", "Slice Club", "Forno Vivo", "Masa Nova", "Pizza Norte"];
+const advantages = [
+  ["90% del ticket", "El 90% del ticket para tu pizzería.", "Un modelo vinculado a tus ventas, con las condiciones detalladas antes de contratar."],
+  ["Storefront activo 24/7", "Tu tienda online siempre disponible.", "El escaparate permanece accesible. La recepción de pedidos respeta los horarios y las condiciones que configures."],
+  ["Clientes directos", "Conoce y fideliza a tus compradores.", "Desarrolla una relación comercial directa mediante datos, promociones y segmentación."],
+  ["Acompañamiento", "Tecnología y estrategia comercial.", "Te acompañamos en la puesta en marcha y en el desarrollo de estrategias para impulsar tus ventas directas. Concretamos contigo el alcance del apoyo."],
+];
+
+const landingSeo = {
+  title: "Volta Pizza — El motor para vender pizzas por Internet",
+  description: "Motor de venta online para pizzerías. Pedidos directos, promociones y datos de clientes para impulsar la compra directa y la repetición.",
+  canonicalUrl: "https://voltapizza.com/",
+};
 
 const footerGroups = [
   {
@@ -42,15 +54,15 @@ const footerGroups = [
     links: ["Pedidos online", "Reservas", "Cupones", "Demo comercial"],
   },
   {
-    title: "Marcas",
-    links: partnerBrands,
+    title: "Venta directa",
+    links: ["Ventajas comerciales", "Cómo empezar", "Condiciones comerciales"],
   },
 ];
 
 const contactLinks = [
   { label: "Email", href: "mailto:contacto@voltapizza.com", icon: "mail" },
   { label: "Demo", href: "#contacto", icon: "chat" },
-  { label: "Llamada", href: "#contacto", icon: "phone" },
+  { label: "Solicitar llamada", href: "#contacto", icon: "phone" },
 ];
 
 const socialLinks = [
@@ -101,7 +113,26 @@ function ContactIcon({ icon }) {
   );
 }
 
+function PillarIcon({ index }) {
+  return <svg className="vp-pillarIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    {index === 0 ? <><circle cx="7" cy="6" r="3" /><path d="M2 19v-3a5 5 0 0 1 10 0v3M14 10h8m-3-3 3 3-3 3M16 17h6" /></>
+      : index === 1 ? <><rect x="2" y="3" width="20" height="14" rx="2" /><path d="M8 21h8m-4-4v4m-2-14 5 3-5 3Z" /></>
+        : <><path d="M3 3v18h18M7 16v-4m5 4V9m5 7V6M6 8l5-4 4 1 5-3" /></>}
+  </svg>;
+}
+
+function PaymentIcon({ type }) {
+  return <span className="vp-paymentIcon" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" focusable="false">
+      {type === "purchase" ? <><rect x="3" y="5" width="18" height="14" rx="3" /><path d="M3 10h18m-5 5 1.5 1.5L20 14M7 15h3" /></>
+        : type === "installments" ? <><rect x="4" y="5" width="16" height="16" rx="3" /><path d="M8 3v4m8-4v4M4 10h16m-12 4h2m4 0h2m-8 3h2m4 0h2" /></>
+          : <><path d="M20 9a8 8 0 0 0-14-3L3 9m0-5v5h5M4 15a8 8 0 0 0 14 3l3-3m0 5v-5h-5" /><path d="m9 12 2 2 4-4" /></>}
+    </svg>
+  </span>;
+}
+
 export default function LandingPage() {
+  usePublicSeo(landingSeo);
   const [lead, setLead] = useState({
     name: "",
     business: "",
@@ -124,8 +155,7 @@ export default function LandingPage() {
       setSubmittingLead(true);
       setLeadStatus("");
 
-      const response = await api.post("/api/onboarding/requests", lead);
-      const emailStatus = response.data?.request?.emailStatus;
+      await api.post("/api/onboarding/demo-requests", lead);
 
       setLead({
         name: "",
@@ -136,13 +166,11 @@ export default function LandingPage() {
       });
 
       setLeadStatus(
-        emailStatus === "SENT"
-          ? "Solicitud recibida. Te hemos enviado el enlace para completar la fase 2."
-          : "Solicitud recibida. Revisaremos el envio del enlace de fase 2."
+        "Solicitud de demostración recibida. Te contactaremos para conocer tu pizzería y mostrarte el sistema."
       );
     } catch (error) {
       console.error(error);
-      setLeadStatus("No pudimos enviar la solicitud. Intentalo de nuevo o escribe a contacto@voltapizza.com.");
+      setLeadStatus("No pudimos enviar la solicitud. Inténtalo de nuevo o escribe a contacto@voltapizza.com.");
     } finally {
       setSubmittingLead(false);
     }
@@ -153,41 +181,33 @@ export default function LandingPage() {
   return (
     <main className="vp-site">
       <section className="vp-hero">
-        <div className="vp-engineField" aria-hidden="true">
+        <div className="vp-engineField vp-engineField--subtle" aria-hidden="true">
           <EngineBackground />
-          <div className="vp-tunnelLines"></div>
-          <PizzaBg className="vp-bgPizza" />
-          <div className="vp-orbit vp-orbitOne"></div>
-          <div className="vp-orbit vp-orbitTwo"></div>
+          <PizzaBg className="vp-bgPizza vp-bgPizza--subtle" viewBox="320 0 800 810" focusable="false" />
         </div>
-
         <div className="vp-heroGrid">
           <div className="vp-heroCopy">
-            <p className="vp-kicker">The pizza sale engine</p>
-            <h1>Volta Pizza</h1>
-            <div className="vp-heroStatement" aria-label="Propuesta principal">
-              <span className="vp-statementLead">Tu pizzeria online</span>
-              <span className="vp-statementRow">
-                <strong>tus clientes</strong>
-                <em>tus pedidos</em>
-                <strong>tus datos</strong>
-              </span>
-            </div>
+            <h1>VOLTA PIZZA</h1>
+            <p className="vp-heroSlogan">El motor para vender pizzas por Internet.</p>
+            <h2 className="vp-heroBenefit">Aumenta las <span>ventas directas</span> de tu pizzería.</h2>
             <p className="vp-heroPromise">
-              Recibe mas del 90% de cada pedido. Vende, opera y vuelve a conectar
-              con tus clientes desde un solo motor.
+              Combinamos migración de clientes, tecnología de venta e inteligencia
+              comercial para atraer compradores de los marketplaces a tu canal
+              directo y fomentar la repetición de compra.
             </p>
             <div className="vp-heroActions">
-              <a className="vp-primaryLink" href={backofficeHref}>MyBackoffice</a>
+              <a className="vp-primaryLink" href={backofficeHref}>Explorar la demo</a>
               <a className="vp-secondaryLink" href="#sistema">Ver sistema</a>
-              <a className="vp-secondaryLink" href="#contacto">Contacto</a>
+              <a className="vp-secondaryLink" href="#contacto">Solicitar una demostración</a>
             </div>
           </div>
+          <LandingProductPreview />
         </div>
 
-        <div className="vp-heroStatus" aria-label="Resumen del sistema">
-          {metrics.map(([value, label]) => (
+        <div className="vp-heroStatus vp-pillars" aria-label="Pilares estratégicos">
+          {pillars.map(([value, label], index) => (
             <div key={label}>
+              <PillarIcon index={index} />
               <strong>{value}</strong>
               <span>{label}</span>
             </div>
@@ -196,21 +216,26 @@ export default function LandingPage() {
       </section>
 
       <section id="sistema" className="vp-band vp-systemBand">
+        <div className="vp-systemFacts" aria-label="Infraestructura del sistema">
+          <div><strong>01</strong><span>Backoffice central</span></div>
+          <div><strong>24/7</strong><span>Storefront activo</span></div>
+          <div><strong>SMS</strong><span>Motor comercial</span></div>
+        </div>
         <div className="vp-systemLayout">
           <div className="vp-sectionHead">
             <span>Backoffice Volta</span>
-            <h2>El motor de ventas de pizza.</h2>
+            <h2>Tecnología para gestionar tu venta directa.</h2>
             <p>
-              Un backoffice pensado para que una pizzeria controle pedidos,
-              carta, clientes, promociones, stock y locales desde una misma
-              consola. Menos pantallas sueltas; mas ritmo comercial.
+              Tu carta, pedidos, clientes y promociones conectados en una misma
+              plataforma especializada en pizzerías. Control operativo para
+              poner en marcha tu estrategia comercial.
             </p>
           </div>
 
           <div className="vp-backofficePreview" aria-label="Vista de ejemplo del backoffice">
             <div className="vp-previewTopbar">
               <span>MyBackoffice</span>
-              <strong>Store live</strong>
+              <strong>Ejemplo ilustrativo</strong>
             </div>
             <div className="vp-previewMain">
               <div className="vp-previewSidebar">
@@ -229,7 +254,7 @@ export default function LandingPage() {
                 <div className="vp-previewOrders">
                   <div><span>#1082</span><strong>2 pizzas + bebida</strong><em>En horno</em></div>
                   <div><span>#1083</span><strong>Oferta familiar</strong><em>Delivery</em></div>
-                  <div><span>#1084</span><strong>Cupon recuperacion</strong><em>Nuevo</em></div>
+                  <div><span>#1084</span><strong>Cupón de recuperación</strong><em>Nuevo</em></div>
                 </div>
               </div>
             </div>
@@ -246,22 +271,56 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section className="vp-band vp-productBand">
+      <section id="venta-directa" className="vp-band vp-advantagesBand" aria-labelledby="advantages-title">
+        <div className="vp-sectionHead">
+          <h2 id="advantages-title">Las ventajas de vender con Volta.</h2>
+        </div>
+        <div className="vp-moduleGrid">
+          {advantages.map(([label, title, text]) => (
+            <article className="vp-moduleCard" key={label}>
+              <span className="vp-advantageLabel">{label}</span>
+              <h3>{title}</h3>
+              <p>{text}</p>
+            </article>
+          ))}
+        </div>
+        <p id="condiciones" className="vp-commercialNote">El reparto previsto es 90% para el comercio, 9% para Volta y 1% para el embajador, conforme a las condiciones del servicio. El POS y los SMS opcionales se pagan por separado. La oferta concreta la base de cálculo, los costes aplicables y las liquidaciones antes de contratar.</p>
+      </section>
+
+      <section id="como-empezar" className="vp-band vp-productBand">
         <div className="vp-productLayout">
           <div>
-            <span className="vp-kicker">Operacion real</span>
-            <h2>Una consola para vender, operar y volver a vender.</h2>
-            <p>
-              Cada tienda puede tener su menu, promociones, reservas, motor de
-              cupones y base de clientes. El objetivo es convertir visitas en
-              pedidos repetidos y campanas medibles.
-            </p>
+            <span className="vp-kicker">Incorporación</span>
+            <h2>Empieza a vender con Volta.</h2>
+            <p>Elige la modalidad de incorporación que mejor se adapte a tu pizzería.</p>
+            <div className="vp-paymentOptions" aria-label="Modalidades de incorporación">
+              <article className="vp-paymentCard">
+                <PaymentIcon type="purchase" />
+                <h3>Pago único</h3>
+                <strong className="vp-paymentPrice"><small>Desde </small>250 €</strong>
+                <span className="vp-paymentDescription">Equipo en propiedad.</span>
+              </article>
+              <article className="vp-paymentCard">
+                <PaymentIcon type="installments" />
+                <h3>Pago fraccionado</h3>
+                <span className="vp-paymentTerm">6 cuotas</span>
+                <strong className="vp-paymentPrice"><small>Desde </small>46 €<span>/mes</span></strong>
+                <span className="vp-paymentDescription">Sin intereses.</span>
+              </article>
+              <article className="vp-paymentCard">
+                <PaymentIcon type="rental" />
+                <h3>Renting tecnológico</h3>
+                <strong className="vp-paymentPrice"><small>Desde </small>20 €<span>/mes</span></strong>
+                <span className="vp-paymentDescription">12 cuotas.</span>
+              </article>
+            </div>
+            <p className="vp-paymentNote">Consulta las condiciones completas con nuestro equipo.</p>
           </div>
 
           <div className="vp-console" aria-label="Vista resumida del producto">
             <div className="vp-consoleTop">
               <span>Backoffice</span>
-              <strong>MyCrushPizza</strong>
+              <strong>Ejemplo ilustrativo</strong>
             </div>
             <div className="vp-consoleRows">
               <div className="vp-consoleRow"><span>Promos activas</span><strong>8</strong></div>
@@ -269,11 +328,11 @@ export default function LandingPage() {
               <div className="vp-consoleRow"><span>SMS cortos disponibles</span><strong>101</strong></div>
             </div>
             <div className="vp-consoleFooter">
-              <span className="vp-consoleBadge">Menu publicado</span>
+              <span className="vp-consoleBadge">Menú publicado</span>
               <span className="vp-consoleBadge">CRM listo</span>
               <span className="vp-consoleBadge">Delivery activo</span>
             </div>
-            <a className="vp-consoleCta" href={backofficeHref}>Abrir MyBackoffice</a>
+            <a className="vp-consoleCta" href={backofficeHref}>Explorar la demo</a>
             <div className="vp-consoleDemo" aria-hidden="true">
               <span className="vp-demoCursor" />
               <span className="vp-demoClick vp-demoClickOne" />
@@ -287,10 +346,10 @@ export default function LandingPage() {
       <section id="contacto" className="vp-band vp-contactBand">
         <div className="vp-contactCopy">
           <span className="vp-kicker">Contacto</span>
-          <h2>Hablemos de tu pizzeria.</h2>
+          <h2>Veamos cómo impulsar tu venta directa.</h2>
           <p>
-            Envia tus datos y preparamos una demo con el flujo que necesita tu
-            negocio: menu, promociones, clientes, reservas y mensajes.
+            Cuéntanos cómo vende hoy tu pizzería. Te mostraremos el motor
+            y las herramientas que pueden ayudarte a desarrollar tu canal directo.
           </p>
           <a href="mailto:contacto@voltapizza.com">contacto@voltapizza.com</a>
         </div>
@@ -301,7 +360,7 @@ export default function LandingPage() {
             <input value={lead.name} onChange={updateLead("name")} required />
           </label>
           <label>
-            <span>Pizzeria</span>
+            <span>Pizzería</span>
             <input value={lead.business} onChange={updateLead("business")} required />
           </label>
           <label>
@@ -309,30 +368,31 @@ export default function LandingPage() {
             <input type="email" value={lead.email} onChange={updateLead("email")} required />
           </label>
           <label>
-            <span>Telefono</span>
+            <span>Teléfono (opcional)</span>
             <input value={lead.phone} onChange={updateLead("phone")} />
           </label>
           <label className="vp-wideField">
-            <span>Mensaje</span>
+            <span>Mensaje (opcional)</span>
             <textarea value={lead.message} onChange={updateLead("message")} rows="4" />
           </label>
           <button type="submit" disabled={submittingLead}>
-            {submittingLead ? "Enviando..." : "Enviar solicitud"}
+            {submittingLead ? "Enviando..." : "Solicitar demostración"}
           </button>
-          {leadStatus && <div className="vp-formStatus">{leadStatus}</div>}
+          <p className="vp-wideField vp-formNotice">Usaremos tus datos para responder a tu solicitud. Solicitar una demo no inicia el alta, no requiere documentos y no genera ningún pago.</p>
+          {leadStatus && <div className="vp-formStatus" role="status">{leadStatus}</div>}
         </form>
       </section>
 
       <footer className="vp-footer">
         <div className="vp-footerMain">
           <div className="vp-footerIdentity">
-            <img className="vp-footerLogo" src={voltaSystemsLogo} alt="Volta Systems" />
+            <strong className="vp-footerBrand">Volta Pizza</strong>
 
             <label className="vp-languageSelect">
               <span>Idioma</span>
               <select defaultValue="es">
-                <option value="es">Espanol</option>
-                <option value="en">English</option>
+                <option value="es">Español</option>
+                <option value="en" disabled>English — próximamente</option>
               </select>
             </label>
 
@@ -351,12 +411,12 @@ export default function LandingPage() {
             </div>
 
             <div className="vp-footerSocial" aria-label="Redes sociales">
-              <span>Redes sociales</span>
+              <span>Redes sociales · próximamente</span>
               <div>
                 {socialLinks.map((item) => (
-                  <a key={item.label} href={item.href} aria-label={item.label} title={item.label}>
+                  <span key={item.label} className="vp-socialPending" aria-label={`${item.label}: próximamente`} title={`${item.label}: próximamente`}>
                     {item.text}
-                  </a>
+                  </span>
                 ))}
               </div>
             </div>
@@ -367,7 +427,7 @@ export default function LandingPage() {
               <div className="vp-footerColumn" key={group.title}>
                 <span>{group.title}</span>
                 {group.links.map((link) => (
-                  <a key={link} href={link === "Demo comercial" ? "#contacto" : "#sistema"}>
+                  <a key={link} href={link === "Demo comercial" ? "#contacto" : link === "Condiciones comerciales" ? "#condiciones" : link === "Cómo empezar" ? "#como-empezar" : group.title === "Venta directa" ? "#venta-directa" : "#sistema"}>
                     {link}
                   </a>
                 ))}
@@ -377,7 +437,7 @@ export default function LandingPage() {
         </div>
 
         <div className="vp-footerBottom">
-          <span>THE PIZZA SALE ENGINE</span>
+          <span>THE PIZZA<br /> SALE ENGINE</span>
         </div>
       </footer>
     </main>

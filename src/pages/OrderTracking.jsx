@@ -258,7 +258,7 @@ export default function OrderTracking() {
           <span>{data?.storeName || "Pedido"}</span>
           <h1>Seguimiento de pedido</h1>
           <p>
-            Pedido <b>{data?.code}</b>
+            Pedido <b>{data?.displayCode || data?.code}</b>
           </p>
           <div className="ot-fulfilment" aria-label="Modalidad del pedido">{fulfilmentLabel}</div>
         </div>
@@ -400,7 +400,7 @@ export default function OrderTracking() {
               ? "Puedes volver a la tienda para repetir, guardar favoritos o ver nuevas ofertas."
               : isDelivery
               ? "Cuando este listo, la tienda gestionara la entrega. Revisa este seguimiento si necesitas confirmar el estado."
-              : isPickup ? `Muestra ${data?.code || "tu código"} al recoger. Si quieres pedir algo más, vuelve a la tienda sin perder este seguimiento.`
+              : isPickup ? `Muestra ${data?.displayCode || data?.code || "tu código"} al recoger. Si quieres pedir algo más, vuelve a la tienda sin perder este seguimiento.`
               : "Contacta con la tienda si necesitas confirmar cómo recibir tu pedido."}
           </p>
         </section>
@@ -426,7 +426,7 @@ export default function OrderTracking() {
             <div className="ot-boostCurrent">
               <span>Posicion actual</span>
               <strong>#{boostQuote?.currentPosition || data?.queuePosition || "--"}</strong>
-              <small>Pedido {data?.code}</small>
+              <small>Pedido {data?.displayCode || data?.code}</small>
             </div>
 
             <div className="ot-boostOptions" role="radiogroup" aria-label="Nueva posicion">

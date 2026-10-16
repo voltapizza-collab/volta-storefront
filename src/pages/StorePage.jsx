@@ -1,6 +1,5 @@
 import { sortIngredientsForBuilding } from '../utils/ingredientPresentationOrder';
 import { scaleIngredientPriceForSize, buildCustomIngredientDetail, getCustomIngredientPrice, buildCustomPizzaLine } from '../utils/customPizza';
-import { isLocalVisualPizzaEnabled } from '../utils/visualPizzaExperiment';
 import { rememberRepeatReceipt, readRepeatReceipts } from '../auth/repeatReceipts';
 import { getPosOrderCode as getOrderDisplayCode } from '../pos/orderDisplayCode';
 import { getIngredientTaxonomyKey, getTaxonomyCategoryLabel, getTaxonomyCategories } from '../utils/ingredientTaxonomy';
@@ -40,7 +39,6 @@ import { formatCouponValidity } from "../utils/couponValidity";
 import { createCouponValidationController } from "../utils/couponValidation";
 
 const VisualPizzaBuilder = lazy(() => import('../components/Storefront/VisualPizzaBuilder'));
-const localVisualPizzaEnabled = typeof window !== 'undefined' && isLocalVisualPizzaEnabled(window.location.hostname);
 
 const TRENDING_TAB = "__TRENDING__";
 const TOP_DEAL_TAB = "__TOP_DEAL__";
@@ -2448,7 +2446,7 @@ export default function StorePage() {
   const [openHalfExtrasA, setOpenHalfExtrasA] = useState(false);
   const [openHalfExtrasB, setOpenHalfExtrasB] = useState(false);
   const [customModalOpen, setCustomModalOpen] = useState(false);
-  const [customVisualMode, setCustomVisualMode] = useState(localVisualPizzaEnabled);
+  const [customVisualMode, setCustomVisualMode] = useState(true);
   const [customCategoryKey, setCustomCategoryKey] = useState("");
   const [customCategoryUses, setCustomCategoryUses] = useState([]);
   const [customUsesLoading, setCustomUsesLoading] = useState(false);
@@ -4084,7 +4082,7 @@ export default function StorePage() {
 
   useEffect(() => {
     if (!customModalOpen) return;
-    setCustomVisualMode(localVisualPizzaEnabled);
+    setCustomVisualMode(true);
     setCustomCategoryKey("");
     setCustomSize("");
     setCustomQty(1);
@@ -7683,7 +7681,7 @@ export default function StorePage() {
       {customModalOpen && (
         <div className="sf-modalOverlay sf-modalOverlay--custom" onClick={() => setCustomModalOpen(false)}>
           <div
-            className={`sf-modalCard sf-productModal sf-customModal ${selectedCustomCategory && localVisualPizzaEnabled && customVisualMode ? 'sf-customModal--visual' : ''}`}
+            className={`sf-modalCard sf-productModal sf-customModal ${selectedCustomCategory && customVisualMode ? 'sf-customModal--visual' : ''}`}
             onClick={(event) => event.stopPropagation()}
           >
             <div className="sf-cartModalHead">
@@ -7730,7 +7728,7 @@ export default function StorePage() {
                             className="sf-customStartCard"
                             onClick={() => {
                               const sizes = getAvailableSizes(category);
-                              setCustomVisualMode(localVisualPizzaEnabled);
+                              setCustomVisualMode(true);
                               setCustomCategoryKey(category.key);
                               setCustomSize(sizes.length === 1 ? sizes[0] : "");
                               setCustomIngredients({});
@@ -7758,7 +7756,7 @@ export default function StorePage() {
 
                 {selectedCustomCategory && (
                 <>
-                {localVisualPizzaEnabled && customVisualMode ? (
+                {customVisualMode ? (
                   <Suspense fallback={<div className="sf-customEmptyLine">Abriendo el armado visual…</div>}>
                     <VisualPizzaBuilder key={selectedCustomCategory.key}
                       category={selectedCustomCategory} size={customSize} qty={Number(customQty || 1)}
@@ -7780,7 +7778,7 @@ export default function StorePage() {
                   </Suspense>
                 ) : (
                 <div className="sf-customBuilderBody">
-                  {localVisualPizzaEnabled && <div className="sf-customModeSwitch"><button type="button" onClick={() => setCustomVisualMode(true)}>Volver al armado visual</button></div>}
+                  <div className="sf-customModeSwitch"><button type="button" onClick={() => setCustomVisualMode(true)}>Volver al armado visual</button></div>
                   <section className="sf-customAccordion">
                     <button
                       type="button"

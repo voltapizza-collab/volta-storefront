@@ -10,6 +10,7 @@
 
 # production
 /build
+/build-pizza-lab
 
 # misc
 .DS_Store
@@ -30,3 +31,6 @@ yarn-error.log*
 .chrome-profile/
 mockups/
 qa-*.png
+
+/build-category-pricing
+/build-category-pricing-preview

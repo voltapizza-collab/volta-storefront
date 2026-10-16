@@ -24,6 +24,8 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "pizza:lab": "node scripts/pizza-lab.cjs",
+    "pizza:lab:build": "node scripts/pizza-lab.cjs --build-only",
     "predev": "node scripts/disable-react-scripts-cache.cjs",
     "dev": "node --max-old-space-size=4096 ./node_modules/react-scripts/bin/react-scripts.js start",
     "start": "npm run build && node server.js",

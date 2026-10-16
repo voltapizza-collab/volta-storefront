@@ -1,7 +1,10 @@
+import { sortIngredientsForBuilding } from '../utils/ingredientPresentationOrder';
+import { scaleIngredientPriceForSize, buildCustomIngredientDetail, getCustomIngredientPrice, buildCustomPizzaLine } from '../utils/customPizza';
+import { isLocalVisualPizzaEnabled } from '../utils/visualPizzaExperiment';
 import { rememberRepeatReceipt, readRepeatReceipts } from '../auth/repeatReceipts';
 import { getPosOrderCode as getOrderDisplayCode } from '../pos/orderDisplayCode';
 import { getIngredientTaxonomyKey, getTaxonomyCategoryLabel, getTaxonomyCategories } from '../utils/ingredientTaxonomy';
-import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import OrderPortalTransition from "../components/Storefront/OrderPortalTransition";
 import api from "../services/api";
@@ -36,11 +39,13 @@ import { checkoutPresenceState } from "../utils/checkoutPresence";
 import { formatCouponValidity } from "../utils/couponValidity";
 import { createCouponValidationController } from "../utils/couponValidation";
 
+const VisualPizzaBuilder = lazy(() => import('../components/Storefront/VisualPizzaBuilder'));
+const localVisualPizzaEnabled = typeof window !== 'undefined' && isLocalVisualPizzaEnabled(window.location.hostname);
+
 const TRENDING_TAB = "__TRENDING__";
 const TOP_DEAL_TAB = "__TOP_DEAL__";
 const PROMOS_TAB = "__PROMOS__";
 const UPCOMING_TAB = "__UPCOMING__";
-const CUSTOM_BASE_PRICE_FACTOR = 0.8;
 const STOREFRONT_TERMS_VERSION = "2026-05-full-legal-v3";
 const STOREFRONT_TERMS_KEY = `volta_storefront_terms_${STOREFRONT_TERMS_VERSION}`;
 const STOREFRONT_VISITOR_KEY = "volta_storefront_visitor_id";
@@ -256,16 +261,6 @@ const NON_INCENTIVE_LINE_TYPES = new Set([
   "DISCOUNT",
 ]);
 const CUSTOM_CATEGORY_ORDER = ["SALSAS_CONDIMENTOS_BASES", "QUESOS", ...getTaxonomyCategories().map(row => row.key).filter(key => !["SALSAS_CONDIMENTOS_BASES", "QUESOS"].includes(key))];
-const INGREDIENT_BASE_SIZE = "M";
-const INGREDIENT_SIZE_DIAMETERS_CM = {
-  XS: 20,
-  S: 25,
-  M: 30,
-  L: 35,
-  XL: 40,
-  XXL: 45,
-  ST: 30,
-};
 const INCENTIVE_TIME_ZONE = "Europe/Madrid";
 
 function formatCountdown(totalMinutes) {
@@ -1444,6 +1439,7 @@ const mergeTrendingIntoMenu = (menuItems = [], trendingItems = []) => {
       category: item.category,
       categoryPosition: item.categoryPosition,
       categoryCustomizable: item.categoryCustomizable,
+      categoryBasePriceBySize: item.categoryBasePriceBySize,
       categoryHalfAndHalf: item.categoryHalfAndHalf,
     };
   });
@@ -1701,19 +1697,6 @@ const getNextIncentiveStartsInMs = (nextIncentive, nowMs) => {
   return Math.max(0, startsInMs - Math.max(0, nowMs - fetchedAtMs));
 };
 
-const scaleIngredientPriceForSize = (basePrice, size = INGREDIENT_BASE_SIZE) => {
-  const price = num(basePrice);
-  if (price <= 0) return 0;
-
-  const baseDiameter =
-    INGREDIENT_SIZE_DIAMETERS_CM[INGREDIENT_BASE_SIZE] || 30;
-  const targetDiameter =
-    INGREDIENT_SIZE_DIAMETERS_CM[size] || baseDiameter;
-  const areaFactor = (targetDiameter * targetDiameter) / (baseDiameter * baseDiameter);
-
-  return roundMoney(price * areaFactor);
-};
-
 const capWords = (value = "") => {
   const lowerWords = ["de", "del", "y", "con", "al"];
 
@@ -1874,41 +1857,6 @@ const renderProductTagNotice = (productTags = []) => {
   );
 };
 
-const formatCustomPlacementLabel = (value) => {
-  const raw = String(value || "").toUpperCase();
-  if (raw === "FULL") return "Entera";
-  if (raw === "LEFT") return "Mitad izquierda";
-  if (raw === "RIGHT") return "Mitad derecha";
-  return value ? String(value) : "";
-};
-
-const formatCustomQuantityLabel = (value) => {
-  const raw = String(value || "").toUpperCase();
-  if (raw === "DOUBLE") return "Doble";
-  if (raw === "SIMPLE") return "Simple";
-  return value ? String(value) : "";
-};
-
-const buildCustomIngredientDetail = (ingredient) => {
-  const name = String(ingredient?.name || ingredient?.label || "Ingrediente").trim();
-  const placement =
-    ingredient?.placementLabel || formatCustomPlacementLabel(ingredient?.placement);
-  const quantity =
-    ingredient?.quantityLabel || formatCustomQuantityLabel(ingredient?.quantity);
-  const meta = [placement, quantity].filter(Boolean).join(" - ");
-
-  return {
-    ingredientId: ingredient?.ingredientId ?? ingredient?.id ?? null,
-    name,
-    category: ingredient?.category || "OTROS",
-    placement: ingredient?.placement || "",
-    quantity: ingredient?.quantity || "SIMPLE",
-    placementLabel: placement,
-    quantityLabel: quantity,
-    label: meta ? `${name}: ${meta}` : name,
-  };
-};
-
 const normalizeIngredientKey = (value = "") =>
   String(value || "")
     .trim()
@@ -1974,15 +1922,6 @@ const priceForExtraSize = (extra, size) => {
   return num(extra?.price);
 };
 
-const getCustomIngredientPrice = (ingredient) => {
-  const base = num(ingredient?.basePrice ?? ingredient?.costPrice);
-  const quantityMultiplier = ingredient?.quantity === "DOUBLE" ? 2 : 1;
-  const placementMultiplier = ingredient?.placement === "FULL" ? 1 : 0.5;
-
-  if (!ingredient?.placement) return 0;
-  return base * quantityMultiplier * placementMultiplier;
-};
-
 const getCartLineQty = (line) => {
   const qty = Number(line?.qty ?? line?.quantity ?? 1);
   return Number.isFinite(qty) && qty > 0 ? qty : 1;
@@ -2019,11 +1958,6 @@ const normalizeSearchText = (value = "") =>
     .replace(/[\u0300-\u036f]/g, "")
     .trim();
 
-const isPizzaLikeCategory = (value = "") => {
-  const normalized = normalizeSearchText(value);
-  return normalized.includes("pizza");
-};
-
 const getCustomCategoryKey = (item) => {
   const categoryId = Number(item?.categoryId);
   if (Number.isInteger(categoryId) && categoryId > 0) {
@@ -2049,23 +1983,6 @@ const buildCatalogCategories = (menu) => {
 };
 
 const EMPTY_CATALOG_ITEMS = [];
-
-const getLowestPriceBySize = (items = []) => {
-  const result = {};
-
-  items.forEach((item) => {
-    getAvailableSizes(item).forEach((size) => {
-      const price = priceForSize(item.priceBySize, size);
-      if (price <= 0) return;
-
-      if (!result[size] || price < result[size]) {
-        result[size] = price;
-      }
-    });
-  });
-
-  return result;
-};
 
 const isHalfPizzaCandidate = (item) => {
   if (isClearanceLine(item) || item?.categoryHalfAndHalf !== true) {
@@ -2531,6 +2448,7 @@ export default function StorePage() {
   const [openHalfExtrasA, setOpenHalfExtrasA] = useState(false);
   const [openHalfExtrasB, setOpenHalfExtrasB] = useState(false);
   const [customModalOpen, setCustomModalOpen] = useState(false);
+  const [customVisualMode, setCustomVisualMode] = useState(localVisualPizzaEnabled);
   const [customCategoryKey, setCustomCategoryKey] = useState("");
   const [customCategoryUses, setCustomCategoryUses] = useState([]);
   const [customUsesLoading, setCustomUsesLoading] = useState(false);
@@ -3763,18 +3681,12 @@ export default function StorePage() {
       ),
     [halfA, halfB, halfSelectedExtras]
   );
-  const hasExplicitCustomCategories = useMemo(
-    () => menu.some((item) => item?.categoryCustomizable === true),
-    [menu]
-  );
   const customCategoryOptions = useMemo(() => {
     const grouped = new Map();
 
     menu.forEach((item) => {
       const categoryName = item?.category || "Productos";
-      const isCustomizable =
-        item?.categoryCustomizable === true ||
-        (!hasExplicitCustomCategories && isPizzaLikeCategory(categoryName));
+      const isCustomizable = item?.categoryCustomizable === true;
 
       if (!isCustomizable) return;
 
@@ -3804,22 +3716,10 @@ export default function StorePage() {
 
     return [...grouped.values()]
       .map((category) => {
-        const lowestPriceBySize = getLowestPriceBySize(category.products);
-        const selectSize = Object.keys(lowestPriceBySize);
-
-        return {
-          ...category,
-          selectSize,
-          priceBySize: Object.fromEntries(
-            Object.entries(lowestPriceBySize).map(([size, price]) => [
-              size,
-              roundMoney(price * CUSTOM_BASE_PRICE_FACTOR),
-            ])
-          ),
-          minMenuPrice: Math.min(
-            ...Object.values(lowestPriceBySize).filter((price) => price > 0)
-          ),
-        };
+        const configured = category.products[0]?.categoryBasePriceBySize || {};
+        const availableSizes = [...new Set(category.products.flatMap(getAvailableSizes))];
+        const selectSize = availableSizes.filter(size => typeof configured[size] === 'number' && Number.isFinite(configured[size]) && configured[size] > 0);
+        return { ...category, selectSize, priceBySize: Object.fromEntries(selectSize.map(size => [size, configured[size]])) };
       })
       .filter((category) => category.selectSize.length > 0)
       .sort((left, right) => {
@@ -3830,7 +3730,7 @@ export default function StorePage() {
           sensitivity: "base",
         });
       });
-  }, [hasExplicitCustomCategories, menu]);
+  }, [menu]);
   const selectedCustomCategory = useMemo(
     () =>
       customCategoryOptions.find(
@@ -3899,22 +3799,7 @@ export default function StorePage() {
     });
 
     Object.keys(grouped).forEach((category) => {
-      grouped[category] = [...grouped[category]].sort((left, right) => {
-        const leftName = normalizeSearchText(left.name);
-        const rightName = normalizeSearchText(right.name);
-
-        if (category === "SALSAS_CONDIMENTOS_BASES") {
-          if (leftName.includes("tomate")) return -1;
-          if (rightName.includes("tomate")) return 1;
-        }
-
-        if (category === "QUESOS") {
-          if (leftName.includes("mozz")) return -1;
-          if (rightName.includes("mozz")) return 1;
-        }
-
-        return String(left.name || "").localeCompare(String(right.name || ""));
-      });
+      grouped[category] = sortIngredientsForBuilding(grouped[category]);
     });
 
     return grouped;
@@ -4199,6 +4084,7 @@ export default function StorePage() {
 
   useEffect(() => {
     if (!customModalOpen) return;
+    setCustomVisualMode(localVisualPizzaEnabled);
     setCustomCategoryKey("");
     setCustomSize("");
     setCustomQty(1);
@@ -4520,71 +4406,11 @@ export default function StorePage() {
   const addCustomLine = () => {
     if (!selectedCustomCategory || !customReady) return;
 
-    const ingredients = Object.entries(customIngredients).map(([id, data]) => {
-      const catalogIngredient = scopedCustomIngredientsCatalog.find(
-        (ingredient) => Number(ingredient.id) === Number(id)
-      ) || customIngredientsCatalog.find(
-        (ingredient) => Number(ingredient.id) === Number(id)
-      );
-
-      return {
-        id: Number(id),
-        ingredientId: Number(id),
-        name: catalogIngredient?.name || data.name || "Ingrediente",
-        category: catalogIngredient?.category || "OTROS",
-        placement: data.placement,
-        quantity: data.quantity,
-        placementLabel:
-          data.placement === "FULL"
-            ? "Entera"
-            : data.placement === "LEFT"
-            ? "Mitad izquierda"
-            : data.placement === "RIGHT"
-            ? "Mitad derecha"
-            : data.placement,
-        quantityLabel: data.quantity === "DOUBLE" ? "Doble" : "Simple",
-        basePrice: Number(data.basePrice || catalogIngredient?.costPrice || 0),
-        allergens: Array.isArray(catalogIngredient?.allergens)
-          ? catalogIngredient.allergens
-          : [],
-        price: getCustomIngredientPrice(data),
-      };
+    const line = buildCustomPizzaLine({
+      selectedCustomCategory, selectedCustomBase, customSize, customQty, customBasePrice,
+      customIngredients, scopedCustomIngredientsCatalog, customIngredientsCatalog,
+      customSelectedAllergens, customGrandTotal,
     });
-    const customDetailIngredients = ingredients.map(buildCustomIngredientDetail);
-
-    const line = {
-      cartLineId: `custom-${selectedCustomCategory.key}-${Date.now()}`,
-      type: "CUSTOM_BUILD",
-      pizzaId: selectedCustomCategory.samplePizzaId,
-      name: `Personalizada ${selectedCustomCategory.name}`,
-      category: selectedCustomCategory.name,
-      size: customSize,
-      qty: Number(customQty || 1),
-      price: customBasePrice,
-      ingredients,
-      allergens: customSelectedAllergens,
-      extras: [],
-      subtotal: customGrandTotal,
-      customDetails: {
-        categoryName: selectedCustomCategory.name,
-        baseProductName:
-          selectedCustomBase?.name ||
-          selectedCustomCategory.baseName ||
-          selectedCustomCategory.name,
-        ingredients: customDetailIngredients,
-        summary: customDetailIngredients.map((ingredient) => ingredient.label).join(" | "),
-      },
-      customMeta: {
-        categoryId: selectedCustomCategory.categoryId,
-        categoryName: selectedCustomCategory.name,
-        baseName: selectedCustomCategory.baseName,
-        basePizzaId: selectedCustomBase?.pizzaId || selectedCustomCategory.samplePizzaId || null,
-        baseProductName: selectedCustomBase?.name || selectedCustomCategory.baseName || selectedCustomCategory.name,
-        pricingRule: "CATEGORY_BASELINE",
-        basePriceFactor: CUSTOM_BASE_PRICE_FACTOR,
-      },
-      image: selectedCustomCategory.sampleImage || "",
-    };
 
     setCart((current) => [...current, line]);
     setCustomModalOpen(false);
@@ -7857,7 +7683,7 @@ export default function StorePage() {
       {customModalOpen && (
         <div className="sf-modalOverlay sf-modalOverlay--custom" onClick={() => setCustomModalOpen(false)}>
           <div
-            className="sf-modalCard sf-productModal sf-customModal"
+            className={`sf-modalCard sf-productModal sf-customModal ${selectedCustomCategory && localVisualPizzaEnabled && customVisualMode ? 'sf-customModal--visual' : ''}`}
             onClick={(event) => event.stopPropagation()}
           >
             <div className="sf-cartModalHead">
@@ -7904,6 +7730,7 @@ export default function StorePage() {
                             className="sf-customStartCard"
                             onClick={() => {
                               const sizes = getAvailableSizes(category);
+                              setCustomVisualMode(localVisualPizzaEnabled);
                               setCustomCategoryKey(category.key);
                               setCustomSize(sizes.length === 1 ? sizes[0] : "");
                               setCustomIngredients({});
@@ -7931,7 +7758,29 @@ export default function StorePage() {
 
                 {selectedCustomCategory && (
                 <>
+                {localVisualPizzaEnabled && customVisualMode ? (
+                  <Suspense fallback={<div className="sf-customEmptyLine">Abriendo el armado visual…</div>}>
+                    <VisualPizzaBuilder key={selectedCustomCategory.key}
+                      category={selectedCustomCategory} size={customSize} qty={Number(customQty || 1)}
+                      catalog={scopedCustomIngredientsCatalog} ingredients={customIngredients}
+                      loading={customUsesLoading} getUnitPrice={getCustomIngredientUnitPrice}
+                      onSize={(size) => { setCustomSize(size); setCustomPendingIngredients({}); }}
+                      onQty={setCustomQty} onQuick={() => setCustomVisualMode(false)}
+                      onIngredientsChange={(next) => {
+                        setCustomIngredients(Object.fromEntries(Object.entries(next).map(([id, selection]) => {
+                          const ingredient = scopedCustomIngredientsCatalog.find(row => Number(row.id) === Number(id));
+                          return [id, { ...selection, basePrice: getCustomIngredientUnitPrice(ingredient || selection) }];
+                        })));
+                        setCustomPendingIngredients({});
+                      }}
+                      onChangeBase={() => {
+                        setCustomCategoryKey(''); setCustomSize(''); setCustomQty(1);
+                        setCustomIngredients({}); setCustomPendingIngredients({}); setCustomOpenSection('BASE');
+                      }} />
+                  </Suspense>
+                ) : (
                 <div className="sf-customBuilderBody">
+                  {localVisualPizzaEnabled && <div className="sf-customModeSwitch"><button type="button" onClick={() => setCustomVisualMode(true)}>Volver al armado visual</button></div>}
                   <section className="sf-customAccordion">
                     <button
                       type="button"
@@ -8225,6 +8074,7 @@ export default function StorePage() {
                   })}
                 </div>
 
+                )}
                 <div className="sf-productPickerActions sf-builderStickyActions">
                   <div className="sf-builderTotal">
                     <span>Total armado</span>

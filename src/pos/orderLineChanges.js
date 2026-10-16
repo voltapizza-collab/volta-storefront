@@ -20,7 +20,8 @@ export const getLineChangeRows = (item) => {
     const name = extra?.label || extra?.name || extra?.code || (typeof extra === 'string' ? extra : '');
     if (!name) return;
     const side = formatSide(extra?.side || extra?.placement);
-    changes.push(side ? `Extra ${side}: ${name}` : `Extra: ${name}`);
+    const quantity = extra?.quantityLabel || ({ SIMPLE: 'Simple', DOUBLE: 'Doble' }[extra?.quantity] || extra?.quantity || '');
+    changes.push(`${side ? `Extra ${side}: ${name}` : `Extra: ${name}`}${quantity ? ` - ${quantity}` : ''}`);
   });
   if (changes.length) return ['CAMBIOS:', ...changes];
   const hasNote = [item?.notes, item?.note, item?.comment].some((value) => String(value || '').trim());

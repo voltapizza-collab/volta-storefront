@@ -1,0 +1,6 @@
+:root { --brand-1:#3b008b; --brand-2:#6a3df0; --brand-3:#ffb000; }
+body { margin:0; font-family:Arial,sans-serif; background:#f7f5fb; }
+.pricing-preview-note { padding:12px 24px; font-size:12px; background:#efe8fb; color:#54289b; border-bottom:1px solid #d7c6ef; }
+
+.pricing-preview-body { padding:24px; }
+.pricing-preview-body * { box-sizing:border-box; }

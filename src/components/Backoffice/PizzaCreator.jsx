@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import api from "../../setupAxios";
+import CategoryBasePricing, { CategoryCapabilities } from './CategoryBasePricing';
 import ProductNoticeSelector from "./ProductNoticeSelector";
 import ProductLinksAlert from "./ProductLinksAlert";
 import { productNoticeLabels } from "../../constants/productNotices";
@@ -85,8 +86,8 @@ function SortableCategory({ id, children }) {
   };
 
   return (
-    <div ref={setNodeRef} style={style} {...attributes}>
-      {children(listeners)}
+    <div ref={setNodeRef} style={style}>
+      {children({ ...attributes, ...listeners })}
     </div>
   );
 }
@@ -337,6 +338,7 @@ export default function PizzaCreator({ partner, language = "es" }) {
   const [loadingStores, setLoadingStores] = useState(false);
   const [targetStoreIds, setTargetStoreIds] = useState([]);
   const [openCat, setOpenCat] = useState(null);
+  const [basePricingCategory, setBasePricingCategory] = useState(null);
   const [editingPizzaId, setEditingPizzaId] = useState(null);
   const [existingImage, setExistingImage] = useState(null);
   const [categoryOrder, setCategoryOrder] = useState([]);
@@ -1434,6 +1436,10 @@ export default function PizzaCreator({ partner, language = "es" }) {
             {t("side.hint")}
           </div>
 
+          {basePricingCategory && <CategoryBasePricing key={basePricingCategory.id} category={basePricingCategory}
+            products={pizzasByCategory[basePricingCategory.name] || []} partnerId={partnerId} language={language} currency={partner?.currency || 'EUR'}
+            onClose={() => setBasePricingCategory(null)} onSaved={customBasePrices => setCategories(previous => previous.map(row => row.id === basePricingCategory.id ? { ...row, customBasePrices } : row))} />}
+
           <DndContext
             collisionDetection={closestCenter}
             onDragEnd={onCategoryDragEnd}
@@ -1453,22 +1459,14 @@ export default function PizzaCreator({ partner, language = "es" }) {
                   return (
                     <SortableCategory key={c.id} id={c.id}>
                       {(listeners) => (
-                        <button
-                          onClick={() => setOpenCat(name)}
-                          className="pc-catCard"
-                          type="button"
-                        >
-                          <div className="pc-catTop">
-                            <span {...listeners} className="pc-catDrag">
-                              |||
-                            </span>
+                        <div className="pc-catCard pc-catCard--actions">
+                          <span {...listeners} className="pc-catDrag">|||</span>
+                          <button onClick={() => setOpenCat(name)} className="pc-catProducts" type="button">
                             <span className="pc-catName">{name}</span>
-                          </div>
-
-                          <div className="pc-catCount">
-                            {t("side.productCount", { count })}
-                          </div>
-                        </button>
+                            <span className="pc-catCount">{t("side.productCount", { count })}</span>
+                          </button>
+                          <CategoryCapabilities category={c} products={pizzasByCategory[name] || []} language={language} onConfigure={() => setBasePricingCategory(c)} />
+                        </div>
                       )}
                     </SortableCategory>
                   );

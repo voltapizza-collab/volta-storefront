@@ -1,5 +1,9 @@
 # Volta POS para SUNMI V3
 
+## Versión publicada 0.3.24 (código 27)
+
+Comandas personalizadas agrupadas en FULL, DERECHA e IZQUIERDA; dos recetas separadas en LADO 1/LADO 2. Misma firma y canal HTTPS permanente. Publicada el 16 de octubre de 2026 y asignada, por autorización del usuario, a los tres SUNMI registrados. Instalación e impresión física pendientes de confirmar. [Alcance, pruebas y entrega OTA](../../docs/pos/spatial-ticket-2026-10-15.md). La versión 0.3.23 descrita más abajo es la referencia anterior.
+
 Aplicación instalada: **Volta POS**, paquete `com.volta.poslab`, entrada `PosActivity`, con icono y acceso directo al escritorio.
 
 Reutiliza el POS existente de React dentro del APK: pantalla de usuario/PIN, cocina, historial, ingredientes, reservas y atención al cliente. Las llamadas pasan por la identidad Android y la sesión autorizada de tienda. JavaScript no recibe el token ni la clave privada. La impresión se dirige a PrinterX en lugar del diálogo de Windows.

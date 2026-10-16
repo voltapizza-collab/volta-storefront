@@ -24,7 +24,7 @@ import PosUpdates from './PosUpdates';
 import { shouldShowCheckoutAlert } from '../utils/checkoutPresence';
 import "../styles/PosApp.css";
 import { ingredientRemovalRows } from "../utils/ingredientRemovals";
-import { getLineChangeRows } from './orderLineChanges';
+import { getLineDetailRows, isSpatialHeading } from './orderLineDetails';
 import { getOrderPayment, getPaymentLabel, isCashPaymentOrder, isCashPaymentPending } from './orderPayment';
 
 const POS_REMEMBERED_LOGIN_KEY = "volta_pos_remembered_login";
@@ -218,101 +218,12 @@ const lineQty = (item) => {
   return Number.isFinite(qty) && qty > 0 ? qty : 1;
 };
 
-const getPromoItemDetails = (item) =>
-  asArray(item?.promoItems)
-    .map((promoItem) => {
-      const name = lineName(promoItem);
-      const size = promoItem?.size || promoItem?.selectedSize || "";
-      return `${lineQty(promoItem)}x ${name}${size ? ` ${size}` : ""}`.trim();
-    })
-    .filter(Boolean);
-
-const isCustomBuildLine = (item) =>
-  String(item?.type || "").toUpperCase() === "CUSTOM_BUILD" ||
-  String(item?.cartLineId || "").startsWith("custom-");
-
 const isIncentiveRewardLine = (item) =>
   String(item?.source || "").toLowerCase() === "incentive_reward" ||
   String(item?.type || "").toUpperCase() === "INCENTIVE_REWARD";
 
 const isCompletedPaidOrder = (order) =>
   String(order?.status || "").toUpperCase() === "PAID" && order?.processed === true;
-
-const isHalfAndHalfLine = (item) =>
-  Boolean(item?.leftName && item?.rightName) ||
-  String(item?.cartLineId || "").startsWith("half-");
-
-const formatIngredientPlacement = (value) => {
-  const raw = String(value || "").toUpperCase();
-  if (raw === "FULL") return "Entera";
-  if (raw === "LEFT") return "Mitad izquierda";
-  if (raw === "RIGHT") return "Mitad derecha";
-  return value ? String(value) : "";
-};
-
-const formatIngredientQuantity = (value) => {
-  const raw = String(value || "").toUpperCase();
-  if (raw === "DOUBLE") return "Doble";
-  if (raw === "SIMPLE") return "Simple";
-  return value ? String(value) : "";
-};
-
-const getIngredientDetails = (item) => {
-  const directIngredients = asArray(item?.ingredients);
-  const detailIngredients = directIngredients.length
-    ? directIngredients
-    : asArray(item?.customDetails?.ingredients);
-
-  return detailIngredients
-    .map((ingredient) => {
-      if (ingredient?.label) return String(ingredient.label).trim();
-
-      const name = String(ingredient?.name || ingredient?.label || ingredient || "").trim();
-      if (!name) return "";
-
-      const placement = ingredient?.placementLabel || formatIngredientPlacement(ingredient?.placement);
-      const quantity = ingredient?.quantityLabel || formatIngredientQuantity(ingredient?.quantity);
-      const detail = [placement, quantity].filter(Boolean).join(" - ");
-      return detail ? `${name}: ${detail}` : name;
-    })
-    .filter(Boolean);
-};
-
-const getLineDetailRows = (item) => {
-  const rows = [];
-  const customMeta = item?.customMeta || item?.customDetails || {};
-
-  if (isIncentiveRewardLine(item)) {
-    rows.push("Incentivo: premio gratis");
-  }
-
-  if (isHalfAndHalfLine(item)) {
-    if (item.leftName) rows.push(`Mitad A: ${item.leftName}`);
-    if (item.rightName) rows.push(`Mitad B: ${item.rightName}`);
-  }
-
-  getPromoItemDetails(item).forEach((detail) => rows.push(detail));
-
-  getIngredientDetails(item).forEach((detail) => rows.push(detail));
-
-  if (isCustomBuildLine(item) && !getIngredientDetails(item).length) {
-    rows.push("Personalizacion sin ingredientes guardados");
-  }
-
-  if (isCustomBuildLine(item)) {
-    const baseName =
-      customMeta.baseProductName ||
-      customMeta.baseName ||
-      customMeta.categoryName ||
-      "";
-    const visibleName = lineName(item);
-    if (baseName && !visibleName.toLowerCase().includes(String(baseName).toLowerCase())) {
-      rows.push(`Tipo: ${baseName}`);
-    }
-  }
-
-  return [...rows, ...getLineChangeRows(item)];
-};
 
 const escapeHtml = (value) =>
   String(value ?? "")
@@ -406,7 +317,7 @@ export const buildWindowsPrintTicketHtml = (order) => {
                     note ? `<span class="muted">${escapeHtml(note)}</span>` : ""
                   }${
                     detailRows.length
-                      ? `<ul>${detailRows.map((detail) => `<li${ingredientRemovalRows(item).includes(detail) ? ' class="removal"' : detail === 'CAMBIOS:' ? ' class="changesHeading"' : detail === 'Receta original' ? ' class="recipeOriginal"' : ''}>${escapeHtml(detail)}</li>`).join("")}</ul>`
+                      ? `<ul>${detailRows.map((detail) => `<li${(ingredientRemovalRows(item).includes(detail) || (detail.startsWith("SIN ") && !isSpatialHeading(detail))) ? ' class="removal"' : (detail === 'CAMBIOS:' || isSpatialHeading(detail)) ? ' class="changesHeading"' : detail === 'Receta original' ? ' class="recipeOriginal"' : ''}>${escapeHtml(detail)}</li>`).join("")}</ul>`
                       : ""
                   }</div>`;
                 })
@@ -729,7 +640,7 @@ export function OrderItems({ order }) {
             {detailRows.length > 0 && (
               <ul className="pos-itemDetails">
                 {detailRows.map((detail, detailIndex) => (
-                  <li className={ingredientRemovalRows(item).includes(detail) ? "pos-ingredientRemoval" : detail === 'CAMBIOS:' ? 'pos-changesHeading' : detail === 'Receta original' ? 'pos-recipeOriginal' : undefined}
+                  <li className={(ingredientRemovalRows(item).includes(detail) || (detail.startsWith("SIN ") && !isSpatialHeading(detail))) ? "pos-ingredientRemoval" : (detail === 'CAMBIOS:' || isSpatialHeading(detail)) ? 'pos-changesHeading' : detail === 'Receta original' ? 'pos-recipeOriginal' : undefined}
                     key={`${order.id}-${index}-${detailIndex}`}>{detail}</li>
                 ))}
               </ul>
@@ -2498,13 +2409,23 @@ export default function PosApp() {
                     {pizzaId:1,name:'Pizza de prueba con mozzarella y champiñones',quantity:1,size:'Grande',
                       removedIngredients:[{ingredientId:10,name:'Cebolla'},{ingredientId:11,name:'Champiñones frescos laminados'}],extras:[{name:'Mozzarella'}]},
                     {pizzaId:1,name:'Pizza de prueba con mozzarella y champiñones',quantity:1,size:'Grande'},
+                    {type:'CUSTOM_BUILD',name:'Personalizada espacial',qty:1,size:'M',notes:'Cortar en ocho',ingredients:[
+                      {name:'Bacon',placement:'RIGHT',quantity:'DOUBLE'},
+                      {name:'Jamón',placement:'LEFT',quantity:'SIMPLE'},
+                      {name:'Mozzarella',placement:'FULL',quantity:'SIMPLE'},
+                      {name:'Champiñones frescos laminados',placement:'RIGHT',quantity:'SIMPLE'},
+                      {name:'Piña',placement:'LEFT',quantity:'SIMPLE'},
+                    ]},
+                    {type:'HALF_HALF',name:'Dos recetas',qty:1,size:'M',leftName:'Barbacoa',rightName:'Hawaiana',extras:[
+                      {name:'Piña',side:'B'}, {name:'Bacon',side:'A'},
+                    ]},
                   ] };
                 if (!isNativePos) {
                   await printOrder(sample);
                   return;
                 }
                 await printNative('printTest',{lines:[...buildOrderLines(sample),'Direccion de prueba: calle larga numero 123, piso 4','Caracteres: á é í ó ú ñ €']},
-                  'Ticket de prueba confirmado por SUNMI. Comprueba CAMBIOS, las retiradas en negrita y Receta original en la segunda pizza.');
+                  'Ticket de prueba confirmado por SUNMI. Comprueba FULL, DERECHA, IZQUIERDA, LADO 1 y LADO 2, cantidades y retiradas.');
               } catch (_) { setMessage('No se confirmó la impresión. Comprueba el papel antes de repetir.'); }
             }}><strong>Impresión de prueba</strong><small>Imprimir un ticket de comprobación</small></button>
             {isNativePos && <button type="button" onClick={() => {

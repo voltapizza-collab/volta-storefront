@@ -1,4 +1,4 @@
-import { getLineChangeRows } from '../orderLineChanges';
+import { getLineDetailRows, isSpatialHeading } from '../orderLineDetails';
 import { getPaymentLabel } from '../orderPayment';
 import { getPosOrderCode } from '../orderDisplayCode';
 const PRINT_LOG_KEY = "volta_pos_virtual_print_log";
@@ -45,108 +45,9 @@ const lineQty = (item) => {
   return Number.isFinite(qty) && qty > 0 ? qty : 1;
 };
 
-const getPromoItemDetails = (item) =>
-  readArray(item?.promoItems)
-    .map((promoItem) => {
-      const name = lineName(promoItem);
-      const size = promoItem?.size || promoItem?.selectedSize || "";
-      return `${lineQty(promoItem)}x ${name}${size ? ` ${size}` : ""}`.trim();
-    })
-    .filter(Boolean);
-
-const isCustomBuildLine = (item) =>
-  String(item?.type || "").toUpperCase() === "CUSTOM_BUILD" ||
-  String(item?.cartLineId || "").startsWith("custom-");
-
 const isIncentiveRewardLine = (item) =>
   String(item?.source || "").toLowerCase() === "incentive_reward" ||
   String(item?.type || "").toUpperCase() === "INCENTIVE_REWARD";
-
-const isHalfAndHalfLine = (item) =>
-  Boolean(item?.leftName && item?.rightName) ||
-  String(item?.cartLineId || "").startsWith("half-");
-
-const formatIngredientPlacement = (value) => {
-  const raw = String(value || "").toUpperCase();
-  if (raw === "FULL") return "Entera";
-  if (raw === "LEFT") return "Mitad izquierda";
-  if (raw === "RIGHT") return "Mitad derecha";
-  return value ? String(value) : "";
-};
-
-const formatIngredientQuantity = (value) => {
-  const raw = String(value || "").toUpperCase();
-  if (raw === "DOUBLE") return "Doble";
-  if (raw === "SIMPLE") return "Simple";
-  return value ? String(value) : "";
-};
-
-const readArray = (value) => {
-  if (Array.isArray(value)) return value;
-  if (typeof value !== "string") return [];
-
-  try {
-    const parsed = JSON.parse(value);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
-};
-
-const getLineDetailRows = (item) => {
-  const rows = [];
-  const customMeta = item?.customMeta || item?.customDetails || {};
-
-  if (isIncentiveRewardLine(item)) {
-    rows.push("Incentivo: premio gratis");
-  }
-
-  if (isHalfAndHalfLine(item)) {
-    if (item.leftName) rows.push(`Mitad A: ${item.leftName}`);
-    if (item.rightName) rows.push(`Mitad B: ${item.rightName}`);
-  }
-
-  getPromoItemDetails(item).forEach((detail) => rows.push(detail));
-
-  const ingredientRows = [];
-  const sourceIngredients = readArray(item?.ingredients).length
-    ? readArray(item?.ingredients)
-    : readArray(item?.customDetails?.ingredients);
-
-  sourceIngredients.forEach((ingredient) => {
-    if (ingredient?.label) {
-      ingredientRows.push(String(ingredient.label).trim());
-      return;
-    }
-
-    const name = String(ingredient?.name || ingredient?.label || ingredient || "").trim();
-    if (!name) return;
-
-    const placement = ingredient?.placementLabel || formatIngredientPlacement(ingredient?.placement);
-    const quantity = ingredient?.quantityLabel || formatIngredientQuantity(ingredient?.quantity);
-    const detail = [placement, quantity].filter(Boolean).join(" - ");
-    ingredientRows.push(detail ? `${name}: ${detail}` : name);
-  });
-  rows.push(...ingredientRows);
-
-  if (isCustomBuildLine(item) && !ingredientRows.length) {
-    rows.push("Personalizacion sin ingredientes guardados");
-  }
-
-  if (isCustomBuildLine(item)) {
-    const baseName =
-      customMeta.baseProductName ||
-      customMeta.baseName ||
-      customMeta.categoryName ||
-      "";
-    const visibleName = lineName(item);
-    if (baseName && !visibleName.toLowerCase().includes(String(baseName).toLowerCase())) {
-      rows.push(`Tipo: ${baseName}`);
-    }
-  }
-
-  return [...rows, ...getLineChangeRows(item)];
-};
 
 const getScheduledFor = (order) =>
   order?.scheduledFor ||
@@ -260,7 +161,7 @@ export function buildOrderLines(order) {
         const size = item?.size || item?.selectedSize || "";
         return [
           `${lineQty(item)} x ${lineName(item)} ${size}${isIncentiveRewardLine(item) ? " [REGALO]" : ""}`.trim(),
-          ...getLineDetailRows(item).map((detail) => detail === 'CAMBIOS:' || detail === 'Receta original' ? `  ${detail}` : `  - ${detail}`),
+          ...getLineDetailRows(item).map((detail) => isSpatialHeading(detail) || detail === 'CAMBIOS:' || detail === 'Receta original' ? `  ${detail}` : `  - ${detail}`),
         ];
       }),
       "------------------------------",

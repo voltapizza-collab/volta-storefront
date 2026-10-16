@@ -11,7 +11,7 @@ jest.mock("react-router-dom", () => {
     useNavigate: () => jest.fn(), Link: ({ children }) => children };
 }, { virtual: true });
 
-const product = { pizzaId: 1, name: "Barbacoa", categoryId: 1, category: "Pizzas", selectSize: ["M"], priceBySize: { M: 10 }, available: true,
+const product = { pizzaId: 1, name: "Barbacoa", categoryId: 1, category: "Pizzas", categoryCustomizable: true, categoryBasePriceBySize: { M: 8 }, selectSize: ["M"], priceBySize: { M: 10 }, available: true,
   ingredients: [
     { id: 10, name: "Cebolla", removable: false, qtyBySize: { M: 0 } },
     { id: 11, name: "Masa", removable: false, qtyBySize: { M: 100 } },
@@ -43,6 +43,37 @@ async function openProduct() {
   return within(modal);
 }
 const cartDraft = () => JSON.parse(localStorage.getItem(draftKey)).items;
+
+test('choosing a base opens the local visual builder; quick mode preserves the recipe and adds the same cart line', async () => {
+  const previousGet = api.get.getMockImplementation();
+  api.get.mockImplementation(async path => {
+    if (path.includes('ingredient-category-uses')) return [{ ingredientId: 10, name: 'Cebolla', category: 'VERDURAS', costPrice: 2 }];
+    if (path === '/stores/1/ingredients') return [{ id: 10, name: 'Cebolla', category: 'VERDURAS', costPrice: 2, status: 'ACTIVE' }];
+    return previousGet(path);
+  });
+  render(<StorePage />);
+  const openBuilder = (await screen.findAllByRole('button', { name: 'Arma tu pizza' }))[0];
+  await act(async () => fireEvent.click(openBuilder));
+  fireEvent.click(await screen.findByRole('button', { name: /Pizzas M.*base desde/ }));
+  const visual = await screen.findByRole('region', { name: 'Armado visual de pizza' });
+  fireEvent.click(await within(visual).findByRole('button', { name: 'Abrir Vegetales' }));
+  fireEvent.click(await within(visual).findByRole('button', { name: 'Elegir Cebolla' }));
+  fireEvent.click(within(visual).getByRole('button', { name: 'Derecha', exact: true }));
+  fireEvent.click(within(visual).getByRole('button', { name: 'Doble', exact: true }));
+  fireEvent.click(within(visual).getByRole('button', { name: /Poner en mi pizza/ }));
+  fireEvent.click(within(visual).getByRole('button', { name: /Tu receta/ }));
+  expect(within(visual).getByText('Derecha · Doble')).toBeVisible();
+  fireEvent.click(within(visual).getByRole('button', { name: 'Armado rápido' }));
+  expect(screen.queryByRole('region', { name: 'Armado visual de pizza' })).not.toBeInTheDocument();
+  expect(document.querySelector('.sf-customBuilderBody')).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Volver al armado visual' }));
+  fireEvent.click(await screen.findByRole('button', { name: /Tu receta/ }));
+  expect(await screen.findByText('Derecha · Doble')).toBeVisible();
+  fireEvent.click(screen.getByRole('button', { name: 'Add to cart - EUR 10.00' }));
+  await waitFor(() => expect(cartDraft()).toHaveLength(1));
+  expect(cartDraft()[0]).toMatchObject({ type: 'CUSTOM_BUILD', size: 'M', qty: 1, price: 8, subtotal: 10,
+    ingredients: [{ ingredientId: 10, placement: 'RIGHT', quantity: 'DOUBLE' }] });
+});
 
 test('all six special notices reach the card and the product detail without truncation', async () => {
   const previousGet = api.get.getMockImplementation();
@@ -132,4 +163,13 @@ test("restored drafts keep old removals visible and allow clearing a changed rec
   fireEvent.click(screen.getByRole("checkbox", { name: /Sin Ingrediente anterior/ }));
   await waitFor(() => expect(cartDraft()[0].removedIngredients).toEqual([]));
   expect(cartDraft()[0].subtotal).toBe(10);
+});
+
+test.each([{categoryBasePriceBySize:{}},{categoryCustomizable:false},{categoryCustomizable:undefined}])('unconfigured or globally disabled categories never derive a base from menu offers: %j',async change=>{
+  const previousGet=api.get.getMockImplementation();
+  api.get.mockImplementation(async path=>{const result=await previousGet(path);return path.endsWith('/menu')?{...result,menu:[{...product,...change,priceBySize:{M:4.94}}]}:result;});
+  render(<StorePage />);
+  fireEvent.click((await screen.findAllByRole('button',{name:'Arma tu pizza'}))[0]);
+  expect(await screen.findByText('No hay categorias personalizables en esta tienda.')).toBeVisible();
+  expect(screen.queryByRole('button',{name:/base desde/})).not.toBeInTheDocument();
 });

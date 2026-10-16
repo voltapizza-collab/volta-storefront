@@ -5,6 +5,11 @@ import java.util.List;
 
 /** 58 mm paper, 384-dot printable area; conservative 30-column text at size 24. */
 public final class Receipt58 {
+    public static boolean isDetailHeading(String text) {
+        String row = text.trim();
+        return row.equals("CAMBIOS:") || row.equals("FULL") || row.equals("DERECHA") ||
+            row.equals("IZQUIERDA") || row.equals("SIN UBICACIÓN") || row.matches("LADO [12](:.*)?");
+    }
     public static List<String> wrap(String text) {
         List<String> result = new ArrayList<>();
         for (String paragraph : text.replace("\r", "").replace("\t", " ").split("\n", -1)) {

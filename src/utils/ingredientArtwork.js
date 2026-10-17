@@ -1,4 +1,5 @@
 import { getIngredientTaxonomyKey } from './ingredientTaxonomy';
+import { getPizzaSaucePresentation } from './ingredientPizzaPresentation';
 
 // Illustrative appearance only: never used for identity, pricing or allergens.
 const appearance = (art, color, accent) => ({ art, color, ...(accent ? { accent } : {}) });
@@ -45,18 +46,21 @@ const rules = [
 
 export function ingredientArtwork(ingredient = {}) {
   const name = String(ingredient.name || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  const sauce = getPizzaSaucePresentation(ingredient);
+  const sauceAppearance = color => ({ ...appearance('sauce', color), sauceRole: sauce.sauceRole });
+  if (sauce.color) return sauceAppearance(sauce.color);
   // Sauce recipes take precedence over the ingredient in their name.
   if (/salsa|pesto|barbacoa|\bbbq\b|alioli|mayonesa|tomate triturado|aceite|ranch|cesar|bechamel/.test(name)) {
-    if (/aceite/.test(name)) return appearance('sauce', '#c7ac4c');
-    if (/barbacoa|\bbbq\b/.test(name)) return appearance('sauce', '#713e2c');
-    if (/pesto|verde/.test(name)) return appearance('sauce', '#538348');
-    if (/cheddar/.test(name)) return appearance('sauce', '#efa52c');
-    if (/blanca|queso|nata|carbonara|alioli|mayonesa|ranch|cesar|bechamel/.test(name)) return appearance('sauce', '#f5e8c9');
-    if (/picante|brava|sriracha/.test(name)) return appearance('sauce', '#da6830');
-    return appearance('sauce', '#c6472c');
+    if (/aceite/.test(name)) return sauceAppearance('#c7ac4c');
+    if (/barbacoa|\bbbq\b/.test(name)) return sauceAppearance('#713e2c');
+    if (/pesto|verde/.test(name)) return sauceAppearance('#538348');
+    if (/cheddar/.test(name)) return sauceAppearance('#efa52c');
+    if (/blanca|queso|nata|carbonara|alioli|mayonesa|ranch|cesar|bechamel/.test(name)) return sauceAppearance('#f5e8c9');
+    if (/picante|brava|sriracha/.test(name)) return sauceAppearance('#da6830');
+    return sauceAppearance('#c6472c');
   }
   const match = rules.find(([pattern]) => pattern.test(name));
-  if (match) return { ...match[1] };
+  if (match) return { ...match[1], ...(match[1].art === 'sauce' ? { sauceRole: sauce.sauceRole } : {}) };
   const family = getIngredientTaxonomyKey(ingredient);
   const fallback = {
     QUESOS: appearance('cheese', '#efdfa9'),

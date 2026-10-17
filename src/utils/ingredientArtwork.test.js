@@ -35,3 +35,15 @@ test('accents and case do not change appearance; unknown ingredients have a stab
   expect(ingredientArtwork({ name: 'Carne de cabra' }).art).toBe('piece');
   expect(ingredientArtwork().color).toMatch(/^#[0-9a-f]{6}$/);
 });
+
+test('only reviewed tomato sauces cover the base; other sauces and melted cheddar finish above toppings', () => {
+  expect(ingredientArtwork({ name: 'SALSA DE TOMATE' }).sauceRole).toBe('BASE');
+  expect(ingredientArtwork({ canonicalKey: 'tomato_sauce', name: 'Tomato sauce' }).sauceRole).toBe('BASE');
+  expect(ingredientArtwork({ masterCanonicalKey: 'tomate_triturado', name: 'Tomato' }).sauceRole).toBe('BASE');
+  for (const name of ['Salsa BBQ', 'Salsa de cheddar', 'Cheddar fundido', 'Salsa blanca', 'Salsa picante', 'Salsa de tomate y chile', 'Miel']) {
+    expect(ingredientArtwork({ name }).sauceRole).toBe('TOPPING');
+  }
+  expect(ingredientArtwork({ name: 'Tomate', canonicalKey: 'tomate' }).art).toBe('tomato');
+  expect(ingredientArtwork({ name: 'Cheddar', canonicalKey: 'cheddar' }).art).toBe('cheddar');
+  expect(ingredientArtwork({ canonicalKey: 'bbq_sauce', name: 'Salsa de tomate' }).sauceRole).toBe('TOPPING');
+});

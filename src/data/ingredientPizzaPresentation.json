@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "defaultSauceRole": "TOPPING",
+  "ingredients": [
+    {
+      "canonicalKeys": ["tomato_sauce", "tomate_triturado"],
+      "names": ["Salsa tomate", "Salsa de tomate", "Tomate triturado"],
+      "sauceRole": "BASE",
+      "color": "#c6472c"
+    },
+    {
+      "canonicalKeys": ["bbq", "bbq_sauce"],
+      "names": ["Salsa BBQ", "Salsa barbacoa", "Salsa de barbacoa", "BBQ", "Barbacoa"],
+      "sauceRole": "TOPPING",
+      "color": "#713e2c"
+    },
+    {
+      "canonicalKeys": ["salsa_cheddar", "melted_cheddar"],
+      "names": ["Salsa cheddar", "Salsa de cheddar", "Cheddar fundido"],
+      "sauceRole": "TOPPING",
+      "color": "#efa52c"
+    }
+  ]
+}

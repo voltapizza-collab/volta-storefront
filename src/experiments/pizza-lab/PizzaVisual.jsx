@@ -1,5 +1,6 @@
 import { useId } from 'react';
 import { toppingPoints } from './model';
+import { getPizzaSaucePresentation } from '../../utils/ingredientPizzaPresentation';
 
 export function IngredientMark({ ingredient }) {
   const color = ingredient.color;
@@ -32,11 +33,38 @@ export function IngredientMark({ ingredient }) {
   }
 }
 
+function CheeseCoverage({ ingredient }) {
+  const clipId = `cheese-${useId().replace(/:/g, '')}`;
+  const double = ingredient.quantity === 'DOUBLE';
+  const count = double ? 25 : 21;
+  const paths = Array.from({ length: count }, (_, i) => {
+    const offset = 50 + i * 300 / (count - 1);
+    const bend = Math.sin(i * 2.4 + (Number(ingredient.id) || 0)) * 5;
+    return `M40 ${offset} C120 ${offset + 6 + bend} 260 ${offset - 8} 360 ${offset + bend}`;
+  });
+  return <g data-cheese-coverage="true">
+    <defs><clipPath id={clipId}><circle cx="200" cy="200" r="140" /></clipPath></defs>
+    <g clipPath={`url(#${clipId})`} fill="none" strokeLinecap="round">
+      {[-32, 53].map(angle => <g key={angle} transform={`rotate(${angle} 200 200)`}>
+        {paths.map((d, i) => <g key={i}>
+          <path d={d} stroke="#d4ad65" strokeWidth={double ? 10 : 8} opacity=".45" />
+          <path d={d} stroke={ingredient.color} strokeWidth={double ? 8 : 6} />
+          <path d={d} stroke="#fffbed" strokeWidth="1.5" opacity=".45" />
+        </g>)}
+      </g>)}
+    </g>
+  </g>;
+}
+
 export default function PizzaVisual({ ingredients, catalog, animate = true }) {
   const uid = useId().replace(/:/g, '');
-  const selected = ingredients.map(row => ({ ...catalog.find(item => item.id === row.id), ...row }));
-  const layer = { sauce: 0, cheese: 1, 'blue-cheese': 1, goat: 1, shreds: 1, mozzarella: 1, cheddar: 1, flakes: 1, crumbles: 1 };
-  const sorted = [...selected].sort((a, b) => (layer[a.art] ?? 2) - (layer[b.art] ?? 2));
+  const selected = ingredients.map(row => {
+    const ingredient = { ...catalog.find(item => item.id === row.id), ...row };
+    return ingredient.art === 'sauce' ? { ...ingredient, sauceRole: getPizzaSaucePresentation(ingredient).sauceRole } : ingredient;
+  });
+  const layer = { cheese: 1, 'blue-cheese': 1, goat: 1, shreds: 1, mozzarella: 1, cheddar: 1, flakes: 1, crumbles: 1 };
+  const layerFor = row => row.art === 'sauce' ? (row.sauceRole === 'BASE' ? 0 : 3) : (layer[row.art] ?? 2);
+  const sorted = [...selected].sort((a, b) => layerFor(a) - layerFor(b));
   return <svg className={`pl-pizza ${animate ? '' : 'pl-still'}`} viewBox="0 0 400 400" role="img" aria-label={`Tu pizza con ${selected.length} ingredientes. Consulta el resumen para las cantidades y zonas.`}>
     <defs>
       <radialGradient id={`${uid}-crust`}><stop offset="0" stopColor="#f4d29a" /><stop offset=".85" stopColor="#e4aa5c" /><stop offset=".94" stopColor="#d28c3f" /><stop offset="1" stopColor="#ba7332" /></radialGradient>
@@ -49,8 +77,15 @@ export default function PizzaVisual({ ingredients, catalog, animate = true }) {
     <circle cx="200" cy="200" r="177" fill={`url(#${uid}-crust)`} />
     <circle cx="200" cy="200" r="153" fill={`url(#${uid}-base)`} />
     {Array.from({ length: 32 }, (_, i) => { const a = i * 2.399; return <ellipse key={i} cx={200 + Math.cos(a) * 164} cy={200 + Math.sin(a) * 164} rx={3 + i % 4} ry="2" fill="#a96630" opacity=".35" transform={`rotate(${i * 47} ${200 + Math.cos(a) * 164} ${200 + Math.sin(a) * 164})`} />; })}
-    {sorted.map(row => <g key={`${row.id}-${row.placement}-${row.quantity}`} clipPath={`url(#${uid}-${row.placement})`} className="pl-topping" data-ingredient={row.id} data-placement={row.placement}>
-      {row.art === 'sauce' ? <><circle cx="200" cy="200" r="149" fill={row.color} opacity={row.quantity === 'DOUBLE' ? '.95' : '.8'} /><path d="M105 170C130 90 300 95 301 198S120 299 109 222 246 130 265 201 170 249 163 202" fill="none" stroke="#f4a260" strokeWidth="5" opacity=".2" /></>
+    {sorted.map(row => <g key={`${row.id}-${row.placement}-${row.quantity}`} clipPath={`url(#${uid}-${row.placement})`} className="pl-topping" data-ingredient={row.id} data-placement={row.placement} data-sauce-role={row.art === 'sauce' ? row.sauceRole : undefined}>
+      {row.art === 'sauce' ? row.sauceRole === 'BASE' ? <><circle cx="200" cy="200" r="149" fill={row.color} opacity={row.quantity === 'DOUBLE' ? '.95' : '.8'} /><path d="M105 170C130 90 300 95 301 198S120 299 109 222 246 130 265 201 170 249 163 202" fill="none" stroke="#f4a260" strokeWidth="5" opacity=".2" /></>
+        : <g fill="none" stroke={row.color} strokeWidth={row.quantity === 'DOUBLE' ? 8 : 5} strokeLinecap="round" opacity=".95" transform={`rotate(${(Number(row.id) || 0) % 3 * 25 - 25} 200 200)`}>
+          {Array.from({ length: row.quantity === 'DOUBLE' ? 9 : 5 }, (_, i) => {
+            const y = 90 + i * (row.quantity === 'DOUBLE' ? 27.5 : 55);
+            return <path key={i} d={`M55 ${y} C140 ${y - 15} 260 ${y + 15} 345 ${y}`} />;
+          })}
+        </g>
+        : ['cheese', 'shreds', 'mozzarella'].includes(row.art) ? <CheeseCoverage ingredient={row} />
         : toppingPoints(row.id, row.placement, row.quantity).map((point, i) => <g key={i} transform={`translate(${point.x} ${point.y}) rotate(${point.rotation})`}><IngredientMark ingredient={row} /></g>)}
     </g>)}
     <path d="M200 45V355" stroke="#fff9ec" strokeDasharray="4 7" strokeWidth="2" opacity=".65" />

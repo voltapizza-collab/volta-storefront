@@ -9,6 +9,8 @@ import Backoffice from "./pages/Backoffice";
 import CouponGalleryPage from "./pages/CouponGalleryPage";
 import GamePage from "./pages/GamePage";
 import LandingPage from "./pages/LandingPage";
+import ResourcesPage from "./pages/ResourcesPage";
+import ResourcePage from "./pages/ResourcePage";
 import ReservationCancelPage from "./pages/ReservationCancelPage";
 import OrderTracking from "./pages/OrderTracking";
 import ProductReviewPage from "./pages/ProductReviewPage";
@@ -27,6 +29,9 @@ function App() {
     <AppLayout>
       <Routes>
         <Route path="/" element={<LandingPage />} />
+        <Route path="/recursos" element={<ResourcesPage />} />
+        <Route path="/recursos/:slug" element={<ResourcePage />} />
+        <Route path="/recursos/*" element={<ResourcePage />} />
 
         {/* ADMI */}
         <Route path="/admin/stores" element={<AdminStoresPage />} />

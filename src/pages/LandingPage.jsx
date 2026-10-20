@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { usePublicSeo } from "../utils/seo";
 import LandingProductPreview from "../components/LandingProductPreview";
+import PublicNavigation from "../components/PublicNavigation";
+import { MEETING_BOOKING_URL } from "../config/commercial";
 import EngineBackground from "../components/Backoffice/EngineBackground";
 import { ReactComponent as PizzaBg } from "../assets/logo/pizza.svg";
 import api from "../setupAxios";
@@ -180,6 +182,7 @@ export default function LandingPage() {
 
   return (
     <main className="vp-site">
+      <PublicNavigation />
       <section className="vp-hero">
         <div className="vp-engineField vp-engineField--subtle" aria-hidden="true">
           <EngineBackground />
@@ -197,8 +200,7 @@ export default function LandingPage() {
             </p>
             <div className="vp-heroActions">
               <a className="vp-primaryLink" href={backofficeHref}>Explorar la demo</a>
-              <a className="vp-secondaryLink" href="#sistema">Ver sistema</a>
-              <a className="vp-secondaryLink" href="#contacto">Solicitar una demostración</a>
+              <a className="vp-secondaryLink" href={MEETING_BOOKING_URL} target="_blank" rel="noopener noreferrer">Agendar una reunión</a>
             </div>
           </div>
           <LandingProductPreview />

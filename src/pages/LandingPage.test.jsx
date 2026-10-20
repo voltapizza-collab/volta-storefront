@@ -24,8 +24,12 @@ test('hero preserves the approved copy and destinations with one set of pillars 
   expect(promise).toHaveTextContent(/^Aumenta las ventas directas de tu pizzería\.$/);
   expect(promise.querySelector('span')).toHaveTextContent(/^ventas directas$/);
   expect(hero.getByText(/Combinamos migración de clientes/)).toHaveTextContent('Combinamos migración de clientes, tecnología de venta e inteligencia comercial para atraer compradores de los marketplaces a tu canal directo y fomentar la repetición de compra.');
-  expect(hero.getByRole('link', { name: 'Ver sistema' })).toHaveAttribute('href', '#sistema');
-  expect(hero.getByRole('link', { name: 'Solicitar una demostración' })).toHaveAttribute('href', '#contacto');
+  const meeting = hero.getByRole('link', { name: 'Agendar una reunión' });
+  expect(meeting).toHaveAttribute('href', 'https://calendar.app.google/MPeZBS1K4UsEgmKG8');
+  expect(meeting).toHaveAttribute('target', '_blank');
+  expect(meeting).toHaveAttribute('rel', 'noopener noreferrer');
+  expect(hero.queryByRole('link', { name: 'Ver sistema' })).not.toBeInTheDocument();
+  expect(hero.queryByRole('link', { name: 'Solicitar una demostración' })).not.toBeInTheDocument();
   for (const name of ['Migración de clientes', 'Tecnología de venta', 'Inteligencia comercial']) expect(hero.getAllByText(name)).toHaveLength(1);
   expect(hero.getAllByRole('img')).toHaveLength(2);
   expect(hero.getByRole('img', { name: /Backoffice de Volta/ })).toHaveAttribute('width', '1280');

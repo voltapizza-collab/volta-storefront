@@ -1,0 +1,56 @@
+.vp-resourcesMain { max-width: 1200px; margin: auto; padding: 64px clamp(16px,4vw,48px) 88px; }
+.vp-resourcesIntro { max-width: 850px; }
+.vp-resourceEyebrow { color: var(--brand-2, #ffb61c); font-size: .8rem; font-weight: 700; letter-spacing: .13em; }
+.vp-resourcesIntro h1 { font-size: clamp(2.1rem,4.8vw,3.8rem); line-height: 1.08; letter-spacing: -.035em; margin: 18px 0 24px; }
+.vp-resourcesIntro > p:last-child { max-width: 720px; color: #d2c9e1; font-size: 1.15rem; line-height: 1.7; }
+.vp-resourceFilters { display: flex; flex-wrap: wrap; gap: 10px; margin: 36px 0 22px; }
+.vp-resourceFilters button { min-height: 46px; padding: 10px 20px; border: 1px solid #655477; border-radius: 8px; background: transparent; color: #fff; font: inherit; cursor: pointer; }
+.vp-resourceFilters button[aria-pressed="true"] { background: var(--brand-2, #ffb61c); border-color: var(--brand-2, #ffb61c); color: #25123f; font-weight: 700; }
+.vp-resources a:focus-visible, .vp-resources button:focus-visible { outline: 3px solid var(--brand-2, #ffb61c); outline-offset: 4px; }
+.vp-resourceCount { color: #b9accb; margin-bottom: 22px; font-size: .9rem; }
+.vp-resourceEmpty { padding: clamp(24px,5vw,48px); border: 1px solid #49375e; border-radius: 16px; background: #1d1030; max-width: 840px; }
+.vp-resourceEmpty h2, .vp-resourceEmpty h1 { font-size: clamp(1.35rem,3vw,1.8rem); line-height: 1.3; margin: 0 0 18px; }
+.vp-resourceEmpty p { color: #d2c9e1; line-height: 1.7; max-width: 660px; }
+.vp-resourceGrid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 24px; }
+.vp-resourceCard { border-radius: 14px; overflow: hidden; background: #1d1030; border: 1px solid #49375e; }
+.vp-resourceCard > a { display: block; height: 100%; }
+.vp-resourceCard > a:hover h2 { color: var(--brand-2, #ffb61c); }
+.vp-resourceCard img { width: 100%; height: auto; aspect-ratio: 16/9; object-fit: cover; display: block; }
+.vp-resourceCardCopy { padding: 24px; }
+.vp-resourceMeta { display: flex; flex-wrap: wrap; gap: 8px 16px; color: #c4b7d7; font-size: .8rem; line-height: 1.5; }
+.vp-resourceMeta > span:first-child { color: var(--brand-2, #ffb61c); font-weight: 700; }
+.vp-resourceCard h2 { font-size: 1.25rem; line-height: 1.4; margin: 18px 0 12px; }
+.vp-resourceCard p { font-size: .95rem; color: #d2c9e1; line-height: 1.6; }
+.vp-resourceRead { display: inline-block; margin-top: 16px; color: var(--brand-2, #ffb61c); font-weight: 700; }
+.vp-resourcesFooter { max-width: 1200px; margin: auto; padding: 28px clamp(16px,4vw,48px); display: flex; flex-wrap: wrap; gap: 16px 32px; border-top: 1px solid #49375e; font-size: .85rem; color: #b9accb; }
+.vp-resourcesFooter a { color: var(--brand-2, #ffb61c); }
+.vp-resourceDetail { max-width: 900px; margin: auto; padding: 40px clamp(16px,4vw,40px) 88px; }
+.vp-resourceBack { display: inline-block; padding: 12px 0; margin-bottom: 30px; color: #e1c9ff !important; }
+.vp-resourceArticleHeader h1 { font-size: clamp(2rem,4vw,3rem); line-height: 1.15; letter-spacing: -.025em; margin: 22px 0; }
+.vp-resourceLead { font-size: 1.15rem; color: #e1d6ec; line-height: 1.7; }
+.vp-resourceAuthor { color: #c4b7d7; }
+.vp-resourceCover { display: block; width: 100%; height: auto; aspect-ratio: 16/9; object-fit: cover; border-radius: 12px; margin: 32px 0; }
+.vp-resourceBody { line-height: 1.85; font-size: 1.05rem; color: #e1d6ec; overflow-wrap: anywhere; }
+.vp-resourceBody h2 { font-size: 1.7rem; line-height: 1.3; color: #fff; margin-top: 40px; }
+.vp-resourceBody h3 { color: #fff; font-size: 1.25rem; }
+.vp-resourceBody a, .vp-resourceReferences a { text-decoration: underline; color: #f6c863; }
+.vp-resourceMedia { margin: 32px 0; }
+.vp-resourceMedia iframe, .vp-resourceMedia video { display: block; width: 100%; aspect-ratio: 16/9; border: 0; border-radius: 12px; background: #08030e; }
+.vp-resourceActions { display: flex; gap: 12px; flex-wrap: wrap; margin: 30px 0 16px; }
+.vp-resourceActions .vp-primaryLink, .vp-resourceMeeting .vp-primaryLink, .vp-resourceEmpty .vp-primaryLink { color: #25123f; }
+.vp-resourcePdf iframe { display: block; width: 100%; height: min(80vh,850px); border: 1px solid #655477; border-radius: 8px; background: white; }
+.vp-resourceHint { color: #c4b7d7; font-size: .9rem; line-height: 1.6; }
+.vp-resourceReferences { border-top: 1px solid #49375e; padding-top: 24px; margin-top: 40px; line-height: 1.7; overflow-wrap: anywhere; }
+.vp-resourceMeeting { padding: 30px; margin-top: 48px; background: #281142; border: 1px solid #655477; border-radius: 14px; }
+.vp-resourceMeeting h2 { margin-top: 0; font-size: 1.6rem; }
+.vp-resourceMeeting p { line-height: 1.6; color: #d2c9e1; }
+@media (max-width: 980px) { .vp-resourceGrid { grid-template-columns: repeat(2,minmax(0,1fr)); } }
+@media (max-width: 640px) {
+  .vp-resourcesMain { padding-top: 32px; padding-bottom: 48px; }
+  .vp-resourceGrid { grid-template-columns: 1fr; }
+  .vp-resourceFilters { gap: 8px; }
+  .vp-resourceFilters button { flex: 1 1 calc(50% - 8px); padding-inline: 10px; }
+  .vp-resourceMeeting { padding: 22px; }
+  .vp-resourceActions a, .vp-resourceMeeting .vp-primaryLink { width: 100%; box-sizing: border-box; }
+  .vp-resourcePdf iframe { height: 65vh; }
+}

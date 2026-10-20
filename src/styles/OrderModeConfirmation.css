@@ -1,0 +1,69 @@
+.sf-orderMode {
+  --order-mode-accent: #4b11b2;
+  --order-mode-ink: #fff;
+  margin: 12px 0;
+  padding: 0 14px 12px;
+  border: 2px solid var(--order-mode-accent);
+  border-radius: 16px;
+  background: #fff;
+  color: #21182e;
+  text-align: left;
+}
+.sf-orderMode--pickup {
+  --order-mode-accent: #ffd34f;
+  --order-mode-ink: #21182e;
+}
+.sf-orderMode__summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: -1px -13px 0;
+  padding: 14px 12px;
+  border-radius: 13px 13px 0 0;
+  background: var(--order-mode-accent);
+  color: var(--order-mode-ink);
+}
+.sf-orderMode__icon { width: 46px; height: 46px; flex: 0 0 46px; color: inherit; }
+.sf-orderMode__heading { min-width: 0; }
+.sf-orderMode__eyebrow {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .05em;
+  line-height: 1.3;
+}
+.sf-orderMode__title {
+  display: block;
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: -.025em;
+  line-height: 1.08;
+}
+.sf-orderMode__title span { display: block; }
+.sf-orderMode__copy { padding-top: 10px; min-width: 0; overflow-wrap: anywhere; }
+.sf-orderMode__copy p { margin: 0 0 5px; font-size: .88rem; line-height: 1.4; }
+.sf-orderMode__destination { display: block; font-size: .94rem; line-height: 1.4; }
+.sf-orderMode__change {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  margin-top: 10px;
+  padding: 9px 12px;
+  border: 1px solid #4b11b2;
+  border-radius: 10px;
+  background: #f5efff;
+  color: #4b11b2;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.sf-orderMode__change:hover:not(:disabled) { background: #ebe0ff; }
+.sf-orderMode__change:focus-visible { outline: 3px solid #4b11b2; outline-offset: 3px; }
+.sf-orderMode__change:disabled { opacity: .55; cursor: default; }
+.sf-orderMode__copy .sf-orderMode__issue { margin-top: 8px; font-weight: 700; }
+@media (max-width: 360px) {
+  .sf-orderMode__title { font-size: 23px; }
+  .sf-orderMode__icon { width: 40px; height: 40px; flex-basis: 40px; }
+  .sf-orderMode__summary { gap: 10px; }
+}

@@ -35,3 +35,7 @@ qa-*.png
 /build-category-pricing
 /build-category-pricing-preview
 /build-deploy-verification
+
+# Generated from content/resources.json; only complete active resources.
+/src/resources/published.json
+/public/resources-manifest.json

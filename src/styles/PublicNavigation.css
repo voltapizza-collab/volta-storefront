@@ -1,0 +1,10 @@
+.vp-publicHeader { background: #160829; border-bottom: 1px solid rgba(255,255,255,.12); }
+.vp-publicNav { max-width: 1440px; margin: auto; padding: 18px clamp(16px,4vw,64px); box-sizing: border-box; }
+.vp-publicBrand { color: var(--brand-2, #ffb61c) !important; font-family: "Arial Black", Arial, sans-serif; font-weight: 900; letter-spacing: -.04em; }
+.vp-publicNav nav a { min-height: 44px; }
+.vp-publicNav nav a[aria-current="page"] { border-color: var(--brand-2, #ffb61c); }
+.vp-publicNav a:focus-visible { outline: 3px solid var(--brand-2, #ffb61c); outline-offset: 4px; }
+@media (max-width: 640px) {
+  .vp-publicNav { display: flex; flex-wrap: wrap; gap: 12px; }
+  .vp-publicNav nav { width: auto; flex-wrap: wrap; gap: 8px; }
+}

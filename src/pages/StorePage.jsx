@@ -16,6 +16,7 @@ import "../styles/Storefront.css";
 import "../styles/CatalogLayout.css";
 import "../styles/CatalogDesktop.css";
 import DeliveryMethodSelector from "../components/Storefront/DeliveryMethodSelector";
+import OrderModeConfirmation from "../components/Storefront/OrderModeConfirmation";
 import CatalogNavigation, { CatalogFocusCategory, CatalogSearch, CatalogTools } from "../components/Storefront/CatalogNavigation";
 import useCatalogSwipe from "../components/Storefront/useCatalogSwipe";
 import useCatalogFocus from "../components/Storefront/useCatalogFocus";
@@ -115,8 +116,8 @@ const getStoreServiceMode = (store, selection) => {
         ? "pickup"
         : "";
 
-  if (requestedMode === "delivery" && storeAllowsDelivery(store)) return "delivery";
-  if (requestedMode === "pickup" && storeAllowsPickup(store)) return "pickup";
+  // Keep the customer's explicit choice visible even when the store disables it.
+  if (requestedMode) return requestedMode;
   if (storeAllowsPickup(store)) return "pickup";
   if (storeAllowsDelivery(store)) return "delivery";
   return "pickup";
@@ -2342,6 +2343,7 @@ export default function StorePage() {
   const { partnerSlug, storeSlug } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
+  const checkoutResume = useRef(location.state?.checkoutResume).current;
   const orderSelection = useMemo(() => {
     const state = location.state && typeof location.state === "object" ? location.state : {};
     if (state.serviceMode) return state;
@@ -2369,7 +2371,7 @@ export default function StorePage() {
   const [portalReady, setPortalReady] = useState(false);
   const [search, setSearch] = useState("");
   const [couponCode, setCouponCode] = useState("");
-  const [selectedCouponCode, setSelectedCouponCode] = useState("");
+  const [selectedCouponCode, setSelectedCouponCode] = useState(checkoutResume?.couponCode || "");
   const [couponResultKey, setCouponResultKey] = useState("");
   const [couponStatus, setCouponStatus] = useState("");
   const [couponInfoOpen, setCouponInfoOpen] = useState(false);
@@ -2379,7 +2381,7 @@ export default function StorePage() {
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [activeTab, setActiveTab] = useState("");
   const [scheduleOpen, setScheduleOpen] = useState(false);
-  const [scheduledAt, setScheduledAt] = useState(null);
+  const [scheduledAt, setScheduledAt] = useState(checkoutResume?.scheduledFor || null);
   const [scheduleDate, setScheduleDate] = useState("");
   const [availability, setAvailability] = useState(null);
   const [availabilityError, setAvailabilityError] = useState("");
@@ -2403,9 +2405,11 @@ export default function StorePage() {
   const [repeatMessage, setRepeatMessage] = useState("");
   const [repeatLoading, setRepeatLoading] = useState(false);
   const [repeatSearched, setRepeatSearched] = useState(false);
-  const [cart, setCart] = useState([]);
-  const [cartOpen, setCartOpen] = useState(false);
-  const [checkoutMessage, setCheckoutMessage] = useState("");
+  const [cart, setCart] = useState(() => Array.isArray(checkoutResume?.items) ? checkoutResume.items.map(normalizeCartLine) : []);
+  const [cartOpen, setCartOpen] = useState(Boolean(checkoutResume?.open));
+  const [checkoutMessage, setCheckoutMessage] = useState(checkoutResume?.sourceStoreSlug && checkoutResume.sourceStoreSlug !== storeSlug
+    ? "Has cambiado de tienda. Conservamos tu carrito; se comprobarán los productos y las ofertas disponibles antes de confirmar el pedido."
+    : "");
   const [checkoutTrackingCode, setCheckoutTrackingCode] = useState("");
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [checkoutProfileOpen, setCheckoutProfileOpen] = useState(false);
@@ -2413,10 +2417,11 @@ export default function StorePage() {
   const [paymentMethodModalPurpose, setPaymentMethodModalPurpose] = useState("checkout");
   const [onlinePaymentMethods, setOnlinePaymentMethods] = useState(["card"]);
   const checkoutInFlightRef = useRef(false);
+  const checkoutContextRef = useRef("");
   const [cashConfirmationOpen, setCashConfirmationOpen] = useState(false);
   const checkoutRedirectingRef = useRef(false);
   const [pendingCashProfile, setPendingCashProfile] = useState(null);
-  const [checkoutPaymentMode, setCheckoutPaymentMode] = useState("card");
+  const [checkoutPaymentMode, setCheckoutPaymentMode] = useState(checkoutResume?.paymentMode || "card");
   const [checkoutProfileForm, setCheckoutProfileForm] = useState({
     name: "",
     phone: "",
@@ -2775,6 +2780,14 @@ export default function StorePage() {
   }, [customerProfileStorageKey]);
 
   useEffect(() => {
+    // Consume the navigation snapshot so browser Back cannot restore a paid cart.
+    if (!location.state?.checkoutResume) return;
+    const { checkoutResume: consumed, ...state } = location.state;
+    navigate(location.pathname + location.search, { replace: true, state });
+  }, [location.pathname, location.search, location.state, navigate]);
+
+  useEffect(() => {
+    if (Array.isArray(checkoutResume?.items)) return;
     try {
       const stored = window.localStorage.getItem(cartDraftStorageKey);
       const parsed = stored ? JSON.parse(stored) : null;
@@ -2787,7 +2800,7 @@ export default function StorePage() {
     } catch {
       // Ignore invalid stored drafts.
     }
-  }, [cartDraftStorageKey]);
+  }, [cartDraftStorageKey, checkoutResume]);
 
   useEffect(() => {
     try {
@@ -4540,11 +4553,52 @@ export default function StorePage() {
   }, [couponDiscountTotal, couponEligibleSubtotal]);
   const couponCart = useMemo(() => cart.filter(line => !isCouponCartLine(line)), [cart]);
   const activeCouponCode = selectedCouponCode || cart.find(isCouponCartLine)?.couponCode || "";
-  const couponContextKey = JSON.stringify([partner?.id || store?.partnerId, store?.id, shippingBenefitFee, couponCart]);
+  const couponContextKey = JSON.stringify([partner?.id || store?.partnerId, store?.id, deliverySelectionKey, shippingBenefitFee, couponCart]);
   const currentCouponKey = activeCouponCode ? activeCouponCode + ":" + couponContextKey : "";
   couponContextRef.current = currentCouponKey;
   const couponNeedsValidation = Boolean(activeCouponCode && (couponLoading || couponResultKey !== currentCouponKey));
   const couponBlocksPayment = Boolean(activeCouponCode && (couponNeedsValidation || !couponInfoData?.valid));
+  const selectedServiceMode = getStoreServiceMode(store, orderSelection);
+  const serviceModeIssue = (selectedServiceMode === "delivery" ? !storeAllowsDelivery(store) : !storeAllowsPickup(store))
+    ? "Esta modalidad no está disponible en esta tienda. Pulsa Cambiar modalidad para elegir otra opción."
+    : selectedServiceMode === "delivery" && !String(orderSelection?.deliveryAddress || orderSelection?.deliveryResolution?.formattedAddress || "").trim()
+      ? "Confirma la dirección de entrega antes de pagar."
+      : "";
+  const checkoutContextKey = JSON.stringify([deliverySelectionKey, orderSelection?.deliveryAddressLine2, cart, cartTotal, scheduledAt, serviceModeIssue, currentCouponKey, couponBlocksPayment]);
+  checkoutContextRef.current = checkoutContextKey;
+
+  const changeOrderMode = ({ startServiceMode } = {}) => {
+    if (checkoutInFlightRef.current || checkoutRedirectingRef.current) return;
+    navigate(`/${partnerSlug}/order`, {
+      state: {
+        orderTrail: "change-service",
+        partnerName: partner?.name || store?.partnerName || store?.storeName,
+        storeName: store?.storeName,
+        currentStoreSlug: storeSlug,
+        currentServiceMode: selectedServiceMode,
+        startServiceMode,
+        returnToStorePath: `/${partnerSlug}/${storeSlug}`,
+        currentSelection: orderSelection,
+        checkoutResume: {
+          items: cart, couponCode: activeCouponCode, scheduledFor: scheduledAt, sourceStoreSlug: storeSlug,
+          paymentMode: checkoutPaymentMode,
+          open: cartOpen || paymentMethodModalOpen || checkoutProfileOpen || cashConfirmationOpen,
+        },
+      },
+    });
+  };
+
+  const renderOrderConfirmation = () => (
+    <OrderModeConfirmation
+      serviceMode={selectedServiceMode}
+      storeName={store?.storeName || orderSelection?.storeName || storeSlug}
+      address={selectedServiceMode === "delivery"
+        ? orderSelection?.deliveryAddress || orderSelection?.deliveryResolution?.formattedAddress
+        : [store?.address, store?.zipCode, store?.city].filter(Boolean).join(", ")}
+      addressLine2={orderSelection?.deliveryAddressLine2}
+      onChange={changeOrderMode} busy={checkoutLoading} issue={serviceModeIssue}
+    />
+  );
 
   const removeCouponFromCart = useCallback(() => {
     couponValidationRef.current.invalidate();
@@ -4676,6 +4730,16 @@ export default function StorePage() {
         latestAvailability = await refreshAvailability();
       } catch {
         setCheckoutMessage("No pudimos comprobar los horarios. Intentalo de nuevo.");
+        setCartOpen(true);
+        return;
+      }
+      if (checkoutContextRef.current !== checkoutContextKey) {
+        setCheckoutMessage("El pedido ha cambiado. Revisa la modalidad y el total antes de continuar.");
+        setCartOpen(true);
+        return;
+      }
+      if (serviceModeIssue) {
+        setCheckoutMessage(serviceModeIssue);
         setCartOpen(true);
         return;
       }
@@ -4962,6 +5026,8 @@ export default function StorePage() {
     couponBlocksPayment,
     couponNeedsValidation,
     currentCouponKey,
+    checkoutContextKey,
+    serviceModeIssue,
     orderSelection,
     partner?.currency,
     partner?.id,
@@ -5812,16 +5878,7 @@ export default function StorePage() {
       <DeliveryMethodSelector
         serviceMode={serviceMode}
         destination={destination}
-        onChange={() => navigate(`/${partnerSlug}/order`, {
-          state: {
-            orderTrail: "change-service",
-            partnerName: partner?.name || store?.partnerName || store?.storeName,
-            storeName: store?.storeName,
-            currentStoreSlug: storeSlug,
-            currentServiceMode: serviceMode,
-            returnToStorePath: `/${partnerSlug}/${storeSlug}`,
-          },
-        })}
+        onChange={changeOrderMode}
       />
     );
   };
@@ -7226,7 +7283,7 @@ export default function StorePage() {
                       Faltan {formatMoney(minimumPaymentMissing, partner?.currency || "EUR")}.
                       <div className="sf-cartMinimumActions">
                         <button type="button" className="sf-primaryBtn" onClick={() => setCartOpen(false)}>Seguir comprando</button>
-                        {getStoreServiceMode(store, orderSelection) === "delivery" && storeAllowsPickup(store) && <button type="button" className="sf-secondaryBtn" onClick={() => navigate(`/${partnerSlug}/order`, { state: { orderTrail: "change-service", currentStoreSlug: storeSlug, currentServiceMode: "delivery", startServiceMode: "pickup", returnToStorePath: `/${partnerSlug}/${storeSlug}` } })}>Cambiar a recogida</button>}
+                        {getStoreServiceMode(store, orderSelection) === "delivery" && storeAllowsPickup(store) && <button type="button" className="sf-secondaryBtn" onClick={() => changeOrderMode({ startServiceMode: "pickup" })}>Cambiar a recogida</button>}
                       </div>
                     </div>
                   )}
@@ -7238,6 +7295,7 @@ export default function StorePage() {
                       <button type="button" className="sf-secondaryBtn" onClick={removeCouponFromCart}>Quitar cupón</button>
                     </div>
                   )}
+                  {renderOrderConfirmation()}
                   <div className="sf-cartPaymentPanel">
                     <div className="sf-cartPaymentHead">
                       <span>Método de pago</span>
@@ -7299,7 +7357,7 @@ export default function StorePage() {
                       type="button"
                       className="sf-primaryBtn sf-cartCheckoutBtn"
                       onClick={() => startCheckout(selectedCheckoutPaymentMode)}
-                      disabled={checkoutLoading || cartBelowMinimumPayment || couponBlocksPayment}
+                      disabled={checkoutLoading || cartBelowMinimumPayment || couponBlocksPayment || Boolean(serviceModeIssue)}
                     >
                       {couponNeedsValidation ? "Comprobando descuento..." : checkoutLoading ? "Preparando tu pago..." : (availability?.requiresSchedule || scheduledAt) && !scheduledAtIsValid ? "Programar y continuar" : cartCheckoutLabel}
                     </button>
@@ -7376,6 +7434,7 @@ export default function StorePage() {
 
       {paymentMethodModalOpen && (
         <PaymentMethodModal methods={visiblePaymentMethods} total={formatMoney(cartTotal, partner?.currency || "EUR")}
+          orderConfirmation={renderOrderConfirmation()}
           busy={checkoutLoading} onClose={closePaymentMethodPicker} onSelect={selectPaymentMethod} />
       )}
 

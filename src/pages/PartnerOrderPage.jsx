@@ -69,6 +69,15 @@ export default function PartnerOrderPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { partnerSlug } = useParams();
+  const checkoutResume = location.state?.orderTrail === "change-service" ? location.state?.checkoutResume : null;
+  const returnToOrder = () => {
+    if (checkoutResume && location.state?.returnToStorePath) {
+      navigate(location.state.returnToStorePath, {
+        replace: true,
+        state: { ...location.state.currentSelection, checkoutResume },
+      });
+    } else navigate(`/${partnerSlug}`);
+  };
 
   const [partner, setPartner] = useState(null);
   const [error, setError] = useState("");
@@ -300,7 +309,7 @@ export default function PartnerOrderPage() {
       }
 
       navigate(`/${partnerSlug}/${store.slug}`, {
-        replace,
+        replace: replace || Boolean(checkoutResume),
         state: {
           orderTrail: "store",
           partnerName: partner.name,
@@ -309,10 +318,11 @@ export default function PartnerOrderPage() {
           deliveryAddress: "",
           deliveryAddressLine2: "",
           deliveryResolution: null,
+          ...(checkoutResume ? { checkoutResume } : {}),
         },
       });
     },
-    [navigate, partner, partnerSlug, rememberPickupStore]
+    [navigate, partner, partnerSlug, rememberPickupStore, checkoutResume]
   );
 
   const continueSingleService = useCallback(() => {
@@ -469,11 +479,13 @@ export default function PartnerOrderPage() {
         setDeliveryModalOpen(false);
         rememberDeliverySelection(selection);
         navigate(`/${partnerSlug}/${resolution.nearestStore.slug}`, {
+          replace: Boolean(checkoutResume),
           state: {
             orderTrail: "store",
             partnerName: partner?.name,
             storeName: resolution.nearestStore.storeName || resolution.nearestStore.slug,
             ...selection,
+            ...(checkoutResume ? { checkoutResume } : {}),
           },
         });
       } else {
@@ -519,11 +531,13 @@ export default function PartnerOrderPage() {
     }
 
     navigate(`/${partnerSlug}/${selectedStoreSlug}`, {
+      replace: Boolean(checkoutResume),
       state: {
         orderTrail: "store",
         partnerName: partner.name,
         storeName: selectedStore?.storeName || selectedStoreSlug,
         ...selection,
+        ...(checkoutResume ? { checkoutResume } : {}),
       },
     });
   };
@@ -556,7 +570,7 @@ export default function PartnerOrderPage() {
             <button
               type="button"
               className="sf-textBack"
-              onClick={() => navigate(`/${partnerSlug}`)}
+              onClick={returnToOrder}
             >
               {"<- volver"}
             </button>
@@ -585,7 +599,7 @@ export default function PartnerOrderPage() {
               <button
                 type="button"
                 className="sf-closedNotice__action"
-                onClick={() => navigate(`/${partnerSlug}`)}
+                onClick={returnToOrder}
               >
                 Volver al inicio
               </button>
@@ -664,7 +678,7 @@ export default function PartnerOrderPage() {
                 <button
                   type="button"
                   className="sf-secondaryBtn"
-                  onClick={() => navigate(`/${partnerSlug}`)}
+                  onClick={returnToOrder}
                 >
                   Cancelar
                 </button>
@@ -692,7 +706,7 @@ export default function PartnerOrderPage() {
               <button
                 type="button"
                 className="sf-secondaryBtn"
-                onClick={() => navigate(`/${partnerSlug}`)}
+                onClick={returnToOrder}
               >
                 Cancelar
               </button>

@@ -1,7 +1,7 @@
 import { useEffect, useId, useRef } from "react";
 import "../../styles/PaymentMethods.css";
 
-export default function PaymentMethodModal({ methods, total, busy, onClose, onSelect }) {
+export default function PaymentMethodModal({ methods, total, busy, onClose, onSelect, orderConfirmation }) {
   const dialogRef = useRef(null);
   const titleId = useId();
 
@@ -38,6 +38,7 @@ export default function PaymentMethodModal({ methods, total, busy, onClose, onSe
           <div><span>Método de pago</span><h3 id={titleId}>¿Cómo quieres pagar?</h3></div>
           <button type="button" className="sf-modalCloseBtn" onClick={onClose} disabled={busy} aria-label="Cerrar">×</button>
         </div>
+        {orderConfirmation}
         <div className="sf-paymentMethodGrid">
           {methods.map((method) => (
             <button key={method.id} type="button"

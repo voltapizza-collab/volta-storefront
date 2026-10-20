@@ -1,6 +1,8 @@
 const fs = require("fs");
 const http = require("http");
 const path = require("path");
+const { resourceResponse } = require("./scripts/resources-http.cjs");
+const { serveResourceMedia } = require("./scripts/resource-media.cjs");
 
 const PORT = Number(process.env.PORT || 3000);
 const BUILD_DIR = path.join(__dirname, "build");
@@ -24,9 +26,15 @@ const MIME_TYPES = {
   ".json": "application/json; charset=utf-8",
   ".map": "application/json; charset=utf-8",
   ".png": "image/png",
+  ".jpg": "image/jpeg",
+  ".jpeg": "image/jpeg",
+  ".webp": "image/webp",
   ".svg": "image/svg+xml; charset=utf-8",
   ".txt": "text/plain; charset=utf-8",
   ".webmanifest": "application/manifest+json; charset=utf-8",
+  ".pdf": "application/pdf",
+  ".mp4": "video/mp4",
+  ".webm": "video/webm",
 };
 
 const cleanText = (value) =>
@@ -221,6 +229,11 @@ const resolveSeo = async (req) => {
   const segments = url.pathname.split("/").filter(Boolean);
   const [partnerSlug, secondSegment] = segments;
 
+  if (/^\/recursos(?:\/|$)/i.test(url.pathname)) {
+    const catalog = JSON.parse(fs.readFileSync(path.join(BUILD_DIR, "resources-manifest.json"), "utf8"));
+    return resourceResponse(url.pathname, catalog);
+  }
+
   if (!partnerSlug) return {
     title: 'Volta Pizza — El motor para vender pizzas por Internet',
     description: 'Motor de venta online para pizzerías. Pedidos directos, promociones y datos de clientes para impulsar la compra directa y la repetición.',
@@ -288,6 +301,7 @@ const buildSeoTags = (seo) => {
     `<link rel="canonical" href="${canonicalUrl}" />`,
     `<meta name="description" content="${description}" />`,
     `<meta name="application-name" content="${escapeHtml(SITE_NAME)}" />`,
+    seo?.robots ? `<meta name="robots" content="${escapeHtml(seo.robots)}" />` : "",
     `<meta property="og:title" content="${title}" />`,
     `<meta property="og:description" content="${description}" />`,
     `<meta property="og:url" content="${canonicalUrl}" />`,
@@ -330,6 +344,10 @@ const getStaticPath = (urlPathname) => {
 const serveStaticFile = (req, res, filePath) => {
   const extension = path.extname(filePath).toLowerCase();
   const contentType = MIME_TYPES[extension] || "application/octet-stream";
+  if (filePath.startsWith(path.join(BUILD_DIR, "resources") + path.sep) && [".pdf", ".mp4", ".webm"].includes(extension)) {
+    serveResourceMedia(req, res, filePath, contentType);
+    return;
+  }
   const cacheControl = filePath.includes(`${path.sep}static${path.sep}`)
     ? "public, max-age=31536000, immutable"
     : "public, max-age=300";
@@ -362,13 +380,20 @@ const serveIndex = async (req, res) => {
     seo = await resolveSeo(req);
   } catch (error) {
     console.warn("[storefront-seo] Failed to resolve public SEO:", error?.message || error);
+    if (/^\/recursos(?:\/|$)/i.test(new URL(buildRequestUrl(req)).pathname)) {
+      send(res, 503, req.method === "HEAD" ? "" : "Recursos temporalmente no disponibles.", {
+        "content-type": "text/plain; charset=utf-8", "x-robots-tag": "noindex", "cache-control": "no-store",
+      });
+      return;
+    }
   }
 
   const html = seo ? injectSeo(baseHtml, seo) : baseHtml;
-  send(res, 200, req.method === "HEAD" ? "" : html, {
+  send(res, seo?.statusCode || 200, req.method === "HEAD" ? "" : html, {
     "content-type": "text/html; charset=utf-8",
     "cache-control": seo ? "s-maxage=300, stale-while-revalidate=3600" : "public, max-age=300",
     ...(seo ? { "x-volta-seo": "public-business" } : {}),
+    ...(seo?.robots ? { "x-robots-tag": seo.robots } : {}),
   });
 };
 

@@ -1,5 +1,17 @@
 # Biblioteca pública de recursos
 
+## Primera clase — 21 de octubre de 2026
+
+La primera clase está activa en `content/resources.json`, con el vídeo de
+Volta Pizza `https://youtu.be/6hOa9NKMssE`, su miniatura original y fecha
+`2026-10-21`. Su título es «¿Por qué tus clientes no compran en tu web?» y
+conserva la ruta `/recursos/por-que-tus-clientes-siguen-comprando-en-marketplaces`.
+Incluye reproductor y enlace alternativo a YouTube. Los tests de borradores
+usan datos sintéticos independientes del catálogo editorial.
+
+Las secciones siguientes describen también la entrega inicial del 20 de
+octubre, cuando la biblioteca todavía no tenía publicaciones.
+
 ## Arquitectura y alcance
 
 La aplicación sigue usando React y React Router. `/recursos` es la biblioteca;

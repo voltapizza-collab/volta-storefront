@@ -2,19 +2,23 @@
   {
     "slug": "por-que-tus-clientes-siguen-comprando-en-marketplaces",
     "category": "clases",
-    "active": false,
+    "active": true,
     "order": 10,
-    "title": "¿Por qué tus clientes siguen comprando en marketplaces aunque tengas página web?",
+    "title": "¿Por qué tus clientes no compran en tu web?",
     "description": "Descubre por qué tener una página web propia no garantiza ventas directas, qué dificulta cambiar los hábitos de compra y cómo abordamos la migración de clientes hacia el canal directo",
     "introduction": "Descubre por qué tener una página web propia no garantiza ventas directas, qué dificulta cambiar los hábitos de compra y cómo abordamos la migración de clientes hacia el canal directo.",
-    "publishedAt": "",
-    "cover": { "url": "", "alt": "" },
+    "publishedAt": "2026-10-21",
+    "cover": { "url": "https://i.ytimg.com/vi/6hOa9NKMssE/maxresdefault.jpg", "alt": "Portada de la clase: ¿Por qué tus clientes no compran en tu web?" },
     "seo": {
-      "title": "¿Por qué tus clientes siguen comprando en marketplaces? | Volta Pizza",
+      "title": "¿Por qué tus clientes no compran en tu web? | Volta Pizza",
       "description": "Una clase gratuita sobre hábitos de compra y migración de clientes hacia el canal directo de tu pizzería.",
-      "image": ""
+      "image": "https://i.ytimg.com/vi/6hOa9NKMssE/maxresdefault.jpg"
     },
-    "videoUrl": "",
-    "body": []
+    "videoUrl": "https://youtu.be/6hOa9NKMssE",
+    "body": [
+      { "type": "heading", "text": "Economía conductual aplicada al delivery" },
+      { "type": "paragraph", "content": ["Una clase de Volta Pizza sobre los hábitos de compra y la venta directa de tu pizzería. Puedes verla gratis y sin registro en el reproductor de esta página."] },
+      { "type": "paragraph", "content": ["Si prefieres verla en YouTube, ", { "text": "abre la clase completa", "href": "https://youtu.be/6hOa9NKMssE" }, "."] }
+    ]
   }
 ]

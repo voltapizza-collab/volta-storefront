@@ -4,7 +4,7 @@ import ResourcesPage from './ResourcesPage';
 import ResourcePage from './ResourcePage';
 import { ResourceVideo } from '../components/ResourceContent';
 import { publishedResources, publicationErrors, videoSource } from '../resources/catalog';
-import drafts from '../../content/resources.json';
+const drafts = [{ slug: 'clase-borrador', category: 'clases', active: false, title: 'Clase en preparación' }];
 let mockSlug = 'articulo-prueba';
 jest.mock('react-router-dom', () => ({ useParams: () => ({ slug: mockSlug }) }), { virtual: true });
 
@@ -19,7 +19,7 @@ const resource = (category = 'articulos', extra = {}) => ({
   ...extra,
 });
 
-test('only complete active dated resources appear, ordered explicitly; original class stays unpublished', () => {
+test('only complete active dated resources appear, ordered explicitly; drafts stay unpublished', () => {
   const earlier = resource('articulos', { slug: 'primero', order: 1 });
   expect(publishedResources([resource(), earlier, ...drafts])).toEqual([earlier, resource()]);
   expect(publishedResources([resource('clases', { videoUrl: '' }), resource('investigaciones', { pdfUrl: '' }),

@@ -7,7 +7,7 @@ const http = require('node:http');
 const { validateCatalog } = require('./build-resources.cjs');
 const { resourceResponse } = require('./resources-http.cjs');
 const { serveResourceMedia } = require('./resource-media.cjs');
-const draft = require('../content/resources.json')[0];
+const draft = { slug: 'clase-borrador', category: 'clases', active: false, title: 'Clase en preparación' };
 const fixture = () => ({ slug: 'prueba', category: 'investigaciones', active: true, order: 1,
   title: 'Prueba', description: 'Resumen', introduction: 'Introducción', publishedAt: '2026-01-01',
   cover: { url: '/resources/cover.svg', alt: 'Portada' },

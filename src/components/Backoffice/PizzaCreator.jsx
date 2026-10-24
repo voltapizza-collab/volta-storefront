@@ -158,7 +158,7 @@ const PC_COPY = {
     "state.loadingStores": "Loading stores...",
     "state.noStores": "No stores configured.",
     "section.sizesPrices": "Sizes and prices",
-    "section.buildPizza": "Build your pizza",
+    "section.buildPizza": "Product ingredients",
     "hint.selectSize": "Select at least one size before setting quantities.",
     "hint.activeIngredients": "Only active ingredients from this store inventory/onboarding are shown.",
     "hint.randomSelection": "Random selection placeholders let the store choose the final surplus ingredients during production.",
@@ -168,7 +168,7 @@ const PC_COPY = {
     "allergen.none": "No declared allergen",
     "action.addIngredient": "+ Add ingredient",
     "modal.randomTitle": "Random selection",
-    "field.randomSelectionCount": "Choose how many random selections this pizza will use",
+    "field.randomSelectionCount": "Choose how many random selections this product will use",
     "action.apply": "Apply",
     "action.cancel": "Cancel",
     "image.current": "Current image",
@@ -222,7 +222,7 @@ const PC_COPY = {
     "state.loadingStores": "Cargando tiendas...",
     "state.noStores": "No hay tiendas configuradas.",
     "section.sizesPrices": "Tamanos y precios",
-    "section.buildPizza": "Arma tu pizza",
+    "section.buildPizza": "Ingredientes del producto",
     "hint.selectSize": "Selecciona al menos un tamano para poder poner cantidades.",
     "hint.activeIngredients": "Solo aparecen ingredientes activos del inventario/onboarding de esta tienda.",
     "hint.randomSelection": "Random selection permite que la tienda decida los ingredientes finales de excedente durante produccion.",
@@ -232,7 +232,7 @@ const PC_COPY = {
     "allergen.none": "Sin alergeno declarado",
     "action.addIngredient": "+ Anadir ingrediente",
     "modal.randomTitle": "Random selection",
-    "field.randomSelectionCount": "Escoge la cantidad de random selection que se usara en esta pizza",
+    "field.randomSelectionCount": "Escoge la cantidad de random selection que se usara en este producto",
     "action.apply": "Aplicar",
     "action.cancel": "Cancelar",
     "image.current": "Imagen actual",
@@ -360,23 +360,10 @@ export default function PizzaCreator({ partner, language = "es" }) {
     try {
       setLoadingCategories(true);
       const r = await api.get(`/api/partners/${partnerId}/categories`);
-      setCategories(Array.isArray(r.data) ? r.data : []);
+      setCategories(Array.isArray(r.data) ? r.data.filter(category => category.assigned !== false) : []);
     } catch (err) {
       console.error(err);
-      try {
-        const fallback = await api.get("/api/categories");
-        const rows = Array.isArray(fallback.data) ? fallback.data : [];
-        setCategories(
-          rows.map((category, index) => ({
-            ...category,
-            enabled: true,
-            position: category.position ?? index,
-          }))
-        );
-      } catch (fallbackErr) {
-        console.error(fallbackErr);
-        setCategories([]);
-      }
+      setCategories([]);
     } finally {
       setLoadingCategories(false);
     }

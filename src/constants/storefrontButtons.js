@@ -128,10 +128,11 @@ export const normalizeStorefrontMode = (mode) => {
 };
 
 export const normalizeStorefrontButtonConfig = (rawConfig) => {
+  const source = rawConfig && typeof rawConfig === 'object' && !Array.isArray(rawConfig) ? rawConfig : {};
   return STOREFRONT_BUTTON_ITEMS.reduce(
     (config, item) => ({
       ...config,
-      [item.id]: true,
+      [item.id]: source[item.id] !== false,
     }),
     {}
   );

@@ -27,7 +27,7 @@ const EMPTY_OVERVIEW = {
   },
 };
 
-export default function PizzaCreatorOverview({ partner, onOpenProducts }) {
+export default function PizzaCreatorOverview({ partner, onOpenProducts, language = "es" }) {
   const partnerId = partner?.partnerId;
   const [overview, setOverview] = useState(EMPTY_OVERVIEW);
   const [loading, setLoading] = useState(true);
@@ -62,7 +62,7 @@ export default function PizzaCreatorOverview({ partner, onOpenProducts }) {
     <div className="pc-overview">
       <section className="pc-overviewHero pc-section">
         <div>
-          <div className="pc-sectionTitle">Pizza Creator</div>
+          <div className="pc-sectionTitle">{({ es: 'Crear producto', en: 'Create product', it: 'Crea prodotto', fr: 'Créer un produit', pt: 'Criar produto' }[language] || 'Create product')}</div>
           <h2 className="pc-overviewTitle">Panel del modulo</h2>
         </div>
 

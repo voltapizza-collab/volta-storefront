@@ -18,7 +18,7 @@ const modules = [
     text: "Gestiona pedidos, clientes y tiendas desde un mismo backoffice.",
   },
   {
-    name: "Pizza Creator",
+    name: "Crear producto",
     text: "Una carta preparada para pizzas: tamaños, ingredientes, extras y combinaciones.",
   },
   {
@@ -49,7 +49,7 @@ const landingSeo = {
 const footerGroups = [
   {
     title: "Producto",
-    links: ["Storefront", "Backoffice", "Pizza Creator", "CRM & Promos"],
+    links: ["Storefront", "Backoffice", "Crear producto", "CRM & Promos"],
   },
   {
     title: "Compras",
@@ -242,7 +242,7 @@ export default function LandingPage() {
             <div className="vp-previewMain">
               <div className="vp-previewSidebar">
                 <span className="is-active">Pedidos</span>
-                <span>Pizza Creator</span>
+                <span>Crear producto</span>
                 <span>Promos</span>
                 <span>Clientes</span>
                 <span>Stock</span>

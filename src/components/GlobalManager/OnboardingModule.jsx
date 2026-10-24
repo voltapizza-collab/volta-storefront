@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
+import FoodAssignment from './FoodAssignment';
 import api from "../../setupAxios";
 import { CommercialSummary } from '../OnboardingCommercial';
 import OnboardingOffer from './OnboardingOffer';
@@ -483,6 +484,8 @@ export default function OnboardingModule() {
                   {selected.closure ? 'Abrir contrato y pago' : 'Abrir fase 2'}
                 </a>
               </div>
+
+              <FoodAssignment key={`food-${selected.id}`} requestId={selected.id} />
 
               {!formalData.commercialSelection && !selected.closure && <div className="gmon-contractActions">
                 <div>

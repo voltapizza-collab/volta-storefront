@@ -61,6 +61,7 @@ export default function CategoriesModule() {
       await api.post("/api/categories", {
         name: trimmedName,
         customizable: newCategoryCustomizable,
+        builderType: newCategoryCustomizable ? "PIZZA" : "NONE",
         halfAndHalf: newCategoryHalfAndHalf,
       });
       setNewCategoryName("");
@@ -78,7 +79,7 @@ export default function CategoriesModule() {
   const startEditing = (category) => {
     setEditingCategoryId(category.id);
     setEditingName(category.name || "");
-    setEditingCustomizable(Boolean(category.customizable));
+    setEditingCustomizable(category.builderType === "PIZZA" || (!category.builderType && Boolean(category.customizable)));
     setEditingHalfAndHalf(Boolean(category.halfAndHalf));
   };
 
@@ -114,6 +115,7 @@ export default function CategoriesModule() {
       const { data } = await api.patch(`/api/categories/${category.id}`, {
         name: trimmedName,
         customizable: editingCustomizable,
+        builderType: editingCustomizable ? "PIZZA" : "NONE",
         halfAndHalf: editingHalfAndHalf,
       });
 
@@ -155,6 +157,7 @@ export default function CategoriesModule() {
           Create and maintain the global category catalog. Feed order and
           visibility are managed by each business from Backoffice.
         </p>
+        <p>El constructor visual y mitad y mitad son funciones específicas. Los extras se configuran por separado y no necesitan constructor.</p>
       </div>
 
       <div className="gmc-createCard">
@@ -186,7 +189,7 @@ export default function CategoriesModule() {
               onChange={(e) => setNewCategoryCustomizable(e.target.checked)}
               disabled={saving}
             />
-            Personalizable
+            Constructor visual de pizza
           </label>
 
           <label className="gmc-customizeCheck">
@@ -238,7 +241,7 @@ export default function CategoriesModule() {
                   )}
                   <div className="gmc-rowMeta">
                     {[
-                      category.customizable ? "Personalizable en armado" : "Catalogo global",
+                      category.customizable ? "Constructor visual de pizza" : "Catalogo global",
                       category.halfAndHalf ? "Disponible para mitad / mitad" : null,
                     ]
                       .filter(Boolean)
@@ -255,7 +258,7 @@ export default function CategoriesModule() {
                           }
                           disabled={saving}
                         />
-                        Personalizable
+                        Constructor visual de pizza
                       </label>
                       <label className="gmc-customizeCheck gmc-customizeCheck--inline">
                         <input

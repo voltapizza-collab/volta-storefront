@@ -1,4 +1,5 @@
 import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
+import FoodAssignment from './FoodAssignment';
 import api from "../../setupAxios";
 
 const formatNumber = (value) => new Intl.NumberFormat("es-ES").format(Number(value || 0));
@@ -360,6 +361,7 @@ export default function PartnersModule() {
                       <tr key={`${partner.id}-detail`} className="gmp-detailRow">
                         <td colSpan="8">
                           <div className="gmp-detail">
+                            <FoodAssignment partnerId={partner.id} />
                             <div>
                               <span>Alta</span>
                               <strong>{formatDate(partner.createdAt)}</strong>

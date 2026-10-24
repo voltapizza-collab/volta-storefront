@@ -9,6 +9,28 @@ const fields = { partnerType: 'AUTONOMO', legalName: 'Titular', taxId: 'TEST', l
   businessPhone: '600000000', businessEmail: 'test@example.com', accountHolder: 'Titular', iban: 'ES0012341234123412341234',
   acceptedTerms: true, acceptedCompliance: true, posChoice: 'PURCHASE', posInstallments: null, commercialAcknowledged: true };
 let request;
+
+test('food packages are selected in business details, saved in drafts and restored in the summary', async () => {
+  request.foodPackagesRequired = true;
+  request.foodPackages = [{ id: 2, name: 'Hamburguesas' }, { id: 3, name: 'Kebab' }];
+  api.post.mockImplementation(async (_url, body) => {
+    request = { ...request, formalData: { ...request.formalData, onboardingDraft: body } };
+    return { data: { request } };
+  });
+  const view = render(<OnboardingFormPage />);
+  await screen.findByDisplayValue('Mi tienda');
+  fireEvent.click(screen.getByRole('checkbox', { name: 'Hamburguesas' }));
+  fireEvent.click(screen.getByRole('checkbox', { name: 'Kebab' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Guardar y continuar después' }));
+  await waitFor(() => expect(api.post).toHaveBeenCalledWith('/api/onboarding/form/test-token/draft', expect.objectContaining({ foodPackageIds: [2, 3] })));
+  view.unmount();
+  render(<OnboardingFormPage />);
+  await screen.findByDisplayValue('Mi tienda');
+  expect(screen.getByRole('checkbox', { name: 'Hamburguesas' })).toBeChecked();
+  expect(screen.getByRole('checkbox', { name: 'Kebab' })).toBeChecked();
+  fireEvent.click(screen.getByRole('button', { name: '4. Resumen' }));
+  expect(screen.getByText(/Hamburguesas, Kebab/)).toBeVisible();
+});
 test('email method prefills a new selection without overwriting a saved choice or accepting terms', async () => {
   window.history.replaceState(null, '', '/onboarding/test-token?posChoice=INSTALLMENTS');
   request.formalData.onboardingDraft = { ...fields, posChoice: '', commercialAcknowledged: false };

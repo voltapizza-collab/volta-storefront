@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
+import FoodPackageSelector from '../components/FoodPackageSelector';
 import api from "../setupAxios";
 import OnboardingCommercial, { CommercialSummary, commercialPreview } from '../components/OnboardingCommercial';
 import OnboardingClosure from '../components/OnboardingClosure';
@@ -7,6 +8,7 @@ import voltaSignature from "../assets/signatures/volta-signature.png";
 import "../styles/OnboardingForm.css";
 
 const initialForm = {
+  foodPackageIds: [],
   posChoice: '',
   posInstallments: 6,
   posRentalMonths: '',
@@ -510,6 +512,7 @@ export default function OnboardingFormPage() {
   const [documents, setDocuments] = useState({});
   const [invalidFields, setInvalidFields] = useState({});
   const [step, setStep] = useState(0);
+  const [foodPackages, setFoodPackages] = useState([]);
   const [savingDraft, setSavingDraft] = useState(false);
   const draftBusy = useRef(false);
 
@@ -552,6 +555,8 @@ export default function OnboardingFormPage() {
         const response = await api.get(`/api/onboarding/form/${token}`);
         const nextRequest = response.data?.request;
         setRequest(nextRequest);
+        const savedFood = nextRequest?.formalData?.onboardingDraft?.foodConfiguration || nextRequest?.formalData?.foodConfiguration;
+        setFoodPackages([...(nextRequest?.foodPackages || []), ...(savedFood?.packages || []).filter(p => !(nextRequest?.foodPackages || []).some(row => row.id === p.id))]);
         const nextForm = {
           ...initialForm,
           businessEmail: nextRequest?.email || "",
@@ -638,6 +643,7 @@ export default function OnboardingFormPage() {
     if (step !== 3) { setStep(current => Math.min(3, current + 1)); return; }
 
     const nextInvalid = buildInvalidFormalFields(form, documents, existingDocumentsByType);
+    if (request.foodPackagesRequired && !form.foodPackageIds.length) nextInvalid.foodPackageIds = true;
     if (!form.posChoice) nextInvalid.posChoice = true;
     if (form.posChoice === 'INSTALLMENTS' && ![2, 3, 4, 5, 6].includes(Number(form.posInstallments))) nextInvalid.posInstallments = true;
     if (form.posChoice === 'RENT_QUOTE' && ['PRICE_BY_TERM', 'AMORTIZED_RENTAL'].includes(request.commercialCatalog?.rental?.calculation)
@@ -658,7 +664,8 @@ export default function OnboardingFormPage() {
       setMessage("");
       const payload = new FormData();
       Object.entries(form).forEach(([key, value]) => {
-        if (key in initialForm) payload.append(key, value == null ? "" : String(value));
+        if (key === 'foodPackageIds') { if (foodPackages.length || value?.length) payload.append(key, JSON.stringify(value)); }
+        else if (key in initialForm) payload.append(key, value == null ? "" : String(value));
       });
       payload.append('commercialVersion', request.commercialCatalog.version);
       documentFields.forEach(({ key }) => {
@@ -697,6 +704,7 @@ export default function OnboardingFormPage() {
     draftBusy.current = true; setSavingDraft(true); setMessage('');
     try {
       const body = Object.fromEntries(Object.keys(initialForm).map(key => [key, form[key]]));
+      if (!foodPackages.length && !body.foodPackageIds.length) delete body.foodPackageIds;
       const response = await api.post(`/api/onboarding/form/${token}/draft`, body);
       setRequest(response.data.request);
       setMessage('Avance guardado. Puedes volver con este enlace. Los archivos seleccionados se subirán al enviar a revisión; si cierras esta página, tendrás que seleccionarlos de nuevo.');
@@ -872,6 +880,11 @@ export default function OnboardingFormPage() {
               <span>Nombre comercial</span>
               <input value={form.commercialName} onChange={updateField("commercialName")} required disabled={isLocked} {...fieldProps("commercialName")} />
             </label>
+            {!!foodPackages.length && <div className="onb-foodPackages" tabIndex={-1} {...fieldProps('foodPackageIds')}>
+              <FoodPackageSelector packages={foodPackages} value={form.foodPackageIds} disabled={isLocked} invalid={invalidFields.foodPackageIds}
+                onChange={ids => { setForm(current => ({ ...current, foodPackageIds: ids })); setInvalidFields(current => ({ ...current, foodPackageIds: false })); }} />
+            </div>}
+            {request.foodPackagesRequired && !foodPackages.length && <p role="alert">No hay tipos de comida disponibles para completar el alta. Contacta con Volta para revisar la configuración.</p>}
             <label className={fieldClassName("businessAddress")}>
               <span>Direccion del local</span>
               <input value={form.businessAddress} onChange={updateField("businessAddress")} required disabled={isLocked} {...fieldProps("businessAddress")} />
@@ -955,6 +968,7 @@ export default function OnboardingFormPage() {
             <h2>Revisa tu incorporación</h2>
             <p><strong>{form.commercialName || request.businessName}</strong> · {form.legalName} · {form.taxId}</p>
             <p>{form.businessAddress} · {form.city} · {form.businessEmail}</p>
+            {!!form.foodPackageIds.length && <p><strong>Comidas:</strong> {foodPackages.filter(p => form.foodPackageIds.includes(p.id)).map(p => p.name).join(', ')}</p>}
             <CommercialSummary selection={isLocked ? request.formalData?.commercialSelection : commercialPreview(form, request.commercialCatalog)} />
           </div>
           <div className="onb-section onb-checks" hidden={!isLocked && step !== 3}>

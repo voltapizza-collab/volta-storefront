@@ -1,3 +1,4 @@
+import { usesPizzaBuilder, foodButtonVisible } from '../utils/foodCapabilities';
 import { sortIngredientsForBuilding } from '../utils/ingredientPresentationOrder';
 import { scaleIngredientPriceForSize, buildCustomIngredientDetail, getCustomIngredientPrice, buildCustomPizzaLine } from '../utils/customPizza';
 import { rememberRepeatReceipt, readRepeatReceipts } from '../auth/repeatReceipts';
@@ -1438,6 +1439,7 @@ const mergeTrendingIntoMenu = (menuItems = [], trendingItems = []) => {
       category: item.category,
       categoryPosition: item.categoryPosition,
       categoryCustomizable: item.categoryCustomizable,
+      categoryBuilderType: item.categoryBuilderType,
       categoryBasePriceBySize: item.categoryBasePriceBySize,
       categoryHalfAndHalf: item.categoryHalfAndHalf,
     };
@@ -2944,10 +2946,7 @@ export default function StorePage() {
     [partner?.storefrontButtonConfig]
   );
 
-  const isStorefrontButtonVisible = useCallback(
-    (buttonId) => storefrontButtons[buttonId] !== false,
-    [storefrontButtons]
-  );
+
 
   const topDeals = useMemo(
     () => sortTopDealsByDiscount(menu.filter(hasTopDealPolicy)),
@@ -3697,7 +3696,7 @@ export default function StorePage() {
 
     menu.forEach((item) => {
       const categoryName = item?.category || "Productos";
-      const isCustomizable = item?.categoryCustomizable === true;
+      const isCustomizable = usesPizzaBuilder(item);
 
       if (!isCustomizable) return;
 
@@ -4289,7 +4288,10 @@ export default function StorePage() {
     }));
   };
 
+  const isStorefrontButtonVisible = (buttonId) => foodButtonVisible(buttonId, storefrontButtons, customCategoryOptions, halfItems, getAvailableSizes);
+
   const openHalfModal = () => {
+    if (!isStorefrontButtonVisible('halfAndHalf')) return;
     setHalfQty(1);
     setHalfSize("");
     setHalfExtras({ A: {}, B: {} });
@@ -4411,6 +4413,7 @@ export default function StorePage() {
   };
 
   const openCustomModal = () => {
+    if (!isStorefrontButtonVisible('customPizza')) return;
     setCustomModalOpen(true);
   };
 
@@ -5956,8 +5959,8 @@ export default function StorePage() {
           if (phoneHref) window.location.href = phoneHref;
         }}
         disabled={!phoneHref}
-        aria-label="Llamar a la pizzeria"
-        title={phoneHref ? "Llamar a la pizzeria" : "Telefono no disponible"}
+        aria-label="Llamar al restaurante"
+        title={phoneHref ? "Llamar al restaurante" : "Telefono no disponible"}
       >
         <span className="lsf-callbtn__icon" aria-hidden="true">
           <svg viewBox="0 0 64 64" focusable="false">
@@ -6000,7 +6003,7 @@ export default function StorePage() {
     {isStorefrontButtonVisible("halfAndHalf") && <button type="button" onClick={openHalfModal}>Mitad y mitad</button>}
     {isStorefrontButtonVisible("customPizza") && <button type="button" onClick={openCustomModal}>Arma tu pizza</button>}
     {isStorefrontButtonVisible("scheduleOrder") && <button type="button" onClick={() => setScheduleOpen(true)}>Programar pedido</button>}
-    {isStorefrontButtonVisible("call") && phoneHref && <a href={phoneHref}>Llamar a la pizzería</a>}
+    {isStorefrontButtonVisible("call") && phoneHref && <a href={phoneHref}>Llamar al restaurante</a>}
   </CatalogTools>;
 
   return (
@@ -6133,7 +6136,7 @@ export default function StorePage() {
               <div className="sf-lsfSearchCluster">
                 <button type="button" className="sf-catalogSearchLaunch" aria-label="Buscar productos" aria-expanded={catalogSearchOpen} onClick={toggleCatalogSearch}>
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" /><path d="m16 16 5 5" /></svg>
-                  <span>Buscar pizza o ingrediente…</span>
+                  <span>Buscar productos o ingredientes…</span>
                 </button>
 
                 {storefrontMode !== "commercial-light" && isStorefrontButtonVisible("repeatOrder") && (

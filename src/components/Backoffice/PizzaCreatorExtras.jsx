@@ -228,7 +228,7 @@ export default function PizzaCreatorExtras({ partner, language = "es" }) {
         api.get(`/api/pizzas?partnerId=${partnerId}`),
       ]);
 
-      setCategories(Array.isArray(catRes.data) ? catRes.data : []);
+      setCategories(Array.isArray(catRes.data) ? catRes.data.filter(category => category.assigned !== false) : []);
       setIngredients(
         (Array.isArray(ingRes.data) ? ingRes.data : []).filter(
           (ingredient) => ingredient.exists && ingredient.active
@@ -389,7 +389,7 @@ export default function PizzaCreatorExtras({ partner, language = "es" }) {
     <div className="pcex-page">
       <div className="pcex-header">
         <div>
-          <div className="pcex-kicker">Pizza Creator</div>
+          <div className="pcex-kicker">{({ es: 'Crear producto', en: 'Create product', it: 'Crea prodotto', fr: 'Créer un produit', pt: 'Criar produto' }[language] || 'Create product')}</div>
           <h2 className="pcex-title">{t("title")}</h2>
         </div>
 

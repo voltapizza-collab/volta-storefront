@@ -76,7 +76,7 @@ export function CatalogSearch({ value, onChange, onClose, resultCount = 0, autoF
     </div>
     <div className="sf-catalogSearch__field">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" /><path d="m16 16 5 5" /></svg>
-      <input ref={inputRef} type="search" aria-label="Buscar pizza o ingrediente" placeholder="Pizza o ingrediente…" autoComplete="off" enterKeyHint="search"
+      <input ref={inputRef} type="search" aria-label="Buscar productos o ingredientes" placeholder="Productos o ingredientes…" autoComplete="off" enterKeyHint="search"
         value={value} onChange={event => onChange(event.target.value)} />
       {value && <button className="sf-catalogSearch__clear" type="button" aria-label="Borrar búsqueda" onClick={() => { onChange(""); inputRef.current?.focus(); }}>×</button>}
     </div>

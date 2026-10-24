@@ -6,6 +6,7 @@ import "../styles/GlobalManager.css";
 
 // módulos
 import IngredientsModule from "../components/GlobalManager/IngredientsModule";
+import FoodPackagesModule from '../components/GlobalManager/FoodPackagesModule';
 import CategoriesModule from "../components/GlobalManager/CategoriesModule";
 import SmsCreditsModule from "../components/GlobalManager/SmsCreditsModule";
 import MyOrdersModule from "../components/GlobalManager/MyOrdersModule";
@@ -17,6 +18,7 @@ import PartnersModule from "../components/GlobalManager/PartnersModule";
 import AppFooter from "../components/Layout/AppFooter";
 
 export default function GlobalManager() {
+  const [categoryTab, setCategoryTab] = useState("categories");
   const [activeModule, setActiveModule] = useState("myorders");
 
   const [auth, setAuth, checkingSession] = useWebSession("global_admin");
@@ -145,7 +147,7 @@ export default function GlobalManager() {
             }`}
             onClick={() => setActiveModule("categories")}
           >
-            Categories
+            Categorías y paquetes
           </button>
 
           <button
@@ -202,7 +204,10 @@ export default function GlobalManager() {
         <div className="gm-workspace">
           {activeModule === "myorders" && <MyOrdersModule />}
           {activeModule === "ingredients" && <IngredientsModule />}
-          {activeModule === "categories" && <CategoriesModule />}
+          {activeModule === "categories" && <>
+            <div className="food-tabs"><button type="button" aria-pressed={categoryTab === 'categories'} onClick={() => setCategoryTab('categories')}>Categorías</button><button type="button" aria-pressed={categoryTab === 'packages'} onClick={() => setCategoryTab('packages')}>Paquetes de comida</button></div>
+            {categoryTab === 'categories' ? <CategoriesModule /> : <FoodPackagesModule />}
+          </>}
           {activeModule === "smsCredits" && <SmsCreditsModule />}
           {activeModule === "boostSettings" && <BoostSettingsModule />}
           {activeModule === "onboarding" && <OnboardingModule />}

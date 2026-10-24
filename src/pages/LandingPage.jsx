@@ -168,7 +168,7 @@ export default function LandingPage() {
       });
 
       setLeadStatus(
-        "Solicitud de demostración recibida. Te contactaremos para conocer tu pizzería y mostrarte el sistema."
+        "Solicitud de demostración recibida. Te contactaremos para conocer tu restaurante y mostrarte el sistema."
       );
     } catch (error) {
       console.error(error);
@@ -350,7 +350,7 @@ export default function LandingPage() {
           <span className="vp-kicker">Contacto</span>
           <h2>Veamos cómo impulsar tu venta directa.</h2>
           <p>
-            Cuéntanos cómo vende hoy tu pizzería. Te mostraremos el motor
+            Cuéntanos cómo vende hoy tu restaurante. Te mostraremos el motor
             y las herramientas que pueden ayudarte a desarrollar tu canal directo.
           </p>
           <a href="mailto:contacto@voltapizza.com">contacto@voltapizza.com</a>
@@ -362,7 +362,7 @@ export default function LandingPage() {
             <input value={lead.name} onChange={updateLead("name")} required />
           </label>
           <label>
-            <span>Pizzería</span>
+            <span>Nombre del restaurante</span>
             <input value={lead.business} onChange={updateLead("business")} required />
           </label>
           <label>

@@ -11,7 +11,7 @@ jest.mock('../assets/logo/pizza.svg', () => ({
 beforeEach(() => jest.clearAllMocks());
 const fill = () => {
   fireEvent.change(screen.getByLabelText('Nombre'), { target: { value: 'Ana' } });
-  fireEvent.change(screen.getByLabelText('Pizzería'), { target: { value: 'Pizza Test' } });
+  fireEvent.change(screen.getByLabelText('Nombre del restaurante'), { target: { value: 'Burger Test' } });
   fireEvent.change(screen.getByRole('textbox', { name: 'Email' }), { target: { value: 'ana@example.invalid' } });
 };
 
@@ -46,7 +46,7 @@ test('landing identifies the brand, labels the demo and sends only a demo inquir
   expect(screen.queryByRole('link', { name: 'Instagram' })).not.toBeInTheDocument();
   fill(); fireEvent.click(screen.getByRole('button', { name: 'Solicitar demostración' }));
   await screen.findByText(/Solicitud de demostración recibida/);
-  expect(api.post).toHaveBeenCalledWith('/api/onboarding/demo-requests', expect.objectContaining({ name: 'Ana', business: 'Pizza Test' }));
+  expect(api.post).toHaveBeenCalledWith('/api/onboarding/demo-requests', expect.objectContaining({ name: 'Ana', business: 'Burger Test' }));
   expect(screen.getByRole('textbox', { name: 'Email' })).toHaveValue('');
   expect(screen.queryByText(/fase 2/i)).not.toBeInTheDocument();
 });
@@ -80,6 +80,6 @@ test('large English footer preserves language, contact and navigation destinatio
   const footer = within(container.querySelector('footer'));
   expect(container.querySelector('.vp-footerBottom')).toHaveTextContent(/^THE PIZZA SALE ENGINE$/);
   expect(footer.getByLabelText('Idioma')).toHaveValue('es');
-  const destinations = { Email: 'mailto:contacto@voltapizza.com', Demo: '#contacto', 'Solicitar llamada': '#contacto', Storefront: '#sistema', Backoffice: '#sistema', 'Pizza Creator': '#sistema', 'CRM & Promos': '#sistema', 'Pedidos online': '#sistema', Reservas: '#sistema', Cupones: '#sistema', 'Demo comercial': '#contacto', 'Ventajas comerciales': '#venta-directa', 'Cómo empezar': '#como-empezar', 'Condiciones comerciales': '#condiciones' };
+  const destinations = { Email: 'mailto:contacto@voltapizza.com', Demo: '#contacto', 'Solicitar llamada': '#contacto', Storefront: '#sistema', Backoffice: '#sistema', 'Crear producto': '#sistema', 'CRM & Promos': '#sistema', 'Pedidos online': '#sistema', Reservas: '#sistema', Cupones: '#sistema', 'Demo comercial': '#contacto', 'Ventajas comerciales': '#venta-directa', 'Cómo empezar': '#como-empezar', 'Condiciones comerciales': '#condiciones' };
   for (const [name, href] of Object.entries(destinations)) expect(footer.getByRole('link', { name, exact: true })).toHaveAttribute('href', href);
 });

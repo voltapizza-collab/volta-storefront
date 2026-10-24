@@ -4,6 +4,7 @@ import { euro } from './OnboardingCommercial';
 const paymentLabel = status => ({ CREATING: 'Preparando pago', PENDING: 'Pendiente de confirmación', PAID: 'Confirmado', EXPIRED: 'Enlace vencido', REFUND_PENDING: 'Devolución en trámite', REFUNDED: 'Devuelto', REVERSED: 'Requiere revisión por Volta' })[status] || status;
 
 export const closureErrorText = code => ({
+  cancellation_confirmation_required: 'Confirma la cancelación para detener el alta. Puedes volver al contrato sin cancelarlo.',
   review_confirmation_required: 'Confirma la revisión de los datos, los documentos, el contrato y el suministro del POS.',
   review_changed: 'El contrato ha cambiado. Revisa la versión actualizada antes de enviarla.',
   review_load_failed: 'No se pudo cargar el contrato. Vuelve a intentarlo.',
@@ -36,10 +37,12 @@ export const closureErrorText = code => ({
 
 export function ClosureDocument({ closure, compact = false }) {
   const { offer, payment } = closure;
+  const simulated = payment?.method === 'SIMULATED';
   const contractNumber = offer.contractNumber || closure.contractNumber || offer.id;
   const download = () => {
     const content = `${offer.documentText}\n\nReferencia del contrato: ${contractNumber}\nSHA-256: ${offer.hash}\nEstado: ${closure.status}\n${closure.signed ? `Firma: ${closure.signerName || '-'} · ${closure.signedAt || '-'}\n` : ''}${payment?.paidAt ? `Pago: ${euro(payment.amountCents)}. ${payment.paidAt}. Justificante: ${payment.receipt || '-'}\n` : ''}`;
-    const url = URL.createObjectURL(new Blob([content], { type: 'text/plain;charset=utf-8' }));
+    const paymentNotice = simulated ? '\n\nPAGO SIMULADO PARA PRUEBAS. No se ha recibido dinero. Este documento no es un justificante de cobro.\n' : '';
+    const url = URL.createObjectURL(new Blob([content + paymentNotice], { type: 'text/plain;charset=utf-8' }));
     const link = document.createElement('a'); link.href = url; link.download = `contrato-${String(contractNumber).replace(/[^a-zA-Z0-9-]/g, '')}.txt`; link.click(); URL.revokeObjectURL(url);
   };
   return <section className="onb-commercialSummary">
@@ -54,7 +57,9 @@ export function ClosureDocument({ closure, compact = false }) {
     {compact ? <details className="onb-managerAdvanced"><summary>Leer contrato completo</summary><pre className="onb-closureDocument" tabIndex="0" aria-label="Contrato completo">{offer.documentText}</pre></details>
       : <pre className="onb-closureDocument" tabIndex="0" aria-label="Contrato completo">{offer.documentText}</pre>}
     <button type="button" onClick={download}>{payment?.paidAt ? 'Descargar contrato y justificante' : 'Descargar contrato'}</button>
-    {payment && <p role="status">Estado del pago: {paymentLabel(payment.status)}. {payment.paidAt && <>Recibido: {euro(payment.amountCents)} · Justificante: {payment.receipt}</>}</p>}
+    {payment && <p role="status">{simulated
+      ? `${payment.status === 'VOIDED' ? 'Simulación anulada' : 'Pago simulado para pruebas'}: ${euro(payment.amountCents)}. No se ha recibido dinero ni se ha realizado un cobro.`
+      : <>Estado del pago: {paymentLabel(payment.status)}. {payment.paidAt && <>Recibido: {euro(payment.amountCents)} · Justificante: {payment.receipt}</>}</>}</p>}
     {closure.signatureDeadline && !closure.signed && <p>Plazo de firma: {new Date(closure.signatureDeadline).toLocaleString('es-ES')}.</p>}
     {closure.refundDueAt && !closure.signed && <p>Fecha límite para tramitar la devolución: {new Date(closure.refundDueAt).toLocaleDateString('es-ES')}.</p>}
   </section>;
@@ -63,12 +68,14 @@ export function ClosureDocument({ closure, compact = false }) {
 export default function OnboardingClosure({ request, onUpdate }) {
   const [accepted, setAccepted] = useState(false), [signed, setSigned] = useState(false);
   const [busy, setBusy] = useState(false), [message, setMessage] = useState('');
+  const [confirmingCancel, setConfirmingCancel] = useState(false);
   const working = useRef(false);
   const sequence = useRef(0);
   const c = request.closure, prefix = `/api/onboarding/form/${request.token}`;
   const first = c.offer.workflow === 'SIGN_PAY_ACTIVATE';
+  const simulated = c.payment?.method === 'SIMULATED';
   const activated = c.activated || request.status === 'ACTIVATED' || c.status === 'SIGNED';
-  useEffect(() => { setAccepted(false); setSigned(false); }, [c.offer.hash]);
+  useEffect(() => { setAccepted(false); setSigned(false); setConfirmingCancel(false); }, [c.offer.hash]);
   const action = async (path, body = {}) => {
     if (working.current) return;
     working.current = true; setBusy(true); setMessage('');
@@ -97,7 +104,7 @@ export default function OnboardingClosure({ request, onUpdate }) {
     const timer = setInterval(refresh, 15000);
     return () => { active = false; clearInterval(timer); };
   }, [prefix, onUpdate]);
-  const cancelled = c.cancelRequested || ['CANCELLED','REFUNDED','REFUND_PENDING','REVERSED'].includes(c.status);
+  const cancelled = c.cancelRequested || ['CANCEL_REQUESTED','CANCELLED','REFUNDED','REFUND_PENDING','REVERSED'].includes(c.status);
   return <main className="onb-page"><div className="onb-shell">
     <h1>{request.businessName} · Contrato y pago</h1>
     <ClosureDocument closure={c} />
@@ -113,18 +120,23 @@ export default function OnboardingClosure({ request, onUpdate }) {
         {c.offer.pos.mode === 'PURCHASE' && <p>Si pagas en efectivo, Volta debe registrar el recibo y confirmar que recibió el importe completo. No necesitas pagar otra vez online.</p>}
       </>}
       {c.canSign && !cancelled && <>
-        <p>{first ? 'Firma el contrato y después completa el pago inicial.' : 'Pago recibido. Ya puedes firmar.'}</p>
+        <p>{simulated ? 'El pago de prueba está simulado. Revisa el contrato; la firma sigue pendiente y debe realizarla el representante del negocio.' : first ? 'Firma el contrato y después completa el pago inicial.' : 'Pago recibido. Ya puedes firmar.'}</p>
         <label className="onb-choice"><input type="checkbox" checked={signed} onChange={e => setSigned(e.target.checked)} />
           <span>Acepto y firmo electrónicamente este contrato completo, y declaro que puedo representar al negocio.</span></label>
-        <button type="button" disabled={!signed || busy} onClick={() => action('/sign-contract', { acceptedContract: true })}>{first ? 'Firmar contrato y continuar al pago' : 'Firmar contrato y preparar mi tienda'}</button>
+        <button type="button" disabled={!signed || busy} onClick={() => action('/sign-contract', { acceptedContract: true })}>{simulated ? 'Firmar contrato y continuar la prueba' : first ? 'Firmar contrato y continuar al pago' : 'Firmar contrato y preparar mi tienda'}</button>
       </>}
       {c.overdue && <p role="alert">Ha vencido el plazo de firma. El alta está bloqueada; Volta debe resolver la devolución del pago.</p>}
       {cancelled && <p role="status">Cancelación o devolución en seguimiento. La firma está bloqueada.</p>}
-      {first && c.payment?.status === 'PAID' && !cancelled && <p role="status">Pago confirmado. Estamos preparando tu acceso y el correo de bienvenida con el QR. No necesitas volver a pagar.</p>}
+      {first && c.signed && c.payment?.status === 'PAID' && !cancelled && <p role="status">{simulated ? 'Pago simulado. Estamos preparando el acceso de prueba.' : 'Pago confirmado. Estamos preparando tu acceso y el correo de bienvenida con el QR. No necesitas volver a pagar.'}</p>}
       <button type="button" disabled={busy} onClick={() => action('/closure/refresh')}>Actualizar estado</button>
-      {!cancelled && <button type="button" disabled={busy} onClick={() => action('/closure/cancel')}>Solicitar cancelación antes del alta</button>}
+      {!cancelled && !confirmingCancel && <button type="button" disabled={busy} onClick={() => setConfirmingCancel(true)}>Solicitar cancelación antes del alta</button>}
+      {!cancelled && confirmingCancel && <div role="group" aria-label="Confirmar cancelación del alta">
+        <p>Cancelar bloqueará la firma y el pago de este expediente. Si quieres continuar con el alta, vuelve al contrato.</p>
+        <button type="button" disabled={busy} onClick={() => setConfirmingCancel(false)}>Volver al contrato</button>{' '}
+        <button type="button" disabled={busy} onClick={() => action('/closure/cancel', { confirmCancellation: true })}>Sí, solicitar cancelación</button>
+      </div>}
     </section>}
-    {activated && <p>Contrato firmado y pago confirmado. {['FAILED', 'NOT_CONFIGURED'].includes(request.formalData?.credentialsNotification?.emailStatus)
+    {activated && <p>{simulated ? 'Alta de prueba con pago simulado, sin cobro real.' : 'Contrato firmado y pago confirmado.'} {['FAILED', 'NOT_CONFIGURED'].includes(request.formalData?.credentialsNotification?.emailStatus)
       ? 'El correo de acceso no se ha entregado; Volta debe reenviarlo desde tu expediente. El contrato y el pago están conservados.'
       : 'Revisa tu correo para configurar el acceso.'} La tienda debe prepararse antes de abrir pedidos.</p>}
     {message && <p role="alert">{message}</p>}

@@ -91,6 +91,31 @@ test('overdue or cancelled closure cannot show signing or checkout controls', ()
   expect(screen.getByText(/Ha vencido el plazo/)).toBeInTheDocument();
 });
 
+test('requesting cancellation only changes state after a second explicit confirmation', () => {
+  render(<OnboardingClosure request={request({ offer: { ...offer, workflow: 'SIGN_PAY_ACTIVATE' }, canSign: true })} onUpdate={jest.fn()} />);
+  api.post.mockClear();
+  fireEvent.click(screen.getByRole('button', { name: 'Solicitar cancelación antes del alta' }));
+  expect(api.post).not.toHaveBeenCalled();
+  expect(screen.getByRole('group', { name: 'Confirmar cancelación del alta' })).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Volver al contrato' }));
+  expect(api.post).not.toHaveBeenCalled();
+  fireEvent.click(screen.getByRole('button', { name: 'Solicitar cancelación antes del alta' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Sí, solicitar cancelación' }));
+  expect(api.post).toHaveBeenCalledWith('/api/onboarding/form/token/closure/cancel', { offerHash: offer.hash, confirmCancellation: true });
+});
+
+test('simulated payment is identified without real collection and still requires the representative signature', () => {
+  render(<OnboardingClosure request={request({ offer: { ...offer, workflow: 'SIGN_PAY_ACTIVATE' }, canSign: true,
+    payment: { method: 'SIMULATED', status: 'PAID', amountCents: 29000 } })} onUpdate={jest.fn()} />);
+  expect(screen.getByText(/No se ha recibido dinero/)).toBeInTheDocument();
+  expect(screen.queryByText(/Estamos preparando/)).not.toBeInTheDocument();
+  expect(screen.queryByRole('button', { name: /^Pagar/ })).not.toBeInTheDocument();
+  const button = screen.getByRole('button', { name: 'Firmar contrato y continuar la prueba' });
+  expect(button).toBeDisabled();
+  fireEvent.click(screen.getByRole('checkbox'));
+  expect(button).toBeEnabled();
+});
+
 test('failed welcome delivery preserves signed confirmation and does not offer another payment', () => {
   const row = { ...request({ signed: true, status: 'SIGNED' }), formalData: { credentialsNotification: { emailStatus: 'FAILED' } } };
   render(<OnboardingClosure request={row} onUpdate={jest.fn()} />);

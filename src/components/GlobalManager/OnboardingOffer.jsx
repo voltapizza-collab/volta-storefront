@@ -41,6 +41,7 @@ export default function OnboardingOffer({ request, onUpdate }) {
   };
   if (!c && !request.submittedAt) return null;
   const cancelled = c?.cancelRequested || ['CANCELLED','REFUNDED','REFUND_PENDING','REVERSED'].includes(c?.status);
+  const simulated = c?.payment?.method === 'SIMULATED';
   return <section className="onb-commercial" aria-label="Revisión y pago">
     <h3>Revisión y pago</h3>
     {!c && <>
@@ -55,7 +56,7 @@ export default function OnboardingOffer({ request, onUpdate }) {
     </>}
     {c && <>
       <ClosureDocument closure={c} compact />
-      {!activated && !cancelled && <p role="status">{c.payment?.status === 'PAID' ? 'Pago confirmado. Preparando el alta y el correo de bienvenida.' : c.signed ? 'Contrato firmado. Pendiente de pago.' : 'Pendiente de firma y pago del comercio.'}</p>}
+      {!activated && !cancelled && <p role="status">{simulated ? (c.signed ? 'Pago simulado, sin cobro real. Preparando el alta de prueba.' : 'Pago simulado, sin cobro real. Pendiente de firma del comercio.') : c.payment?.status === 'PAID' ? 'Pago confirmado. Preparando el alta y el correo de bienvenida.' : c.signed ? 'Contrato firmado. Pendiente de pago.' : 'Pendiente de firma y pago del comercio.'}</p>}
       {!activated && !cancelled && c.payment?.status !== 'PAID' && <button type="button" disabled={busy} onClick={() => run('/contract/send')}>Reenviar correo de pago</button>}
       {activated && <>
         <p>Correo de bienvenida: {request.formalData?.credentialsNotification?.emailStatus || 'Pendiente'}.</p>
@@ -69,9 +70,9 @@ export default function OnboardingOffer({ request, onUpdate }) {
       </details>}
       {c.payment?.method === 'STRIPE' && <button type="button" disabled={busy} onClick={() => run('/reconcile-payment')}>Comprobar pago y completar alta</button>}
       {!activated && (c.cancelRequested || c.overdue) && <details><summary>Resolver cancelación</summary>
-        <label>Recibo de devolución en efectivo, si corresponde<input value={receipt} onChange={e => setReceipt(e.target.value)} /></label>
-        <label className="onb-choice"><input type="checkbox" checked={confirmed} onChange={e => setConfirmed(e.target.checked)} />Confirmo la devolución de {euro(c.offer.totalCents)}; si fue en efectivo, ya he devuelto el dinero.</label>
-        <button type="button" disabled={busy || !confirmed || (c.payment?.method === 'CASH' && receipt.trim().length < 3)} onClick={() => run('/resolve-cancellation', { offerHash: c.offer.hash, cashReceipt: receipt, confirmRefund: true })}>Resolver cancelación y devolver pago</button>
+        {!simulated && <label>Recibo de devolución en efectivo, si corresponde<input value={receipt} onChange={e => setReceipt(e.target.value)} /></label>}
+        <label className="onb-choice"><input type="checkbox" checked={confirmed} onChange={e => setConfirmed(e.target.checked)} />{simulated ? 'Confirmo cerrar esta prueba sin cobro ni devolución de dinero.' : <>Confirmo la devolución de {euro(c.offer.totalCents)}; si fue en efectivo, ya he devuelto el dinero.</>}</label>
+        <button type="button" disabled={busy || !confirmed || (c.payment?.method === 'CASH' && receipt.trim().length < 3)} onClick={() => run('/resolve-cancellation', { offerHash: c.offer.hash, cashReceipt: receipt, confirmRefund: true })}>{simulated ? 'Cerrar prueba sin cobro' : 'Resolver cancelación y devolver pago'}</button>
       </details>}
     </>}
     {message && <p role="alert">{message}</p>}

@@ -1,5 +1,9 @@
 # Volta POS para SUNMI V3
 
+## Inventario 0.3.25 (código 28)
+
+Ingredientes y productos en el mismo buscador, con interruptores independientes y aviso de ingredientes agotados. Compilación firmada y validada; distribución autorizada a todos los POS el 27 de octubre. Requiere publicar primero las rutas de stock autorizadas para POS en el backend. [Alcance y verificación](../../docs/pos/product-inventory-2026-10-27.md).
+
 ## Versión publicada 0.3.24 (código 27)
 
 Comandas personalizadas agrupadas en FULL, DERECHA e IZQUIERDA; dos recetas separadas en LADO 1/LADO 2. Misma firma y canal HTTPS permanente. Publicada el 16 de octubre de 2026 y asignada, por autorización del usuario, a los tres SUNMI registrados. Instalación e impresión física pendientes de confirmar. [Alcance, pruebas y entrega OTA](../../docs/pos/spatial-ticket-2026-10-15.md). La versión 0.3.23 descrita más abajo es la referencia anterior.

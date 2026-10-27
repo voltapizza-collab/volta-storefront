@@ -1,6 +1,6 @@
 import useWebSession from '../auth/useWebSession';
 import { accessDestination } from '../auth/webSession';
-import { getIngredientTaxonomyKey, getTaxonomyCategoryLabel, resolveIngredientTaxonomy } from '../utils/ingredientTaxonomy';
+import PosInventory, { fetchPosInventory } from './PosInventory';
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import api from "../setupAxios";
 import { receptionText } from '../utils/storeReception';
@@ -900,250 +900,14 @@ export function TicketPreview({ order }) {
   );
 }
 
-function PosInventory({ session, ingredients, setIngredients }) {
-  const [openCategory, setOpenCategory] = useState("");
-  const [view, setView] = useState("inventory");
-  const [search, setSearch] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [savingId, setSavingId] = useState(null);
-  const [message, setMessage, dismissMessage] = usePosNotice();
-
-  const loadIngredients = useCallback(async () => {
-    if (!session?.storeId) return;
-
-    try {
-      setLoading(true);
-      const response = await api.get(`/api/stores/${session.storeId}/ingredients`, {
-        params: { scope: "menu" },
-      });
-      const items = Array.isArray(response.data) ? response.data : [];
-      setIngredients(items);
-      setOpenCategory("");
-      setMessage("");
-    } catch (error) {
-      console.error(error);
-      setMessage("No se pudo cargar inventario.");
-    } finally {
-      setLoading(false);
-    }
-  }, [session?.storeId]);
-
-  useEffect(() => {
-    loadIngredients();
-  }, [loadIngredients]);
-
-  const categories = useMemo(() => {
-    const grouped = new Map();
-
-    ingredients.forEach((ingredient) => {
-      const category = getIngredientTaxonomyKey(ingredient);
-      if (!grouped.has(category)) grouped.set(category, []);
-      grouped.get(category).push(ingredient);
-    });
-
-    return [...grouped.entries()]
-      .sort((left, right) => left[0].localeCompare(right[0], "es", { sensitivity: "base" }))
-      .map(([category, items]) => ({
-        category,
-        items,
-        activeCount: items.filter((item) => item.exists && item.active).length,
-      }));
-  }, [ingredients]);
-
-  const filteredIngredients = useMemo(() => {
-    const query = search.trim().toLowerCase();
-    if (!query) return ingredients;
-
-    return ingredients.filter((ingredient) =>
-      [
-        ingredient.name,
-        ingredient.category,
-        resolveIngredientTaxonomy(ingredient).label,
-        ingredient.status,
-        ...(ingredient.affectedProductNames || []),
-      ]
-        .filter(Boolean)
-        .some((value) => String(value).toLowerCase().includes(query))
-    );
-  }, [ingredients, search]);
-
-  const toggleIngredient = async (ingredient) => {
-    if (!session?.storeId || savingId) return;
-
-    const nextActive = !(ingredient.exists && ingredient.active);
-
-    try {
-      setSavingId(ingredient.id);
-      await api.patch(`/stores/${session.storeId}/ingredients/${ingredient.id}`, {
-        active: nextActive,
-        source: "pos",
-      });
-      setIngredients((current) =>
-        current.map((item) =>
-          item.id === ingredient.id
-            ? {
-                ...item,
-                exists: true,
-                active: nextActive,
-              }
-            : item
-        )
-      );
-      setMessage("");
-    } catch (error) {
-      console.error(error);
-      setMessage("No se pudo cambiar el ingrediente.");
-    } finally {
-      setSavingId(null);
-    }
-  };
-
-  return (
-    <section className="pos-inventoryPane">
-      <div className="pos-sectionHead">
-        <div>
-          <span>Inventory</span>
-          <h2>Ingredientes del menu</h2>
-          <small>{session.storeName}</small>
-        </div>
-        <div className="pos-invHeadActions">
-          {view === "inventory" && (
-            <button
-              type="button"
-              className="pos-invSearchBtn"
-              onClick={() => {
-                setView("search");
-                setSearch("");
-              }}
-              aria-label="Buscar ingrediente"
-              title="Buscar ingrediente"
-            >
-              <span aria-hidden="true" />
-            </button>
-          )}
-          <button type="button" onClick={loadIngredients} disabled={loading}>
-            {loading ? "..." : "Sync"}
-          </button>
-        </div>
-      </div>
-
-      <PosNotice message={message} onDismiss={dismissMessage} />
-
-      {view === "search" && (
-        <div className="pos-invSearchView">
-          <div className="pos-invSearchBar">
-            <button type="button" onClick={() => setView("inventory")}>
-              Volver
-            </button>
-            <input
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-              placeholder="Buscar ingrediente..."
-              autoFocus
-            />
-          </div>
-
-          <div className="pos-invItems pos-invItems--search">
-            {filteredIngredients.map((ingredient) => {
-              const active = ingredient.exists && ingredient.active;
-
-              return (
-                <div
-                  key={ingredient.id}
-                  className={`pos-invItem ${active ? "is-active" : "is-inactive"}`}
-                >
-                  <span>
-                    {String(ingredient.name || "").toUpperCase()}
-                    <small>
-                      {ingredient.affectedProducts || 0} producto
-                      {(ingredient.affectedProducts || 0) === 1 ? "" : "s"}
-                    </small>
-                  </span>
-                  <button
-                    type="button"
-                    className={`pos-invToggle ${active ? "on" : "off"}`}
-                    onClick={() => toggleIngredient(ingredient)}
-                    disabled={savingId === ingredient.id}
-                  >
-                    {active ? "ACTIVE" : "OFF"}
-                  </button>
-                </div>
-              );
-            })}
-
-            {!loading && filteredIngredients.length === 0 && (
-              <div className="pos-emptySmall">No encontramos ese ingrediente.</div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {view === "inventory" && (
-        <div className="pos-inventoryList">
-          {categories.map(({ category, items, activeCount }) => {
-            const isOpen = openCategory === category;
-
-            return (
-              <div key={category} className="pos-invCategory">
-                <button
-                  type="button"
-                  className="pos-invCategoryBtn"
-                  onClick={() => setOpenCategory(isOpen ? "" : category)}
-                >
-                  <span>{getTaxonomyCategoryLabel(category)}</span>
-                  <strong>{activeCount}/{items.length}</strong>
-                </button>
-
-                {isOpen && (
-                  <div className="pos-invItems">
-                    {items.map((ingredient) => {
-                      const active = ingredient.exists && ingredient.active;
-
-                      return (
-                        <div
-                          key={ingredient.id}
-                          className={`pos-invItem ${active ? "is-active" : "is-inactive"}`}
-                        >
-                          <span>
-                            {String(ingredient.name || "").toUpperCase()}
-                            <small>
-                              {ingredient.affectedProducts || 0} producto
-                              {(ingredient.affectedProducts || 0) === 1 ? "" : "s"}
-                            </small>
-                          </span>
-                          <button
-                            type="button"
-                            className={`pos-invToggle ${active ? "on" : "off"}`}
-                            onClick={() => toggleIngredient(ingredient)}
-                            disabled={savingId === ingredient.id}
-                          >
-                            {active ? "ACTIVE" : "OFF"}
-                          </button>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-            );
-          })}
-
-          {!loading && categories.length === 0 && (
-            <div className="pos-emptySmall">No hay ingredientes configurados.</div>
-          )}
-        </div>
-      )}
-    </section>
-  );
-}
-
 export default function PosApp() {
   const [session, setSession, checkingSession] = useWebSession("pos", isNativePos);
   const [orders, setOrders] = useState([]);
   const [activePanel, setActivePanel] = useState("orders");
   const [inventoryItems, setInventoryItems] = useState([]);
-  const disabledIngredientCount = inventoryItems.filter(item => !(item.exists && item.active)).length;
-  useEffect(() => { setInventoryItems([]); }, [session?.storeId]);
+  const [inventoryProducts, setInventoryProducts] = useState([]);
+  const disabledInventoryCount = inventoryItems.filter(item => !(item.exists && item.active)).length + inventoryProducts.filter(item => !item.active).length;
+  useEffect(() => { setInventoryItems([]); setInventoryProducts([]); }, [session?.storeId]);
   useEffect(() => {
     if (!session?.storeId || activePanel === "inventory") return;
     let cancelled = false;
@@ -1152,8 +916,8 @@ export default function PosApp() {
       if (running) return;
       running = true;
       try {
-        const { data } = await api.get(`/api/stores/${session.storeId}/ingredients`, { params: { scope: "menu" } });
-        if (!cancelled && Array.isArray(data)) setInventoryItems(data);
+        const data = await fetchPosInventory(session.storeId);
+        if (!cancelled) { setInventoryItems(data.ingredients); setInventoryProducts(data.products); }
       } catch (_) { /* Preserve the last confirmed inventory on network failure. */ }
       finally { running = false; }
     };
@@ -2682,7 +2446,7 @@ export default function PosApp() {
       {activePanel === "inventory" && (
         <main className="store-pos-panel pos-storePanel">
           <button type="button" className="pos-backToKitchen" onClick={() => { setSelectedOrderId(null); setActivePanel("orders"); }}>← Volver a cocina</button>
-          <PosInventory session={session} ingredients={inventoryItems} setIngredients={setInventoryItems} />
+          <PosInventory key={session.storeId} session={session} ingredients={inventoryItems} setIngredients={setInventoryItems} products={inventoryProducts} setProducts={setInventoryProducts} />
         </main>
       )}
 
@@ -3011,9 +2775,9 @@ export default function PosApp() {
       </footer>}
       {showOrderUtilityFabs && (
         <div className="pos-utilityDock">
-          <button type="button" className={`pos-inventoryFab ${activePanel === "inventory" ? "active" : ""} ${disabledIngredientCount > 0 ? "has-disabled" : ""}`} aria-label={`Inventario: ${disabledIngredientCount} ingredientes desactivados`} title={disabledIngredientCount > 0 ? `${disabledIngredientCount} ingredientes desactivados` : "Inventario: todos disponibles"} aria-pressed={activePanel === "inventory"} onClick={() => { setMenuOpen(false); setActivePanel("inventory"); }}>
+          <button type="button" className={`pos-inventoryFab ${activePanel === "inventory" ? "active" : ""} ${disabledInventoryCount > 0 ? "has-disabled" : ""}`} aria-label={`Inventario: ${disabledInventoryCount} elementos desactivados`} title={disabledInventoryCount > 0 ? `${disabledInventoryCount} elementos desactivados` : "Inventario: todos disponibles"} aria-pressed={activePanel === "inventory"} onClick={() => { setMenuOpen(false); setActivePanel("inventory"); }}>
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" aria-hidden="true"><path d="M3 13h8v8H3zM13 13h8v8h-8zM8 3h8v8H8zM7 13v3m10-3v3M12 3v3" /></svg>
-            {disabledIngredientCount > 0 && <strong className="pos-inventoryCount" aria-live="polite" key={disabledIngredientCount}>{disabledIngredientCount}</strong>}
+            {disabledInventoryCount > 0 && <strong className="pos-inventoryCount" aria-live="polite" key={disabledInventoryCount}>{disabledInventoryCount}</strong>}
           </button>
       <button
         type="button"

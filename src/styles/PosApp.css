@@ -3471,6 +3471,8 @@
 }
 
 .pos-invItem span {
+  min-width: 0;
+  overflow-wrap: anywhere;
   display: grid;
   gap: 2px;
   font-size: 13px;
@@ -3487,6 +3489,10 @@
 
 .pos-invItem.is-inactive span small {
   color: #94a3b8;
+}
+
+.pos-invItem span .pos-invWarning {
+  color: #92400e;
 }
 
 .pos-invItem.is-inactive {

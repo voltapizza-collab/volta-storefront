@@ -1,7 +1,7 @@
 import useWebSession from '../auth/useWebSession';
 import { accessDestination } from '../auth/webSession';
 import PosInventory, { fetchPosInventory } from './PosInventory';
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import api from "../setupAxios";
 import { receptionText } from '../utils/storeReception';
 import {
@@ -21,6 +21,8 @@ import PosPrintStatus, { usePosPrinting } from './PosPrintStatus';
 import { getPosOrderCode } from './orderDisplayCode';
 import PosLogoutDialog from './PosLogoutDialog';
 import PosUpdates from './PosUpdates';
+import PosDayInfo from './PosDayInfo';
+import PosClock from './PosClock';
 import { shouldShowCheckoutAlert } from '../utils/checkoutPresence';
 import "../styles/PosApp.css";
 import { ingredientRemovalRows } from "../utils/ingredientRemovals";
@@ -460,70 +462,6 @@ const playOrderCommandAlert = (ctx, startAt, boosted = false) => {
 
 const orderHasBoost = (order) => Boolean(order?.boost?.active);
 
-const WEATHER_LABELS = {
-  0: "Despejado",
-  1: "Mayormente claro",
-  2: "Parcialmente nublado",
-  3: "Nublado",
-  45: "Niebla",
-  48: "Niebla",
-  51: "Llovizna ligera",
-  53: "Llovizna",
-  55: "Llovizna intensa",
-  61: "Lluvia ligera",
-  63: "Lluvia",
-  65: "Lluvia intensa",
-  71: "Nieve ligera",
-  73: "Nieve",
-  75: "Nieve intensa",
-  80: "Chubascos",
-  81: "Chubascos",
-  82: "Chubascos fuertes",
-  95: "Tormenta",
-};
-
-const REGION_BY_CITY = {
-  ourense: { label: "Galicia", code: "ES-GA" },
-  orense: { label: "Galicia", code: "ES-GA" },
-  vigo: { label: "Galicia", code: "ES-GA" },
-  pontevedra: { label: "Galicia", code: "ES-GA" },
-  coruna: { label: "Galicia", code: "ES-GA" },
-  "a coruna": { label: "Galicia", code: "ES-GA" },
-  lugo: { label: "Galicia", code: "ES-GA" },
-};
-
-const LOCAL_DAY_EVENTS = {
-  "05-17": [{ scope: "Regional", label: "Dia das Letras Galegas", regionCode: "ES-GA" }],
-  "07-25": [{ scope: "Regional", label: "Dia de Galicia", regionCode: "ES-GA" }],
-  "01-06": [{ scope: "Nacional", label: "Reyes" }],
-};
-
-const normalizeKey = (value) =>
-  String(value || "")
-    .trim()
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
-
-const getRegionForCity = (city) => REGION_BY_CITY[normalizeKey(city)] || null;
-
-const getLocalDateParts = (date = new Date()) => {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return {
-    year,
-    isoDate: `${year}-${month}-${day}`,
-    monthDay: `${month}-${day}`,
-  };
-};
-
-const addLocalDays = (date, days) => {
-  const nextDate = new Date(date);
-  nextDate.setDate(nextDate.getDate() + days);
-  return nextDate;
-};
-
 const CUSTOMER_HELP_EMOJIS = ["🙋", "🙋🏻‍♀️", "🙋🏻‍♂️", "🙋🏽‍♂️", "🙋🏿", "🧕"];
 
 const pickCustomerHelpEmoji = (current = "") => {
@@ -900,6 +838,103 @@ export function TicketPreview({ order }) {
   );
 }
 
+const OrderCard = memo(function OrderCard({ order, locked, onSelect }) {
+                  const segment = getCustomerSegment(order);
+                  const tags = getCustomerTags(order);
+                  const address = getCustomerAddress(order);
+                  const boosted = isBoostedOrder(order);
+                  const vip = isVipOrder(order);
+                  const schedule = getScheduledOrderState(order);
+                  const cashPayment = isCashPaymentPending(order);
+
+                  return (
+                    <button
+                      key={order.id}
+                      type="button"
+                      className={`pos-orderCard ${boosted ? "is-boosted" : ""} ${
+                        vip ? "is-vip" : ""
+                      } ${locked ? "is-scheduledLocked" : ""} ${
+                        schedule.hasSchedule && !locked ? "is-scheduledReady" : ""
+                      } ${
+                        cashPayment ? "is-cashPayment" : ""
+                      }`}
+                      onClick={() => onSelect(order.id)}
+                    >
+                      {boosted && (
+                        <div className={`pos-boostSeal pos-boostSeal--${getBoostSealTone(order)}`}>
+                          <span>BOOTS</span>
+                        </div>
+                      )}
+
+                      <div className="pos-orderIdRow">
+                        <div>
+                          <span>Pedido</span>
+                          <strong>{getPosOrderCode(order)}</strong>
+                        </div>
+                        <em>#{order.queuePosition || "-"}</em>
+                      </div>
+
+                      <div className="pos-orderCustomerCard">
+                        <div className="pos-orderCustomerTop">
+                          <div>
+                            <span>Cliente</span>
+                            <strong>{getCustomerName(order)}</strong>
+                          </div>
+                          <b className={`pos-segmentBadge pos-segmentBadge--${segment.tone}`}>
+                            {segment.label}
+                          </b>
+                        </div>
+
+                        {tags.length > 0 && (
+                          <div className="pos-orderTags">
+                            {tags.map((tag) => (
+                              <span key={tag}>{tag}</span>
+                            ))}
+                          </div>
+                        )}
+
+                        <div className="pos-orderContact">
+                          <span>{order.customerData?.phone || "Sin telefono"}</span>
+                          {order.customerData?.code && <span>{order.customerData.code}</span>}
+                        </div>
+
+                        <div className="pos-orderAddress">
+                          {address || getOrderContext(order) || "Sin direccion"}
+                        </div>
+                        {order.deliveryReviewRequired && <div className="pos-orderCashPayment">Revisar reparto · tarifa base</div>}
+                      </div>
+
+                      <div className="pos-orderSummary">
+                        <span>{getOrderType(order)}</span>
+                        <span>{formatTime(order.date || order.createdAt)}</span>
+                        <span className={cashPayment ? "pos-orderCashPayment" : ""}>
+                          {getPaymentLabel(order)}
+                        </span>
+                        <b>{formatMoney(order.total, order.currency || "EUR")}</b>
+                      </div>
+
+                      {schedule.hasSchedule && (
+                        <div className={`pos-orderSchedule ${locked ? "is-locked" : ""}`}>
+                          <span>Programado</span>
+                          <strong>{schedule.label}</strong>
+                        </div>
+                      )}
+
+                      {!boosted && vip && (
+                        <div className="pos-vipPriorityBadge">VIP prioridad despues de Boost</div>
+                      )}
+
+                      {boosted && (
+                        <div className="pos-orderBoost">{getBoostText(order)}</div>
+                      )}
+
+                      <div className="pos-orderItemsTitle">Pidio</div>
+                      <OrderItems order={order} />
+                    </button>
+                  );
+
+});
+
 export default function PosApp() {
   const [session, setSession, checkingSession] = useWebSession("pos", isNativePos);
   const [orders, setOrders] = useState([]);
@@ -927,6 +962,8 @@ export default function PosApp() {
   }, [session?.storeId, activePanel]);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
   const [dayOrders, setDayOrders] = useState([]);
+  const [dayCursor, setDayCursor] = useState(null);
+  const dayRequest = useRef(false);
   const [dayOrdersKpis, setDayOrdersKpis] = useState(null);
   const [dayOrdersLoading, setDayOrdersLoading] = useState(false);
   const [dayOrdersError, setDayOrdersError] = useState("");
@@ -959,6 +996,9 @@ export default function PosApp() {
   const [newOrderNotice, setNewOrderNotice] = useState(null);
   useEffect(() => { if (newOrderNotice) setMenuOpen(false); }, [newOrderNotice]);
   const [readyConfirmOrder, setReadyConfirmOrder] = useState(null);
+  const readyWrites = useRef(new Set());
+  const completedOrderIds = useRef(new Set());
+  const [savingReady, setSavingReady] = useState(false);
   const [readyCashReminderOrder, setReadyCashReminderOrder] = useState(null);
   const [reservations, setReservations] = useState([]);
   const [reservationsOpen, setReservationsOpen] = useState(false);
@@ -971,10 +1011,6 @@ export default function PosApp() {
   const [customerHelpEmoji, setCustomerHelpEmoji] = useState(() => pickCustomerHelpEmoji());
   const [, setAudioReady] = useState(false);
   const [storeMeta, setStoreMeta] = useState(null);
-  const [dayInfo, setDayInfo] = useState({
-    loading: false,
-    items: [],
-  });
   const [presence, setPresence] = useState({
     activeVisitors: 0,
     cartVisitors: 0,
@@ -1026,8 +1062,12 @@ export default function PosApp() {
   const [nativePrinterStatus, setNativePrinterStatus] = useState({ realConnected: false, virtualReady: false, label: 'Conectando SUNMI' });
   useEffect(() => {
     if (!isNativePos) return;
-    let mounted = true;
-    const refresh = () => nativeCall('printerStatus').then(status => { if (mounted) setNativePrinterStatus(status); }).catch(() => {});
+    let mounted = true, running = false;
+    const refresh = () => {
+      if (running) return;
+      running = true;
+      nativeCall('printerStatus').then(status => { if (mounted) setNativePrinterStatus(current => JSON.stringify(current) === JSON.stringify(status) ? current : status); }).catch(() => {}).finally(() => { running = false; });
+    };
     refresh(); const timer = setInterval(refresh, 15000);
     return () => { mounted = false; clearInterval(timer); };
   }, []);
@@ -1077,29 +1117,6 @@ export default function PosApp() {
       : trustState === "checking"
       ? "Conectando"
       : "Sin conexion";
-  const idleClockTime = useMemo(
-    () =>
-      new Intl.DateTimeFormat("es-ES", {
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        hour12: false,
-      }).format(new Date(clockTick)),
-    [clockTick]
-  );
-  const idleClockDate = useMemo(
-    () =>
-      new Intl.DateTimeFormat("es-ES", {
-        weekday: "short",
-        day: "2-digit",
-        month: "short",
-      }).format(new Date(clockTick)),
-    [clockTick]
-  );
-  const cityRegion = useMemo(
-    () => getRegionForCity(storeMeta?.city || session?.storeCity || ""),
-    [session?.storeCity, storeMeta?.city]
-  );
   const calendarEvents = useMemo(() => {
     const today = new Date(clockTick);
     const reservationEvents = reservations
@@ -1124,7 +1141,7 @@ export default function PosApp() {
 
     const scheduledOrderEvents = orders
       .map((order) => {
-        const schedule = getScheduledOrderState(order, clockTick);
+        const schedule = getScheduledOrderState(order, Date.now());
         if (!schedule.hasSchedule) return null;
 
         const scheduledDate = new Date(schedule.scheduledFor);
@@ -1171,9 +1188,9 @@ export default function PosApp() {
     .join(" ");
 
   useEffect(() => {
-    const timer = window.setInterval(() => setClockTick(Date.now()), 1000);
+    const timer = window.setInterval(() => setClockTick(Date.now()), selectedOrderSchedule?.hasSchedule ? 1000 : 5000);
     return () => window.clearInterval(timer);
-  }, []);
+  }, [selectedOrderSchedule?.hasSchedule]);
 
   useEffect(() => {
     ordersRef.current = orders;
@@ -1320,16 +1337,16 @@ export default function PosApp() {
     createTone(ctx, { frequency: 587.33, startAt: now + 0.22, duration: 0.24, volume: 0.014, type: "triangle" });
   }, [getUnlockedAudioContext]);
 
-  const loadOrders = useCallback(async ({ force = false } = {}) => {
+  const loadOrders = useCallback(async () => {
     if (!session?.partnerId || !session?.storeId) return;
-    if (loadingOrdersRef.current && !force) return;
+    if (loadingOrdersRef.current) return;
 
     const requestId = loadOrdersRequestRef.current + 1;
     loadOrdersRequestRef.current = requestId;
 
+    loadingOrdersRef.current = true;
     try {
-      await unlockAudioContext();
-      loadingOrdersRef.current = true;
+      void unlockAudioContext().catch(() => {});
       setLoadingOrders(true);
       const lastAttemptAt = new Date().toISOString();
       setSyncHealth((current) => ({
@@ -1337,26 +1354,15 @@ export default function PosApp() {
         lastAttemptAt,
       }));
 
-      const [ordersResponse, presenceResponse] = await Promise.all([
-        api.get("/api/myorders/pending", {
-          params: {
-            partnerId: session.partnerId,
-            storeId: session.storeId,
-            _ts: Date.now(),
-          },
-          timeout: POS_REQUEST_TIMEOUT_MS,
-        }),
-        api.get(`/api/presence/stores/${session.storeId}/status`, {
-          params: {
-            partnerId: session.partnerId,
-            _ts: Date.now(),
-          },
-          timeout: POS_REQUEST_TIMEOUT_MS,
-        }).catch(() => null),
-      ]);
+      const ordersResponse = await api.get("/api/myorders/pending", {
+        params: { partnerId: session.partnerId, storeId: session.storeId },
+        timeout: POS_REQUEST_TIMEOUT_MS,
+      });
       if (requestId !== loadOrdersRequestRef.current) return;
 
-      const items = Array.isArray(ordersResponse.data?.items) ? ordersResponse.data.items : [];
+      const received = Array.isArray(ordersResponse.data?.items) ? ordersResponse.data.items : [];
+      const items = received.filter(item => !completedOrderIds.current.has(item.id));
+      for (const id of completedOrderIds.current) if (!received.some(item => item.id === id)) completedOrderIds.current.delete(id);
       const previousSeen = seenIdsRef.current;
       const previousBoostState = boostStateRef.current;
       const acceptedNoticeIds = acceptedNoticeIdsRef.current;
@@ -1389,10 +1395,6 @@ export default function PosApp() {
         startNewOrderSoundLoop(false);
       }
 
-      if (presenceResponse?.data?.presence) {
-        setPresence(presenceResponse.data.presence);
-      }
-
       const previousUnreadIds = chatUnreadIdsRef.current;
       const nextUnreadIds = new Set(getUnreadCustomerChatIds(items));
       const newUnreadIds = [...nextUnreadIds].filter((id) => !previousUnreadIds.has(id));
@@ -1417,7 +1419,7 @@ export default function PosApp() {
       });
       seenIdsRef.current = new Set(items.map((item) => item.id));
       boostStateRef.current = new Map(items.map((item) => [item.id, orderHasBoost(item)]));
-      setOrders(items);
+      setOrders(current => JSON.stringify(current) === JSON.stringify(items) ? current : items);
       setSelectedOrderId((current) =>
         current && items.some((item) => item.id === current) ? current : null
       );
@@ -1438,8 +1440,28 @@ export default function PosApp() {
     }
   }, [playCustomerMessageSound, session, startNewOrderSoundLoop, unlockAudioContext]);
 
-  const loadDayOrders = useCallback(async () => {
-    if (!session?.partnerId || !session?.storeId) return;
+  useEffect(() => {
+    if (!session?.storeId) return undefined;
+    let cancelled = false, running = false;
+    const refresh = async () => {
+      if (running) return;
+      running = true;
+      try {
+        const response = await api.get(`/api/presence/stores/${session.storeId}/status`, {
+          params: { partnerId: session.partnerId }, timeout: POS_REQUEST_TIMEOUT_MS,
+        });
+        if (!cancelled && response.data?.presence) setPresence(current => JSON.stringify(current) === JSON.stringify(response.data.presence) ? current : response.data.presence);
+      } catch (_) { /* Presence does not define order queue health. */ }
+      finally { running = false; }
+    };
+    refresh();
+    const timer = setInterval(refresh, POLL_MS);
+    return () => { cancelled = true; clearInterval(timer); };
+  }, [session?.storeId, session?.partnerId]);
+
+  const loadDayOrders = useCallback(async (cursor = null) => {
+    if (!session?.partnerId || !session?.storeId || dayRequest.current) return;
+    dayRequest.current = true;
 
     try {
       setDayOrdersLoading(true);
@@ -1449,18 +1471,22 @@ export default function PosApp() {
           partnerId: session.partnerId,
           storeId: session.storeId,
           period: "today",
+          view: "pos",
+          ...(typeof cursor === "string" ? { cursor } : {}),
         },
       });
       const data = response.data || {};
       const completedOrders = Array.isArray(data?.orders)
         ? data.orders.filter(isCompletedPaidOrder)
         : [];
-      setDayOrders(completedOrders);
+      setDayOrders(current => typeof cursor === "string" ? [...current, ...completedOrders.filter(item => !current.some(existing => existing.id === item.id))] : completedOrders);
+      setDayCursor(data.nextCursor || null);
       setDayOrdersKpis(data?.kpis || null);
     } catch (error) {
       console.error(error);
       setDayOrdersError("No se pudieron cargar las ordenes del dia.");
     } finally {
+      dayRequest.current = false;
       setDayOrdersLoading(false);
     }
   }, [session?.partnerId, session?.storeId]);
@@ -1469,13 +1495,18 @@ export default function PosApp() {
     if (!session) return undefined;
 
     seenIdsRef.current = new Set();
+    completedOrderIds.current.clear();
     acceptedNoticeIdsRef.current = readAcceptedNoticeIds(session.storeId);
     boostStateRef.current = new Map();
     chatUnreadIdsRef.current = new Set();
     chatUnreadInitializedRef.current = false;
     loadOrders();
     const timer = window.setInterval(loadOrders, POLL_MS);
-    return () => window.clearInterval(timer);
+    return () => {
+      window.clearInterval(timer);
+      loadOrdersRequestRef.current += 1;
+      loadingOrdersRef.current = false;
+    };
   }, [loadOrders, session]);
 
   useEffect(() => {
@@ -1528,12 +1559,15 @@ export default function PosApp() {
     if (!session?.storeId) return;
     let cancelled = false;
     setPauseStateKnown(false);
-    const refreshStore = () => api
-      .get(`/api/stores/${session.storeId}`)
+    let running = false;
+    const refreshStore = () => {
+      if (running) return;
+      running = true;
+      return api.get(`/api/stores/${session.storeId}`, { timeout: POS_REQUEST_TIMEOUT_MS })
       .then((response) => {
         if (cancelled) return;
         const store = response?.data || response;
-        setStoreMeta(store || null);
+        setStoreMeta(current => JSON.stringify(current) === JSON.stringify(store || null) ? current : store || null);
         setStoreActive(store?.active !== false && store?.acceptingOrders !== false);
         setOperationsPaused(store?.operationsPaused === true);
         setPauseStateKnown(typeof store?.operationsPaused === "boolean");
@@ -1542,173 +1576,29 @@ export default function PosApp() {
         if (cancelled) return;
         console.error(error);
         setPauseStateKnown(false);
-      });
+      })
+      .finally(() => { running = false; });
+    };
     refreshStore();
     const timer = window.setInterval(refreshStore, 15000);
     return () => { cancelled = true; window.clearInterval(timer); };
   }, [session?.storeId]);
 
-  useEffect(() => {
-    if (!session?.storeId) return undefined;
-
-    let cancelled = false;
-
-    const resolveCoordinates = async (store) => {
-      const lat = Number(store?.latitude);
-      const lon = Number(store?.longitude);
-      if (Number.isFinite(lat) && Number.isFinite(lon)) return { lat, lon };
-
-      const city = String(store?.city || session?.storeName || "").trim();
-      if (!city) return null;
-
-      const response = await fetch(
-        `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=es&format=json&countryCode=ES`
-      );
-      if (!response.ok) return null;
-
-      const data = await response.json();
-      const place = Array.isArray(data?.results) ? data.results[0] : null;
-      const placeLat = Number(place?.latitude);
-      const placeLon = Number(place?.longitude);
-      return Number.isFinite(placeLat) && Number.isFinite(placeLon)
-        ? { lat: placeLat, lon: placeLon }
-        : null;
-    };
-
-    const loadDayInfo = async () => {
-      const store = storeMeta || {};
-      const city = String(store.city || session.storeName || "").trim();
-      const region = getRegionForCity(city);
-      const today = new Date();
-      const { year, isoDate, monthDay } = getLocalDateParts(today);
-      const tomorrowDateParts = getLocalDateParts(addLocalDays(today, 1));
-      const nextItems = [];
-
-      setDayInfo((current) => ({ ...current, loading: true }));
-
-      try {
-        const coords = await resolveCoordinates(store);
-        if (coords && !cancelled) {
-          const weatherResponse = await fetch(
-            `https://api.open-meteo.com/v1/forecast?latitude=${coords.lat}&longitude=${coords.lon}&current=temperature_2m,weather_code&timezone=auto`
-          );
-          if (weatherResponse.ok) {
-            const weather = await weatherResponse.json();
-            const temp = Number(weather?.current?.temperature_2m);
-            const code = Number(weather?.current?.weather_code);
-            if (Number.isFinite(temp)) {
-              nextItems.push({
-                key: "weather",
-                label: "Clima",
-                value: `${Math.round(temp)}°C · ${WEATHER_LABELS[code] || "Ahora"}`,
-              });
-            }
-          }
-        }
-      } catch (error) {
-        console.warn("[pos.dayInfo.weather]", error?.message || error);
-      }
-
-      try {
-        const holidayYears = [...new Set([year, tomorrowDateParts.year])];
-        const holidayResponses = await Promise.all(
-          holidayYears.map((holidayYear) =>
-            fetch(`https://date.nager.at/api/v3/PublicHolidays/${holidayYear}/ES`)
-          )
-        );
-        const holidayPayloads = await Promise.all(
-          holidayResponses
-            .filter((response) => response.ok)
-            .map((response) => response.json())
-        );
-        const holidays = holidayPayloads.flatMap((payload) =>
-          Array.isArray(payload) ? payload : []
-        );
-
-        if (holidays.length) {
-          const matchesRegion = (holiday) => {
-            if (!Array.isArray(holiday.counties) || holiday.counties.length === 0) {
-              return true;
-            }
-            return region?.code ? holiday.counties.includes(region.code) : false;
-          };
-          const todaysHolidays = holidays.filter(
-            (holiday) => holiday?.date === isoDate && matchesRegion(holiday)
-          );
-          const tomorrowsHolidays = holidays.filter(
-            (holiday) => holiday?.date === tomorrowDateParts.isoDate && matchesRegion(holiday)
-          );
-
-          if (todaysHolidays.length) {
-            nextItems.push({
-              key: "holiday",
-              label: region?.label ? `Festivo ${region.label}` : "Festivo",
-              value: todaysHolidays.map((holiday) => holiday.localName || holiday.name).join(" · "),
-            });
-          }
-          if (tomorrowsHolidays.length) {
-            nextItems.push({
-              key: "holiday-tomorrow",
-              label: region?.label ? `Festivo ${region.label}` : "Festivo",
-              value: tomorrowsHolidays.map((holiday) => holiday.localName || holiday.name).join(" · "),
-              tone: "warning",
-            });
-          }
-        }
-      } catch (error) {
-        console.warn("[pos.dayInfo.holidays]", error?.message || error);
-      }
-
-      const localEvents = (LOCAL_DAY_EVENTS[monthDay] || []).filter(
-        (event) => !event.regionCode || event.regionCode === region?.code
-      );
-      localEvents.forEach((event, index) => {
-        nextItems.push({
-          key: `event-${index}`,
-          label: event.scope,
-          value: event.label,
-        });
-      });
-
-      if (!nextItems.some((item) => item.key.startsWith("holiday") || item.key.startsWith("event-"))) {
-        nextItems.push({
-          key: "no-event",
-          label: city || region?.label ? "Local" : "Info",
-          value: city
-            ? `${city}${region?.label ? ` · ${region.label}` : ""} · sin festivo cargado hoy`
-            : "Sin evento cargado hoy",
-        });
-      }
-
-      if (!cancelled) {
-        setDayInfo({
-          loading: false,
-          items: nextItems.slice(0, 4),
-        });
-      }
-    };
-
-    loadDayInfo();
-    const timer = window.setInterval(loadDayInfo, 30 * 60 * 1000);
-
-    return () => {
-      cancelled = true;
-      window.clearInterval(timer);
-    };
-  }, [session?.storeId, session?.storeName, storeMeta]);
-
+  const reservationsRequest = useRef(false);
   const loadReservations = useCallback(async () => {
-    if (!session?.storeId) return;
+    if (!session?.storeId || reservationsRequest.current) return;
+    reservationsRequest.current = true;
 
     try {
       setLoadingReservations(true);
-      const response = await api.get(`/api/reservations/today/${session.storeId}`);
+      const response = await api.get(`/api/reservations/today/${session.storeId}`, { timeout: POS_REQUEST_TIMEOUT_MS });
       const items = Array.isArray(response.data) ? response.data : [];
-      setReservations(items);
+      setReservations(current => JSON.stringify(current) === JSON.stringify(items) ? current : items);
     } catch (error) {
       console.error(error);
       setMessage("No se pudieron cargar las reservas de hoy.");
     } finally {
+      reservationsRequest.current = false;
       setLoadingReservations(false);
     }
   }, [session?.storeId]);
@@ -1869,36 +1759,44 @@ export default function PosApp() {
   };
 
   const markReady = async (order) => {
-    if (!order) return;
+    if (!order || readyWrites.current.has(order.id)) return;
 
-    const schedule = getScheduledOrderState(order, clockTick);
+    const schedule = getScheduledOrderState(order, Date.now());
     if (schedule.locked) {
       showReadyBlockedToast();
       return;
     }
 
+    readyWrites.current.add(order.id);
+    setSavingReady(true);
     try {
       const response = await api.patch(`/api/myorders/${order.id}/ready`);
       const notification = response.data?.notification;
+      completedOrderIds.current.add(order.id);
       setOrders((current) => current.filter((item) => item.id !== order.id));
       setSelectedOrderId(null);
       setReadyConfirmOrder(null);
       setReadyCashReminderOrder(null);
       setMessage(
-        notification?.ok
+        notification?.queued
+          ? `Pedido ${getPosOrderCode(order)} marcado como listo. Aviso al cliente en cola de envío.`
+          : notification?.ok
           ? `Pedido ${getPosOrderCode(order)} marcado como listo. Cliente notificado.`
           : `Pedido ${getPosOrderCode(order)} marcado como listo. Revisa la notificacion al cliente.`
       );
     } catch (error) {
       console.error(error);
       setMessage(error.response?.data?.error || "No se pudo marcar como listo.");
+    } finally {
+      readyWrites.current.delete(order.id);
+      setSavingReady(readyWrites.current.size > 0);
     }
   };
 
   const requestMarkReady = (order) => {
     if (!order) return;
 
-    const schedule = getScheduledOrderState(order, clockTick);
+    const schedule = getScheduledOrderState(order, Date.now());
     if (schedule.locked) {
       showReadyBlockedToast();
       return;
@@ -2202,6 +2100,7 @@ export default function PosApp() {
       </header>}
 
       {isNativePos && <PosUpdates open={updatesOpen} onOpen={() => setUpdatesOpen(true)} onClose={() => setUpdatesOpen(false)} onVersionChange={setInstalledVersion} />}
+      {storeMeta && <PosDayInfo city={storeMeta.city || session.storeCity || ""} latitude={storeMeta.latitude} longitude={storeMeta.longitude} />}
       <PosNotice message={message} onDismiss={dismissMessage} />
       {isNativePos && printStatus?.orderId === null && <PosPrintStatus status={printStatus} />}
       {logoutOpen && <PosLogoutDialog onCancel={() => setLogoutOpen(false)} onConfirm={logoutSession} />}
@@ -2300,34 +2199,7 @@ export default function PosApp() {
               )}
             </div>
             {!showVisitorAlert && (
-              <section className="pos-idleClockCard" aria-label="Reloj digital">
-                <strong>{idleClockTime}</strong>
-                <small>{idleClockDate}</small>
-                <div className="pos-dayInfoGrid" aria-label="Informacion relevante del dia">
-                  {dayInfo.loading && dayInfo.items.length === 0 ? (
-                    <span className="pos-dayInfoChip">
-                      <em>Info</em>
-                      <b>Cargando datos del dia</b>
-                    </span>
-                  ) : (
-                    dayInfo.items.map((item) => (
-                      <span
-                        key={item.key}
-                        className={`pos-dayInfoChip ${item.tone ? `pos-dayInfoChip--${item.tone}` : ""}`}
-                      >
-                        <em>{item.label}</em>
-                        <b>{item.value}</b>
-                      </span>
-                    ))
-                  )}
-                  {!dayInfo.loading && dayInfo.items.length === 0 && (
-                    <span className="pos-dayInfoChip">
-                      <em>{cityRegion?.label || "Info"}</em>
-                      <b>Sin datos externos ahora</b>
-                    </span>
-                  )}
-                </div>
-              </section>
+              <PosClock />
             )}
             </>
           ) : (
@@ -2341,101 +2213,7 @@ export default function PosApp() {
               </div>
 
               <div className="pos-orderList" aria-label="Cola de pedidos">
-                {orders.map((order) => {
-                  const segment = getCustomerSegment(order);
-                  const tags = getCustomerTags(order);
-                  const address = getCustomerAddress(order);
-                  const boosted = isBoostedOrder(order);
-                  const vip = isVipOrder(order);
-                  const schedule = getScheduledOrderState(order, clockTick);
-                  const cashPayment = isCashPaymentPending(order);
-
-                  return (
-                    <button
-                      key={order.id}
-                      type="button"
-                      className={`pos-orderCard ${boosted ? "is-boosted" : ""} ${
-                        vip ? "is-vip" : ""
-                      } ${schedule.locked ? "is-scheduledLocked" : ""} ${
-                        schedule.hasSchedule && !schedule.locked ? "is-scheduledReady" : ""
-                      } ${
-                        cashPayment ? "is-cashPayment" : ""
-                      }`}
-                      onClick={() => setSelectedOrderId(order.id)}
-                    >
-                      {boosted && (
-                        <div className={`pos-boostSeal pos-boostSeal--${getBoostSealTone(order)}`}>
-                          <span>BOOTS</span>
-                        </div>
-                      )}
-
-                      <div className="pos-orderIdRow">
-                        <div>
-                          <span>Pedido</span>
-                          <strong>{getPosOrderCode(order)}</strong>
-                        </div>
-                        <em>#{order.queuePosition || "-"}</em>
-                      </div>
-
-                      <div className="pos-orderCustomerCard">
-                        <div className="pos-orderCustomerTop">
-                          <div>
-                            <span>Cliente</span>
-                            <strong>{getCustomerName(order)}</strong>
-                          </div>
-                          <b className={`pos-segmentBadge pos-segmentBadge--${segment.tone}`}>
-                            {segment.label}
-                          </b>
-                        </div>
-
-                        {tags.length > 0 && (
-                          <div className="pos-orderTags">
-                            {tags.map((tag) => (
-                              <span key={tag}>{tag}</span>
-                            ))}
-                          </div>
-                        )}
-
-                        <div className="pos-orderContact">
-                          <span>{order.customerData?.phone || "Sin telefono"}</span>
-                          {order.customerData?.code && <span>{order.customerData.code}</span>}
-                        </div>
-
-                        <div className="pos-orderAddress">
-                          {address || getOrderContext(order) || "Sin direccion"}
-                        </div>
-                        {order.deliveryReviewRequired && <div className="pos-orderCashPayment">Revisar reparto · tarifa base</div>}
-                      </div>
-
-                      <div className="pos-orderSummary">
-                        <span>{getOrderType(order)}</span>
-                        <span>{formatTime(order.date || order.createdAt)}</span>
-                        <span className={cashPayment ? "pos-orderCashPayment" : ""}>
-                          {getPaymentLabel(order)}
-                        </span>
-                        <b>{formatMoney(order.total, order.currency || "EUR")}</b>
-                      </div>
-
-                      {schedule.hasSchedule && (
-                        <div className={`pos-orderSchedule ${schedule.locked ? "is-locked" : ""}`}>
-                          <span>Programado</span>
-                          <strong>{schedule.label}</strong>
-                        </div>
-                      )}
-
-                      {!boosted && vip && (
-                        <div className="pos-vipPriorityBadge">VIP prioridad despues de Boost</div>
-                      )}
-
-                      {boosted && (
-                        <div className="pos-orderBoost">{getBoostText(order)}</div>
-                      )}
-
-                      <div className="pos-orderItemsTitle">Pidio</div>
-                      <OrderItems order={order} />
-                    </button>
-                  );
-                })}
+                {orders.map(order => <OrderCard key={order.id} order={order} locked={getScheduledOrderState(order, clockTick).locked} onSelect={setSelectedOrderId} />)}
               </div>
             </div>
           )}
@@ -2489,6 +2267,7 @@ export default function PosApp() {
                 ))}
               </div>
             )}
+            {dayCursor && <button type="button" disabled={dayOrdersLoading} onClick={() => loadDayOrders(dayCursor)}>{dayOrdersLoading ? 'Cargando…' : 'Cargar más tickets'}</button>}
           </section>
         </div>
       )}
@@ -2711,7 +2490,7 @@ export default function PosApp() {
             </div>
 
             <div className="pos-actionGrid">
-              <button type="button" onClick={() => confirmReadyRequest(readyConfirmOrder)}>
+              <button type="button" disabled={savingReady} onClick={() => confirmReadyRequest(readyConfirmOrder)}>
                 {readyCashReminderOrder?.id === readyConfirmOrder.id
                   ? "Entendido, marcar listo"
                   : "Si, marcar listo"}

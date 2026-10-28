@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import api from '../setupAxios';
 import { getIngredientTaxonomyKey, getTaxonomyCategoryLabel, resolveIngredientTaxonomy } from '../utils/ingredientTaxonomy';
 import PosNotice, { usePosNotice } from './PosNotice';
@@ -7,25 +7,27 @@ const normalize = value => String(value || '').normalize('NFD').replace(/[\u0300
 
 export async function fetchPosInventory(storeId) {
   const [ingredients, products] = await Promise.all([
-    api.get(`/api/stores/${storeId}/ingredients`, { params: { scope: 'menu' } }),
-    api.get(`/api/stock/${storeId}`),
+    api.get(`/api/stores/${storeId}/ingredients`, { params: { scope: 'menu' }, timeout: 8000 }),
+    api.get(`/api/stock/${storeId}`, { timeout: 8000 }),
   ]);
   if (!Array.isArray(ingredients.data) || !Array.isArray(products.data)) throw new Error('Invalid inventory response');
   return { ingredients: ingredients.data, products: products.data };
 }
 
-export default function PosInventory({ session, ingredients, setIngredients, products, setProducts }) {
+function PosInventory({ session, ingredients, setIngredients, products, setProducts }) {
   const [openCategory, setOpenCategory] = useState('');
   const [view, setView] = useState('inventory');
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
-  const [savingId, setSavingId] = useState(null);
+  const [savingIds, setSavingIds] = useState(new Set());
+  const writes = useRef(new Set());
+  const [uncertainIds, setUncertainIds] = useState(new Set());
   const busy = useRef(false);
   const mounted = useRef(false);
   const [message, setMessage, dismissMessage] = usePosNotice();
 
   const load = useCallback(async () => {
-    if (!session?.storeId || busy.current) return;
+    if (!session?.storeId || busy.current || writes.current.size) return;
     busy.current = true;
     setLoading(true);
     try {
@@ -33,6 +35,7 @@ export default function PosInventory({ session, ingredients, setIngredients, pro
       if (!mounted.current) return;
       setIngredients(data.ingredients);
       setProducts(data.products);
+      setUncertainIds(new Set());
       setOpenCategory('');
       setMessage('');
     } catch (error) {
@@ -49,6 +52,7 @@ export default function PosInventory({ session, ingredients, setIngredients, pro
     return () => { mounted.current = false; };
   }, [load]);
 
+  const ingredientsById = useMemo(() => new Map(ingredients.map(item => [item.id, item])), [ingredients]);
   const rows = useMemo(() => [
     ...ingredients.map(item => ({
       key: `ingredient-${item.id}`, kind: 'ingredient', id: item.id, name: item.name,
@@ -60,7 +64,7 @@ export default function PosInventory({ session, ingredients, setIngredients, pro
     })),
     ...products.map(item => {
       const missing = (item.pizza.ingredients || []).filter(ingredient => {
-        const current = ingredients.find(row => row.id === ingredient.id);
+        const current = ingredientsById.get(ingredient.id);
         if (ingredient.globalStatus !== 'ACTIVE') return true;
         return current ? !(current.exists && current.active) : ingredient.active !== true;
       });
@@ -72,7 +76,7 @@ export default function PosInventory({ session, ingredients, setIngredients, pro
         terms: [item.pizza.name, item.pizza.category],
       };
     }),
-  ], [ingredients, products]);
+  ].map(row => ({ ...row, searchText: normalize(row.terms.join(' ')) })), [ingredients, ingredientsById, products]);
 
   const categories = useMemo(() => {
     const groups = new Map();
@@ -83,12 +87,12 @@ export default function PosInventory({ session, ingredients, setIngredients, pro
     return [...groups.values()].sort((a, b) => a.key === 'products' ? -1 : b.key === 'products' ? 1 : a.label.localeCompare(b.label, 'es'));
   }, [rows]);
   const query = normalize(search.trim());
-  const filtered = rows.filter(row => !query || row.terms.some(value => normalize(value).includes(query)));
+  const filtered = useMemo(() => rows.filter(row => !query || row.searchText.includes(query)), [rows, query]);
 
   const toggle = async row => {
-    if (busy.current) return;
-    busy.current = true;
-    setSavingId(row.key);
+    if (busy.current || writes.current.has(row.key) || uncertainIds.has(row.key)) return;
+    writes.current.add(row.key);
+    setSavingIds(new Set(writes.current));
     const active = !row.active;
     try {
       if (row.kind === 'ingredient') {
@@ -100,10 +104,15 @@ export default function PosInventory({ session, ingredients, setIngredients, pro
       }
       if (mounted.current) setMessage('');
     } catch (error) {
-      if (mounted.current) setMessage(row.kind === 'ingredient' ? 'No se pudo cambiar el ingrediente.' : 'No se pudo cambiar el producto.');
+      if (mounted.current) {
+        if (error.outcomeUnknown || error.code === 'ECONNABORTED' || !error.response || error.response.status >= 500) {
+          setUncertainIds(current => new Set([...current, row.key]));
+          setMessage('No hay confirmación del cambio. Pulsa Sync para comprobar el estado antes de repetir.');
+        } else setMessage(row.kind === 'ingredient' ? 'No se pudo cambiar el ingrediente.' : 'No se pudo cambiar el producto.');
+      }
     } finally {
-      busy.current = false;
-      if (mounted.current) setSavingId(null);
+      writes.current.delete(row.key);
+      if (mounted.current) setSavingIds(new Set(writes.current));
     }
   };
 
@@ -117,7 +126,7 @@ export default function PosInventory({ session, ingredients, setIngredients, pro
       <button type="button" role="switch" aria-checked={row.active}
         aria-label={`${row.kind === 'product' ? 'Producto' : 'Ingrediente'}: ${row.name}`}
         className={`pos-invToggle ${row.active ? 'on' : 'off'}`}
-        onClick={() => toggle(row)} disabled={loading || savingId !== null}>
+        onClick={() => toggle(row)} disabled={loading || savingIds.has(row.key) || uncertainIds.has(row.key)}>
         {row.active ? 'ACTIVO' : 'INACTIVO'}
       </button>
     </div>
@@ -130,7 +139,7 @@ export default function PosInventory({ session, ingredients, setIngredients, pro
         <div className="pos-invHeadActions">
           {view === 'inventory' && <button type="button" className="pos-invSearchBtn"
             onClick={() => { setView('search'); setSearch(''); }} aria-label="Buscar ingredientes o productos" title="Buscar ingredientes o productos"><span aria-hidden="true" /></button>}
-          <button type="button" onClick={load} disabled={loading || savingId !== null}>{loading ? '...' : 'Sync'}</button>
+          <button type="button" onClick={load} disabled={loading || savingIds.size > 0}>{loading ? '...' : 'Sync'}</button>
         </div>
       </div>
       <PosNotice message={message} onDismiss={dismissMessage} />
@@ -156,3 +165,4 @@ export default function PosInventory({ session, ingredients, setIngredients, pro
     </section>
   );
 }
+export default memo(PosInventory);

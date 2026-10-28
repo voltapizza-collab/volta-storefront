@@ -2259,7 +2259,8 @@
   margin-top: 2px;
 }
 
-.pos-idleClockCard .pos-dayInfoChip {
+.pos-idleClockCard .pos-dayInfoChip,
+.pos-dayOutlook .pos-dayInfoChip {
   display: grid;
   gap: 2px;
   min-height: 48px;
@@ -2271,7 +2272,8 @@
   text-align: left;
 }
 
-.pos-idleClockCard .pos-dayInfoChip--warning {
+.pos-idleClockCard .pos-dayInfoChip--warning,
+.pos-dayOutlook .pos-dayInfoChip--warning {
   border-color: color-mix(in srgb, var(--pos-alert-yellow) 64%, #111111);
   background: var(--pos-alert-yellow);
   box-shadow:
@@ -3707,3 +3709,7 @@
 .pos-itemDetails .pos-ingredientRemoval { font-weight: 900; color: #991b1b; background: #fff1eb; border-left: 3px solid #b6430e; padding: 4px 8px; }
 .pos-itemDetails .pos-changesHeading { list-style: none; font-weight: 900; margin-top: 6px; color: #3b008b; }
 .pos-itemDetails .pos-recipeOriginal { list-style: none; font-weight: 400; color: #6b7280; font-size: 12px; }
+
+.pos-dayOutlook { margin: 6px 12px; padding: 8px 12px; border: 1px solid #e6dbef; border-radius: 12px; background: #faf6ef; }
+.pos-dayOutlook summary { cursor: pointer; font-size: 13px; overflow-wrap: anywhere; }
+.pos-dayOutlook .pos-dayInfoGrid { margin-top: 10px; width: 100%; }

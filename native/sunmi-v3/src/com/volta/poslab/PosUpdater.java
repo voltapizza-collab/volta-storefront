@@ -28,7 +28,8 @@ public final class PosUpdater {
     private volatile Integer storeId;
     private volatile boolean busy;
     private int failures;
-    private long nextAttempt;
+    private volatile long nextAttempt;
+    private String verifiedArtifact = "";
     private volatile boolean checkOnOpen = true, noticeOnOpen = true;
     private volatile long lastOrdersRead, lastPrinterRead;
     private long lastHealthReport;
@@ -92,7 +93,8 @@ public final class PosUpdater {
                 prefs.getLong("authorizedUntil", 0), noticeOnOpen, prefs.getString("lastNoticeDay", ""), java.util.Calendar.getInstance()))
             .put("blocked", available && target.optString("sha256").equals(prefs.getString("blockedSha", "")))
             .put("decision", prefs.getString("decision", "pending")).put("scheduledAt", prefs.getLong("scheduledAt", 0))
-            .put("authorizedUntil", prefs.getLong("authorizedUntil", 0));
+            .put("authorizedUntil", prefs.getLong("authorizedUntil", 0))
+            .put("stateAt", prefs.getLong("stateAt", 0)).put("retryAt", nextAttempt).put("operations", GATE.operationCount());
     }
     public JSONObject noticeSeen(String sha) throws Exception {
         synchronized (decisionLock) {
@@ -145,7 +147,8 @@ public final class PosUpdater {
         try { sendReport(context, new JSONObject().put("state", state).put("error", error.isEmpty() ? JSONObject.NULL : error)
             .put("foreground", foreground).put("printerReady", printerReady).put("storeId", storeId == null ? JSONObject.NULL : storeId)
             .put("decision",prefs.getString("decision","pending")).put("scheduledAt",prefs.getLong("scheduledAt",0))
-            .put("authorizedUntil",prefs.getLong("authorizedUntil",0)).put("approvedSha",prefs.getString("approvedSha", ""))); }
+            .put("authorizedUntil",prefs.getLong("authorizedUntil",0)).put("approvedSha",prefs.getString("approvedSha", ""))
+            .put("stateAt", prefs.getLong("stateAt", 0)).put("retryAt", nextAttempt).put("operations", GATE.operationCount())); }
         catch (Exception e) { android.util.Log.w("VoltaUpdate", "report_pending"); }
     }
     static void sendReport(Context context, JSONObject body) throws Exception {
@@ -165,9 +168,14 @@ public final class PosUpdater {
         if (current != null) current.showUpdateMaintenance(false);
     }
     private void tick() {
-        if (busy || !configured() || Build.VERSION.SDK_INT < 31 || System.currentTimeMillis() < nextAttempt) return;
+        if (busy || !configured() || Build.VERSION.SDK_INT < 31) return;
         busy = true;
         try {
+            if (restored && System.currentTimeMillis() - lastHealthReport > 300000) {
+                report(prefs.getString("state", "idle"), prefs.getString("error", ""));
+                lastHealthReport = System.currentTimeMillis();
+            }
+            if (System.currentTimeMillis() < nextAttempt) return;
             long installed = version(context);
             long previousTarget = prefs.getLong("targetVersion", 0);
             String state = prefs.getString("state", "idle");
@@ -186,6 +194,13 @@ public final class PosUpdater {
                 transition("failed", "installation_timeout"); releaseMaintenance(); return;
             }
             if (!foreground || !restored || !ordersRead || !uiReady) return;
+            synchronized (decisionLock) {
+                long until = prefs.getLong("authorizedUntil", 0);
+                if (until > 0 && System.currentTimeMillis() >= until) {
+                    prefs.edit().putString("decision", "pending").remove("approvedSha").putLong("authorizedUntil", 0).commit();
+                    transition("pending", "authorization_expired");
+                }
+            }
             // Discover on opening or once per local day from 15:00. Explicit
             // approvals remain evaluated every tick, independently of discovery.
             boolean due = ("now".equals(prefs.getString("decision", "")) || "scheduled".equals(prefs.getString("decision", ""))) &&
@@ -198,7 +213,6 @@ public final class PosUpdater {
             try { response = client.updateRequest("GET", "/check", null); }
             catch (Exception e) { checkOnOpen = true; throw e; }
             prefs.edit().putString("lastDiscoveryDay", UpdateCadence.day(java.util.Calendar.getInstance())).commit();
-            failures = 0;
             if (System.currentTimeMillis() - lastHealthReport > 300000) {
                 report(prefs.getString("state", "idle"), prefs.getString("error", ""));
                 lastHealthReport = System.currentTimeMillis();
@@ -244,6 +258,8 @@ public final class PosUpdater {
             long size = target.getLong("size");
             if (size <= 0 || size > 100 * 1024 * 1024) throw new IOException("invalid_target_size");
             if (directory.getUsableSpace() < size * 3 + 20 * 1024 * 1024) { transition("waiting_safe", "insufficient_storage"); return; }
+            String fingerprint = sha + ":" + size + ":" + apk.lastModified() + ":" + target.toString();
+            if (!fingerprint.equals(verifiedArtifact)) {
             if (!apk.isFile() || apk.length() != size || !sha.equals(fileHash(apk))) {
                 transition("downloading", "");
                 File part = new File(directory, "download.part");
@@ -253,9 +269,11 @@ public final class PosUpdater {
                 if (!part.renameTo(apk)) throw new IOException("update_storage_unavailable");
             }
             verifyApk(apk, target);
+            verifiedArtifact = sha + ":" + size + ":" + apk.lastModified() + ":" + target.toString();
+            }
             synchronized (decisionLock) { if (!consentAllows(sha, storeId)) return; }
             transition("ready", "");
-            if (!foreground || !GATE.beginMaintenance()) { transition("waiting_safe", "operations_in_progress"); return; }
+            if (!foreground || !GATE.drainAndBeginMaintenance(10000)) { transition("waiting_safe", "operations_in_progress"); return; }
             PosActivity current = activity.get();
             if (current == null) { releaseMaintenance(); return; }
             current.showUpdateMaintenance(true);
@@ -272,9 +290,9 @@ public final class PosUpdater {
             checkOnOpen = true; // Preserve retries after a failed daily check or validation.
             String code = e instanceof PosClient.ApiException ? ((PosClient.ApiException)e).code : e.getMessage();
             if (code == null || !code.matches("[a-zA-Z0-9_:-]{1,100}")) code = "update_connection_or_validation_failed";
-            transition("failed", code);
             failures++;
             nextAttempt = System.currentTimeMillis() + Math.min(15 * 60_000, 30000L * (1L << Math.min(failures, 5)));
+            transition("failed", code);
         } finally { busy = false; }
     }
     private void cleanOldApks() {
@@ -305,6 +323,8 @@ public final class PosUpdater {
         if (!expected.equals(actual) || !actual.equals(target.getString("certificateSha256"))) throw new IOException("update_signer_mismatch");
     }
     private void install(File apk, JSONObject target, PosClient client, Integer actualStore) throws Exception {
+        if (!target.getString("sha256").equals(fileHash(apk))) throw new IOException("update_hash_mismatch");
+        verifyApk(apk, target);
         PackageInstaller installer = context.getPackageManager().getPackageInstaller();
         PackageInstaller.SessionParams params = new PackageInstaller.SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL);
         params.setAppPackageName(context.getPackageName()); params.setSize(apk.length());

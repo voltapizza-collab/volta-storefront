@@ -44,3 +44,7 @@ html, body, #root { margin: 0; width: 100%; min-height: 100%; }
   .pos-orderCashPayment { justify-self: start; white-space: nowrap; font-size: 11px; }
   .pos-utilityDock { position: sticky; bottom: 0; z-index: 20; background: #f5eff8; border-top: 1px solid #e6dbef; }
 }
+
+/* Keep animation on compositor-friendly properties on handheld POS hardware. */
+.pos-topChip { backdrop-filter: none; }
+.pos-chill span { filter: none; animation: none; }

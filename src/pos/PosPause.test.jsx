@@ -48,6 +48,24 @@ function mockPos(orders) {
     return { data: { ...store } };
   });
 }
+test('ready is submitted once, queued SMS is not reported as delivered, and stale polling cannot restore the ticket', async () => {
+  store.operationsPaused = false;
+  mockPos([pendingOrder]);
+  const { container } = render(<PosApp />);
+  await screen.findByText('VOL-42');
+  fireEvent.click(container.querySelector('.pos-orderCard'));
+  fireEvent.click(screen.getByRole('button', { name: 'Ready' }));
+  let finish;
+  api.patch.mockImplementationOnce(() => new Promise(resolve => { finish = resolve; }));
+  const confirm = screen.getByRole('button', { name: 'Si, marcar listo' });
+  fireEvent.click(confirm); fireEvent.click(confirm);
+  expect(api.patch).toHaveBeenCalledTimes(1); expect(confirm).toBeDisabled();
+  await act(async () => finish({ data: { notification: { ok: true, queued: true } } }));
+  expect(await screen.findByText(/Aviso al cliente en cola de envío/)).toBeVisible();
+  expect(screen.queryByText(/Cliente notificado/)).not.toBeInTheDocument();
+  await act(async () => { jest.advanceTimersByTime(5000); });
+  expect(container.querySelector('.pos-orderCard')).toBeNull();
+});
 
 test('POS opens reception rather than store activation, retains pause and explains rejected opening', async () => {
   store.acceptingOrders = false;

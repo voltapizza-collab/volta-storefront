@@ -103,8 +103,10 @@ test('product errors and concurrent writes preserve the last confirmed state', a
   expect(api.patch).toHaveBeenCalledTimes(1);
   expect(toggle).toBeDisabled();
   expect(within(screen.getByRole('heading', { name: 'Ingredientes y productos' }).closest('section')).getByRole('button', { name: 'Sync' })).toBeDisabled();
-  expect(screen.getByRole('switch', { name: 'Producto: Dónuts' })).toBeDisabled();
-  await act(async () => reject(new Error('offline')));
+  expect(screen.getByRole('switch', { name: 'Producto: Dónuts' })).toBeEnabled();
+  fireEvent.click(screen.getByRole('switch', { name: 'Producto: Dónuts' }));
+  await waitFor(() => expect(api.patch).toHaveBeenCalledTimes(2));
+  await act(async () => reject(Object.assign(new Error('rejected'), { response: { status: 400 } })));
   expect(await screen.findByText('No se pudo cambiar el producto.')).toBeVisible();
   expect(toggle).toHaveAttribute('aria-checked', 'true');
   expect(toggle).toBeEnabled();
@@ -155,10 +157,15 @@ test('failed and in-flight writes cannot falsely change availability or submit t
   expect(category).toHaveTextContent('1/2');
   const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
   await act(async () => reject(new Error('offline')));
-  expect(await screen.findByText('No se pudo cambiar el ingrediente.')).toBeVisible();
-  expect(toggle).toBeEnabled();
+  expect(await screen.findByText('No hay confirmación del cambio. Pulsa Sync para comprobar el estado antes de repetir.')).toBeVisible();
+  expect(toggle).toBeDisabled();
   expect(toggle).toHaveTextContent('ACTIVO');
   expect(category).toHaveTextContent('1/2');
+  const inventory = within(screen.getByRole('heading', { name: 'Ingredientes y productos' }).closest('section'));
+  fireEvent.click(inventory.getByRole('button', { name: 'Sync' }));
+  await waitFor(() => expect(inventory.getByRole('button', { name: 'Sync' })).toBeEnabled());
+  fireEvent.click(category);
+  expect(within(rowFor('PAN DE PITA')).getByRole('switch')).toBeEnabled();
   consoleError.mockRestore();
 });
 

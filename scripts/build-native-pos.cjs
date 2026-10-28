@@ -8,6 +8,7 @@ const config = require('react-scripts/config/webpack.config')('production');
 config.entry = path.resolve('src/pos/nativeEntry.jsx');
 config.output.path = path.resolve(process.env.VOLTA_ANDROID_PROJECT || 'native/sunmi-v3', 'build/packaged/assets/pos');
 config.output.publicPath = '/';
+config.output.clean = true; // Remove obsolete hashed bundles from the APK staging directory.
 config.plugins = config.plugins.filter(p => !['HtmlWebpackPlugin','InterpolateHtmlPlugin','WebpackManifestPlugin','ESLintWebpackPlugin','ForkTsCheckerWebpackPlugin'].includes(p.constructor.name));
 webpack(config, (error, stats) => {
   if (error || stats.hasErrors()) { console.error(error || stats.toString({all:false,errors:true})); process.exitCode=1; return; }

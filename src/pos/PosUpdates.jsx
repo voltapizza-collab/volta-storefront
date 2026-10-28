@@ -39,6 +39,8 @@ export default function PosUpdates({ open, onOpen, onClose, onVersionChange }) {
   const dialog = useRef(null);
   const feedback = useRef(null);
   const claimingReminder = useRef(false);
+  const refreshing = useRef(false);
+  const choosing = useRef(false);
   const alive = useRef(true);
   useEffect(() => {
     if (typeof status?.versionName === 'string' && status.versionName.trim()) {
@@ -46,8 +48,11 @@ export default function PosUpdates({ open, onOpen, onClose, onVersionChange }) {
     }
   }, [status?.versionName, onVersionChange]);
   const refresh = useCallback(async () => {
+    if (refreshing.current) return;
+    refreshing.current = true;
     try { const data = await nativeCall('updateStatus'); if (alive.current) setStatus(data); }
     catch (_) { /* Keep the last known notice during an operation or installation. */ }
+    finally { refreshing.current = false; }
   }, []);
   useEffect(() => {
     alive.current = true; refresh();
@@ -78,10 +83,12 @@ export default function PosUpdates({ open, onOpen, onClose, onVersionChange }) {
   }, [status, open, onOpen]);
 
   const choose = async (decision) => {
+    if (choosing.current) return;
     const scheduledAt = decision === 'scheduled' ? new Date(when).getTime() : undefined;
     if (decision === 'scheduled' && (!Number.isFinite(scheduledAt) || scheduledAt <= Date.now() || scheduledAt > Date.now() + 30 * 86400000)) {
       setError(decisionErrors.invalid_update_schedule); return;
     }
+    choosing.current = true;
     setBusy(true); setError('');
     try {
       const result = await nativeCall('updateDecision', { sha256: status.target.sha256, decision, ...(scheduledAt ? { scheduledAt } : {}) });
@@ -89,7 +96,7 @@ export default function PosUpdates({ open, onOpen, onClose, onVersionChange }) {
       setStatus(result); setStep('details');
       onClose();
     } catch (e) { if (alive.current) { setError(decisionErrors[e.message] || 'No se pudo guardar tu elección. Comprueba la conexión y vuelve a intentarlo.'); refresh(); } }
-    finally { if (alive.current) setBusy(false); }
+    finally { choosing.current = false; if (alive.current) setBusy(false); }
   };
   const action = async (operation) => {
     setBusy(true); setError('');
@@ -124,7 +131,7 @@ export default function PosUpdates({ open, onOpen, onClose, onVersionChange }) {
             <p className="pos-updateHelp">La tienda seguirá abierta y recibiendo pedidos. Necesita batería ≥30 % y que terminen las operaciones e impresiones del terminal. «Actualizar ahora» autoriza el intento durante 15 minutos. Si Android vuelve al escritorio, abre Volta desde su icono.</p>
             {accepted && <div ref={feedback} className="pos-updateFeedback" role="status"><strong>Actualización autorizada</strong><p>{description}</p><small>No tienes que pulsar de nuevo. Esperará hasta las {new Date(status.authorizedUntil).toLocaleTimeString('es-ES')}.</small></div>}
             <div className="pos-updateActions">
-              <button type="button" className="pos-updatePrimary" disabled={busy || active || status.blocked || accepted} onClick={() => choose('now')}>{busy ? 'Guardando…' : accepted ? 'Solicitud aceptada' : 'Actualizar ahora'}</button>
+              <button type="button" className="pos-updatePrimary" disabled={busy || active || status.blocked || accepted} onClick={() => choose('now')}>{busy ? 'Guardando…' : status.blocked ? 'Instalación detenida' : active ? labels[status.state] : accepted ? 'Solicitud aceptada' : 'Actualizar ahora'}</button>
               <button type="button" disabled={busy || status.state === 'installing'} onClick={async () => {
                 // Revoke an earlier approval before offering another date.
                 if (status.decision !== 'pending') {
@@ -136,7 +143,8 @@ export default function PosUpdates({ open, onOpen, onClose, onVersionChange }) {
               }}>{scheduled ? 'Cambiar o cancelar programación' : 'Ahora no'}</button>
             </div>
           </>}
-          {status.blocked && <p>Esta versión está detenida por un error de instalación. Volta debe revisar el terminal o publicar una nueva versión antes de continuar.</p>}
+          {status.blocked && <p role="status">Esta versión está detenida por un error de instalación. El POS comunica el estado a Volta para revisar la distribución de la red. Código: {status.error || 'installation_blocked'}.</p>}
+          {status.retryAt > Date.now() && <p>Próximo intento automático: {new Date(status.retryAt).toLocaleTimeString('es-ES')}.</p>}
           {step === 'later' && <section aria-label="Opciones para más tarde"><h3>¿Quieres programar la actualización?</h3>
             <div className="pos-updateActions"><button type="button" disabled={busy} onClick={() => { setWhen(localInput(new Date(Date.now() + 3600000))); setStep('schedule'); }}>Programar fecha y hora</button>
               <button type="button" disabled={busy} onClick={() => choose('pending')}>Dejar pendiente</button></div></section>}

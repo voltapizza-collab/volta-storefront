@@ -71,23 +71,31 @@ public final class PosClient {
         return (JSONObject) requestValue(method,suffix,payload,withSession,enrollment);
     }
     private Object requestValue(String method, String suffix, JSONObject payload, boolean withSession, boolean enrollment) throws Exception {
+        return requestValue(method, suffix, payload, withSession, enrollment, method.equals("GET") ? 8000 : 60000);
+    }
+    private static final java.util.concurrent.ScheduledExecutorService deadlines = java.util.concurrent.Executors.newSingleThreadScheduledExecutor();
+    private Object requestValue(String method, String suffix, JSONObject payload, boolean withSession, boolean enrollment, int timeoutMs) throws Exception {
         String path = "/api/pos" + suffix;
         String body = payload == null ? "" : payload.toString();
         String authorization = withSession ? "Bearer " + token() : "";
         String id = enrollment ? "enroll" : deviceId();
         HttpURLConnection connection = (HttpURLConnection) new URL(BASE_URL + path).openConnection();
         connection.setInstanceFollowRedirects(false);
-        connection.setConnectTimeout(10000); connection.setReadTimeout(60000);
+        int timeout = Math.max(1, Math.min(timeoutMs, 120000));
+        connection.setConnectTimeout(Math.min(5000, timeout)); connection.setReadTimeout(timeout);
         connection.setRequestMethod(method);
         connection.setRequestProperty("Content-Type", "application/json");
-        signConnection(connection, method, path, body, authorization, id);
+        java.util.concurrent.atomic.AtomicBoolean expired = new java.util.concurrent.atomic.AtomicBoolean();
+        java.util.concurrent.ScheduledFuture<?> deadline = deadlines.schedule(() -> { expired.set(true); connection.disconnect(); }, timeout, java.util.concurrent.TimeUnit.MILLISECONDS);
         try {
+            signConnection(connection, method, path, body, authorization, id);
+            if (expired.get()) throw new java.net.SocketTimeoutException("Request deadline expired");
             if (payload != null) {
                 connection.setDoOutput(true);
                 try (OutputStream out = connection.getOutputStream()) { out.write(bytes(body)); }
             }
             return readJson(connection, 4_000_000);
-        } finally { connection.disconnect(); }
+        } finally { deadline.cancel(false); connection.disconnect(); }
     }
     private void signConnection(HttpURLConnection connection, String method, String path, String body, String authorization, String id) throws Exception {
         String timestamp = Long.toString(System.currentTimeMillis() / 1000);
@@ -182,6 +190,10 @@ public final class PosClient {
     public Object uiRequest(String method, String path, JSONObject body) throws Exception {
         if (!path.startsWith("/") || path.contains("..") || path.contains("#") || path.contains("\\")) throw new IOException("Invalid path");
         return requestValue(method, "/ui" + path, body, true, false);
+    }
+    public Object uiRequest(String method, String path, JSONObject body, int timeoutMs) throws Exception {
+        if (!path.startsWith("/") || path.contains("..") || path.contains("#") || path.contains("\\")) throw new IOException("Invalid path");
+        return requestValue(method, "/ui" + path, body, true, false, timeoutMs);
     }
     public void logout() throws Exception {
         prefs.edit().remove("session").putBoolean("logoutPending", true).commit();

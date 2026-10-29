@@ -2100,7 +2100,7 @@ export default function PosApp() {
       </header>}
 
       {isNativePos && <PosUpdates open={updatesOpen} onOpen={() => setUpdatesOpen(true)} onClose={() => setUpdatesOpen(false)} onVersionChange={setInstalledVersion} />}
-      {storeMeta && <PosDayInfo city={storeMeta.city || session.storeCity || ""} latitude={storeMeta.latitude} longitude={storeMeta.longitude} />}
+      {storeMeta && activePanel === "orders" && !menuOpen && !updatesOpen && <PosDayInfo city={storeMeta.city || session.storeCity || ""} zipCode={storeMeta.zipCode} latitude={storeMeta.latitude} longitude={storeMeta.longitude} />}
       <PosNotice message={message} onDismiss={dismissMessage} />
       {isNativePos && printStatus?.orderId === null && <PosPrintStatus status={printStatus} />}
       {logoutOpen && <PosLogoutDialog onCancel={() => setLogoutOpen(false)} onConfirm={logoutSession} />}

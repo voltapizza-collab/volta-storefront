@@ -3,6 +3,36 @@ import '@testing-library/jest-dom';
 import api from '../setupAxios';
 import PosApp from './PosApp';
 
+test('day outlook is exclusive to kitchen and does not refresh while inventory, menu or history is open', async () => {
+  store.operationsPaused = false;
+  mockPos([]);
+  const originalGet = api.get.getMockImplementation();
+  api.get.mockImplementation(async (url, ...args) => {
+    if (url === '/api/stock/2') return { data: [] };
+    if (url === '/api/myorders/summary') return { data: { items: [] } };
+    return originalGet(url, ...args);
+  });
+  render(<PosApp />);
+  await waitFor(() => expect(screen.queryByLabelText('Clima de tres días y próximo festivo')).toBeInTheDocument());
+  fireEvent.click(screen.getByRole('button', { name: /Inventario:/ }));
+  await screen.findByRole('button', { name: /Volver a cocina/ });
+  expect(screen.queryByLabelText('Clima de tres días y próximo festivo')).toBeNull();
+  const calls = fetch.mock.calls.length;
+  await act(async () => { jest.advanceTimersByTime(120000); });
+  expect(fetch).toHaveBeenCalledTimes(calls);
+  fireEvent.click(screen.getByRole('button', { name: /Volver a cocina/ }));
+  await waitFor(() => expect(screen.queryByLabelText('Clima de tres días y próximo festivo')).toBeInTheDocument());
+  expect(fetch).toHaveBeenCalledTimes(calls);
+  fireEvent.click(screen.getByRole('button', { name: 'Menu POS' }));
+  expect(screen.queryByLabelText('Clima de tres días y próximo festivo')).toBeNull();
+  fireEvent.click(screen.getByRole('button', { name: /Operaciones del día/ }));
+  await screen.findByRole('button', { name: 'Volver a pedidos' });
+  expect(screen.queryByLabelText('Clima de tres días y próximo festivo')).toBeNull();
+  fireEvent.click(screen.getByRole('button', { name: 'Volver a pedidos' }));
+  await waitFor(() => expect(screen.queryByLabelText('Clima de tres días y próximo festivo')).toBeInTheDocument());
+  await screen.findByText('Sin próximo festivo registrado');
+});
+
 jest.mock('../setupAxios', () => ({ __esModule: true, default: { get: jest.fn(), patch: jest.fn() } }));
 jest.mock('../components/Backoffice/EngineBackground', () => () => null);
 jest.mock('../assets/logo/pizza.svg', () => ({ __esModule: true, default: 'pizza.svg', ReactComponent: () => null }));

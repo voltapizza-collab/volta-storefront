@@ -3711,11 +3711,14 @@
 .pos-itemDetails .pos-recipeOriginal { list-style: none; font-weight: 400; color: #6b7280; font-size: 12px; }
 
 .pos-dayOutlook { margin: 6px 12px; padding: 8px 12px; border: 1px solid #e6dbef; border-radius: 12px; background: #faf6ef; }
-.pos-dayOutlook summary { cursor: pointer; font-size: 13px; overflow-wrap: anywhere; }
+.pos-dayOutlook summary { display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 12px; line-height: 1.5; white-space: nowrap; list-style: none; }
+.pos-dayOutlook summary::-webkit-details-marker { display: none; }
+.pos-dayOutlook summary::before { content: '▸'; flex-shrink: 0; }
+.pos-dayOutlook[open] summary::before { content: '▾'; }
 .pos-dayOutlook .pos-dayInfoGrid { margin-top: 10px; width: 100%; grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .pos-dayOutlook--holiday { border: 2px solid #986000; }
-.pos-dayHolidayAlert { display: block; margin-top: 6px; padding: 8px; background: #fff0bb; color: #533200; border-left: 4px solid #986000; border-radius: 4px; line-height: 1.4; }
-.pos-dayWeatherIndicator { display: inline-block; margin: 6px 0 0 8px; color: #62430a; font-size: 12px; font-weight: 700; }
+.pos-dayHolidayAlert { padding: 2px 5px; background: #fff0bb; color: #533200; border-radius: 4px; line-height: 1.4; }
+.pos-dayWeatherIndicator { color: #62430a; font-size: 14px; font-weight: 700; }
 .pos-dayOutlook .pos-dayInfoChip { min-width: 0; align-content: start; gap: 6px; color: #33263f; overflow-wrap: anywhere; font: inherit; }
 .pos-dayOutlook .pos-dayInfoChip em { color: #55475f; font-size: 11px; line-height: 1.3; letter-spacing: .02em; }
 .pos-dayOutlook .pos-dayInfoChip b { font-size: 12px; line-height: 1.4; }
@@ -3728,4 +3731,8 @@
 .pos-dayInfoStatus { margin: 8px 0 0; color: #55475f; font-size: 11px; line-height: 1.4; }
 @media (max-width: 600px) {
   .pos-dayOutlook .pos-dayInfoGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 380px) {
+  .pos-dayOutlook { padding: 8px; }
+  .pos-dayOutlook summary { font-size: 11px; gap: 4px; }
 }

@@ -30,10 +30,14 @@ test('priority holiday reminder and discreet weather indicator remain in collaps
   info.holiday = {date:'2026-10-31',dateLabel:'31 de octubre de 2026',name:'Festivo de prueba',scope:'Nacional · España',relative:'en 3 días',alert:true};
   info.days[1] = {...info.days[1],min:10,max:18,icon:'⛈️',condition:'Tormenta',alert:{title:'Tormentas',message:'Revisa cocina y repartidores.'}};
   render(<PosDayInfo />);
-  expect(await screen.findByText(/Revisa inventario y anticipa compras/)).toBeVisible();
-  expect(screen.getByText(/Previsión adversa · 1 día/)).toBeVisible();
+  expect(await screen.findByText('⚠ Festivo en 3 días')).toBeVisible();
+  expect(screen.getByText('Festivo de prueba')).not.toBeVisible();
+  expect(screen.getByText('31 de octubre de 2026')).not.toBeVisible();
+  expect(screen.getByRole('img', {name: 'Previsión adversa · 1 día'})).toBeVisible();
   expect(grid()).not.toBeVisible();
-  fireEvent.click(screen.getByText('Clima y próximo festivo'));
+  fireEvent.click(screen.getByText('Clima y próximos festivos:'));
+  expect(screen.getByText('Festivo de prueba')).toBeVisible();
+  expect(screen.getByText('31 de octubre de 2026')).toBeVisible();
   const button = screen.getByRole('button',{name:/Mañana: Tormentas/});
   expect(within(button).getByText('Mañana')).toBeVisible();
   expect(button).not.toHaveTextContent('Revisa');
@@ -48,8 +52,8 @@ test('priority holiday reminder and discreet weather indicator remain in collaps
 test('ordinary weather and distant holidays create no alerts or weather actions', async () => {
   info.holiday = {date:'2026-11-01',name:'Todos los Santos',scope:'Nacional · España',alert:false};
   render(<PosDayInfo />); await screen.findByText('Todos los Santos');
-  expect(screen.queryByText(/Revisa inventario/)).not.toBeInTheDocument();
-  expect(screen.queryByText(/Previsión adversa/)).not.toBeInTheDocument();
+  expect(screen.queryByText(/⚠ Festivo/)).not.toBeInTheDocument();
+  expect(screen.queryByRole('img', {name: /Previsión adversa/})).not.toBeInTheDocument();
   expect(within(grid()).queryByRole('button',{hidden:true})).not.toBeInTheDocument();
 });
 test('local refresh starts the holiday alert over midnight and cleans timers on unmount', async () => {
@@ -57,7 +61,7 @@ test('local refresh starts the holiday alert over midnight and cleans timers on 
   loadDayInfo.mockImplementation(async()=>({...emptyDayInfo(),loading:false,
     holiday:nextHoliday([{date:'2026-10-31',localName:'Festivo de prueba',global:true}],null)}));
   const {unmount}=render(<PosDayInfo />); await screen.findByText('Festivo de prueba');
-  expect(screen.queryByText(/Revisa inventario/)).not.toBeInTheDocument();
+  expect(screen.queryByText(/⚠ Festivo/)).not.toBeInTheDocument();
   await act(async()=>{jest.advanceTimersByTime(60000);});
   expect(screen.getByText(/Festivo en 3 días/)).toBeVisible();
   expect(cardCount()).toBe(4);

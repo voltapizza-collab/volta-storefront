@@ -30,7 +30,22 @@ function localInput(date) {
   return new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
 }
 
-export default function PosUpdates({ open, onOpen, onClose, onVersionChange }) {
+export function PosUpdateIndicator({ status, onOpen }) {
+  let label = 'Actualizaciones';
+  if (status?.configured) {
+    if (status.available) label = 'Pendiente actualizar';
+    else if (status.state === 'healthy') label = 'Actualización completada';
+    else if (status.state === 'idle') label = 'Última versión';
+    if (['downloading', 'ready', 'installing', 'installed', 'failed', 'confirmation_required'].includes(status.state)) label = labels[status.state];
+    else if (status.available && status.decision === 'scheduled' && status.authorizedUntil > Date.now()) label = 'Actualización programada';
+  }
+  return <button type="button" className={`pos-updateIndicator${status?.available ? ' pos-updateIndicator--pending' : ''}`} onClick={onOpen} aria-label={`Actualizaciones del terminal: ${label}`}>
+    {status?.available && <span className="pos-updateDot" aria-hidden="true" />}
+    <span role="status">{label}</span>
+  </button>;
+}
+
+export default function PosUpdates({ open, onOpen, onClose, onVersionChange, onStatusChange }) {
   const [status, setStatus] = useState(null);
   const [step, setStep] = useState('details');
   const [when, setWhen] = useState('');
@@ -47,6 +62,7 @@ export default function PosUpdates({ open, onOpen, onClose, onVersionChange }) {
       onVersionChange?.(status.versionName.trim());
     }
   }, [status?.versionName, onVersionChange]);
+  useEffect(() => { onStatusChange?.(status); }, [status, onStatusChange]);
   const refresh = useCallback(async () => {
     if (refreshing.current) return;
     refreshing.current = true;
@@ -111,12 +127,6 @@ export default function PosUpdates({ open, onOpen, onClose, onVersionChange }) {
   const accepted = available && status.decision === 'now' && !expired;
   const description = expired ? reasons.authorization_expired : reasons[status?.error] || labels[status?.state] || 'Consultando el terminal…';
   return <>
-    {available && <aside className="pos-updateNotice" aria-label="Actualización del terminal">
-      <span><strong>{scheduled && !expired ? 'Actualización programada' : 'Tienes una actualización pendiente'}</strong>
-        <small>{accepted ? description : scheduled && !expired ? new Date(status.scheduledAt).toLocaleString('es-ES') : `Volta POS ${status.target.versionName}`}</small></span>
-      <button type="button" onClick={onOpen}>Ver detalles</button>
-    </aside>}
-    {!available && status?.state === 'healthy' && <p className="pos-updateSuccess" role="status">Volta POS {status.versionName}: actualización completada.</p>}
     {open && <dialog className="pos-updateDialog" ref={dialog} aria-labelledby="pos-update-title" onCancel={event => { event.preventDefault(); onClose(); }}>
       <header><div><small>VOLTA POS · ACTUALIZACIONES</small><h2 id="pos-update-title">{available ? status.target.title : 'Actualizaciones del terminal'}</h2></div>
         <button type="button" onClick={onClose} autoFocus aria-label="Cerrar actualizaciones">×</button></header>

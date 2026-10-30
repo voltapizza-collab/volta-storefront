@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import PosUpdates from './PosUpdates';
+import PosUpdates, { PosUpdateIndicator } from './PosUpdates';
 import { nativeCall } from './nativeBridge';
 jest.mock('./nativeBridge', () => ({ nativeCall: jest.fn() }));
 
@@ -22,10 +22,12 @@ beforeEach(() => {
   });
 });
 test('persistent notice does not open or authorize an update on arrival', async () => {
-  const onOpen=jest.fn(); render(<PosUpdates open={false} onOpen={onOpen} onClose={()=>{}} />);
-  expect(await screen.findByText('Tienes una actualización pendiente')).toBeVisible();
+  const onOpen=jest.fn(); const onStatusChange=jest.fn();
+  render(<><PosUpdates open={false} onOpen={onOpen} onClose={()=>{}} onStatusChange={onStatusChange} /><footer><PosUpdateIndicator status={current} onOpen={onOpen} /></footer></>);
+  await waitFor(()=>expect(onStatusChange).toHaveBeenCalledWith(current));
+  expect(screen.getByText('Pendiente actualizar')).toBeVisible();
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-  fireEvent.click(screen.getByText('Ver detalles')); expect(onOpen).toHaveBeenCalled();
+  fireEvent.click(screen.getByRole('button', {name: /Actualizaciones del terminal/})); expect(onOpen).toHaveBeenCalled();
   expect(nativeCall.mock.calls.every(([op]) => op === 'updateStatus')).toBe(true);
 });
 test('details are plain text and update now authorizes the exact APK', async () => {
@@ -110,8 +112,28 @@ test('daily reminder waits while another operation dialog is open', async () => 
   const onOpen=jest.fn();
   try {
     render(<PosUpdates open={false} onOpen={onOpen} onClose={()=>{}} />);
-    await screen.findByText('Tienes una actualización pendiente');
+    await waitFor(()=>expect(nativeCall).toHaveBeenCalledWith('updateStatus'));
     expect(nativeCall.mock.calls.some(([op])=>op==='updateNoticeSeen')).toBe(false);
     expect(onOpen).not.toHaveBeenCalled();
   } finally { other.remove(); }
 });
+
+ test.each([
+  [{configured:true,available:false,state:'healthy'}, 'Actualización completada'],
+  [{configured:true,available:false,state:'idle'}, 'Última versión'],
+  [{configured:false,available:false,state:'idle'}, 'Actualizaciones'],
+  [{configured:true,available:true,state:'pending'}, 'Pendiente actualizar'],
+  [{configured:true,available:true,state:'scheduled',decision:'scheduled',authorizedUntil:Date.now()+86400000}, 'Actualización programada'],
+  [{configured:true,available:true,state:'downloading'}, 'Descargando la actualización…'],
+  [{configured:true,available:false,state:'failed'}, 'La actualización no se completó. Tus datos se conservan.'],
+ ])('footer indicator reports state without claiming an unverified update', (status, label) => {
+   render(<PosUpdateIndicator status={status} onOpen={()=>{}} />);
+   expect(screen.getByRole('button', {name:`Actualizaciones del terminal: ${label}`})).toBeVisible();
+ });
+ test('healthy update publishes status without rendering a banner above kitchen', async () => {
+   current={...base(),available:false,state:'healthy'};
+   const onStatusChange=jest.fn();
+   const {container}=render(<PosUpdates open={false} onOpen={()=>{}} onClose={()=>{}} onStatusChange={onStatusChange} />);
+   await waitFor(()=>expect(onStatusChange).toHaveBeenCalledWith(current));
+   expect(container).toBeEmptyDOMElement();
+ });

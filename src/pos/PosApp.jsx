@@ -20,7 +20,7 @@ import PosNotice, { usePosNotice } from './PosNotice';
 import PosPrintStatus, { usePosPrinting } from './PosPrintStatus';
 import { getPosOrderCode } from './orderDisplayCode';
 import PosLogoutDialog from './PosLogoutDialog';
-import PosUpdates from './PosUpdates';
+import PosUpdates, { PosUpdateIndicator } from './PosUpdates';
 import PosDayInfo from './PosDayInfo';
 import PosClock from './PosClock';
 import { shouldShowCheckoutAlert } from '../utils/checkoutPresence';
@@ -976,6 +976,7 @@ export default function PosApp() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [updatesOpen, setUpdatesOpen] = useState(false);
   const [installedVersion, setInstalledVersion] = useState('');
+  const [updateStatus, setUpdateStatus] = useState(null);
   const menuPanelRef = useRef(null);
   const menuButtonRef = useRef(null);
   useEffect(() => {
@@ -2099,7 +2100,7 @@ export default function PosApp() {
         )}
       </header>}
 
-      {isNativePos && <PosUpdates open={updatesOpen} onOpen={() => setUpdatesOpen(true)} onClose={() => setUpdatesOpen(false)} onVersionChange={setInstalledVersion} />}
+      {isNativePos && <PosUpdates open={updatesOpen} onOpen={() => setUpdatesOpen(true)} onClose={() => setUpdatesOpen(false)} onVersionChange={setInstalledVersion} onStatusChange={setUpdateStatus} />}
       {storeMeta && activePanel === "orders" && !menuOpen && !updatesOpen && <PosDayInfo city={storeMeta.city || session.storeCity || ""} zipCode={storeMeta.zipCode} latitude={storeMeta.latitude} longitude={storeMeta.longitude} />}
       <PosNotice message={message} onDismiss={dismissMessage} />
       {isNativePos && printStatus?.orderId === null && <PosPrintStatus status={printStatus} />}
@@ -2545,7 +2546,10 @@ export default function PosApp() {
       )}
 
       {activePanel !== "dayOrders" && <footer className="pos-footer">
-        <span>© {new Date().getFullYear()} voltaPizza · {isNativePos ? `POS${installedVersion ? ` v${installedVersion}` : ''}` : 'POS Virtual'}</span>
+        <div className="pos-versionControl">
+          <span>© {new Date().getFullYear()} voltaPizza · {isNativePos ? `POS${installedVersion ? ` v${installedVersion}` : ''}` : 'POS Virtual'}</span>
+          {isNativePos && <PosUpdateIndicator status={updateStatus} onOpen={() => setUpdatesOpen(true)} />}
+        </div>
         <div className={`pos-printInline ${printerTone}`}>
           <span />
           {printerLabel}

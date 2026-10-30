@@ -24,11 +24,11 @@ export default memo(function PosDayInfo({ city, zipCode, latitude, longitude }) 
   const { holiday } = info;
   return <details className={`pos-dayOutlook${holiday?.alert ? ' pos-dayOutlook--holiday' : ''}`}>
     <summary>
-      <span>Clima y próximo festivo</span>
+      <span>Clima y próximos festivos:</span>
       {holiday?.alert && <strong className="pos-dayHolidayAlert" role="status">
-        ⚠ Festivo {holiday.relative}: {holiday.name}. Revisa inventario y anticipa compras ante posibles cierres de mercados y proveedores.
+        ⚠ Festivo {holiday.relative}
       </strong>}
-      {adverseDays.length > 0 && <span className="pos-dayWeatherIndicator">⚠ Previsión adversa · {adverseDays.length} {adverseDays.length === 1 ? 'día' : 'días'}</span>}
+      {adverseDays.length > 0 && <span className="pos-dayWeatherIndicator" role="img" aria-label={`Previsión adversa · ${adverseDays.length} ${adverseDays.length === 1 ? 'día' : 'días'}`} title="Previsión adversa: abre el panel y toca el día señalado">⛈</span>}
     </summary>
     <div className="pos-dayInfoGrid" aria-label="Clima de tres días y próximo festivo">
       {info.days.map(day => {

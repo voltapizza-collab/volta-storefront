@@ -3990,6 +3990,8 @@
   line-height: 1.35;
 }
 
+.sf-couponSummary, .sf-couponConditions { display: grid; gap: 12px; min-width: 0; }
+
 .sf-couponInfoBody b,
 .sf-couponInfoBody strong,
 .sf-couponInfoBody li {

@@ -5,6 +5,7 @@ import api from "../services/api";
 
 jest.mock("../services/api", () => ({ get: jest.fn(), post: jest.fn() }));
 jest.mock("../utils/seo", () => ({ buildStorefrontSeo: () => ({}), usePublicSeo: () => {} }));
+let storefrontMode = 'commercial-light';
 jest.mock("react-router-dom", () => {
   const location = { pathname: "/test/centro", search: "", hash: "", state: null };
   const navigate = jest.fn();
@@ -13,6 +14,7 @@ jest.mock("react-router-dom", () => {
 }, { virtual: true });
 
 beforeEach(() => {
+  storefrontMode = 'commercial-light';
   jest.clearAllMocks();
   window.localStorage.clear();
   window.sessionStorage.clear();
@@ -22,7 +24,7 @@ beforeEach(() => {
     { id: "pizza-1", pizzaId: 1, name: "Margherita", qty: 1, unitPrice: 10, subtotal: 10, source: "menu", size: "M" },
   ] }));
   api.get.mockImplementation(async path => {
-    if (path === "/partners/test") return { id: 1, slug: "test", name: "Test", currency: "EUR", storefrontMode: "commercial-light" };
+    if (path === "/partners/test") return { id: 1, slug: "test", name: "Test", currency: "EUR", storefrontMode };
     if (path.endsWith("/menu")) return { store: { id: 1, partnerId: 1, storeName: "Centro", pickupEnabled: true }, menu: [] };
     return {};
   });
@@ -38,10 +40,20 @@ async function openCouponEntry() {
   return { trigger, dialog, input: within(dialog).getByRole("textbox", { name: "Código del cupón" }) };
 }
 
-test("footer opens code entry without validation, then shows and retains the applied coupon", async () => {
+test.each(['commercial-light', 'commercial-dark', 'sepia'])("%s: footer opens code entry, applies and retains the coupon", async mode => {
+  storefrontMode = mode;
   api.post.mockResolvedValue({ valid: true, status: "valid", message: "Descuento aplicado.", discount: 2,
     coupon: { id: 20, code: "PROMO20", kind: "PERCENT", percent: 20 } });
   const { trigger, dialog, input } = await openCouponEntry();
+  expect(trigger.closest('.sf-shell')).toHaveClass('sf-shell--mode-commercial-light');
+  if (mode === 'commercial-dark') {
+    expect(trigger.closest('.sf-shell')).toHaveClass('sf-shell--mode-commercial-dark');
+    expect(trigger.closest('.sf-shell').style.getPropertyValue('--sf-theme-text')).toBe('#f2ece1');
+  }
+  if (mode === 'sepia') {
+    expect(trigger.closest('.sf-shell')).toHaveClass('sf-shell--mode-sepia');
+    expect(trigger.closest('.sf-shell').style.getPropertyValue('--sf-theme-text')).toBe('#3f3026');
+  }
   expect(api.post).not.toHaveBeenCalledWith("/api/coupons/validate", expect.anything());
   expect(input).toHaveFocus();
   expect(within(dialog).getByRole("button", { name: "Validar cupón" })).toBeDisabled();

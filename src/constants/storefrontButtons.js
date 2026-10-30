@@ -78,51 +78,15 @@ export const DEFAULT_STOREFRONT_BUTTON_CONFIG = STOREFRONT_BUTTON_ITEMS.reduce(
 export const DEFAULT_STOREFRONT_MODE = "commercial-light";
 
 export const STOREFRONT_MODE_ITEMS = [
-  {
-    id: "commercial-light",
-    name: "Modo claro comercial",
-    status: "available",
-    label: "Principal",
-    description:
-      "Superficie blanca, menos ruido visual y foco comercial en cupones, repetir pedido y Top Deal.",
-  },
-  {
-    id: "volta",
-    name: "Modo Volta",
-    status: "available",
-    label: "Volta",
-    description:
-      "Look oficial Volta preservado: arcade, botones intensos y paleta fija del motor.",
-  },
-  {
-    id: "commercial-dark",
-    name: "Modo oscuro comercial",
-    status: "coming",
-    label: "Proximamente",
-    description:
-      "Version de contraste oscuro para la misma estructura comercial.",
-  },
-  {
-    id: "sepia",
-    name: "Modo sepia",
-    status: "coming",
-    label: "Proximamente",
-    description:
-      "Misma estructura del storefront con una superficie mas calida y editorial.",
-  },
-  {
-    id: "clean",
-    name: "Modo clean",
-    status: "coming",
-    label: "Proximamente",
-    description:
-      "Misma estructura del storefront con menos ruido visual y colores mas neutros.",
-  },
+  { id: 'commercial-light', name: 'Claro', status: 'available', description: 'Fondos claros y un aspecto luminoso para dar protagonismo a tu carta.' },
+  { id: 'commercial-dark', name: 'Oscuro', status: 'available', description: 'Fondos oscuros, texto cálido y detalles suaves para un ambiente más elegante.' },
+  { id: 'sepia', name: 'Sepia', status: 'available', description: 'Fondos crema, tonos café y detalles cobre para un ambiente cálido y acogedor.' },
 ];
 
 export const normalizeStorefrontMode = (mode) => {
   const normalized = String(mode || "").trim();
-  return STOREFRONT_MODE_ITEMS.some((item) => item.id === normalized)
+  // Preserve existing legacy restaurants until their owner chooses a new mode.
+  return normalized === 'volta' || STOREFRONT_MODE_ITEMS.some((item) => item.id === normalized)
     ? normalized
     : DEFAULT_STOREFRONT_MODE;
 };

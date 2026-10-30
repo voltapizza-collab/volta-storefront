@@ -16,6 +16,8 @@ import { productNoticeLabels, normalizeProductNotices } from "../constants/produ
 import "../styles/Storefront.css";
 import "../styles/CatalogLayout.css";
 import "../styles/CatalogDesktop.css";
+import "../styles/StorefrontDark.css";
+import { STOREFRONT_MODE_THEMES } from "../constants/storefrontModes";
 import DeliveryMethodSelector from "../components/Storefront/DeliveryMethodSelector";
 import OrderModeConfirmation from "../components/Storefront/OrderModeConfirmation";
 import CatalogNavigation, { CatalogFocusCategory, CatalogSearch, CatalogTools } from "../components/Storefront/CatalogNavigation";
@@ -997,9 +999,11 @@ export function CouponInfoModal({ open, onClose, onRemove, onValidate, onChooseP
                 <span>Codigo del cupon</span>
                 <strong>{coupon.code}</strong>
               </div>
-              {coupon.id && <p><b>Beneficio:</b> {formatCouponBenefit(coupon)}</p>}
-              {coupon.expiresAt && <p><b>Caduca:</b> {formatCouponExpiry(coupon.expiresAt)}</p>}
-              <p><b>{discountLabel}:</b> {discountPreview}</p>
+              <div className="sf-couponSummary">
+                {coupon.id && <p><b>Beneficio:</b> {formatCouponBenefit(coupon)}</p>}
+                {coupon.expiresAt && <p><b>Caduca:</b> {formatCouponExpiry(coupon.expiresAt)}</p>}
+                <p><b>{discountLabel}:</b> {discountPreview}</p>
+              </div>
 
               {coupon.expiresAt && (
                 <div className={`sf-couponTimer sf-couponTimer--${severity}`} role="status" aria-live="polite">
@@ -1008,6 +1012,7 @@ export function CouponInfoModal({ open, onClose, onRemove, onValidate, onChooseP
                 </div>
               )}
 
+              <section className="sf-couponConditions" aria-label="Condiciones del cupón">
               <h4>Condiciones</h4>
               <ul>
                 <li>Valido por <b>1 cupon por pedido</b> y <b>no acumulable</b> con otros cupones.</li>
@@ -1017,6 +1022,7 @@ export function CouponInfoModal({ open, onClose, onRemove, onValidate, onChooseP
                 <li>Debe estar activo, dentro de horario y antes de su caducidad.</li>
                 <li>Con tarjeta, el uso se registra al confirmar el pago. En efectivo, al confirmar el pedido.</li>
               </ul>
+              </section>
             </>
           ) : (
             <p>Introduce un codigo valido para ver las condiciones y aplicar el descuento.</p>
@@ -2923,6 +2929,7 @@ export default function StorePage() {
         "--sf-theme-on-accent": theme.onAccent,
         "--sf-theme-on-surface": theme.onSurface,
         "--sf-font-family": theme.fontFamily,
+        ...(STOREFRONT_MODE_THEMES[normalizeStorefrontMode(partner?.storefrontMode)] || {}),
       };
     },
     [partner]
@@ -2940,6 +2947,8 @@ export default function StorePage() {
     () => normalizeStorefrontMode(partner?.storefrontMode),
     [partner?.storefrontMode]
   );
+
+  const isCommercialMode = storefrontMode !== "volta";
 
   const storefrontButtons = useMemo(
     () => normalizeStorefrontButtonConfig(partner?.storefrontButtonConfig),
@@ -5978,10 +5987,10 @@ export default function StorePage() {
 
   const renderCatalogCouponButton = () => isStorefrontButtonVisible("coupons") && (
     <button type="button"
-      className={`sf-catalogCoupon ${storefrontMode === "commercial-light" ? "sf-couponEntryBtn" : `sf-offersBtn sf-lsfOfferBtn ${offerVariant.className}`} ${hasDeliveryFreeCouponAvailable ? "has-delivery-free" : ""}`}
+      className={`sf-catalogCoupon ${isCommercialMode ? "sf-couponEntryBtn" : `sf-offersBtn sf-lsfOfferBtn ${offerVariant.className}`} ${hasDeliveryFreeCouponAvailable ? "has-delivery-free" : ""}`}
       aria-label={hasDeliveryFreeCouponAvailable ? "Cupones y envío gratis" : "Cupones"}
       onClick={() => navigate(`/${partnerSlug}/coupons`, { state: { returnToStorePath: `/${partnerSlug}/${storeSlug}` } })}>
-      <span className={storefrontMode === "commercial-light" ? "sf-couponEntryBtn__label" : "sf-offersBtnLabel"}>
+      <span className={isCommercialMode ? "sf-couponEntryBtn__label" : "sf-offersBtnLabel"}>
         {hasDeliveryFreeCouponAvailable ? <><span>CUPONES</span><span>ENVÍO GRATIS</span></> : "CUPONES"}
       </span>
     </button>
@@ -6009,7 +6018,7 @@ export default function StorePage() {
   return (
     <div
       ref={catalogRootRef}
-      className={`sf-shell sf-catalog sf-shell--mode-${storefrontMode} ${gridFocusMode ? "is-grid-focused" : ""}`}
+      className={`sf-shell sf-catalog sf-shell--mode-${storefrontMode} ${STOREFRONT_MODE_THEMES[storefrontMode] ? "sf-shell--mode-commercial-light" : ""} ${gridFocusMode ? "is-grid-focused" : ""}`}
       style={themeStyle}
     >
       {directDeliveryGateRequired && (
@@ -6139,7 +6148,7 @@ export default function StorePage() {
                   <span>Buscar productos o ingredientes…</span>
                 </button>
 
-                {storefrontMode !== "commercial-light" && isStorefrontButtonVisible("repeatOrder") && (
+                {!isCommercialMode && isStorefrontButtonVisible("repeatOrder") && (
                   <button
                     type="button"
                     className={`sf-repeatOrderBtn ${cartCount > 0 ? "has-draft" : ""}`}
@@ -6507,7 +6516,7 @@ export default function StorePage() {
       </div>
 
       <div className="sf-stickyFooterShell" style={themeStyle}>
-        {storefrontMode === "commercial-light" && isStorefrontButtonVisible("payNow") && (cartCount > 0 || checkoutLoading) && (
+        {isCommercialMode && isStorefrontButtonVisible("payNow") && (cartCount > 0 || checkoutLoading) && (
           <div className="sf-catalogPayRow">
             <button type="button" className="sf-engineBottomBtn sf-engineBottomBtn--pay"
               onClick={handlePrimaryCheckout} disabled={cartCount === 0 || checkoutLoading}>
@@ -6517,7 +6526,7 @@ export default function StorePage() {
           </div>
         )}
         <div className="sf-stickyFooter">
-          {storefrontMode === "commercial-light" ? (
+          {isCommercialMode ? (
             <>
               {isStorefrontButtonVisible("scheduleOrder") && (
                 <button

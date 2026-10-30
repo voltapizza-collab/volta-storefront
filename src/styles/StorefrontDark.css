@@ -1,0 +1,272 @@
+/* Shared palette skins preserve the commercial layout and original food images. */
+.sf-shell.sf-catalog.sf-shell--mode-commercial-dark {
+  color-scheme: dark;
+  --sf-commercial-bg: #141619;
+  --sf-commercial-panel: #202329;
+  --sf-commercial-ink: #f2ece1;
+  --sf-commercial-muted: #aaa69f;
+  --sf-commercial-line: #3b3e45;
+  --sf-commercial-soft: #292c32;
+  --sf-commercial-primary: #e8c68b;
+  --sf-commercial-primary-dark: #d6ad6e;
+  --sf-commercial-success: #8bd5a7;
+  --sf-commercial-danger: #ffabb6;
+  --sf-mode-ink: #f2ece1;
+  --sf-mode-muted: #b5b0a7;
+  --sf-mode-panel: #202329;
+  --sf-mode-soft: #292c32;
+  --sf-mode-line: #3b3e45;
+  --sf-mode-accent: #e8c68b;
+  --sf-mode-on-accent: #211b12;
+  background: #141619;
+  color: var(--sf-mode-ink);
+  --sf-mode-input: #17191d; --sf-mode-input-line: #50535b; --sf-mode-placeholder: #a9a49b;
+  --sf-mode-warm: #302b23; --sf-mode-warm-ink: #f1d49f; --sf-mode-warm-line: #65543b;
+  --sf-mode-hover: #35383e; --sf-mode-overlay: #07090cc9; --sf-mode-selected: #383126;
+  --sf-mode-success: #8bd5a7; --sf-mode-preview: radial-gradient(ellipse at center, #444039, #292c32);
+  --sf-mode-success-bg: #203c2d; --sf-mode-success-ink: #b4e7c4; --sf-mode-success-line: #487957;
+  --sf-mode-danger-bg: #432b31; --sf-mode-danger-ink: #ffc3cc; --sf-mode-danger-line: #905360;
+}
+
+.sf-shell.sf-catalog.sf-shell--mode-sepia {
+  color-scheme: light;
+  --sf-commercial-bg: #f2e7d7; --sf-commercial-panel: #fff9ef;
+  --sf-commercial-ink: #3f3026; --sf-commercial-muted: #78604c;
+  --sf-commercial-line: #d8c4aa; --sf-commercial-soft: #eee0cc;
+  --sf-commercial-primary: #855437; --sf-commercial-primary-dark: #694027;
+  --sf-commercial-success: #3e6b43; --sf-commercial-danger: #a32f36;
+  --sf-mode-ink: #3f3026; --sf-mode-muted: #78604c; --sf-mode-panel: #fff9ef;
+  --sf-mode-soft: #eee0cc; --sf-mode-line: #d8c4aa; --sf-mode-accent: #855437;
+  --sf-mode-on-accent: #fff9ef; --sf-mode-input: #fffaf2; --sf-mode-input-line: #bca58a;
+  --sf-mode-placeholder: #806950; --sf-mode-warm: #ead5b8; --sf-mode-warm-ink: #62412c;
+  --sf-mode-warm-line: #bc946e; --sf-mode-hover: #e4d2b9; --sf-mode-overlay: #302318a8;
+  --sf-mode-selected: #e5cfb0; --sf-mode-success: #3e6b43;
+  --sf-mode-preview: radial-gradient(ellipse at center, #f9efdc, #ddc7a6);
+  --sf-mode-success-bg: #e6efdf; --sf-mode-success-ink: #31583c; --sf-mode-success-line: #8da17b;
+  --sf-mode-danger-bg: #f6ded9; --sf-mode-danger-ink: #872f35; --sf-mode-danger-line: #c28c86;
+  background: #f2e7d7; color: var(--sf-mode-ink);
+}
+
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(
+  .sf-storeHeader, .sf-lsfSurface, .sf-engineGridStage--lsf, .sf-engineCard--lsf,
+  .sf-stickyFooter, .sf-catalogFocusHeader, .lsf-gridContext, .sf-modalCard,
+  .lsf-card, .lsf-flip__front, .lsf-flip__back, .sf-cartRow,
+  .sf-customStage, .sf-builderStickyActions, .sf-halfSummary, .sf-customSummary
+) { background: var(--sf-mode-panel) !important; border-color: var(--sf-mode-line) !important; color: var(--sf-mode-ink); box-shadow: 0 8px 28px #0003; }
+
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) .lsf-gridContext::after,
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) .sf-catalogFocusHeader::after { background: var(--sf-mode-panel); }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) .sf-engineGridStage--lsf::before,
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) .sf-lsfSurface::before { opacity: .025; }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) .sf-lsfNavCeiling { background: var(--sf-mode-panel); }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(.sf-catalogContext, .sf-cartFoot, .sf-cartModalHead) { border-color: var(--sf-mode-line); }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(.sf-catalogOffers, .lsf-mobile, .sf-stickyFooterShell, .lsf-card__overlay) { background: transparent !important; }
+
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(
+  .sf-catalogSearch, .sf-catalogSearch__field, .sf-catalogSearchLaunch,
+  .sf-catalogSearchToggle, .sf-catalogExit, .sf-catalogFocusCategory--picker,
+  .sf-catalogNav button, .sf-catalogNav select, .lsf-cartbtn, .lsf-buildmode,
+  .sf-footerNavItem:not(.sf-footerNavItem--repeat), .sf-couponDock, .sf-catalogIncentive, .sf-incentiveBanner,
+  .sf-modalCloseBtn, .sf-secondaryBtn, .sf-cartContinueBtn, .sf-cartPaymentPanel,
+  .sf-orderMode, .sf-orderMode__change, .sf-couponInfoCard, .sf-couponEntryForm,
+  .sf-scheduleDay, .sf-scheduleSlot, .sf-sizeBtn, .sf-productSizeBtn,
+  .sf-customIngredientCard, .sf-productExtras, .sf-repeatCard
+) { background: var(--sf-mode-soft) !important; border-color: var(--sf-mode-line) !important; color: var(--sf-mode-ink) !important; box-shadow: none; }
+
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(
+  .sf-catalogContext strong, .sf-catalogSearch__heading, .sf-catalogFocusCategory,
+  .lsf-card__name, .lsf-card__price, .lsf-card__priceCurrent, .lsf-cartbtn__total,
+  .sf-lsfStoreTicker, .sf-engineUtilityPillLine, .sf-footerNavLabel, .sf-footerNavIcon,
+  .sf-cartRowMain strong, .sf-cartRowSide strong, .sf-cartFootLine,
+  .sf-cartPaymentHead, .sf-orderMode__title, .sf-orderMode__destination,
+  .sf-modalCard h2, .sf-modalCard h3, .sf-modalCard h4, .sf-modalCard label,
+  .sf-productTitle, .sf-productPrice, .sf-productIngredientName,
+  .sf-incentiveCopy strong, .sf-incentiveFocusModal__copy h3
+) { color: var(--sf-mode-ink) !important; text-shadow: none; }
+
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(
+  .sf-catalogContext > span, .sf-catalogSearch__hint, .sf-catalogExpand,
+  .sf-catalogFocusCategory__copy > span, .lsf-card__approval, .lsf-card__buyMessage,
+  .lsf-card__priceOld, .sf-cartRowMain span, .sf-cartRowMain small,
+  .sf-modalCard p, .sf-modalCard small, .sf-productDescription, .sf-orderMode__copy,
+  .sf-incentiveFocusModal__copy p
+) { color: var(--sf-mode-muted); text-shadow: none; }
+
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(input, select, textarea) {
+  background-color: var(--sf-mode-input); color: var(--sf-mode-ink); border-color: var(--sf-mode-input-line); accent-color: var(--sf-mode-accent);
+}
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) input::placeholder,
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) textarea::placeholder { color: var(--sf-mode-placeholder); opacity: 1; }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) .sf-catalogSearch input { background: transparent; color: var(--sf-mode-ink); }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) select option { background: var(--sf-mode-panel); color: var(--sf-mode-ink); }
+
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(
+  .sf-primaryBtn, .sf-engineBottomBtn--pay, .lsf-card__addbtn,
+  .sf-catalogNav button[aria-pressed="true"], .lsf-buildmode.is-active,
+  .sf-sizeBtn.is-active, .sf-productSizeBtn.is-active, .sf-scheduleSlot.is-selected,
+  .sf-catalogFocusCategory__chevron, .lsf-cartbtn__count
+) { background: var(--sf-mode-accent) !important; border-color: var(--sf-mode-accent) !important; color: var(--sf-mode-on-accent) !important; text-shadow: none; box-shadow: none; }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(.sf-primaryBtn, .sf-engineBottomBtn--pay) :is(span, small, strong) { color: var(--sf-mode-on-accent) !important; text-shadow: none; }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(.sf-couponEntryBtn, .sf-catalogCoupon) { background: var(--sf-mode-warm) !important; color: var(--sf-mode-warm-ink) !important; border-color: var(--sf-mode-warm-line) !important; box-shadow: none; }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(.sf-couponEntryBtn__label, .sf-couponEntryBtn__label span) { color: var(--sf-mode-warm-ink) !important; }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(.sf-customModeBtn, .sf-catalogBuildActions button, .sf-catalogTools button, .sf-catalogTools a) { background: var(--sf-mode-soft); color: var(--sf-mode-ink); border-color: var(--sf-mode-line); }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(.sf-footerNavItem:hover:not(.sf-footerNavItem--repeat), .sf-secondaryBtn:hover, .sf-catalogSearch button:hover, .sf-catalogNav button:hover:not([aria-pressed="true"])) { background: var(--sf-mode-hover) !important; color: var(--sf-mode-ink); }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(.sf-catalogSwipeHint, .sf-incentiveTimer, .sf-incentiveFocusModal__stats span) { background: var(--sf-mode-warm); color: var(--sf-mode-warm-ink); border-color: var(--sf-mode-warm-line); }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) .sf-modalOverlay { background: var(--sf-mode-overlay); }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(.sf-cartMinimumNotice, .sf-orderMode__issue) { color: var(--sf-mode-warm-ink); background: var(--sf-mode-warm); border-color: var(--sf-mode-warm-line); }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(button, a, input, select, textarea):focus-visible { outline: 3px solid var(--sf-mode-accent); outline-offset: 3px; }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) button:disabled { opacity: .5; }
+
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) .sf-orderMode { --order-mode-accent: var(--sf-mode-warm); --order-mode-ink: var(--sf-mode-ink); }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(.sf-termsGateBody, .sf-termsGateBody li, .sf-termsGateModal .sf-modalEyebrow) { color: var(--sf-mode-muted); }
+
+/* Product, cart and builder controls have their own legacy surface colors. */
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(
+  .sf-cartModalHead, .sf-productPickerActions, .sf-scheduleHead, .sf-scheduleFooter,
+  .sf-cartFoot, .sf-removalPicker, .sf-removalPickerBody, .sf-cartPaymentToggle,
+  .sf-customAccordion, .sf-customAccordionHead, .sf-customIngredient,
+  .sf-repeatChoice, .sf-repeatSummary, .sf-bootsOption, .sf-bootsCurrent,
+  .sf-engineEmptyState, .sf-catalogTools > div
+) { background: var(--sf-mode-panel) !important; color: var(--sf-mode-ink) !important; border-color: var(--sf-mode-line) !important; box-shadow: none; }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(
+  .sf-qtyControl, .sf-qtyControl button, .sf-sizeChip, .sf-extraItem, .sf-extrasToggle,
+  .sf-removalPicker summary, .sf-cartPaymentOption, .sf-scheduleDayChip, .sf-scheduleHourChip,
+  .sf-customCategoryCard, .sf-customNextBtn
+) { background: var(--sf-mode-soft) !important; color: var(--sf-mode-ink) !important; border-color: var(--sf-mode-line) !important; box-shadow: none; }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(
+  .sf-productPickerDesc, .sf-productPickerDesc span, .sf-productPickerRow > span,
+  .sf-qtyControl strong, .sf-sizeChip span, .sf-sizeChip strong, .sf-extrasToggleText strong,
+  .sf-extraItem span, .sf-extraItem strong, .sf-removalPicker summary,
+  .sf-cartPaymentHead span, .sf-cartPaymentOption span, .sf-builderTotal,
+  .sf-customIngredientHead, .sf-customIngredientHead strong, .sf-scheduleLabel,
+  .sf-repeatChoice strong, .sf-repeatLine, .sf-repeatSummary strong,
+  .sf-engineEmptyState strong, .sf-bootsOption strong
+) { color: var(--sf-mode-ink) !important; }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(.sf-sizeChip.is-active, .sf-cartPaymentOption.is-active, .sf-scheduleDayChip.is-selected, .sf-scheduleHourChip.is-selected, .sf-bootsOption.is-active) { border-color: var(--sf-mode-accent) !important; background: var(--sf-mode-selected) !important; }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(.sf-productPickerDesc strong, .sf-builderTotal strong, .sf-customIngredientHead span) { color: var(--sf-mode-accent) !important; }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(.sf-directDiscountNotice, .sf-allergenNotice, .sf-randomSelectionNotice) { background: var(--sf-mode-warm) !important; color: var(--sf-mode-warm-ink) !important; border-color: var(--sf-mode-warm-line) !important; box-shadow: none; }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(.sf-directDiscountNotice small, .sf-allergenNotice strong) { color: var(--sf-mode-warm-ink) !important; }
+
+/* Keep the same actions, with restrained accents in the dark palette. */
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(.sf-catalogTools summary, .sf-catalogTools__label) { background: var(--sf-mode-warm) !important; color: var(--sf-mode-warm-ink) !important; border-color: var(--sf-mode-warm-line) !important; text-shadow: none !important; box-shadow: none !important; }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) .sf-catalogTools summary::after { display: none; }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) .sf-footerNavItem .sf-footerNavLabel { color: var(--sf-mode-ink) !important; }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(.lsf-topDealPrice__discount, .lsf-card__discount) { color: var(--sf-mode-success) !important; }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) .lsf-topDealPrice em { color: var(--sf-mode-success) !important; }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(.sf-footerNavLabel, .sf-footerNavLabel > span) { color: var(--sf-mode-ink) !important; }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(.sf-cartFootLine span, .sf-cartFootLine strong, .sf-cartModalHead > div > span, .sf-paymentMethodTotal, .sf-paymentMethodTotal strong) { color: var(--sf-mode-ink) !important; }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) .sf-paymentMethodCard { background: var(--sf-mode-soft); color: var(--sf-mode-ink); border-color: var(--sf-mode-line); }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) .sf-paymentMethodCopy strong { color: var(--sf-mode-ink); }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) .sf-sizeChipOldPrice { color: var(--sf-mode-muted) !important; }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) .sf-allergenAlert { background: var(--sf-mode-warm); color: var(--sf-mode-warm-ink); border-color: var(--sf-mode-warm-line); box-shadow: none; }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) .sf-allergenAlert > span { color: var(--sf-mode-warm-ink); }
+
+/* The visual builder keeps ingredient artwork and pizza colors intact. */
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(.svb, .svb-editor, .sf-customStartCard, .sf-halfCard) { background: var(--sf-mode-panel); color: var(--sf-mode-ink); border-color: var(--sf-mode-line); }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(.svb button, .svb-search, .svb-size select, .svb-placementGroup, .svb-quantityGroup, .svb-panelHead span, .sf-customModeSwitch button) { background: var(--sf-mode-soft); color: var(--sf-mode-ink); border-color: var(--sf-mode-line); }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) .svb-preview { background: var(--sf-mode-preview); }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(.svb-base > span, .svb-sides, .svb-motion, .svb-trayTitle > span, .svb .svb-status, .svb small) { color: var(--sf-mode-muted); }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) .svb button[aria-pressed="true"] { background: var(--sf-mode-selected); color: var(--sf-mode-ink); border-color: var(--sf-mode-accent); }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) .svb .svb-confirm { background: var(--sf-mode-accent); color: var(--sf-mode-on-accent); }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(.sf-customStartCard > span, .sf-halfCard strong, .sf-customBaseSummary, .sf-customAccordionHead strong) { color: var(--sf-mode-ink); }
+
+/* Coupon content needs explicit surfaces: legacy nested text used black ink. */
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) .sf-couponInfoBody { color: var(--sf-mode-ink); }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(.sf-couponSummary, .sf-couponConditions, .sf-couponCodeHero) {
+  padding: 14px 16px; border: 1px solid var(--sf-mode-line); border-radius: 14px;
+  background: var(--sf-mode-soft); color: var(--sf-mode-ink); box-shadow: none;
+}
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(.sf-couponSummary p, .sf-couponConditions ul, .sf-couponConditions li) { color: var(--sf-mode-ink); line-height: 1.55; }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(.sf-couponSummary b, .sf-couponConditions b, .sf-couponCodeHero strong) { color: var(--sf-mode-ink); }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) .sf-couponCodeHero span { color: var(--sf-mode-muted); }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) .sf-couponConditions li + li { margin-top: 8px; }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) .sf-couponInfoStatus {
+  background: var(--sf-mode-danger-bg); color: var(--sf-mode-danger-ink); border-color: var(--sf-mode-danger-line);
+}
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) .sf-couponInfoStatus.is-valid {
+  background: var(--sf-mode-success-bg); color: var(--sf-mode-success-ink); border-color: var(--sf-mode-success-line);
+}
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) .sf-couponInfoStatus.is-pending {
+  background: var(--sf-mode-warm); color: var(--sf-mode-warm-ink); border-color: var(--sf-mode-warm-line);
+}
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) .sf-couponTimer {
+  background: var(--sf-mode-soft); color: var(--sf-mode-ink); border: 1px solid var(--sf-mode-line); box-shadow: none;
+}
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) .sf-couponTimer--warning {
+  background: var(--sf-mode-warm); color: var(--sf-mode-warm-ink); border-color: var(--sf-mode-warm-line);
+}
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) .sf-couponTimer--critical {
+  background: var(--sf-mode-danger-bg); color: var(--sf-mode-danger-ink); border-color: var(--sf-mode-danger-line);
+}
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(.sf-couponInfoStatus, .sf-couponTimer) :is(strong, span) { color: inherit; }
+
+/* Modal interiors must use the same palette as their shell, including empty and selected states.
+   The repeat R intentionally inherits the shared commercial identity in every palette. */
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) .sf-schedule {
+  background: var(--sf-mode-panel); color: var(--sf-mode-ink);
+}
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(
+  .sf-reservationStore, .sf-bootsEmpty, .sf-scheduleEmpty, .sf-repeatChoice, .sf-repeatSummary, .sf-bootsCurrent, .sf-bootsOption
+) { background: var(--sf-mode-soft) !important; border-color: var(--sf-mode-line) !important; color: var(--sf-mode-ink) !important; box-shadow: none; }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(
+  .sf-reservationStore strong, .sf-bootsCurrent strong, .sf-bootsOption span, .sf-bootsOption em,
+  .sf-repeatChoice > strong, .sf-repeatChoiceLines em, .sf-repeatLine em
+) { color: var(--sf-mode-ink) !important; text-shadow: none; }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(
+  .sf-scheduleHead span, .sf-reservationStore span, .sf-reservationStore small,
+  .sf-reservationForm label > span, .sf-reservationSlot small, .sf-repeatForm label > span,
+  .sf-repeatChoice > span, .sf-repeatChoice > small, .sf-repeatSummary > span,
+  .sf-repeatLine small, .sf-bootsHeroTop span, .sf-bootsCurrent span, .sf-bootsCurrent small,
+  .sf-bootsOptionGroup > span, .sf-bootsCheckoutNote
+) { color: var(--sf-mode-muted) !important; text-shadow: none; }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) .sf-repeatChoice::after { display: none; }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) .sf-repeatLine { border-color: var(--sf-mode-line); }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) .sf-repeatLine--extra { border-left-color: var(--sf-mode-accent); }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(.sf-repeatChoice:hover:not(:disabled):not(.is-empty), .sf-bootsOption:hover:not(:disabled)) {
+  background: var(--sf-mode-hover) !important; border-color: var(--sf-mode-accent) !important; box-shadow: none; filter: none;
+}
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(.sf-bootsCurrent--target, .sf-bootsOption.is-active) {
+  background: var(--sf-mode-selected) !important; border-color: var(--sf-mode-accent) !important;
+}
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) .sf-bootsOption strong {
+  background: var(--sf-mode-accent); color: var(--sf-mode-on-accent) !important;
+}
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) .sf-bootsRouteArrow span { background: var(--sf-mode-accent); box-shadow: none; }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) .sf-bootsRouteArrow span::before { background: var(--sf-mode-on-accent); }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) .sf-bootsRouteArrow span::after { border-color: var(--sf-mode-on-accent); }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(.sf-scheduleDayChip.is-selected, .sf-scheduleHourChip.is-selected) {
+  background: var(--sf-mode-accent) !important; border-color: var(--sf-mode-accent) !important; color: var(--sf-mode-on-accent) !important;
+}
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) .sf-reservationSlot.is-selected :is(span, small) { color: var(--sf-mode-on-accent) !important; }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(.sf-scheduleDayChip:disabled, .sf-scheduleHourChip:disabled, .sf-repeatChoice.is-empty) {
+  background: var(--sf-mode-input) !important; color: var(--sf-mode-muted) !important; border-color: var(--sf-mode-line) !important; border-style: dashed; opacity: 1;
+}
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) .sf-repeatChoice.is-empty > strong { color: var(--sf-mode-muted) !important; }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) .sf-reservationSlot.is-medium:not(.is-selected) { border-color: var(--sf-mode-warm-line) !important; }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) .sf-reservationSlot.is-high:not(.is-selected) { border-color: var(--sf-mode-danger-line) !important; }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(.sf-bootsMessage, .sf-reservationMessage) {
+  background: var(--sf-mode-warm); border-color: var(--sf-mode-warm-line); color: var(--sf-mode-warm-ink);
+}
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) .sf-reservationMessage.is-success { background: var(--sf-mode-success-bg); border-color: var(--sf-mode-success-line); color: var(--sf-mode-success-ink); }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) .sf-reservationMessage.is-error { background: var(--sf-mode-danger-bg); border-color: var(--sf-mode-danger-line); color: var(--sf-mode-danger-ink); }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(.sf-scheduleSection.is-missing .sf-scheduleLabel, .sf-reservationForm label.is-missing > span) { color: var(--sf-mode-danger-ink) !important; }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(.sf-reservationStore.is-missing, .sf-reservationForm label.is-missing input, .sf-reservationForm label.is-missing select, .sf-scheduleSection.is-missing .sf-scheduleEmpty) { border-color: var(--sf-mode-danger-line) !important; }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(.sf-scheduleModal, .sf-repeatModal, .sf-bootsModal) :is(button, input, select):focus-visible {
+  outline: 2px solid var(--sf-mode-accent); outline-offset: 3px;
+}
+/* Quick assembly: nested base cards, category labels and ingredient controls. */
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(.sf-customAccordionBody, .sf-customBaseSummary, .sf-customCategorySlide, .sf-customEmptyLine) {
+  background: var(--sf-mode-soft); color: var(--sf-mode-ink); border-color: var(--sf-mode-line); box-shadow: none;
+}
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(.sf-customAccordionHead > span, .sf-customBaseSummary > span, .sf-customCategorySlide > span, .sf-customCategoryCard > span, .sf-customIngredientExpanded > strong) { color: var(--sf-mode-ink); text-shadow: none; }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(.sf-customBaseSummary > small, .sf-customCategorySlide > small, .sf-customNextBtn > span, .sf-customEmptyLine, .sf-customModal .sf-mutedLine, .sf-customModal .sf-builderTotal > span) { color: var(--sf-mode-muted); text-shadow: none; }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(.sf-customBaseSummary > button, .sf-customConfirmBtn) {
+  background: var(--sf-mode-accent); color: var(--sf-mode-on-accent); border-color: var(--sf-mode-accent); box-shadow: none; text-shadow: none;
+}
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) :is(.sf-customNextBtn > strong, .sf-customCategoryCard > strong) { color: var(--sf-mode-accent); }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) .sf-customToggle { border-color: var(--sf-mode-line); }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) .sf-customCategoryCard.is-active { border-color: var(--sf-mode-accent) !important; box-shadow: inset 0 0 0 1px var(--sf-mode-accent); }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) .sf-customModal :is(button, input, select):focus-visible { outline: 2px solid var(--sf-mode-accent); outline-offset: 3px; }
+/* Secondary labels stay readable in the light palette as well. */
+.sf-shell.sf-catalog.sf-shell--mode-commercial-light:not(.sf-shell--mode-commercial-dark):not(.sf-shell--mode-sepia) :is(.sf-scheduleHead span, .sf-reservationForm label > span, .sf-reservationSlot:not(.is-selected) small, .sf-customModal .sf-cartModalHead > div > span, .sf-customModal .sf-builderTotal > span) { color: #666; }
+.sf-shell.sf-catalog:is(.sf-shell--mode-commercial-dark, .sf-shell--mode-sepia) .sf-bootsModal .sf-bootsCurrent--target :is(span, small) { color: var(--sf-mode-ink) !important; }

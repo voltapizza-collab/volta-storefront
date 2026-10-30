@@ -1,296 +1,95 @@
-import { useEffect, useMemo, useState } from "react";
-import api from "../../setupAxios";
-import {
-  BRANDING_DEFAULTS,
-  OFFER_BUTTON_VARIANTS,
-  getOfferButtonVariant,
-} from "../../constants/branding";
-import {
-  STOREFRONT_BUTTON_ITEMS,
-  STOREFRONT_MODE_ITEMS,
-  DEFAULT_STOREFRONT_BUTTON_CONFIG,
-  DEFAULT_STOREFRONT_MODE,
-  normalizeStorefrontMode,
-} from "../../constants/storefrontButtons";
+import { useEffect, useRef, useState } from 'react';
+import api from '../../setupAxios';
+import { STOREFRONT_MODE_ITEMS, DEFAULT_STOREFRONT_MODE, normalizeStorefrontMode } from '../../constants/storefrontButtons';
+import '../../styles/StorefrontModesSettings.css';
+
+const selectableMode = value => STOREFRONT_MODE_ITEMS.some(mode => mode.id === normalizeStorefrontMode(value)) ? normalizeStorefrontMode(value) : DEFAULT_STOREFRONT_MODE;
 
 export default function SettingsBrandingModule({ partner }) {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-  const [partnerData, setPartnerData] = useState(null);
-  const [offerStyle, setOfferStyle] = useState(
-    BRANDING_DEFAULTS.brandOfferButtonStyle
-  );
-  const [storefrontMode, setStorefrontMode] = useState(DEFAULT_STOREFRONT_MODE);
-  const [offerModalOpen, setOfferModalOpen] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [selected, setSelected] = useState(DEFAULT_STOREFRONT_MODE);
+  const [saved, setSaved] = useState(DEFAULT_STOREFRONT_MODE);
+  const [restaurantName, setRestaurantName] = useState('Tu restaurante');
+  const savingRef = useRef(false);
+  const requestVersion = useRef(0);
 
   useEffect(() => {
-    const loadButtonGallery = async () => {
-      if (!partner?.partnerId) {
-        setLoading(false);
-        setError("No hay un partner asociado a esta sesion.");
-        return;
-      }
-
+    const version = ++requestVersion.current;
+    setLoaded(false); setLoading(true); setError(''); setSuccess('');
+    async function load() {
       try {
-        setLoading(true);
+        if (!partner?.partnerId) throw new Error('missing_partner');
         const response = await api.get(`/partners/by-id/${partner.partnerId}`);
-        const currentPartner = response.data || {};
-
-        setPartnerData(currentPartner);
-        setOfferStyle(
-          currentPartner.brandOfferButtonStyle ||
-            BRANDING_DEFAULTS.brandOfferButtonStyle
-        );
-        setStorefrontMode(normalizeStorefrontMode(currentPartner.storefrontMode));
-        setError("");
-      } catch (loadError) {
-        console.error("Error loading button personalization", loadError);
-        setError("No pudimos cargar la personalizacion.");
+        if (version !== requestVersion.current) return;
+        const mode = normalizeStorefrontMode(response.data?.storefrontMode);
+        setSelected(selectableMode(mode)); setSaved(mode);
+        setRestaurantName(response.data?.name || 'Tu restaurante');
+        setLoaded(true);
+      } catch {
+        if (version === requestVersion.current) setError('No pudimos cargar la personalización. Vuelve a abrir esta pantalla para reintentar.');
       } finally {
-        setLoading(false);
+        if (version === requestVersion.current) setLoading(false);
       }
-    };
-
-    loadButtonGallery();
+    }
+    load();
+    return () => { requestVersion.current++; };
   }, [partner?.partnerId]);
 
-  const selectedOfferVariant = useMemo(
-    () => getOfferButtonVariant(offerStyle),
-    [offerStyle]
-  );
-
-  const handleOfferVariantSelect = (variantId) => {
-    const nextVariant = getOfferButtonVariant(variantId);
-    setOfferStyle(nextVariant.id);
-    setSuccess("");
-    setOfferModalOpen(false);
-  };
-
-  const handleSubmit = async (event) => {
+  const save = async event => {
     event.preventDefault();
-    if (!partner?.partnerId) return;
-
+    if (!loaded || savingRef.current || selected === saved) return;
+    const version = requestVersion.current;
+    savingRef.current = true; setSaving(true); setError(''); setSuccess('');
     try {
-      setSaving(true);
-      setError("");
-      setSuccess("");
-
-      const [buttonsResponse, brandingResponse] = await Promise.all([
-        api.patch(`/partners/by-id/${partner.partnerId}/storefront-buttons`, {
-          storefrontButtonConfig: DEFAULT_STOREFRONT_BUTTON_CONFIG,
-        }),
-        api.patch(`/partners/by-id/${partner.partnerId}/branding`, {
-          brandPrimary: partnerData?.brandPrimary || BRANDING_DEFAULTS.brandPrimary,
-          brandSecondary:
-            partnerData?.brandSecondary || BRANDING_DEFAULTS.brandSecondary,
-          brandAccent: partnerData?.brandAccent || BRANDING_DEFAULTS.brandAccent,
-          brandSurface: partnerData?.brandSurface || BRANDING_DEFAULTS.brandSurface,
-          brandTextColor:
-            partnerData?.brandTextColor || BRANDING_DEFAULTS.brandTextColor,
-          brandFontFamily:
-            partnerData?.brandFontFamily || BRANDING_DEFAULTS.brandFontFamily,
-          brandOfferButtonStyle: offerStyle,
-          storefrontMode,
-        }),
-      ]);
-
-      setPartnerData({
-        ...(buttonsResponse.data || {}),
-        ...(brandingResponse.data || {}),
-      });
-      setSuccess("Personalizacion guardada.");
-    } catch (saveError) {
-      console.error("Error saving button personalization", saveError);
-      setError("No pudimos guardar la personalizacion.");
+      const response = await api.patch(`/partners/by-id/${partner.partnerId}/storefront-mode`, { storefrontMode: selected });
+      if (version !== requestVersion.current) return;
+      if (response.data?.storefrontMode !== selected) throw new Error('unconfirmed_mode');
+      setSaved(selected);
+      setSuccess(`Modo ${STOREFRONT_MODE_ITEMS.find(mode => mode.id === selected).name.toLowerCase()} aplicado. Se mostrará al abrir o recargar tu tienda.`);
+    } catch {
+      if (version === requestVersion.current) setError('No se pudo aplicar el modo. Tu tienda conserva el anterior; puedes volver a intentarlo.');
     } finally {
+      savingRef.current = false;
       setSaving(false);
     }
   };
 
-  if (loading) {
-    return (
-      <section className="bo-settingsShell">
-        <div className="bo-settingsCard">
-          <h2 className="bo-settingsTitle">Personalizacion</h2>
-          <p className="bo-settingsHint">Cargando galeria de botones...</p>
+  return <section className="bo-settingsShell bo-storefrontModes">
+    <div className="bo-settingsCard">
+      <div className="bo-settingsHeader">
+        <div>
+          <div className="bo-settingsEyebrow">Personalización</div>
+          <h2 className="bo-settingsTitle">El estilo de tu tienda</h2>
+          <p className="bo-settingsHint">Elige un modo para tu restaurante. Tu carta, las fotos y las funciones siguen en el mismo lugar.</p>
         </div>
-      </section>
-    );
-  }
-
-  return (
-    <section className="bo-settingsShell">
-      <div className="bo-settingsCard">
-        <div className="bo-settingsHeader">
-          <div>
-            <div className="bo-settingsEyebrow">Settings / Personalizacion</div>
-            <h2 className="bo-settingsTitle">Galeria de botones del storefront</h2>
-            <p className="bo-settingsHint">
-              Estos son los botones fijos del storefront. El cliente no los
-              apaga; solo puede elegir variantes visuales cuando existan,
-              como el estilo del boton de cupones.
-            </p>
-          </div>
-          <div className="bo-settingsStoreChip">
-            {STOREFRONT_BUTTON_ITEMS.length} botones fijos
-          </div>
-        </div>
-
-        <form className="bo-settingsForm" onSubmit={handleSubmit}>
-          <div className="bo-buttonGallery">
-            {STOREFRONT_BUTTON_ITEMS.map((item) => {
-              const isCouponButton = item.id === "coupons";
-
-              return (
-                <article
-                  key={item.id}
-                  className="bo-buttonCard is-enabled"
-                >
-                  <div className="bo-buttonCardTop">
-                    <div>
-                      <span>{item.area}</span>
-                      <strong>{item.label}</strong>
-                    </div>
-                    <span className="bo-fixedButtonBadge">Fijo</span>
-                  </div>
-
-                  <div className="bo-buttonPreviewRail">
-                    {isCouponButton ? (
-                      <button
-                        type="button"
-                        className={`sf-offersBtn bo-buttonPreviewCoupon ${selectedOfferVariant.className}`}
-                        onClick={() => setOfferModalOpen(true)}
-                      >
-                        <span className="sf-offersBtnLabel">
-                          {selectedOfferVariant.label}
-                        </span>
-                      </button>
-                    ) : (
-                      <button
-                        type="button"
-                        className={`bo-storefrontButtonPreview bo-storefrontButtonPreview--${item.id}`}
-                      >
-                        {item.id === "couponCode" && <span>%</span>}
-                        {item.id === "boost" && <span>POS 1</span>}
-                        <strong>{item.preview}</strong>
-                      </button>
-                    )}
-                  </div>
-
-                  <small>Siempre visible en el storefront</small>
-
-                  {isCouponButton && (
-                    <button
-                      type="button"
-                      className="bo-buttonVariantLink"
-                      onClick={() => setOfferModalOpen(true)}
-                    >
-                      Cambiar variante de cupones
-                    </button>
-                  )}
-                </article>
-              );
-            })}
-          </div>
-
-          <section className="bo-modeSection">
-            <div className="bo-modeSectionHead">
-              <div>
-                <div className="bo-settingsEyebrow">Modos</div>
-                <h3 className="bo-settingsSectionTitle">Aspecto general controlado</h3>
-              </div>
-              <span>{STOREFRONT_MODE_ITEMS.filter((mode) => mode.status === "available").length} disponibles</span>
-            </div>
-
-            <div className="bo-modeGallery">
-              {STOREFRONT_MODE_ITEMS.map((mode) => {
-                const isAvailable = mode.status === "available";
-                const isActive = storefrontMode === mode.id;
-                return (
-                  <article
-                    key={mode.id}
-                    className={`bo-modeCard ${isActive ? "is-active" : ""} ${
-                      isAvailable ? "is-available" : "is-coming"
-                    }`}
-                  >
-                    <div className={`bo-modePreview bo-modePreview--${mode.id}`}>
-                      <span />
-                      <i />
-                      <strong />
-                    </div>
-                    <div className="bo-modeCardCopy">
-                      <span>{mode.label}</span>
-                      <strong>{mode.name}</strong>
-                      <p>{mode.description}</p>
-                    </div>
-                    <button
-                      type="button"
-                      disabled={!isAvailable}
-                      onClick={() => {
-                        if (!isAvailable) return;
-                        setStorefrontMode(mode.id);
-                        setSuccess("");
-                      }}
-                    >
-                      {isActive ? "Activo" : isAvailable ? "Usar modo" : "En desarrollo"}
-                    </button>
-                  </article>
-                );
-              })}
-            </div>
-          </section>
-
-          {error && <div className="bo-settingsError">{error}</div>}
-          {success && <div className="bo-settingsSuccess">{success}</div>}
-
-          <div className="bo-settingsActions">
-            <button type="submit" className="bo-settingsSave" disabled={saving}>
-              {saving ? "Guardando..." : "Guardar personalizacion"}
-            </button>
-          </div>
-        </form>
       </div>
-
-      {offerModalOpen && (
-        <div className="bo-brandingModalBackdrop" onClick={() => setOfferModalOpen(false)}>
-          <div className="bo-brandingModalCard" onClick={(e) => e.stopPropagation()}>
-            <div className="bo-brandingModalHead">
-              <div>
-                <div className="bo-settingsEyebrow">Boton de cupones</div>
-                <h3 className="bo-settingsSectionTitle">Elige una variante</h3>
+      {loading ? <p role="status">Cargando personalización…</p> : <form onSubmit={save}>
+        {loaded && <>
+          {saved === 'volta' && <p className="bo-settingsHint">Tu tienda conserva el modo Volta. Elige uno de los nuevos modos y pulsa Aplicar modo para cambiarlo.</p>}
+          <fieldset className="bo-storefrontModes__options" disabled={saving}>
+            <legend>Elige el aspecto del storefront</legend>
+            {STOREFRONT_MODE_ITEMS.map(mode => <label key={mode.id} className={`bo-storefrontMode ${selected === mode.id ? 'is-selected' : ''}`}>
+              <input type="radio" name="storefront-mode" value={mode.id} checked={selected === mode.id}
+                aria-label={mode.name} onChange={() => { setSelected(mode.id); setSuccess(''); setError(''); }} />
+              <div className={`bo-storefrontMode__preview ${mode.id === 'commercial-dark' ? 'is-dark' : mode.id === 'sepia' ? 'is-sepia' : ''}`} aria-hidden="true">
+                <div className="bo-storefrontMode__previewHeader"><span className="bo-storefrontMode__logo" />{restaurantName}<span>•••</span></div>
+                <div className="bo-storefrontMode__previewTabs"><b>Carta</b><span>Ofertas</span><span>Buscar</span></div>
+                <div className="bo-storefrontMode__previewGrid">{[0, 1, 2].map(index => <div key={index}><i /><span /><small /></div>)}</div>
+                <div className="bo-storefrontMode__previewFooter"><span>Tu pedido</span><b>Ver carrito →</b></div>
               </div>
-              <button
-                type="button"
-                className="bo-brandingModalClose"
-                onClick={() => setOfferModalOpen(false)}
-              >
-                Cerrar
-              </button>
-            </div>
-
-            <div className="bo-offerVariantGrid">
-              {OFFER_BUTTON_VARIANTS.map((variant) => (
-                <button
-                  key={variant.id}
-                  type="button"
-                  className={`bo-offerVariantCard ${
-                    offerStyle === variant.id ? "is-active" : ""
-                  }`}
-                  onClick={() => handleOfferVariantSelect(variant.id)}
-                >
-                  <span className={`sf-offersBtn bo-offerVariantPreview ${variant.className}`}>
-                    <span className="sf-offersBtnLabel">{variant.label}</span>
-                  </span>
-                  <strong>{variant.name}</strong>
-                  <small>{variant.accent}</small>
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-    </section>
-  );
+              <div className="bo-storefrontMode__copy"><div><strong>{mode.name}</strong>{saved === mode.id && <span className="bo-storefrontMode__badge">En uso</span>}</div><p>{mode.description}</p></div>
+            </label>)}
+          </fieldset>
+          <p className="bo-storefrontModes__scope">El modo se aplica a las tiendas de este restaurante. Puedes cambiarlo cuando quieras.</p>
+        </>}
+        {error && <div className="bo-settingsError" role="alert">{error}</div>}
+        {success && <div className="bo-settingsSuccess" role="status">{success}</div>}
+        {loaded && <div className="bo-settingsActions"><button type="submit" className="bo-settingsSave" disabled={saving || selected === saved}>{saving ? 'Aplicando…' : 'Aplicar modo'}</button></div>}
+      </form>}
+    </div>
+  </section>;
 }

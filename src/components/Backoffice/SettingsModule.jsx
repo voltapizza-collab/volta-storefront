@@ -1,13 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import api from "../../setupAxios";
-import {
-  BRANDING_DEFAULTS,
-  getOfferButtonVariant,
-} from "../../constants/branding";
-import {
-  STOREFRONT_BUTTON_ITEMS,
-  normalizeStorefrontButtonConfig,
-} from "../../constants/storefrontButtons";
+
 
 const formatCurrency = (value) => {
   const numeric = Number(value || 0);
@@ -97,13 +90,6 @@ export default function SettingsModule({
     } pizzas.`;
   }, [partnerData]);
 
-  const offerVariant = useMemo(
-    () =>
-      getOfferButtonVariant(
-        partnerData?.brandOfferButtonStyle || BRANDING_DEFAULTS.brandOfferButtonStyle
-      ),
-    [partnerData?.brandOfferButtonStyle]
-  );
   const minimumPaymentAmount = Number(partnerData?.minimumPaymentAmount || 0);
   const priceAdjustmentRules = useMemo(() => {
     const parsed = parseMaybeJson(partnerData?.priceAdjustmentRules, []);
@@ -122,11 +108,6 @@ export default function SettingsModule({
     paymentPolicySettings.paypal && "PayPal",
     paymentPolicySettings.crypto && "Cartera virtual",
   ].filter(Boolean);
-  const buttonConfig = useMemo(
-    () => normalizeStorefrontButtonConfig(partnerData?.storefrontButtonConfig),
-    [partnerData?.storefrontButtonConfig]
-  );
-  const visibleButtonCount = Object.values(buttonConfig).filter(Boolean).length;
   const trackingSettings = useMemo(
     () => readTrackingSettings(partnerData?.trackingNotificationSettings),
     [partnerData?.trackingNotificationSettings]
@@ -230,7 +211,7 @@ export default function SettingsModule({
             <div className="bo-settingsSummaryTop">
               <div>
                 <div className="bo-settingsEyebrow">Personalizacion</div>
-                <h3 className="bo-settingsSectionTitle">Botones y modos</h3>
+                <h3 className="bo-settingsSectionTitle">Modo del storefront</h3>
               </div>
               <button
                 type="button"
@@ -241,22 +222,8 @@ export default function SettingsModule({
               </button>
             </div>
 
-            <div className="bo-settingsMetricRow">
-              <span>Botones visibles</span>
-              <strong>
-                {visibleButtonCount}/{STOREFRONT_BUTTON_ITEMS.length}
-              </strong>
-            </div>
-            <div className="bo-settingsMetricRow">
-              <span>Boton cupones</span>
-              <strong>{offerVariant.name}</strong>
-            </div>
-
-            <p className="bo-settingsCardHint">
-              Activa u oculta llamadas, reservas, programar, Pay Now, cupones,
-              Boost y el resto de botones. Los modos cambian el aspecto general
-              desde opciones cerradas de Volta.
-            </p>
+            <div className="bo-settingsMetricRow"><span>Modo en uso</span><strong>{partnerData?.storefrontMode === 'volta' ? 'Volta' : partnerData?.storefrontMode === 'commercial-dark' ? 'Oscuro' : partnerData?.storefrontMode === 'sepia' ? 'Sepia' : 'Claro'}</strong></div>
+            <p className="bo-settingsCardHint">Elige Claro, Oscuro o Sepia para la carta de tu restaurante.</p>
           </article>
 
           <article className="bo-settingsSummaryCard">

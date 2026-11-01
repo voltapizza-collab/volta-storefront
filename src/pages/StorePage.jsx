@@ -2211,7 +2211,9 @@ const getPromoCategoryOptions = (promoItem, menu = []) => {
 
   return menu
     .filter((item) => {
+      if (item?.available === false) return false;
       if (optionIds.length && !optionIds.includes(Number(item?.pizzaId))) return false;
+      if (!optionIds.length && promoItem?.choiceType === "PRODUCTS") return false;
 
       const itemCategoryId = Number(item?.categoryId);
       const idMatch =
@@ -2223,7 +2225,7 @@ const getPromoCategoryOptions = (promoItem, menu = []) => {
         categoryName &&
         normalizeSearchText(item?.category || item?.categoryName) === categoryName;
 
-      if (!optionIds.length && !idMatch && !nameMatch) return false;
+      if (!optionIds.length && (categoryId > 0 ? !idMatch : !nameMatch)) return false;
       if (!requestedSize) return true;
       return getAvailableSizes(item).includes(requestedSize);
     })
@@ -2238,6 +2240,17 @@ const getPromoItemLabel = (item) =>
   isPromoCategoryItem(item)
     ? `Elige ${getPromoRequiredChoiceCount(item)} de ${getPromoCategoryName(item)}${item.size ? ` ${item.size}` : ""}`
     : `${item.quantity || 1}x ${item.name}${item.size ? ` ${item.size}` : ""}`;
+
+const isPromoAvailable = (promo, menu) =>
+  promoHasProducts(promo) && promo.items.every(item => {
+    if (isPromoCategoryItem(item)) {
+      return getPromoCategoryOptions(item, menu).length >= getPromoRequiredChoiceCount(item);
+    }
+    // A product with the same name cannot replace a missing component.
+    const product = menu.find(candidate => Number(candidate.pizzaId) === Number(item?.pizzaId));
+    return Boolean(product && product.available !== false &&
+      (!item.size || getAvailableSizes(product).includes(item.size)));
+  });
 
 const findPromoMenuItem = (promoItem, menu = []) => {
   if (isPromoCategoryItem(promoItem)) {
@@ -2974,9 +2987,7 @@ export default function StorePage() {
   }, [menu, trending]);
 
   const visiblePromos = useMemo(
-    () => promos.filter(promoHasProducts).filter(promo => (promo.items || []).every(item =>
-      !isPromoCategoryItem(item) || getPromoCategoryOptions(item, menu).length >= getPromoRequiredChoiceCount(item)
-    )),
+    () => promos.filter(promo => isPromoAvailable(promo, menu)),
     [promos, menu]
   );
 
@@ -5510,7 +5521,7 @@ export default function StorePage() {
   const addPromoLine = (promo, selections = {}) => {
     const promoId = Number(promo?.id);
     const totalPrice = roundMoney(num(promo?.totalPrice));
-    if (!promoId || totalPrice <= 0) return;
+    if (!promoId || totalPrice <= 0 || !isPromoAvailable(promo, menu)) return;
 
     const promoItems = Array.isArray(promo.items)
       ? promo.items.map((item, index) => {
@@ -5565,6 +5576,7 @@ export default function StorePage() {
   };
 
   const handlePromoAdd = (promo) => {
+    if (!isPromoAvailable(promo, menu)) return;
     if (promoNeedsChoices(promo)) {
       openPromoPicker(promo);
       return;

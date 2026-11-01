@@ -14,21 +14,55 @@ jest.mock('react-router-dom', () => {
 const dish = { pizzaId: 1, name: 'Barbacoa', categoryId: 1, category: 'Pizzas', selectSize: ['M'], priceBySize: { M: 10 }, available: true, ingredients: [] };
 let available;
 let heldMenu;
+let promos;
+let extraMenu;
 const menuCalls = () => api.get.mock.calls.filter(([path]) => path.endsWith('/menu'));
 beforeEach(() => {
   jest.clearAllMocks(); localStorage.clear(); sessionStorage.clear();
   window.scrollTo = jest.fn(); Element.prototype.scrollTo = jest.fn();
   available = true; heldMenu = null;
+  promos = []; extraMenu = [];
   api.get.mockImplementation(async path => {
     if (path.includes('/availability/')) return { acceptingOrders: true, serviceOpen: true, days: [], paymentMethods: ['card'] };
     if (path === '/partners/test') return { id: 1, slug: 'test', name: 'Test', currency: 'EUR' };
-    if (path.endsWith('/menu')) return heldMenu || { store: { id: 1, partnerId: 1, storeName: 'Centro', pickupEnabled: true }, menu: available ? [dish] : [] };
+    if (path.endsWith('/menu')) return heldMenu || { store: { id: 1, partnerId: 1, storeName: 'Centro', pickupEnabled: true }, menu: [...(available ? [dish] : []), ...extraMenu], promos };
     return {};
   });
   api.post.mockResolvedValue({});
   jest.spyOn(console, 'error').mockImplementation(() => {});
 });
 afterEach(() => { jest.restoreAllMocks(); jest.useRealTimers(); });
+
+test('fixed promo disappears from the cabinet and navigation when ravioli is unavailable, then returns', async () => {
+  jest.useFakeTimers();
+  const ravioli = { ...dish, pizzaId: 2, name: 'Raviolis' };
+  extraMenu = [ravioli];
+  promos = [{ id: 10, title: 'Promo Full Pack', totalPrice: 14.99, items: [
+    { pizzaId: 1, name: dish.name, size: 'M' }, { pizzaId: 2, name: 'Raviolis', size: 'M' },
+  ] }];
+  render(<StorePage />);
+  fireEvent.click(await screen.findByRole('button', { name: 'Promos' }));
+  expect(screen.getAllByText('Promo Full Pack').length).toBeGreaterThan(0);
+  extraMenu = [];
+  await act(async () => jest.advanceTimersByTime(15000));
+  expect(screen.queryByText('Promo Full Pack')).not.toBeInTheDocument();
+  expect(screen.queryByRole('button', { name: 'Promos' })).not.toBeInTheDocument();
+  // An identically named replacement cannot satisfy the configured component.
+  extraMenu = [{ ...ravioli, pizzaId: 3 }];
+  await act(async () => jest.advanceTimersByTime(15000));
+  expect(screen.queryByRole('button', { name: 'Promos' })).not.toBeInTheDocument();
+  extraMenu = [ravioli];
+  await act(async () => jest.advanceTimersByTime(15000));
+  fireEvent.click(await screen.findByRole('button', { name: 'Promos' }));
+  expect(screen.getAllByText('Promo Full Pack').length).toBeGreaterThan(0);
+});
+
+test('a pack with an unavailable fixed size is hidden even when all products exist', async () => {
+  promos = [{ id: 10, title: 'Promo Full Pack', totalPrice: 9, items: [{ pizzaId: 1, name: dish.name, size: 'L' }] }];
+  render(<StorePage />);
+  await screen.findAllByRole('button', { name: 'Comprar Barbacoa' });
+  expect(screen.queryByRole('button', { name: 'Promos' })).not.toBeInTheDocument();
+});
 
 test('open menu removes disabled dishes within 15 seconds and restores reactivated dishes', async () => {
   jest.useFakeTimers();
